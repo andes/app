@@ -1,3 +1,11 @@
+# [5.137.0](https://github.com/andes/app/compare/v5.136.2...v5.137.0) (2024-05-08)
+
+
+### Features
+
+* **RUP:** omite previsualizacion PDF si no hay validacion ([#2986](https://github.com/andes/app/issues/2986)) ([7367d38](https://github.com/andes/app/commit/7367d38114bfc99e670460980025e140d2ebcc91))
+* **TM-32:** Nueva funcionalidad de plex-select ([#2996](https://github.com/andes/app/issues/2996)) ([767ce69](https://github.com/andes/app/commit/767ce69f37ad84be2f14ba37b9e70ed5b5303ec7))
+
 ## [5.136.2](https://github.com/andes/app/compare/v5.136.1...v5.136.2) (2024-04-24)
 
 
