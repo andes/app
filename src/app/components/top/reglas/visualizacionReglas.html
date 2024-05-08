@@ -1,3 +1,9 @@
+<plex-title titulo="Reglas Solicitudes" size="md">
+    <plex-text class="mb-2" [(ngModel)]="search" [debounce]="600" name="search" (change)="onSearchStart($event)"
+               placeholder=" Buscar ..." [autoFocus]="true">
+    </plex-text>
+</plex-title>
+
 <plex-wrapper *ngIf="!esParametrizado">
     <plex-select [(ngModel)]="organizacionOrigen" name="orgOrigen" tmOrganizaciones label="Organización origen"
                  placeholder="Seleccione la organización" (change)="refrescarFiltro()">
@@ -15,57 +21,51 @@
     </plex-button>
 </plex-wrapper>
 
-<div class="row">
-    <div class="col-12">
-        <plex-loader *ngIf="loader" type="ball-pulse"></plex-loader>
+<ng-container *ngIf="filas$ | async as filas">
+
+    <plex-loader class="loader" *ngIf="loader && filas" type="ball-pulse"></plex-loader>
+
+    <plex-list [striped]="true" [offset]="260" [ngClass]="{ 'loading': loader }" (scrolled)="onScroll()">
+        <plex-item *ngIf="filas?.length">
+            <b *ngIf="!esParametrizado">Organización origen</b>
+            <b label> Prestación origen </b>
+            <b label> Organización destino </b>
+            <b label> Prestación destino </b>
+            <b></b>
+        </plex-item>
+        <plex-item *ngFor="let fila of filas">
+            <div *ngIf="!esParametrizado">
+                <plex-icon name="hospital-building" type="info"></plex-icon>
+                <plex-label [tituloBold]="true" titulo="{{ fila?.organizacionOrigen?.nombre }}">
+                </plex-label>
+            </div>
+            <plex-label [tituloBold]="!esParametrizado" titulo="{{ fila?.prestacionOrigen?.term }}">
+            </plex-label>
+            <div>
+                <plex-icon *ngIf="!esParametrizado" name="hospital-building" type="success"></plex-icon>
+                <plex-label [tituloBold]="!esParametrizado" titulo="{{ fila?.organizacionDestino?.nombre }}">
+                </plex-label>
+            </div>
+            <plex-label [tituloBold]="!esParametrizado" titulo="{{ fila?.prestacionDestino?.term }}"></plex-label>
+
+            <plex-button *ngIf="prestacion"
+                         [disabled]="prestacion?.conceptId === fila?.prestacionOrigen?.prestacion?.conceptId"
+                         type="primary" size="sm" icon="plus" tooltip="Agregar a la consulta"
+                         (click)="seleccionarConcepto(fila.prestacionDestino)" tooltipPosition="left">
+            </plex-button>
+
+            <plex-badge *ngIf="fila?.prestacionOrigen?.auditable && !esParametrizado" type="success">
+                auditable
+            </plex-badge>
+            <plex-badge *ngIf="!fila?.prestacionOrigen?.auditable && !esParametrizado" type="warning">
+                no auditable
+            </plex-badge>
+        </plex-item>
+
         <div *ngIf="!loader && filas && !filas?.length" justify="center" class="mt-5">
-            <plex-label titulo="No hay resultados para esta búsqueda" direction="column"
-                        subtitulo="Edite algún filtro para realizar una nueva" type="warning" size="xl" icon="close">
+            <plex-label class="mt-5" titulo="No hay resultados para esta búsqueda" direction="column"
+                        subtitulo="Edite el filtro para realizar una nueva" type="warning" size="lg" icon="close">
             </plex-label>
         </div>
-        <div *ngIf="!loader && !filas" justify="center" class="mt-5">
-            <plex-label class="flex-column" icon="magnify" size="xl" type="info" direction="column" titulo="Comience completando los filtros"
-                        subtitulo="Elija las opciones de filtrado y se generará la búsqueda">
-            </plex-label>
-        </div>
-        <ng-container *ngIf="filas?.length">
-            <plex-list [striped]="true" height="calc(100vh - 247px)" (scrolled)="onScroll()">
-                <plex-item>
-                    <b *ngIf="!esParametrizado">Organización origen</b>
-                    <b label> Prestación origen </b>
-                    <b label> Organización destino </b>
-                    <b label> Prestación destino </b>
-                </plex-item>
-                <plex-item *ngFor="let fila of filas">
-                    <div class="elementos-graficos w-100" *ngIf="!esParametrizado">
-                        <plex-icon name="hospital-building" type="info"></plex-icon>
-                        <plex-label [tituloBold]="true" titulo="{{ fila.organizacionOrigen.nombre }}">
-                        </plex-label>
-                    </div>
-                    <plex-label [tituloBold]="!esParametrizado" titulo="{{ fila.prestacionOrigen.prestacion.term }}">
-                    </plex-label>
-                    <div class="elementos-graficos w-100">
-                        <plex-icon *ngIf="!esParametrizado" name="hospital-building" type="success"></plex-icon>
-                        <plex-label [tituloBold]="!esParametrizado" titulo="{{ fila.organizacionDestino.nombre }}">
-                        </plex-label>
-                    </div>
-                    <plex-label [tituloBold]="!esParametrizado" titulo="{{ fila.prestacionDestino.term }}"></plex-label>
-
-
-                    <plex-button *ngIf="prestacion"
-                                 [disabled]="prestacion?.conceptId !== fila.prestacionOrigen.prestacion.conceptId"
-                                 type="primary" size="sm" icon="plus" tooltip="Agregar a la consulta"
-                                 (click)="seleccionarConcepto(fila.prestacionDestino)" tooltipPosition="left">
-                    </plex-button>
-
-                    <plex-badge *ngIf="fila.prestacionOrigen.auditable && !esParametrizado" type="success">
-                        auditable
-                    </plex-badge>
-                    <plex-badge *ngIf="!fila.prestacionOrigen.auditable && !esParametrizado" type="warning">
-                        no auditable
-                    </plex-badge>
-                </plex-item>
-            </plex-list>
-        </ng-container>
-    </div>
-</div>
+    </plex-list>
+</ng-container>

@@ -10,9 +10,9 @@
                     </plex-button>
 
                     <ng-container ngProjectAs="plex-button" *ngIf="activeIndex === 0">
-                        <plex-help #helpSolicitudes class="text-left" titulo="Reglas Solicitudes"
-                                   tituloBoton="Reglas Solicitudes" size="sm">
-                            <visualizacion-reglas info [esParametrizado]="true"
+
+                        <plex-help #helpSolicitudes class="text-left" tituloBoton="Reglas Solicitudes" cardSize="full">
+                            <visualizacion-reglas [esParametrizado]="true"
                                                   [prestacion]="prestacion.solicitud.tipoPrestacion" *plHelp
                                                   (addSolicitud)="agregarSolicitud($event, helpSolicitudes)">
                             </visualizacion-reglas>
@@ -34,10 +34,7 @@
                               *ngIf="paciente || prestacion.solicitud.tipoPrestacion.noNominalizada">
                         <div justify="end" class="mb-1"
                              *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length">
-                            <div class="col float-right text-right panel-acciones">
-
-
-                            </div>
+                            <div class="col float-right text-right panel-acciones"></div>
                         </div>
 
                         <!-- Area droppable de la consulta -->

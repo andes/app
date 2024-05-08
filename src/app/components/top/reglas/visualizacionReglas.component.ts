@@ -5,12 +5,23 @@ import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.s
 import { DocumentosService } from 'src/app/services/documentos.service';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { IRegla } from '../../../interfaces/IRegla';
+import { Observable, of, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 import { ReglaService } from '../../../services/top/reglas.service';
 
 @Component({
     selector: 'visualizacion-reglas',
-    templateUrl: './visualizacionReglas.html'
+    templateUrl: './visualizacionReglas.html',
+    styles: [`
+        .loader {
+            position: absolute;
+            top: 45%;
+            left: 45%;
+        }
+        .loading {
+            opacity: 50%;
+        }
+    `]
 })
 export class VisualizacionReglasComponent implements OnInit {
     @Input() esParametrizado = false;
@@ -51,8 +62,10 @@ export class VisualizacionReglasComponent implements OnInit {
     public arrayReglas: any = [];
     public filas: any[];
     public parametros;
+    public filas$: Observable<any[]>;
     public loader = false;
     private scrollEnd = false;
+    public search = '';
 
     constructor(
         private servicioReglas: ReglaService,
@@ -67,6 +80,7 @@ export class VisualizacionReglasComponent implements OnInit {
             organizacionDestino: undefined,
             prestacionDestino: undefined,
             prestacionOrigen: this.prestacion?.conceptId || undefined,
+            search: this.search,
             skip: 0,
             limit: 10
         };
@@ -88,14 +102,20 @@ export class VisualizacionReglasComponent implements OnInit {
         this.parametros['prestacionOrigen'] = this.prestacionOrigen?.conceptId || undefined;
 
         // cada vez que se modifican los filtros seteamos el skip en 0
-        this.parametros.skip = 0;
+        this.parametros['skip'] = 0;
         this.scrollEnd = false;
         if (this.parametros.organizacionOrigen || this.parametros.organizacionDestino || this.parametros.prestacionOrigen || this.parametros.prestacionDestino) {
             this.actualizarTabla();
         } else {
             this.arrayReglas = [];
-            this.filas = null;
         }
+    }
+
+    public onSearchStart(event: any) {
+        this.search = event.value;
+        this.parametros['search'] = this.search;
+        this.parametros['skip'] = 0;
+        this.actualizarTabla();
     }
 
     /**
@@ -104,48 +124,59 @@ export class VisualizacionReglasComponent implements OnInit {
      * @memberof VisualizacionReglasComponent
      */
     actualizarTabla() {
-        if (this.parametros.skip === 0) {
-            this.arrayReglas = [];
-            this.filas = [];
+        if (this.parametros['skip'] === 0) {
             this.loader = true;
+            this.arrayReglas = [];
         }
-        this.servicioReglas.get(this.parametros).subscribe((reglas: [IRegla]) => {
-            this.loader = false;
-            this.obtenerFilasTabla(reglas);
-            this.parametros.skip = this.arrayReglas.length;
-            if (!this.arrayReglas.length || this.arrayReglas.length < this.parametros.limit) {
-                this.scrollEnd = true;
-            }
-        });
-    }
 
-    /**
-     * Acomoda los datos de las reglas de forma que se pueda acceder facilmente desde la tabla
-     *
-     * @memberof VisualizacionReglasComponent
-     */
-    obtenerFilasTabla(reglas: IRegla[]) {
-        for (const regla of reglas) {
-            this.arrayReglas.push(regla);
-            regla.origen.prestaciones?.forEach((prestacionAux: any) => { // prestacionAux es cada celda del arreglo de origen.prestaciones. Tiene la prestación y si es auditable
-                if (!this.prestacionOrigen || this.prestacionOrigen.conceptId === prestacionAux.prestacion.conceptId) {
-                    /* Es necesaria esta validación porque una regla tiene un origen y un destino. El origen se compone de
-                     * una organización y una lista de prestaciones. Entonces si filtra por prestación origen, que muestre
-                     * solo aquellas partes de la regla que cumpla con los filtros ingresados. El destino es una organización
-                     * y una sola prestación por lo que no< es necesario más validaciones. */
-                    if (!this.prestacion || prestacionAux.prestacion.conceptId === this.prestacion.conceptId) {
-                        this.filas.push({
-                            organizacionOrigen: regla.origen.organizacion,
-                            prestacionOrigen: prestacionAux,
-                            organizacionDestino: regla.destino.organizacion,
-                            prestacionDestino: regla.destino.prestacion
-                        });
-                    }
+        this.servicioReglas.get(this.parametros)
+            .pipe(
+                debounceTime(300),
+                distinctUntilChanged()
+            )
+            .subscribe((reglas: [IRegla]) => {
+                this.loader = false;
+                this.arrayReglas.push(...reglas.filter(regla => regla.destino?.prestacion?.id));
+                this.generarFilasObservable();
+                this.parametros.skip = this.arrayReglas.length;
+                if (!this.arrayReglas.length || this.arrayReglas.length < this.parametros.limit) {
+                    this.scrollEnd = true;
                 }
             });
-        }
-        if (this.esParametrizado) {
-            this.filas.sort((fila1, fila2) => {
+
+    }
+
+    generarFilasObservable() {
+
+        this.filas$ = of(
+            this.arrayReglas.flatMap(regla =>
+                regla.origen.prestaciones?.flatMap((prestacionAux: any) => {
+
+                    if (
+                        !this.prestacionOrigen ||
+                        this.prestacionOrigen.conceptId === prestacionAux.prestacion.conceptId
+                    ) {
+                        if (
+                            !this.prestacion ||
+                            prestacionAux.prestacion.conceptId === this.prestacion.conceptId
+                        ) {
+
+                            const fila = {
+                                organizacionOrigen: regla.origen.organizacion,
+                                prestacionOrigen: prestacionAux.prestacion,
+                                organizacionDestino: regla.destino.organizacion,
+                                prestacionDestino: regla.destino.prestacion,
+                            };
+                            return fila;
+                        }
+                    }
+                    return []; // Devuelve un array vacío si no se cumple ninguna condición
+                })
+            )
+        );
+
+        this.filas$.subscribe(filas => {
+            filas.sort((fila1, fila2) => {
                 if (fila2.prestacionDestino.term < fila1.prestacionDestino.term) {
                     return 1;
                 }
@@ -154,7 +185,7 @@ export class VisualizacionReglasComponent implements OnInit {
                 }
                 return 0;
             });
-        }
+        });
     }
 
     public seleccionarConcepto(concepto) {
