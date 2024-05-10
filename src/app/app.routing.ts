@@ -40,6 +40,7 @@ import { PacienteComponent } from './core/mpi/components/paciente.component';
 // Internacion
 import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
 import { ValidarCertificadoComponent } from './modules/epidemiologia/components/validar-certificado/validar-certificado.component';
+import { DemandaInsatisfechaComponent } from './components/demandaInsatisfecha/demanda-insatisfecha.component';
 
 
 const appRoutes: Routes = [
@@ -195,6 +196,9 @@ const appRoutes: Routes = [
     { path: 'inscripcion/profesionales', component: InscripcionProfesionalesComponent, canActivate: [RoutingNavBar] },
 
     { path: 'validar-certificado', component: ValidarCertificadoComponent, canActivate: [RoutingNavBar] },
+
+    // Demanda insatisfecha
+    { path: 'demanda-insatisfecha', component: DemandaInsatisfechaComponent, canActivate: [RoutingNavBar] },
 
     // dejar siempre al último porque no encuentra las url después de esta
     { path: '**', redirectTo: 'inicio' }

@@ -1,0 +1,77 @@
+<plex-layout main="{{itemSelected ? '8' : '12'}}" [min]="4" [max]="5" [steps]="2">
+    <plex-layout-main>
+        <plex-title main titulo="Demanda insatisfecha">
+            <plex-button label="volver" type="danger" size="sm" position="left" routerLink='/inicio'></plex-button>
+        </plex-title>
+        <plex-wrapper>
+            <plex-text [(ngModel)]="filtros.paciente" name="paciente.nombreCompleto" label="Paciente"
+                       (change)="refreshSelection($event,'paciente')">
+            </plex-text>
+            <plex-select [(ngModel)]="selectorPrestacion" (change)="refreshSelection($event,'prestacion')"
+                         label="Prestación" tmPrestaciones preload="true" tipo="nominalizadas">
+            </plex-select>
+            <plex-datetime type="date" [(ngModel)]="filtros.fechaDesde" name="fechaDesde" label="Desde" class="fechas"
+                           [max]="filtros.fechaHasta" [required]="true"
+                           (change)="refreshSelection($event,'fechaDesde')">
+            </plex-datetime>
+            <plex-datetime type="date" [(ngModel)]="filtros.fechaHasta" name="fechaHasta" label="Hasta" class="fechas"
+                           [required]="false" (change)="refreshSelection($event,'fechaHasta')">
+            </plex-datetime>
+            <plex-select [(ngModel)]="selectorMotivo" ambito="ambulatorio" name="motivo" label="Motivo" [data]="motivos"
+                         (change)="refreshSelection($event,'motivo')">
+            </plex-select>
+        </plex-wrapper>
+        <div *ngIf="!listaEspera.length" class="mt-5">
+            <plex-label class="flex-column" icon="magnify" type="info" justify="center" size="xl" direction="column"
+                        titulo="No hay resultados para esta búsqueda"
+                        subtitulo="Edite algún filtro para realizar una búsqueda">
+            </plex-label>
+        </div>
+        <ng-container>
+            <plex-table *ngIf="listaEspera.length" [columns]="columns" #table="plTable" [offset]="102">
+                <plex-title titulo="Listado de pacientes" size="sm"></plex-title>
+                <tr *ngFor="let item of listaEspera" (click)="seleccionarDemanda(item)"
+                    [class.selected]="item.id === itemSelected?.id" [class.selectable]="selectable">
+                    <td>{{item.paciente.nombreCompleto}}</td>
+                    <td>{{item.tipoPrestacion.nombre}}</td>
+                    <td>{{item.fecha | fecha}}</td>
+                    <td>{{item.motivos}}</td>
+                    <td class="align-center" justify="center">
+                        <plex-badge class="ml-1" size="sm" type="info">
+                            {{item.estado}}
+                        </plex-badge>
+                    </td>
+                </tr>
+            </plex-table>
+        </ng-container>
+    </plex-layout-main>
+    <plex-layout-sidebar *ngIf="itemSelected" type="invert">
+        <plex-tabs [activeIndex]="tabIndex" (change)="cambiarTab($event)">
+            <plex-tab label="DATOS">
+                <ng-container>
+                    <plex-title titulo="Detalle paciente" size="md">
+                        <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()"></plex-button>
+                    </plex-title>
+                    <paciente-detalle [paciente]="itemSelected.paciente" orientacion="horizontal"
+                                      [fields]="pacienteFields">
+                    </paciente-detalle>
+                </ng-container>
+                <ng-container>
+                    <plex-title titulo="Listado" size="md">
+                    </plex-title>
+                    <plex-list>
+                        <ng-container>
+                            <plex-item *ngFor="let demanda of itemSelected.demandas">
+                                <plex-label size="md" titulo="Prestacion"
+                                            subtitulo="{{ itemSelected.tipoPrestacion.nombre }}">
+                                </plex-label>
+                                <plex-label size="md" titulo="Efector" subtitulo="{{ demanda.organizacion.nombre }}">
+                                </plex-label>
+                            </plex-item>
+                        </ng-container>
+                    </plex-list>
+                </ng-container>
+            </plex-tab>
+        </plex-tabs>
+    </plex-layout-sidebar>
+</plex-layout>
