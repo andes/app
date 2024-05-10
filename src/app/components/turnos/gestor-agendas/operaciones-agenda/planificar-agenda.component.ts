@@ -117,7 +117,7 @@ export class PlanificarAgendaComponent implements OnInit {
 
 
     loadProfesionales(event) {
-        if (this.modelo && this.modelo.profesionales && this.modelo.profesionales.length > 0) {
+        if (this.modelo.profesionales?.length) {
             event.callback(this.modelo.profesionales);
         }
         if (event.query && event.query !== '' && event.query.length > 2) {
@@ -336,13 +336,7 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     compararBloques(fecha1, fecha2): number {
-        // let indiceAux: Number;
         if (fecha1.horaInicio && fecha2.horaInicio) {
-            // /* if (fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime() > 0) {
-            //     indiceAux = fecha1.indice;
-            //     fecha1.indice = fecha2.indice;
-            //     fecha2.indice = indiceAux;
-            // } */
             return fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime();
         } else {
             return 0;
@@ -358,6 +352,9 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     cambioPrestaciones() {
+        // limpiamos profesionales al cambiar la selección de prestaciones
+        this.modelo.profesionales = [];
+
         // Valores por defecto
         this.noNominalizada = false;
         this.dinamica = false;

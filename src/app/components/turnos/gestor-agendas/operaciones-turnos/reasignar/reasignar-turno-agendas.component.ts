@@ -32,7 +32,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     @Input()
     set agendasSimilares(value: IAgenda[]) {
         if (value) {
-            this._agendasSimilares = value.filter(ag => moment(ag.horaFin).isAfter(moment()));
+            this._agendasSimilares = value.filter(ag => this.bloquesSegunPrestacion(ag).length);
             this.agendasEnTabla = this._agendasSimilares;
         }
     }
@@ -301,19 +301,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         });
     }
 
-    hayTurnosDisponibles(agenda: any) {
-        const profesionalOrigen = (this.agendaAReasignar.profesionales && this.agendaAReasignar.profesionales.length > 0) ? this.agendaAReasignar.profesionales[0].id : null;
-        const profesionalDestino = (agenda.profesionales && agenda.profesionales.length > 0) ? agenda.profesionales[0]._id : null;
-        return agenda.bloques.filter(bloque => {
-            return (bloque.restantesDelDia > 0 && moment(bloque.horaInicio).isSame(this.hoy, 'day')) ||
-                (bloque.restantesProgramados > 0 && moment(bloque.horaInicio).isAfter(this.hoy, 'day') ||
-                    (bloque.restantesGestion > 0 && this.turnoAReasignar.tipoTurno === 'gestion') ||
-                    (bloque.restantesProfesional > 0 && this.turnoAReasignar.tipoTurno === 'profesional'
-                        && profesionalOrigen && profesionalDestino && profesionalOrigen === profesionalDestino)
-                );
-        }).length > 0;
-    }
-
     siguienteDisponible(bloque, indiceTurno) {
         if (((indiceTurno < bloque.turnos.length - 1) && (bloque.turnos[indiceTurno + 1].estado !== 'disponible')) || (indiceTurno === (bloque.turnos.length - 1))) {
             return false;
@@ -331,11 +318,13 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         return turnos.some(turno => turno.estado === 'disponible' && moment(turno.horaInicio).isSameOrAfter(moment()));
     }
 
-    bloquesSegunPrestacion() {
-        const a = this.agendaSeleccionada.bloques.filter(b => {
-            return (b as any).tipoPrestaciones.some(tp => tp._id === this.turnoAReasignar.tipoPrestacion.id);
+    // Dada una agenda, filtra los bloques que corresponden al tipoPrestacion del turno a reasignar y tenga turnos disponibles.
+    bloquesSegunPrestacion(agenda: IAgenda) {
+        return agenda.bloques.filter(b => {
+            const delTipoPrestacion = b.tipoPrestaciones.some(tp => tp.conceptId === this.turnoAReasignar.tipoPrestacion.conceptId);
+            const conTurnoDisponible = this.tieneTurnos(b);
+            return delTipoPrestacion && conTurnoDisponible;
         });
-        return a;
     }
 
     primerSimultaneoDisponible(bloque: IBloque, turno: ITurno, indiceT: number) {

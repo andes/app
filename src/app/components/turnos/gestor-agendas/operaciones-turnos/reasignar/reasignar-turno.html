@@ -50,10 +50,10 @@
                         <td class="text-center" (click)="seleccionarTurno(turno, bloque, false)">
                             <span *ngIf="turno && turno.paciente">{{ turno.paciente | nombre }} </span>
                             <small>
-                                <span *ngIf="turno && turno.paciente && turno.paciente.documento !== ''">|
-                                    DNI {{turno.paciente.documento}}</span>
-                                <span *ngIf="turno && turno.paciente && turno.paciente.documento === ''">|
-                                    Sin documento (temporal)</span>
+                                <span>|
+                                    {{ turno.paciente.numeroIdentificacion ? 'DOC EXT:' : 'DNI:' }} {{ turno.paciente |
+                                    documento }}
+                                </span>
                             </small>
                             <small>
                                 <span

@@ -6,15 +6,16 @@
             <plex-title titulo="{{(!editaAgenda)?'Crear nueva agenda':'Editar agenda'}}" size="md">
                 <plex-bool class="mr-1" [(ngModel)]="modelo.enviarSms" label="Enviar SMS" name="enviarSms" type="slide">
                 </plex-bool>
-                <plex-button type="danger" label="Cancelar" size="md" (click)="cancelar()" size="sm">
+                <plex-button type="danger" label="Cancelar" (click)="cancelar()" size="sm">
                 </plex-button>
-                <plex-button class="mx-1" *ngIf="!hideGuardar && !alertas.length"
-                             [disabled]="!form.valid || !formSidebar.valid" label="Guardar" validateForm="true"
-                             type="success" (click)="onSave($event, false)" title="Guardar" size="sm">
+                <plex-button class="mx-1"
+                             [disabled]="!form.valid || !formSidebar.valid || hideGuardar || alertas.length"
+                             label="Guardar" validateForm="true" autodisabled="true" type="success" size="sm"
+                             (click)="onSave($event, false)" title="Guardar">
                 </plex-button>
-                <plex-button *ngIf="!hideGuardar && !alertas.length && !dinamica"
-                             [disabled]="!form.valid || !formSidebar.valid" label="Guardar y clonar" validateForm="true"
-                             type="primary" (click)="onSave($event, true)" size="sm">
+                <plex-button [disabled]="!form.valid || !formSidebar.valid || hideGuardar || alertas.length"
+                             label="Guardar y clonar" autodisabled="true" size="sm" validateForm="true" type="primary"
+                             (click)="onSave($event, true)">
                 </plex-button>
             </plex-title>
             <!-- Alertas de profesional y espacio físico -->
@@ -49,11 +50,18 @@
                              [multiple]="true" [required]="true" (change)="cambioPrestaciones()"
                              [closeAfterSelect]="true">
                 </plex-select>
-                <plex-select [disabled]="!modelo.horaFin" [(ngModel)]="modelo.profesionales" label="Equipo de Salud"
-                             name="modelo.profesionales" (getData)="loadProfesionales($event)" [multiple]="true"
-                             labelField="apellido + ' ' + nombre" (change)="verificarProfesional()"
-                             [closeAfterSelect]="true">
-                </plex-select>
+                <div class="mt-1">
+                    <plex-label class="float-left mr-3" titulo="Equipo de Salud" subtitulo=""
+                                hint="Si no encuentra el profesional en el listado, puede que no exista o no tenga permisos para las prestaciones seleccionadas"
+                                hintType="info" hintIcon="eye">
+                    </plex-label>
+                    <plex-select [disabled]="!modelo.horaFin || !modelo.tipoPrestaciones?.length"
+                                 [(ngModel)]="modelo.profesionales" name="modelo.profesionales"
+                                 (getData)="loadProfesionales($event)" [multiple]="true"
+                                 labelField="apellido + ' ' + nombre" (change)="verificarProfesional()"
+                                 [closeAfterSelect]="true">
+                    </plex-select>
+                </div>
             </plex-grid>
             <!-- Tipo de agenda -->
             <plex-title titulo="Tipo de agenda" size="md"></plex-title>
