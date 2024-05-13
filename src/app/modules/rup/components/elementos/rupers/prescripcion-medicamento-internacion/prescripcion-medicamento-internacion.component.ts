@@ -96,6 +96,20 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
     }
 
     @Unsubscribe()
+    loadMedicamentoGenerico(event) {
+        const input = event.query;
+        if (input && input.length > 3) {
+            const query: any = {
+                expression: '<410942007 OR 387307005',
+                search: input
+            };
+            this.snomedService.get(query).subscribe(event.callback);
+        } else {
+            event.callback([]);
+        }
+    }
+
+    @Unsubscribe()
     loadConceptos(event) {
         if (!event) { return; }
         if (event.query && event.query.length > 2) {
