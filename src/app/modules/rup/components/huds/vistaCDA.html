@@ -44,30 +44,34 @@
                             <div class="d-flex justify-content-between adjuntos">
                                 <ng-container *ngFor="let archivo of registro.data.adjuntos; let i=index">
                                     <div class="d-flex align-items-center text-info">
-                                        {{ 
-                                            registro.data.prestacion.snomed.term[0].toUpperCase() +
-                                            registro.data.prestacion.snomed.term.slice(1) 
+                                        {{
+                                        registro.data.prestacion.snomed.term[0].toUpperCase() +
+                                        registro.data.prestacion.snomed.term.slice(1)
                                         }}
                                     </div>
                                     <div class="d-flex align-items-end mb-1">
                                         <plex-badge type="info mr-1">PDF</plex-badge>
                                         <plex-button type="info" size="sm" icon="download mdi-18px"
-                                                     (click)="descargar(archivo)">
+                                                     (click)="descargar(archivo)" tooltip="Descargar PDF">
                                         </plex-button>
                                     </div>
                                 </ng-container>
                             </div>
                         </ng-container>
-                        <ng-container *ngIf="!registro?.data?.adjuntos?.length">
-                            No hay documentos adjuntos.
+                    </div>
+
+                    <div class="columna-completa">
+                        <ng-container
+                                      *ngIf="!registro.data.adjuntos && registro?.data?.prestacion?.snomed?.conceptId !== '33879002'">
+                            <div class="d-flex align-items-end mb-1">
+                                <plex-badge type="info mr-1">PDF</plex-badge>
+                                <plex-button type="info" size="sm" icon="download mdi-18px" tooltip="Descargar CDA"
+                                             (click)="descargarCDA(registro)">
+                                </plex-button>
+                            </div>
                         </ng-container>
                     </div>
 
-                    <div class="columna-completa">
-                    </div>
-
-                    <div class="columna-completa">
-                    </div>
                 </div>
 
             </div>

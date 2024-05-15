@@ -33,4 +33,17 @@ export class VistaCDAComponent implements OnInit {
         const url = environment.API + '/modules/cda/' + archivo + '?token=' + token;
         window.open(url);
     }
+
+    descargarCDA(registro) {
+        const metadata = {
+            id: registro.data.id,
+            prestacion: registro.data.prestacion,
+            fecha: registro.data.fecha,
+            idPaciente: registro.data.paciente,
+            profesional: registro.data.profesional,
+            organizacion: registro.data.organizacion,
+            codificacion: this.codificacionCDA
+        };
+        this.servicioCDA.descargarCDA(metadata, registro.data.prestacion.snomed.term).subscribe();
+    }
 }
