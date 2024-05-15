@@ -1,3 +1,10 @@
+## [5.137.1](https://github.com/andes/app/compare/v5.137.0...v5.137.1) (2024-05-15)
+
+
+### Bug Fixes
+
+* **INT:** Cambia combo para principios activos ([#3007](https://github.com/andes/app/issues/3007)) ([aad8e8b](https://github.com/andes/app/commit/aad8e8be873eb869afbedef6cac3037fa745d4c3))
+
 # [5.137.0](https://github.com/andes/app/compare/v5.136.2...v5.137.0) (2024-05-08)
 
 
