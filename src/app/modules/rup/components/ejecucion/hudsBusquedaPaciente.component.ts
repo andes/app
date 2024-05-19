@@ -75,7 +75,7 @@ export class HudsBusquedaPacienteComponent implements OnInit {
     }
 
     onConfirmSelect(motivoAccesoHuds) {
-        if (motivoAccesoHuds[0]) {
+        if (motivoAccesoHuds) {
             // se obtiene token y loguea el acceso a la huds del paciente
             const paramsToken = {
                 usuario: this.auth.usuario,
