@@ -1,19 +1,37 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { ILlamado } from 'src/app/interfaces/turnos/IListaEspera';
 import { ListaEsperaService } from 'src/app/services/turnos/listaEspera.service';
-
+import { TurnoService } from 'src/app/services/turnos/turno.service';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'demanda-insatisfecha',
     templateUrl: 'demanda-insatisfecha.html'
 })
+
 export class DemandaInsatisfechaComponent implements OnInit {
     public listaEspera = [];
+    public listaLlamados = [];
+    public listaHistorial = [];
     public itemSelected = null;
     public filtros: any = {};
     public selectorPrestacion;
     public selectorMotivo;
+    public selectorEstadoLlamado;
     public selectedPaciente;
+    public nuevoLlamado: ILlamado = {};
+    public estadosLlamado = [
+        { id: 'turnoAsignado', nombre: 'Turno asignado' },
+        { id: 'noContesta', nombre: 'No contesta' },
+        { id: 'numeroEquivocado', nombre: 'Numero equivocado' },
+        { id: 'otro', nombre: 'Otro' }
+    ];
+
+    public verFormularioLlamado = false;
 
     public motivos = [
         { id: 1, nombre: 'No existe la oferta en el efector' },
@@ -46,23 +64,63 @@ export class DemandaInsatisfechaComponent implements OnInit {
     public tabIndex = 0;
     public pacienteFields = ['sexo', 'fechaNacimiento', 'cuil', 'financiador', 'numeroAfiliado', 'direccion'];
 
-    constructor(private listaEsperaService: ListaEsperaService) { }
+    @ViewChild('formLlamados', { read: NgForm }) formLlamados: NgForm;
+
+    constructor(
+        private listaEsperaService: ListaEsperaService,
+        private plex: Plex,
+        private auth: Auth,
+        private serviceTurno: TurnoService) { }
 
     ngOnInit(): void {
-        this.getDemandas({ estado: 'pendiente' });
+        this.getDemandas({});
     }
 
     private getDemandas(filtros) {
-        this.listaEsperaService.get(filtros).subscribe((listaEspera: any[]) => {
+        this.listaEsperaService.get({ ...filtros, estado: 'pendiente' }).subscribe((listaEspera: any[]) => {
             this.listaEspera = listaEspera;
-
             this.listaEspera.forEach(item => {
                 item.motivos = item.demandas.map(({ motivo }) => motivo);
             });
         });
     }
 
-    public seleccionarDemanda(demanda) { this.itemSelected = demanda; }
+    public obtenerObjetoMasAntiguo() {
+        if (this.listaEspera.length === 0) {
+            return null;
+        }
+
+        return this.listaEspera.reduce((masAntiguo, item) => {
+            return item.fecha < masAntiguo.fecha ? item : masAntiguo;
+        });
+    }
+
+    public getHistorial(historial) {
+        const primerDemanda = this.listaEspera.reduce((masAntiguo, item) => {
+            return item.fecha < masAntiguo.fecha ? item : masAntiguo;
+        });
+
+        if (historial) {
+            this.serviceTurno.getHistorial({ pacienteId: this.itemSelected.paciente.id }).pipe(
+                map(historial => {
+                    return historial.filter(item => item.fechaHoraDacion > primerDemanda.fecha);
+                })
+            ).subscribe(historialFiltrado => {
+                this.listaHistorial = historialFiltrado;
+            });
+        }
+    }
+
+    public cambiarTab(value) {
+        this.tabIndex = value;
+    }
+
+    public seleccionarDemanda(demanda) {
+        this.itemSelected = demanda;
+        this.listaHistorial = null;
+        this.tabIndex = 0;
+        this.listaLlamados = !this.itemSelected.llamados ? [] : [...this.itemSelected.llamados];
+    }
 
     public refreshSelection({ value }, tipo) {
         if (tipo === 'paciente') {
@@ -90,5 +148,35 @@ export class DemandaInsatisfechaComponent implements OnInit {
 
     public cerrar() { this.itemSelected = null; }
 
-    public cambiarTab(index) { }
+    public agregarLlamado() {
+        this.verFormularioLlamado = !this.verFormularioLlamado;
+        this.nuevoLlamado = {};
+        this.formLlamados?.reset({});
+        this.formLlamados?.form.markAsPristine();
+    }
+
+    public async guardarLlamado(id) {
+        this.formLlamados.control.markAllAsTouched();
+
+        if (this.formLlamados.form.valid) {
+            try {
+                this.listaLlamados.push({ ...this.nuevoLlamado, createdBy: this.auth.usuario, createdAt: moment() });
+
+                this.listaEsperaService.patch(id, 'llamados', this.listaLlamados).subscribe(() => {
+                    this.plex.toast('success', 'Llamado registrado exitosamente');
+                    this.agregarLlamado();
+                });
+            } catch (error) {
+                this.plex.toast('danger', 'Error al guardar el llamado');
+            }
+        }
+    }
+
+    public seleccionarEstadoLlamado() {
+        this.nuevoLlamado.estado = this.selectorEstadoLlamado?.nombre;
+
+        if (this.selectorEstadoLlamado?.id !== 'otro') {
+            this.nuevoLlamado.comentario = null;
+        }
+    }
 }

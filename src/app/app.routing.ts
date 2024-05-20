@@ -87,6 +87,7 @@ const appRoutes: Routes = [
     { path: 'citas/revision_agenda/:idAgenda', component: RevisionAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/sobreturnos/:idAgenda', component: AgregarSobreturnoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/paciente/:idAgenda', component: AgregarPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+    { path: 'citas/demanda-insatisfecha', component: DemandaInsatisfechaComponent, canActivate: [RoutingNavBar] },
 
     {
         path: 'rup',
@@ -196,9 +197,6 @@ const appRoutes: Routes = [
     { path: 'inscripcion/profesionales', component: InscripcionProfesionalesComponent, canActivate: [RoutingNavBar] },
 
     { path: 'validar-certificado', component: ValidarCertificadoComponent, canActivate: [RoutingNavBar] },
-
-    // Demanda insatisfecha
-    { path: 'demanda-insatisfecha', component: DemandaInsatisfechaComponent, canActivate: [RoutingNavBar] },
 
     // dejar siempre al último porque no encuentra las url después de esta
     { path: '**', redirectTo: 'inicio' }

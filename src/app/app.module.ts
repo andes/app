@@ -147,7 +147,7 @@ import { ValidarCertificadoService } from './modules/epidemiologia/services/vali
 import { MPILibModule } from './modules/mpi/mpi-lib.module';
 import { FormulaBaseService } from './modules/rup/components/formulas';
 import { RiesgoCardiovascularService } from './modules/rup/components/formulas/riesgoCardiovascular.service';
-import { demandaInsatisfechaComponent as DemandaInsatisfechaSidebarComponent } from './components/turnos/dashboard/demandaInsatisfecha';
+
 // INTERNACION
 import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
 import { RUPLibModule } from './modules/rup/rup-lib.module';
@@ -288,7 +288,6 @@ registerLocaleData(localeEs, 'es');
         HeaderPacienteComponent,
         PuntoInicioInternacionComponent,
         ValidarCertificadoComponent,
-        DemandaInsatisfechaSidebarComponent,
         DemandaInsatisfechaComponent,
 
         // Solicitudes

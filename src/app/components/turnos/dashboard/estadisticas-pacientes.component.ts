@@ -22,7 +22,6 @@ export class EstadisticasPacientesComponent implements OnInit {
 
     @Input() showTab: Number = 0;
     @Input() paciente: IPaciente;
-    @Input() demandaInsatisfecha = false;
     @Output() demandaCerrada = new EventEmitter<any>();
 
     constructor(
@@ -55,9 +54,4 @@ export class EstadisticasPacientesComponent implements OnInit {
             return ((inia && inib) ? (inib.getTime() - inia.getTime()) : 0);
         });
     }
-
-    cerrarDemandaInsatisfecha() {
-        this.demandaCerrada.emit();
-    }
-
 }
