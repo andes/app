@@ -2,7 +2,7 @@
     <img class="img-user" *ngIf="!usuario.foto" />
     <img *ngIf="usuario.foto" src="{{ usuario.foto }}" />
     <plex-badge [type]="profesional.profesionalMatriculado ? 'info' : 'warning'"
-                *ngIf="(profesional$ | async) as profesional;else notProfesional">
+                *ngIf="profesional;else notProfesional">
         Profesional
         <span dato>{{profesional.formacionGrado.length > 0 ?
             profesional.formacionGrado[0].profesion.nombre +' '+(profesional.formacionGrado[0].matriculacion?.length?
@@ -23,12 +23,30 @@
 
     <div subtitle>
         <plex-copy *ngIf="usuario.documento" [value]="usuario.documento">{{ usuario.documento | number }}</plex-copy>
-        <div *ngIf="(profesional$ | async) as profesional">
+        <div *ngIf="profesional">
             <plex-label titulo="Profesión" *ngIf="!profesional.profesionalMatriculado && profesional.matriculaExterna"
                         subtitulo="{{ profesional.profesionExterna?
                         profesional.profesionExterna.nombre + ' MAT. N° '+ profesional.matriculaExterna : profesional.matriculaExterna
                          }}">
             </plex-label>
         </div>
+    </div>
+    <div subtitle>
+        <span class="mx-1">{{usuario?.email || 'Sin correo electrónico' }}</span>
+        <plex-help *ngIf="editable" size="sm" btnType="warning" icon="pencil">
+            <plex-title titulo="Editar usuario" size="sm">
+                <plex-button type="success" icon="check" size="sm" tooltip="Confirmar" tooltipPosition="left"
+                             [disabled]="!formUsuario.valid" (click)="onEditarUsuario()">
+                </plex-button>
+            </plex-title>
+            <form #formUsuario="ngForm">
+                <plex-text email label="email" name="email" debounce="900" [(ngModel)]="email"
+                           placeholder="usuario@mail.com" [required]="true">
+                </plex-text>
+
+                <plex-bool class="mt-4" label="Reenviar link de activación" [(ngModel)]="activate" name="activate" type="slide">
+                </plex-bool>
+            </form>
+        </plex-help>
     </div>
 </plex-detail>

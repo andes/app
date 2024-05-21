@@ -5,4 +5,8 @@ export interface IUsuario {
     documento: string;
     foto: string;
     disclaimers?: any[];
+    lastLogin?: Date;
+    email?: string;
+    tipo?: string;
+    usuario: number;
 }
