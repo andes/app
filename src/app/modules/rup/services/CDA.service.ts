@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Auth } from '@andes/auth';
-import { Server } from '@andes/shared';
+import { Server, saveAs } from '@andes/shared';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class CDAService {
@@ -31,6 +32,16 @@ export class CDAService {
      */
     post(file, metadata) {
         return this.server.post(this.CDAUrl + 'create/', metadata);
+    }
+
+    descargarCDA(params, nombreArchivo: string): Observable<any> {
+        return this.download('createInformeCDA', params).pipe(
+            saveAs(nombreArchivo, 'pdf')
+        );
+    }
+
+    download(url, data): Observable<any> {
+        return this.server.post(this.CDAUrl + '/' + url, data, { responseType: 'blob' } as any);
     }
 
     /**
