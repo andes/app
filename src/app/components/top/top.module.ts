@@ -17,7 +17,7 @@ export const TOP_COMPONENTS = [
     VisualizacionReglasTopComponent,
     VisualizacionReglasComponent,
     HistorialSolicitudComponent,
-    FormNuevaSolicitudComponent,
+    FormNuevaSolicitudComponent
 ];
 
 export const TOP_PROVIDERS = [

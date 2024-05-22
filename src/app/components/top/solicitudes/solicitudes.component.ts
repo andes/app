@@ -364,8 +364,6 @@ export class SolicitudesComponent implements OnInit {
         this.showEditarReglas = false;
     }
 
-
-
     referir(prestacion) {
         const arreColumns = this.columns.filter(col => col.key !== 'paciente');
         this.columns = arreColumns;

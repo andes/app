@@ -1,13 +1,11 @@
 <plex-layout [main]="showSidebar ? 8 : 12" [offset]="160" (scroll)="onScroll()"
              *ngIf="!showDarTurnos && !showCargarSolicitud && !showEditarReglas">
     <plex-layout-main>
-        <header>
-            <plex-title main titulo="{{asignadas ? 'Solicitudes asignadas' : 'Módulo de solicitudes'}}">
-                <plex-button *ngIf="!asignadas" type="danger" label="Reglas Globales"
-                             routerLink="/solicitudes/reglasVisualizacion">
-                </plex-button>
-            </plex-title>
-        </header>
+        <plex-title class="mb-2" main titulo="{{asignadas ? 'Solicitudes asignadas' : 'Módulo de solicitudes'}}">
+            <plex-button *ngIf="!asignadas" type="danger" label="Reglas Globales"
+                         routerLink="/solicitudes/reglasVisualizacion">
+            </plex-button>
+        </plex-title>
         <plex-tabs (change)="cambio($event);" [activeIndex]="panelIndex">
             <plex-button *ngIf="!asignadas && tipoSolicitud === 'entrada'" type="success"
                          label="Nueva Solicitud de Entrada" (click)="nuevaSolicitud()">
@@ -25,23 +23,21 @@
             <plex-tab label="Entrada" (click)="panelIndex = 0">
                 <form #formEntrada="ngForm">
                     <plex-wrapper>
-                        <plex-datetime *ngIf="verFechaDateTimeEntrada()" 
-                                       type="date" [(ngModel)]="fechaDesde" (change)="cambioFechaDesde()"
-                                       name="fechaDesdeLimitada" label="Registro desde" class="fechas" required>
+                        <plex-datetime *ngIf="verFechaDateTimeEntrada()" type="date" [(ngModel)]="fechaDesde"
+                                       (change)="cambioFechaDesde()" name="fechaDesdeLimitada" label="Registro desde"
+                                       class="fechas" required>
                         </plex-datetime>
-                        <plex-datetime *ngIf="verFechaDateTimeEntrada()"
-                                       type="date" [(ngModel)]="fechaHasta" (change)="cambioFechaHasta()"
-                                       name="fechaHastaLimitada" label="Registro hasta" class="fechas" required>
+                        <plex-datetime *ngIf="verFechaDateTimeEntrada()" type="date" [(ngModel)]="fechaHasta"
+                                       (change)="cambioFechaHasta()" name="fechaHastaLimitada" label="Registro hasta"
+                                       class="fechas" required>
                         </plex-datetime>
-                        <plex-datetime *ngIf="!(asignadas && tipoSolicitud === 'entrada')"
-                                       type="date" [(ngModel)]="fechaDesde" (change)="cargarSolicitudes()"
-                                       name="fechaDesde" label="Registro desde" class="fechas" [max]="fechaHasta"
-                                       required>
+                        <plex-datetime *ngIf="!(asignadas && tipoSolicitud === 'entrada')" type="date"
+                                       [(ngModel)]="fechaDesde" (change)="cargarSolicitudes()" name="fechaDesde"
+                                       label="Registro desde" class="fechas" [max]="fechaHasta" required>
                         </plex-datetime>
-                        <plex-datetime *ngIf="!(asignadas && tipoSolicitud === 'entrada')"
-                                       type="date" [(ngModel)]="fechaHasta" (change)="cargarSolicitudes()"
-                                       name="fechaHasta" label="Registro hasta" class="fechas" [min]="fechaDesde"
-                                       [max]="hoy" required>
+                        <plex-datetime *ngIf="!(asignadas && tipoSolicitud === 'entrada')" type="date"
+                                       [(ngModel)]="fechaHasta" (change)="cargarSolicitudes()" name="fechaHasta"
+                                       label="Registro hasta" class="fechas" [min]="fechaDesde" [max]="hoy" required>
                         </plex-datetime>
 
                         <plex-select [(ngModel)]="prestacionesDestinoEntrada" name="nombrePrestacion"
@@ -203,13 +199,13 @@
             <plex-tab label="Salida">
                 <form #formSalida="ngForm">
                     <plex-wrapper>
-                        <plex-datetime type="date" [(ngModel)]="fechaDesde"
-                                       (change)="cargarSolicitudes()" name="fechaDesde" label="Registro desde"
-                                       class="fechas" [max]="fechaHasta" required>
+                        <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="cargarSolicitudes()"
+                                       name="fechaDesde" label="Registro desde" class="fechas" [max]="fechaHasta"
+                                       required>
                         </plex-datetime>
-                        <plex-datetime type="date" [(ngModel)]="fechaHasta"
-                                       (change)="cargarSolicitudes()" name="fechaHasta" label="Registro hasta"
-                                       class="fechas" [min]="fechaDesde" [max]="hoy" required>
+                        <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="cargarSolicitudes()"
+                                       name="fechaHasta" label="Registro hasta" class="fechas" [min]="fechaDesde"
+                                       [max]="hoy" required>
                         </plex-datetime>
                         <plex-select [(ngModel)]="prestacionesDestinoSalida" name="nombrePrestacion"
                                      label="Prestación destino" name="prestacionDestino"
@@ -483,7 +479,7 @@
     </plex-layout-sidebar>
 </plex-layout>
 
-<reglas *ngIf="showEditarReglas" (cancel)="volverReglas($event)"></reglas>
+<reglas class="content" *ngIf="showEditarReglas" (volver)="volverReglas($event)"></reglas>
 
 <dar-turnos *ngIf="showDarTurnos && solicitudTurno && !showCargarSolicitud" (volverAlGestor)="volverDarTurno($event)"
             (afterDarTurno)="volverDarTurno($event)" [pacienteSeleccionado]="pacienteSeleccionado"

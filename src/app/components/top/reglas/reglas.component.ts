@@ -1,53 +1,50 @@
-import { ProfesionalService } from './../../../services/profesional.service';
-import { Component, Output, EventEmitter, HostBinding } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { ReglaService } from '../../../services/top/reglas.service';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ReglaService } from 'src/app/services/top/reglas.service';
 
 @Component({
     selector: 'reglas',
     templateUrl: './reglas.component.html',
-    styleUrls: ['./reglas.component.css']
+    styleUrls: ['reglas.scss'],
 })
-export class ReglasComponent {
-    @HostBinding('class.plex-layout') layout = true;
-    organizacionDestino = this.auth.organizacion;
-    prestacionDestino;
-    prestacionOrigen;
-    reglas: any = [];
-    prestaciones = [];
-    auditable = false;
-    reglaActiva = -1;
-    regla: any = {};
-    prestacionActiva = -1;
-    prestacion = {};
-    organizacion;
-    reglasIniciales: any = []; // reglas antes de de hacer cualquier modificación
 
+export class ReglasComponent implements OnInit {
     constructor(
-        private auth: Auth,
         private plex: Plex,
-        private servicioProfesional: ProfesionalService,
+        private auth: Auth,
         private servicioReglas: ReglaService
     ) { }
 
-    @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
+    organizacionDestino;
+    organizacionOrigen;
+    tipoPrestacion;
+    prestacionDestino;
+    prestacionOrigen;
+    reglas;
+    regla;
+    reglaActiva = -1;
+    reglasIniciales = [];
+    prestacionActiva = -1;
+    prestacion = {};
+    prestaciones = [];
+    auditable = false;
 
-    loadProfesionales(event) {
-        if (event.query) {
-            const query = {
-                nombreCompleto: event.query
-            };
-            this.servicioProfesional.get(query).subscribe(event.callback);
-        } else {
-            event.callback([]);
-        }
+    @Output() volver = new EventEmitter<any>();
+
+    ngOnInit() {
+        this.plex.updateTitle('TOP | Nueva solicitud de entrada');
+        this.organizacionDestino = this.auth.organizacion;
     }
 
+    limpiarForm() {
+        this.reglas = [];
+        this.reglaActiva = -1;
+        this.regla = {};
+    }
 
     cargarReglas() {
         const query: any = {};
-        this.reglasIniciales = [];
         this.limpiarForm();
         query.organizacionDestino = this.organizacionDestino.id;
         if (this.prestacionDestino && this.prestacionDestino.conceptId) {
@@ -59,11 +56,25 @@ export class ReglasComponent {
         }
     }
 
+    activarRegla(indice) {
+        this.reglaActiva = indice;
+        this.regla = this.reglas[indice];
+    }
+
+    reglaCorrecta() {
+        return this.reglas?.every(regla => regla.destino?.organizacion && regla.destino?.prestacion);
+    }
+
+    activarPrestacion(indice) {
+        this.prestacionActiva = indice;
+        this.prestacion = (this.regla as any).origen.prestaciones[indice];
+    }
+
     addOrganizacion() {
-        if (this.organizacion && this.prestacionDestino) {
-            if (this.reglas.some(r => r.origen.organizacion.id === this.organizacion.id)) {
+        if (this.organizacionOrigen && this.prestacionDestino) {
+            if (this.reglas.some(r => r.origen.organizacion.id === this.organizacionOrigen.id)) {
                 this.plex.info('warning', 'La organización ya fue seleccionada');
-                this.organizacion = null;
+                this.organizacionOrigen = null;
             } else {
                 const longitud = this.reglas.length;
                 const destino = {
@@ -75,8 +86,8 @@ export class ReglasComponent {
                 };
                 const origen = {
                     organizacion: {
-                        nombre: this.organizacion.nombre,
-                        id: this.organizacion.id
+                        nombre: this.organizacionOrigen.nombre,
+                        id: this.organizacionOrigen.id
                     },
                 };
                 this.reglas.push({
@@ -84,7 +95,7 @@ export class ReglasComponent {
                     origen: origen
                 });
                 this.activarRegla(longitud);
-                this.organizacion = null;
+                this.organizacionOrigen = null;
             }
         } else {
             const mensaje = this.prestacionDestino ? 'Debe seleccionar la organización de origen' : 'Debe seleccionar la prestación destino';
@@ -93,12 +104,19 @@ export class ReglasComponent {
     }
 
     deleteOrganizacion(indice) {
+        const isSelected = this.regla.origen?.organizacion?.id === this.reglas[indice].origen.organizacion?.id;
+
         this.reglas.splice(indice, 1);
         this.reglaActiva = -1;
+
+        if (isSelected) {
+            this.regla = this.reglas[0];
+        }
     }
 
     addPrestacion() {
         this.prestaciones = [];
+
         if (this.regla.origen.prestaciones) {
             this.prestaciones = this.regla.origen.prestaciones;
         }
@@ -122,28 +140,8 @@ export class ReglasComponent {
         this.regla.origen.prestaciones.splice(indice, 1);
     }
 
-    activarRegla(indice) {
-        this.reglaActiva = indice;
-        this.regla = this.reglas[indice];
-    }
-
-    reglaCorrecta() {
-        return this.reglas?.every(regla => regla.destino?.organizacion && regla.destino?.prestacion);
-    }
-
-    activarPrestacion(indice) {
-        this.prestacionActiva = indice;
-        this.prestacion = (this.regla as any).origen.prestaciones[indice];
-    }
-
-    limpiarForm() {
-        this.reglas = [];
-        this.reglaActiva = -1;
-        this.regla = {};
-    }
-
-    cancelar() {
-        this.cancel.emit();
+    disabledSave() {
+        return !this.regla?.origen?.organizacion.id || !this.regla?.origen?.prestaciones?.length;
     }
 
     preSave() {
@@ -190,5 +188,9 @@ export class ReglasComponent {
                 this.plex.toast('success', 'Las reglas se actualizaron correctamente');
             });
         }
+    }
+
+    volverASolicitudes() {
+        this.volver.emit();
     }
 }
