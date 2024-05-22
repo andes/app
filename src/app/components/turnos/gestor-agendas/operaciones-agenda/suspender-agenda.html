@@ -1,7 +1,8 @@
 <div *ngIf="showData">
     <plex-title titulo="Turnos suspendidos" size="md">
         <plex-badge [type]="estadosAgenda[agenda.estado]?.class" class="mr-1">{{
-            estadosAgenda[agenda.estado]?.nombre }}</plex-badge>
+            estadosAgenda[agenda.estado]?.nombre }}
+        </plex-badge>
         <plex-help class="mr-1" type="help" icon="information-variant" tooltip="Detalle de agenda"
                    titulo="Detalle de agenda">
             <div class="container mb-4">
@@ -67,14 +68,15 @@
             {{ agenda.nota }}
         </plex-help>
         <plex-button type="default" icon="email-outline" size="sm" (click)="notificar()"></plex-button>
-        <plex-button type="danger" icon="close" (click)="cerrarSidebarTurnos()" class="ml-1" size="sm">
+        <plex-button type="danger" tooltip="Cerrar" icon="close" (click)="cerrarSidebarTurnos()" class="ml-1" size="sm">
         </plex-button>
     </plex-title>
     <div class="py-2 d-flex align-items-center">
         <i *ngIf="todosSeleccionados" class="mdi mdi-checkbox-marked hover" (click)="seleccionarTodos()"
            title="Seleccionar todos" titlePosition="right"></i>
-       
-           <plex-icon  *ngIf="!todosSeleccionados" name="checkbox-blank-outline" class="hover" (click)="seleccionarTodos()"></plex-icon> 
+
+        <plex-icon *ngIf="!todosSeleccionados" name="checkbox-blank-outline" class="hover"
+                   (click)="seleccionarTodos()"></plex-icon>
         Seleccionar todos
     </div>
     <small><i>*Agenda suspendida, no se dan turnos</i></small>

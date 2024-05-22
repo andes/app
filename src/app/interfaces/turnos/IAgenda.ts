@@ -7,6 +7,7 @@ import { IEspacioFisico } from './IEspacioFisico';
 
 export interface IAgenda {
     id: String;
+    _id: String;
     tipoPrestaciones: ITipoPrestacion[];
     // profesionales: IProfesional[];
     profesionales: [{

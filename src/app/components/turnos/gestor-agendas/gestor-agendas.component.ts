@@ -288,7 +288,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             }
         }
         if (tipo === 'prestaciones') {
-            if (value.value !== null) {
+            if (value.value) {
                 this.parametros['tipoPrestacion'] = value.value.map(tp => tp.conceptId);
                 delete this.parametros['tipoPrestaciones'];
             } else {
@@ -411,11 +411,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showAgregarNotaAgenda = false;
     }
 
-    cerrarSidebarAgendas() {
-        this.showSobreturno = false;
-        this.showElegirSobreTurno = false;
-    }
-
     saveAgregarNotaAgenda() {
         if (this.parametros) {
             this.getAgendas();
@@ -514,25 +509,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         localStorage.setItem('filtrosGestorAgendas', JSON.stringify(this.parametros));
         localStorage.setItem('idAgenda', agenda._id);
         this.router.navigate(['citas/revision_agenda', agenda._id]);
-    }
-
-    loadProfesionales(event) {
-        if (event.query && event.query !== '' && event.query.length > 2) {
-            // cancelamos ultimo request
-            if (this.lastRequestProf) {
-                this.lastRequestProf.unsubscribe();
-            }
-            const query = {
-                nombreCompleto: event.query
-            };
-            this.lastRequestProf = this.serviceProfesional.get(query).subscribe(event.callback);
-        } else {
-            // cancelamos ultimo request
-            if (this.lastRequestProf) {
-                this.lastRequestProf.unsubscribe();
-            }
-            event.callback([]);
-        }
     }
 
     loadEdificios(event) {
@@ -978,7 +954,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.servicePaciente.getById(paciente.id).subscribe(
             pacienteMPI => {
                 this.paciente = pacienteMPI;
-                // this.verificarTelefono(this.paciente);
                 this.obtenerCarpetaPaciente();
                 this.pacientesSearch = false;
                 this.loadObraSocial(this.paciente);

@@ -51,9 +51,13 @@ export class ReasignarTurnoComponent implements OnInit {
     private permisosRequeridos = 'reasignarTurnos';
 
     public tiposDeTurnos = TiposDeTurnos;
+    public showCrearAgenda = false;
 
-
-    constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public serviceTurno: TurnoService) { }
+    constructor(
+        public plex: Plex,
+        public auth: Auth,
+        public serviceAgenda: AgendaService,
+        public serviceTurno: TurnoService) { }
 
     ngOnInit() {
         this.autorizado = this.auth.check('turnos:' + this.permisosRequeridos);
@@ -73,11 +77,14 @@ export class ReasignarTurnoComponent implements OnInit {
 
     seleccionarTurno(turno, bloque, multiple = false) {
         if (!multiple) {
-            this.turnosSeleccionados = [];
-            this.turnosSeleccionados = [...this.turnosSeleccionados, turno];
+            if (this.turnosSeleccionados[0] === turno) {
+                this.turnosSeleccionados = [];
+            } else {
+                this.turnosSeleccionados = [];
+                this.turnosSeleccionados = [...this.turnosSeleccionados, turno];
+            }
         } else {
             if (this.turnosSeleccionados.find(x => x.id === turno._id)) {
-                // this.turnosSeleccionados.splice(this.turnosSeleccionados.indexOf(turno), 1);
                 delete this.turnosSeleccionados[this.turnosSeleccionados.indexOf(turno)];
                 this.turnosSeleccionados = [... this.turnosSeleccionados];
             } else {
@@ -108,7 +115,7 @@ export class ReasignarTurnoComponent implements OnInit {
         const params = {
             idAgenda: idAgendaAReasignar,
             idBloque: idBloque,
-            idTurno: idTurno
+            idTurno: idTurno,
         };
 
         // Datos de referencia de la agenda origen para pasar al componente hijo (reasignar-turno-agendas)
@@ -139,13 +146,13 @@ export class ReasignarTurnoComponent implements OnInit {
         }
     }
 
-    /**
-     * Volver al gestor
-     */
+    crearAgenda() {
+        this.showCrearAgenda = !this.showCrearAgenda;
+    }
+
     cancelar() {
         this.volverAlGestor.emit(true);
         this.showReasignarTurno = false;
     }
-
 
 }

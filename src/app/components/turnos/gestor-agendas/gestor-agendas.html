@@ -177,8 +177,10 @@
             </plex-label>
         </div>
     </plex-layout-main>
+
+    <!-- ##### SIDEBAR ##### -->
     <plex-layout-sidebar type="invert">
-        <info-agenda [agenda]="agenda" (volver)="volverAlGestor($event)">
+        <info-agenda *ngIf="!showSuspendida" [agenda]="agenda" (volver)="volverAlGestor($event)">
         </info-agenda>
 
         <small *ngIf="!agenda.nominalizada"><i>*Actividad no nominalizada, no se dan turnos</i></small>
@@ -243,7 +245,7 @@
             <!-- Panel Suspender Turno -->
             <div *ngIf="showSuspenderAgenda || showSuspendida">
                 <suspender-agenda [agenda]="agenda" (returnSuspenderAgenda)="cerrarSuspenderTurno(agenda)"
-                                  (cerrarSidebar)="cerrarSidebarAgendas()">
+                                  (cerrarSidebar)="volverAlGestor($event)">
                 </suspender-agenda>
             </div>
         </ng-container>

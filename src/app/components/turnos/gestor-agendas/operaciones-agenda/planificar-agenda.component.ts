@@ -115,6 +115,7 @@ export class PlanificarAgendaComponent implements OnInit {
         this.calculosInicio();
     }
 
+
     loadProfesionales(event) {
         if (this.modelo.profesionales?.length) {
             event.callback(this.modelo.profesionales);
@@ -335,13 +336,7 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     compararBloques(fecha1, fecha2): number {
-        // let indiceAux: Number;
         if (fecha1.horaInicio && fecha2.horaInicio) {
-            // /* if (fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime() > 0) {
-            //     indiceAux = fecha1.indice;
-            //     fecha1.indice = fecha2.indice;
-            //     fecha2.indice = indiceAux;
-            // } */
             return fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime();
         } else {
             return 0;

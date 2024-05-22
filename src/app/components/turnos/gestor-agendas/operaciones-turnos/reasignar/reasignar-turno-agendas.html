@@ -1,167 +1,194 @@
-<header *ngIf="autorizado && agendaAReasignar">
+<ng-container *ngIf="autorizado && agendaAReasignar">
+    <plex-title titulo="{{ turnoAReasignar?.reasignado?.siguiente ? 'DETALLES DE LA REASIGNACIÓN' : 'SELECCIÓN DE TURNO PARA REASIGNACIÓN'}}"
+                size="md">
+    </plex-title>
+    <ng-container *ngIf="turnoAReasignar?.paciente">
+        <plex-list [selectable]="false">
+            <plex-item>
+                <plex-icon name="paciente" size="xl" type="info"></plex-icon>
+                <plex-label titulo="Paciente"
+                            subtitulo="{{ turnoAReasignar.paciente | nombre }} | {{ turnoAReasignar.paciente.numeroIdentificacion ? 'DOC EXT:' : 'DNI:' }} {{ turnoAReasignar.paciente | documento }}"
+                            size="lg">
+                </plex-label>
+                <plex-label titulo="Datos de contacto" size="lg"
+                            subtitulo="Teléfono: {{ turnoAReasignar?.paciente?.telefono || 'Sin datos'}} | Obra Social: {{ turnoAReasignar?.paciente?.obraSocial?.nombre || 'Sin datos'}}">
+                </plex-label>
+            </plex-item>
+        </plex-list>
+    </ng-container>
 
-    <div class="row">
-        <div class="col-12">
-            <plex-title *ngIf="turnoSeleccionado?.reasignado?.siguiente" titulo="DETALLES DE LA REASIGNACIÓN"></plex-title>
-            <plex-title *ngIf="!turnoSeleccionado?.reasignado?.siguiente" titulo="SELECCIÓN DE TURNO PARA REASIGNACIÓN"></plex-title>
-            <!-- Hay turno? -->
-            <div class="row" *ngIf="turnoSeleccionado?.paciente">
-                <div class="col">
-                    Paciente: {{turnoSeleccionado.paciente | nombre }}
-                    <small>
-                        <span *ngIf="turnoSeleccionado.paciente.documento !== ''">| DNI
-                            {{turnoSeleccionado.paciente.documento}}</span>
-                        <span *ngIf="turnoSeleccionado.paciente.documento === ''">| Sin documento (temporal)</span>
-                    </small>
-                    <br>
-                    <b>{{turnoSeleccionado.tipoPrestacion.nombre}}</b>
-                </div>
+    <br />
+
+    <!-- Turno ya Reasignado. -->
+    <ng-container *ngIf="turnoAReasignar?.reasignado?.siguiente">
+        <plex-list [selectable]="false" size="md">
+            <plex-title titulo="Este turno ya fue reasignado" size="sm"></plex-title>
+            <plex-item class="justify-content-center align-items-center">
+                <plex-icon name="calendario" size="lg" type="warning"></plex-icon>
+                <plex-label>Agenda y Turno Origen</plex-label>
+                <plex-label *ngIf="agendaAReasignar?.horaInicio" titulo="{{agendaAReasignar?.horaInicio | date: 'EEEE' |
+                            uppercase }} {{agendaAReasignar?.horaInicio | fecha}} de {{agendaAReasignar?.horaInicio |
+                            date: 'HH:mm' }} a {{agendaAReasignar?.horaFin | date: 'HH:mm' }} hs"
+                            subtitulo="Turno: {{turnoAReasignar?.horaInicio | date: 'HH:mm' }} hs">
+                </plex-label>
+                <plex-label *ngIf="agendaAReasignar?.profesionales?.length"
+                            titulo="{{ agendaAReasignar?.profesionales | enumerar:['apellido', 'nombre'] }}"
+                            subtitulo="Equipo de Salud">
+                </plex-label>
+                <plex-label *ngIf="agendaAReasignar?.profesionales?.length === 0" titulo="No asignado"
+                            subtitulo="Equipo de Salud">
+                </plex-label>
+            </plex-item>
+            <plex-item>
+                <plex-icon name="calendario-tilde" size="lg" type="success"></plex-icon>
+                <plex-label>Agenda y Turno Destino</plex-label>
+                <plex-label *ngIf="agendaDestino?.agenda?.horaInicio" titulo="{{agendaDestino?.agenda?.horaInicio | date: 'EEEE' |
+                            uppercase }} {{ agendaDestino?.agenda?.horaInicio | fecha}} de {{ agendaDestino?.agenda.horaInicio |
+                            date: 'HH:mm' }} a {{ agendaDestino?.agenda?.horaFin | date:'HH:mm' }} hs"
+                            subtitulo="Turno: {{agendaDestino?.turno?.horaInicio | date: 'HH:mm' }} hs">
+                </plex-label>
+                <plex-label *ngIf="agendaDestino?.agenda?.profesionales?.length"
+                            titulo="{{ agendaDestino?.agenda?.profesionales | enumerar:['apellido', 'nombre'] }}"
+                            subtitulo="Equipo de Salud">
+                </plex-label>
+                <plex-label *ngIf="agendaDestino?.agenda?.profesionales.length === 0" titulo="No asignado"
+                            subtitulo="Equipo de Salud">
+                </plex-label>
+            </plex-item>
+        </plex-list>
+    </ng-container>
+
+    <!-- El turno aun no fue reasignado? -->
+    <ng-container *ngIf="!turnoAReasignar?.reasignado?.siguiente">
+
+        <ng-container *ngIf="(!agendasSimilares || !agendasSimilares?.length) && turnoAReasignar">
+            <div class="pt-5 line-height justify-content-center align-items-center">
+                <plex-label icon="zoom" type="info" direction="column">No hay agendas disponibles. Para agregar click
+                    aquí
+                    <plex-button class="pt-0" type="link" (click)="crearAgenda(turno)">
+                        CREAR NUEVA AGENDA
+                    </plex-button>
+                </plex-label>
             </div>
-            <hr>
-            <h6 *ngIf="!turnoSeleccionado?.reasignado?.siguiente && agendasSimilares?.length > 0">
-                Seleccione horario al cual reasignar el turno:
-            </h6>
-            <!-- El turno ya fue reasignado? -->
-            <div class="row" *ngIf="turnoSeleccionado?.reasignado?.siguiente">
-                <div class="col">
-                    <h6>Este turno fue reasignado:</h6>
-                    <div class="row">
-                        <div class="col">
-                            <i class="mdi mdi-routes"></i>
-                            <b>Agenda y Turno Origen</b>
-                        </div>
-                        <div class="col">
-                            <i class="mdi mdi-sign-direction"></i>
-                            <b>Agenda y Turno Destino</b>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <!-- AGENDA ORIGEN -->
-                        <div class="col-6 text-warning" *ngIf="agendaAReasignar?.horaInicio">
-                            <b>{{agendaAReasignar?.horaInicio | date: 'EEEE' | uppercase }}
-                                {{agendaAReasignar?.horaInicio |
-                                fecha}} de {{agendaAReasignar?.horaInicio | date: 'HH:mm'}} a
-                                {{agendaAReasignar?.horaFin
-                                | date: 'HH:mm'}} hs</b>
-                        </div>
-                        <!-- AGENDA DESTINO -->
-                        <div class="col-6 text-info" *ngIf="agendaDestino?.agenda">
-                            <b>{{agendaDestino?.agenda?.horaInicio | date: 'EEEE' | uppercase }} {{
-                                agendaDestino?.agenda?.horaInicio
-                                | fecha}} de {{ agendaDestino?.agenda.horaInicio | date: 'HH:mm' }} a {{
-                                agendaDestino?.agenda?.horaFin
-                                | date:'HH:mm' }} hs
-                            </b>
-                        </div>
-                    </div>
-                    <div class="row" *ngIf="turnoSeleccionado?.horaInicio && agendaDestino?.turno?.horaInicio">
-                        <!-- TURNO ORIGEN -->
-                        <div class="col-6 text-warning">Turno:
-                            <b>{{turnoSeleccionado?.horaInicio | date: 'HH:mm' }} hs</b>
-                        </div>
-                        <!-- TURNO DESTINO -->
-                        <div class="col-6 text-info">Turno:
-                            <b>{{agendaDestino?.turno?.horaInicio | date: 'HH:mm' }} hs</b>
-                        </div>
-                    </div>
-                    <div class="row" *ngIf="agendaAReasignar?.horaInicio && agendaDestino?.agenda">
-                        <!-- Equipo de Salud ORIGEN -->
-                        <div class="col-6 text-warning" *ngIf="agendaAReasignar?.profesionales?.length > 0">
-                            Equipo de Salud:
-                            <b>{{ agendaAReasignar?.profesionales | enumerar:['apellido', 'nombre'] }}</b>
-                        </div>
-                        <!-- Equipo de Salud DESTINO -->
-                        <div class="col-6 text-info" *ngIf="agendaDestino?.agenda?.profesionales?.length > 0">
-                            Equipo de Salud:
-                            <b>{{ agendaDestino?.agenda?.profesionales | enumerar:['apellido', 'nombre'] }}</b>
-                        </div>
-                    </div>
-                </div>
+        </ng-container>
+
+        <ng-container *ngIf="!turnoAReasignar">
+            <div justify="center" class="h-75">
+                <plex-label size="lg" direction="column" type="info" icon="turno-mas" direction="column"
+                            titulo="Seleccione un turno para ver agendas candidatas a reasignar"
+                            subtitulo="o Seleccione un turno ya reasignado para ver más detalles">
+                </plex-label>
             </div>
-            <!-- El turno aun no fue reasignado? -->
-            <div class="row flex-row" *ngIf="!turnoSeleccionado?.reasignado?.siguiente">
-                <!-- Hay agendas similares? -->
-                <div class="col" *ngIf="(!agendasSimilares || agendasSimilares?.length === 0) && turnoSeleccionado">
-                    <i class="mdi mdi-emoticon-sad"></i> No hay agendas que contengan turnos que coincidan
-                </div>
-                <div class="col" *ngIf="!turnoSeleccionado">
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            Seleccione un turno sin reasignar para ver agendas candidatas para reasignar
-                        </li>
-                        <li class="list-group-item">
-                            Seleccione un turno ya reasignado para ver más detalles
-                        </li>
-                    </ul>
-                </div>
-                <ng-container *ngFor="let agenda of agendasSimilares; let indiceAgenda = index">
+        </ng-container>
 
-                    <div *ngIf="hayTurnosDisponibles(agenda)" class="col-6">
-                        <div class="card">
-                            <div class="card-block">
-                                <h6 class="card-title">Agenda: {{ agenda.horaInicio | date: 'dd/MM/yyyy' }} de {{
-                                    agenda.horaInicio | date: 'HH:mm'
-                                    }} a {{ agenda.horaFin | date: 'HH:mm' }} hs</h6>
-                                <p class="card-text" *ngIf="agenda.profesionales?.length > 0">Equipo de Salud: {{
-                                    agenda.profesionales | enumerar:['apellido', 'nombre'] }}</p>
-                                <p class="card-text text-danger" *ngIf="agenda.profesionales?.length === 0">Sin equipo
-                                    de salud asignado</p>
-                                <div *ngFor="let bloque of agenda.bloques; let indiceBloque = index">
-                                    <div *ngIf="existePrestacion(bloque, turnoSeleccionado.tipoPrestacion.id)">
-                                        <div *ngFor="let turno of bloque.turnos; let indiceTurno = index">
-                                            <div *ngIf="bloque.descripcion && indiceTurno === 0">
-                                                Bloque
-                                                <span>{{bloque.descripcion}}</span>
-                                            </div>
-                                            <ng-container
-                                                          *ngIf="turno.horaInicio && (getFecha(hoy) === getFecha(agenda.horaInicio) && getHora(turno.horaInicio) > getHora(hoy)) || (getFecha(hoy) !== getFecha(agenda.horaInicio))">
-                                                <div class="reasignar"
-                                                     *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque && !esTurnoDoble(turnoSeleccionado)">
-                                                    <div *ngIf="turno.estado === 'disponible'"
-                                                         class="text-center p-2 mb-1 hover outline-dashed-default"
-                                                         [appHover]="'text-info outline-info'"
-                                                         (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
-                                                        {{turno.horaInicio | date: 'HH:mm'}}
-                                                    </div>
-                                                </div>
-                                                <div *ngIf="esTurnoDoble(turnoSeleccionado)">
-                                                    <div *ngIf="turno.estado === 'disponible' && siguienteDisponible(bloque, turno, indiceTurno)"
-                                                         class="text-center p-2 mb-1 hover outline-dashed-default"
-                                                         [appHover]="'text-info outline-info'"
-                                                         (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
-                                                        {{turno.horaInicio | date: 'HH:mm'}}
-                                                    </div>
-                                                </div>
-                                                <div
-                                                     *ngIf="bloque.pacienteSimultaneos && !esTurnoDoble(turnoSeleccionado)">
-                                                    <div *ngIf="turno.estado === 'disponible' && primerSimultaneoDisponible(bloque, turno, indiceTurno)"
-                                                         class="text-center p-2 mb-1 hover outline-dashed-default"
-                                                         [appHover]="'text-info outline-info'"
-                                                         (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
-                                                        {{turno.horaInicio | date: 'HH:mm'}}
-                                                    </div>
-                                                </div>
-                                                <div *ngIf="bloque.citarPorBloque  && !esTurnoDoble(turnoSeleccionado)">
-                                                    <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, indiceTurno)"
-                                                         class="text-center p-2 mb-1 hover outline-dashed-default"
-                                                         [appHover]="'text-info outline-info'"
-                                                         (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
-                                                        {{turno.horaInicio | date: 'HH:mm'}}
-                                                    </div>
-                                                </div>
-                                            </ng-container>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </ng-container>
+        <ng-container *ngIf="mostrarAgendasSimilares()">
+            <plex-title size="sm" titulo="{{ agendaSeleccionada ? 'Agenda seleccionada' : 'Agendas'}}"></plex-title>
+
+            <plex-table *ngIf="agendasSimilares?.length" class="table-striped">
+                <tr>
+                    <th class="text-center">Fecha</th>
+                    <th class="text-center">Horario</th>
+                    <th class="text-center">Equipo de salud</th>
+                </tr>
+
+                <tr class="selectable" *ngFor="let agenda of agendasEnTabla" (click)="seleccionarAgenda(agenda)">
+                    <td>
+                        <plex-label justify="center">
+                            {{ agenda.horaInicio | date: 'EEEE' }} {{ agenda.horaInicio | date:'dd/MM/yyyy' }}
+                        </plex-label>
+                    </td>
+                    <td>
+                        <plex-label justify="center">
+                            {{ agenda.horaInicio | date:'HH:mm' }}-{{ agenda.horaFin | date: 'HH:mm' }} hs
+                        </plex-label>
+                    </td>
+                    <td>
+                        <plex-label justify="center" *ngIf="agenda.profesionales?.length" size="md"
+                                    titulo="{{ agenda.profesionales | enumerar:['apellido','nombre']}}">
+                        </plex-label>
+                        <plex-label justify="center" *ngIf="!agenda.profesionales?.length">(no
+                            asignado)
+                        </plex-label>
+                    </td>
+                </tr>
+            </plex-table>
+
+
+            <!-- HORARIOS -->
+            <plex-table *ngIf="showHorarios">
+                <tr class="horarios"
+                    *ngFor=" let bloque of bloquesSegunPrestacion(agendaSeleccionada); let indBloque=index">
+                    <td colspan="3">
+                        <ng-container *ngIf="indBloque === 0">
+                            <plex-title size="sm" titulo="Seleccione horario">
+                                <plex-button class="pr-1" type="success" size="sm" icon="check"
+                                             [disabled]="!turnoSeleccionado" tooltip="Confirmar"
+                                             (click)="reasignarTurno()">
+                                </plex-button>
+                                <plex-button icon="arrow-left" type="danger" tooltip="Volver" size="sm"
+                                             (click)="seleccionarAgenda()">
+                                </plex-button>
+                            </plex-title>
+
+                            <plex-label *ngIf="bloque.descripcion">
+                                Descripción: {{bloque.descripcion}}
+                            </plex-label>
+                        </ng-container>
+
+                        <plex-grid *ngIf="tieneTurnos(bloque)" type="full" size="sm">
+                            <ng-container *ngFor="let turno of bloque.turnos; let i=index">
+                                <ng-container *ngIf="mostrarHorarioTurno(turno)">
+                                    <plex-card type="dark" mode="filled" size="xs" class="hover" [selectable]="true"
+                                               [selected]="turnoSeleccionado?._id === turno._id"
+                                               (click)="seleccionarHorarioTurno(bloque, turno)"
+                                               [ngClass]="{'disabled' : !turnoSeleccionable(bloque, turno, i)}">
+                                        <plex-label size="md" direction="column"
+                                                    titulo="{{turno.horaInicio | date: 'HH:mm'}}hs">
+                                        </plex-label>
+                                    </plex-card>
+                                </ng-container>
+                            </ng-container>
+                        </plex-grid>
+                    </td>
+                </tr>
+            </plex-table>
+        </ng-container>
+    </ng-container>
+
+    <!-- Muestra modal al reasignar el turno. -->
+    <plex-modal *ngIf="reasignado" size="sm" #modal [startOpen]="true" [allowEscClose]="false"
+                [allowBackdropClose]="false">
+        <plex-icon name="check-circle" size="sm" type="success mt-2 mb-2"></plex-icon>
+        <plex-modal-subtitle type="success" class="font-subtitle text-muted text-center">El turno fue reasignado
+            exitosamente
+        </plex-modal-subtitle>
+        <br>
+        <main>
+            <div>
+                <plex-title titulo="Datos de la reasignación" size="sm"></plex-title>
+                <plex-grid type="auto" cols="2">
+                    <plex-label *ngIf="turnoSeleccionado?.horaInicio" case="capitalize" color="#8cc63f"
+                                icon="calendario" size="md" grow="full"
+                                titulo="{{ turnoSeleccionado.horaInicio | date: 'EEEE' }} {{ turnoSeleccionado.horaInicio | fecha }}"
+                                subtitulo="{{ turnoSeleccionado.horaInicio | date: 'HH:mm' }} Hs.">
+                    </plex-label>
+                    <plex-label color="#00a8e0" icon="paciente" size="md" grow="full" case="capitalize"
+                                titulo="{{ turnoAReasignar.paciente | nombre }}"
+                                subtitulo="{{ turnoAReasignar.paciente.numeroIdentificacion ? 'DOC EXT:' : 'DNI:' }} {{ turnoAReasignar.paciente | documento }}">
+                    </plex-label>
+                    <plex-label color="#00a8e0" icon="mano-corazon" size="md" grow="full" case="capitalize"
+                                titulo="{{ bloqueSeleccionado?.tipoPrestaciones | enumerar:['term'] }}"
+                                subtitulo="Prestación">
+                    </plex-label>
+                    <plex-label color="#00a8e0" icon="medico" size="md" grow="full" case="capitalize"
+                                titulo="{{ (agendaDestino?.agenda?.profesionales | enumerar:['apellido', 'nombre']) || 'No asignado' }}"
+                                subtitulo="Equipo de Salud">
+                    </plex-label>
+                </plex-grid>
             </div>
-
-
-        </div>
-
-    </div>
-
-</header>
+        </main>
+        <plex-button class="mb-4" modal center type="info" (click)="cerrarModal()">
+            Aceptar
+        </plex-button>
+    </plex-modal>
+</ng-container>
