@@ -1,3 +1,11 @@
+# [5.138.0](https://github.com/andes/app/compare/v5.137.1...v5.138.0) (2024-05-22)
+
+
+### Features
+
+* **GDU:** modificar email en paciente temporal ([#2974](https://github.com/andes/app/issues/2974)) ([1fe137d](https://github.com/andes/app/commit/1fe137d7f3efe1b6bd380ad34a8cb8d7c7a8aec1))
+* **HUDS-97:** Exportacion de HUDS ([#3008](https://github.com/andes/app/issues/3008)) ([bdbd5d8](https://github.com/andes/app/commit/bdbd5d8aea2b2547073cb6a8067fd98a4ce79ff2))
+
 ## [5.137.1](https://github.com/andes/app/compare/v5.137.0...v5.137.1) (2024-05-15)
 
 
