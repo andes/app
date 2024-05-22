@@ -1,10 +1,8 @@
 <plex-layout [main]="6">
     <plex-layout-main>
-        <header>
-            <plex-title main titulo="Datos de destino" size="lg">
-                <plex-button type="danger" size="sm" (click)="volverASolicitudes()">Volver</plex-button>
-            </plex-title>
-        </header>
+        <plex-title main titulo="Datos de destino" size="md">
+            <plex-button class="mb-1" type="danger" (click)="volverASolicitudes()">Volver</plex-button>
+        </plex-title>
 
         <plex-title titulo="Organización de destino" size="sm"></plex-title>
 
@@ -12,7 +10,7 @@
             <plex-icon type="info" name="hospital" size="xl"></plex-icon>
             <div title>{{organizacionDestino.nombre}}</div>
         </plex-detail>
-        <!--  -->
+
         <div class="mb-4">
             <div class="mb-3">
                 <plex-title titulo="Prestación de destino" size="sm"></plex-title>
@@ -41,9 +39,9 @@
         </plex-list>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
-        <plex-title main titulo="Datos de origen" size="lg">
-            <plex-button type="success" label="Guardar" size="sm" (click)="preSave()" [disabled]="disabledSave()"
-                         class="mr-1">
+        <plex-title main titulo="Datos de origen" size="md">
+            <plex-button type="success" label="Guardar" (click)="preSave()" [disabled]="disabledSave()"
+                         class="mr-1 mb-1">
             </plex-button>
         </plex-title>
 
@@ -65,11 +63,13 @@
             </div>
         </ng-container>
         <ng-container *ngIf="regla?.origen?.organizacion">
-            <plex-title titulo="Prestaciones de Origen" size="sm">
-                <plex-button *ngIf="regla" type="success" label="Agregar prestación" size="sm"
-                             (click)="addPrestacion()">
-                </plex-button>
-            </plex-title>
+            <div class="mb-3">
+                <plex-title titulo="Prestaciones de Origen" size="sm">
+                    <plex-button *ngIf="regla" type="success" label="Agregar prestación" size="sm"
+                                 (click)="addPrestacion()">
+                    </plex-button>
+                </plex-title>
+            </div>
             <div *ngIf="regla">
                 <div class="mb-1">
                     <plex-select [(ngModel)]="prestacionOrigen" name="prestacionOrigen" tmPrestaciones
