@@ -53,25 +53,24 @@ export class AgregarNotaTurnoComponent implements OnInit {
                 'textoNota': this.nota
             };
 
-            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+            this.serviceAgenda.patch(this.agenda.id, patch).subscribe({
 
-                if (alertCount === 0) {
-                    if (this.turnosSeleccionados.length === 1) {
-                        this.plex.toast('success', 'La nota se guardó correctamente');
-                    } else {
-                        this.plex.toast('success', 'Las notas se guardaron correctamente');
+                next: resultado => {
+                    if (alertCount === 0) {
+                        if (this.turnosSeleccionados.length === 1) {
+                            this.plex.toast('success', 'La nota se guardó correctamente.');
+                        } else {
+                            this.plex.toast('success', 'Las notas se guardaron correctamente.');
+                        }
+                        alertCount++;
                     }
-                    alertCount++;
-                }
 
-                this.agenda = resultado;
-                if (index === this.turnosSeleccionados.length - 1) {
-                    this.saveAgregarNotaTurno.emit();
-                }
-            }, err => {
-                if (err) {
-
-                }
+                    this.agenda = resultado;
+                    if (index === this.turnosSeleccionados.length - 1) {
+                        this.saveAgregarNotaTurno.emit();
+                    }
+                },
+                error: () => this.plex.toast('error', 'Error al cargar una o varias notas.')
             });
 
         });

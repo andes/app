@@ -3,18 +3,15 @@ import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
 import { DocumentosService } from '../../../services/documentos.service';
-import { FacturacionAutomaticaService } from './../../../services/facturacionAutomatica.service';
 
 // Servicios
-import { ObraSocialService } from '../../../services/obraSocial.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
 
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { IAgenda } from '../../../interfaces/turnos/IAgenda';
 import { ITurno } from '../../../interfaces/turnos/ITurno';
-import { switchMap } from 'rxjs/operators';
-import { EMPTY } from 'rxjs';
+
 @Component({
     selector: 'turnos-paciente',
     templateUrl: 'turnos-paciente.html',
@@ -73,8 +70,6 @@ export class TurnosPacienteComponent implements OnInit {
 
     // Inicialización
     constructor(
-        public servicioFA: FacturacionAutomaticaService,
-        public obraSocialService: ObraSocialService,
         public documentosService: DocumentosService,
         public serviceTurno: TurnoService,
         public serviceAgenda: AgendaService,
@@ -130,47 +125,28 @@ export class TurnosPacienteComponent implements OnInit {
     }
 
     eventosTurno(turno, operacion) {
+        let mensaje = '';
+        let tipoToast = 'info';
         const patch: any = {
             op: operacion,
             turnos: [turno._id],
         };
-        this.serviceTurno.get({ id: turno.id }).pipe(
-            switchMap(t => {
-                if (t.some(turno => turno.bloques.some(bloque => bloque.turnos.some(turno => turno.paciente && turno.estado !== 'suspendido')))) {
-                    return this.serviceAgenda.patch(turno.agenda_id, patch);
-                } else {
-                    return this.serviceAgenda.getById(turno.agenda_id).pipe(
-                        switchMap(ag => {
-                            if (ag.sobreturnos.some(st => turno.id === st.id && st.estado !== 'suspendido' && st.paciente)) {
-                                return this.serviceAgenda.patch(turno.agenda_id, patch);
-                            } else {
-                                if (ag.sobreturnos.some(st => st.estado === 'suspendido')) {
-                                    this.plex.info('warning', 'El sobreturno se encuentra suspendido', 'Acción denegada');
-                                } else if (t.some(turno => turno.bloques.some(bloque => bloque.turnos.some(turno => turno.estado === 'suspendido')))) {
-                                    this.plex.info('warning', 'El turno se encuentra suspendido', 'Acción denegada');
-                                } else {
-                                    const mensaje = turno.bloque_id ? 'El turno no presenta un paciente registrado' : 'El sobreturno no presenta un paciente registrado';
-                                    this.plex.info('warning', mensaje, 'Acción denegada');
-                                }
-                                return EMPTY;
-                            }
-                        })
-                    );
-                }
-            })
-        ).subscribe(() => {
+
+        // Patchea los turnosSeleccionados (1 o más turnos)
+        this.serviceAgenda.patch(turno.agenda_id, patch).subscribe(() => {
             this.turnosPacienteChanged.emit();
-            let mensaje = '';
             switch (operacion) {
                 case 'darAsistencia':
-                    mensaje = 'Se registró la asistencia del paciente';
+                    mensaje = 'Se registró la asistencia del paciente.';
+                    tipoToast = 'success';
                     break;
                 case 'sacarAsistencia':
-                    mensaje = 'Se registró la inasistencia del paciente';
+                    mensaje = 'Se registró la inasistencia del paciente.';
+                    tipoToast = 'warning';
                     break;
             }
             if (mensaje !== '') {
-                this.plex.toast('success', mensaje);
+                this.plex.toast(tipoToast, mensaje);
             }
         });
     }

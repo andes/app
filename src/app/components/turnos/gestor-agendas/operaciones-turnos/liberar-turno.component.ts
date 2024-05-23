@@ -5,6 +5,8 @@ import { ITurno } from './../../../../interfaces/turnos/ITurno';
 import { ListaEsperaService } from '../../../../services/turnos/listaEspera.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { getMotivosLiberacion } from '../../../../utils/enumerados';
+import { forkJoin } from 'rxjs';
+import { mergeMap, tap } from 'rxjs/operators';
 
 @Component({
     selector: 'liberar-turno',
@@ -46,40 +48,39 @@ export class LiberarTurnoComponent implements OnInit {
             };
             const mensaje = this.turnos.length === 1 ? 'El turno seleccionado fue liberado' : 'Los turnos seleccionados fueron liberados';
 
-            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(() => {
-                this.plex.toast('success', mensaje, 'Liberar turno', 4000);
-                this.saveLiberarTurno.emit(this.agenda);
-            }, err => {
-                if (err) {
+            this.serviceAgenda.patch(this.agenda.id, patch).subscribe({
+                complete: () => {
+                    this.plex.toast('success', mensaje, 'Liberar turno', 4000);
+                    this.saveLiberarTurno.emit(this.agenda);
+                },
+                error: () => {
                     this.plex.info('warning', 'El turno ya tiene una prestación iniciada', 'Información');
                     this.cancelaLiberarTurno.emit(true);
-
                 }
             });
         }
     }
 
     agregarPacienteListaEspera() {
-
-        for (let x = 0; x < this.turnos.length; x++) {
+        const turnos = this.turnos.map(turno => {
             const patch = {
                 'op': 'listaEsperaSuspensionAgenda',
                 'idAgenda': this.agenda.id,
-                'pacientes': this.turnos[x]
+                'pacientes': turno
             };
 
             this.liberarTurno();
 
-            this.listaEsperaService.postXIdAgenda(this.agenda.id, patch).subscribe(resultado => {
+            return this.listaEsperaService.postXIdAgenda(this.agenda.id, patch);
+        });
 
-                this.serviceAgenda.getById(this.agenda.id).subscribe(resulAgenda => {
-
-                    this.saveLiberarTurno.emit(resulAgenda);
-
-                    this.plex.info('warning', 'Los pacientes seleccionados pasaron a Lista de Espera');
-                });
-            });
-        }
+        forkJoin(turnos).pipe(
+            mergeMap(() => this.serviceAgenda.getById(this.agenda.id)),
+            tap(resulAgenda => {
+                this.saveLiberarTurno.emit(resulAgenda);
+                this.plex.info('info', 'Los pacientes seleccionados se agregaron a Lista de Espera');
+            })
+        ).subscribe();
     }
 
     cancelar() {

@@ -3,14 +3,13 @@ import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { SmsService } from './../../../services/turnos/sms.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 import { EstadosAgenda } from './../enums';
 import * as moment from 'moment';
-import { map, switchMap } from 'rxjs/operators';
-import { EMPTY, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
 import { TurnoService } from 'src/app/services/turnos/turno.service';
 
 @Component({
@@ -138,7 +137,6 @@ export class TurnosComponent implements OnInit {
         public smsService: SmsService,
         public serviceAgenda: AgendaService,
         public listaEsperaService: ListaEsperaService,
-        public servicePaciente: PacienteService,
         public auth: Auth,
         public serviceTurno: TurnoService) { }
 
@@ -237,9 +235,7 @@ export class TurnosComponent implements OnInit {
         this.bloqueSelected = this.agenda.bloques[this.mostrar];
     }
 
-    eventosTurno(operacion, agenda) {
-        const cantTurnos = this.turnosSeleccionados.length;
-        let tieneSobreturno = false;
+    eventosTurno(operacion) {
         const patch: any = {
             op: operacion,
             turnos: this.turnosSeleccionados.map((resultado) => {
@@ -247,51 +243,18 @@ export class TurnosComponent implements OnInit {
             })
         };
 
-        this.serviceAgenda.getById(agenda.id).pipe(
-            switchMap(ag => {
-                if (ag.sobreturnos.length && ag.sobreturnos.some(st => this.turnosSeleccionados.some(ts => ts.id === st.id))) {
-                    tieneSobreturno = true;
-                }
-                return ag.bloques;
-            }),
-            switchMap(bloques => {
-                let index;
-                const turnoSinPaciente = this.turnosSeleccionados.some(turnoSeleccionado => {
-                    index = bloques.turnos.findIndex(turno => turno.id === turnoSeleccionado.id);
-                    return index > -1 && !bloques.turnos[index].paciente && bloques.turnos[index].estado !== 'turnoDoble';
-                });
-                if (!turnoSinPaciente && (tieneSobreturno || index > -1)) {
-                    return this.serviceAgenda.patch(agenda.id, patch);
-                } else {
-                    this.plex.info('warning', 'Uno o varios turnos no presentan pacientes registrados', 'Acción denegada');
-                    return EMPTY;
-                }
-            })
-        ).subscribe(resultado => {
-            let mensaje = '';
+        // Patchea los turnosSeleccionados (1 o más turnos)
+        this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
             this.agenda.bloques = resultado.bloques;
-            this.agenda.sobreturnos = resultado.sobreturnos;
             this.bloqueSelected = this.agenda.bloques[this.mostrar];
-            switch (operacion) {
-                case 'darAsistencia':
-                    mensaje = (cantTurnos > 1) ? 'Se registraron las asistencias de los pacientes seleccionados' : 'Se registró la asistencia del paciente';
-                    break;
-                case 'sacarAsistencia':
-                    mensaje = (cantTurnos > 1) ? 'Se registraron las inasistencias de los pacientes seleccionados' : 'Se registró la inasistencia del paciente';
-                    break;
-                case 'quitarTurnoDoble':
-                    mensaje = 'Se removió el doble turno del paciente';
-                    break;
-            }
-            if (mensaje !== '') {
-                this.plex.toast('success', mensaje);
-            }
-            this.turnosSeleccionados = [];
-            this.turnos.forEach((turno) => {
-                turno.checked = false;
-            });
-            this.todos = false;
         });
+
+        // Reset botones y turnos seleccionados
+        this.turnosSeleccionados = [];
+        this.turnos.forEach((turno) => {
+            turno.checked = false;
+        });
+        this.todos = false;
     }
 
     reasignarTurno(paciente: any, idTurno: any, idAgenda: any) {
@@ -318,42 +281,36 @@ export class TurnosComponent implements OnInit {
             // Se busca la posición del turno y se obtiene el siguiente
             turnoSeleccionado = this.turnosSeleccionados[x];
             bloqueTurno = this.bloques.find(bloque => (bloque.turnos.findIndex(t => (t._id === turnoSeleccionado._id)) >= 0));
-            // console.log(turnoSeleccionado);
-            this.serviceTurno.get({ id: turnoSeleccionado.id }).pipe(
-                switchMap(t => {
-                    if (t.some(turno => turno.bloques.some(bloque => bloque.turnos.some(turno => turno.paciente))) && bloqueTurno) {
-                        index = bloqueTurno.turnos.findIndex(t => {
-                            return t._id === turnoSeleccionado._id;
-                        });
-                        if ((index > -1) && (index < bloqueTurno.turnos.length - 1) && (bloqueTurno.turnos[index + 1].estado === 'disponible')) {
-                            turnosActualizar.push(bloqueTurno.turnos[index + 1]);
-                        } else {
-                            // en el caso que el turno siguiente no se encuentre disponible
-                            this.plex.info('warning', 'El turno siguiente no se encuentra disponible para ser asignado');
-                            return EMPTY;
-                        }
-                        const patch: any = {
-                            op: operacion,
-                            turnos: turnosActualizar.map((resultado) => {
-                                return resultado.id;
-                            })
-                        };
-                        return this.serviceAgenda.patch(this.agenda.id, patch);
-                    } else {
-                        this.plex.info('warning', 'No se puede asignar el turno doble', 'Acción denegada');
-                        return EMPTY;
-                    }
-                })
-            ).subscribe(resultado => {
-                this.agenda.bloques = resultado.bloques;
-                this.bloqueSelected = this.agenda.bloques[this.mostrar];
-                this.plex.toast('success', 'Se registró el doble turno del paciente');
-            });
+
+            if (bloqueTurno) {
+                index = bloqueTurno.turnos.findIndex(t => {
+                    return t._id === turnoSeleccionado._id;
+                });
+                if ((index > -1) && (index < bloqueTurno.turnos.length - 1) && (bloqueTurno.turnos[index + 1].estado === 'disponible')) {
+                    turnosActualizar.push(bloqueTurno.turnos[index + 1]);
+                } else {
+                    // en el caso que el turno siguiente no se encuentre disponible
+                    this.plex.info('warning', 'No se puede asignar el turno doble');
+                }
+            }
         }
+
+        const patch: any = {
+            op: operacion,
+            turnos: turnosActualizar.map((resultado) => {
+                return resultado.id;
+            })
+        };
+
+        // Patchea los turnosSeleccionados (1 o más turnos)
+        this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+            this.agenda.bloques = resultado.bloques;
+            this.bloqueSelected = this.agenda.bloques[this.mostrar];
+        });
 
         // Reset botones y turnos seleccionados
         this.turnosSeleccionados = [];
-        this.turnos.forEach((turno) => {
+        this.turnos.forEach((turno, index) => {
             turno.checked = false;
         });
         this.todos = false;
@@ -399,10 +356,9 @@ export class TurnosComponent implements OnInit {
             // Siempre chequear que exista el id de paciente, porque puede haber una key "paciente" vacía
             if (this.turnosSeleccionados[x].paciente && this.turnosSeleccionados[x].paciente.id) {
 
-                this.smsService.enviarSms(this.turnosSeleccionados[x].paciente.telefono).subscribe(
-                    resultado => {
+                this.smsService.enviarSms(this.turnosSeleccionados[x].paciente.telefono).subscribe({
+                    next: resultado => {
                         turno = this.turnosSeleccionados[x];
-
                         if (resultado === '0') {
                             turno.smsEnviado = true;
                             turno.smsNoEnviado = false;
@@ -412,14 +368,9 @@ export class TurnosComponent implements OnInit {
                             turno.smsNoEnviado = true;
                             turno.smsLoader = false;
                         }
-
                     },
-                    err => {
-                        if (err) {
-
-                        }
-                    }
-                );
+                    error: () => this.plex.toast('error', 'Error al enviar SMS.')
+                });
             }
         }
     }
@@ -436,31 +387,34 @@ export class TurnosComponent implements OnInit {
 
     pasarADisponible() {
         let alertCount = 0;
-        this.turnosSeleccionados.forEach((turno, index) => {
+        this.turnosSeleccionados.forEach((index) => {
 
             const patch = {
                 'op': 'liberarTurno',
                 'turnos': this.turnosSeleccionados.map(resultado => resultado._id)
             };
-            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
-                this.saveLiberarTurno(this.agenda);
-                if (alertCount === 0) {
-                    if (this.turnosSeleccionados.length === 1) {
-                        this.plex.toast('success', 'El turno seleccionado fue cambiado a disponible.');
-                    } else {
-                        this.plex.toast('success', 'Los turnos seleccionados fueron cambiados a disponible.');
-                    }
-                    alertCount++;
-                }
-
-                this.agenda = resultado;
-                if (index === this.turnosSeleccionados.length - 1) {
+            this.serviceAgenda.patch(this.agenda.id, patch).subscribe({
+                next: resultado => {
                     this.saveLiberarTurno(this.agenda);
-                }
-            }, err => {
-                if (err) {
-                    this.plex.info('warning', 'Turno en ejecución', 'Error');
-                    this.cancelaLiberarTurno();
+                    if (alertCount === 0) {
+                        if (this.turnosSeleccionados.length === 1) {
+                            this.plex.toast('success', 'El turno seleccionado fue cambiado a disponible.');
+                        } else {
+                            this.plex.toast('success', 'Los turnos seleccionados fueron cambiados a disponible.');
+                        }
+                        alertCount++;
+                    }
+
+                    this.agenda = resultado;
+                    if (index === this.turnosSeleccionados.length - 1) {
+                        this.saveLiberarTurno(this.agenda);
+                    }
+                },
+                error: err => {
+                    if (err) {
+                        this.plex.info('warning', 'Turno en ejecución', 'Error');
+                        this.cancelaLiberarTurno();
+                    }
                 }
             });
         });
