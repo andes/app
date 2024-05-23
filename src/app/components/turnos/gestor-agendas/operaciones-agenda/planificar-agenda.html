@@ -9,12 +9,12 @@
                 <plex-button type="danger" label="Cancelar" (click)="cancelar()" size="sm">
                 </plex-button>
                 <plex-button class="mx-1"
-                             [disabled]="!form.valid || !formSidebar.valid || hideGuardar || alertas.length"
-                             label="Guardar" validateForm="true" autodisabled="true" type="success" size="sm"
+                             [disabled]="!form.valid  || !formSidebar.valid || hideGuardar || alertas.length || alertaProfesional"
+                             label="Guardar" validateForm="true" autodisabled="true" type="success"
                              (click)="onSave($event, false)" title="Guardar">
                 </plex-button>
-                <plex-button [disabled]="!form.valid || !formSidebar.valid || hideGuardar || alertas.length"
-                             label="Guardar y clonar" autodisabled="true" size="sm" validateForm="true" type="primary"
+                <plex-button [disabled]="!form.valid || !formSidebar.valid || hideGuardar || alertas.length || alertaProfesional"
+                             label="Guardar y clonar" autodisabled="true" validateForm="true" type="primary"
                              (click)="onSave($event, true)">
                 </plex-button>
             </plex-title>

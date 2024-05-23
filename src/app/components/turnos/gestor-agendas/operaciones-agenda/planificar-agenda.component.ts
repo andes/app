@@ -581,7 +581,7 @@ export class PlanificarAgendaComponent implements OnInit {
             // Verifica que ningún profesional de la agenda esté asignado a otra agenda en ese horario
             if (iniAgenda && finAgenda && this.modelo.profesionales) {
                 this.modelo.profesionales.forEach((profesional, index) => {
-                    this.serviceAgenda.get({ 'organizacion': this.auth.organizacion.id, idProfesional: profesional.id, rango: true, desde: iniAgenda, hasta: finAgenda, estados: ['planificacion', 'disponible', 'publicada', 'pausada'] }).
+                    this.serviceAgenda.get({ idProfesional: profesional.id, rango: true, desde: iniAgenda, hasta: finAgenda, estados: ['planificacion', 'disponible', 'publicada', 'pausada'] }).
                         subscribe(agendas => {
                             const agds = agendas.filter(agenda => {
                                 return agenda.id !== this.modelo.id || !this.modelo.id;
