@@ -24,13 +24,12 @@
         <ng-container *ngIf="agenda | botonesTurnos:turnosSeleccionados as botones">
             <plex-button *ngIf="botones.sacarAsistencia && turnosSeleccionados?.length" class="mr-1"
                          ariaLabel="Registrar inasistencia" size="sm" type="warning" icon="account-remove"
-                         (click)="eventosTurno('sacarAsistencia', agenda)" tooltip="Registrar inasistencia"
+                         (click)="eventosTurno('sacarAsistencia')" tooltip="Registrar inasistencia"
                          tooltipPosition="top">
             </plex-button>
             <plex-button *ngIf="botones.darAsistencia && turnosSeleccionados?.length" class="mr-1"
                          ariaLabel="Registrar asistencia" size="sm" type="success" icon="account-check"
-                         (click)="eventosTurno('darAsistencia', agenda)" tooltip="Registrar asistencia"
-                         tooltipPosition="top">
+                         (click)="eventosTurno('darAsistencia')" tooltip="Registrar asistencia" tooltipPosition="top">
             </plex-button>
 
             <plex-help *ngIf="botones.nota && turnosSeleccionados?.length" class="mr-1" type="info"
