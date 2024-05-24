@@ -79,7 +79,7 @@ export class ElementosRUPService {
      * @param {any} params Opciones de busqueda
      */
     get(): Observable<IElementoRUP[]> {
-        return this.server.get(url, { showError: true }).pipe(
+        return this.server.get(url, { params: { activo: true }, showError: true }).pipe(
             // cacheStorage({ key: 'elementos-rup-v1', ttl: 60 * 8 })
         );
     }
