@@ -132,6 +132,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             paciente: this.turnoAReasignar.paciente,
             tipoPrestacion: this.turnoAReasignar.tipoPrestacion,
             tipoTurno: tipoTurno,
+            nota: this.turnoAReasignar.nota,
             reasignado: {
                 anterior: {
                     idAgenda: this.datosAgenda.idAgenda,
@@ -169,7 +170,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             };
 
             // Se guardan los datos del turno "nuevo" en el turno "viejo/suspendido" (PUT)
-            this.serviceTurno.put(datosTurnoReasignado).subscribe(agenda => {
+            this.serviceTurno.put(datosTurnoReasignado).subscribe(() => {
                 this.agendaDestino.agenda = resultado;
                 this.agendaDestino.turno = turno;
 
@@ -238,6 +239,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         );
     }
 
+    // Chequea y retorna el tipo de turno que se quiere reasignar
     asignarTipoTurno(bloque, turnoSuspendido) {
         let tipoTurno;
 
