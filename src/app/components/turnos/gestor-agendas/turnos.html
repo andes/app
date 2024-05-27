@@ -152,8 +152,7 @@
                             Suspendido</plex-badge>
                         <plex-badge *ngIf="!turno?.paciente?.id && turno?.estado === 'suspendido'" type="danger">
                             suspendido(sin paciente)</plex-badge>
-                        <plex-badge *ngIf="turno?.nota" size="sm" type="info" tooltip="{{turno.nota}}"
-                                    tooltipPosition="right">
+                        <plex-badge *ngIf="turno?.nota" size="sm" type="warning" tooltip="{{turno.nota}}">
                             <plex-icon name="message"></plex-icon>
                         </plex-badge>
                     </div>
@@ -263,8 +262,7 @@
                         </plex-badge>
                         <plex-badge *ngIf="sobreturno && sobreturno.estado === 'suspendido'" type="danger">
                             Suspendido</plex-badge>
-                        <plex-badge *ngIf="sobreturno?.nota" size="sm" type="warning" tooltip="{{sobreturno.nota}}"
-                                    tooltipPosition="right">
+                        <plex-badge *ngIf="sobreturno?.nota" size="sm" type="warning" tooltip="{{sobreturno.nota}}">
                             <plex-icon name="message"></plex-icon>
                         </plex-badge>
                     </div>
