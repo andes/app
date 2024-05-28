@@ -75,18 +75,19 @@ export class HudsBusquedaPacienteComponent implements OnInit {
     }
 
     onConfirmSelect(motivoAccesoHuds) {
-        if (motivoAccesoHuds) {
+        if (motivoAccesoHuds[0]) {
             // se obtiene token y loguea el acceso a la huds del paciente
             const paramsToken = {
                 usuario: this.auth.usuario,
                 organizacion: this.auth.organizacion,
                 paciente: this.pacienteSelected,
-                motivo: motivoAccesoHuds,
+                motivo: motivoAccesoHuds[0],
                 profesional: this.auth.profesional ? this.auth.profesional : null,
                 idTurno: null,
-                idPrestacion: null
+                idPrestacion: null,
+                detalleMotivo: motivoAccesoHuds[1]
             };
-            this.hudsService.generateHudsToken( paramsToken).subscribe(hudsToken => {
+            this.hudsService.generateHudsToken(paramsToken).subscribe(hudsToken => {
                 window.sessionStorage.setItem('huds-token', hudsToken.token);
                 window.sessionStorage.removeItem('motivoAccesoHuds');
                 this.router.navigate(['/huds/paciente/' + this.pacienteSelected.id]);
