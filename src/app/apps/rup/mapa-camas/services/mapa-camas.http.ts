@@ -40,11 +40,14 @@ export class MapaCamasHTTP {
         return this.server.get(`${this.url}/camas/historial`, { params });
     }
 
-    historialInternacion(ambito: string, capa: string, desde: Date, hasta: Date, idInternacion: string): Observable<ISnapshot[]> {
+    historialInternacion(ambito: string, capa: string, desde: Date, hasta: Date, idInternacion: string, organizacionID?: string): Observable<ISnapshot[]> {
         const params = {
             ambito,
             desde,
             hasta
+        };
+        if (organizacionID) {
+            params['idInternacion'] = idInternacion;
         };
         return this.server.get(`${this.url}/${capa}/${idInternacion}/historial`, { params });
     }
