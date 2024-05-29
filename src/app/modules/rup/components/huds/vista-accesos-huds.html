@@ -32,14 +32,9 @@
             </div>
         </td>
         <td *plTableCol="'motivo'">
-
-            <span *ngIf="acceso.motivoAcceso" class="text-secondary"
-                  style="padding: 10px;">{{acceso.motivoAcceso}}</span>
-            <plex-help *ngIf="acceso.detalleMotivo" type="help" icon="message" tooltip="Observación"
-                       titulo="Detalle del motivo" size="sm" cardSize="half">
-                {{ acceso.detalleMotivo }}
-            </plex-help>
-
+            <span *ngIf="acceso.motivoAcceso" class="text-secondary mr-2" hintIcon="message" detach="right"
+                  [hint]="acceso.detalleMotivo ? 'Observación: ' + acceso.detalleMotivo : null">{{acceso.motivoAcceso}}
+            </span>
         </td>
         <td *plTableCol="'organizacion'">
             <ng-container *ngIf="acceso.organizacion && acceso.organizacion.nombre">
