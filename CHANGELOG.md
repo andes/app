@@ -1,3 +1,10 @@
+## [5.138.1](https://github.com/andes/app/compare/v5.138.0...v5.138.1) (2024-05-29)
+
+
+### Bug Fixes
+
+* **cit:** visualizacion de nota en turno reasignado ([#3013](https://github.com/andes/app/issues/3013)) ([6f282d0](https://github.com/andes/app/commit/6f282d064974fc808c5736c5bbb23debf1abf615))
+
 # [5.138.0](https://github.com/andes/app/compare/v5.137.1...v5.138.0) (2024-05-22)
 
 
