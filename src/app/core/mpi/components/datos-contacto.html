@@ -135,7 +135,8 @@
                     </div>
                     <div>
                         <plex-bool class="mt-3" name="sitacionCalle" label="Vive en situación de calle"
-                                   [(ngModel)]="paciente.direccion[0].situacionCalle" (change)="changeSituacion()">
+                                   [(ngModel)]="paciente.direccion[0].situacionCalle"
+                                   (change)="changeSituacion($event)">
                         </plex-bool>
                     </div>
                     <div class="w-100" *ngIf="paciente.direccion[1]">
