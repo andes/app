@@ -17,7 +17,7 @@ import { BotonesAgendaGeneralPipe } from './gestor-agendas/pipes/botonesAgendaGe
 import { BotonesTurnosPipe } from './gestor-agendas/pipes/botonesTurnos.pipe';
 import { InfoAgendaComponent } from './gestor-agendas/info-agenda.component';
 import { SeleccionarFinanciadorComponent } from './dar-turnos/seleccionar-financiador.component';
-
+import { PrestacionesHabilitadasComponent } from './gestor-agendas/prestaciones-habilitadas/prestaciones-habilitadas.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -39,7 +39,8 @@ import { SeleccionarFinanciadorComponent } from './dar-turnos/seleccionar-financ
         BotonesAgendaGeneralPipe,
         BotonesTurnosPipe,
         InfoAgendaComponent,
-        SeleccionarFinanciadorComponent
+        SeleccionarFinanciadorComponent,
+        PrestacionesHabilitadasComponent
     ],
     exports: [
         DarTurnosComponent,
@@ -51,7 +52,8 @@ import { SeleccionarFinanciadorComponent } from './dar-turnos/seleccionar-financ
         BotonesAgendaGeneralPipe,
         BotonesTurnosPipe,
         InfoAgendaComponent,
-        SeleccionarFinanciadorComponent
+        SeleccionarFinanciadorComponent,
+        PrestacionesHabilitadasComponent
     ],
 })
 export class CITASLibModule {
