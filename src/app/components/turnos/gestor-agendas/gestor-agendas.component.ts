@@ -1036,5 +1036,9 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             }
         }
     }
+
+    habilitarProfesional() {
+        this.router.navigate(['citas/prestaciones_habilitadas']);
+    }
 }
 

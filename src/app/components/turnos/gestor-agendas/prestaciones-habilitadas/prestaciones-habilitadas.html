@@ -1,0 +1,68 @@
+<plex-layout *ngIf="!crearNuevoAcceso" [main]="12" resizable="true" [min]="4" [max]="5" [steps]="2">
+    <plex-layout-main>
+        <plex-title titulo="Prestaciones Habilitadas" size="lg">
+            <plex-button type="danger" label="Volver" (click)="volver()" class="mr-1"></plex-button>
+            <plex-button type="success" label="Nuevo acceso" (click)="verNuevoAcceso(true)"></plex-button>
+        </plex-title>
+        <plex-label icon="informacion" type="warning" size="lg" direction="column" titulo="No hay permisos disponibles."
+                    subtitulo="Para crear nuevos, presione el botón." class="warning">
+        </plex-label>
+    </plex-layout-main>
+</plex-layout>
+
+<plex-layout *ngIf="crearNuevoAcceso">
+    <plex-layout-main>
+        <plex-title titulo="Crear nuevo acceso" size="lg">
+            <plex-button type="danger" label="Cancelar" (click)="cancelar()" class="mr-1"></plex-button>
+            <plex-button type="success" label="Guardar" (click)="guardarAcceso()"></plex-button>
+        </plex-title>
+
+        <plex-card size="sm" type="dark" mode="filled" class="d-block w-75 mt-4">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam atque iusto culpa. Voluptate blanditiis
+            illo aspernatur voluptatibus. Nam commodi quaerat blanditiis consequuntur aliquam distinctio facere
+            dolor
+            hic eligendi, tempora quod.
+        </plex-card>
+
+        <form #formulario="ngForm">
+            <plex-grid size="md" type="full" cols="2">
+                <plex-select label="Tipo de Prestación" name="tipoPrestacion" [(ngModel)]="nuevoAcceso.tipoPrestacion"
+                             labelField="term" tmPrestaciones="rup:tipoPrestacion:?" [preload]="true">
+                </plex-select>
+                <plex-select [(ngModel)]="nuevoAcceso.profesional" tmProfesionales name="profesional"
+                             label="Profesional" ngModelOptions="{standalone: true}">
+                </plex-select>
+
+                <div class="d-flex" style="gap: 5px">
+                    <plex-datetime type="date" [(ngModel)]="nuevoAcceso.fechaDesde" [required]="true" name="fechaDesde"
+                                   label="Desde">
+                    </plex-datetime>
+                    <plex-datetime type="date" [(ngModel)]="nuevoAcceso.fechaHasta" [required]="true" name="fechaDesde"
+                                   label="Hasta">
+                    </plex-datetime>
+                </div>
+            </plex-grid>
+
+            <div class="mt-4">
+                <plex-title titulo="Rango horario" size="md" class="mt-4"></plex-title>
+                <div class="d-flex" style="gap: 5px">
+                    <plex-datetime type="time" [(ngModel)]="nuevoAcceso.horaDesde" [required]="true" name="horaDesde"
+                                   label="Desde">
+                    </plex-datetime>
+                    <plex-datetime type="time" [(ngModel)]="nuevoAcceso.horaHasta" [required]="true" name="horaHasta"
+                                   label="Hasta">
+                    </plex-datetime>
+                </div>
+            </div>
+            <div class="mt-4">
+                <plex-title titulo="Seleccione día de semana" size="md" class="mt-4"></plex-title>
+                <div class="d-flex plex-column mt-4">
+                    <div *ngFor="let dia of diasSemana; let i = index" class="mr-3">
+                        <plex-bool [(ngModel)]="diasSelected[dia.id]" [ngModelOptions]="{standalone: true}"
+                                   label="{{dia.label}}"></plex-bool>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </plex-layout-main>
+</plex-layout>
