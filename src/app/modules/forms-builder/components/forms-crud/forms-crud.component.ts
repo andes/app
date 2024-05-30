@@ -199,7 +199,7 @@ export class AppFormsCrudComponent implements OnInit {
                 if (f.sections && f.sections.length > 0) {
                     f.sections.forEach(s => {
                         const r = aux.find(item => {
-                            if (item.seccion.name === s?.name) {
+                            if (item.seccion?.name === s?.name) {
                                 item.campos.push(cloneField);
                                 return true;
                             }

@@ -15,7 +15,13 @@
         <form #form="ngForm">
 
             <ng-container *ngFor="let seccion of secciones">
-                <plex-title size="sm" titulo="{{seccion.name}}"></plex-title>
+                <plex-title *ngIf="seccion.name==='Contactos Estrechos';else notContactos" size="sm"
+                            titulo="{{seccion.name}}">
+                    <plex-button *ngIf="editFicha" type="info" size="sm" (click)="showNuevoContacto()">
+                        Agregar contacto</plex-button>
+                </plex-title>
+                <plex-title size="sm" *ngIf="seccion.name!=='Contactos Estrechos'"
+                            titulo="{{seccion.name}}"></plex-title>
                 <plex-grid>
                     <ng-container *ngFor="let field of seccion.fields" [ngSwitch]="field.type">
                         <ng-container *ngIf="checkDependency(field)">
@@ -57,6 +63,62 @@
                                          [multiple]="field.multiple">
                             </plex-select>
                         </ng-container>
+                        <div *ngIf="field.key==='tablacontactos'">
+                            <plex-table [columns]="columns" #table="plTable">
+                                <plex-table-columns>
+                                </plex-table-columns>
+                                <tr *ngFor="let contacto of contactosEstrechos">
+                                    <td *plTableCol="'apellidoNombre'">{{contacto.apellidoNombre}}</td>
+                                    <td *plTableCol="'dni'">{{contacto.dni}}</td>
+                                    <td *plTableCol="'telefono'">{{contacto.telefono}}</td>
+                                    <td *plTableCol="'domicilio'">{{contacto.domicilio}}</td>
+                                    <td *plTableCol="'fechaContacto'">{{contacto.fechaUltimoContacto ?
+                                        (contacto.fechaUltimoContacto | fecha) : ''}}</td>
+                                    <td *plTableCol="'tipoContacto'">{{contacto.tipoContacto.nombre}}</td>
+                                    <td *plTableCol="'acciones'">
+                                        <plex-icon *ngIf="editFicha" size="xl" type="danger" name="delete"
+                                                   (click)="deleteContacto(contacto)" class="hover"></plex-icon>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="nuevoContacto">
+                                    <td *plTableCol="'apellidoNombre'">
+                                        <plex-text name="apellidoNombre" [(ngModel)]="contacto.apellidoNombre"
+                                                   [readonly]="!editFicha">
+                                        </plex-text>
+                                    </td>
+                                    <td *plTableCol="'dni'">
+                                        <plex-text name="dni" [(ngModel)]="contacto.dni" [readonly]="!editFicha">
+                                        </plex-text>
+                                    </td>
+                                    <td *plTableCol="'telefono'">
+                                        <plex-phone name="telefono" [(ngModel)]="contacto.telefono"
+                                                    [readonly]="!editFicha">
+                                        </plex-phone>
+                                    </td>
+                                    <td *plTableCol="'domicilio'">
+                                        <plex-text name="domicilio" [(ngModel)]="contacto.domicilio"
+                                                   [readonly]="!editFicha">
+                                        </plex-text>
+                                    </td>
+                                    <td *plTableCol="'fechaContacto'">
+                                        <plex-datetime name="fechaContacto" type="date"
+                                                       [(ngModel)]="contacto.fechaUltimoContacto"
+                                                       [readonly]="!editFicha">
+                                        </plex-datetime>
+                                    </td>
+                                    <td *plTableCol="'tipoContacto'">
+                                        <plex-select name="tipoContacto" [(ngModel)]="contacto.tipoContacto"
+                                                     [data]="tipoContacto" [readonly]="!editFicha">
+                                        </plex-select>
+                                    </td>
+                                    <td *plTableCol="'acciones'">
+                                        <plex-icon size=" xl" type="success" name="mas" class="hover"
+                                                   (click)="addContacto()">
+                                        </plex-icon>
+                                    </td>
+                                </tr>
+                            </plex-table>
+                        </div>
                     </ng-container>
                 </plex-grid>
             </ng-container>

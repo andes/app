@@ -22,5 +22,6 @@ export const FIELD_PRC = 'identificadorpcr';
 
 export const TYPE_FICHA = Object.freeze({
     UMA: 'UMA',
-    COVID: 'covid19'
+    COVID: 'covid19',
+    HANTAVIRUS: 'Hantavirus'
 });
