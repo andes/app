@@ -2,9 +2,12 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { AfterContentInit, Component, EventEmitter, Input, Optional, Output, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
-import { Observable } from 'rxjs';
+import { LaboratorioService } from 'projects/portal/src/app/services/laboratorio.service';
+import { Observable, forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { InternacionResumenHTTP } from 'src/app/apps/rup/mapa-camas/services/resumen-internacion.http';
+import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { SECCION_CLASIFICACION } from 'src/app/modules/epidemiologia/constantes';
 import { FormsEpidemiologiaService } from 'src/app/modules/epidemiologia/services/ficha-epidemiologia.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
@@ -14,8 +17,6 @@ import { getSemanticClass } from '../../pipes/semantic-class.pipes';
 import { EmitConcepto, RupEjecucionService } from '../../services/ejecucion.service';
 import { HUDSService } from '../../services/huds.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
-import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'rup-hudsBusqueda',
@@ -154,7 +155,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
         private formEpidemiologiaService: FormsEpidemiologiaService,
         private resumenHTTP: InternacionResumenHTTP,
         @Optional() private ejecucionService: RupEjecucionService,
-        private pacienteService: PacienteService
+        private pacienteService: PacienteService,
+        private laboratorioService: LaboratorioService,
     ) {
     }
 
@@ -281,6 +283,9 @@ export class HudsBusquedaComponent implements AfterContentInit {
                 registro.id = registro.id;
                 registro.tipo = 'internacion';
                 registro.index = index;
+                break;
+            case 'laboratorio':
+                gtag('huds-open', tipo, 'laboratorio', index);
                 break;
         }
 
@@ -428,39 +433,66 @@ export class HudsBusquedaComponent implements AfterContentInit {
         });
     }
 
+    private ordenarLaboratorios(laboratorios, protocolos) {
+        const listaProtocolos = protocolos[0]?.Data;
+        const listado = listaProtocolos ? [...laboratorios, ...listaProtocolos] : [...laboratorios];
+
+        return listado.sort((a, b) => {
+            const fechaA = moment(a.fecha);
+            const fechaB = moment(b.fecha);
+            return fechaB.diff(fechaA);
+        });
+
+    }
+
     // Trae los cdas registrados para el paciente
     buscarCDAPacientes(token) {
-        this.servicioPrestacion.getCDAByPaciente(this.paciente.id, token).subscribe(registros => {
-            this.cdas = registros.map(cda => {
-                cda.id = cda.cda_id;
-                return {
-                    data: cda,
-                    tipo: 'cda',
-                    prestacion: cda.prestacion.snomed,
-                    profesional: cda.profesional ? `${cda.profesional.apellido} ${cda.profesional.nombre}` : '',
-                    fecha: cda.fecha,
-                    estado: 'validada',
-                    ambito: 'ambulatorio',
-                    organizacion: cda.organizacion.id
-                };
-            });
-            this.prestaciones = this.prestacionesCopia;
-            // filtramos las vacunas y laboratorios por ahora para que se listan por separado
-            this.vacunas = this.cdas.filter(cda => cda.prestacion.conceptId === ConceptosTurneablesService.Vacunas_CDA_ID);
-            this.laboratorios = this.cdas.filter(cda => cda.prestacion.conceptId === ConceptosTurneablesService.Laboratorio_CDA_ID
-                || cda.prestacion.conceptId === ConceptosTurneablesService.Laboratorio_SISA_CDA_ID);
+        const { estado, documento: dni, fechaNacimiento, apellido } = this.paciente;
+        const fecNac = moment(fechaNacimiento).format('yyyyMMDD');
+        const fechaHta = moment().format('yyyyMMDD');
 
-            // DEjamos el resto de los CDAS y los unimos a las prestaciones
-            const filtro = this.cdas.filter(cda => {
-                return cda.prestacion.conceptId !== ConceptosTurneablesService.Vacunas_CDA_ID
-                    && cda.prestacion.conceptId !== ConceptosTurneablesService.Laboratorio_CDA_ID
-                    && cda.prestacion.conceptId !== ConceptosTurneablesService.Laboratorio_SISA_CDA_ID;
-            });
-            // Filtramos por CDA para poder recargar los estudiosc
-            this.prestaciones = [...this.prestaciones.filter(e => e.tipo !== 'cda'), ...filtro];
-            this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
-            this.prestacionesCopia = this.prestaciones.slice();
-            this.filtrar();
+        forkJoin({
+            protocolos: this.laboratorioService.getProtocolos({ estado, dni, fecNac, apellido, fechaDde: '20200101', fechaHta }),
+            cdaByPaciente: this.servicioPrestacion.getCDAByPaciente(this.paciente.id, token)
+        }).subscribe({
+            next: (resultados) => {
+                const protocolos = resultados.protocolos || [];
+
+                this.servicioPrestacion.getCDAByPaciente(this.paciente.id, token).subscribe(registros => {
+                    this.cdas = registros.map(cda => {
+                        cda.id = cda.cda_id;
+                        return {
+                            data: cda,
+                            tipo: 'cda',
+                            prestacion: cda.prestacion.snomed,
+                            profesional: cda.profesional ? `${cda.profesional.apellido} ${cda.profesional.nombre}` : '',
+                            fecha: cda.fecha,
+                            estado: 'validada',
+                            ambito: 'ambulatorio',
+                            organizacion: cda.organizacion.id
+                        };
+                    });
+                    this.prestaciones = this.prestacionesCopia;
+                    // filtramos las vacunas y laboratorios por ahora para que se listan por separado
+                    this.vacunas = this.cdas.filter(cda => cda.prestacion.conceptId === ConceptosTurneablesService.Vacunas_CDA_ID);
+                    this.laboratorios = this.cdas.filter(cda => cda.prestacion.conceptId === ConceptosTurneablesService.Laboratorio_CDA_ID
+                        || cda.prestacion.conceptId === ConceptosTurneablesService.Laboratorio_SISA_CDA_ID);
+
+                    this.laboratorios = this.ordenarLaboratorios(this.laboratorios, protocolos);
+
+                    // DEjamos el resto de los CDAS y los unimos a las prestaciones
+                    const filtro = this.cdas.filter(cda => {
+                        return cda.prestacion.conceptId !== ConceptosTurneablesService.Vacunas_CDA_ID
+                            && cda.prestacion.conceptId !== ConceptosTurneablesService.Laboratorio_CDA_ID
+                            && cda.prestacion.conceptId !== ConceptosTurneablesService.Laboratorio_SISA_CDA_ID;
+                    });
+                    // Filtramos por CDA para poder recargar los estudiosc
+                    this.prestaciones = [...this.prestaciones.filter(e => e.tipo !== 'cda'), ...filtro];
+                    this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
+                    this.prestacionesCopia = this.prestaciones.slice();
+                    this.filtrar();
+                });
+            }
         });
     }
 

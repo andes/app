@@ -584,7 +584,7 @@
                     <ng-container *ngFor="let laboratorio of laboratorios; let iLaboratorio = index">
                         <li>
                             <div class="rup-card mini laboratorio"
-                                 [ngClass]="{'active': huds.isOpen(laboratorio.data, 'cda')}">
+                                 [ngClass]="{'active': huds.isOpen(laboratorio,  laboratorio.idProtocolo ? 'laboratorio' : 'cda')}">
                                 <div class="rup-header">
                                     <div class="rup-border rup-border-laboratorio">
                                         <div class="row p-0 m-0 border-secondary border-left-0">
@@ -596,21 +596,40 @@
                                                         </div>
                                                     </ng-container>
                                                     <div class="col p-0 pl-2 float-left"
-                                                         (click)="emitTabs(laboratorio, 'cda', iLaboratorio)">
-                                                        {{ laboratorio?.prestacion.term }}
+                                                         (click)="emitTabs(laboratorio, laboratorio.idProtocolo ? 'laboratorio' : 'cda', iLaboratorio)">
+                                                        <div>
+                                                            <small>
+                                                                <span *ngIf="laboratorio?.prestacion?.term">{{
+                                                                    laboratorio?.prestacion?.term}}</span>
+                                                                <span *ngIf="laboratorio?.idProtocolo">Informe de
+                                                                    laboratorio:
+                                                                    <b>Protocolo {{laboratorio?.idProtocolo}}</b>
+                                                                </span>
+                                                            </small>
+                                                        </div>
                                                         <div class="row p-0 m-0">
                                                             <div class="col-10 p-0 m-0">
-                                                                <div class="text-sm">
-                                                                    Solicitante:
-                                                                    {{laboratorio?.profesional?.nombre}}
+                                                                <div *ngIf="laboratorio?.documento">
+                                                                    <small>Paciente: <b>{{ laboratorio?.apellido
+                                                                            }}, {{
+                                                                            laboratorio?.nombre }}</b></small>
                                                                 </div>
-                                                                <div class="text-sm">
-                                                                    Organización:
-                                                                    {{laboratorio?.data.organizacion?.nombre }}
+                                                                <div>
+                                                                    <small>Organización: <b>{{
+                                                                            laboratorio?.data?.organizacion?.nombre ||
+                                                                            laboratorio?.efectorSolicitante
+                                                                            }}</b></small>
                                                                 </div>
-                                                                <small class="sugerido">
-                                                                    Fecha: {{laboratorio?.fecha | fecha}}
-                                                                </small>
+                                                                <div *ngIf="laboratorio?.fecha " class="text-xs">
+                                                                    <small>Fecha: <b>{{laboratorio?.fecha |
+                                                                            fecha}}</b></small>
+                                                                </div>
+                                                                <div *ngIf="laboratorio?.efectorSolicitante || laboratorio?.profesional"
+                                                                     class="text-sm">
+                                                                    <small>Médico solicitante: <b>{{
+                                                                            laboratorio?.medicoSolicitante ||
+                                                                            laboratorio?.profesional }}</b></small>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
