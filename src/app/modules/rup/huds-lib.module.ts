@@ -28,6 +28,7 @@ import { VistaSolicitudTopComponent } from './components/huds/vistaSolicitudTop'
 import { ElementosRUPModule } from './elementos-rup.module';
 import { RUPLibModule } from './rup-lib.module';
 import { VistaHistorialTurnosComponent } from './components/huds/vistaHistorialTurnos.component';
+import { VistaLaboratorioComponent } from './components/ejecucion/laboratorios/vista-laboratorio.component';
 
 @NgModule({
     imports: [
@@ -50,6 +51,7 @@ import { VistaHistorialTurnosComponent } from './components/huds/vistaHistorialT
     ],
     declarations: [
         VistaCDAComponent,
+        VistaLaboratorioComponent,
         VistaIPSComponent,
         ResumenPacienteEstaticoComponent,
         ResumenPacienteDinamicoComponent,
@@ -67,6 +69,7 @@ import { VistaHistorialTurnosComponent } from './components/huds/vistaHistorialT
     ],
     exports: [
         VistaCDAComponent,
+        VistaLaboratorioComponent,
         VistaIPSComponent,
         ResumenPacienteEstaticoComponent,
         ResumenPacienteDinamicoComponent,

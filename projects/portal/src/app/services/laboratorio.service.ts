@@ -20,7 +20,6 @@ export class LaboratorioService {
         return this.server.get(`${this.mobileUrl}/laboratorios/${id}`).pipe(
             cacheStorage({ key: 'laboratorios' })
         );
-
     }
 
     getLaboratorio(id: number | string, idPaciente) {
@@ -29,11 +28,18 @@ export class LaboratorioService {
         );
     }
 
+    getProtocolos({ estado, dni, fecNac, apellido, fechaDde, fechaHta }) {
+        return this.server.get(`/modules/rup/protocolosLab?estado=${estado}&dni=${dni}&fecNac=${fecNac}&apellido=${apellido}&fechaDde=${fechaDde}&fechaHta=${fechaHta}`);
+    }
+
+    getByProtocolo(id: number) {
+        return this.server.get(`/modules/rup/protocolosLab/${id}`);
+    }
+
     descargar(cda) {
         if (cda.confidentialityCode !== 'R') {
             const url = environment.API + '/modules/cda/' + cda.adjuntos[0] + '?token=' + this.auth.getToken();
             window.open(url);
         }
     }
-
 }

@@ -94,6 +94,12 @@ export class HUDSService {
                             return i;
                         }
                         break;
+
+                    case 'laboratorio':
+                        if (registro.idProtocolo === _registro.idProtocolo) {
+                            return i;
+                        }
+                        break;
                 }
             }
         }
