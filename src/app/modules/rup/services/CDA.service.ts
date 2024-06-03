@@ -41,7 +41,7 @@ export class CDAService {
     }
 
     download(url, data): Observable<any> {
-        return this.server.post(this.CDAUrl + '/' + url, data, { responseType: 'blob' } as any);
+        return this.server.post(this.CDAUrl + url, data, { responseType: 'blob' } as any);
     }
 
     /**
