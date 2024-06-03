@@ -11,6 +11,7 @@
             -1].matriculaNumero:''):'NO MATRICULADO'}}</span>
 
     </plex-badge>
+    <plex-badge *ngIf="!profesionalHabilitado" type="danger">DESHABILITADO</plex-badge>
     <ng-template #notProfesional>
         <plex-badge type="default">
             Sin datos
@@ -44,7 +45,8 @@
                            placeholder="usuario@mail.com" [required]="true">
                 </plex-text>
 
-                <plex-bool class="mt-4" label="Reenviar link de activación" [(ngModel)]="activate" name="activate" type="slide">
+                <plex-bool class="mt-4" label="Reenviar link de activación" [(ngModel)]="activate" name="activate"
+                           type="slide">
                 </plex-bool>
             </form>
         </plex-help>
