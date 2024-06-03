@@ -133,7 +133,6 @@ export class PacienteComponent implements OnInit {
     public paciente: IPaciente;
     public showDeshacer = false;
     private subscripcionValidar: Subscription = null;
-
     origen = '';
     tipoPaciente = '';
     contactoImportado = false;
@@ -185,23 +184,26 @@ export class PacienteComponent implements OnInit {
                 this.historialBusquedaService.add(this.paciente);
 
                 // Busco el paciente en mongodb
-                this.pacienteService.getById(this.paciente.id).subscribe(resultado => {
-                    if (resultado) {
-                        if (!resultado.scan) {
-                            resultado.scan = this.scanCode;
+                this.pacienteService.getById(this.paciente.id).subscribe({
+                    next: (resultado) => {
+                        if (resultado) {
+                            if (!resultado.scan) {
+                                resultado.scan = this.scanCode;
+                            }
+                            if (this.escaneado && resultado.estado !== 'validado') {
+                                resultado.nombre = resultado.nombre.toUpperCase();
+                                resultado.apellido = resultado.apellido.toUpperCase();
+                            }
+                            this.paciente = Object.assign({}, resultado);
+                            this.loading = false;
                         }
-                        if (this.escaneado && resultado.estado !== 'validado') {
-                            resultado.nombre = resultado.nombre.toUpperCase();
-                            resultado.apellido = resultado.apellido.toUpperCase();
-                        }
-                        this.paciente = Object.assign({}, resultado);
+                        this.actualizarDatosPaciente();
                         this.loading = false;
+                    },
+                    error: () => {
+                        this.loading = false;
+                        this._router.navigate(['apps/mpi/busqueda']);
                     }
-                    this.actualizarDatosPaciente();
-                    this.loading = false;
-                }, () => {
-                    this.loading = false;
-                    this._router.navigate(['apps/mpi/busqueda']);
                 });
             } else {
                 if (this.escaneado) {
@@ -420,7 +422,6 @@ export class PacienteComponent implements OnInit {
             }
         } else {
             const paciente = this.prepararPaciente(this.mergePaciente(this.pacienteModel, this.pacienteExtranjero), ignoreSuggestions);
-
             if (paciente) {
                 this.guardarPaciente(paciente).subscribe((paciente) => {
                     const vinculado = this.pacienteVinculadoCache.getPacienteValor();

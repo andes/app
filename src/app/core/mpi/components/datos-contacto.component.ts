@@ -441,7 +441,7 @@ export class DatosContactoComponent implements OnInit {
     // ------------------------ MAPA ------------------------
 
     get disableGeoreferenciar() {
-        return !(this.paciente.direccion[0].valor && this.paciente.direccion[0].ubicacion.provincia && this.paciente.direccion[0].ubicacion.localidad);
+        return !(this.paciente.direccion[0].valor && this.paciente.direccion[0].ubicacion.provincia && this.paciente.direccion[0].ubicacion.localidad) || this.paciente.direccion[0].situacionCalle;
     }
 
     refreshMap() {
@@ -468,5 +468,9 @@ export class DatosContactoComponent implements OnInit {
                     return this.georeferencia$;
                 }),
                 cache());
+    }
+
+    changeSituacion(event) {
+        this.paciente.direccion[0].situacionCalle = event.value;
     }
 }

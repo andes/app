@@ -133,6 +133,12 @@
                                      (click)="geoReferenciar()">
                         </plex-button>
                     </div>
+                    <div>
+                        <plex-bool class="mt-3" name="sitacionCalle" label="Vive en situación de calle"
+                                   [(ngModel)]="paciente.direccion[0].situacionCalle"
+                                   (change)="changeSituacion($event)">
+                        </plex-bool>
+                    </div>
                     <div class="w-100" *ngIf="paciente.direccion[1]">
                         <hr class="w-100">
                         <plex-grid type="auto" size="sm" cols="2">
