@@ -4,9 +4,14 @@
     <plex-modal-subtitle type="">Por favor, indique el motivo de acceso:</plex-modal-subtitle>
     <main>
         <div class="w-100">
-            <div class="w-50">
+            <div class="w-60 ">
                 <plex-radio [(ngModel)]="motivoSelected" [data]="motivosAccesoHuds">
                 </plex-radio>
+            </div>
+            <div class="mt-4">
+                <plex-text placeholder="Describa brevemente el motivo de acceso" multiline="true" name="multi"
+                           [(ngModel)]="detalleMotivo">
+                </plex-text>
             </div>
 
             <div class="mt-4">

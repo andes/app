@@ -44,7 +44,7 @@ export class ModalMotivoAccesoHudsService {
         });
     }
 
-    private hudsToken(paciente, motivo: string, turno?: string, prestacion?: string) {
+    private hudsToken(paciente, motivo: string, turno?: string, prestacion?: string, detalle?: string) {
         const paramsToken = {
             usuario: this.auth.usuario,
             organizacion: this.auth.organizacion,
@@ -52,7 +52,8 @@ export class ModalMotivoAccesoHudsService {
             motivo: motivo,
             profesional: this.auth.profesional,
             idTurno: turno,
-            idPrestacion: prestacion
+            idPrestacion: prestacion,
+            detalleMotivo: detalle
         };
         return this.hudsService.generateHudsToken(paramsToken).pipe(
             tap((hudsToken) => {

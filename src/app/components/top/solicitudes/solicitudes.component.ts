@@ -656,20 +656,22 @@ export class SolicitudesComponent implements OnInit {
     }
 
     preAccesoHuds(motivoAccesoHuds) {
-        if (motivoAccesoHuds) {
+        if (motivoAccesoHuds[0]) {
             if (!this.accesoHudsPaciente && !this.accesoHudsPrestacion && this.routeToParams && this.routeToParams[0] === 'huds') {
                 // Se esta accediendo a 'HUDS DE UN PACIENTE'
-                window.sessionStorage.setItem('motivoAccesoHuds', motivoAccesoHuds);
+                window.sessionStorage.setItem('motivoAccesoHuds', motivoAccesoHuds[0]);
             } else {
                 if (this.accesoHudsPaciente) {
                     const paramsToken = {
                         usuario: this.auth.usuario,
                         organizacion: this.auth.organizacion,
                         paciente: this.accesoHudsPaciente,
-                        motivo: motivoAccesoHuds,
+                        motivo: motivoAccesoHuds[0],
                         profesional: this.auth.profesional,
                         idTurno: this.accesoHudsTurno,
-                        idPrestacion: this.accesoHudsPrestacion
+                        idPrestacion: this.accesoHudsPrestacion,
+                        detalleMotivo: motivoAccesoHuds[1]
+
                     };
                     this.hudsService.generateHudsToken(paramsToken).subscribe(hudsToken => {
                         // se obtiene token y loguea el acceso a la huds del paciente
