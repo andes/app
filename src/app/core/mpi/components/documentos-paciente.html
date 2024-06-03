@@ -12,10 +12,10 @@
                      [data]="tipoDocumentos" (change)="onTipoChange()">
         </plex-select>
 
-        <upload-file label="Adjuntar archivo" (onUpload)="onUpload($event)" [extensiones]="extensions" modulo="mpi">
+        <upload-file label="Adjuntar archivo" (onUpload)="onUpload($event)" [extensiones]="extensions">
         </upload-file>
     </div>
-    <shared-galeria-archivos [files]="archivos | galeria | async" (remove)="imageRemoved($event)">
+    <shared-galeria-archivos [files]="archivos | galeria | async" (remove)="imageRemoved($event)" [modulo]="'mpi'">
     </shared-galeria-archivos>
 </ng-container>
 

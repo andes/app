@@ -1,4 +1,4 @@
-import { FileObject, IMAGENES_EXT, } from '@andes/shared';
+import { FileObject, IMAGENES_EXT } from '@andes/shared';
 import { OnInit, Component, Input } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { DriveService } from 'src/app/services/drive.service';

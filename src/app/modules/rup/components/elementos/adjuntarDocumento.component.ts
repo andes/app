@@ -130,10 +130,11 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         this.adjuntosService.delete(this.adjunto._id).subscribe(() => { });
     }
 
-    get documentos() {
-        if (this.registro.valor && this.registro.valor.documentos) {
+    documentos() {
+        if (this.registro.valor?.documentos) {
             return this.registro.valor.documentos.map((doc) => {
                 doc.url = this.createUrl(doc);
+
                 return doc;
             });
         } else {
@@ -150,9 +151,4 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
             });
         }
     }
-
-    open(index: number) {
-        this.plexVisualizador.open(this.documentos, index);
-    }
 }
-// ElementosRUPRegister.register('AdjuntarDocumentoComponent', AdjuntarDocumentoComponent);
