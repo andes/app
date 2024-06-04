@@ -15,7 +15,7 @@
                 <plex-icon class="icon-video" size="xxl" name="mp4-outline"></plex-icon>
             </div>
         </ng-container>
-        <plex-button *ngIf="modulo !== 'rup'" type="success" size="sm" icon="download" (click)="openUrl(archivo)">
+        <plex-button type="success" size="sm" icon="download" (click)="openUrl(archivo)">
         </plex-button>
         <plex-button *ngIf="archivo.isImage" type="info" size="sm" icon="eye" (click)="open(i)">
         </plex-button>
@@ -36,7 +36,7 @@
         </ng-container>
         <ng-container *ngIf="verificarDocumento(file.ext)">
             <div justify="center">
-                <plex-icon size="xxl" name="pdf-outline" type="info"></plex-icon>
+                <plex-icon size="xxl" name="pdf-outline" type="info" (click)="openUrl(file)"></plex-icon>
             </div>
         </ng-container>
         <ng-container *ngIf="verificarVideo(file.ext)">
