@@ -1,3 +1,19 @@
+# [5.139.0](https://github.com/andes/app/compare/v5.138.1...v5.139.0) (2024-06-05)
+
+
+### Bug Fixes
+
+* **CIT:** modificar esquema de obra social al dar sobreturno ([#2985](https://github.com/andes/app/issues/2985)) ([a4356fa](https://github.com/andes/app/commit/a4356fa2a120730b25cca6005cac98f0ea3c6d9b))
+* **HUDS:** Corrige ruta al descargar pdf ([#3016](https://github.com/andes/app/issues/3016)) ([02f82f6](https://github.com/andes/app/commit/02f82f6f3570daa34b16ef9f1e714507de254f8a))
+* **LIB:** cambia el  label para marcar conflictos ([#3021](https://github.com/andes/app/issues/3021)) ([60b70ab](https://github.com/andes/app/commit/60b70aba6c83c651ea87b5a2316302d8f1450259))
+* **RUP:** Agregar un cursor  tipo puntero sobre los adjuntos ([#3020](https://github.com/andes/app/issues/3020)) ([92fc205](https://github.com/andes/app/commit/92fc20582b900d65afdf31e8ce459f4e6dd10fb8))
+* **RUP:** Visualizar botón de desacarga de adjuntos ([#3019](https://github.com/andes/app/issues/3019)) ([73c9ec6](https://github.com/andes/app/commit/73c9ec6540cd65955f5d822f93266b4a954ab325))
+
+
+### Features
+
+* **HUDS-77:** Declaración jurada de acceso a la HUDS ([#3009](https://github.com/andes/app/issues/3009)) ([291a3a2](https://github.com/andes/app/commit/291a3a2acc9191695c33cb5f155688cb169d601d))
+
 ## [5.138.1](https://github.com/andes/app/compare/v5.138.0...v5.138.1) (2024-05-29)
 
 
