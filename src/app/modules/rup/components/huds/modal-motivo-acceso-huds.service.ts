@@ -19,14 +19,14 @@ export class ModalMotivoAccesoHudsService {
 
     }
 
-    private askForReason(): Observable<string> {
+    private askForReason(): Observable<string[]> {
         return new Observable((observer) => {
             const componentFactory = this.componentFactoryResolver.resolveComponentFactory(ModalMotivoAccesoHudsComponent);
             const componentRef = componentFactory.create(this.injector);
             const modalComponent = componentRef.instance;
             modalComponent.show = true;
 
-            const sub = modalComponent.motivoAccesoHuds.subscribe((motivo: string) => {
+            const sub = modalComponent.motivoAccesoHuds.subscribe((motivo: string[]) => {
                 observer.next(motivo);
                 observer.complete();
             });
@@ -68,10 +68,16 @@ export class ModalMotivoAccesoHudsService {
     getAccessoHUDS(paciente: IPaciente) {
         return this.askForReason().pipe(
             switchMap(motivo => {
+                let textoMotivo = '';
+                let detalleMotivo;
                 if (!motivo) {
                     return throwError({ error: 'NO SE SELECCIONO MOTIVO' });
                 }
-                return this.hudsToken(paciente, motivo);
+                if (typeof motivo === 'object') {
+                    textoMotivo = motivo[0] ? motivo[0] : '';
+                    detalleMotivo = motivo[1] ? motivo[1] : null;
+                }
+                return this.hudsToken(paciente, textoMotivo, null, null, detalleMotivo);
             })
         );
     }
