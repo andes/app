@@ -838,26 +838,27 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     preAccesoHuds(motivoAccesoHuds) {
+        const motivo = (typeof motivoAccesoHuds !== 'string') ? motivoAccesoHuds[0] : motivoAccesoHuds;
+
         const doRoute = () => this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
-        if ((this.tieneAccesoHUDS || this.motivoVerContinuarPrestacion === motivoAccesoHuds[0]) && motivoAccesoHuds[0]) {
+        if ((this.tieneAccesoHUDS || this.motivoVerContinuarPrestacion === motivo) && motivo) {
             if (this.prestacionNominalizada) {
                 this.accesoHudsPaciente = null;
             }
             if (!this.accesoHudsPaciente && !this.accesoHudsPrestacion && this.routeToParams && this.routeToParams[0] === 'huds') {
                 // Se esta accediendo a 'HUDS DE UN PACIENTE'
-                window.sessionStorage.setItem('motivoAccesoHuds', motivoAccesoHuds[0]);
+                window.sessionStorage.setItem('motivoAccesoHuds', motivo);
                 doRoute();
             } else if (this.accesoHudsPaciente) {
                 const paramsToken = {
                     usuario: this.auth.usuario,
                     organizacion: this.auth.organizacion,
                     paciente: this.accesoHudsPaciente,
-                    motivo: motivoAccesoHuds[0],
+                    motivo,
                     profesional: this.auth.profesional,
                     idTurno: this.accesoHudsTurno,
                     idPrestacion: this.accesoHudsPrestacion,
-                    detalleMotivo: motivoAccesoHuds[1]
-
+                    detalleMotivo: (typeof motivoAccesoHuds !== 'string') ? motivoAccesoHuds[1] : ''
                 };
                 this.hudsService.generateHudsToken(paramsToken).subscribe(hudsToken => {
                     // se obtiene token y loguea el acceso a la huds del paciente
