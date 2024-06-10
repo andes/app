@@ -97,7 +97,7 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
 
                 this.fichaPaciente.secciones.map(sec => {
                     if (sec.name !== SECCION_CONTACTOS_ESTRECHOS && sec.name !== SECCION_OPERACIONES) {
-                        const buscado = this.secciones.findIndex(seccion => seccion.name === sec.name);
+                        const buscado = this.secciones.findIndex(seccion => seccion.id === sec.id);
                         if (buscado !== -1) {
                             if (sec.name === SECCION_USUARIO && this.editFicha) {
 
@@ -278,7 +278,6 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
             fechaUltimoContacto: '',
             tipoContacto: ''
         };
-        this.nuevoContacto = false;
     }
     deleteContacto(contacto) {
         const index = this.contactosEstrechos.findIndex(item => item.dni === contacto.dni);
@@ -286,6 +285,10 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
             this.contactosEstrechos.splice(index, 1);
             this.contactosEstrechos = [...this.contactosEstrechos];
         }
+        if (!this.contactosEstrechos?.length) {
+            this.nuevoContacto = false;
+        }
+
     }
     showNuevoContacto() {
         this.nuevoContacto = true;
