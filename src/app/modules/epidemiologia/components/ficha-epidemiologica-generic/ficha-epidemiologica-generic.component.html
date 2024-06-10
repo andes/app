@@ -63,7 +63,7 @@
                                          [multiple]="field.multiple">
                             </plex-select>
                         </ng-container>
-                        <div *ngIf="field.key==='tablacontactos'">
+                        <div *ngIf="field.key==='contactosestrechos' && nuevoContacto">
                             <plex-table [columns]="columns" #table="plTable">
                                 <plex-table-columns>
                                 </plex-table-columns>
