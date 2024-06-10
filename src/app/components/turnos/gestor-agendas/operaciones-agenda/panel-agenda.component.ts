@@ -113,6 +113,7 @@ export class PanelAgendaComponent implements OnInit {
                 }
 
                 const patch = {
+                    'agendaId': agenda.id,
                     'op': 'editarAgenda',
                     'profesional': profesional,
                     'espacioFisico': espacioFisico,
@@ -122,17 +123,19 @@ export class PanelAgendaComponent implements OnInit {
                     enviarSms: this.agenda.enviarSms
                 };
 
-                this.serviceAgenda.patch(agenda.id, patch).subscribe((resultado: any) => {
-                    this.agenda = resultado;
-                    this.plex.toast('success', 'La agenda se guardó correctamente', 'Información');
-                    this.actualizarEstadoEmit.emit(true);
-                }, err => {
-
-                    if (err.error?.tipoError !== 'errorPrestaciones') {
-                        this.plex.info('warning', 'Otro usuario ha modificado el estado de la agenda seleccionada, su gestor se ha actualizado', err);
+                this.serviceAgenda.patch(agenda.id, patch).subscribe({
+                    next: (resultado: any) => {
+                        this.agenda = resultado;
+                        this.plex.toast('success', 'La agenda se guardó correctamente', 'Información');
                         this.actualizarEstadoEmit.emit(true);
-                    } else {
-                        this.plex.info('warning', '', err.error.msg);
+                    },
+                    error: (err: any) => {
+                        if (err.error?.tipoError !== 'errorPrestaciones') {
+                            this.plex.info('warning', 'Otro usuario ha modificado el estado de la agenda seleccionada, su gestor se ha actualizado', err);
+                            this.actualizarEstadoEmit.emit(true);
+                        } else {
+                            this.plex.info('warning', '', err.error.msg);
+                        }
                     }
                 });
             }
