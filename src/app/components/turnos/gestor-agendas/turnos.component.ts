@@ -3,12 +3,14 @@ import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { SmsService } from './../../../services/turnos/sms.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 import { EstadosAgenda } from './../enums';
 import * as moment from 'moment';
+import { switchMap } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { TurnoService } from 'src/app/services/turnos/turno.service';
 
 @Component({
     selector: 'turnos',
@@ -130,7 +132,13 @@ export class TurnosComponent implements OnInit {
     countBloques: any[];
 
     // Inicialización
-    constructor(public plex: Plex, public smsService: SmsService, public serviceAgenda: AgendaService, public listaEsperaService: ListaEsperaService, public servicePaciente: PacienteService, public auth: Auth) { }
+    constructor(
+        public plex: Plex,
+        public smsService: SmsService,
+        public serviceAgenda: AgendaService,
+        public listaEsperaService: ListaEsperaService,
+        public auth: Auth,
+        public serviceTurno: TurnoService) { }
 
     ngOnInit() {
         const agendaActualizar = this.agenda;
@@ -243,7 +251,7 @@ export class TurnosComponent implements OnInit {
 
         // Reset botones y turnos seleccionados
         this.turnosSeleccionados = [];
-        this.turnos.forEach((turno, index) => {
+        this.turnos.forEach((turno) => {
             turno.checked = false;
         });
         this.todos = false;
@@ -348,10 +356,9 @@ export class TurnosComponent implements OnInit {
             // Siempre chequear que exista el id de paciente, porque puede haber una key "paciente" vacía
             if (this.turnosSeleccionados[x].paciente && this.turnosSeleccionados[x].paciente.id) {
 
-                this.smsService.enviarSms(this.turnosSeleccionados[x].paciente.telefono).subscribe(
-                    resultado => {
+                this.smsService.enviarSms(this.turnosSeleccionados[x].paciente.telefono).subscribe({
+                    next: resultado => {
                         turno = this.turnosSeleccionados[x];
-
                         if (resultado === '0') {
                             turno.smsEnviado = true;
                             turno.smsNoEnviado = false;
@@ -361,14 +368,9 @@ export class TurnosComponent implements OnInit {
                             turno.smsNoEnviado = true;
                             turno.smsLoader = false;
                         }
-
                     },
-                    err => {
-                        if (err) {
-
-                        }
-                    }
-                );
+                    error: () => this.plex.toast('error', 'Error al enviar SMS.')
+                });
             }
         }
     }
@@ -385,32 +387,34 @@ export class TurnosComponent implements OnInit {
 
     pasarADisponible() {
         let alertCount = 0;
-        this.turnosSeleccionados.forEach((turno, index) => {
+        this.turnosSeleccionados.forEach((index) => {
 
             const patch = {
                 'op': 'liberarTurno',
                 'turnos': this.turnosSeleccionados.map(resultado => resultado._id)
             };
-            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
-                this.saveLiberarTurno(this.agenda);
-                if (alertCount === 0) {
-                    if (this.turnosSeleccionados.length === 1) {
-                        this.plex.toast('success', 'El turno seleccionado fue cambiado a disponible.');
-                    } else {
-                        this.plex.toast('success', 'Los turnos seleccionados fueron cambiados a disponible.');
-                    }
-                    alertCount++;
-                }
-
-                this.agenda = resultado;
-                if (index === this.turnosSeleccionados.length - 1) {
+            this.serviceAgenda.patch(this.agenda.id, patch).subscribe({
+                next: resultado => {
                     this.saveLiberarTurno(this.agenda);
-                }
-            },
-            err => {
-                if (err) {
-                    this.plex.info('warning', 'Turno en ejecución', 'Error');
-                    this.cancelaLiberarTurno();
+                    if (alertCount === 0) {
+                        if (this.turnosSeleccionados.length === 1) {
+                            this.plex.toast('success', 'El turno seleccionado fue cambiado a disponible.');
+                        } else {
+                            this.plex.toast('success', 'Los turnos seleccionados fueron cambiados a disponible.');
+                        }
+                        alertCount++;
+                    }
+
+                    this.agenda = resultado;
+                    if (index === this.turnosSeleccionados.length - 1) {
+                        this.saveLiberarTurno(this.agenda);
+                    }
+                },
+                error: err => {
+                    if (err) {
+                        this.plex.info('warning', 'Turno en ejecución', 'Error');
+                        this.cancelaLiberarTurno();
+                    }
                 }
             });
         });
