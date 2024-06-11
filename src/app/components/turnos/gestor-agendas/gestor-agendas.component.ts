@@ -673,7 +673,18 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
         switch (estado) {
             case 'publicada':
-                this.plex.confirm('¿Publicar Agenda?').then((confirmado) => {
+                const existeAgendaDelPasado = this.agendasSeleccionadas.some(agenda => moment(agenda.horaInicio).isBefore(moment().startOf('day')));
+                let mensaje = '';
+                if (this.agendasSeleccionadas.length > 1 && existeAgendaDelPasado) {
+                    mensaje = 'Una o varias agendas pasarán a estado Auditada. ¿Desea publicar de todas formas?';
+                } else if (this.agendasSeleccionadas.length === 1 && existeAgendaDelPasado) {
+                    mensaje = 'La agenda seleccionada pasará a estado Auditada. ¿Desea publicar de todas formas?';
+                } else if (this.agendasSeleccionadas.length > 1) {
+                    mensaje = '¿Publicar las siguientes agendas?';
+                } else {
+                    mensaje = '¿Publicar agenda?';
+                }
+                this.plex.confirm(mensaje).then((confirmado) => {
                     if (!confirmado) {
                         return false;
                     } else {
@@ -703,6 +714,9 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     confirmarEstado(estado) {
         let alertCount = 0;
         this.agendasSeleccionadas.forEach((agenda, index) => {
+            if (estado === 'publicada' && moment(agenda.horaInicio).isBefore(moment().startOf('day'))) {
+                estado = 'auditada';
+            }
             const patch = {
                 'op': estado,
                 'estado': estado
