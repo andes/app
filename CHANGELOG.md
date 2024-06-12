@@ -1,3 +1,11 @@
+## [5.139.1](https://github.com/andes/app/compare/v5.139.0...v5.139.1) (2024-06-12)
+
+
+### Bug Fixes
+
+* **HUDS:** Agrega y divide detalle y motivo en modal de acceso a la huds ([#3022](https://github.com/andes/app/issues/3022)) ([fad9779](https://github.com/andes/app/commit/fad977949ac62ffa20c840d4986d7e9d538362e7))
+* **RUP:** Cambia el formato del mensaje del motivo de acceso a la HUDS ([#3023](https://github.com/andes/app/issues/3023)) ([ce714c6](https://github.com/andes/app/commit/ce714c68bfbe7c6982011a54cf5581a0fc5a2268))
+
 # [5.139.0](https://github.com/andes/app/compare/v5.138.1...v5.139.0) (2024-06-05)
 
 
