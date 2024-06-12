@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 import { InstitucionService } from '../../../../services/turnos/institucion.service';
@@ -79,7 +79,8 @@ export class PlanificarAgendaComponent implements OnInit {
         public serviceAgenda: AgendaService,
         public servicioInstitucion: InstitucionService,
         public auth: Auth,
-        private breakpointObserver: BreakpointObserver
+        private breakpointObserver: BreakpointObserver,
+        private el: ElementRef
     ) { }
 
     ngOnInit() {
@@ -349,6 +350,10 @@ export class PlanificarAgendaComponent implements OnInit {
         } else {
             return 0;
         }
+    }
+
+    smallScreen() {
+        return this.el.nativeElement.clientWidth < 780 || this.modelo.bloques?.length;
     }
 
     cambioPrestaciones() {

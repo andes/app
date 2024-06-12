@@ -8,13 +8,13 @@
                 </plex-bool>
                 <plex-button type="danger" label="Cancelar" (click)="cancelar()" size="sm">
                 </plex-button>
-                <plex-button class="mx-1"
+                <plex-button class="mx-1" size="sm"
                              [disabled]="!form.valid  || !formSidebar.valid || hideGuardar || alertas.length || alertaProfesional"
                              label="Guardar" validateForm="true" autodisabled="true" type="success"
                              (click)="onSave($event, false)" title="Guardar">
                 </plex-button>
                 <plex-button [disabled]="!form.valid || !formSidebar.valid || hideGuardar || alertas.length || alertaProfesional"
-                             label="Guardar y clonar" autodisabled="true" validateForm="true" type="primary"
+                             label="Guardar y clonar" autodisabled="true" size="sm" validateForm="true" type="primary"
                              (click)="onSave($event, true)">
                 </plex-button>
             </plex-title>
@@ -28,7 +28,7 @@
                 </div>
             </plex-grid>
             <!-- Campos importante para la creación de una agenda -->
-            <plex-grid type="full" responsive cols="5" colsSm="1" colsMd="3" colsLg="5">
+            <plex-grid class="mb-1" type="full" responsive cols="5" colsSm="1" colsMd="3" colsLg="5">
                 <plex-datetime type="date" [(ngModel)]="modelo.fecha" [required]="true" [autoFocus]="autoFocus"
                                (change)="validarTodo(); verificarProfesional(); verificarEspacioFisico()"
                                name="modelo.fecha" label="Fecha">
@@ -43,17 +43,17 @@
                                name="modelo.horaFin" label="Fin">
                 </plex-datetime>
             </plex-grid>
-            <plex-grid type="full" responsive cols="2" colsSm="1" colsMd="1" colsLg="2">
-                <plex-select [disabled]="!modelo.horaFin" [(ngModel)]="modelo.tipoPrestaciones"
-                             name="modelo.tipoPrestaciones" label="Tipos de prestación"
-                             tmPrestaciones="turnos:planificarAgenda:prestacion:?" preload="true" ambito="ambulatorio"
-                             [multiple]="true" [required]="true" (change)="cambioPrestaciones()"
-                             [closeAfterSelect]="true">
+            <plex-wrapper>
+                <plex-select [ngClass]="{'w-100' : smallScreen(), 'w-50': !smallScreen()}" [disabled]="!modelo.horaFin"
+                             [(ngModel)]="modelo.tipoPrestaciones" name="modelo.tipoPrestaciones"
+                             label="Tipos de prestación" tmPrestaciones="turnos:planificarAgenda:prestacion:?"
+                             preload="true" ambito="ambulatorio" [multiple]="true" [required]="true"
+                             (change)="cambioPrestaciones()" [closeAfterSelect]="true">
                 </plex-select>
-                <div class="mt-1">
-                    <plex-label class="float-left mr-3" titulo="Equipo de Salud" subtitulo=""
+                <div class="pt-1" [ngClass]="{'w-100 mt-3' : smallScreen(), 'w-50': !smallScreen()}">
+                    <plex-label class="float-left mr-3" titulo="Equipo de Salud"
                                 hint="Si no encuentra el profesional en el listado, puede que no exista o no tenga permisos para las prestaciones seleccionadas"
-                                hintType="info" hintIcon="eye">
+                                hintType="info" hintIcon="eye" detach="top">
                     </plex-label>
                     <plex-select [disabled]="!modelo.horaFin || !modelo.tipoPrestaciones?.length"
                                  [(ngModel)]="modelo.profesionales" name="modelo.profesionales"
@@ -62,7 +62,7 @@
                                  [closeAfterSelect]="true">
                     </plex-select>
                 </div>
-            </plex-grid>
+            </plex-wrapper>
             <!-- Tipo de agenda -->
             <plex-title titulo="Tipo de agenda" size="md"></plex-title>
             <plex-grid type="full" responsive cols="6" colsSm="1" colsMd="2" colsLg="6">
