@@ -3,15 +3,15 @@ import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
 import { DocumentosService } from '../../../services/documentos.service';
-import { FacturacionAutomaticaService } from './../../../services/facturacionAutomatica.service';
 
 // Servicios
-import { ObraSocialService } from '../../../services/obraSocial.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
 
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { IAgenda } from '../../../interfaces/turnos/IAgenda';
+import { ITurno } from '../../../interfaces/turnos/ITurno';
+
 @Component({
     selector: 'turnos-paciente',
     templateUrl: 'turnos-paciente.html',
@@ -31,12 +31,12 @@ export class TurnosPacienteComponent implements OnInit {
     _turnos: any;
     _operacion: string;
     turnosPaciente: any;
-    turnosSeleccionados: any[] = [];
+    turnosSeleccionados: ITurno[] = [];
     public financiador = {
         codigoPuco: null,
         nombre: '',
         financiador: '',
-        prepaga:false
+        prepaga: false
     };
     public _paciente: IPaciente;
     @Input('operacion')
@@ -69,8 +69,12 @@ export class TurnosPacienteComponent implements OnInit {
     @Output() turnosPacienteChanged = new EventEmitter<any>();
 
     // Inicialización
-    constructor(public servicioFA: FacturacionAutomaticaService, public obraSocialService: ObraSocialService, public documentosService: DocumentosService,
-                public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
+    constructor(
+        public documentosService: DocumentosService,
+        public serviceTurno: TurnoService,
+        public serviceAgenda: AgendaService,
+        public plex: Plex,
+        public auth: Auth) { }
 
     ngOnInit() {
         this.puedeRegistrarAsistencia = this.auth.check('turnos:turnos:registrarAsistencia');
@@ -109,7 +113,7 @@ export class TurnosPacienteComponent implements OnInit {
         }
 
         const obraSocialUpdate = this.financiador ? this._paciente.financiador.find(os => os.nombre === this.financiador.nombre) : null;
-        turno.paciente.obraSocial = (obraSocialUpdate) ? obraSocialUpdate :this.financiador;
+        turno.paciente.obraSocial = (obraSocialUpdate) ? obraSocialUpdate : this.financiador;
 
         data['actualizaObraSocial'] = turno.paciente.obraSocial;
         data['turno'] = turno;
@@ -129,15 +133,15 @@ export class TurnosPacienteComponent implements OnInit {
         };
 
         // Patchea los turnosSeleccionados (1 o más turnos)
-        this.serviceAgenda.patch(turno.agenda_id, patch).subscribe(resultado => {
+        this.serviceAgenda.patch(turno.agenda_id, patch).subscribe(() => {
             this.turnosPacienteChanged.emit();
             switch (operacion) {
                 case 'darAsistencia':
-                    mensaje = 'Se registro la asistencia del paciente';
+                    mensaje = 'Se registró la asistencia del paciente.';
                     tipoToast = 'success';
                     break;
                 case 'sacarAsistencia':
-                    mensaje = 'Se registro la inasistencia del paciente';
+                    mensaje = 'Se registró la inasistencia del paciente.';
                     tipoToast = 'warning';
                     break;
             }

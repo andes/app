@@ -1,7 +1,6 @@
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-import { ITurno } from './../../../../interfaces/turnos/ITurno';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 
 @Component({
@@ -14,7 +13,6 @@ export class AgregarNotaTurnoComponent implements OnInit {
     @Input() agenda: IAgenda;
 
     @Output() saveAgregarNotaTurno = new EventEmitter<IAgenda>();
-    @Output() cancelaAgregarNota = new EventEmitter<boolean>();
 
     private _turnosSeleccionados: Array<any>;
 
@@ -55,26 +53,24 @@ export class AgregarNotaTurnoComponent implements OnInit {
                 'textoNota': this.nota
             };
 
-            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+            this.serviceAgenda.patch(this.agenda.id, patch).subscribe({
 
-                if (alertCount === 0) {
-                    if (this.turnosSeleccionados.length === 1) {
-                        this.plex.toast('success', 'La nota se guardó correctamente');
-                    } else {
-                        this.plex.toast('success', 'Las notas se guardaron correctamente');
+                next: resultado => {
+                    if (alertCount === 0) {
+                        if (this.turnosSeleccionados.length === 1) {
+                            this.plex.toast('success', 'La nota se guardó correctamente.');
+                        } else {
+                            this.plex.toast('success', 'Las notas se guardaron correctamente.');
+                        }
+                        alertCount++;
                     }
-                    alertCount++;
-                }
 
-                this.agenda = resultado;
-                if (index === this.turnosSeleccionados.length - 1) {
-                    this.saveAgregarNotaTurno.emit();
-                }
-            },
-            err => {
-                if (err) {
-
-                }
+                    this.agenda = resultado;
+                    if (index === this.turnosSeleccionados.length - 1) {
+                        this.saveAgregarNotaTurno.emit();
+                    }
+                },
+                error: () => this.plex.toast('error', 'Error al cargar una o varias notas.')
             });
 
         });
@@ -84,11 +80,6 @@ export class AgregarNotaTurnoComponent implements OnInit {
         if (this.nota && this.nota.length > this.lenNota) {
             this.nota = this.nota.substring(0, this.lenNota);
         }
-    }
-
-    cancelar() {
-        this.cancelaAgregarNota.emit(true);
-        this.turnosSeleccionados = [];
     }
 
 }

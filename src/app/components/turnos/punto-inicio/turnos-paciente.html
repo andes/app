@@ -1,5 +1,4 @@
 <div>
-    <!-- <legend>{{ tituloOperacion }}</legend> -->
     <div *ngIf="!showLiberarTurno && !showMotivoConsulta">
         <!-- El paciente no tiene turnos -->
         <h5 *ngIf="!turnosPaciente || turnosPaciente?.length === 0">
@@ -25,19 +24,13 @@
                                     | {{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}}
 
                                 </div>
-
-
-
                                 <div *ngIf="turno.organizacion">
-
                                     <em class="small">{{ turno.organizacion.nombre }}</em>
-
                                 </div>
                                 <div *ngIf="turno.tipoPrestacion">
                                     {{turno.tipoPrestacion.term}}
                                 </div>
                             </div>
-
 
                             <div class="col-md-6">
                                 <div *ngIf="turno && turno.profesionales?.length">
@@ -66,9 +59,7 @@
                                     </div>
                                 </div>
                                 <div *ngIf="!turno.espacioFisico?.nombre && !turno.otroEspacioFisico?.nombre"
-                                     class="text-danger">Espacio
-                                    físico no asignado</div>
-
+                                     class="text-danger">Espacio físico no asignado</div>
                             </div>
                             <div class="col-md-12">
                                 <div
@@ -84,39 +75,34 @@
                             <div class="col-md-12"
                                  *ngIf=" turno.horaInicio >= todaysdate && turno.estado !== 'suspendido' && turno.organizacion._id === auth.organizacion.id">
                                 <plex-button *ngIf="puedeLiberarTurno && turno.asistencia !== 'asistio' && turno.bloque_id"
-                                             class="float-right mr-1" type="danger btn-sm" label="Liberar Turno"
+                                             class="float-right mr-1" type="danger" label="Liberar Turno" size="sm"
                                              (click)="liberarTurno(turno)">
                                 </plex-button>
 
-
                                 <plex-button *ngIf="puedeRegistrarAsistencia && turno.asistencia !== 'asistio'&& isToday(turno)"
-                                             class="float-right mr-1" type="success btn-sm" label="Dar Asistencia"
-                                             (click)="eventosTurno(turno, 'darAsistencia')"></plex-button>
-
-
-                                <plex-button *ngIf="puedeRegistrarAsistencia && turno.asistencia === 'asistio' && isToday(turno) && turno.diagnostico.codificaciones.length == 0"
-                                             class="float-right mr-1" type="warning btn-sm" label="Quitar Asistencia"
-                                             (click)="eventosTurno(turno,'sacarAsistencia')"></plex-button>
-
-
-                                <plex-button *ngIf="financiador?.nombre !== 'SUMAR' && turno?.profesionales?.length > 0 && turno?.paciente.documento"
-                                             class="float-right mr-1" type="info btn-sm" label="Recupero"
-                                             (click)="showArancelamiento(turno)">
+                                             class="float-right mr-1" type="success" label="Dar Asistencia" size="sm"
+                                             (click)="eventosTurno(turno, 'darAsistencia')">
                                 </plex-button>
 
+                                <plex-button *ngIf="puedeRegistrarAsistencia && turno.asistencia === 'asistio' && isToday(turno) && turno.diagnostico.codificaciones.length == 0"
+                                             class="float-right mr-1" type="warning" label="Quitar Asistencia" size="sm"
+                                             (click)="eventosTurno(turno,'sacarAsistencia')">
+                                </plex-button>
+
+                                <plex-button *ngIf="financiador?.nombre !== 'SUMAR' && turno?.profesionales?.length > 0 && turno?.paciente.documento"
+                                             class="float-right mr-1" type="info" label="Recupero" size="sm"
+                                             (click)="showArancelamiento(turno)">
+                                </plex-button>
                             </div>
-
-
                         </div>
                     </div>
                 </li>
             </ul>
         </fieldset>
-
     </div>
     <div *ngIf="showMotivoConsulta">
         <div class="row">
-            <div class="col" *ngIf="turnoArancelamiento?.paciente?.obraSocial?.financiador || obraSocialSeleccionada">
+            <div class="col" *ngIf="turnoArancelamiento?.paciente?.obraSocial?.financiador">
                 <label>Obra Social </label>
                 <div>{{financiador?.nombre}}</div>
             </div>
@@ -129,7 +115,7 @@
         </div>
         <div class="row">
             <div class="col">
-                <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true"
+                <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" [multiline]="true"
                            (change)="cambiarMotivo()" [(ngModel)]="turnoArancelamiento.motivoConsulta"></plex-text>
             </div>
         </div>
@@ -146,8 +132,7 @@
     </div>
     <div *ngIf="showLiberarTurno ">
         <liberar-turno [agenda]="agenda " [turnosSeleccionados]="turnosSeleccionados "
-                       (saveLiberarTurno)="afterLiberarTurno($event) "
-                       (cancelaLiberarTurno)="afterLiberarTurno($event) ">
+                       (saveLiberarTurno)="afterLiberarTurno() " (cancelaLiberarTurno)="afterLiberarTurno() ">
         </liberar-turno>
     </div>
 </div>

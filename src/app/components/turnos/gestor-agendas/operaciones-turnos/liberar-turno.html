@@ -3,6 +3,9 @@
                  [disabled]="!motivoLiberacionSelect || (motivoLiberacionSelect.nombre === 'Otro' && !otroMotivoLiberacion)"
                  (click)="liberarTurno()">
     </plex-button>
+    <plex-button *ngIf="!desdeAgenda" type="danger" size="sm" icon="arrow-left" tooltip="Volver" class="ml-1"
+                 (click)="cancelar()">
+    </plex-button>
 </plex-title>
 
 <ng-container *ngIf="showLiberarTurno">
