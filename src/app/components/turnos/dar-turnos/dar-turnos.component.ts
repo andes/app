@@ -1293,6 +1293,18 @@ export class DarTurnosComponent implements OnInit {
         this.showSobreturno = !this.showSobreturno;
     }
 
+    agendaDeHoy() {
+        return (moment(this.agenda.horaInicio).isSame(moment(), 'day'));
+    }
+
+    showTurnoTelefonico() {
+        return this.estadoT !== 'dinamica' && this.agenda.nominalizada || this.estadoT === 'dinamica' && this.agendaDeHoy();
+    }
+
+    showInfoAdicional() {
+        return this.estadoT === 'seleccionada' || this.estadoT === 'dinamica' && this.agendaDeHoy();
+    }
+
     public volver() {
         // se ingresó desde monitoreo de inscriptos
         if (this.solicitudVacunacion) {

@@ -103,8 +103,8 @@
                         <plex-badge *ngIf="agenda.link" type="info" tooltipPosition="top" tooltip="Agenda Virtual">
                             <plex-icon name="monitor" size="md"></plex-icon>
                         </plex-badge>
-                        <plex-button *ngIf="puedeDarSobreturno" class="mr-1" type="success" size="sm"
-                                     icon="account-plus" (click)="agregarSobreturno()" tooltipPosition="top"
+                        <plex-button *ngIf="puedeDarSobreturno && estadoT !== 'dinamica'" class="mr-1" type="success"
+                                     size="sm" icon="account-plus" (click)="agregarSobreturno()" tooltipPosition="top"
                                      tooltip="Agregar Sobreturno">
                         </plex-button>
                         <plex-help titulo="" subtitulo="" type="help" size="sm" icon="information-variant">
@@ -196,12 +196,14 @@
                 <!-- Dependiendo el estado, se visualiza el plex-title aducuado -->
                 <plex-title titulo="{{estadoT==='dinamica'?'Agenda dinámica':estadoT==='noTurnos'?'Agendas alternativas':'Selección horario'}}"
                             size="sm">
-                    <plex-bool *ngIf="estadoT !== 'noTurnos' && permitirTurnoDoble" class="mr-2 text-secondary"
-                               label="Turno doble" [(ngModel)]='turnoDoble' name="turnoDoble">
-                    </plex-bool>
-                    <plex-bool *ngIf="agenda.nominalizada && estadoT !== 'noTurnos'" label="Turno telefónico"
-                               [(ngModel)]='turnoTelefonico' name="turnoTelefonico">
-                    </plex-bool>
+                    <ng-container *ngIf="estadoT !== 'noTurnos'">
+                        <plex-bool *ngIf="permitirTurnoDoble" class="mr-2 text-secondary" label="Turno doble"
+                                   [(ngModel)]='turnoDoble' name="turnoDoble">
+                        </plex-bool>
+                        <plex-bool *ngIf="showTurnoTelefonico()" label="Turno telefónico" [(ngModel)]='turnoTelefonico'
+                                   name="turnoTelefonico">
+                        </plex-bool>
+                    </ng-container>
                 </plex-title>
 
                 <!-- Agenda con turnos disponibles -->
@@ -271,7 +273,9 @@
                 <!--Agenda Dinámica -->
                 <plex-list *ngIf="estadoT == 'dinamica'" size="md" [selectable]="false">
                     <plex-item>
-                        <plex-button label="Dar Turno" type="success" (click)="turnoDinamico()" size="sm"></plex-button>
+                        <plex-button *ngIf="agendaDeHoy()" label="Dar Turno" type="success" (click)="turnoDinamico()"
+                                     size="sm">
+                        </plex-button>
                         <plex-badge *ngIf="agenda.cupo > 1" type="info">{{agenda.cupo}} cupos disponibles
                         </plex-badge>
                         <plex-badge *ngIf="agenda.cupo === 1" type="info">{{agenda.cupo}} cupo disponible
@@ -279,6 +283,11 @@
                         <plex-badge *ngIf="agenda.cupo === -1" type="info">Agenda con cupos no limitados
                         </plex-badge>
                     </plex-item>
+                    <div *ngIf="!agendaDeHoy()" justify="center" class="mt-3 mb-3">
+                        <plex-label class="flex-column" icon="calendar" size="md" direction="column"
+                                    titulo="Solo se puede dar turno el {{ agenda.horaInicio | date: 'EEEE d/M/yyyy' }}">
+                        </plex-label>
+                    </div>
                 </plex-list>
 
                 <!-- Financiador: Obras sociales y prepagas -->
@@ -294,7 +303,7 @@
                 </ng-container>
 
                 <!--Información Adicional -->
-                <ng-container *ngIf="estadoT === 'seleccionada' || estadoT == 'dinamica'">
+                <ng-container *ngIf="showInfoAdicional()">
                     <plex-title titulo="Información Adicional" size="sm">
                     </plex-title>
 

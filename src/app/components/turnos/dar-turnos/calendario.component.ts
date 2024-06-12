@@ -129,7 +129,20 @@ export class CalendarioComponent implements OnInit {
             this.diaSeleccionado = dia;
             this.agenda = dia.agenda;
             this.estado = 'seleccionada';
-            this.agendaChanged.emit(dia.agendasDisponibles.length ? dia.agendasDisponibles : [dia.agenda] );
+            this.agendaChanged.emit(dia.agendasDisponibles.length ? dia.agendasDisponibles : [dia.agenda]);
         }
     }
+
+    agendaDinamicaFutura(dia) {
+        return (dia.dinamicasIndefinidas > 0 && moment(dia.fecha).isAfter(moment(), 'day'));
+    }
+
+    mostrarCloseIcon(dia) {
+        return dia.turnosDisponibles === 0 && dia.dinamicasIndefinidas === 0 || dia.turnosDisponibles === 0 && this.agendaDinamicaFutura(dia);
+    }
+
+    outLineDanger(dia) {
+        return (dia.estado === 'ocupado' || dia.turnosDisponibles === 0 && this.agendaDinamicaFutura(dia)) && !dia.seleccionado && this.mostrarNoDisponibles;
+    }
+
 }
