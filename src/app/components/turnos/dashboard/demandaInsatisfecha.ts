@@ -58,7 +58,7 @@ export class demandaInsatisfechaComponent {
                     this.plex.toast('success', 'Demanda insatisfecha guardada exitosamente!');
                     this.cerrar();
                 },
-                error: (e) => this.plex.toast('danger', e, 'Ha ocurrido un error al guardar')
+                error: (e) => this.plex.toast('danger', e.message, 'Ha ocurrido un error al guardar')
             });
         }
     }
