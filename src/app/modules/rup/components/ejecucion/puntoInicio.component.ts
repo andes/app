@@ -514,17 +514,17 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             }
         });
     }
-
     /**
-     * Recorremos los bloques y los turnos de una agenda
-     * y verifica si hay algun paciente agregado
+     * Comprueba si la agenda tiene al menos paciente en al menos un turno en al menos un bloque
      */
+    agendaTienePaciente(agenda) {
+        return agenda.bloques.some((bloque) => bloque.turnos.some((turno) => turno.paciente?.id));
+
+    }
     getCantidadPacientes(agenda) {
         let total = 0;
-
         const lengthBloques = agenda.bloques.length;
         for (let indexBloque = 0; indexBloque < lengthBloques; indexBloque++) {
-
             const _turnos = agenda.bloques[indexBloque].turnos.filter(t => {
                 total += (t.paciente && t.paciente.id) ? 1 : 0;
             });
@@ -532,8 +532,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         if (agenda.sobreturnos && agenda.sobreturnos.length > 0) {
             total = total + agenda.sobreturnos.length;
         }
-
-
         return total;
     }
 
@@ -582,7 +580,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         const esDeHoy = moment().isSame(agenda.horaInicio, 'day');
         const esNominalizadaNoDinamica = !agenda.dinamica && agenda.nominalizada;
         const esDelUsuario = agenda?.profesionales?.some(p => p.id === this.auth.profesional);
-        this.puedeDarSobreturno = esDeHoy && esNominalizadaNoDinamica && esDelUsuario;
+        this.puedeDarSobreturno = esDeHoy && esNominalizadaNoDinamica && esDelUsuario && !agenda?.turnosDisponibles && this.agendaTienePaciente(agenda);
     }
 
     @Unsubscribe()
@@ -640,7 +638,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     cargarPrestacionesTurnos(agenda) {
-        // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
+        // loopeamos agendas y vinculamos el turno si existe con alguna de las  prestaciones
         agenda['cantidadTurnos'] = 0;
         agenda.bloques.forEach(bloques => {
             agenda['cantidadTurnos'] += bloques.turnos.length;
