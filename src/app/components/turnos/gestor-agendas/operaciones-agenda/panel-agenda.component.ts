@@ -91,8 +91,8 @@ export class PanelAgendaComponent implements OnInit {
     }
 
     guardarAgenda(agenda: IAgenda) {
-        if (this.alertas.length === 0) {
 
+        if (this.alertas.length === 0) {
             // Quitar cuando esté solucionado inconveniente de plex-select
             let profesional = [];
             if (this.agenda.profesionales && this.agenda.profesionales.length > 40) {
@@ -113,21 +113,29 @@ export class PanelAgendaComponent implements OnInit {
                 }
 
                 const patch = {
+                    'agendaId': agenda.id,
                     'op': 'editarAgenda',
                     'profesional': profesional,
                     'espacioFisico': espacioFisico,
                     'otroEspacioFisico': otroEspacioFisico,
+                    'prestaciones': agenda.tipoPrestaciones,
+                    'organizacion': this.auth.organizacion.id,
                     enviarSms: this.agenda.enviarSms
                 };
 
-                this.serviceAgenda.patch(agenda.id, patch).subscribe((resultado: any) => {
-                    this.agenda = resultado;
-                    this.plex.toast('success', 'La agenda se guardó correctamente', 'Información');
-                    this.actualizarEstadoEmit.emit(true);
-                }, err => {
-                    if (err) {
-                        this.plex.info('warning', 'Otro usuario ha modificado el estado de la agenda seleccionada, su gestor se ha actualizado', err);
+                this.serviceAgenda.patch(agenda.id, patch).subscribe({
+                    next: (resultado: any) => {
+                        this.agenda = resultado;
+                        this.plex.toast('success', 'La agenda se guardó correctamente', 'Información');
                         this.actualizarEstadoEmit.emit(true);
+                    },
+                    error: (err: any) => {
+                        if (err.error?.tipoError !== 'errorPrestaciones') {
+                            this.plex.info('warning', 'Otro usuario ha modificado el estado de la agenda seleccionada, su gestor se ha actualizado', err);
+                            this.actualizarEstadoEmit.emit(true);
+                        } else {
+                            this.plex.info('warning', '', err.error.msg);
+                        }
                     }
                 });
             }
@@ -242,7 +250,6 @@ export class PanelAgendaComponent implements OnInit {
             if (this.agenda.profesionales) {
                 this.agenda.profesionales.forEach((profesional, index) => {
                     const params = {
-                        organizacion: this.auth.organizacion.id,
                         idProfesional: profesional.id,
                         rango: true,
                         desde: this.agenda.horaInicio,

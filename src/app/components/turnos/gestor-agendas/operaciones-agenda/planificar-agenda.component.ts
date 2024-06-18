@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 import { InstitucionService } from '../../../../services/turnos/institucion.service';
@@ -79,7 +79,8 @@ export class PlanificarAgendaComponent implements OnInit {
         public serviceAgenda: AgendaService,
         public servicioInstitucion: InstitucionService,
         public auth: Auth,
-        private breakpointObserver: BreakpointObserver
+        private breakpointObserver: BreakpointObserver,
+        private el: ElementRef
     ) { }
 
     ngOnInit() {
@@ -351,6 +352,10 @@ export class PlanificarAgendaComponent implements OnInit {
         }
     }
 
+    smallScreen() {
+        return this.el.nativeElement.clientWidth < 780 || this.modelo.bloques?.length;
+    }
+
     cambioPrestaciones() {
         // limpiamos profesionales al cambiar la selección de prestaciones
         this.modelo.profesionales = [];
@@ -581,7 +586,7 @@ export class PlanificarAgendaComponent implements OnInit {
             // Verifica que ningún profesional de la agenda esté asignado a otra agenda en ese horario
             if (iniAgenda && finAgenda && this.modelo.profesionales) {
                 this.modelo.profesionales.forEach((profesional, index) => {
-                    this.serviceAgenda.get({ 'organizacion': this.auth.organizacion.id, idProfesional: profesional.id, rango: true, desde: iniAgenda, hasta: finAgenda, estados: ['planificacion', 'disponible', 'publicada', 'pausada'] }).
+                    this.serviceAgenda.get({ idProfesional: profesional.id, rango: true, desde: iniAgenda, hasta: finAgenda, estados: ['planificacion', 'disponible', 'publicada', 'pausada'] }).
                         subscribe(agendas => {
                             const agds = agendas.filter(agenda => {
                                 return agenda.id !== this.modelo.id || !this.modelo.id;
