@@ -43,19 +43,7 @@ export class ListaEsperaService {
         return this.server.patch(this.listaEsperaUrl + '/' + id + '/' + datoMod, cambios);
     }
 
-    save(listaEspera: IListaEspera): Observable<IListaEspera> {
-        if (listaEspera.id) {
-            return this.server.put(this.listaEsperaUrl + '/' + listaEspera.id, listaEspera);
-        } else {
-            return this.server.post(this.listaEsperaUrl, listaEspera);
-        }
-    }
-
-    guardar(paciente, tipoPrestacion, estado: String, profesional, organizacion, motivo: String, origen: String) {
-        if (!paciente || !tipoPrestacion || !estado || !organizacion || !motivo || !origen) {
-            this.plex.toast('danger', 'Error en parámetros');
-            return false;
-        }
+    save(paciente, tipoPrestacion, estado: String, profesional, organizacion, motivo: String, origen: String) {
         const datosProfesional = !profesional ? null : {
             id: profesional.id,
             nombre: profesional.nombre,
@@ -68,51 +56,26 @@ export class ListaEsperaService {
             fecha: moment().toDate(),
             origen
         };
-        const params = {
-            'pacienteId': paciente.id,
-            'conceptId': tipoPrestacion.conceptId,
-            'estado': estado
+        const datosPaciente: IPacienteBasico = {
+            id: paciente.id,
+            nombre: paciente.nombre,
+            alias: paciente.alias,
+            apellido: paciente.apellido,
+            documento: paciente.documento,
+            numeroIdentificacion: paciente.numeroIdentificacion,
+            fechaNacimiento: paciente.fechaNacimiento,
+            sexo: paciente.sexo,
+            genero: paciente.genero
         };
-        const r = this.get(params).subscribe(resultado => {
-            if (resultado[0]?.demandas) {
-                resultado[0].demandas.push(demanda);
-                this.patch(resultado[0].id, 'demandas', resultado[0].demandas).subscribe(() => {
-                    return true;
-                }, (error) => {
-                    this.plex.toast('danger', error, 'Ha ocurrido un error al guardar');
-                    return false;
-                });
-            } else {
-                const datosPaciente: IPacienteBasico = {
-                    id: paciente.id,
-                    nombre: paciente.nombre,
-                    alias: paciente.alias,
-                    apellido: paciente.apellido,
-                    documento: paciente.documento,
-                    numeroIdentificacion: paciente.numeroIdentificacion,
-                    fechaNacimiento: paciente.fechaNacimiento,
-                    sexo: paciente.sexo,
-                    genero: paciente.genero
-                };
-                const listaEspera: IListaEspera = {
-                    paciente: datosPaciente,
-                    fecha: moment().toDate(),
-                    vencimiento: null,
-                    estado,
-                    demandas: [demanda],
-                    tipoPrestacion,
-                    resolucion: null
-                };
-                if (listaEspera !== null) {
-                    this.post(listaEspera).subscribe(() => {
-                        return true;
-                    }, (error) => {
-                        this.plex.toast('danger', error, 'Ha ocurrido un error al guardar');
-                        return false;
-                    });
-                }
-            }
-        });
-        return r;
+        const listaEspera: IListaEspera = {
+            paciente: datosPaciente,
+            fecha: moment().toDate(),
+            vencimiento: null,
+            estado,
+            demandas: [demanda],
+            tipoPrestacion,
+            resolucion: null
+        };
+        return this.post(listaEspera);
     }
 }
