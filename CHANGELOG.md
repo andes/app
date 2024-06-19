@@ -1,3 +1,11 @@
+# [5.140.0](https://github.com/andes/app/compare/v5.139.1...v5.140.0) (2024-06-19)
+
+
+### Features
+
+* **BI-154:** detalle en variables query ([#2995](https://github.com/andes/app/issues/2995)) ([e6686dc](https://github.com/andes/app/commit/e6686dc2f36f11cbd44f68157474fa5b6cef63c0))
+* **CIT-280:** Publicar agendas en el pasado ([#3015](https://github.com/andes/app/issues/3015)) ([fbddecf](https://github.com/andes/app/commit/fbddecf4edeb1b302c4023243f8fb9981f935890))
+
 ## [5.139.1](https://github.com/andes/app/compare/v5.139.0...v5.139.1) (2024-06-12)
 
 
