@@ -61,7 +61,8 @@
         <ng-container>
             <plex-list [striped]="true" *ngIf="agendas.length">
                 <ng-container *ngFor="let agenda of agendas; let i=index">
-                    <plex-item (click)="toogleSidebar(true); cargarTurnos(this.agenda); selectAgenda(this.agenda)" [selected]="agendaSeleccionada?.id === agenda.id">
+                    <plex-item (click)="toogleSidebar(true); cargarTurnos(this.agenda); selectAgenda(this.agenda)"
+                               [selected]="agendaSeleccionada?.id === agenda.id">
                         <div class="d-flex align-items-center">
                             <plex-icon class="icono-circulo mr-3" name="calendario-tilde" type="info"></plex-icon>
 
@@ -120,7 +121,8 @@
         <ng-container *ngIf="fueraDeAgenda?.length">
             <plex-title justify titulo="Fuera de agenda" size="sm" class="mt-4"></plex-title>
             <plex-list [striped]="true">
-                <plex-item (click)="toogleSidebar(true); cargarTurnos('fueraAgenda'); selectAgenda('fueraAgenda')" [selected]="agendaSeleccionada === 'fueraAgenda'">
+                <plex-item (click)="toogleSidebar(true); cargarTurnos('fueraAgenda'); selectAgenda('fueraAgenda')"
+                           [selected]="agendaSeleccionada === 'fueraAgenda'">
                     <div class="d-flex align-items-center">
                         <plex-icon class="icono-circulo mr-3" name="calendario-tilde" type="info"></plex-icon>
                         <plex-label class="d-flex align-items-center"
@@ -142,8 +144,8 @@
         </ng-container>
     </plex-layout-main>
     <plex-layout-sidebar class="sidebar" type="invert" *ngIf="showSidebar">
-        <prestacion-crear *ngIf="verFueraAgenda" [opcion]="tipoPrestacion"
-                          (mostrar)="ocultarCrearPrestacion()"></prestacion-crear>
+        <prestacion-crear *ngIf="verFueraAgenda" [opcion]="tipoPrestacion" (mostrar)="ocultarCrearPrestacion()">
+        </prestacion-crear>
 
         <ng-container *ngIf="!verFueraAgenda">
             <div *ngIf="!buscandoPaciente && !prestacionPendiente">
@@ -215,6 +217,13 @@
                         </div>
                         <div class="col-12 mt-2">
                             <plex-title titulo="Pacientes" size="md"></plex-title>
+
+                            <div class="label-agenda"
+                                 *ngIf="agendaSeleccionada?.dinamica && !agendaSeleccionada.bloques[0].turnos?.length">
+                                <plex-label icon="account-no" type="info" size="xl" direction="column"
+                                            titulo='Sin pacientes' subtitulo='No se agregaron pacientes a esta agenda'>
+                                </plex-label>
+                            </div>
                         </div>
                     </div>
 
