@@ -1,4 +1,4 @@
-<plex-title size="md" titulo="Crear Prestación">
+<plex-title size="md" titulo="{{ opcion === 'fueraAgenda' ? 'Iniciar fuera de agenda' : 'Agendar autocitado' }}">
     <plex-button *ngIf="opcion === 'fueraAgenda'" label="INICIAR PRESTACIÓN" type="success" size="sm"
                  (click)="iniciarPrestacion()"
                  [disabled]="!paciente?.id && !tipoPrestacionSeleccionada?.noNominalizada">

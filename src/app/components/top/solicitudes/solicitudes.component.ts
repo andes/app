@@ -11,6 +11,7 @@ import { HUDSService } from '../../../modules/rup/services/huds.service';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'solicitudes',
@@ -158,7 +159,8 @@ export class SolicitudesComponent implements OnInit {
         public router: Router,
         private hudsService: HUDSService,
         private pacienteService: PacienteService,
-        private routerService: RouterService
+        private routerService: RouterService,
+        private location: Location
     ) {
     }
 
@@ -276,6 +278,10 @@ export class SolicitudesComponent implements OnInit {
         this.showSidebar = false;
         this.showDetalle = false;
         this.showNuevaSolicitud = false;
+    }
+
+    volver() {
+        this.location.back();
     }
 
     seleccionar(prestacion) {
