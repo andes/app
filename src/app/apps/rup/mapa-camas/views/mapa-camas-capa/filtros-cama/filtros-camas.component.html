@@ -14,17 +14,23 @@
                      [data]="estadoList$ | async" (change)="filtrar()">
         </plex-select>
 
-        <div collapse>
-            <plex-select name="tipo-cama" label="Tipo de Cama" [(ngModel)]="filtro.tipoCama" idField="conceptId"
-                         labelField="term" (change)="filtrar()" [data]="tipoCamaList$ | async">
-            </plex-select>
-            <plex-select name="censable" label="Censable" [(ngModel)]="filtro.censable" (change)="filtrar()"
-                         [data]="censables">
-            </plex-select>
-            <plex-select name="equipamiento" label="Equipamiento" [(ngModel)]="filtro.equipamiento" idField="conceptId"
-                         labelField="term" (change)="filtrar()" [data]="equipamientoList$ | async" multiple="true"
-                         grow="3">
-            </plex-select>
+        <plex-button class="collapse-button" type="primary" size="sm" icon="{{ collapse ? 'chevron-down' : 'chevron-up'}}"
+                     title="{{ collapse ? 'Expandir' : 'Colapsar'}}" titlePosition="left" (click)="colapsar()">
+        </plex-button>
+
+        <div [hidden]="collapse" class="w-100">
+            <div class="d-flex">
+                <plex-select name="tipo-cama" label="Tipo de Cama" [(ngModel)]="filtro.tipoCama" idField="conceptId"
+                             labelField="term" (change)="filtrar()" [data]="tipoCamaList$ | async">
+                </plex-select>
+                <plex-select name="censable" label="Censable" [(ngModel)]="filtro.censable" (change)="filtrar()"
+                             [data]="censables">
+                </plex-select>
+                <plex-select name="equipamiento" label="Equipamiento" [(ngModel)]="filtro.equipamiento"
+                             idField="conceptId" labelField="term" (change)="filtrar()"
+                             [data]="equipamientoList$ | async" multiple="true" grow="3">
+                </plex-select>
+            </div>
         </div>
     </plex-wrapper>
 </form>
