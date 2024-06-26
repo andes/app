@@ -5,6 +5,7 @@
             <plex-button *ngIf="!asignadas" type="danger" label="Reglas Globales"
                          routerLink="/solicitudes/reglasVisualizacion">
             </plex-button>
+            <plex-button *ngIf="asignadas" label="Volver" type="info" (click)="volver()"></plex-button>
         </plex-title>
         <plex-tabs (change)="cambio($event);" [activeIndex]="panelIndex">
             <plex-button *ngIf="!asignadas && tipoSolicitud === 'entrada'" type="success"
