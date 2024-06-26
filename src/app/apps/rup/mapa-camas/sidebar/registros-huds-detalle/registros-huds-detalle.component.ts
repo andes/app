@@ -133,6 +133,11 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                     } else {
                         return fechaValida && noEsInternacion && tipoPrestacionValida && !this.prestacionesEliminadas.some(id => id === registro.id);
                     }
+                }).sort((pres1, pres2) => {
+                    // Ordenamos las prestaciones junto con los CDAs de forma descendente.
+                    const fechaPrestacion1 = moment(pres1.ejecucion?.fecha || pres1.fecha);
+                    const fechaPrestacion2 = moment(pres2.ejecucion?.fecha || pres2.fecha);
+                    return fechaPrestacion2.diff(fechaPrestacion1);
                 });
             }),
             cache()
