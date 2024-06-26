@@ -1,5 +1,5 @@
 import { Plex, PlexOptionsComponent } from '@andes/plex';
-import { Component, ContentChild, EventEmitter, OnInit, Output, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Component, ContentChild, EventEmitter, OnInit, Output, AfterViewChecked, ChangeDetectorRef, Input } from '@angular/core';
 import { combineLatest, Observable, of } from 'rxjs';
 import { auditTime, map, switchMap, take } from 'rxjs/operators';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
@@ -24,6 +24,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     public existeEgreso;
     view$ = this.mapaCamasService.view;
 
+    @Input() cama;
     @Output() cambiarCama = new EventEmitter<any>();
     @Output() accion = new EventEmitter<any>();
     @ContentChild(PlexOptionsComponent, { static: true }) plexOptions: PlexOptionsComponent;
