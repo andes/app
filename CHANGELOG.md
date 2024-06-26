@@ -1,3 +1,10 @@
+# [5.141.0](https://github.com/andes/app/compare/v5.140.0...v5.141.0) (2024-06-26)
+
+
+### Features
+
+* **RUP:** implementa mockups en punto de inicio ([82dd4a1](https://github.com/andes/app/commit/82dd4a1e942ab2abca5928127bfb73731012ac6a))
+
 # [5.140.0](https://github.com/andes/app/compare/v5.139.1...v5.140.0) (2024-06-19)
 
 
