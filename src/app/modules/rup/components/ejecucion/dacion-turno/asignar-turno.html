@@ -24,36 +24,40 @@
                           orientacion="horizontal">
         </paciente-detalle>
     </div>
-    <div class="row" *ngIf="pacienteActivo">
-        <div class="col-6">
-            <plex-datetime type="time" [(ngModel)]="horaTurno" [min]="inicio" [max]="fin" [required]="true"
-                           name="horaTurno" label="Hora Turno">
-            </plex-datetime>
+    <ng-container *ngIf="pacienteActivo">
+        <plex-select *ngIf="prestaciones.length > 1" label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion"
+                     [data]="prestaciones" name="turnoTipoPrestacion" [required]="true"></plex-select>
+        <div class="row">
+            <div class="col-6">
+                <plex-datetime type="time" [(ngModel)]="horaTurno" [min]="inicio" [max]="fin" [required]="true"
+                               name="horaTurno" label="Hora Turno">
+                </plex-datetime>
+            </div>
+            <div *ngIf="agenda.link" class="col-6">
+                <plex-text placeholder="Ingrese link turno virtual" [(ngModel)]="turno_link" [required]="true"
+                           name="turno_link" label="Link">
+                </plex-text>
+            </div>
         </div>
-        <div *ngIf="agenda.link" class="col">
-            <plex-text placeholder="Ingrese link turno virtual" [(ngModel)]="turno_link" [required]="true"
-                       name="turno_link" label="Link">
-            </plex-text>
-        </div>
-    </div>
+    </ng-container>
 </form>
 
 <plex-modal size="sm" #modalAsignarTurno [startOpen]="false" [allowEscClose]="true" [allowBackdropClose]="true">
     <plex-icon name="help-circle" type="info"></plex-icon>
-    <plex-modal-subtitle class="font-title text-center" type="info" size="sm"><b>¿Desea agregar el paciente<br>a la agenda?</b></plex-modal-subtitle>
+    <plex-modal-subtitle class="font-title text-center" type="info" size="sm"><b>¿Desea agregar el paciente<br>a la
+            agenda?</b></plex-modal-subtitle>
     <main>
         <section class="w-100 h-100">
             <plex-title titulo="Datos de la agenda" size="sm"></plex-title>
             <plex-grid size="md" type="full" cols="2">
                 <plex-label size="sm" grow="full" case="capitalize" titulo="{{ horaTurno | date: 'EEEE' | uppercase }} {{horaTurno | date:
-                    'dd/MM/yyyy'}}" subtitulo="{{horaTurno | date: 'HH:mm'}} hs"
-                            icon="calendario-fecha-abajo">
+                    'dd/MM/yyyy'}}" subtitulo="{{horaTurno | date: 'HH:mm'}} hs" icon="calendario-fecha-abajo">
                 </plex-label>
                 <plex-label size="sm" grow="full" case="capitalize" titulo="{{ pacienteActivo | nombre }}"
                             subtitulo="{{ pacienteActivo | documento }}" icon="account">
                 </plex-label>
-                <plex-label size="sm" grow="full" case="capitalize" titulo="{{ turnoTipoPrestacion.nombre }}"
-                            subtitulo="Prestación" icon="mano-corazon">
+                <plex-label *ngIf="turnoTipoPrestacion" size="sm" grow="full" case="capitalize"
+                            titulo="{{ turnoTipoPrestacion.nombre }}" subtitulo="Prestación" icon="mano-corazon">
                 </plex-label>
                 <plex-label size="sm" grow="full" case="capitalize" titulo="{{ getEquipoProfesional() }}"
                             subtitulo="Equipo profesional" icon="paciente">
