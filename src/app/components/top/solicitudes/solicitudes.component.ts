@@ -661,23 +661,25 @@ export class SolicitudesComponent implements OnInit {
         this.routeToParams = params;
     }
 
+
     preAccesoHuds(motivoAccesoHuds) {
-        if (motivoAccesoHuds[0]) {
+        const motivo = (typeof motivoAccesoHuds !== 'string') ? motivoAccesoHuds[0] : motivoAccesoHuds;
+
+        if (motivo) {
             if (!this.accesoHudsPaciente && !this.accesoHudsPrestacion && this.routeToParams && this.routeToParams[0] === 'huds') {
                 // Se esta accediendo a 'HUDS DE UN PACIENTE'
-                window.sessionStorage.setItem('motivoAccesoHuds', motivoAccesoHuds[0]);
+                window.sessionStorage.setItem('motivoAccesoHuds', motivo);
             } else {
                 if (this.accesoHudsPaciente) {
                     const paramsToken = {
                         usuario: this.auth.usuario,
                         organizacion: this.auth.organizacion,
                         paciente: this.accesoHudsPaciente,
-                        motivo: motivoAccesoHuds[0],
+                        motivo,
                         profesional: this.auth.profesional,
                         idTurno: this.accesoHudsTurno,
                         idPrestacion: this.accesoHudsPrestacion,
-                        detalleMotivo: motivoAccesoHuds[1]
-
+                        detalleMotivo: (typeof motivoAccesoHuds !== 'string') ? motivoAccesoHuds[1] : ''
                     };
                     this.hudsService.generateHudsToken(paramsToken).subscribe(hudsToken => {
                         // se obtiene token y loguea el acceso a la huds del paciente
@@ -834,8 +836,8 @@ export class SolicitudesComponent implements OnInit {
 
     onContinuarRegistro() {
         this.setRouteToParams(['ejecucion', this.prestacionSeleccionada.id]);
-        this.preAccesoHuds(this.motivoVerContinuarPrestacion);
         this.accesoHudsPaciente = this.prestacionSeleccionada.paciente;
+        this.preAccesoHuds(this.motivoVerContinuarPrestacion);
         this.accesoHudsTurno = null;
         this.accesoHudsPrestacion = this.prestacionSeleccionada.solicitud.tipoPrestacion.id;
         this.prestacionNominalizada = this.prestacionSeleccionada.solicitud.tipoPrestacion.noNominalizada;
