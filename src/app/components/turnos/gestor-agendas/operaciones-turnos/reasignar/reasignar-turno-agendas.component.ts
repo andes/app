@@ -1,17 +1,17 @@
-import { environment } from './../../../../../../environments/environment';
-import { Component, Input, EventEmitter, Output, OnInit, ViewChild } from '@angular/core';
-import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { IBloque } from './../../../../../interfaces/turnos/IBloque';
-import { ITurno } from './../../../../../interfaces/turnos/ITurno';
-import { AgendaService } from '../../../../../services/turnos/agenda.service';
-import { TurnoService } from '../../../../../services/turnos/turno.service';
-import { SmsService } from './../../../../../services/turnos/sms.service';
+import { Plex } from '@andes/plex';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import * as moment from 'moment';
-import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { map } from 'rxjs/operators';
+import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
+import { AgendaService } from '../../../../../services/turnos/agenda.service';
+import { TurnoService } from '../../../../../services/turnos/turno.service';
+import { environment } from './../../../../../../environments/environment';
 import { IAgenda } from './../../../../../interfaces/turnos/IAgenda';
+import { IBloque } from './../../../../../interfaces/turnos/IBloque';
+import { ITurno } from './../../../../../interfaces/turnos/ITurno';
+import { SmsService } from './../../../../../services/turnos/sms.service';
 
 @Component({
     selector: 'reasignar-turno-agendas',
@@ -32,7 +32,10 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     @Input()
     set agendasSimilares(value: IAgenda[]) {
         if (value) {
-            this._agendasSimilares = value.filter(ag => this.bloquesSegunPrestacion(ag).length);
+            this._agendasSimilares = value
+                .filter(ag => this.bloquesSegunPrestacion(ag).length)
+                .filter(agenda => this.agendasSegunDia(agenda));
+
             this.agendasEnTabla = this._agendasSimilares;
         }
     }
@@ -113,7 +116,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         if (this.turnoSeleccionado?._id === turno._id || turno.estado !== 'disponible') {
             this.turnoSeleccionado = null;
             this.turnoSiguiente = null;
-            // this.showHorarios = false;
         } else {
             this.turnoSeleccionado = turno;
             const indiceTurno = bloque.turnos.findIndex(t => t._id === turno._id);
@@ -326,6 +328,16 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             const delTipoPrestacion = b.tipoPrestaciones.some(tp => tp.conceptId === this.turnoAReasignar.tipoPrestacion.conceptId);
             const conTurnoDisponible = this.tieneTurnos(b);
             return delTipoPrestacion && conTurnoDisponible;
+        });
+    }
+
+    agendasSegunDia(agenda: IAgenda) {
+        return agenda.bloques.some(bloque => {
+            if (bloque.cantidadTurnos === bloque.accesoDirectoDelDia) {
+                return moment(agenda.horaInicio).isSame(moment(), 'day');
+            }
+
+            return true;
         });
     }
 
