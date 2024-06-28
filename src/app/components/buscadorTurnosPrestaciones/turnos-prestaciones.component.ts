@@ -8,6 +8,7 @@ import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { HUDSService } from '../../modules/rup/services/huds.service';
 import { ExportHudsService } from '../../modules/visualizacion-informacion/services/export-huds.service';
 import { ObraSocialService } from '../../services/obraSocial.service';
+import { switchMap } from 'rxjs/operators';
 import { ProfesionalService } from '../../services/profesional.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
 import { TurnosPrestacionesService } from './services/turnos-prestaciones.service';
@@ -15,6 +16,7 @@ import { cache } from '@andes/shared';
 import { IFinanciador } from 'src/app/interfaces/IFinanciador';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
+import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 
 @Component({
     selector: 'turnos-prestaciones',
@@ -100,7 +102,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         private exportHudsService: ExportHudsService,
         public obraSocialService: ObraSocialService,
         private pacienteService: PacienteService,
-        private pacienteRestringido: PacienteRestringidoPipe
+        private pacienteRestringido: PacienteRestringidoPipe,
+        public motivosHudsService: MotivosHudsService
+
 
     ) { }
 
@@ -330,19 +334,24 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         this.descargasPendientes = false;
         this.prestacionIniciada = datos.idPrestacion;
 
-        this.pacienteService.getById(datos.paciente?.id).subscribe(paciente => this.paciente = paciente);
-
-
-        const paramsToken = {
-            usuario: this.auth.usuario,
-            organizacion: this.auth.organizacion,
-            paciente: datos.paciente,
-            motivo: 'auditoria',
-            profesional: this.auth.profesional ? this.auth.profesional : null,
-            idTurno: datos.turno ? datos.turno.id : null,
-            idPrestacion: datos.idPrestacion ? datos.idPrestacion : null
-        };
-        this.hudsService.generateHudsToken(paramsToken).subscribe(hudsToken => {
+        this.pacienteService.getById(datos.paciente.id).subscribe(paciente => {
+            this.paciente = paciente;
+            this.financiador = paciente.financiador[0];
+        });
+        const token = this.motivosHudsService.getMotivo('typ').pipe(
+            switchMap(motivoH => {
+                const paramsToken = {
+                    usuario: this.auth.usuario,
+                    organizacion: this.auth.organizacion,
+                    paciente: datos.paciente,
+                    motivo: motivoH[0].key,
+                    profesional: this.auth.profesional ? this.auth.profesional : null,
+                    idTurno: datos.turno ? datos.turno.id : null,
+                    idPrestacion: datos.idPrestacion ? datos.idPrestacion : null
+                };
+                return this.hudsService.generateHudsToken(paramsToken);
+            }));
+        token.subscribe(hudsToken => {
             // se obtiene token y loguea el acceso a la huds del paciente
             window.sessionStorage.setItem('huds-token', hudsToken.token);
             const aux: any = this.lastSelect$;
@@ -353,10 +362,6 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             datos.seleccionada = true;
             this.showPrestacion = true;
             this.prestacion = datos;
-        });
-        this.pacienteService.getById(datos.paciente?.id).subscribe(paciente => {
-            this.paciente = paciente;
-            this.financiador = paciente.financiador[0];
         });
     }
 

@@ -10,6 +10,7 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
 import { NgForm } from '@angular/forms';
 import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 import { cache } from '@andes/shared';
+import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 
 @Component({
     selector: 'app-nuevo-registro-salud',
@@ -59,7 +60,9 @@ export class NuevoRegistroSaludComponent implements OnInit {
         private auth: Auth,
         private hudsService: HUDSService,
         private prestacionService: PrestacionesService,
-        private router: Router
+        private router: Router,
+        public motivosHudsService: MotivosHudsService
+
     ) { }
 
     ngOnInit() {
@@ -125,16 +128,20 @@ export class NuevoRegistroSaludComponent implements OnInit {
     }
 
     generarToken(paciente, concepto, prestacion) {
-        const paramsToken = {
-            usuario: this.auth.usuario,
-            organizacion: this.auth.organizacion,
-            paciente: paciente,
-            motivo: concepto.term,
-            profesional: this.auth.profesional,
-            idTurno: null,
-            idPrestacion: prestacion.id
-        };
-        return this.hudsService.generateHudsToken(paramsToken).pipe(
+        const token = this.motivosHudsService.getMotivo('rup-inicio-prestacion').pipe(
+            switchMap(motivoH => {
+                const paramsToken = {
+                    usuario: this.auth.usuario,
+                    organizacion: this.auth.organizacion,
+                    paciente: paciente,
+                    motivo: motivoH[0].key,
+                    profesional: this.auth.profesional,
+                    idTurno: null,
+                    idPrestacion: prestacion.id
+                };
+                return this.hudsService.generateHudsToken(paramsToken);
+            }));
+        return token.pipe(
             tap(hudsToken => window.sessionStorage.setItem('huds-token', hudsToken.token))
         );
     }

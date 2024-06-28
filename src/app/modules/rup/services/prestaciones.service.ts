@@ -1,5 +1,5 @@
 
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { Auth } from '@andes/auth';
@@ -15,6 +15,7 @@ import { environment } from 'src/environments/environment';
 import { ITurno } from 'src/app/interfaces/turnos/ITurno';
 import { Router } from '@angular/router';
 import { IPacienteBasico } from 'src/app/core/mpi/interfaces/IPaciente';
+import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 
 
 @Injectable()
@@ -77,7 +78,8 @@ export class PrestacionesService {
         private hudsService: HUDSService,
         private plex: Plex,
         private archivoAdjuntoService: AdjuntosService,
-        private router: Router
+        private router: Router,
+        private motivosHudsService: MotivosHudsService
     ) {
     }
 
@@ -779,18 +781,20 @@ export class PrestacionesService {
         const paciente = prestacion.paciente;
         const snomedConcept = prestacion.solicitud.tipoPrestacion;
         if (tieneAccesoHUDS) {
-            const paramsToken = {
-                usuario: this.auth.usuario,
-                organizacion: this.auth.organizacion,
-                paciente: paciente,
-                motivo: snomedConcept.term,
-                profesional: this.auth.profesional,
-                idTurno: turno?.id,
-                idPrestacion: prestacion.id
-            };
-            this.hudsService.generateHudsToken(
-                paramsToken
-            ).subscribe((husdTokenRes) => {
+            const token = this.motivosHudsService.getMotivo('rup-ejecucion').pipe(
+                switchMap(motivoH => {
+                    const paramsToken = {
+                        usuario: this.auth.usuario,
+                        organizacion: this.auth.organizacion,
+                        paciente: paciente,
+                        motivo: motivoH[0].key,
+                        profesional: this.auth.profesional,
+                        idTurno: turno?.id,
+                        idPrestacion: prestacion.id
+                    };
+                    return this.hudsService.generateHudsToken(paramsToken);
+                }));
+            token.subscribe((husdTokenRes) => {
                 if (husdTokenRes.token) {
                     window.sessionStorage.setItem('huds-token', husdTokenRes.token);
                     this.router.navigate(['rup/ejecucion/', prestacion.id]);

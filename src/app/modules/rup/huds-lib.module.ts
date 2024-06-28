@@ -32,6 +32,7 @@ import { VistaHistorialTurnosComponent } from './components/huds/vistaHistorialT
 import { VistaSolicitudTopComponent } from './components/huds/vistaSolicitudTop';
 import { ElementosRUPModule } from './elementos-rup.module';
 import { RUPLibModule } from './rup-lib.module';
+import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 
 @NgModule({
     imports: [
@@ -92,6 +93,8 @@ import { RUPLibModule } from './rup-lib.module';
         HudsBusquedaComponent,
         ListadoInternacionHudsComponent
     ],
+
+    providers: [MotivosHudsService]
 })
 export class HUDSLibModule {
 
