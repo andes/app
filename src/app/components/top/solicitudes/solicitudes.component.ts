@@ -5,6 +5,7 @@ import { Unsubscribe } from '@andes/shared';
 import { Component, ElementRef, HostBinding, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, concatWith } from 'rxjs';
+import { concat, switchMap } from 'rxjs';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { RouterService } from 'src/app/services/router.service';
 import { HUDSService } from '../../../modules/rup/services/huds.service';
@@ -12,6 +13,10 @@ import { PrestacionesService } from '../../../modules/rup/services/prestaciones.
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
 import { Location } from '@angular/common';
+import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
+import { IMotivosHuds } from 'src/app/interfaces/IMotivosHuds';
+import { IMotivoAcceso } from 'src/app/modules/rup/interfaces/IMotivoAcceso';
+
 
 @Component({
     selector: 'solicitudes',
@@ -114,6 +119,7 @@ export class SolicitudesComponent implements OnInit {
     public mostrarMasOpcionesSalida = false;
     public mostrarMasOpcionesEntrada = false;
     public mostrarAlertaRangoDias = false;
+    public seleccionado;
     public actualizacion = false;
     public check;
     public collapse = false;
@@ -160,7 +166,8 @@ export class SolicitudesComponent implements OnInit {
         private hudsService: HUDSService,
         private pacienteService: PacienteService,
         private routerService: RouterService,
-        private location: Location
+        private location: Location,
+        public motivosHudsService: MotivosHudsService
     ) {
     }
 
@@ -661,9 +668,8 @@ export class SolicitudesComponent implements OnInit {
         this.routeToParams = params;
     }
 
-
-    preAccesoHuds(motivoAccesoHuds) {
-        const motivo = (typeof motivoAccesoHuds !== 'string') ? motivoAccesoHuds[0] : motivoAccesoHuds;
+    preAccesoHuds(motivoAccesoHuds: IMotivoAcceso | string) {
+        const motivo = (typeof motivoAccesoHuds !== 'string') ? motivoAccesoHuds.motivo : motivoAccesoHuds;
 
         if (motivo) {
             if (!this.accesoHudsPaciente && !this.accesoHudsPrestacion && this.routeToParams && this.routeToParams[0] === 'huds') {
@@ -679,7 +685,8 @@ export class SolicitudesComponent implements OnInit {
                         profesional: this.auth.profesional,
                         idTurno: this.accesoHudsTurno,
                         idPrestacion: this.accesoHudsPrestacion,
-                        detalleMotivo: (typeof motivoAccesoHuds !== 'string') ? motivoAccesoHuds[1] : ''
+                        detalleMotivo: (typeof motivoAccesoHuds !== 'string') ? motivoAccesoHuds.descripcionAcceso : null
+
                     };
                     this.hudsService.generateHudsToken(paramsToken).subscribe(hudsToken => {
                         // se obtiene token y loguea el acceso a la huds del paciente
@@ -746,16 +753,6 @@ export class SolicitudesComponent implements OnInit {
 
     onConfirmarIniciarPrestacion() {
         // token HUDS
-        const paramsToken = {
-            usuario: this.auth.usuario,
-            organizacion: this.auth.organizacion,
-            paciente: this.prestacionSeleccionada.paciente,
-            motivo: 'Fuera de agenda',
-            profesional: this.auth.profesional,
-            idTurno: null,
-            idPrestacion: this.prestacionSeleccionada.solicitud.tipoPrestacion.id
-        };
-        // patch config
         const patch: any = {
             op: 'estadoPush',
             ejecucion: {
@@ -767,7 +764,19 @@ export class SolicitudesComponent implements OnInit {
                 tipo: 'ejecucion'
             }
         };
-        this.hudsService.generateHudsToken(paramsToken).pipe(
+        this.motivosHudsService.getMotivo('rup-inicio-prestacion').pipe(
+            switchMap(motivoH => {
+                const paramsToken = {
+                    usuario: this.auth.usuario,
+                    organizacion: this.auth.organizacion,
+                    paciente: this.prestacionSeleccionada.paciente,
+                    motivo: motivoH[0].motivo,
+                    profesional: this.auth.profesional,
+                    idTurno: null,
+                    idPrestacion: this.prestacionSeleccionada.solicitud.tipoPrestacion.id
+                };
+                return this.hudsService.generateHudsToken(paramsToken);
+            }),
             concatWith(this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch)),
             catchError(err => this.plex.info('danger', 'La prestación no pudo ser iniciada. ' + err))
         ).subscribe(() => this.router.navigate(['/rup/ejecucion', this.prestacionSeleccionada.id]));
@@ -837,7 +846,9 @@ export class SolicitudesComponent implements OnInit {
     onContinuarRegistro() {
         this.setRouteToParams(['ejecucion', this.prestacionSeleccionada.id]);
         this.accesoHudsPaciente = this.prestacionSeleccionada.paciente;
-        this.preAccesoHuds(this.motivoVerContinuarPrestacion);
+        this.motivosHudsService.getMotivo('continuidad').subscribe(motivoH => {
+            this.preAccesoHuds(motivoH[0].motivo);
+        });
         this.accesoHudsTurno = null;
         this.accesoHudsPrestacion = this.prestacionSeleccionada.solicitud.tipoPrestacion.id;
         this.prestacionNominalizada = this.prestacionSeleccionada.solicitud.tipoPrestacion.noNominalizada;
