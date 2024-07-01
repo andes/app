@@ -22,6 +22,7 @@ export class UsuarioDetalleComponent implements OnChanges {
     public email;
     public activate;
     public editable;
+    public profesionalHabilitado;
 
     constructor(
         private profesionalService: ProfesionalService,
@@ -39,8 +40,8 @@ export class UsuarioDetalleComponent implements OnChanges {
 
         this.getProfesional(this.usuario.documento).subscribe((profesional) => {
             const permission = this.auth.getPermissions('usuarios:?');
-
-            this.profesional = profesional[0];
+            this.profesionalHabilitado = profesional.find(prof => prof.habilitado === true);
+            this.profesional = this.profesionalHabilitado || profesional[0];
             this.editable = (permission.includes('cuenta') || permission.includes('*')) && !!profesional[0]?.id && esTemporal;
         });
 
@@ -50,7 +51,7 @@ export class UsuarioDetalleComponent implements OnChanges {
     getProfesional(documento) {
         return this.profesionalService.get({
             documento,
-            fields: 'id documento nombre apellido profesionalMatriculado formacionGrado matriculaExterna profesionExterna'
+            fields: 'id habilitado documento nombre apellido profesionalMatriculado formacionGrado matriculaExterna profesionExterna'
         });
     }
 
