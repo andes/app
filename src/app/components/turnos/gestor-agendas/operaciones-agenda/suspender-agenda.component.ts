@@ -72,7 +72,7 @@ export class SuspenderAgendaComponent implements OnInit {
                 const request = sinTelefono.map(turno => this.pacienteService.getById(turno.paciente.id));
                 forkJoin(request).subscribe(response => {
                     response.forEach(paciente => {
-                        const telefono = paciente.contacto.find(contacto => contacto.tipo !== 'email');
+                        const telefono = paciente.contacto?.find(contacto => contacto.tipo !== 'email');
                         if (telefono && telefono.valor && telefono.valor !== '') {
                             const pacientesEncontrado = sinTelefono.filter(turno => turno.paciente.id === paciente.id);
                             pacientesEncontrado.map(pac => {
