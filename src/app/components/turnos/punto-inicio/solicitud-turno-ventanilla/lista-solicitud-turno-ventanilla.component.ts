@@ -59,6 +59,8 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
             estados: [
                 'auditoria', // solicitudes a ser auditadas, pueden pasar a rechazadas o a pendientes
                 'pendiente', // solicitudes pendientes pueden tener o no turno asociado, están pendientes de ejecución
+                'asignada',
+                'anulada'
             ]
         };
 
