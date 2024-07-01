@@ -31,4 +31,10 @@ export interface IListaEspera {
         motivo: String;
         observacion: String;
     };
+    llamados?: ILlamado[];
+}
+
+export interface ILlamado {
+    estado?: string;
+    comentario?: string;
 }
