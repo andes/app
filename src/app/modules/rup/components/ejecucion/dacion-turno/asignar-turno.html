@@ -16,8 +16,8 @@
     <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [offset]="150"
                       (selected)="onPacienteSelected($event)">
     </paciente-listado>
-    <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
-        ¡No se encontró ningún paciente!
+    <div *ngIf="pacientes && !pacientes.length" class="alert alert-danger">
+        <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente
     </div>
     <div *ngIf="pacienteActivo">
         <paciente-detalle [paciente]="pacienteActivo" [fields]="['documento', 'sexo', 'financiador']"
