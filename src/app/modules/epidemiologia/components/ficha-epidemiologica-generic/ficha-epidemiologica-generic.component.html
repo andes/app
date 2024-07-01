@@ -69,12 +69,12 @@
                                 </plex-table-columns>
                                 <tr *ngFor="let contacto of contactosEstrechos">
                                     <td *plTableCol="'apellidoNombre'">{{contacto.apellidoNombre}}</td>
-                                    <td *plTableCol="'dni'">{{contacto.dni}}</td>
+                                    <td *plTableCol="'documento'">{{contacto | documento }}</td>
                                     <td *plTableCol="'telefono'">{{contacto.telefono}}</td>
                                     <td *plTableCol="'domicilio'">{{contacto.domicilio}}</td>
                                     <td *plTableCol="'fechaContacto'">{{contacto.fechaUltimoContacto ?
                                         (contacto.fechaUltimoContacto | fecha) : ''}}</td>
-                                    <td *plTableCol="'tipoContacto'">{{contacto.tipoContacto.nombre}}</td>
+                                    <td *plTableCol="'tipoContacto'">{{contacto.tipoContacto?.nombre}}</td>
                                     <td *plTableCol="'acciones'">
                                         <plex-icon *ngIf="editFicha" size="xl" type="danger" name="delete"
                                                    (click)="deleteContacto(contacto)" class="hover"></plex-icon>
@@ -86,8 +86,8 @@
                                                    [readonly]="!editFicha">
                                         </plex-text>
                                     </td>
-                                    <td *plTableCol="'dni'">
-                                        <plex-text name="dni" [(ngModel)]="contacto.dni" [readonly]="!editFicha">
+                                    <td *plTableCol="'documento'">
+                                        <plex-text name="documento" [(ngModel)]="contacto.documento" [readonly]="!editFicha">
                                         </plex-text>
                                     </td>
                                     <td *plTableCol="'telefono'">
