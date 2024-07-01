@@ -8,12 +8,14 @@ $trastorno: #ff4a1a;
 $hallazgo: #f4a03b;
 $procedimiento: #92278e;
 $solicitud: #0070cc;
+$prestacion: #e12079;
 // $productos: #ef0993;
 $producto: #00bcb4;
 $adjunto: #b9c512;
 $todos: #111;
 $otro: #b9c512;
 $invert: #002738;
+$blue: #00a8e0;
 $calificador: #660520;
 $laboratorio: #a0a0a0;
 $registro: #8bc43f; // elemento de registro
@@ -34,6 +36,7 @@ $rup_colors: (
     regimen: $procedimiento,
     entidad: $procedimiento,
     solicitud: $solicitud,
+    prestacion: $prestacion,
     plan: $solicitud,
     producto: $producto,
     'medicamento.clínico': $producto,
@@ -44,6 +47,7 @@ $rup_colors: (
     elementoderegistro: $registro,
     'estructura.corporal': $registro,
     invert: $invert,
+    blue: $blue,
     todos: $todos,
     informacion: $informacion,
     otro: $otro

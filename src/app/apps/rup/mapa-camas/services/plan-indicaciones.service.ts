@@ -15,10 +15,11 @@ export class PlanIndicacionesServices extends ResourceBaseHttp {
         return this.server.patch(`${this.url}/${idIndicacion}/estado`, estado);
     }
 
-    getIndicaciones(idInternacion: string, fecha: Date, capa: string) {
+    getIndicaciones(idInternacion: string, fecha: Date, capa: string, excluyeEstado?: string) {
         return this.search({
             internacion: idInternacion,
-            rangoFechas: fecha
+            rangoFechas: fecha,
+            excluyeEstado: excluyeEstado
         }).pipe(
             map(indicaciones => {
                 const fechaMax = moment(fecha).endOf('day').toDate();

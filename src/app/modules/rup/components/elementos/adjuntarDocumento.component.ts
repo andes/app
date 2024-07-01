@@ -38,10 +38,10 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         if (this.parametroRegistro) {
             this.registro = this.parametroRegistro;
         }
-        if (!this.registro.valor) {
+        if (!this.registro?.valor) {
             this.registro.valor = {};
         }
-        if (!this.registro.valor.documentos) {
+        if (!this.registro?.valor.documentos) {
             this.registro.valor.documentos = [];
         }
 

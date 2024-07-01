@@ -1,0 +1,111 @@
+<div class="solicitud-wrapper">
+    <plex-title *ngIf="registro?.concepto"
+                titulo="{{ registro.concepto.term[0].toUpperCase() + registro.concepto.term.slice(1) }}" size="lg">
+        <div class="titulo-badges">
+            <plex-badge type="danger">
+                Registro Privado
+            </plex-badge>
+            <plex-badge type="{{ !registro.esSolicitud ? registro.concepto.semanticTag : 'solicitud' }}">
+                {{ !registro.esSolicitud ? registro.concepto.semanticTag : 'Solicitud' }}
+            </plex-badge>
+        </div>
+    </plex-title>
+    <div class="mt-4">
+        <plex-grid cols="2">
+            <div class="registros">
+                <plex-icon name="historial" class="icon-info" size="xl"></plex-icon>
+                <plex-badge type="xs" type="info">
+                    Registros
+                </plex-badge>
+                <plex-button size="sm" type="info" tooltip="Registros de la solicitud"
+                             *ngIf="registro.estadoActual?.tipo === 'validada'" (click)="abrirSolicitud()">
+                    <plex-icon name="mano-corazon"></plex-icon>
+                </plex-button>
+            </div>
+            <div>
+                <div *ngIf="registro.registros[indice].valor?.solicitudPrestacion?.organizacionDestino">
+                    <b>Organización de destino</b>
+                    <p class="texto-detalle">
+                        {{registro.registros[indice].valor.solicitudPrestacion.organizacionDestino.nombre}}</p>
+                </div>
+                <div>
+                    <b>Profesionales</b>
+                    <p class="texto-detalle">{{registro.evoluciones[indice].profesional}}</p>
+                </div>
+
+            </div>
+        </plex-grid>
+    </div>
+    <div class="mt-4">
+        <div><b>Diagnóstico / Motivo</b>
+            <p>{{registro.registros[indice].valor?.solicitudPrestacion?.motivo || 'Sin diagnóstico o motivo'}}</p>
+        </div>
+        <div>
+            <b>Indicaciones</b>
+            <p>{{registro.registros[indice].valor?.solicitudPrestacion?.indicaciones || 'Sin indicación' | html}}</p>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="solicitud-wrapper">
+    <div class="mt-4">
+        <plex-grid cols="2">
+            <div class="registros">
+                <plex-icon name="documento-corazon" class="icon-info" size="xl"></plex-icon>
+                <div class="info-registro">
+                    <plex-badge size="sm" type="info">
+                        Datos de la prestación
+                    </plex-badge>
+                    <h6><b>{{prestacionOrigen.solicitud.fecha | fecha}}</b></h6>
+                    <hr />
+                </div>
+                <div *ngIf="prestacionOrigen?.solicitud?.profesional">
+                    <plex-button size="sm" icon="eye" type="info" (click)="abrirSolicitud()" tooltip="Ver prestación">
+                    </plex-button>
+                </div>
+            </div>
+            <div>
+                <plex-grid cols="3">
+                    <div>
+                        <b>Prestación</b>
+                        <p class="texto-detalle">{{prestacionOrigen.solicitud.tipoPrestacion.term}}</p>
+                    </div>
+                    <div>
+                        <b>Profesional</b>
+                        <p class="texto-detalle">{{prestacionOrigen.solicitud.profesional | nombre}}</p>
+                    </div>
+                    <div>
+                        <b>Ámbito</b>
+                        <p class="texto-detalle">{{prestacionOrigen.solicitud.ambitoOrigen}}</p>
+                    </div>
+                </plex-grid>
+            </div>
+        </plex-grid>
+    </div>
+    <div class="mt-3 mb-4 w-100" *ngIf="registro.dataPrestacion">
+        <div class="subtitulo" size="sm">Historial de la solicitud</div>
+        <plex-wrapper>
+            <div collapse>
+                <historial-solicitud class="w-100" [prestacion]="registro.dataPrestacion">
+                </historial-solicitud>
+            </div>
+        </plex-wrapper>
+    </div>
+    <div class="mt-4">
+        <div class="subtitulo mb-1" size="sm">Otros registros de la prestación</div>
+        <plex-accordion>
+            <plex-panel class="lista-panel" *ngFor="let registro of prestacionOrigen.ejecucion?.registros; let i=index">
+                <div plex-accordion-title case="capitalize">
+                    <div class="titulo">
+                        {{ registro.nombre }}
+                    </div>
+                    <plex-button disabled type="info" size="sm" icon="chevron-down" class="float-right">
+                    </plex-button>
+                </div>
+                <div>
+                    <detalle-registro-interno [registro]="registro"></detalle-registro-interno>
+                </div>
+            </plex-panel>
+        </plex-accordion>
+    </div>
+</div>
