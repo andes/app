@@ -65,7 +65,7 @@ export class SuspenderAgendaComponent implements OnInit {
                 sinTelefono = sinTelefono.concat(sinTel);
             });
 
-            const sinTel = this.agenda.sobreturnos.filter(sobreTurno => sobreTurno.paciente && (sobreTurno.paciente.telefono === null || !sobreTurno.paciente.telefono.length));
+            const sinTel = this.agenda.sobreturnos.filter(sobreTurno => sobreTurno.paciente && (sobreTurno.paciente.telefono === null || !sobreTurno.paciente.telefono?.length));
             sinTelefono = sinTelefono.concat(sinTel);
 
             if (sinTelefono.length) {
