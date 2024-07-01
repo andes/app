@@ -31,7 +31,7 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
     public contactosEstrechos = [];
     public contacto = {
         apellidoNombre: '',
-        dni: '',
+        documento: '',
         telefono: '',
         domicilio: '',
         fechaUltimoContacto: '',
@@ -43,8 +43,8 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
             label: 'Apellido y Nombre'
         },
         {
-            key: 'dni',
-            label: 'Dni'
+            key: 'documento',
+            label: 'documento'
         },
         {
             key: 'telefono',
@@ -97,7 +97,7 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
 
                 this.fichaPaciente.secciones.map(sec => {
                     if (sec.name !== SECCION_CONTACTOS_ESTRECHOS && sec.name !== SECCION_OPERACIONES) {
-                        const buscado = this.secciones.findIndex(seccion => seccion.id === sec.id);
+                        const buscado = this.secciones.findIndex(seccion => seccion.name === sec.name);
                         if (buscado !== -1) {
                             if (sec.name === SECCION_USUARIO && this.editFicha) {
 
@@ -272,7 +272,7 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
         this.contactosEstrechos.push(this.contacto);
         this.contacto = {
             apellidoNombre: '',
-            dni: '',
+            documento: '',
             telefono: '',
             domicilio: '',
             fechaUltimoContacto: '',
@@ -280,7 +280,7 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
         };
     }
     deleteContacto(contacto) {
-        const index = this.contactosEstrechos.findIndex(item => item.dni === contacto.dni);
+        const index = this.contactosEstrechos.findIndex(item => item.documento === contacto.documento);
         if (index >= 0) {
             this.contactosEstrechos.splice(index, 1);
             this.contactosEstrechos = [...this.contactosEstrechos];
