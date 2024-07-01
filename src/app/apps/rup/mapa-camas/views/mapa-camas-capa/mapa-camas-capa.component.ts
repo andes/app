@@ -186,6 +186,10 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     verListadoInternacionMedico() {
         this.router.navigate(['/mapa-camas/listado-internacion-medico']);
     }
+    verListadoMedicamentos() {
+        this.router.navigate(['/mapa-camas/listado-medicamentos']);
+    }
+
 
     onEdit(accion) {
         this.accion = accion;
