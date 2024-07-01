@@ -5,6 +5,7 @@ import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { HUDSService } from '../../services/huds.service';
 import { Location } from '@angular/common';
+import { IMotivoAcceso } from '../../interfaces/IMotivoAcceso';
 
 @Component({
     selector: 'rup-hudsBusquedaPaciente',
@@ -74,18 +75,18 @@ export class HudsBusquedaPacienteComponent implements OnInit {
         }
     }
 
-    onConfirmSelect(motivoAccesoHuds) {
+    onConfirmSelect(motivoAccesoHuds: IMotivoAcceso) {
         if (motivoAccesoHuds) {
             // se obtiene token y loguea el acceso a la huds del paciente
             const paramsToken = {
                 usuario: this.auth.usuario,
                 organizacion: this.auth.organizacion,
                 paciente: this.pacienteSelected,
-                motivo: motivoAccesoHuds[0],
+                motivo: motivoAccesoHuds.motivo,
                 profesional: this.auth.profesional ? this.auth.profesional : null,
                 idTurno: null,
                 idPrestacion: null,
-                detalleMotivo: motivoAccesoHuds[1]
+                detalleMotivo: motivoAccesoHuds.descripcionAcceso
             };
             this.hudsService.generateHudsToken(paramsToken).subscribe(hudsToken => {
                 window.sessionStorage.setItem('huds-token', hudsToken.token);
