@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@agm/core": "3.0.0-beta.0",
-    "@andes/icons": "^1.1.22",
+    "@andes/icons": "^1.1.23",
     "@andes/match": "^1.1.12",
     "@andes/plex": "^8.0.3",
     "@angular-eslint/eslint-plugin": "12.3.1",

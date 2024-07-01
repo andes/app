@@ -33,8 +33,8 @@ import { PlanificarAgendaComponent } from './components/turnos/gestor-agendas/op
 import { RevisionAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/revision-agenda.component';
 import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/operaciones-agenda/sobreturno.component';
 import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/puntoInicio-turnos.component';
+import { PrestacionesHabilitadasComponent } from './components/turnos/gestor-agendas/prestaciones-habilitadas/prestaciones-habilitadas.component';
 // ... MPI
-// import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
 import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
 import { PacienteComponent } from './core/mpi/components/paciente.component';
 // Internacion
@@ -86,6 +86,7 @@ const appRoutes: Routes = [
     { path: 'citas/revision_agenda/:idAgenda', component: RevisionAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/sobreturnos/:idAgenda', component: AgregarSobreturnoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/paciente/:idAgenda', component: AgregarPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+    { path: 'citas/prestaciones_habilitadas', component: PrestacionesHabilitadasComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
     {
         path: 'rup',
