@@ -35,9 +35,9 @@ export class FormPresetResourcesService extends ResourceBaseHttp<Event> {
                 break;
             case 'mpi':
                 seccion.fields['nacionalidad'] = paciente.direccion[1]?.ubicacion.pais ? paciente.direccion[1].ubicacion.pais : '';
-                seccion.fields['direccioncaso'] = paciente.direccion[0].valor ? paciente.direccion[0].valor : '';
-                seccion.fields['lugarresidencia'] = paciente.direccion[0].ubicacion.provincia ? paciente.direccion[0].ubicacion.provincia : '';
-                seccion.fields['localidadresidencia'] = paciente.direccion[0].ubicacion.localidad ? paciente.direccion[0].ubicacion.localidad : '';
+                seccion.fields['direccioncaso'] = paciente.direccion[0]?.valor ? paciente.direccion[0].valor : '';
+                seccion.fields['lugarresidencia'] = paciente.direccion[0]?.ubicacion.provincia ? paciente.direccion[0].ubicacion.provincia : '';
+                seccion.fields['localidadresidencia'] = paciente.direccion[0]?.ubicacion.localidad ? paciente.direccion[0].ubicacion.localidad : '';
                 break;
         }
     }
