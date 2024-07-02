@@ -17,6 +17,7 @@ import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
+import { ListadoInternacionCapasService } from '../../views/listado-internacion-capas/listado-internacion-capas.service';
 @Component({
     selector: 'app-egresar-paciente',
     templateUrl: './egresar-paciente.component.html',
@@ -106,6 +107,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         public mapaCamasService: MapaCamasService,
         public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
         private listadoInternacionService: ListadoInternacionService,
+        private listadoInternacionCapasService: ListadoInternacionCapasService,
         private internacionResumenService: InternacionResumenHTTP,
         private camasHTTP: MapaCamasHTTP,
     ) { }
@@ -135,7 +137,11 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     return false;
                 }
                 const camaActual = camas.find(c => c.id === this.cama?.id);
-                if ((camaActual?.estado === 'ocupada' && camaActual?.idInternacion === this.cama?.idInternacion) || this.prestacion) {
+                // condicion: 1.disponible 2.ocupada por el mismo paciente 3.tiene prestacion
+                const condicion = camaActual?.estado === 'disponible'
+                    || (camaActual?.estado === 'ocupada' && camaActual?.idInternacion === this.cama?.idInternacion)
+                    || this.prestacion;
+                if (condicion) {
                     return false;
                 }
                 return true;
@@ -239,7 +245,14 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                             }
                         });
                 }
+            } else {
+                // asistencial
+                if (this.resumen?.fechaEgreso) {
+                    this.fechaEgresoOriginal = moment(this.resumen.fechaEgreso).toDate();
+                    this.registro.valor.InformeEgreso.tipoEgreso = this.listaTipoEgreso.find(tipo => tipo.nombre === this.resumen.tipo_egreso);
+                }
             }
+
             if (cama.id && cama.id !== ' ') {
                 this.cama = cama;
                 this.fechaMin = moment(this.cama.fecha).add(1, 'm').toDate();
@@ -265,7 +278,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     setFecha() {
-        const nuevaFecha = (this.fecha) ? moment(this.fecha).toDate() : moment().toDate();
+        const nuevaFecha = moment(this.fecha).toDate();
         this.mapaCamasService.setFecha(nuevaFecha);
         this.registro.valor.InformeEgreso.fechaEgreso = nuevaFecha;
         if (this.capa === 'estadistica' || this.capa === 'estadistica-v2') {
@@ -287,7 +300,12 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 complete: () => {
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
                     if (this.view === 'listado-internacion') {
-                        this.listadoInternacionService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
+                        const fechaHasta = moment(this.registro.valor.InformeEgreso.fechaEgreso).add(1, 'minute').toDate();
+                        // actualiza el listado
+                        this.listadoInternacionService.setFechaHasta(fechaHasta);
+                        this.listadoInternacionCapasService.setFechaHasta(fechaHasta);
+                        this.mapaCamasService.selectPrestacion(null);
+                        this.mapaCamasService.selectResumen(null);
                     } else if (this.view === 'mapa-camas') {
                         this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
                     }
@@ -362,7 +380,11 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                             no generar datos inconsistentes entre internacion y movimientos */
                     throw new Error();
                 }
-                return this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso);
+                if (this.fechaEgresoOriginal) {
+                    return this.mapaCamasService.changeTime(this.cama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, this.cama.idInternacion);
+                } else {
+                    return this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso);
+                }
             })
         );
     }
@@ -675,7 +697,16 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         );
     }
 
-    egresarPaciente(formEgreso, disable) {
-        return formEgreso.invalid || this.prestacionValidada || this.disableButton || this.inProgress || disable;
+    disableGuardar(formEgreso, disable) {
+        let condicion = false;
+        if (this.capa === 'estadistica') {
+            condicion = this.prestacionValidada;
+        }
+
+        return formEgreso.invalid
+            || this.disableButton
+            || this.inProgress
+            || condicion
+            || disable;
     }
 }
