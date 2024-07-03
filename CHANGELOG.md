@@ -1,3 +1,11 @@
+# [5.142.0](https://github.com/andes/app/compare/v5.141.0...v5.142.0) (2024-07-03)
+
+
+### Features
+
+* **IN:** implementa periodos censables en internacion ([#3003](https://github.com/andes/app/issues/3003)) ([a75abaf](https://github.com/andes/app/commit/a75abaf76cbe0a7eea71dffbdff8a31ad45877ac))
+* **TOP-183:** fix en ContinuarRegistro de TOP ([#3030](https://github.com/andes/app/issues/3030)) ([087b003](https://github.com/andes/app/commit/087b003d23a800b63b5978308f0a3c2b6ac351c2))
+
 # [5.141.0](https://github.com/andes/app/compare/v5.140.0...v5.141.0) (2024-06-26)
 
 
