@@ -549,14 +549,21 @@ export class MapaCamasService {
                 hasta = hasta || new Date();
                 if (type === 'cama') {
                     return this.camasHTTP.historial(ambito, capa, desde, hasta, { idCama: cama ? cama.idCama : selectedCama.idCama });
+
                 } else if (type === 'internacion') {
                     if (view === 'mapa-camas' && selectedCama.idInternacion) {
                         return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedCama.idInternacion);
+
                     } else if (view === 'listado-internacion') {
+                        if (!desde) {
+                            desde = selectedPrestacion ? selectedPrestacion.solicitud.fecha : selectedResumen.fechaIngreso;
+                        }
                         if (this.capa === 'estadistica' && selectedPrestacion.id) {
+                            desde = [desde, selectedPrestacion.solicitud.fecha].sort((a, b) => moment(a).diff(moment(b)))[0];
                             return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedPrestacion.id);
                         }
                         if (selectedResumen._id) {
+                            desde = [desde, selectedResumen.fechaIngreso].sort((a, b) => moment(a).diff(moment(b)))[0];
                             return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedResumen._id);
                         }
                     }

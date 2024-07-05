@@ -1,5 +1,5 @@
 import { Plex } from '@andes/plex';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { combineLatest, Observable, of } from 'rxjs';
 import { filter, first, map, switchMap } from 'rxjs/operators';
@@ -22,7 +22,7 @@ import { Auth } from '@andes/auth';
     selector: 'app-cama-detalle',
     templateUrl: 'cama-detalle.component.html'
 })
-export class CamaDetalleComponent implements OnInit {
+export class CamaDetalleComponent implements OnInit, AfterViewChecked {
     public cama$: Observable<ISnapshot>;
     public estadoCama$: Observable<IMAQEstado>;
     public relaciones$: Observable<IMAQRelacion[]>;
@@ -61,12 +61,12 @@ export class CamaDetalleComponent implements OnInit {
     public fechaMin$: Observable<Date>;
     public relacionesPosibles;
     public sinMovimientosAt$: Observable<Boolean>;
-    public registraEgreso = true; // inicia en true para ocultar el boton
+    public registraEgreso = true;
+    public loadingDataEgreso = true;
 
     public turnero$: Observable<string>;
     public hayRespirador$: Observable<any>;
     public botonRegistroHabilitado$;
-    public openedDropDown = null;
     public itemsDropdown: any = [];
     public unicoMovimiento = false;
 
@@ -98,14 +98,20 @@ export class CamaDetalleComponent implements OnInit {
         private motivoAccesoService: ModalMotivoAccesoHudsService,
         private internacionResumenHTTP: InternacionResumenHTTP,
         private organizacionService: OrganizacionService,
-        private auth: Auth
+        private auth: Auth,
+        private cdr: ChangeDetectorRef
     ) {
     }
 
     ngOnInit() {
+        this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
         this.capa = this.mapaCamasService.capa;
         this.cama$ = this.mapaCamasService.selectedCama;
-        this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
+        this.estadoCama$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getEstadoCama(cama)));
+        this.relaciones$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getRelacionesPosibles(cama)));
+        this.accionesEstado$ = this.mapaCamasService.prestacionesPermitidas(this.mapaCamasService.selectedCama);
+        this.organizacionV2$ = this.organizacionService.usaCapasUnificadas(this.auth.organizacion.id);
+
         this.paciente$ = this.cama$.pipe(
             filter(cama => !!cama.paciente),
             switchMap(cama => cama.paciente ? this.mapaCamasService.getPaciente(cama.paciente) : of(null))
@@ -116,6 +122,7 @@ export class CamaDetalleComponent implements OnInit {
             this.mapaCamasService.maquinaDeEstado$
         ]).pipe(
             map(([cama, estado]) => {
+                this.loadingDataEgreso = true;
                 if (cama.idInternacion) {
                     const turnero = estado.turnero || {};
                     if (turnero[cama.id]) {
@@ -126,14 +133,10 @@ export class CamaDetalleComponent implements OnInit {
             })
         );
 
-        this.estadoCama$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getEstadoCama(cama)));
-        this.relaciones$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getRelacionesPosibles(cama)));
-        this.accionesEstado$ = this.mapaCamasService.prestacionesPermitidas(this.mapaCamasService.selectedCama);
-        this.organizacionV2$ = this.organizacionService.usaCapasUnificadas(this.auth.organizacion.id);
-
         this.mapaCamasService.historialInternacion$.subscribe(historial => {
             this.unicoMovimiento = historial.length <= 1;
-            this.registraEgreso = historial.some(mov => mov.extras?.egreso);
+            this.registraEgreso = !!historial.some(mov => mov.extras?.egreso);
+            this.loadingDataEgreso = false;
         });
 
         this.hayRespirador$ = this.mapaCamasService.resumenInternacion$.pipe(
@@ -143,6 +146,10 @@ export class CamaDetalleComponent implements OnInit {
             })
         );
         this.botonRegistroHabilitado$ = this.mapaCamasService.controlRegistros();
+    }
+
+    ngAfterViewChecked() {
+        this.cdr.detectChanges();
     }
 
     sector(cama: ISnapshot) {
@@ -293,32 +300,28 @@ export class CamaDetalleComponent implements OnInit {
             this.permisosMapaCamasService.indicacionesValidar || this.permisosMapaCamasService.indicacionesVer;
     }
 
-    setDropDown(relacion, drop) {
+    setDropDown(relacion) {
         this.relacionesPosibles = { ...relacion };
-        if (this.openedDropDown) {
-            this.openedDropDown.open = !!(this.openedDropDown === drop);
-        }
-        this.openedDropDown = drop;
         this.itemsDropdown = [];
 
-        this.itemsDropdown.push({
-            label: 'Cambiar de cama',
-            handler: ($event: Event) => {
-                $event.stopPropagation();
-                this.relacionesPosibles.accion = 'cambiarCama';
-                this.accionCama.emit(this.relacionesPosibles);
-            }
-        }, {
-            label: 'Pase de unidad organizativa',
-            handler: ($event: Event) => {
-                $event.stopPropagation();
-                this.relacionesPosibles.accion = 'cambiarUO';
-                this.accionCama.emit(this.relacionesPosibles);
-            }
-        });
-
-        if (!this.registraEgreso) {
+        if (this.registraEgreso) {
+            this.plex.toast('danger', 'El paciente ya está egresado', 'Acción denegada');
+        } else {
             this.itemsDropdown.push({
+                label: 'Cambiar de cama',
+                handler: ($event: Event) => {
+                    $event.stopPropagation();
+                    this.relacionesPosibles.accion = 'cambiarCama';
+                    this.accionCama.emit(this.relacionesPosibles);
+                }
+            }, {
+                label: 'Pase de unidad organizativa',
+                handler: ($event: Event) => {
+                    $event.stopPropagation();
+                    this.relacionesPosibles.accion = 'cambiarUO';
+                    this.accionCama.emit(this.relacionesPosibles);
+                }
+            }, {
                 label: 'Egresar paciente',
                 handler: ($event: Event) => {
                     $event.stopPropagation();
