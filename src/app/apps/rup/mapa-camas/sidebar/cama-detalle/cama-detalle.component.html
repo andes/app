@@ -3,15 +3,15 @@
         <ng-container *ngIf="estadoCama$ | async as estadoCama">
             <plex-title titulo="DATOS DE CAMA" size="md">
                 <ng-container *ngIf="permisosMapaCamasService.movimientos">
-                    <ng-container *ngFor="let relacion of relaciones$ | async">
+                    <ng-container *ngFor="let relacion of (relaciones$ | async)">
                         <ng-container *ngIf="relacionesYcondiciones(relacion, cama)">
                             <plex-button tooltip="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color"
                                          size="sm" (click)="accion(relacion)" class="mr-1">
                             </plex-button>
                         </ng-container>
-                        <plex-dropdown #drop class="mr-1" *ngIf="puedeDesocupar(relacion)" [right]="true" size="sm"
-                                       type="danger" icon="menos" [items]="itemsDropdown" tooltip="Desocupar"
-                                       (onOpen)="setDropDown(relacion, drop)">
+                        <plex-dropdown class="mr-1" *ngIf="puedeDesocupar(relacion)" name="drop" [right]="true"
+                                       size="sm" type="danger" icon="menos" [items]="itemsDropdown" tooltip="Desocupar"
+                                       [disabled]="loadingDataEgreso" (onOpen)="setDropDown(relacion)">
                         </plex-dropdown>
                     </ng-container>
                 </ng-container>
