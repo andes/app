@@ -148,6 +148,7 @@ import { MPILibModule } from './modules/mpi/mpi-lib.module';
 import { FormulaBaseService } from './modules/rup/components/formulas';
 import { RiesgoCardiovascularService } from './modules/rup/components/formulas/riesgoCardiovascular.service';
 import { demandaInsatisfechaComponent } from './components/turnos/dashboard/demandaInsatisfecha';
+
 // INTERNACION
 import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
 import { RUPLibModule } from './modules/rup/rup-lib.module';
@@ -220,6 +221,7 @@ import { AcronimoSvgComponent } from './styles/acronimo.svg';
 import { LogoSvgComponent } from './styles/logo.svg';
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
+
 
 registerLocaleData(localeEs, 'es');
 

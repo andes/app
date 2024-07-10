@@ -40,6 +40,7 @@ import { PacienteComponent } from './core/mpi/components/paciente.component';
 // Internacion
 import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
 import { ValidarCertificadoComponent } from './modules/epidemiologia/components/validar-certificado/validar-certificado.component';
+import { DemandaInsatisfechaComponent } from './components/demandaInsatisfecha/demanda-insatisfecha.component';
 
 
 const appRoutes: Routes = [
@@ -87,6 +88,7 @@ const appRoutes: Routes = [
     { path: 'citas/sobreturnos/:idAgenda', component: AgregarSobreturnoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/paciente/:idAgenda', component: AgregarPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/prestaciones_habilitadas', component: PrestacionesHabilitadasComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+    { path: 'citas/demanda-insatisfecha', component: DemandaInsatisfechaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
     {
         path: 'rup',
