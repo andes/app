@@ -63,7 +63,7 @@
                                          [multiple]="field.multiple">
                             </plex-select>
                         </ng-container>
-                        <div *ngIf="field.key==='contactosestrechos' && nuevoContacto">
+                        <ng-container *ngIf="field.key==='contactosestrechos' && nuevoContacto">
                             <plex-table [columns]="columns" #table="plTable">
                                 <plex-table-columns>
                                 </plex-table-columns>
@@ -76,49 +76,53 @@
                                         (contacto.fechaUltimoContacto | fecha) : ''}}</td>
                                     <td *plTableCol="'tipoContacto'">{{contacto.tipoContacto?.nombre}}</td>
                                     <td *plTableCol="'acciones'">
-                                        <plex-icon *ngIf="editFicha" size="xl" type="danger" name="delete"
-                                                   (click)="deleteContacto(contacto)" class="hover"></plex-icon>
+                                        <plex-button *ngIf="editFicha" type="danger" (click)="deleteContacto(contacto)">
+                                            <plex-icon size="sm" name="delete" class="hover"></plex-icon>
+                                        </plex-button>
+
                                     </td>
                                 </tr>
                                 <tr *ngIf="nuevoContacto">
                                     <td *plTableCol="'apellidoNombre'">
                                         <plex-text name="apellidoNombre" [(ngModel)]="contacto.apellidoNombre"
-                                                   [readonly]="!editFicha">
+                                                   [readonly]="!editFicha" required="true">
                                         </plex-text>
                                     </td>
                                     <td *plTableCol="'documento'">
-                                        <plex-text name="documento" [(ngModel)]="contacto.documento" [readonly]="!editFicha">
+                                        <plex-text name="documento" [(ngModel)]="contacto.documento"
+                                                   [readonly]="!editFicha" required="true">
                                         </plex-text>
                                     </td>
                                     <td *plTableCol="'telefono'">
                                         <plex-phone name="telefono" [(ngModel)]="contacto.telefono"
-                                                    [readonly]="!editFicha">
+                                                    [readonly]="!editFicha" required="true">
                                         </plex-phone>
                                     </td>
                                     <td *plTableCol="'domicilio'">
                                         <plex-text name="domicilio" [(ngModel)]="contacto.domicilio"
-                                                   [readonly]="!editFicha">
+                                                   [readonly]="!editFicha" required="true">
                                         </plex-text>
                                     </td>
                                     <td *plTableCol="'fechaContacto'">
                                         <plex-datetime name="fechaContacto" type="date"
                                                        [(ngModel)]="contacto.fechaUltimoContacto"
-                                                       [readonly]="!editFicha">
+                                                       [readonly]="!editFicha" required="true">
                                         </plex-datetime>
                                     </td>
                                     <td *plTableCol="'tipoContacto'">
                                         <plex-select name="tipoContacto" [(ngModel)]="contacto.tipoContacto"
-                                                     [data]="tipoContacto" [readonly]="!editFicha">
+                                                     [data]="tipoContacto" [readonly]="!editFicha" required="true">
                                         </plex-select>
                                     </td>
                                     <td *plTableCol="'acciones'">
-                                        <plex-icon size=" xl" type="success" name="mas" class="hover"
-                                                   (click)="addContacto()">
-                                        </plex-icon>
+                                        <plex-button type="default" type="success" [validateForm]="form"
+                                                     (click)="addContacto()">
+                                            <plex-icon size="xs" name="mas" class="hover"></plex-icon>
+                                        </plex-button>
                                     </td>
                                 </tr>
                             </plex-table>
-                        </div>
+                        </ng-container>
                     </ng-container>
                 </plex-grid>
             </ng-container>

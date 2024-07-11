@@ -78,6 +78,7 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
     public asintomatico = false;
     public operaciones = [];
     public zonaSanitaria = null;
+    public contactoCorrecto = false;
     constructor(
         private formsService: FormsService,
         private plex: Plex,
@@ -269,15 +270,25 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
     }
 
     addContacto() {
-        this.contactosEstrechos.push(this.contacto);
-        this.contacto = {
-            apellidoNombre: '',
-            documento: '',
-            telefono: '',
-            domicilio: '',
-            fechaUltimoContacto: '',
-            tipoContacto: ''
-        };
+
+        this.contactoCorrecto = !!(this.contacto.apellidoNombre && this.contacto.documento && this.contacto.telefono
+            && this.contacto.domicilio && this.contacto.fechaUltimoContacto && this.contacto.tipoContacto);
+
+        if (this.contactoCorrecto) {
+            this.contactosEstrechos.push(this.contacto);
+            this.contacto = {
+                apellidoNombre: '',
+                documento: '',
+                telefono: '',
+                domicilio: '',
+                fechaUltimoContacto: '',
+                tipoContacto: ''
+            };
+            this.plex.toast('success', 'El contacto estrecho se ha agregado satisfactoriamente!');
+        } else {
+            this.plex.info('danger', 'Debe completar los datos requeridos');
+        }
+        this.contactoCorrecto = false;
     }
     deleteContacto(contacto) {
         const index = this.contactosEstrechos.findIndex(item => item.documento === contacto.documento);
@@ -288,7 +299,7 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
         if (!this.contactosEstrechos?.length) {
             this.nuevoContacto = false;
         }
-
+        this.plex.toast('success', 'Contacto eliminado exitosamente!');
     }
     showNuevoContacto() {
         this.nuevoContacto = true;
