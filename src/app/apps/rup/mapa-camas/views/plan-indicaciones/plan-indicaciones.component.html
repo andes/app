@@ -177,6 +177,7 @@
                                                                  (click)="eliminar(indicacion)">
                                                     </plex-button>
 
+                                                    <!-- Indicación vigente en el dia, ya verificada -->
                                                     <ng-container
                                                                   *ngIf="indicacion.estado.tipo !== 'pending' && indicacion.requiereAceptacion && indicacion.estado.verificacion?.estado as verificacion">
                                                         <plex-badge class="circle"
@@ -203,9 +204,11 @@
                                                             </plex-button>
                                                         </ng-container>
                                                     </ng-container>
-                                                    <!-- Botones de aceptacion / rechazo -->
+
+                                                    <!-- Indicación vigente en el dia, sin verificar -->
                                                     <ng-container
-                                                                  *ngIf="!indicacion.estado.verificacion && indicacion.estadoActual.tipo !== 'pending'">
+                                                                  *ngIf="!indicacion.estado.verificacion && indicacion.estado.tipo !== 'pending'">
+                                                        <!-- Botones de aceptacion / rechazo -->
                                                         <ng-container *ngIf="puedeAceptarRechazar(indicacion)">
                                                             <plex-button type="success" size="sm" icon="check"
                                                                          tooltip="Aceptar" [autodisable]="true"
@@ -219,7 +222,7 @@
 
                                                         <ng-container
                                                                       *ngIf="capa !== 'interconsultores' && indicacion.estadoActual.tipo !== 'cancelled' && indicacion.estado.tipo !== 'pending'">
-                                                            <plex-badge *ngIf="capa !== 'enfermeria'"
+                                                            <plex-badge *ngIf="capa !== 'farmaceutica'"
                                                                         tooltip="Indicación aún no aceptada"
                                                                         type="info">
                                                                 <plex-icon name="informacion"></plex-icon>
