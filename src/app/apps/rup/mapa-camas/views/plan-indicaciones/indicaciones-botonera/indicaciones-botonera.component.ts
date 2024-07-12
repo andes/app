@@ -1,6 +1,7 @@
 import { Plex } from '@andes/plex';
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PlanIndicacionesServices } from '../../../services/plan-indicaciones.service';
+import { MapaCamasService } from '../../../services/mapa-camas.service';
 
 @Component({
     selector: '[in-plan-indicacion-botonera]',
@@ -15,6 +16,7 @@ export class PlanIndicacionesBotoneraComponent {
     openedDropDown = null;
     constructor(
         private planIndicacionesServices: PlanIndicacionesServices,
+        private mapaCamasService: MapaCamasService,
         private plex: Plex
     ) { }
 
@@ -55,6 +57,10 @@ export class PlanIndicacionesBotoneraComponent {
     }
 
     mostrarDropdown() {
-        return this.indicacion.estadoActual.tipo === 'active' && !this.indicacion.estadoActual.verificacion;
+        if (this.mapaCamasService.capa !== 'medica') {
+            return false;
+        }
+        const estado = this.indicacion.estadoActual;
+        return estado.tipo === 'active' && moment(estado.fecha).isSame(moment(), 'day') && !estado.verificacion;
     }
 }
