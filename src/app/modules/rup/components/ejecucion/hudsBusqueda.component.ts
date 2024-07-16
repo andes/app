@@ -296,7 +296,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
     listarInternaciones() {
         this.resumenHTTP.search({
-            organizacion: this.auth.organizacion.id,
             ingreso: this.resumenHTTP.queryDateParams(this.fechaInicio, this.fechaFin),
             paciente: this.paciente.id,
         }).subscribe((internaciones) => this.internaciones = internaciones);
