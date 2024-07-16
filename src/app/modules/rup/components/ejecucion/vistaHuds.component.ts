@@ -28,10 +28,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     public activeIndexResumen = 0;
     public internacione$: Observable<any[]>;
     public registros = [];
-    // Seguimiento Paciente San Juan
     public flagSeguimiento = false;
-
-
 
     constructor(
         public elementosRUPService: ElementosRUPService,
@@ -142,5 +139,8 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         this.router.navigate(['huds', 'timeline', this.paciente.id]);
     }
 
-
+    prestacionVisible(registro) {
+        return registro.data.class === 'plan' || registro.data.class === 'regimen' ||
+            registro.data.class === 'procedimiento' || registro.data.class === 'elementoderegistro' || registro.data.class === 'producto';
+    }
 }

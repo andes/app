@@ -21,6 +21,7 @@ export class VistaPrestacionComponent implements OnInit {
     @Input() paciente: IPaciente;
     @Input() prestacion: IPrestacion;
     @Input() puedeEditar: boolean;
+    @Input() tipo;
 
     public ready$ = this.elementosRUPService.ready;
     public puedeDescargarInforme: boolean;
@@ -34,9 +35,9 @@ export class VistaPrestacionComponent implements OnInit {
     constructor(
         private auth: Auth,
         private servicioDocumentos: DocumentosService,
-        public servicioPrestacion: PrestacionesService,
+        private servicioPrestacion: PrestacionesService,
         private servicioPaciente: PacienteService,
-        public elementosRUPService: ElementosRUPService,
+        private elementosRUPService: ElementosRUPService,
         private router: Router
     ) {
     }

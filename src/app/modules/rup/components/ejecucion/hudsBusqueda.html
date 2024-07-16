@@ -1,159 +1,63 @@
-<!-- MAESTRO DE PROBLEMAS - BD:tipoProblema -->
 <div class="menu-buscador">
+    <plex-title titulo="Panel de búsqueda" size="lg"></plex-title>
+
     <plex-loader class="float-right" *ngIf="loading" type="ball-pulse"></plex-loader>
     <!-- Botones filtros  -->
     <div class="container-filtros">
-        <ul class="botones-filtros">
-            <li>
-                <small *ngIf="getCantidadResultados('planes')" class="contador badge-solicitud ml-1 float-right"
-                       [ngClass]="{'active': filtroActual === 'planes'}">{{
-                    getCantidadResultados('planes')}}</small>
-                <button (click)="filtroBuscador('planes')" class="btn btn-block p-0 btn-solicitud"
-                        [ngClass]="{'active': filtroActual === 'planes'}">
-                    <i class="adi adi-clipboard-check-outline"></i>
-                    PRESTACIONES
-                </button>
-            </li>
-            <li>
-                <small *ngIf="getCantidadResultados('solicitudes')" class="contador badge-solicitud ml-1 float-right"
-                       [ngClass]="{'active': filtroActual === 'solicitudes'}">{{
-                    getCantidadResultados('solicitudes')}}</small>
-                <button (click)="filtroBuscador('solicitudes')" [ngClass]="{'active': filtroActual === 'solicitudes'}"
-                        class="btn btn-block p-0 btn-solicitud">
-                    <i class="adi adi-mano-corazon"></i>
-                    SOLICITUDES
-                </button>
-            </li>
-            <li>
-                <small *ngIf="getCantidadResultados('hallazgo')" class="contador badge-hallazgo ml-1 float-right"
-                       [ngClass]="{'active': filtroActual === 'hallazgo'}">{{
-                    getCantidadResultados('hallazgo')}}</small>
-                <button (click)="filtroBuscador('hallazgo')" [ngClass]="{'active': filtroActual === 'hallazgo'}"
-                        class="btn btn-block p-0 btn-hallazgo" (click)="buscar()">
-                    <i class="adi adi-lupa-ojo"></i>
-                    HALLAZGOS
-                </button>
-            </li>
-            <li>
-                <small *ngIf="getCantidadResultados('trastorno')" class="contador badge-trastorno ml-1 float-right"
-                       [ngClass]="{'active': filtroActual === 'trastorno'}">{{
-                    getCantidadResultados('trastorno')}}</small>
-                <button (click)="filtroBuscador('trastorno')" [ngClass]="{'active': filtroActual === 'trastorno'}"
-                        class="btn btn-block p-0 btn-trastorno" (click)="buscar()">
-                    <i class="adi adi-trastorno"></i>
-                    TRASTORNOS
-                </button>
-            </li>
-            <li>
-                <small *ngIf="getCantidadResultados('procedimiento')"
-                       class="contador badge-procedimiento ml-1 float-right"
-                       [ngClass]="{'active': filtroActual === 'procedimiento'}">{{
-                    getCantidadResultados('procedimiento')}}</small>
-                <button (click)="filtroBuscador('procedimiento')"
-                        [ngClass]="{'active': filtroActual === 'procedimiento'}"
-                        class="btn btn-block p-0 btn-procedimiento" (click)="buscar()">
-                    <i class="adi adi-termometro"></i>
-                    PROC.
-                </button>
-            </li>
-            <li>
-                <small *ngIf="getCantidadResultados('producto')" class="contador badge-producto ml-1 float-right"
-                       [ngClass]="{'active': filtroActual === 'producto'}">{{
-                    getCantidadResultados('producto')}}</small>
-                <button (click)="filtroBuscador('producto')" [ngClass]="{'active': filtroActual === 'producto'}"
-                        class="btn btn-block p-0 btn-producto" (click)="buscar()">
-                    <i class="adi adi-pildoras"></i>
-                    PRODUCTOS
-                </button>
-            </li>
-            <li>
-                <small *ngIf="getCantidadResultados('laboratorios')" class="contador badge-otro ml-1 float-right"
-                       [ngClass]="{'active': filtroActual === 'laboratorios'}">{{
-                    getCantidadResultados('laboratorios')}}</small>
-                <button (click)="filtroBuscador('laboratorios')" [ngClass]="{'active': filtroActual === 'laboratorios'}"
-                        class="btn btn-block p-0 btn-laboratorio">
-                    <i class="adi adi-recipiente"></i>
-                    LABOS
-                </button>
-            </li>
-            <li>
-                <small *ngIf="getCantidadResultados('vacunas')" class="contador badge-vacuna ml-1 float-right"
-                       [ngClass]="{'active': filtroActual === 'vacunas'}">{{ getCantidadResultados('vacunas') }}</small>
-                <button (click)="filtroBuscador('vacunas')" [ngClass]="{'active': filtroActual === 'vacunas'}"
-                        class="btn btn-block p-0 btn-vacuna">
-                    <i class="adi adi-vacuna"></i>
-                    VACUNAS
-                </button>
-            </li>
-            <ng-container *feature="'ips'">
-                <li *ngIf="dominios$ | async as dominios">
-                    <small *ngIf="getCantidadResultados('dominios')" class="contador badge-dominiosNac ml-1 float-right"
-                           [ngClass]="{'active': filtroActual === 'dominios'}">
-                        {{ getCantidadResultados('dominios') }}
-                    </small>
-                    <button (click)="filtroBuscador('dominios')" [ngClass]="{'active': filtroActual === 'dominios'}"
-                            class="btn btn-block p-0 btn-dominiosNac">
-                        <i class="adi adi-hospital"></i>
-                        DOMINIOS NACIONALES
-                    </button>
-                </li>
-            </ng-container>
-        </ul>
+        <div class="slider-filtros">
+            <plex-card class="card-filtro" *ngFor="let filtro of filtros; let iPrestacion = index"
+                       (click)="filtroBuscador(filtro.key)">
+                <div class="card-content {{filtro.key}}" [ngClass]="{'active': filtroActual === filtro.key}">
+                    <div class="icon-wrapper">
+                        <div class="contador"><small *ngIf="getCantidadResultados(filtro.key)">
+                                {{getCantidadResultados(filtro.key)}}
+                            </small></div>
+                        <plex-icon class="icon" name="{{filtro.icono}}"></plex-icon>
+                    </div>
+                    <span class="titulo mt-1">{{filtro.titulo}}</span>
+                </div>
+            </plex-card>
+        </div>
     </div>
+    <h6 class="titulo-filtro {{filtroActual}}">{{ getTitulo(filtroActual) | uppercase }}</h6>
     <div class="grow" *ngIf="filtroActual === 'planes'">
-        <div class="row">
-            <div class="btn-group col botonera historial" role="group" aria-label="Botonera principal">
-                <button class="btn btn-primary btn-sm btn-block m-0" (click)="setAmbitoOrigen('ambulatorio')"
-                        [class.active]="ambitoOrigen === 'ambulatorio'">
-                    AMBULATORIO
-                </button>
-                <button class="btn btn-primary btn-sm btn-block m-0" (click)="setAmbitoOrigen('internacion')"
-                        [class.active]="ambitoOrigen === 'internacion'">
-                    INTERNACIÓN
-                </button>
-                <plex-button type="info" size="sm" [icon]="showFiltros ? 'chevron-up' : 'chevron-down'"
-                             [tooltip]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" (click)="toogleFiltros()">
-                </plex-button>
-            </div>
+        <plex-options class="filtros-ambitos" (activated)='setAmbitoOrigen($event)' [items]="filtrosAmbitos">
+        </plex-options>
+        <div class="ml-1">
+            <plex-button type="info" size="sm" [icon]="showFiltros ? 'chevron-up' : 'chevron-down'"
+                         [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" class="float-right"
+                         tooltipPosition="left" (click)="toogleFiltros()">
+            </plex-button>
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <small class="pr-1" *ngIf="getSemanticTagFiltros()">Filtros:</small>
-            <i class="text-secondary ml-1">{{ getSemanticTagFiltros() }}</i>
-        </div>
-
-    </div>
-
 </div>
-<div class="mt-1"
-     *ngIf="filtroActual !== 'solicitudes' && filtroActual !== 'planes' && filtroActual !== 'laboratorios' && filtroActual !== 'vacunas' && filtroActual !== 'dominios'">
-    <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholder="Buscar registros..."
-               [autoFocus]="true">
-    </plex-text>
+<ng-container
+              *ngIf="filtroActual !== 'solicitudes' && filtroActual !== 'planes' && filtroActual !== 'laboratorios' && filtroActual !== 'vacunas' && filtroActual !== 'dominios'">
+    <div *ngIf="hasRegistrosTotales(filtroActual)" class="mb-2">
+        <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholder="Buscar registros..."
+                   [autoFocus]="true">
+        </plex-text>
+    </div>
 
-    <div class="my-2" *ngIf="filtroActual === 'trastorno' && registrosTotales.trastorno.length">
+    <div class="my-2" *ngIf="filtroActual === 'trastorno' && hasRegistrosTotales(filtroActual)">
         <plex-bool [(ngModel)]="filtroTrastornos" name="filtroTrastornos" (change)="filtrarTrastornos()" type="slide"
                    label="{{filtroTrastornos ? 'Activos' : 'Todos'}}">
         </plex-bool>
     </div>
-</div>
+</ng-container>
 <div class="row huds-busqueda">
-    <div class="col">
-
+    <div class="col mb-0">
         <!-- Vista: SOLICITUDES -->
         <ng-container *ngIf="filtroActual === 'solicitudes'">
-            <ul class="hover conceptos list-unstyled">
-
+            <ul class="hover conceptos list-unstyled mb-0">
                 <ng-container *ngFor="let registro of solicitudesMezcladas; let iPrestacion = index">
                     <li>
                         <div class="rup-card mini procedimiento"
-                             [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': true}"
+                             [ngClass]="{'active': huds.isOpen(registro, 'solicitud') ||  huds.isOpen(registro, 'concepto'), 'solicitud': true}"
                              (click)="clickSolicitud(registro, iPrestacion)">
-
                             <div class="rup-header">
                                 <div class="rup-border rup-border-procedimiento"
-                                     [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-plan': true}">
+                                     [ngClass]="{'active': huds.isOpen(registro, 'solicitud') ||  huds.isOpen(registro, 'concepto'), 'rup-border-plan': true}">
                                     <div class="row p-0 m-0 border-secondary border-left-0">
                                         <div class="col-10 p-0 m-0">
                                             <div class="row m-0 p-0">
@@ -217,11 +121,19 @@
                     </li>
                 </ng-container>
             </ul>
+            <div *ngIf="!solicitudesMezcladas.length">
+                <hr class="mt-0">
+                <div class="item-lista-vacia">
+                    <plex-label size="sm" justify="center" icon="adi adi-mano-corazon"
+                                titulo="No hay solicitudes registradas">
+                    </plex-label>
+                </div>
+            </div>
         </ng-container>
 
         <!-- Vista: HALLAZGOS -->
         <ng-container *ngIf="filtroActual === 'hallazgo'">
-            <ul *ngIf="registrosTotales.hallazgo" class="hover conceptos list-unstyled">
+            <ul *ngIf="hasRegistrosTotales(filtroActual)" class="hover conceptos list-unstyled">
                 <ng-container *ngFor="let registro of registrosTotales.hallazgo ; let iConcepto = index">
                     <li>
                         <div class="rup-card mini hallazgo"
@@ -269,11 +181,19 @@
                     </li>
                 </ng-container>
             </ul>
+            <div *ngIf="!registrosTotales.hallazgo.length">
+                <hr class="mt-0">
+                <div class="item-lista-vacia">
+                    <plex-label size="sm" justify="center" icon="adi adi-hallazgo"
+                                titulo="No hay hallazgos registrados">
+                    </plex-label>
+                </div>
+            </div>
         </ng-container>
 
         <!-- Vista: TRASTORNOS -->
         <ng-container *ngIf="filtroActual === 'trastorno'">
-            <ul *ngIf="registrosTotales.trastorno" class="hover conceptos list-unstyled" cdkDropList>
+            <ul *ngIf="hasRegistrosTotales(filtroActual)" class="hover conceptos list-unstyled" cdkDropList>
                 <ng-container *ngFor="let registro of registrosTotales.trastorno; let iConcepto = index">
                     <li>
                         <div class="rup-card mini trastorno"
@@ -315,7 +235,7 @@
                                             <div class="p-0 pt-1 pr-1 float-right">
                                                 <ng-container *ngIf="registro.evoluciones">
                                                     <plex-badge size="sm"
-                                                                [type]="registro.evoluciones[0].estado === 'activo' ? 'danger' : 'info'">
+                                                                [type]="registro.evoluciones[0].estado === 'activo' ? 'success' : 'danger'">
                                                         {{ registro.evoluciones[0].estado }}
                                                     </plex-badge>
                                                 </ng-container>
@@ -334,11 +254,19 @@
                     </li>
                 </ng-container>
             </ul>
+            <div *ngIf="!registrosTotales.trastorno.length">
+                <hr class="mt-0">
+                <div class="item-lista-vacia">
+                    <plex-label size="sm" justify="center" icon="adi adi-trastorno"
+                                titulo="No hay trastornos registrados">
+                    </plex-label>
+                </div>
+            </div>
         </ng-container>
 
         <!-- Vista: PROCEDIMIENTOS -->
         <ng-container *ngIf="filtroActual === 'procedimiento'">
-            <ul *ngIf="registrosTotales.procedimiento" class="hover conceptos list-unstyled">
+            <ul *ngIf="hasRegistrosTotales(filtroActual)" class="hover conceptos list-unstyled">
                 <ng-container *ngFor="let registro of registrosTotales.procedimiento; let iPrestacion = index">
                     <li>
                         <div class="rup-card mini procedimiento"
@@ -386,6 +314,14 @@
                     </li>
                 </ng-container>
             </ul>
+            <div *ngIf="!registrosTotales.procedimiento.length">
+                <hr class="mt-0">
+                <div class="item-lista-vacia">
+                    <plex-label size="sm" justify="center" icon="adi adi-termometro"
+                                titulo="No hay procedimientos registrados">
+                    </plex-label>
+                </div>
+            </div>
         </ng-container>
 
         <!-- Vista: PLANES -->
@@ -419,65 +355,168 @@
                 </div>
             </ng-container>
 
-            <ul *ngIf="prestaciones" class="hover conceptos list-unstyled">
-                <ng-container *ngFor="let prestacion of prestaciones; let iPrestacion = index">
-                    <li>
-                        <div class="rup-card mini solicitud"
-                             [ngClass]="{'active': huds.isOpen(prestacion.data, prestacion.tipo)}"
-                             (click)="emitTabs(prestacion, prestacion.tipo, iPrestacion)">
-                            <div class="rup-header">
-                                <div class="rup-border rup-border-solicitud"
-                                     [ngClass]="{'active': huds.isOpen(prestacion.data, prestacion.tipo)}">
-                                    <div class="row p-0 m-0 border-secondary border-left-0">
-                                        <div class="col-10 p-0 m-0">
-                                            <div class="row m-0 p-0">
-                                                <div class="col-2 icon-rup drag-handle">
-                                                    <i class="adi adi-clipboard-check-outline"></i>
+            <ul *ngIf="prestaciones" class="mt-2 hover conceptos list-unstyled">
+                <div class="lista-internacion" *ngIf="ambitoOrigen === 'internacion'">
+                    <ng-container>
+                        <plex-accordion activeLast="true" *ngFor="let internacion of indiceInternaciones">
+                            <plex-panel>
+                                <div plex-accordion-title case="capitalize">
+                                    <div class="d-flex">
+                                        <div class="icono"><plex-icon class="icon" size="lg"
+                                                       name="documento"></plex-icon></div>
+                                        <div>
+                                            Detalle de la internacion
+                                            <br>
+                                            <div class="detalle">
+                                                <div class="d-flex fechas">
+                                                    <small><b>Ingreso:</b> {{internacion.fechaIngreso | fecha}}</small>
+                                                    <small *ngIf="internacion.fechaEgreso"><b>Egreso:</b>
+                                                        {{internacion.fechaEgreso | fecha}}</small>
                                                 </div>
-                                                <div class="col p-0 pl-2 float-left">
-                                                    {{ prestacion.prestacion.term }}
-                                                    <div class="row p-0 m-0">
-                                                        <div class="col-10 p-0 m-0">
-                                                            <div class="sugerido">
-                                                                <small *ngIf="prestacion.data.ejecucion">
-                                                                    Fecha:
-                                                                    {{ prestacion.data.ejecucion.fecha | fecha }}
-                                                                </small>
-                                                                <small *ngIf="!prestacion.data.ejecucion">
-                                                                    Fecha:
-                                                                    {{ prestacion.fecha | fecha }}
-                                                                </small>
-                                                                <br>
-                                                                <small>
-                                                                    Profesional:
-                                                                    {{ prestacion.profesional }}
-                                                                </small>
+                                                <small>{{internacion.organizacion}}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="list-group">
+                                    <div *ngFor="let registro of internacion.registros; let iInternacion = index"
+                                         class="item-prestacion list-group-item"
+                                         [ngClass]="{'activo': huds.someOpen(internacion, iInternacion)}"
+                                         (click)="emitTabs(internacion, 'internacion', iInternacion)">
+                                        <div *ngIf="registro.conceptId === '430147008'" class="icono hidrico">
+                                            <plex-icon class="icon" size="lg" name="mano-gota"></plex-icon>
+                                        </div>
+                                        <div *ngIf="registro.conceptId === '33633005'" class="icono medico">
+                                            <plex-icon class="icon" size="lg" name="pildoras"></plex-icon>
+                                        </div>
+                                        <div *ngIf="!registro.conceptId" class="icono otras"><plex-icon class="icon"
+                                                       size="lg" name="circulo-paciente"></plex-icon></div>
+                                        <div class="titulo text-capitalize">
+                                            <p>{{registro.term || 'Evoluciones y otros registros'}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </plex-panel>
+                        </plex-accordion>
+                    </ng-container>
+                    <ng-container>
+                        <plex-accordion activeLast="true" *ngIf="otrasPrestaciones?.length">
+                            <plex-panel>
+                                <div plex-accordion-title case="capitalize">
+                                    <div class="d-flex">
+                                        <div class="icono"><plex-icon class="icon" size="lg"
+                                                       name="documento"></plex-icon></div>
+                                        <div>
+                                            Prestación fuera de internación
+                                            <br>
+                                            <div class="d-flex fechas">
+                                                <small><b>Desde:</b> {{otrasPrestaciones.fechaDesde |
+                                                    fecha}}</small>
+                                                <small><b>Hasta:</b> {{otrasPrestaciones.fechaHasta |
+                                                    fecha}}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="list-group">
+                                    <div *ngFor="let indice of otrasPrestaciones.indices; let iInternacion = index"
+                                         class="item-prestacion list-group-item"
+                                         [ngClass]="{'activo': huds.someOpen(internacion, iInternacion)}"
+                                         (click)="emitTabs(otrasPrestaciones, 'internacion', iInternacion)">
+                                        <div *ngIf="indice.conceptId === '430147008'" class="icono hidrico"><plex-icon
+                                                       class="icon" size="lg" name="mano-gota"></plex-icon></div>
+                                        <div *ngIf="indice.conceptId === '33633005'" class="icono medico"><plex-icon
+                                                       class="icon" size="lg" name="pildoras"></plex-icon></div>
+                                        <div *ngIf="!indice.conceptId" class="icono otras"><plex-icon class="icon"
+                                                       size="lg" name="circulo-paciente"></plex-icon></div>
+                                        <div class="titulo text-capitalize">
+                                            <p>{{indice.term || 'Evoluciones y otros registros'}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </plex-panel>
+                        </plex-accordion>
+                    </ng-container>
+                    <div *ngIf="!indiceInternaciones.length && !otrasPrestaciones.indices.length">
+                        <hr class="mt-0">
+                        <div class="item-lista-vacia">
+                            <plex-label size="sm" justify="center" icon="adi adi-clipboard-check-outline"
+                                        titulo="No hay prestaciones registradas">
+                            </plex-label>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="ambitoOrigen === 'ambulatorio'">
+                    <ng-container *ngFor="let prestacion of prestaciones; let iPrestacion = index">
+                        <li>
+                            <div class="rup-card mini prestacion"
+                                 [ngClass]="{'active': huds.isOpen(prestacion.data, prestacion.tipo)}"
+                                 (click)="emitTabs(prestacion, prestacion.tipo, iPrestacion)">
+                                <div class="rup-header">
+                                    <div class="rup-border rup-border-prestacion"
+                                         [ngClass]="{'active': huds.isOpen(prestacion.data, prestacion.tipo)}">
+                                        <div class="row p-0 m-0 border-secondary border-left-0">
+                                            <div class="col-10 p-0 m-0">
+                                                <div class="row m-0 p-0">
+                                                    <div class="col-2 icon-rup drag-handle">
+                                                        <i class="adi adi-clipboard-check-outline"></i>
+                                                    </div>
+                                                    <div class="col p-0 pl-2 float-left">
+                                                        {{ prestacion.prestacion.term }}
+                                                        <div class="row p-0 m-0">
+                                                            <div class="col-10 p-0 m-0">
+                                                                <div class="sugerido">
+                                                                    <small *ngIf="prestacion.data.ejecucion">
+                                                                        Fecha:
+                                                                        {{ prestacion.data.ejecucion.fecha | fecha }}
+                                                                    </small>
+                                                                    <small *ngIf="!prestacion.data.ejecucion">
+                                                                        Fecha:
+                                                                        {{ prestacion.fecha | fecha }}
+                                                                    </small>
+                                                                    <br>
+                                                                    <small>
+                                                                        Profesional:
+                                                                        {{ prestacion.profesional }}
+                                                                    </small>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-2 p-0 m-0">
-                                            <div class="p-0 pt-1 pr-1 float-right">
-                                                <plex-badge size="sm"
-                                                            [type]=" prestacion.tipo !== 'ficha-epidemiologica' ? 'success' : 'info'">
-                                                    {{prestacion.estado}}
-                                                </plex-badge>
+                                            <div class="col-2 p-0 m-0">
+                                                <div class="p-0 pt-1 pr-1 float-right">
+                                                    <plex-badge size="sm"
+                                                                [type]=" prestacion.tipo !== 'ficha-epidemiologica' ? 'success' : 'info'">
+                                                        {{prestacion.estado}}
+                                                    </plex-badge>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </li>
+                    </ng-container>
+                    <div *ngIf="!prestaciones.length">
+                        <hr class="mt-0">
+                        <div class="item-lista-vacia">
+                            <plex-label size="sm" justify="center" icon="adi adi-clipboard-check-outline"
+                                        titulo="No hay prestaciones registradas">
+                            </plex-label>
                         </div>
-                    </li>
-                </ng-container>
+                    </div>
+                </div>
             </ul>
         </ng-container>
 
         <!-- Vista: PRODUCTOS -->
         <ng-container *ngIf="filtroActual === 'producto'">
-            <ul *ngIf="registrosTotales.producto" class="conceptos hover list-unstyled">
+            <ul *ngIf="hasRegistrosTotales(filtroActual)" class="conceptos hover list-unstyled">
                 <ng-container *ngFor="let registro of this.registrosTotales.producto; let iCronico = index">
                     <li>
                         <div class="rup-card mini producto" [ngClass]="{'active': huds.isOpen(registro, 'concepto')}">
@@ -515,7 +554,7 @@
                                             <div class="p-0 pt-1 pr-1 float-right">
                                                 <ng-container *ngIf="registro.evoluciones">
                                                     <plex-badge size="sm"
-                                                                type="{{ registro.evoluciones[registro.evoluciones.length-1].estado === 'activo' ? 'danger' : 'info' }}">
+                                                                type="{{ registro.evoluciones[registro.evoluciones.length-1].estado === 'activo' ? 'success' : 'danger' }}">
                                                         {{ registro.evoluciones[registro.evoluciones.length-1].estado }}
                                                     </plex-badge>
                                                 </ng-container>
@@ -528,13 +567,19 @@
                     </li>
                 </ng-container>
             </ul>
-            <div *ngIf="registrosTotales.producto.length === 0">No hay medicamentos registrados</div>
+            <div *ngIf="!registrosTotales.producto.length">
+                <hr class="mt-0">
+                <div class="item-lista-vacia">
+                    <plex-label size="sm" justify="center" icon="adi adi-pildoras"
+                                titulo="No hay productos registrados">
+                    </plex-label>
+                </div>
+            </div>
         </ng-container>
-
 
         <!-- Vista: LABORATORIOS -->
         <ng-container *ngIf="filtroActual === 'laboratorios'">
-            <div *ngIf="laboratorios && laboratorios.length > 0" class="conceptos hover list-unstyled">
+            <div *ngIf="laboratorios.length" class="conceptos hover list-unstyled">
                 <ul class="conceptos list-unstyled">
                     <ng-container *ngFor="let laboratorio of laboratorios; let iLaboratorio = index">
                         <li>
@@ -578,14 +623,20 @@
                         </li>
                     </ng-container>
                 </ul>
-                <div *ngIf="laboratorios.length === 0">No hay Laboratorios registrados</div>
+            </div>
+            <div *ngIf="!laboratorios.length">
+                <hr class="mt-0">
+                <div class="item-lista-vacia">
+                    <plex-label size="sm" justify="center" icon="adi adi-recipiente"
+                                titulo="No hay laboratorios registrados">
+                    </plex-label>
+                </div>
             </div>
         </ng-container>
 
         <!-- Vista: VACUNAS -->
         <ng-container *ngIf="filtroActual === 'vacunas'">
             <div *ngIf="vacunas && vacunas.length > 0" class="conceptos hover list-unstyled">
-
                 <ul class="conceptos list-unstyled">
                     <ng-container *ngFor="let unaVacuna of vacunas; let iVacuna = index">
                         <li>
@@ -616,7 +667,6 @@
                                                                         fecha}}
                                                                     </small>
                                                                 </ng-container>
-
                                                             </div>
                                                         </div>
                                                     </div>
@@ -629,9 +679,16 @@
                         </li>
                     </ng-container>
                 </ul>
-                <div *ngIf="vacunas && vacunas.length === 0">No hay vacunas registradas</div>
+            </div>
+            <div *ngIf="!vacunas.length">
+                <hr class="mt-0">
+                <div class="item-lista-vacia">
+                    <plex-label size="sm" justify="center" icon="adi adi-vacuna" titulo="No hay vacunas registradas">
+                    </plex-label>
+                </div>
             </div>
         </ng-container>
+
         <!-- Vista: DOMINIOS NACIONALES -->
         <ng-container *ngIf="filtroActual === 'dominios'">
             <div *ngIf="dominios && dominios.length > 0" class="conceptos hover list-unstyled">
@@ -682,7 +739,13 @@
                         </li>
                     </ng-container>
                 </ul>
-                <div *ngIf="dominio && dominio.length === 0">No se encontraron dominios para este paciente</div>
+            </div>
+            <div *ngIf="!dominio || !dominio.length">
+                <hr class="mt-0">
+                <div class="item-lista-vacia">
+                    <plex-label size="sm" justify="center" icon="adi adi-hospital" titulo="No hay dominios registrados">
+                    </plex-label>
+                </div>
             </div>
         </ng-container>
     </div>

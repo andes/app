@@ -1,0 +1,28 @@
+<plex-grid cols="2">
+    <div class="registros">
+        <plex-icon name="documento-corazon" class="icon-info" size="xl"></plex-icon>
+        <div class="info-registro">
+            <plex-badge size="sm" type="info">
+                {{registro.concepto.semanticTag}}
+            </plex-badge>
+            <h6><b>Registros</b></h6>
+            <hr />
+        </div>
+    </div>
+    <div>
+        <plex-grid cols="3">
+            <div>
+                <b>Profesional</b>
+                <p class="texto-detalle">{{prestacion?.solicitud.profesional | nombre}}</p>
+            </div>
+            <div>
+                <b>Ámbito</b>
+                <p class="texto-detalle" case="capitalize">{{prestacion?.solicitud.ambitoOrigen}}</p>
+            </div>
+            <div>
+                <b>Organización</b>
+                <p class="texto-detalle" case="capitalize">{{prestacion?.solicitud.organizacion.nombre}}</p>
+            </div>
+        </plex-grid>
+    </div>
+</plex-grid>
