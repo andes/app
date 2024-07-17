@@ -1,3 +1,15 @@
+# [5.143.0](https://github.com/andes/app/compare/v5.142.0...v5.143.0) (2024-07-17)
+
+
+### Bug Fixes
+
+* **huds:** habilita ver internaciones de cualquier efector ([#3036](https://github.com/andes/app/issues/3036)) ([b83c756](https://github.com/andes/app/commit/b83c756bddb9274edf9bd5135a2733d27c69b848))
+
+
+### Features
+
+* **HUDS:** implementa mockups de prestaciones ([#2909](https://github.com/andes/app/issues/2909)) ([409e81a](https://github.com/andes/app/commit/409e81a1ac2207e57347aa208bca80127d7dfe7c))
+
 # [5.142.0](https://github.com/andes/app/compare/v5.141.0...v5.142.0) (2024-07-03)
 
 
