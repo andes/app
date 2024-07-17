@@ -63,7 +63,7 @@
 
                     <!-- Incluye registros de internaciones -->
                     <plex-tab *ngIf="registro.tipo === 'internacion'" [allowClose]="true" label="Internacion"
-                              class="hola" color="solicitud">
+                              color="solicitud">
                         <detalle-registro-internacion [internacion]="registro"
                                                       [paciente]="paciente"></detalle-registro-internacion>
                     </plex-tab>
