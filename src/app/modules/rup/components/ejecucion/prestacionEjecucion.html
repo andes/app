@@ -264,15 +264,13 @@
                         <plex-tab [allowClose]="true" [label]="registro.data.concepto.term"
                                   [class]="registro.data.class" [color]="registro.data.class"
                                   *ngIf="registro.tipo === 'concepto'">
+                            <detalle-registro *ngIf="registro.data.class === 'situación' || 
+                                                 registro.data.class === 'hallazgo' || registro.data.class === 'trastorno'"
+                                              [registro]="registro.data" [paciente]="paciente">
+                            </detalle-registro>
 
-                            <vista-registro *ngIf="registro.data.class === 'hallazgo' || registro.data.class === 'trastorno'"
-                                            [registro]="registro.data" [paciente]="paciente">
-                            </vista-registro>
-
-                            <vista-procedimiento *ngIf="registro.data.class === 'plan' || registro.data.class === 'procedimiento' || registro.data.class === 'elementoderegistro' || registro.data.class === 'producto'"
-                                                 [registro]="registro.data" [paciente]="paciente">
-                            </vista-procedimiento>
-
+                            <detalle-prestacion *ngIf="prestacionVisible(registro)" [registro]="registro.data"
+                                                [paciente]="paciente"></detalle-prestacion>
                         </plex-tab>
 
                         <plex-tab [allowClose]="true" [label]="registro.data.solicitud.tipoPrestacion.term"
@@ -290,6 +288,11 @@
                                   [label]="registro.data.prestacion.snomed.term" [class]="registro.data.class">
                             <vista-cda [registro]="registro"></vista-cda>
                         </plex-tab>
+                        <plex-tab *ngIf="registro.tipo === 'internacion'" [allowClose]="true" label="Internacion"
+                                  color="solicitud">
+                            <detalle-registro-internacion [internacion]="registro"
+                                                          [paciente]="paciente"></detalle-registro-internacion>
+                        </plex-tab>
 
                         <plex-tab [allowClose]="true" label="Ficha Epidemilógica"
                                   *ngIf="registro.tipo === 'ficha-epidemiologica'">
@@ -298,7 +301,6 @@
                                                            [editFicha]="false" [hideVolver]="true">
                             </app-ficha-epidemiologica-crud>
                         </plex-tab>
-
                     </ng-container>
 
                     <ng-container *ngIf="detalleRegistrosHUDS && detalleConceptoHUDS">
@@ -308,7 +310,6 @@
                             </vista-detalle-registro>
                         </plex-tab>
                     </ng-container>
-
                 </plex-tabs>
             </div>
         </form>
