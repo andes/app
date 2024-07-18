@@ -2,11 +2,11 @@
 
     <ng-container *ngFor="let paciente of listado;let i=index">
         <plex-item [class.pacienteFallecido]="paciente.fechaFallecimiento" [selected]="selectedId === paciente.id"
-            (click)="seleccionar(paciente)" [colors]="colorItem(i)">
+                   (click)="seleccionar(paciente)" [colors]="colorItem(i)">
             <img [ngClass]="{'img-fallecido' : paciente.fechaFallecimiento}" [mpiFotoPaciente]="paciente" />
 
             <plex-label *ngIf="!showDatosTutor(paciente)" titulo="{{ paciente | nombre }}"
-                subtitulo="{{ paciente | documento }}">
+                        subtitulo="{{ paciente | documento }}">
             </plex-label>
 
             <plex-label *ngIf="showDatosTutor(paciente)" titulo="{{ paciente | nombre }}" subtitulo=" {{paciente.relaciones[0].relacion?.nombre.toUpperCase() || 'RELACIÓN S/D'}}: 
@@ -24,7 +24,7 @@
             </plex-badge>
 
             <plex-badge type="" class=""
-                [ngClass]="{'text-success' : paciente.estado === 'validado' , 'text-warning' : paciente.estado === 'temporal'} ">
+                        [ngClass]="{'text-success' : paciente.estado === 'validado' , 'text-warning' : paciente.estado === 'temporal'} ">
                 {{ paciente.estado || 'S/D' }}
             </plex-badge>
 
@@ -33,12 +33,12 @@
             </plex-badge>
 
             <plex-button *ngIf="showBtnRelaciones(paciente)" type="info" size="sm" icon="usuarios"
-                title="{{openBtnRelaciones(paciente)?'No ver relaciones':'Ver relaciones'}}"
-                (click)="verRelaciones(paciente)">
+                         title="{{openBtnRelaciones(paciente)?'No ver relaciones':'Ver relaciones'}}"
+                         (click)="verRelaciones(paciente)">
             </plex-button>
 
             <plex-button *ngIf="editing" type="warning" size="sm" icon="pencil" title="Editar paciente"
-                (click)="editar(paciente)">
+                         [disabled]="paciente | pacienteRestringido" (click)="editar(paciente)">
             </plex-button>
         </plex-item>
 

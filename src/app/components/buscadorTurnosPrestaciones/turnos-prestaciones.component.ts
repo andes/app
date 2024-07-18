@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subject, combineLatest, of } from 'rxjs';
 import { map, takeUntil, tap } from 'rxjs/operators';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
-import { IFinanciador } from 'src/app/interfaces/IFinanciador';
 import { HUDSService } from '../../modules/rup/services/huds.service';
 import { ExportHudsService } from '../../modules/visualizacion-informacion/services/export-huds.service';
 import { ObraSocialService } from '../../services/obraSocial.service';
@@ -13,6 +12,9 @@ import { ProfesionalService } from '../../services/profesional.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
 import { TurnosPrestacionesService } from './services/turnos-prestaciones.service';
 import { cache } from '@andes/shared';
+import { IFinanciador } from 'src/app/interfaces/IFinanciador';
+import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
+import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 
 @Component({
     selector: 'turnos-prestaciones',
@@ -98,6 +100,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         private exportHudsService: ExportHudsService,
         public obraSocialService: ObraSocialService,
         private pacienteService: PacienteService,
+        private pacienteRestringido: PacienteRestringidoPipe
 
     ) { }
 
@@ -158,10 +161,8 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
 
 
         this.busqueda$ = this.turnosPrestacionesService.prestacionesOrdenada$.pipe(
-            map(prestaciones => {
-                this.loader = false;
-                return prestaciones;
-            }), // Ocultar el loader cuando los datos estén disponibles
+            tap(() => this.loader = false), // Ocultar el loader cuando los datos estén disponibles
+            map((items) => items.filter(({ paciente }) => !this.esPacienteRestringido(paciente), {})),
             takeUntil(this.onDestroy$),
             cache()
         );
@@ -466,5 +467,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
 
     generarComprobante() {
         return this.prestacionIniciada && this.puedeEmitirComprobante && this.financiador && ((!this.prestacion.estadoFacturacion) || this.prestacion.estadoFacturacion?.estado !== 'Comprobante con prestacion');
+    }
+
+    esPacienteRestringido(paciente: IPaciente) {
+        return this.pacienteRestringido.transform(paciente);
     }
 }

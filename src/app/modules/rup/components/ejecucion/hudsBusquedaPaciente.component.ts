@@ -5,6 +5,7 @@ import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { HUDSService } from '../../services/huds.service';
 import { Location } from '@angular/common';
+import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 
 @Component({
     selector: 'rup-hudsBusquedaPaciente',
@@ -18,7 +19,6 @@ export class HudsBusquedaPacienteComponent implements OnInit {
     resultadoBusqueda = null;
     loading = false;
     routeParams: any;
-    // public motivoAccesoHuds;
     showModalMotivo = false;
     pacienteSelected = null;
 
@@ -27,7 +27,8 @@ export class HudsBusquedaPacienteComponent implements OnInit {
         public plex: Plex,
         public auth: Auth,
         private router: Router,
-        private hudsService: HUDSService
+        private hudsService: HUDSService,
+        private pacienteRestringido: PacienteRestringidoPipe
     ) { }
 
     ngOnInit() {
@@ -67,10 +68,18 @@ export class HudsBusquedaPacienteComponent implements OnInit {
         this.resultadoBusqueda = [];
     }
 
+    esPacienteRestringido(paciente: IPaciente) {
+        return this.pacienteRestringido.transform(paciente);
+    }
+
     onSelect(paciente: IPaciente): void {
         if (paciente) {
-            this.pacienteSelected = paciente;
-            this.showModalMotivo = true;
+            if (this.esPacienteRestringido(paciente)) {
+                this.plex.info('warning', 'No tiene permiso para ingresar a este paciente.', 'Atención');
+            } else {
+                this.pacienteSelected = paciente;
+                this.showModalMotivo = true;
+            }
         }
     }
 

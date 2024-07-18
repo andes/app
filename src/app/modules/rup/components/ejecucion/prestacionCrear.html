@@ -22,7 +22,7 @@
     <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="onSearchClear()">
     </paciente-buscar>
 
-    <paciente-listado *ngIf="!paciente && resultadoBusqueda?.length" [offset]="110" [pacientes]="resultadoBusqueda"
+    <paciente-listado *ngIf="!paciente && resultadoBusqueda?.length" [offset]="230" [pacientes]="resultadoBusqueda"
                       (selected)="onSelect($event)">
     </paciente-listado>
 
@@ -33,8 +33,8 @@
 </ng-container>
 
 <ng-container *ngIf="paciente?.id">
-    <plex-title titulo="Datos del Paciente" size="md"></plex-title>
-    <paciente-detalle [paciente]="paciente" reload="true" orientacion="horizontal" [fields]="pacienteFields">
+    <plex-title titulo="Datos del Paciente" size="sm"></plex-title>
+    <paciente-detalle [paciente]="paciente" size="md" reload="true" orientacion="horizontal" [fields]="pacienteFields">
     </paciente-detalle>
     <!-- Lista de Agendas para dar turnos autocitados -->
     <autocitar-turno *ngIf="opcion==='autocitar' && showAutocitar && paciente" class="autocitar-turno"

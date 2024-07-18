@@ -5,6 +5,7 @@ import { ExportHudsService } from '../../services/export-huds.service';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
+import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 
 
 @Component({
@@ -34,7 +35,8 @@ export class ExportarHudsComponent implements OnInit {
         private exportHudsService: ExportHudsService,
         private auth: Auth,
         private router: Router,
-        private motivoAccesoService: ModalMotivoAccesoHudsService) { }
+        private motivoAccesoService: ModalMotivoAccesoHudsService,
+        private pacienteRestringido: PacienteRestringidoPipe) { }
 
     ngOnInit(): void {
         if (!this.auth.check('huds:exportarHuds')) {
@@ -70,19 +72,27 @@ export class ExportarHudsComponent implements OnInit {
         this.prestacion = null;
     }
 
+    esPacienteRestringido(paciente: IPaciente) {
+        return this.pacienteRestringido.transform(paciente);
+    }
+
     onSelect(paciente: IPaciente): void {
         if (paciente) {
-            this.pacienteSelected = paciente;
-            this.motivoAccesoService.getAccessoHUDS(this.pacienteSelected).subscribe((motivo) => {
-                if (motivo) {
-                    this.modalAccepted = true;
-                    this.showLabel = false;
-                }
-            },
-            // Si viene error, segundo callback
-            () => {
-                this.pacienteSelected = '';
-            });
+            if (this.esPacienteRestringido(paciente)) {
+                this.plex.info('warning', 'No tiene permiso para ingresar a este paciente.', 'Atención');
+            } else {
+                this.pacienteSelected = paciente;
+                this.motivoAccesoService.getAccessoHUDS(this.pacienteSelected).subscribe((motivo) => {
+                    if (motivo) {
+                        this.modalAccepted = true;
+                        this.showLabel = false;
+                    }
+                },
+                // Si viene error, segundo callback
+                () => {
+                    this.pacienteSelected = '';
+                });
+            }
         }
     }
 

@@ -17,7 +17,7 @@
             </demandaInsatisfecha>
         </ng-container>
     </plex-tab>
-    <plex-tab icon="history" label="Historial">
+    <plex-tab icon="history" label="Historial" *ngIf="!(paciente | pacienteRestringido)">
         <fieldset *plTab>
             <ul class="list-group">
                 <li *ngFor="let turno of ultimosTurnos$ | async; let i=index" class="list-group-item"

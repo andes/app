@@ -16,6 +16,13 @@ interface IUsuario {
     documento: string;
     nombreCompleto: string;
     username: number;
+    pacienteRestringido?: {
+        idPaciente: string;
+        archivos: string[];
+        observaciones: string;
+        createdBy: any;
+        createdAt: Date;
+    }[];
 }
 
 export enum Estado { inProgress, active, logout }
@@ -48,6 +55,7 @@ export class Auth {
     private arrayFiltros: any[];
     public mobileUser: any;
     private feature: { [key: string]: boolean };
+    public pacienteRestringido;
 
 
     constructor(private server: Server) {
@@ -63,6 +71,7 @@ export class Auth {
                 this.permisos = payload.permisos;
                 this.feature = payload.feature;
                 this.estado = Estado.active;
+                this.pacienteRestringido = payload.pacienteRestringido;
                 this.initShiro();
             }),
             publishReplay(1),

@@ -892,7 +892,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     preAccesoHuds(motivoAccesoHuds) {
-        const motivo = (typeof motivoAccesoHuds !== 'string') ? motivoAccesoHuds[0] : motivoAccesoHuds;
+        const motivo = (typeof motivoAccesoHuds !== 'string' && motivoAccesoHuds.length) ? motivoAccesoHuds[0] : motivoAccesoHuds;
 
         const doRoute = () => this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
         if ((this.tieneAccesoHUDS || this.motivoVerContinuarPrestacion === motivo) && motivo) {
