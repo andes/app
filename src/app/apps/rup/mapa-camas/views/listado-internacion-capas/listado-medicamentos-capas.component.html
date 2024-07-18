@@ -1,0 +1,72 @@
+<plex-layout [main]="12">
+    <plex-layout-main>
+        <plex-title titulo="Medicamentos">
+            <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
+        </plex-title>
+        <plex-wrapper>
+            <plex-select name="unidadOrganizativa" label="Unidad Organizativa" [(ngModel)]="unidadOrg"
+                         idField="conceptId" labelField="term" (change)="filtrar()"
+                         [data]="unidadesOrganizativas$ | async">
+            </plex-select>
+            <plex-select name="sector" label="Sector" [(ngModel)]="sector" idField="nombre" labelField="nombre"
+                         [data]="sectorList$ | async" (change)="filtrar()">
+            </plex-select>
+            <plex-text grow="1" [(ngModel)]="paciente" name="paciente" label="Paciente" [debounce]="500"
+                       (change)="filtrar()"></plex-text>
+        </plex-wrapper>
+        <div *ngIf="!(listaMedicamentos$ | async)?.length" class="mt-5">
+
+            <plex-label *ngIf="!medicamentosHoy" class="flex-column" icon="magnify" type="info" justify="center"
+                        size="xl" direction="column"
+                        titulo="No se han registrado solicitudes de medicamentos en el día de la fecha"
+                        subtitulo="Se mostrarán los medicamentos cargados desde el plan de indicaciones de los pacientes">
+            </plex-label>
+            <plex-label *ngIf="medicamentosHoy && !filtrosVacios" class="flex-column" icon="magnify" type="info"
+                        justify="center" size="xl" direction="column" titulo="No hay resultados para esta búsqueda."
+                        subtitulo="Edite algún filtro para realizar una nueva">
+            </plex-label>
+        </div>
+        <plex-table *ngIf="(listaMedicamentos$ | async)?.length" [columns]="columns" #table="plTable" [offset]="102"
+                    (scroll)="onScroll()" [headOpacity]="50">
+            <plex-table-columns>
+            </plex-table-columns>
+            <plex-title titulo="Listado de pedidos del día" size="sm">
+                <plex-button size="sm" type="info" label="Descargar" (click)="descargarListado()"></plex-button>
+                <plex-table-columns class="pr-2">
+                </plex-table-columns>
+            </plex-title>
+            <tr *ngFor="let internacion of (listaMedicamentos$| plSort:table | async)">
+                <ng-container *ngIf="internacion.valor?.nombre ">
+                    <td *plTableCol="'paciente'">
+                        {{internacion.paciente | nombre }}
+                    </td>
+                    <td *plTableCol="'documento'">
+                        {{ internacion.paciente | documento }}
+                    </td>
+                    <td *plTableCol="'medicamento'">
+                        <span *ngIf="internacion.valor.nombre || internacion.valor.medicamento?.term">
+                            {{ internacion.valor.nombre || internacion.valor.medicamento?.term}}
+                        </span>
+                    </td>
+                    <td *plTableCol="'estado'">
+                        <span *ngIf="internacion.estadoActual?.tipo!=='bypass'">
+                            {{ internacion.estadoActual?.tipo==='active'? 'Aceptada':
+                            internacion.estadoActual?.tipo}}
+                        </span>
+                        <span *ngIf="internacion.estadoActual?.tipo==='bypass'">
+                            {{"Bypass ("+(internacion.estadoActual?.verificacion?.estado == null?
+                            "pendiente": internacion.estadoActual?.verificacion?.estado) +")"}}
+                        </span>
+                    </td>
+                    <td *plTableCol="'sector'">
+                        {{internacion.sector }}
+                    </td>
+                    <td *plTableCol="'unidadOrganizativa'">
+                        {{internacion.unidadOrganizativa }}
+                    </td>
+                </ng-container>
+            </tr>
+        </plex-table>
+
+    </plex-layout-main>
+</plex-layout>

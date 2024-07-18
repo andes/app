@@ -88,6 +88,13 @@ export class DocumentosService {
         );
     }
 
+    descargarListadoMedicamentos(params, nombreArchivo: string): Observable<any> {
+        return this.server.post('/bi/queries/listado-medicamentos-pedidos/csv', { params }, { responseType: 'blob' }).pipe(
+            saveAs(nombreArchivo, 'csv')
+        );
+    }
+
+
     descargarReglasGlobales(params, nombreArchivo: string): Observable<any> {
         return this.server.post('/bi/queries/top-reglas-globales/csv', { params }, { responseType: 'blob' }).pipe(
             saveAs(nombreArchivo, 'csv')
