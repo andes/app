@@ -14,7 +14,7 @@ import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 })
 
 export class EstadisticasPacientesComponent implements OnInit {
-    pacienteFields = ['sexo', 'fechaNacimiento', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
+    pacienteFields = ['sexo', 'edad', 'fechaNacimiento', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
     historial$: Observable<any[]>;
     turnosPaciente$: Observable<any[]>;
     ultimosTurnos$: Observable<any[]>;
