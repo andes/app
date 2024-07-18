@@ -5,7 +5,7 @@ import { ExportHudsService } from '../../services/export-huds.service';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
-import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido';
+import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 
 
 @Component({

@@ -13,7 +13,7 @@ import { ObraSocialCacheService } from '../../../../services/obraSocialCache.ser
 import { HUDSService } from '../../services/huds.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido';
+import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 
 @Component({
     selector: 'prestacion-crear',

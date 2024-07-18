@@ -5,7 +5,7 @@ import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { HUDSService } from '../../services/huds.service';
 import { Location } from '@angular/common';
-import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido';
+import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 
 @Component({
     selector: 'rup-hudsBusquedaPaciente',

@@ -14,7 +14,7 @@ import { TurnosPrestacionesService } from './services/turnos-prestaciones.servic
 import { cache } from '@andes/shared';
 import { IFinanciador } from 'src/app/interfaces/IFinanciador';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
-import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido';
+import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 
 @Component({
     selector: 'turnos-prestaciones',

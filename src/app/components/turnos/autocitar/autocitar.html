@@ -13,9 +13,12 @@
             </plex-item>
         </ng-container>
     </plex-list>
-    <small *ngIf="(!agendasAutocitar || agendasAutocitar?.length === 0) && prestacionAutocitar">No hay agendas con
-        turnos
-        disponibles para la autocitación</small>
+    <div class="mt-5">
+        <plex-label *ngIf="(!agendasAutocitar || agendasAutocitar?.length === 0) && prestacionAutocitar"
+                    icon="calendar-cruz" color="#ff8d22" size="md" direction="column" [tituloBold]="false"
+                    titulo='No hay agendas con turnos disponibles para la autocitación' subtitulo=''>
+        </plex-label>
+    </div>
     <div *ngIf="agendaSeleccionada">
         <plex-title titulo="Grilla Horaria" size="sm"></plex-title>
         <div *ngFor="let bloque of agendaSeleccionada.bloques; let indiceBloque = index">
@@ -42,7 +45,7 @@
 </div>
 <plex-modal size="sm" #modal [allowEscClose]="false" [allowBackdropClose]="false" (closed)="cerrarModal()">
     <plex-modal-title class="mb-2" type="info">
-        <div class="rounded" align="center">?</div> 
+        <div class="rounded" align="center">?</div>
     </plex-modal-title>
     <plex-modal-subtitle class="text-center">¿Desea confirmar el turno para paciente autocitado?
     </plex-modal-subtitle>

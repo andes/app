@@ -14,7 +14,7 @@ import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
 import { Location } from '@angular/common';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { IPrestacion } from 'src/app/interfaces/turnos/IPrestacion';
-import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido';
+import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 
 @Component({
     selector: 'solicitudes',

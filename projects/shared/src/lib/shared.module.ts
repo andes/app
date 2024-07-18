@@ -17,7 +17,7 @@ import { PopoverAuditComponent } from './components/popover-audit/popover-audit.
 import { GaleriaArchivosComponent } from './components/galeria-archivos/galeria-archivos.component';
 import { FormsModule } from '@angular/forms';
 import { DocumentoPipe } from './pipes/documento.pipe';
-import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido';
+import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 
 @NgModule({
     imports: [

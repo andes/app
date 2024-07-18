@@ -15,7 +15,7 @@ import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { AgendaService } from 'src/app/services/turnos/agenda.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
-import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido';
+import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 
 @Component({
     selector: 'rup-asignar-turno',
