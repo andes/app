@@ -3,8 +3,11 @@
              foco="{{agendasSeleccionadas?.length > 0? 'sidebar' : (isMobile()?'main':'')}}">
     <plex-layout-main>
         <plex-title titulo="Gestor de Agendas" size="lg">
-            <plex-button type="danger" label="Volver" (click)="volver()"></plex-button>
-            <plex-button *ngIf="puedeRevisarAgendas" class="mx-1" type="info" label="Auditar fuera de agenda"
+            <plex-button class="mr-1" type="danger" label="Volver" (click)="volver()"></plex-button>
+            <plex-button *ngIf="false" class="mr-1" type="info" icon="habilitar-profesional"
+                         tooltip="Habilitar al profesional" (click)="habilitarProfesional()">
+            </plex-button>
+            <plex-button *ngIf="puedeRevisarAgendas" class="mr-1" type="info" label="Auditar fuera de agenda"
                          (click)="auditarFueraAgenda()">
             </plex-button>
             <plex-button *ngIf="puedeCrearAgenda" type="success" label="Crear agenda" (click)="insertarAgenda()">
