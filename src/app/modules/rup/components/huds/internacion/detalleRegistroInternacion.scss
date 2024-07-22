@@ -1,82 +1,162 @@
-.prestacion-label {
-    display: contents;
-}
+ input::-webkit-outer-spin-button,
+ input::-webkit-inner-spin-button {
+     -webkit-appearance: none !important;
+     margin: 0;
+ }
 
-.badges {
-    display: flex;
-    column-gap: 5px;
-    align-items: flex-start;
-}
+ input[type=number] {
+     -moz-window-appearance: textfield !important;
+ }
 
-.lista-prestacion {
-    .lista-grid {
-        column-gap: 3%;
-    }
+ .badges {
+     display: flex;
+     column-gap: 5px;
+     align-items: flex-start;
+ }
 
-    .titulo {
-        display: flex;
-        align-items: center;
-    }
+ .lista-prestacion {
+     .lista-grid {
+         column-gap: 3%;
+     }
 
-    .lista-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+     .titulo {
+         display: flex;
+         align-items: center;
+     }
 
-        .titulo {
-            color: var(--nav-bar-color);
-        }
+     .detalles {
+         display: flex;
+         align-items: center;
+         flex-grow: 0.3;
+         justify-content: space-between;
+     }
 
-        .icono {
-            padding: 10px 15px;
-            margin-right: 10px;
-            color: white;
-            background-color: var(--nav-bar-color);
+     .lista-header {
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+         margin-bottom: 5px;
 
-            plex-icon i {
-                font-size: 20px;
-            }
-        }
-    }
+         .titulo {
+             color: var(--nav-bar-color);
+         }
 
-    .lista-detail {
-        display: flex;
-        column-gap: 20px;
-        justify-content: space-around;
-    }
+         .icono {
+             padding: 10px 15px;
+             margin-right: 10px;
+             color: white;
+             background-color: var(--nav-bar-color);
 
-    .lista-panel {
-        margin-bottom: 3px;
-        display: block;
-        
-        .icono {
-            border: 1px solid #00bcb4;
-            border-radius: 100%;
-            height: 40px;
-            width: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 10px;
+             plex-icon i {
+                 font-size: 20px;
+             }
+         }
+     }
 
-            &.medico {
-                border-color: #00bcb4;
-                color: #00bcb4;
-            }
-    
-            &.hidrico {
-                border-color: #47c0e9;
-                color: #47c0e9;
-            }
-        }
-    }
-}
+     .lista-detail {
+         display: flex;
+         column-gap: 20px;
+         justify-content: space-around;
+     }
 
-.accordion .card-header {
-    padding: 0 !important
-}
+     .lista-panel {
+         margin-bottom: 3px;
+         display: block;
 
-.filtro-fechas {
-    display: flex;
-    column-gap: 8px;
-}
+         .header {
+             cursor: pointer;
+             display: flex;
+             align-items: center;
+             justify-content: space-between;
+             padding: 10px;
+             border: 1px solid #e2e2e2;
+             border-top-left-radius: 0.25rem;
+             border-top-right-radius: 0.25rem;
+             background-color: #f2f2f2;
+         }
+
+         .detail {
+             border: 1px solid #e2e2e2;
+             border-top: none;
+             padding: 10px;
+             border-bottom-left-radius: 0.25rem;
+             border-bottom-right-radius: 0.25rem;
+         }
+
+         .icono {
+             border: 1px solid #00bcb4;
+             border-radius: 100%;
+             height: 40px;
+             width: 40px;
+             display: flex;
+             justify-content: center;
+             align-items: center;
+             margin-right: 10px;
+
+             &.medico {
+                 border-color: #00bcb4;
+                 color: #00bcb4;
+             }
+
+             &.hidrico {
+                 border-color: #47c0e9;
+                 color: #47c0e9;
+             }
+         }
+     }
+ }
+
+ .filtro-fechas {
+     display: flex;
+     column-gap: 8px;
+ }
+
+ .paginacion {
+     .selector-maximo {
+         padding: 0.5rem 0.75rem;
+         font-size: 0.9rem;
+         line-height: 1.25;
+         color: #464a4c;
+         border: 1px solid rgba(0, 0, 0, 0.15);
+     }
+
+     .selector-pagina {
+         width: 60px;
+     }
+
+     .controles,
+     .error {
+         display: flex;
+         justify-content: flex-end;
+         align-items: center;
+     }
+
+     .error {
+         margin-top: 10px;
+         margin-right: 10px;
+         font-size: small;
+         color: #a83829;
+     }
+ }
+
+ .accordion-title {
+     border-left: 5px solid #0070cc;
+     border-radius: calc(0.25rem - 1px);
+     padding-left: 20px;
+     margin-left: -20px;
+     height: 60px;
+     margin-top: -12px;
+     margin-bottom: -12px;
+     width: calc(100% + 20px);
+     justify-content: normal;
+
+     .prestacion-label {
+         flex-grow: 1;
+     }
+
+     .prestacion-info {
+         display: flex;
+         align-items: center;
+         width: 70%;
+     }
+ }

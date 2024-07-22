@@ -45,6 +45,11 @@ export class PrestacionesService {
     public destinoRuta = new BehaviorSubject<boolean>(false);
     public rutaVolver = this.destinoRuta.asObservable();
 
+    private prestacionesSubject = new BehaviorSubject<any[]>([]);
+    public prestaciones$ = this.prestacionesSubject.asObservable();
+
+    public registroInternaciones;
+
 
     /**
      * [TODO] cambiar nombres
@@ -179,6 +184,8 @@ export class PrestacionesService {
             this.cache[idPaciente] = this.server.get(this.prestacionesUrl, opt).pipe(
                 map(prestaciones => {
                     prestaciones.forEach(p => populateRelaciones(p));
+
+                    this.prestacionesSubject.next(prestaciones);
                     return prestaciones;
                 }),
                 cache()
@@ -806,4 +813,15 @@ export class PrestacionesService {
     }
 
 
+    getPrestaciones(): Observable<any[]> {
+        return this.prestaciones$;
+    }
+
+    setRegistroInternaciones(registros: any) {
+        this.registroInternaciones = registros;
+    }
+
+    getRegistroInternaciones() {
+        return this.registroInternaciones;
+    }
 }
