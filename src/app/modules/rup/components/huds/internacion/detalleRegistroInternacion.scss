@@ -18,10 +18,18 @@
         align-items: center;
     }
 
+    .detalles {
+        display: flex;
+        align-items: center;
+        flex-grow: 0.3;
+        justify-content: space-between;
+    }
+
     .lista-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        margin-bottom: 5px;
 
         .titulo {
             color: var(--nav-bar-color);
@@ -48,7 +56,27 @@
     .lista-panel {
         margin-bottom: 3px;
         display: block;
-        
+
+        .header {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border: 1px solid #e2e2e2;
+            border-top-left-radius: 0.25rem;
+            border-top-right-radius: 0.25rem;
+            background-color: #f2f2f2;
+        }
+
+        .detail {
+            border: 1px solid #e2e2e2;
+            border-top: none;
+            padding: 10px;
+            border-bottom-left-radius: 0.25rem;
+            border-bottom-right-radius: 0.25rem;
+        }
+
         .icono {
             border: 1px solid #00bcb4;
             border-radius: 100%;
@@ -63,7 +91,7 @@
                 border-color: #00bcb4;
                 color: #00bcb4;
             }
-    
+
             &.hidrico {
                 border-color: #47c0e9;
                 color: #47c0e9;
@@ -72,11 +100,63 @@
     }
 }
 
-.accordion .card-header {
-    padding: 0 !important
-}
-
 .filtro-fechas {
     display: flex;
     column-gap: 8px;
+}
+
+.paginacion {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    .selector-maximo {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+        line-height: 1.25;
+        color: #464a4c;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+    }
+
+    .selector-pagina {
+        width: 60px;
+    }
+}
+
+.accordion-title {
+    border-left: 5px solid #0070cc;
+    border-radius: calc(0.25rem - 1px);
+    padding-left: 20px;
+    margin-left: -20px;
+    height: 60px;
+    margin-top: -12px;
+    margin-bottom: -12px;
+
+    &.trastorno {
+        border-color: #ff4a1a;
+    }
+
+    &.procedimiento {
+        border-color: #92278e;
+    }
+
+    &.registro {
+        border-color: #8bc43f;
+    }
+
+    &.producto {
+        border-color: #00bcb4;
+    }
+
+    &.trastorno {
+        border-color: #ff4a1a;
+    }
+
+    &.hallazgo {
+        border-color: #f4a03b;
+    }
+
+    &.laboratorio {
+        border-color: #a0a0a0;
+    }
 }

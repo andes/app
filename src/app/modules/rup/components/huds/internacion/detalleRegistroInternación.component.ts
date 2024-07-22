@@ -4,7 +4,6 @@ import { PlanIndicacionesServices } from 'src/app/apps/rup/mapa-camas/services/p
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';
 import { PrestacionesService } from '../../../services/prestaciones.service';
-import { estados } from 'src/app/utils/enumerados';
 
 @Component({
     selector: 'detalle-registro-internacion',
@@ -17,16 +16,22 @@ export class DetalleRegistroInternacionComponent implements OnInit {
     @Input() internacion;
 
     public ready$ = this.elementosRUPService.ready;
-    public mostrarMas = false;
     public registro;
     public prestacion;
     public indicaciones;
+    public cacheRegistros;
     public tipo;
     public prestacionSeleccionada = [];
     public tiposPrestacion;
-    public indicacionesCache;
     public fechaInicio;
     public fechaFin;
+    public mostrarMas = false;
+    public colapsable = [];
+    public paginacion = [];
+    public maxSizePaginas = [10, 20, 30];
+    public sizePagina = 30;
+    public selectorSizePagina = 30;
+    public pagina = 1;
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -36,35 +41,33 @@ export class DetalleRegistroInternacionComponent implements OnInit {
     }
 
     ngOnInit() {
-        const { data: { id, index, registros, indices, fechaIngreso } } = this.internacion;
+        const { data: { id, index, registros, fechaIngreso } } = this.internacion;
 
-        if (id) {
-            if (registros) {
-                this.registro = registros[index];
-                this.tipo = 'internacion';
+        this.cargarRegistros(id, registros, index, fechaIngreso);
+    }
 
-                if (this.registro.conceptId) {
-                    this.getPrestacion(this.registro.idPrestacion);
-                    this.filtrarIndicaciones(this.registro.conceptId, id, fechaIngreso);
-                } else {
-                    this.indicaciones = Object.values(this.registro).reverse();
-                    this.indicacionesCache = Object.values(this.registro);
-                    this.tiposPrestacion = this.indicaciones.map(p => p.prestacion);
-                    this.tipo = 'otras';
-                }
-            }
+    esPlanIndicacion(registro) {
+        return registro.conceptId && ['33633005', '430147008'].includes(registro.conceptId);
+    }
+
+    cargarRegistros(idInternacion, registros, index, fechaIngreso) {
+        this.registro = registros[index];
+
+        if (this.esPlanIndicacion(this.registro)) {
+            this.tipo = 'planIndicaciones';
+            this.getIndicaciones(this.registro.conceptId, idInternacion, fechaIngreso);
+            this.getPrestacion(this.registro.idPrestacion);
         } else {
-            this.registro = indices[index];
-            this.indicaciones = Object.values(registros[index]).reverse();
+            this.registro = Object.values(this.registro);
 
-            if (this.registro.conceptId) {
-                this.tipo = 'internacion';
-                this.getPrestacion(this.registro.idPrestacion);
+            if (idInternacion) {
+                this.tipo = 'registrosInternacion';
             } else {
-                this.tipo = 'sinInternacion';
-                this.indicacionesCache = Object.values(registros[index]);
-                this.tiposPrestacion = this.indicaciones.map(p => p.concepto);
+                this.tipo = 'fueraDeInternacion';
+                this.tiposPrestacion = this.registro.map(p => p.concepto);
             }
+
+            this.actualizarPaginacion();
         }
     }
 
@@ -74,7 +77,7 @@ export class DetalleRegistroInternacionComponent implements OnInit {
         });
     }
 
-    filtrarIndicaciones(conceptId, idInternacion, fecha) {
+    getIndicaciones(conceptId, idInternacion, fecha) {
         this.planIndicacionesServices.getIndicaciones(idInternacion, fecha, 'medica', 'draft').subscribe((indicaciones) => {
             this.indicaciones = indicaciones.filter((indicacion) => indicacion.concepto.conceptId === conceptId).map((indicacion) => {
                 const diasSuministro = moment().diff(moment(indicacion.fechaInicio), 'days');
@@ -84,22 +87,8 @@ export class DetalleRegistroInternacionComponent implements OnInit {
         });
     }
 
-    getIndicaciones(id) {
-        this.planIndicacionesServices.search({ prestacion: id }).subscribe((indicaciones) => {
-            this.indicaciones = indicaciones;
-        });
-    }
-
-    mostrar() {
-        this.mostrarMas = !this.mostrarMas;
-    }
-
-    getTimestamp(fecha) {
-        return fecha.getTime();
-    }
-
     filtrar() {
-        let filtroIndicaciones = this.indicacionesCache.slice();
+        let filtroIndicaciones = this.registro.slice();
 
         if (this.prestacionSeleccionada?.length) {
             const seleccion = this.prestacionSeleccionada.map(e => e.prestacion ? e.prestacion.conceptId : e.conceptId);
@@ -120,5 +109,92 @@ export class DetalleRegistroInternacionComponent implements OnInit {
         }
 
         this.indicaciones = filtroIndicaciones;
+    }
+
+    colapsar(index) {
+        const position = this.colapsable.findIndex((i) => i === index);
+
+        position > -1 ?
+            this.colapsable.splice(position, 1)
+            : this.colapsable.push(index);
+    }
+
+    mostrar() {
+        this.mostrarMas = !this.mostrarMas;
+    }
+
+    actualizarPaginacion() {
+        const startIndex = (this.pagina - 1) * this.sizePagina;
+        const endIndex = startIndex + this.sizePagina;
+
+        this.paginacion = this.registro.slice(startIndex, endIndex);
+    }
+
+    primera() {
+        this.pagina = 1;
+        this.actualizarPaginacion();
+    }
+
+    ultima() {
+        this.pagina = this.totalPaginas();
+        this.actualizarPaginacion();
+    }
+
+    siguiente() {
+        if ((this.pagina * this.sizePagina) < this.registro.length) {
+            this.pagina++;
+            this.actualizarPaginacion();
+        }
+    }
+
+    anterior() {
+        if (this.pagina > 1) {
+            this.pagina--;
+            this.actualizarPaginacion();
+        }
+    }
+
+    setNumeroPagina(page: number) {
+        const totalPaginas = this.totalPaginas();
+
+        if (!page || page < 1 || page > totalPaginas) {
+            return;
+        }
+
+        this.pagina = page;
+        this.actualizarPaginacion();
+    }
+
+    haySiguiente() {
+        return (this.pagina * this.sizePagina) < this.registro.length;
+    }
+
+    hayAnterior() {
+        return this.pagina !== 1;
+    }
+
+    totalPaginas() {
+        return Math.ceil(this.registro.length / this.sizePagina);
+    }
+
+    setTotalPaginas(total) {
+        this.sizePagina = Number(total);
+        this.pagina = 1;
+        this.actualizarPaginacion();
+    }
+
+    getTag(concepto, esSolicitud) {
+        if (esSolicitud) {
+            return 'solicitud';
+        }
+
+        if (concepto.includes('tratamiento') || concepto.includes('entidad observable')) {
+            return 'procedimiento';
+        } else if (concepto.includes('registro')) {
+            return 'registro';
+        } else if (concepto.includes('fármaco')) {
+            return 'producto';
+        }
+        return concepto;
     }
 }

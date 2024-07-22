@@ -137,7 +137,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
     /**
      * Ids correspondientes a Prescripción de Medicamentos y Seguimiento Hídrico respectivamente
      */
-    public condicionRegistros = ['33633005', '430147008'];
+    public planIndicaciones = ['33633005', '430147008'];
 
     public filtros = [
         { key: 'planes', titulo: 'prestaciones', icono: 'clipboard-check-outline' },
@@ -226,7 +226,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
             this.ejecucionService.agregarConcepto(data.concepto, false, null, data.valor);
         }
     }
-
 
     emitTabs(registro, tipo, index: number) {
         switch (tipo) {
@@ -326,6 +325,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         this.servicioPrestacion.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
             this.prestacionesTotales = prestaciones;
             const validadas = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
+
             this.prestaciones = groupBy(validadas).map(p => {
                 if (Array.isArray(p)) {
                     return {
@@ -559,7 +559,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
             const { concepto: { conceptId, term }, id, idPrestacion, createdAt: fecha } = registro;
             const data = { conceptId, term, id, idPrestacion, fecha };
 
-            if (this.condicionRegistros.includes(data.conceptId)) {
+            if (this.planIndicaciones.includes(data.conceptId)) {
                 return ({
                     indices: { ...grupo.indices, [data.conceptId]: data },
                     registros: { ...grupo.registros, [data.conceptId]: { ...grupo.registros[data.conceptId], [data.conceptId]: registro } }
@@ -592,7 +592,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
                 } else { return null; }
             });
 
-            const indicePrestaciones = prestacionesPorInternacion.reduce((grupo, prestacion, index) => {
+            const indicePrestaciones = prestacionesPorInternacion.reduce((grupo, prestacion) => {
                 return ({ ...grupo, [prestacion.data.id]: prestacion });
             }, {});
 
@@ -601,7 +601,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
             const grupoRegistros = registros.reduce((grupo, registro) => {
                 const dataRegistro = { conceptId: registro.concepto.conceptId, term: registro.concepto.term, id: registro.id, idPrestacion: registro.idPrestacion };
 
-                if (this.condicionRegistros.includes(registro.concepto.conceptId)) {
+                if (this.planIndicaciones.includes(registro.concepto.conceptId)) {
                     return ({ ...grupo, [registro.concepto.conceptId]: dataRegistro });
                 }
 
