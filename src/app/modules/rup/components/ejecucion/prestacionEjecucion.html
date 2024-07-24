@@ -32,8 +32,7 @@
 
                     <plex-tab label="Registros de esta consulta"
                               *ngIf="paciente || prestacion.solicitud.tipoPrestacion.noNominalizada">
-                        <div justify="end" class="mb-1"
-                             *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length">
+                        <div justify="end" class="mb-1" *ngIf="prestacion?.ejecucion?.registros?.length">
                             <div class="col float-right text-right panel-acciones"></div>
                         </div>
 

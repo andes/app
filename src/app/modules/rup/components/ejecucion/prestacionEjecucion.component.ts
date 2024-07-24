@@ -498,6 +498,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
         // Agregamos al array de registros
         this.prestacion.ejecucion.registros = [...this.prestacion.ejecucion.registros, nuevoRegistro];
+        this.activeIndex = 0;
         return nuevoRegistro;
     }
 
@@ -889,6 +890,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             conceptId: concepto.conceptId,
             semanticTag: concepto.semanticTag
         }, concepto.esSolicitud);
+        this.activeIndex = 0;
     }
 
     prestacionVisible(registro) {
