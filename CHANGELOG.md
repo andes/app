@@ -1,3 +1,19 @@
+# [5.144.0](https://github.com/andes/app/compare/v5.143.0...v5.144.0) (2024-07-24)
+
+
+### Bug Fixes
+
+* **RUP:** repara acceso a vistas de registros HUDS ([#3037](https://github.com/andes/app/issues/3037)) ([832a9fb](https://github.com/andes/app/commit/832a9fbd6039c33d8ac2b8fa5dd0cb85d8c58ac1))
+
+
+### Features
+
+* **CIT-272:** Ventanilla-Solicitudes: visualizar estado asignada ([#3026](https://github.com/andes/app/issues/3026)) ([f05ca69](https://github.com/andes/app/commit/f05ca6996956bb26f9eb220fba287c9a29c20cc4))
+* **CIT-273:** Visualizar edad del paciente ([#3025](https://github.com/andes/app/issues/3025)) ([802e18b](https://github.com/andes/app/commit/802e18be878a8bdb14ff36ea7e40cb21dbc2a213))
+* **IN-574:** Reporte indicaciones de medicamentos ([#2997](https://github.com/andes/app/issues/2997)) ([faf8d14](https://github.com/andes/app/commit/faf8d148f08b730123cee6538a3e25309f25c79c))
+* **IN-599:** Cambiar orden en Registros médicos ([#3029](https://github.com/andes/app/issues/3029)) ([1f35c47](https://github.com/andes/app/commit/1f35c47fe962d56162730266a24c7e06a0442182))
+* **RUP:** implementa habilitacion de prestaciones a profesional ([#3014](https://github.com/andes/app/issues/3014)) ([ba954c2](https://github.com/andes/app/commit/ba954c28c2cc9d7663c95aad3a0d94bfe553f440))
+
 # [5.143.0](https://github.com/andes/app/compare/v5.142.0...v5.143.0) (2024-07-17)
 
 
