@@ -61,10 +61,6 @@ export class SuspenderTurnoComponent implements OnInit {
         ];
 
         this.motivoSuspensionSelect.select = this.motivoSuspension[1];
-        // Comentamos la selección automatica de los pacientes para enviar SMS por sugerencia de QA
-        // this.turnos.forEach((turno) => {
-        //     this.seleccionarTurno(turno);
-        // });
     }
 
 
@@ -86,14 +82,6 @@ export class SuspenderTurnoComponent implements OnInit {
         } else {
             return false;
         }
-    }
-
-    fueEnviado(turno) {
-        return this.estaSeleccionado(turno) && turno.paciente && turno.paciente.id && this.smsEnviado(turno) === 'enviado';
-    }
-
-    estaPendiente(turno) {
-        return this.estaSeleccionado(turno) && turno.paciente && turno.paciente.id && this.smsEnviado(turno) === 'pendiente';
     }
 
     tienePaciente(turno) {
@@ -138,16 +126,13 @@ export class SuspenderTurnoComponent implements OnInit {
                 this.suspendio = true;
                 this.saveSuspenderTurno.emit(this.agenda);
 
-                // Se envían SMS sólo en Producción
+                // Se envían notificación sólo en Producción
                 if (environment.production === true) {
                     for (let x = 0; x < this.seleccionadosSMS.length; x++) {
-                        const dia = moment(this.seleccionadosSMS[x].horaInicio).format('DD/MM/YYYY');
-                        const horario = moment(this.seleccionadosSMS[x].horaInicio).format('HH:mm');
-                        const mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue SUSPENDIDO.   ' + this.auth.organizacion.nombre;
-                        this.enviarSMS(this.seleccionadosSMS[x].paciente, mensaje);
+                        this.enviarNotificacion(this.seleccionadosSMS[x]);
                     }
                 } else {
-                    this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
+                    this.plex.toast('info', 'INFO: notificacion no enviado (activo sólo en Producción)');
                 }
             },
         );
@@ -185,57 +170,18 @@ export class SuspenderTurnoComponent implements OnInit {
 
         this.suspenderTurno();
 
-        // this.enviarSMS(paciente, 'Su turno se suspendió, será reasignado');
-
         this.reasignarTurnoSuspendido.emit(this.reasignar);
     }
 
-    enviarSMS(paciente: any, mensaje) {
-        if (!paciente.telefono) {
+    enviarNotificacion(turno) {
+        if (!turno.paciente?.telefono) {
             return;
         }
-        const smsParams = {
-            telefono: paciente.telefono,
-            mensaje: mensaje,
+        const params = {
+            evento: 'notificaciones:turno:suspender',
+            dto: turno
         };
-        this.smsService.enviarSms(smsParams).subscribe(
-            sms => {
-                this.resultado = sms;
-
-                // "if 0 errores"
-                if (this.resultado === '0') {
-                    if (paciente.alias) {
-                        this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.alias + ' ' + paciente.apellido);
-                    } else {
-                        this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombre + ' ' + paciente.apellido);
-                    }
-                } else {
-                    this.plex.toast('danger', 'ERROR: SMS no enviado');
-                }
-            },
-            err => {
-                if (err) {
-                    this.plex.toast('danger', 'ERROR: Servicio caído');
-
-                }
-            });
-    }
-
-    smsEnviado(turno) {
-        const ind = this.seleccionadosSMS.indexOf(turno);
-        if (ind >= 0) {
-            if (this.seleccionadosSMS[ind].smsEnviado === undefined) {
-                return 'no enviado';
-            } else {
-                if (this.seleccionadosSMS[ind].smsEnviado === true) {
-                    return 'enviado';
-                } else {
-                    return 'pendiente';
-                }
-            }
-        } else {
-            return 'no seleccionado';
-        }
+        this.smsService.enviarNotificacion(params).subscribe(resultado => { });
     }
 
     cancelar() {
