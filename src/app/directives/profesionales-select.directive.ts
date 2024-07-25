@@ -55,6 +55,8 @@ export class SelectProfesionalesDirective implements OnInit, OnDestroy {
                         });
                         $event.callback(result);
                     });
+                } else if (inputText.length === 0) {
+                    $event.callback([]);
                 } else {
                     const value = (this.plexSelect as any).value;
                     $event.callback(value);
