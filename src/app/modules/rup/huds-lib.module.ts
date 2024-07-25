@@ -17,6 +17,7 @@ import { ResumenPacienteDinamicoNinoComponent } from './components/ejecucion/res
 import { ResumenPacienteDinamicoComponent } from './components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
 import { ResumenPacienteEstaticoComponent } from './components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
 import { DetallePrestacionComponent } from './components/huds/detallePrestacion';
+import { DetalleProcedimientoComponent } from './components/huds/detalleProcedimiento';
 import { DetalleRegistronComponent } from './components/huds/detalleRegistro';
 import { DetalleRegistroInternoComponent } from './components/huds/detalleRegistroInterno';
 import { DetalleRegistroInternacionComponent } from './components/huds/internacion/detalleRegistroInternación.component';
@@ -64,6 +65,7 @@ import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
         DetallePrestacionComponent,
         DetalleRegistroInternacionComponent,
         DetalleRegistroInternoComponent,
+        DetalleProcedimientoComponent,
         ListadoRegistrosComponent,
         DetalleRegistronComponent,
         DetallePacienteComponent,
@@ -86,6 +88,7 @@ import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
         DetalleRegistroInternacionComponent,
         DetalleRegistronComponent,
         DetalleRegistroInternoComponent,
+        DetalleProcedimientoComponent,
         VistaDetalleRegistroComponent,
         VistaAccesosHudsComponent,
         VistaSolicitudTopComponent,
