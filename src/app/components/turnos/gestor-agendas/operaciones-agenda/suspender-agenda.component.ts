@@ -1,11 +1,9 @@
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-import { ITurno } from './../../../../interfaces/turnos/ITurno';
 import { EstadosAgenda } from './../../enums';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { environment } from './../../../../../environments/environment';
-import * as moment from 'moment';
 import { SmsService } from './../../../../services/turnos/sms.service';
 import { TurnoService } from './../../../../services/turnos/turno.service';
 import { Auth } from '@andes/auth';
@@ -150,11 +148,8 @@ export class SuspenderAgendaComponent implements OnInit {
         if (environment.production === true) {
             for (let x = 0; x < this.seleccionadosSMS.length; x++) {
                 if (this.seleccionadosSMS[x].avisoSuspension !== 'enviado') {
-                    const dia = moment(this.seleccionadosSMS[x].horaInicio).format('DD/MM/YYYY');
-                    const horario = moment(this.seleccionadosSMS[x].horaInicio).format('HH:mm');
-                    const mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue SUSPENDIDO.   ' + this.auth.organizacion.nombre;
                     this.seleccionadosSMS[x].smsEnviado = 'pendiente';
-                    this.seleccionadosSMS[x].smsEnviado = this.send(this.seleccionadosSMS[x], mensaje);
+                    this.send(this.seleccionadosSMS[x]);
                 }
             }
         } else {
@@ -163,14 +158,15 @@ export class SuspenderAgendaComponent implements OnInit {
 
     }
 
-    send(turno: any, mensaje) {
+    send(turno: any) {
         if (!turno.paciente || !turno.paciente.telefono) {
             return;
         }
-        const smsParams = {
-            telefono: turno.paciente.telefono,
-            mensaje: mensaje,
+        const params = {
+            evento: 'notificaciones:turno:suspender',
+            dto: turno
         };
+
         let idBloque;
         this.agenda.bloques.forEach(element => {
             const indice = element.turnos.findIndex(t => {
@@ -178,32 +174,18 @@ export class SuspenderAgendaComponent implements OnInit {
             });
             idBloque = (indice !== -1) ? element.id : -1;
         });
-        this.smsService.enviarSms(smsParams).subscribe(
-            sms => {
-                if (sms === '0') {
-                    this.plex.toast('info', 'Se envió SMS al paciente ' + (turno.paciente.alias || turno.paciente.nombre) + ' ' + turno.paciente.apellido);
-                    const data = {
-                        avisoSuspension: 'enviado'
-                    };
-                    this.turnosService.patch(this.agenda.id, idBloque, turno.id, data).subscribe(resultado => {
-                        turno.avisoSuspension = 'enviado';
-                    });
-                }
-            },
-            err => {
-                if (err) {
-                    this.plex.toast('danger', 'ERROR: Servicio caído');
-                    const data = {
-                        idAgenda: this.agenda.id,
-                        idBloque: idBloque,
-                        idTurno: turno.id,
-                        avisoSuspension: 'fallido'
-                    };
-                    this.turnosService.patch(this.agenda.id, idBloque, turno.id, data).subscribe(resultado => {
-                        turno.avisoSuspension = 'fallido';
-                    });
-                }
+        this.smsService.enviarNotificacion(params).subscribe((sms: any) => {
+            const aviso = sms.resultado === 1 ? 'enviado' : 'fallido';
+            const data = {
+                idAgenda: this.agenda.id,
+                idBloque: idBloque,
+                idTurno: turno.id,
+                avisoSuspension: aviso
+            };
+            this.turnosService.patch(this.agenda.id, idBloque, turno.id, data).subscribe(resultado => {
+                turno.avisoSuspension = aviso;
             });
+        });
     }
 
     seleccionarTurno(turno) {
