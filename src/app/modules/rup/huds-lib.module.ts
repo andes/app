@@ -17,6 +17,7 @@ import { ResumenPacienteDinamicoNinoComponent } from './components/ejecucion/res
 import { ResumenPacienteDinamicoComponent } from './components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
 import { ResumenPacienteEstaticoComponent } from './components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
 import { DetallePrestacionComponent } from './components/huds/detallePrestacion';
+import { DetalleProcedimientoComponent } from './components/huds/detalleProcedimiento';
 import { DetalleRegistronComponent } from './components/huds/detalleRegistro';
 import { DetalleRegistroInternoComponent } from './components/huds/detalleRegistroInterno';
 import { DetalleRegistroInternacionComponent } from './components/huds/internacion/detalleRegistroInternación.component';
@@ -66,6 +67,7 @@ import { VistaLaboratorioComponent } from './components/ejecucion/laboratorios/v
         DetallePrestacionComponent,
         DetalleRegistroInternacionComponent,
         DetalleRegistroInternoComponent,
+        DetalleProcedimientoComponent,
         ListadoRegistrosComponent,
         DetalleRegistronComponent,
         DetallePacienteComponent,
@@ -89,6 +91,7 @@ import { VistaLaboratorioComponent } from './components/ejecucion/laboratorios/v
         DetalleRegistroInternacionComponent,
         DetalleRegistronComponent,
         DetalleRegistroInternoComponent,
+        DetalleProcedimientoComponent,
         VistaDetalleRegistroComponent,
         VistaAccesosHudsComponent,
         VistaSolicitudTopComponent,

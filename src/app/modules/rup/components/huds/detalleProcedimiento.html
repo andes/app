@@ -1,0 +1,111 @@
+<div class="solicitud-wrapper">
+    <div class="mt-4">
+        <plex-grid cols="2">
+            <div class="registros">
+                <plex-icon name="documento-corazon" class="icon-info" size="xl"></plex-icon>
+                <div class="info-registro">
+                    <plex-badge size="sm" type="info">
+                        Datos de la prestación
+                    </plex-badge>
+                    <h6><b>{{prestacionRelacionada.solicitud.fecha | fecha}}</b></h6>
+                    <hr />
+                </div>
+                <div>
+                    <plex-button size="sm" icon="eye" type="info" (click)="getPrestacion()" tooltip="Ver prestación">
+                    </plex-button>
+                </div>
+            </div>
+            <div>
+                <plex-grid cols="3">
+                    <div>
+                        <b>Prestación</b>
+                        <p class="texto-detalle">{{prestacionRelacionada.solicitud.tipoPrestacion.term}}</p>
+                    </div>
+                    <div>
+                        <b>Profesional</b>
+                        <p class="texto-detalle">{{prestacionRelacionada.solicitud.profesional.apellido}},
+                            {{prestacionRelacionada.solicitud.profesional.nombre}}</p>
+                    </div>
+                    <div>
+                        <b>Ámbito</b>
+                        <p class="texto-detalle"> {{prestacionRelacionada.solicitud.ambitoOrigen}}</p>
+                    </div>
+                </plex-grid>
+            </div>
+        </plex-grid>
+    </div>
+    <div class="mt-4 mb-3">
+        <plex-title titulo="Detalle del procedimiento" size="sm"></plex-title>
+    </div>
+    <div class="rup-card {{ registro | semanticClass }}">
+        <div class="rup-header">
+            <div class="icon-rup">
+                <i class="adi {{ registro | semanticIcon }}"></i>
+            </div>
+            <div class="title">
+                <ng-container>
+                    {{ registro.concepto.term }}
+                </ng-container>
+                <div class="float-left" *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length > 1">
+                    <b class="clearfix">Relacionado con:</b>
+                    <ng-container *ngFor="let relacionado of registro?.relacionadoCon">
+                        <plex-badge size="sm" type="info mr-1">
+                            {{ relacionado | relacionRUP }}
+                        </plex-badge>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="actions" style="display: flex; gap: 5px">
+                <plex-badge *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length === 1" size="sm"
+                            type="info">
+                    <b> Relacionado con: </b>
+                    {{ registro.relacionadoCon[0].concepto?.term[0].toUpperCase() +
+                    registro.relacionadoCon[0].concepto?.term.slice(1)}}
+                </plex-badge>
+
+                <plex-badge size="sm" type="info" *ngIf="registro.esDiagnosticoPrincipal">
+                    Procedimiento / diagnóstico principal
+                </plex-badge>
+            </div>
+        </div>
+        <div class="rup-body">
+            <div class="legend">
+                <span>
+                    {{ (registro.esSolicitud) ? 'solicitud' : registro.concepto.semanticTag}}
+                </span>
+            </div>
+            <div class="content">
+                <div class="row" *ngIf="paciente">
+                    <div class="col-12">
+                        <rup class="columna-completa align"
+                             [elementoRUP]="elementosRUPService.elementoRegistro(registro)"
+                             [prestacion]="prestacionRelacionada" [paciente]="paciente" [registro]="registro"
+                             [params]="elementosRUPService.elementoRegistro(registro)?.params" [soloValores]="true"
+                             [vistaHUDS]="false">
+                        </rup>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="mt-3">
+        <plex-title titulo="Registros de la prestación" size="sm"></plex-title>
+        <div class="mt-3">
+            <plex-accordion>
+                <plex-panel class="lista-panel" *ngFor="let registro of registrosPrestacion;let i =index">
+                    <div plex-accordion-title case="capitalize">
+                        <div class="titulo">
+                            {{ registro.nombre }}
+                        </div>
+                        <plex-button disabled type="info" size="sm" icon="chevron-down" class="float-right">
+                        </plex-button>
+                    </div>
+                    <div>
+                        <detalle-registro-interno [registro]="registro"></detalle-registro-interno>
+                    </div>
+                </plex-panel>
+            </plex-accordion>
+        </div>
+    </div>
+</div>

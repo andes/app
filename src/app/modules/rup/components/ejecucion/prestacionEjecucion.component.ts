@@ -895,6 +895,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     prestacionVisible(registro) {
         return registro.data.class === 'plan' || registro.data.class === 'regimen' ||
-            registro.data.class === 'procedimiento' || registro.data.class === 'elementoderegistro' || registro.data.class === 'producto';
+            registro.data.class === 'elementoderegistro' || registro.data.class === 'producto';
     }
 }
