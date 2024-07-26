@@ -132,13 +132,16 @@
                 </td>
                 <td>
                     <div *ngIf="turno.paciente?.telefono && turno.avisoSuspension && !turno.reasignado?.siguiente">
-                        <plex-badge *ngIf="turno.avisoSuspension === 'fallido'" type="danger" title="SMS fallido">
+                        <plex-badge *ngIf="turno.avisoSuspension === 'fallido'" type="danger"
+                                    title="Notificación fallida">
                             <plex-icon name="message-alert"></plex-icon>
                         </plex-badge>
-                        <plex-badge *ngIf="turno.avisoSuspension ==='enviado'" type="success" title="SMS enviado">
+                        <plex-badge *ngIf="turno.avisoSuspension ==='enviado'" type="success"
+                                    title="Notificación enviada">
                             <plex-icon name="message-text-outline"></plex-icon>
                         </plex-badge>
-                        <plex-badge *ngIf="turno.avisoSuspension ==='no enviado'" type="info" title="SMS pendiente">
+                        <plex-badge *ngIf="turno.avisoSuspension ==='no enviado'" type="info"
+                                    title="Notificación pendiente">
                             <plex-icon name="message-processing"></plex-icon>
                         </plex-badge>
                     </div>

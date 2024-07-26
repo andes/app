@@ -30,6 +30,9 @@
             <span *ngIf="!estaSeleccionado(turno) && turno.paciente?.id">
                 <plex-icon name="checkbox-blank-outline"></plex-icon>
             </span>
+            <span *ngIf="estaSeleccionado(turno) && turno.paciente?.id">
+                <plex-icon name="checkbox-marked"></plex-icon>
+            </span>
         </div>
     </div>
     <div class="row">
