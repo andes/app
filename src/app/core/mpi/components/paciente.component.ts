@@ -702,7 +702,7 @@ export class PacienteComponent implements OnInit {
                                     this.pacienteModel.fechaFallecimiento = null;
                                 }
                                 //  Se completan datos FALTANTES
-                                if (resultado.direccion[0]) { // direccion fisica
+                                if (resultado.direccion[0] && !this.pacienteModel.direccion[0]) { // direccion fisica
                                     this.pacienteModel.direccion[0] = resultado.direccion[0];
                                 }
                                 if (resultado.direccion[1]) { // direccion legal
