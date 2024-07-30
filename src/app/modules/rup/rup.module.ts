@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { NgDragDropModule } from 'ng-drag-drop';
 import { ChartsModule } from 'ng2-charts';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 import { PlantillasRUPComponent } from '../../apps/rup/plantillas-rup/plantillas-rup.component';
 import { TOPLibModule } from '../../components/top/top.module';
 import { AutocitarTurnoAgendasComponent } from '../../components/turnos/autocitar/autocitar.component';
@@ -73,6 +74,8 @@ export const RUP_COMPONENTS = [
     declarations: [
         ...RUP_COMPONENTS
     ],
+    providers: [
+        MotivosHudsService],
     exports: []
 })
 export class RUPModule {

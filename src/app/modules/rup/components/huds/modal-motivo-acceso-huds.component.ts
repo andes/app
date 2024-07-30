@@ -4,7 +4,8 @@ import { Auth } from '@andes/auth';
 import { ProfesionalService } from 'src/app/services/profesional.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { catchError, of } from 'rxjs';
-
+import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
+import { IMotivoAcceso } from '../../interfaces/IMotivoAcceso';
 @Component({
     selector: 'modal-motivo-acceso-huds',
     templateUrl: 'modal-motivo-acceso-huds.html'
@@ -27,8 +28,8 @@ export class ModalMotivoAccesoHudsComponent implements OnInit {
     constructor(
         public auth: Auth,
         public _profesionalService: ProfesionalService,
+        public motivosHudsService: MotivosHudsService,
         public sanitizer: DomSanitizer,
-
     ) { };
     @Input()
     set show(value) {
@@ -37,15 +38,12 @@ export class ModalMotivoAccesoHudsComponent implements OnInit {
             this.motivoSelected = null;
         }
     }
-    @Output() motivoAccesoHuds = new EventEmitter<[String, String]>();
-    public motivosAccesoHuds = [
-        { id: 'auditoria', label: 'Procesos de Auditoría' },
-        { id: 'urgencia', label: 'Intervención de Urgencia/Emergencia' },
-        { id: 'administrativo', label: 'Procesos Administrativos' },
-        { id: 'continuidad', label: 'Intervención en el proceso de cuidado del paciente' }
-    ];
+    @Output() motivoAccesoHuds = new EventEmitter<IMotivoAcceso>();
+
     public motivoSelected = null;
-    public detalleMotivo = '';
+    public descripcionAcceso = '';
+    public motivo: IMotivoAcceso;
+    public motivosAccesoHuds = [];
 
     ngOnInit(): void {
         if (this.auth.profesional) {
@@ -64,8 +62,14 @@ export class ModalMotivoAccesoHudsComponent implements OnInit {
                     this.nombreAdministrativo = '';
                 }
             });
+            this.motivosHudsService.getMotivosModal().subscribe(
+                motivos => {
+                    motivos.map(motivo => this.motivosAccesoHuds.push({ id: motivo.key, label: motivo.label }));
+                }
+            );
         }
     }
+
 
     motivoSelect() {
         return this.motivoSelected === null;
@@ -74,7 +78,11 @@ export class ModalMotivoAccesoHudsComponent implements OnInit {
     notificarAccion(flag: boolean) {
         if (flag) {
             const item = this.motivosAccesoHuds.find((elem) => elem.id === this.motivoSelected);
-            this.motivoAccesoHuds.emit([item.label, this.detalleMotivo]);
+            this.motivo = {
+                motivo: item.id,
+                textoObservacion: this.descripcionAcceso,
+            };
+            this.motivoAccesoHuds.emit(this.motivo);
         } else {
             this.motivoAccesoHuds.emit(null);
         }

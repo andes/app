@@ -12,6 +12,7 @@ import { VisualizacionReglasComponent } from './reglas/visualizacionReglas.compo
 import { HistorialSolicitudComponent } from './solicitudes/historialSolicitud.component';
 import { VisualizacionReglasTopComponent } from './reglas/visualizacionReglasTop.component';
 import { RouterService } from 'src/app/services/router.service';
+import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 
 export const TOP_COMPONENTS = [
     VisualizacionReglasTopComponent,
@@ -38,6 +39,7 @@ export const TOP_PROVIDERS = [
         ...TOP_COMPONENTS
     ],
     providers: [
+        MotivosHudsService,
         ...TOP_PROVIDERS
     ],
     exports: [

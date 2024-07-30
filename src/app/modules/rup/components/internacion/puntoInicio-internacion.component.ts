@@ -6,6 +6,8 @@ import { PrestacionesService } from '../../services/prestaciones.service';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
 import { Auth } from '@andes/auth';
 import { HUDSService } from '../../services/huds.service';
+import { switchMap } from 'rxjs';
+import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 
 @Component({
     selector: 'app-punto-inicio-internacion',
@@ -53,7 +55,9 @@ export class PuntoInicioInternacionComponent implements OnInit {
         private router: Router,
         private elementoRupService: ElementosRUPService,
         private auth: Auth,
-        public hudsService: HUDSService
+        public hudsService: HUDSService,
+        public motivosHudsService: MotivosHudsService
+
     ) { }
 
     ngOnInit() {
@@ -91,16 +95,20 @@ export class PuntoInicioInternacionComponent implements OnInit {
     onPacienteSelected(paciente) {
         this.showLoader = true;
         this.pacienteSeleccionado = paciente;
-        const paramsToken = {
-            usuario: this.auth.usuario,
-            organizacion: this.auth.organizacion,
-            paciente: paciente,
-            motivo: this.conceptosInternacion.epicrisis.term,
-            profesional: this.auth.profesional,
-            idTurno: null,
-            idPrestacion: null
-        };
-        this.hudsService.generateHudsToken(paramsToken).subscribe(hudsToken => {
+        const token = this.motivosHudsService.getMotivo('rup-epicrisis').pipe(
+            switchMap(motivoH => {
+                const paramsToken = {
+                    usuario: this.auth.usuario,
+                    organizacion: this.auth.organizacion,
+                    paciente: paciente,
+                    motivo: motivoH[0].key,
+                    profesional: this.auth.profesional,
+                    idTurno: null,
+                    idPrestacion: null
+                };
+                return this.hudsService.generateHudsToken(paramsToken);
+            }));
+        token.subscribe(hudsToken => {
             window.sessionStorage.setItem('huds-token', hudsToken.token);
 
             this.tipoPrestaciones = [

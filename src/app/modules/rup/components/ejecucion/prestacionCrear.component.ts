@@ -4,7 +4,7 @@ import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
-import { concat, forkJoin } from 'rxjs';
+import { concat, forkJoin, switchMap } from 'rxjs';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
@@ -14,6 +14,7 @@ import { HUDSService } from '../../services/huds.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
+import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 
 @Component({
     selector: 'prestacion-crear',
@@ -60,7 +61,9 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
         private osService: ObraSocialCacheService,
         private pacienteService: PacienteService,
         private hudsService: HUDSService,
-        private pacienteRestringido: PacienteRestringidoPipe
+        private pacienteRestringido: PacienteRestringidoPipe,
+        public motivosHudsService: MotivosHudsService
+
     ) { }
 
     ngOnInit() {
@@ -159,30 +162,35 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
             };
             this.disableGuardar = true;
             if (this.tieneAccesoHUDS && this.paciente) {
+                const motivo = this.motivosHudsService.getMotivo('rup-fuera-de-agenda');
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
-                const paramsToken = {
-                    usuario: this.auth.usuario,
-                    organizacion: this.auth.organizacion,
-                    paciente: this.paciente,
-                    motivo: 'Fuera de agenda',
-                    profesional: this.auth.profesional,
-                    idTurno: null,
-                    idPrestacion: this.tipoPrestacionSeleccionada.id
-                };
-                const token = this.hudsService.generateHudsToken(paramsToken);
+                const token = motivo.pipe(
+                    switchMap(motivoH => {
+                        const paramsToken = {
+                            usuario: this.auth.usuario,
+                            organizacion: this.auth.organizacion,
+                            paciente: this.paciente,
+                            motivo: motivoH[0].key,
+                            profesional: this.auth.profesional,
+                            idTurno: null,
+                            idPrestacion: this.tipoPrestacionSeleccionada.id
+                        };
+                        return this.hudsService.generateHudsToken(paramsToken);
+                    })
+                );
                 const nuevaPrest = this.servicioPrestacion.post(nuevaPrestacion);
-                const res = concat(token, nuevaPrest);
-
-                res.subscribe(input => {
-                    if (input.token) {
-                        // se obtuvo token y loguea el acceso a la huds del paciente
-                        window.sessionStorage.setItem('huds-token', input.token);
-                    } else {
-                        this.router.navigate(['/rup/ejecucion', input.id]); // prestacion
-                    }
-                }, (err) => {
-                    this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err);
+                concat(token, nuevaPrest).subscribe({
+                    next: input => {
+                        if (input.token) {
+                            // se obtuvo token y loguea el acceso a la huds del paciente
+                            window.sessionStorage.setItem('huds-token', input.token);
+                        } else {
+                            this.router.navigate(['/rup/ejecucion', input.id]); // prestacion
+                        }
+                    },
+                    error: err => this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err)
                 });
+
             } else {
                 this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
                     this.router.navigate(['/rup/ejecucion', prestacion.id]);
