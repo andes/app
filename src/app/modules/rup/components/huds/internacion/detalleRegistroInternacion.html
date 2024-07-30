@@ -38,7 +38,7 @@
 
     <!-- Otras prestaciones de una internación -->
     <div *ngIf="tipo === 'otras'">
-        <plex-title titulo="Prestaciones de la Internación" size="lg"></plex-title>
+        <plex-title titulo="Prestaciones de la Internación" size="sm"></plex-title>
         <div class="w-100 mb-4">
             <detalle-paciente [paciente]="paciente"></detalle-paciente>
             <plex-grid responsive colsMd="2" colsLg="2" type="full">
@@ -60,8 +60,14 @@
                 <plex-grid responsive colsMd="2" colsLg="2" type="full">
                     <div class="lista-header">
                         <div class="titulo">
-                            <div class="icono"><plex-icon name="lapiz-documento" size="lg"></plex-icon></div>
+                            <div class="icono">
+                                <plex-icon name="lapiz-documento" size="lg"></plex-icon>
+                            </div>
                             <span case="capitalize">{{prestacion.prestacion.term}}</span>
+                            <plex-button *ngIf="puedeDescargarInforme" class="pl-2" type="info" size="sm"
+                                         icon="download" tooltip="Descargar PDF" [disabled]="requestInProgress"
+                                         (click)="descargarInforme(prestacion.data)">
+                            </plex-button>
                         </div>
                         <plex-badge size="sm"
                                     [type]="prestacion.data.estadoActual.tipo === 'validada' ? 'success' :'info'">
@@ -74,6 +80,9 @@
                         </plex-label>
                         <plex-label class="prestacion-label" size="md" case="capitalize" titulo="Profesional que valida"
                                     subtitulo="{{  prestacion.data.solicitud.profesional | nombre }}">
+                        </plex-label>
+                        <plex-label class="prestacion-label" size="md" case="capitalize" titulo="Unidad Organizativa"
+                                    subtitulo="{{ prestacion.data.unidadOrganizativa.term}}">
                         </plex-label>
                     </div>
                 </plex-grid>

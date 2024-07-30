@@ -4,7 +4,8 @@ import { PlanIndicacionesServices } from 'src/app/apps/rup/mapa-camas/services/p
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';
 import { PrestacionesService } from '../../../services/prestaciones.service';
-import { estados } from 'src/app/utils/enumerados';
+import { DocumentosService } from 'src/app/services/documentos.service';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'detalle-registro-internacion',
@@ -27,17 +28,20 @@ export class DetalleRegistroInternacionComponent implements OnInit {
     public indicacionesCache;
     public fechaInicio;
     public fechaFin;
+    public requestInProgress = false;
+    public puedeDescargarInforme = false;
 
     constructor(
         public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
         private planIndicacionesServices: PlanIndicacionesServices,
-    ) {
-    }
+        private servicioDocumentos: DocumentosService,
+        private auth: Auth
+    ) { }
 
     ngOnInit() {
         const { data: { id, index, registros, indices, fechaIngreso } } = this.internacion;
-
+        this.puedeDescargarInforme = this.auth.check('huds:impresion');
         if (id) {
             if (registros) {
                 this.registro = registros[index];
@@ -87,6 +91,17 @@ export class DetalleRegistroInternacionComponent implements OnInit {
     getIndicaciones(id) {
         this.planIndicacionesServices.search({ prestacion: id }).subscribe((indicaciones) => {
             this.indicaciones = indicaciones;
+        });
+    }
+
+    descargarInforme(prestacion) {
+        this.requestInProgress = true;
+        const term = prestacion.solicitud.tipoPrestacion.term;
+        const informe = { idPrestacion: prestacion.id };
+
+        this.servicioDocumentos.descargarInformeRUP(informe, term).subscribe({
+            complete: () => this.requestInProgress = false,
+            error: () => this.requestInProgress = false
         });
     }
 
