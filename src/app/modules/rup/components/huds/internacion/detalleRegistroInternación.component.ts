@@ -30,7 +30,6 @@ export class DetalleRegistroInternacionComponent implements OnInit {
     public fechaFin;
     public requestInProgress = false;
     public puedeDescargarInforme = false;
-    public colapsable = [];
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -100,10 +99,10 @@ export class DetalleRegistroInternacionComponent implements OnInit {
         const term = prestacion.solicitud.tipoPrestacion.term;
         const informe = { idPrestacion: prestacion.id };
 
-        this.servicioDocumentos.descargarInformeRUP(informe, term).subscribe(
-            () => this.requestInProgress = false,
-            () => this.requestInProgress = false
-        );
+        this.servicioDocumentos.descargarInformeRUP(informe, term).subscribe({
+            complete: () => this.requestInProgress = false,
+            error: () => this.requestInProgress = false
+        });
     }
 
     mostrar() {
