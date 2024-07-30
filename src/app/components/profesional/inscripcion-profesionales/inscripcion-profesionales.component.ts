@@ -153,13 +153,20 @@ export class InscripcionProfesionalesComponent implements OnInit {
         this.usuarioService.createUsuario(newUser, { token: this.token }).subscribe(user => {
             if (user) {
                 const contactoProfesional = this.updateContactos();
-                this.profesionalService.actualizarProfesional({ id: this.profesional.id, contactos: contactoProfesional }, { token: this.token }).subscribe((res) => {
-                    if (res) {
-                        this.plex.info('success', `Un email a ${newUser.email} fue enviado con sus datos de inicio de sesión`, 'Su usuario fue creado correctamente');
-                        this.enProceso = false;
-                        this.resetForm();
-                    }
-                });
+                this.profesionalService.actualizarProfesional({ id: this.profesional.id, contactos: contactoProfesional }, { token: this.token })
+                    .subscribe((res) => {
+                        if (res) {
+                            if (user.tipo === 'temporal') {
+                                this.plex.info('success', `Un email a ${newUser.email} fue enviado con sus datos de inicio de sesión`, 'Su usuario fue creado correctamente');
+                            } else {
+                                if (user.tipo === '') {
+                                    this.plex.info('success', 'El usuario fue generado correctamente, puede ingresar con el usuario y clave de ONE LOGIN', 'Su usuario fue creado correctamente');
+                                }
+                            }
+                            this.enProceso = false;
+                            this.resetForm();
+                        }
+                    });
             }
         }, (error) => {
             this.plex.info('warning', error);
