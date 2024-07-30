@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { MapaCamasService } from '../../../services/mapa-camas.service';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { arrayToSet } from '@andes/shared';
+import { Component, OnInit } from '@angular/core';
+import { Observable, combineLatest } from 'rxjs';
+import { filter, map, tap } from 'rxjs/operators';
+import { MapaCamasService } from '../../../services/mapa-camas.service';
 
 
 
 @Component({
     selector: 'app-filtros-camas',
     templateUrl: './filtros-camas.component.html',
+    styleUrls: ['filtros-camas.scss']
 })
 
 export class FiltrosCamasComponent implements OnInit {
@@ -18,8 +19,8 @@ export class FiltrosCamasComponent implements OnInit {
     public tipoCamaList$: Observable<any[]>;
     public equipamientoList$: Observable<any[]>;
     public estadoList$: Observable<any[]>;
-
     public paciente = '';
+    public collapse = true;
 
     filtro: any = {};
     censables = [
@@ -51,8 +52,24 @@ export class FiltrosCamasComponent implements OnInit {
             map((camas) => arrayToSet(camas, 'estado', (item) => item)),
             map(estados => estados.map(e => ({ estado: e.estado })))
         );
+
+        this.checkSeleccion();
     }
 
+    checkSeleccion() {
+        const filtros = [this.mapaCamasService.tipoCamaSelected, this.mapaCamasService.esCensable, this.mapaCamasService.equipamientoSelected];
+
+        combineLatest(filtros).pipe(
+            filter(values => values.some(value => value !== null)),
+            tap(() => {
+                this.collapse = false;
+            })
+        ).subscribe();
+    }
+
+    colapsar() {
+        this.collapse = !this.collapse;
+    }
 
     filtrar() {
         this.mapaCamasService.unidadOrganizativaSelected.next(this.filtro.unidadOrganizativa);
