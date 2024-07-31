@@ -1,3 +1,21 @@
+# [5.145.0](https://github.com/andes/app/compare/v5.144.0...v5.145.0) (2024-07-31)
+
+
+### Bug Fixes
+
+* **CITAS:** select profesional despues de clonar ([#3046](https://github.com/andes/app/issues/3046)) ([425d872](https://github.com/andes/app/commit/425d87203b113270ac2abef8ab8dc487e3171123))
+* **GDU-64:** Controlar datos del profesional asociado al usuario ([#3018](https://github.com/andes/app/issues/3018)) ([00c467f](https://github.com/andes/app/commit/00c467f471e020ac2e85a9ad80deec51d3be186d))
+* **HUDS:** elimina reemplazo de privacy en elemento rup ([#3044](https://github.com/andes/app/issues/3044)) ([d8ab080](https://github.com/andes/app/commit/d8ab0806e257aad37b7083d8f5506107ae60db2c))
+* **MAT:** Agrega mensaje de usuario one login ([#3024](https://github.com/andes/app/issues/3024)) ([b0a1aff](https://github.com/andes/app/commit/b0a1aff014b107152b27ef8e3dfe631ece4a4301))
+* **Notificacion:** Agrega envío de notificación al cancelar turno ([#3043](https://github.com/andes/app/issues/3043)) ([fc77fb0](https://github.com/andes/app/commit/fc77fb07527ae715e4344a0cfdc95b0bface1fad))
+* **PRIV:** corrige busqueda de modal iniciando fuera de agenda ([#3048](https://github.com/andes/app/issues/3048)) ([a1fcd17](https://github.com/andes/app/commit/a1fcd1738694f4fea94954ec17f0ccac5b618e0a))
+
+
+### Features
+
+* **IN:** Implementa filtros de busqueda autoexpandibles ([#3027](https://github.com/andes/app/issues/3027)) ([857882d](https://github.com/andes/app/commit/857882d49e9e8204aca09487140231eaf4fe2701))
+* **PRIV-65:** Visualizar motivos de acceso a la HUDS ([#2958](https://github.com/andes/app/issues/2958)) ([3e4d743](https://github.com/andes/app/commit/3e4d743dae8b1db1806f9644d992eab9e1799abf))
+
 # [5.144.0](https://github.com/andes/app/compare/v5.143.0...v5.144.0) (2024-07-24)
 
 
