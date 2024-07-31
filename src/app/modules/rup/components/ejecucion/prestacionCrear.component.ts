@@ -162,7 +162,7 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
             };
             this.disableGuardar = true;
             if (this.tieneAccesoHUDS && this.paciente) {
-                const motivo = this.motivosHudsService.getMotivo('rup-fuera-de-agenda');
+                const motivo = this.motivosHudsService.getMotivo('rup-fuera-agenda');
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
                 const token = motivo.pipe(
                     switchMap(motivoH => {
