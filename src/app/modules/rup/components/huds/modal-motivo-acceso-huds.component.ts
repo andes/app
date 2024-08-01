@@ -47,7 +47,6 @@ export class ModalMotivoAccesoHudsComponent implements OnInit {
 
     ngOnInit(): void {
         if (this.auth.profesional) {
-
             this._profesionalService.getFirma({ id: this.auth.profesional }).pipe(catchError(() => of(null))).subscribe(resp => {
                 this.urlFirma = resp.length ? this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp) : null;
             });
@@ -62,14 +61,13 @@ export class ModalMotivoAccesoHudsComponent implements OnInit {
                     this.nombreAdministrativo = '';
                 }
             });
-            this.motivosHudsService.getMotivosModal().subscribe(
-                motivos => {
-                    motivos.map(motivo => this.motivosAccesoHuds.push({ id: motivo.key, label: motivo.label }));
-                }
-            );
         }
+        this.motivosHudsService.getMotivosModal().subscribe(
+            motivos => {
+                motivos.map(motivo => this.motivosAccesoHuds.push({ id: motivo.key, label: motivo.label }));
+            }
+        );
     }
-
 
     motivoSelect() {
         return this.motivoSelected === null;
