@@ -1,7 +1,7 @@
 import { Plex } from '@andes/plex';
 import { AfterViewInit, AfterViewChecked, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, map } from 'rxjs';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
 import { PacienteBuscarResultado } from '../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
@@ -9,6 +9,7 @@ import { ParentescoService } from '../../../services/parentesco.service';
 import * as enumerados from '../../../utils/enumerados';
 import { IPaciente } from '../interfaces/IPaciente';
 import { PacienteService } from '../services/paciente.service';
+import { ConstantesService } from 'src/app/services/constantes.service';
 
 @Component({
     selector: 'datos-basicos',
@@ -22,17 +23,19 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     @Output() changes: EventEmitter<any> = new EventEmitter<any>();
     @ViewChild('formBasico', { static: false }) formBasico: NgForm;
     @ViewChild('formExtranjero', { static: false }) formExtranjero: NgForm;
+    @ViewChild('formGenero', { static: false }) formGenero: NgForm;
+
     formChangesSubscription: Subscription;
 
     estados = [];
     sexos: any[];
-    generos: any[];
+    generos: Observable<any>;
     estadosCiviles: any[];
     tipoIdentificacion: any[];
     noPoseeDNI = false;
     botonRegistroDNI = false;
     pacienteExtranjero: IPaciente;
-
+    public requiereGenero: boolean;
     public nuevoPaciente = false;
     public disableRegistro = false;
     public nombrePattern: string;
@@ -70,7 +73,8 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     constructor(
         private plex: Plex,
         private pacienteService: PacienteService,
-        private parentescoService: ParentescoService
+        private parentescoService: ParentescoService,
+        private constantesService: ConstantesService
     ) {
         this.nombrePattern = pacienteService.nombreRegEx.source;
     }
@@ -105,17 +109,18 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
             this.noPoseeDNI = true;
             this.paciente.documento = '';
         }
-
         this.sexos = enumerados.getObjSexos();
         this.tipoIdentificacion = enumerados.getObjTipoIdentificacion();
-        this.generos = enumerados.getObjGeneros();
+
+        this.generos = this.constantesService.search({ source: 'mpi:genero' }).pipe(
+            map(res => res.map(g => ({ id: g.key, nombre: g.nombre })))
+        );
         this.estadosCiviles = enumerados.getObjEstadoCivil();
         this.estados = enumerados.getEstados();
         this.parentescoService.get().subscribe(resultado => {
             this.parentescoModel = resultado;
         });
     }
-
     ngAfterViewChecked() {
         this.formBasico.control.valueChanges.subscribe(() => {
             this.changes.emit({ datosBasicos: true });
@@ -124,12 +129,12 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
 
     public checkForm() {
         this.formBasico.control.markAllAsTouched();
-        return this.formBasico.control.valid;
+        return this.formBasico.control.valid && this.formGenero.control.valid;
     }
 
     public checkFormExtranjero() {
         this.formExtranjero.control.markAllAsTouched();
-        return this.formExtranjero.control.valid;
+        return this.formExtranjero.control.valid && this.formGenero.control.valid;
     }
 
     checkDisableValidar() {
@@ -146,10 +151,33 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
             this.plex.info('warning', 'Recuerde que al guardar un paciente sin el número de documento será imposible realizar validaciones contra fuentes auténticas.');
         }
     }
+    mapeoGenero() {
+        switch ((this.paciente.sexo as any)?.id) {
+            case 'masculino':
+                this.generos.subscribe(g => this.paciente.genero = g.find(g2 => g2.id === 'varón'));
+                break;
+            case 'femenino':
+                this.generos.subscribe(g => this.paciente.genero = g.find(g2 => g2.id === 'mujer'));
+                break;
+            default:
+                this.paciente.genero = null;
+        }
+        this.requiereGenero = this.tipoPaciente === 'extranjero'
+            ? ((this.pacienteExtranjero.sexo as any)?.id === 'otro')
+            : ((this.paciente.sexo as any)?.id === 'otro');
+    }
+    completaExtranjero() {
+        if (this.tipoPaciente === 'extranjero') {
+            this.pacienteExtranjero.genero = this.paciente.genero;
+            this.pacienteExtranjero.alias = this.paciente.alias;
 
-    completarGenero() {
-        this.paciente.genero = ((typeof this.paciente.sexo === 'string')) ? this.paciente.sexo : (Object(this.paciente.sexo).id);
-        this.paciente.genero = ((typeof this.pacienteExtranjero.sexo === 'string')) ? this.pacienteExtranjero.sexo : (Object(this.pacienteExtranjero.sexo).id);
+            this.paciente.apellido = this.pacienteExtranjero.apellido;
+            this.paciente.nombre = this.pacienteExtranjero.nombre;
+            this.paciente.sexo = this.pacienteExtranjero.sexo;
+            this.paciente.fechaNacimiento = this.pacienteExtranjero.fechaNacimiento;
+            this.paciente.tipoIdentificacion = this.pacienteExtranjero.tipoIdentificacion;
+            this.paciente.numeroIdentificacion = this.pacienteExtranjero.numeroIdentificacion;
+        }
     }
 
     registrarArgentino() {
@@ -158,7 +186,6 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
             this.formExtranjero.control.markAsPristine();
             this.formExtranjero.control.markAsUntouched();
         }
-
         this.changes.emit({ registroDNI: this.botonRegistroDNI });
     }
 
