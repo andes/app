@@ -1,0 +1,181 @@
+<plex-layout main="{{itemSelected ? '8' : '12'}}" [min]="4" [max]="5" [steps]="2">
+    <plex-layout-main>
+        <plex-title main titulo="Demanda insatisfecha">
+            <plex-button label="volver" type="danger" size="sm" position="left" routerLink='/inicio'></plex-button>
+        </plex-title>
+        <form #formFiltros="ngForm">
+            <plex-wrapper>
+                <plex-text [(ngModel)]="filtros.paciente" name="nombreCompleto" label="Paciente"
+                           (change)="actualizarFiltros($event,'paciente')">
+                </plex-text>
+                <plex-select [(ngModel)]="selectorPrestacion" name="prestacion"
+                             (change)="actualizarFiltros($event,'prestacion')" label="Prestación" tmPrestaciones
+                             preload="true" tipo="nominalizadas">
+                </plex-select>
+                <plex-datetime type="date" [(ngModel)]="filtros.fechaDesde" name="fechaDesde" label="Desde"
+                               class="fechas" [max]="filtros.fechaHasta"
+                               (change)="actualizarFiltros($event,'fechaDesde')" [required]="true">
+                </plex-datetime>
+                <plex-datetime type="date" [(ngModel)]="filtros.fechaHasta" name="fechaHasta" label="Hasta"
+                               class="fechas" [required]="false" (change)="actualizarFiltros($event,'fechaHasta')">
+                </plex-datetime>
+                <plex-select [(ngModel)]="selectorMotivo" ambito="ambulatorio" name="motivo" label="Motivo"
+                             [data]="motivos" (change)="actualizarFiltros($event,'motivo')">
+                </plex-select>
+            </plex-wrapper>
+        </form>
+
+        <div *ngIf="!listaEspera.length" class="mt-5">
+            <plex-label class="flex-column" icon="magnify" type="info" justify="center" size="xl" direction="column"
+                        titulo="No hay resultados para esta búsqueda"
+                        subtitulo="Edite algún filtro para realizar una búsqueda">
+            </plex-label>
+        </div>
+        <ng-container>
+            <plex-table *ngIf="listaEspera.length" [columns]="columns" #table="plTable" [offset]="102">
+                <plex-title titulo="Listado de pacientes" size="sm"></plex-title>
+                <tr *ngFor="let item of listaEspera" (click)="seleccionarDemanda(item)"
+                    [class.selected]="item.id === itemSelected?.id" [class.selectable]="true">
+                    <td>{{item.paciente.nombreCompleto}}</td>
+                    <td>{{item.tipoPrestacion.nombre}}</td>
+                    <td>{{item.fecha | fecha}}</td>
+                    <td>{{item.motivos.join(' - ')}}</td>
+                    <td class="align-center" justify="center">
+                        <plex-badge class="ml-1" size="sm" type="info">
+                            {{item.estado}}
+                        </plex-badge>
+                    </td>
+                </tr>
+            </plex-table>
+        </ng-container>
+    </plex-layout-main>
+    <plex-layout-sidebar *ngIf="itemSelected" type="invert">
+        <plex-tabs size="full" [activeIndex]="tabIndex" (change)="cambiarTab($event)">
+            <plex-tab label="DATOS">
+                <ng-container>
+                    <plex-title titulo="Detalle paciente" size="md">
+                        <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()"></plex-button>
+                    </plex-title>
+                    <paciente-detalle [paciente]="itemSelected.paciente" orientacion="horizontal"
+                                      [fields]="pacienteFields">
+                    </paciente-detalle>
+                </ng-container>
+                <ng-container>
+                    <plex-title titulo="Listado" size="md">
+                    </plex-title>
+                    <plex-list>
+                        <ng-container>
+                            <plex-item *ngFor="let demanda of itemSelected.demandas">
+                                <plex-label size="md" titulo="Prestacion"
+                                            subtitulo="{{ itemSelected.tipoPrestacion.nombre }}">
+                                </plex-label>
+                                <plex-label size="md" titulo="Efector" subtitulo="{{ demanda.organizacion.nombre }}">
+                                </plex-label>
+                                <plex-label size="md" titulo="Fecha de demanda"
+                                            subtitulo="{{ demanda.fecha | date: 'dd/MM/YYYY HH:mm' }}hs">
+                                </plex-label>
+                            </plex-item>
+                        </ng-container>
+                    </plex-list>
+                </ng-container>
+            </plex-tab>
+            <plex-tab label="LLAMADOS">
+                <plex-title titulo="Llamados" size="md">
+                    <plex-badge size="sm" type="warning" class="mr-1">
+                        <plex-icon name="phone" size="md"></plex-icon>
+                        {{ listaLlamados.length }}
+                    </plex-badge>
+                    <ng-container *ngIf="!verFormularioLlamado">
+                        <plex-button size="sm" type="success" icon="plus" (click)="agregarLlamado()"
+                                     ariaLabel="Agregar llamado" class="mr-1">
+                        </plex-button>
+                    </ng-container>
+                    <ng-container *ngIf="verFormularioLlamado">
+                        <plex-button size="sm" type="success" icon="check" (click)="guardarLlamado(itemSelected.id)"
+                                     ariaLabel="Guardar llamado" class="mr-1">
+                        </plex-button>
+                        <plex-button size="sm" type="danger" icon="close" (click)="agregarLlamado()" ariaLabel="Cerrar">
+                        </plex-button>
+                    </ng-container>
+                </plex-title>
+                <ng-container>
+                    <form #formLlamados="ngForm" *ngIf="verFormularioLlamado">
+                        <plex-wrapper justify>
+                            <plex-select grow="full" label="Seleccione una opción" [(ngModel)]="selectorEstadoLlamado"
+                                         name="estadoLlamado" [data]="estadosLlamado" [required]="true"
+                                         (change)="seleccionarEstadoLlamado()">
+                            </plex-select>
+                            <plex-text *ngIf="selectorEstadoLlamado?.id === 'otro'" grow="full" columns="6"
+                                       label="Ingrese comentario" [(ngModel)]="nuevoLlamado.comentario" name="nota"
+                                       multiline=true required="true">
+                            </plex-text>
+                        </plex-wrapper>
+                    </form>
+                </ng-container>
+                <ng-container>
+                    <plex-label *ngIf="!listaLlamados.length" class="flex-column" icon="informacion" type="warning"
+                                size="lg" direction="column" titulo="No se encuentran llamados registrados"
+                                subtitulo='Para agregar uno, presione el botón "+"'
+                                class="d-flex justify-content-center mt-4">
+                    </plex-label>
+                </ng-container>
+                <ng-container>
+                    <plex-list *ngIf="listaLlamados.length">
+                        <plex-item *ngFor="let llamado of listaLlamados">
+                            <plex-badge size="sm" type="info">
+                                {{ llamado?.createdAt | fecha }} {{ llamado?.createdAt | hora }}
+                            </plex-badge>
+                            <div class="d-flex align-items-center">
+                                <span *ngIf="llamado?.estado === 'Otro' && llamado?.comentario"
+                                      hint="{{llamado.comentario}}" hintType="info" hintIcon="message"
+                                      style="width:'40px'">Otro
+                                </span>
+                                <span *ngIf="llamado?.estado === 'Otro' && !llamado?.comentario" style="width:'40px'">
+                                    Otro
+                                </span>
+                                <span *ngIf="llamado?.estado !== 'Otro'">
+                                    {{llamado.estado}}
+                                </span>
+                            </div>
+                            <plex-label titulo="Registrado por"
+                                        subtitulo="{{llamado.createdBy?.nombreCompleto}}"></plex-label>
+                        </plex-item>
+                    </plex-list>
+                </ng-container>
+            </plex-tab>
+            <plex-tab label="HISTORIAL" (toggle)="getHistorial($event)">
+                <plex-title titulo="Historial de turnos" size="md">
+                    <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()"></plex-button>
+                </plex-title>
+                <ng-container>
+                    <plex-label *ngIf="!listaHistorial?.length" class="flex-column" icon="informacion" type="warning"
+                                size="lg" direction="column" titulo="No hay resultados"
+                                subtitulo="No se ha registrado ningún turno para el paciente"
+                                class="d-flex justify-content-center mt-4">
+                    </plex-label>
+                </ng-container>
+                <ng-container>
+                    <plex-list *ngIf="listaHistorial?.length">
+                        <plex-item *ngFor="let historial of listaHistorial">
+                            <plex-badge *ngIf="historial.estado === 'fuera-agenda'" type="warning">Fuera de
+                                agenda</plex-badge>
+                            <plex-badge *ngIf="historial.estado === 'noAsistio'" type="danger">No asistió</plex-badge>
+                            <plex-badge *ngIf="historial.estado === 'liberado' || historial.estado === 'suspendido'"
+                                        type="danger">{{historial.estado}}</plex-badge>
+                            <plex-badge *ngIf="historial.estado === 'asignado' || historial.estado === 'turnoDoble'"
+                                        type="success">{{historial.estado}}</plex-badge>
+                            <div style="display: contents;">
+                                <plex-label size="md" titulo="Efector"
+                                            subtitulo="{{historial.organizacion.nombre}}"></plex-label>
+                                <plex-label size="md" titulo="Fecha"
+                                            subtitulo="{{historial.horaInicio | fecha}} {{historial.horaInicio | hora}}hs"></plex-label>
+                                <plex-label size="md" titulo="Prestación"
+                                            subtitulo="{{historial.tipoPrestacion?.term}}"></plex-label>
+                            </div>
+                        </plex-item>
+                    </plex-list>
+                </ng-container>
+            </plex-tab>
+        </plex-tabs>
+    </plex-layout-sidebar>
+</plex-layout>

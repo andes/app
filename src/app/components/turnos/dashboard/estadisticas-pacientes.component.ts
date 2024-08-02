@@ -59,5 +59,4 @@ export class EstadisticasPacientesComponent implements OnInit {
     cerrarDemandaInsatisfecha() {
         this.demandaCerrada.emit();
     }
-
 }

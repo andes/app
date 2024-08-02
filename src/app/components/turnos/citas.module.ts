@@ -18,6 +18,8 @@ import { BotonesTurnosPipe } from './gestor-agendas/pipes/botonesTurnos.pipe';
 import { InfoAgendaComponent } from './gestor-agendas/info-agenda.component';
 import { SeleccionarFinanciadorComponent } from './dar-turnos/seleccionar-financiador.component';
 import { PrestacionesHabilitadasComponent } from './gestor-agendas/prestaciones-habilitadas/prestaciones-habilitadas.component';
+import { DemandaInsatisfechaComponent } from '../demandaInsatisfecha/demanda-insatisfecha.component';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -40,7 +42,8 @@ import { PrestacionesHabilitadasComponent } from './gestor-agendas/prestaciones-
         BotonesTurnosPipe,
         InfoAgendaComponent,
         SeleccionarFinanciadorComponent,
-        PrestacionesHabilitadasComponent
+        PrestacionesHabilitadasComponent,
+        DemandaInsatisfechaComponent
     ],
     exports: [
         DarTurnosComponent,
