@@ -30,6 +30,19 @@ export interface IListaEspera {
         fecha: Date;
         motivo: String;
         observacion: String;
+        turno: {
+            id: String;
+            idAgenda: String;
+            organizacion: {
+                id: String;
+                nombre: String;
+            };
+            horaInicio: Date;
+            tipo: String;
+            emitidoPor: String;
+            fechaHoraDacion: Date;
+            profesional: String;
+        };
     };
     llamados?: ILlamado[];
 }

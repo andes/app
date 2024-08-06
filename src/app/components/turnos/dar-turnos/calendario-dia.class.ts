@@ -71,7 +71,7 @@ export class CalendarioDia {
 
                     } else {
                         // En caso contrario, se calculan los contadores por separado
-                        const autocitado = solicitudPrestacion && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true;
+                        const autocitado = solicitudPrestacion?.solicitud?.registros?.[0]?.valor?.solicitudPrestacion?.autocitado === true;
 
                         unaAgenda.bloques.forEach((bloque, indexBloque) => {
                             // Por cada bloque asignamos contadores dinamicos con la cantidad inicial de c/tipo de turno (Para sidebar)
