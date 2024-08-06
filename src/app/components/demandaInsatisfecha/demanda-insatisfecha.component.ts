@@ -3,10 +3,11 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { map } from 'rxjs/operators';
 import { ILlamado } from 'src/app/interfaces/turnos/IListaEspera';
 import { ListaEsperaService } from 'src/app/services/turnos/listaEspera.service';
 import { TurnoService } from 'src/app/services/turnos/turno.service';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'demanda-insatisfecha',
@@ -16,6 +17,7 @@ import { TurnoService } from 'src/app/services/turnos/turno.service';
 export class DemandaInsatisfechaComponent implements OnInit {
     public listaOrganizaciones = [];
     public listaEspera = [];
+    public listado$: Observable<any[]>;
     public listaLlamados = [];
     public listaHistorial = [];
     public itemSelected = null;
@@ -25,6 +27,19 @@ export class DemandaInsatisfechaComponent implements OnInit {
     public selectorMotivo;
     public selectorEstadoLlamado;
     public nuevoLlamado: ILlamado = {};
+    public selectedPaciente;
+    public showTurnos;
+    public paciente;
+    public observacion;
+    public showFinalizarDemanda;
+    public selectorFinalizar;
+    public textoOtros;
+    public prestacion = {
+        solicitud: {
+            tipoPrestacion: null
+        },
+        paciente: null
+    };
     public estadosLlamado = [
         { id: 'turnoAsignado', nombre: 'Turno asignado' },
         { id: 'noContesta', nombre: 'No contesta' },
@@ -38,6 +53,11 @@ export class DemandaInsatisfechaComponent implements OnInit {
         { id: 1, nombre: 'No existe la oferta en el efector' },
         { id: 2, nombre: 'No hay turnos disponibles' },
         { id: 3, nombre: 'Oferta rechazada por el paciente' }
+    ];
+
+    public opciones = [
+        { id: 1, nombre: 'Ya tiene turno' },
+        { id: 2, nombre: 'Otro' },
     ];
 
     public columns = [
@@ -62,11 +82,19 @@ export class DemandaInsatisfechaComponent implements OnInit {
         }
     ];
 
+    public itemsListado = [
+        {
+            label: 'DAR TURNO', handler: () => { this.darTurno(); }
+        },
+        {
+            label: 'FINALIZAR', handler: () => { this.finalizarDemanda(); }
+        },
+    ];
+
     public tabIndex = 0;
     public pacienteFields = ['sexo', 'fechaNacimiento', 'cuil', 'financiador', 'numeroAfiliado', 'direccion'];
 
     @ViewChild('formLlamados', { read: NgForm }) formLlamados: NgForm;
-    @ViewChild('formFiltros', { static: false }) formFiltros: NgForm;
 
     constructor(
         private listaEsperaService: ListaEsperaService,
@@ -96,6 +124,7 @@ export class DemandaInsatisfechaComponent implements OnInit {
             });
         });
     }
+
 
     public obtenerObjetoMasAntiguo() {
         if (this.listaEspera.length === 0) {
@@ -142,9 +171,6 @@ export class DemandaInsatisfechaComponent implements OnInit {
     }
 
     public actualizarFiltros({ value }, tipo) {
-        if (this.formFiltros.invalid) {
-            return null;
-        }
 
         if (tipo === 'paciente') {
             this.filtros = { ...this.filtros, paciente: value };
@@ -208,5 +234,46 @@ export class DemandaInsatisfechaComponent implements OnInit {
         if (this.selectorEstadoLlamado?.id !== 'otro') {
             this.nuevoLlamado.comentario = null;
         }
+    }
+
+    public afterDarTurno(datosTurno) {
+        const data = {
+            estado: 'resuelto',
+            fecha: moment().toDate(),
+            motivo: (datosTurno) ? 'Turno asignado' : 'Finalizada',
+            observacion: this.textoOtros || '',
+        };
+        if (datosTurno) {
+            data['turno'] = {
+                id: datosTurno.idTurno,
+                idAgenda: datosTurno.idAgenda,
+            };
+        };
+        this.listaEsperaService.patch(this.itemSelected.id, 'estado', data).subscribe(() => {
+            this.plex.toast('success', 'Demanda cerrada exitosamente');
+            this.actualizarFiltros({ value: '' }, '');
+        });
+        this.volver();
+    }
+
+    private darTurno() {
+        this.showTurnos = true;
+        this.paciente = this.itemSelected.paciente;
+        this.prestacion.solicitud.tipoPrestacion = this.itemSelected.tipoPrestacion;
+        this.prestacion.paciente = this.paciente;
+    }
+
+    finalizarDemanda() {
+        this.showFinalizarDemanda = true;
+    }
+
+    volver() {
+        this.showTurnos = false;
+        this.showFinalizarDemanda = false;
+        this.selectorFinalizar = null;
+    }
+
+    onInputChange() {
+        this.textoOtros = null;
     }
 }

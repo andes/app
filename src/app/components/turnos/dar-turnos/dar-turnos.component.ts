@@ -64,6 +64,11 @@ export class DarTurnosComponent implements OnInit {
 
     private tipoTurno = 'programado';
 
+    @Input('demandaInsatisfecha')
+    set demandaInsatisfecha(value: any) {
+        this.desdeDemanda = value;
+    }
+
     @Input('solicitudPrestacion')
     set solicitudPrestacion(value: any) {
         this._solicitudPrestacion = value;
@@ -76,7 +81,9 @@ export class DarTurnosComponent implements OnInit {
                 this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.motivo ? this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.motivo : this.motivoConsulta;
             this.turnoTipoPrestacion = this._solicitudPrestacion.solicitud.tipoPrestacion;
             this.actualizarDatosPaciente(this._solicitudPrestacion.paciente.id);
-            this.tipoTurno = this._solicitudPrestacion.inicio === 'servicio-intermedio' ? 'programado' : 'gestion';
+            if (this._solicitudPrestacion.inicio === 'top') {
+                this.tipoTurno = 'gestion';
+            }
 
             if (this.tipoTurno === 'programado') {
                 const reglaId = this._solicitudPrestacion.solicitud.reglaId;
@@ -103,6 +110,7 @@ export class DarTurnosComponent implements OnInit {
         this._solicitudVacunacion = value;
         this.organizacion = value.organizacion;
     }
+
     get solicitudVacunacion() {
         return this._solicitudVacunacion;
     }
@@ -110,11 +118,13 @@ export class DarTurnosComponent implements OnInit {
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
     @Output() afterDarTurno: EventEmitter<any> = new EventEmitter<any>();
+    @Output() volverAdemanda: EventEmitter<any> = new EventEmitter<any>();
     @Output() volverAlGestor = new EventEmitter<any>();
     // usamos este output para volver al componente de validacion de rup
     @Output() volverValidacion = new EventEmitter<any>();
 
     private _solicitudVacunacion;
+    private desdeDemanda;
     public organizacion = this.auth.organizacion;
     public _pacienteSeleccionado: any;
     public _solicitudPrestacion: any; // TODO: cambiar por IPrestacion cuando esté
@@ -178,7 +188,7 @@ export class DarTurnosComponent implements OnInit {
     // Muestra/Oculta los días de fin de semana (sábado y domingo)
     mostrarFinesDeSemana = true;
 
-    private bloques: IBloque[];
+    public bloques: IBloque[];
     private indiceTurno: number;
     private indiceBloque: number;
     private cacheBusquedas: any[] = localStorage.getItem('busquedas') ? JSON.parse(localStorage.getItem('busquedas')) : [];
@@ -472,7 +482,7 @@ export class DarTurnosComponent implements OnInit {
                         const autocitadoConTurnosDisponibles = this.autocitado && agenda.turnosRestantesProfesional > 0;
                         const llaveConTurnosDisponibles = !this.autocitado && agenda.turnosRestantesGestion > 0;
                         // condiciones
-                        const accesoDirectoConTurnosDisponibles = !esGestion && ((delDiaConTurnosDisponibles && this.hayTurnosEnHorario(agenda)) || programadaConTurnosDisponibles);
+                        const accesoDirectoConTurnosDisponibles = (!esGestion || this.desdeDemanda) && ((delDiaConTurnosDisponibles && this.hayTurnosEnHorario(agenda)) || programadaConTurnosDisponibles);
                         const gestionConTurnosDisponibles = esGestion && (autocitadoConTurnosDisponibles || llaveConTurnosDisponibles);
 
                         const cond = (publicada && accesoDirectoConTurnosDisponibles) ||
@@ -855,12 +865,13 @@ export class DarTurnosComponent implements OnInit {
                 op: 'updateContactos',
                 contacto: this.paciente.contacto
             };
-            this.servicePaciente.patch(this.paciente.id, cambios).subscribe(resultado => {
-                if (resultado) {
-                    this.plex.toast('info', 'Datos del paciente actualizados');
-                }
-            }, error => {
-                this.plex.toast('danger', 'Error actualizando datos de contacto del paciente.');
+            this.servicePaciente.patch(this.paciente.id, cambios).subscribe({
+                next: (resultado) => {
+                    if (resultado) {
+                        this.plex.toast('info', 'Datos del paciente actualizados');
+                    }
+                },
+                error: () => this.plex.toast('danger', 'Error actualizando datos de contacto del paciente.')
             });
         }
     }
@@ -886,7 +897,7 @@ export class DarTurnosComponent implements OnInit {
 
     hayTurnoSuspendido() {
         if (this._solicitudPrestacion) {
-            const turno = this._solicitudPrestacion.solicitud.historial.reverse().find((turno) => !!turno.idTurnoSuspendido);
+            const turno = this._solicitudPrestacion.solicitud.historial?.reverse().find((turno) => !!turno.idTurnoSuspendido);
 
             return turno?.idTurnoSuspendido;
         }
@@ -956,14 +967,13 @@ export class DarTurnosComponent implements OnInit {
                         } else {
                             this.paciente.carpetaEfectores.push(this.carpetaEfector);
                         }
-                        this.servicePaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.paciente.carpetaEfectores }).subscribe(
-                            resultadoCarpeta => {
-                                this.guardarTurno(agd);
-                            }, error => {
+                        this.servicePaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.paciente.carpetaEfectores }).subscribe({
+                            next: () => this.guardarTurno(agd),
+                            error: () => {
                                 this.plex.toast('danger', 'El número de carpeta ya existe');
                                 this.hideDarTurno = false;
                             }
-                        );
+                        });
 
                     } else {
                         const idTurnoSuspendido = this.hayTurnoSuspendido();
@@ -1011,12 +1021,12 @@ export class DarTurnosComponent implements OnInit {
                 emitidoPor: (this.turnoTelefonico) ? 'turno telefonico' : null,
                 link: this.link
             };
-            this.serviceTurno.saveDinamica(datosTurno).subscribe(
-                resultado => {
+            this.serviceTurno.saveDinamica(datosTurno).subscribe({
+                next: (resultado) => {
                     this.turno.id = resultado.id;
                     this.afterSaveTurno(pacienteSave);
                 },
-                () => {
+                error: () => {
                     this.agenda = null;
                     this.actualizar();
                     this.plex.toast('danger', 'Turno no asignado');
@@ -1030,15 +1040,16 @@ export class DarTurnosComponent implements OnInit {
                         this.resetBuscarPaciente();
                     }
                     this.turnoTipoPrestacion = undefined;
-                });
+                }
+            });
         } else {
             this.agenda = agd;
             this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
             this.agenda.bloques[this.indiceBloque].cantidadTurnos = (this.agenda.bloques[this.indiceBloque].cantidadTurnos) - 1;
-
             // Datos del Turno
             const datosTurno = {
                 idAgenda: this.agenda.id,
+                agenda: this.agenda,
                 idTurno: this.turno.id,
                 idBloque: this.bloque.id,
                 paciente: pacienteSave,
@@ -1050,24 +1061,28 @@ export class DarTurnosComponent implements OnInit {
                 emitidoPor: (this.turnoTelefonico) ? 'turno telefonico' : null,
                 link: this.link
             };
-            this.serviceTurno.save(datosTurno, { showError: false }).subscribe(resultado => {
-                this.showTab = 1;
-                this.afterSaveTurno(pacienteSave);
-            }, (err) => {
-                this.hideDarTurno = false;
-                // Si el turno no pudo ser otorgado, se verifica si el bloque permite citar por segmento
-                // En este caso se trata de dar nuevamente un turno con el siguiente turno disponible con el mismo horario
-                if (err && (err === 'noDisponible')) {
-                    if (this.agenda.bloques[this.indiceBloque].citarPorBloque && (this.agenda.bloques[this.indiceBloque].turnos.length > (this.indiceTurno + 1))) {
-                        const nuevoIndice = this.indiceTurno + 1;
-                        if (this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].horaInicio.getTime() === this.agenda.bloques[this.indiceBloque].turnos[nuevoIndice].horaInicio.getTime()) {
-                            this.indiceTurno = nuevoIndice;
-                            this.turno = this.agenda.bloques[this.indiceBloque].turnos[nuevoIndice];
-                            this.afterDarTurno.emit(true);
-                            this.darTurno();
-                        } else {
-                            this.plex.confirm('No se emitió el turno, por favor verifique los turnos disponibles', 'Turno no asignado');
-                            this.actualizar();
+
+            this.serviceTurno.save(datosTurno, { showError: false }).subscribe({
+                next: () => {
+                    this.showTab = 1;
+                    this.afterSaveTurno(datosTurno);
+                },
+                error: (err) => {
+                    this.hideDarTurno = false;
+                    // Si el turno no pudo ser otorgado, se verifica si el bloque permite citar por segmento
+                    // En este caso se trata de dar nuevamente un turno con el siguiente turno disponible con el mismo horario
+                    if (err && (err === 'noDisponible')) {
+                        if (this.agenda.bloques[this.indiceBloque].citarPorBloque && (this.agenda.bloques[this.indiceBloque].turnos.length > (this.indiceTurno + 1))) {
+                            const nuevoIndice = this.indiceTurno + 1;
+                            if (this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].horaInicio.getTime() === this.agenda.bloques[this.indiceBloque].turnos[nuevoIndice].horaInicio.getTime()) {
+                                this.indiceTurno = nuevoIndice;
+                                this.turno = this.agenda.bloques[this.indiceBloque].turnos[nuevoIndice];
+                                this.afterDarTurno.emit(true);
+                                this.darTurno();
+                            } else {
+                                this.plex.confirm('No se emitió el turno, por favor verifique los turnos disponibles', 'Turno no asignado');
+                                this.actualizar();
+                            }
                         }
                     }
                 }
@@ -1075,9 +1090,9 @@ export class DarTurnosComponent implements OnInit {
         }
     }
 
-    private afterSaveTurno(pacienteSave) {
+    private afterSaveTurno(datosTurno) {
         if (!this.agenda.dinamica && this.agenda.enviarSms) {
-            this.enviarSMS(pacienteSave);
+            this.enviarSMS(datosTurno.pacienteSave);
         }
         this.estadoT = 'noSeleccionada';
         const agendaReturn = this.agenda; // agendaReturn será devuelta al gestor.
@@ -1087,13 +1102,12 @@ export class DarTurnosComponent implements OnInit {
         }
         const agendaid = this.agenda.id;
         this.agenda = null;
-        this.actualizar();
         this.plex.toast('info', 'El turno se asignó correctamente');
         this.hideDarTurno = false;
         this.plex.clearNavbar();
         this.actualizarPaciente();
 
-        if (this._solicitudPrestacion) {
+        if (this._solicitudPrestacion?.id) {
             const params = {
                 op: 'asignarTurno',
                 idTurno: this.turno.id
@@ -1125,12 +1139,16 @@ export class DarTurnosComponent implements OnInit {
             // Esto parece estar de más, pero si no está dentro del else no se refrescan los cambios del turno doble.
             this.volverAlGestor.emit(agendaReturn); // devuelve la agenda al gestor, para que éste la refresque
         }
-        this.afterDarTurno.emit(pacienteSave);
+        this.afterDarTurno.emit(datosTurno.pacienteSave);
+        if (this.desdeDemanda) {
+            this.volverAdemanda.emit(datosTurno);
+        }
         if (this.paciente && this._pacienteSeleccionado) {
             return false;
         } else {
             this.resetBuscarPaciente();
         }
+        this.actualizar();
         this.turnoTipoPrestacion = undefined; // blanquea el select de tipoPrestacion
     }
 
@@ -1169,11 +1187,9 @@ export class DarTurnosComponent implements OnInit {
                 telefono: paciente.telefono,
                 mensaje: mensaje.toLocaleUpperCase(),
             };
-            this.smsService.enviarSms(smsParams).subscribe(
-                sms => {
+            this.smsService.enviarSms(smsParams).subscribe({
+                next: (sms) => {
                     this.resultado = sms;
-
-                    // "if 0 errores"
                     if (this.resultado === '0') {
                         if (paciente.alias) {
                             this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.alias + ' ' + paciente.apellido);
@@ -1184,13 +1200,12 @@ export class DarTurnosComponent implements OnInit {
                         this.plex.toast('danger', 'ERROR: SMS no enviado');
                     }
                 },
-                err => {
+                error: (err) => {
                     if (err) {
                         this.plex.toast('danger', 'Error de servicio');
-
                     }
                 }
-            );
+            });
         } else {
             this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
         }
@@ -1198,8 +1213,7 @@ export class DarTurnosComponent implements OnInit {
 
     tieneTurnos(bloque: IBloque): boolean {
         const turnos = bloque.turnos;
-        if (this.tipoTurno === 'gestion' || this.agenda.condicionLlave) {
-
+        if (!this.desdeDemanda && (this.tipoTurno === 'gestion' || this.agenda.condicionLlave)) {
             if (this.autocitado && bloque.restantesProfesional > 0) {
                 return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
             }
@@ -1307,7 +1321,7 @@ export class DarTurnosComponent implements OnInit {
 
     public volver() {
         // se ingresó desde monitoreo de inscriptos
-        if (this.solicitudVacunacion) {
+        if (this.solicitudVacunacion || this.desdeDemanda) {
             this.afterDarTurno.emit(null);
             this.plex.clearNavbar();
             return;
