@@ -1,3 +1,16 @@
+# [5.146.0](https://github.com/andes/app/compare/v5.145.0...v5.146.0) (2024-08-07)
+
+
+### Bug Fixes
+
+* **HUDS:** Soluciona acceso a huds para No profesionales ([#3049](https://github.com/andes/app/issues/3049)) ([3539695](https://github.com/andes/app/commit/3539695f67185c83a2dffb45dbb32b0df7c5f9dc))
+* **IN-608:** Censo diario- error datos de cama y paciente de internacion duplicada ([#3034](https://github.com/andes/app/issues/3034)) ([1c0cf2c](https://github.com/andes/app/commit/1c0cf2cc32143368472126dfe6bf2de8e356a354))
+
+
+### Features
+
+* **CIT:** Implementa mockups de demanda insatisfecha ([#3006](https://github.com/andes/app/issues/3006)) ([0564482](https://github.com/andes/app/commit/0564482e90d9b9e4215b343eb568ea5ecee12c34))
+
 # [5.145.0](https://github.com/andes/app/compare/v5.144.0...v5.145.0) (2024-07-31)
 
 
