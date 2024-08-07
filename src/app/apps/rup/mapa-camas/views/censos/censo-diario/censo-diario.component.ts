@@ -78,7 +78,10 @@ export class CensosDiariosComponent implements OnInit {
                     const censoPaciente = censoDiario.pacientes[p];
                     censoPaciente.actividad.forEach((actividad: any, index) => {
                         const movimiento = {
-                            datos: censoPaciente.datos,
+                            datos: {
+                                cama: actividad.cama,
+                                paciente: actividad.paciente
+                            },
                             ingreso: actividad.ingreso,
                             fechaIngreso: actividad.fechaIngreso,
                             paseDe: actividad.paseDe,
