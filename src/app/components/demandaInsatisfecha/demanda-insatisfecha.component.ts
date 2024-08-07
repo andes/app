@@ -14,12 +14,14 @@ import { TurnoService } from 'src/app/services/turnos/turno.service';
 })
 
 export class DemandaInsatisfechaComponent implements OnInit {
+    public listaOrganizaciones = [];
     public listaEspera = [];
     public listaLlamados = [];
     public listaHistorial = [];
     public itemSelected = null;
     public filtros: any = {};
     public selectorPrestacion;
+    public selectorOrganizacion;
     public selectorMotivo;
     public selectorEstadoLlamado;
     public nuevoLlamado: ILlamado = {};
@@ -70,13 +72,20 @@ export class DemandaInsatisfechaComponent implements OnInit {
         private listaEsperaService: ListaEsperaService,
         private plex: Plex,
         private auth: Auth,
-        private serviceTurno: TurnoService) { }
+        private serviceTurno: TurnoService,
+    ) { }
 
     ngOnInit(): void {
-        const fechaDesdeInicial = moment().subtract(7, 'days');
-        this.filtros.fechaDesde = fechaDesdeInicial;
+        const fechaDesdeInicial = moment().subtract(7, 'days').startOf('day');
 
-        this.getDemandas({ fechaDesde: fechaDesdeInicial });
+        this.filtros.fechaDesde = fechaDesdeInicial;
+        this.filtros.organizacion = this.auth.organizacion.id;
+
+        this.getDemandas({ fechaDesde: fechaDesdeInicial, organizacion: this.auth.organizacion.id });
+
+        this.auth.organizaciones(true).subscribe((organizaciones) => {
+            this.listaOrganizaciones = organizaciones;
+        });
     }
 
     private getDemandas(filtros) {
@@ -147,11 +156,17 @@ export class DemandaInsatisfechaComponent implements OnInit {
         }
 
         if (tipo === 'prestacion') {
-            this.filtros = { ...this.filtros, prestacion: value?.term };
+            const values = value?.map(prestacion => prestacion.term);
+            this.filtros = { ...this.filtros, prestacion: values?.join(',') };
         }
 
         if (tipo === 'motivo') {
             this.filtros = { ...this.filtros, motivo: value?.nombre };
+        }
+
+        if (tipo === 'organizacion') {
+            const values = value?.map(organizacion => organizacion.id);
+            this.filtros = { ...this.filtros, organizacion: values?.join(',') };
         }
 
         this.getDemandas(this.filtros);
