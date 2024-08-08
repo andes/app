@@ -17,10 +17,14 @@
                                (change)="actualizarFiltros($event,'fechaDesde')" [required]="true">
                 </plex-datetime>
                 <plex-datetime type="date" [(ngModel)]="filtros.fechaHasta" name="fechaHasta" label="Hasta"
-                               class="fechas" [required]="false" (change)="actualizarFiltros($event,'fechaHasta')">
+                               [min]="filtros.fechaDesde" class="fechas" [required]="false"
+                               (change)="actualizarFiltros($event,'fechaHasta')">
                 </plex-datetime>
-                <plex-select [(ngModel)]="selectorMotivo" ambito="ambulatorio" name="motivo" label="Motivo"
-                             [data]="motivos" (change)="actualizarFiltros($event,'motivo')">
+                <plex-select [(ngModel)]="selectorMotivo" name="motivo" label="Motivo" [data]="motivos"
+                             (change)="actualizarFiltros($event,'motivo')">
+                </plex-select>
+                <plex-select [(ngModel)]="filtros.organizacion" name="organizacion" label="efector" [required]="true"
+                             [data]="listaOrganizaciones" (change)="actualizarFiltros($event,'organizacion')">
                 </plex-select>
             </plex-wrapper>
         </form>
