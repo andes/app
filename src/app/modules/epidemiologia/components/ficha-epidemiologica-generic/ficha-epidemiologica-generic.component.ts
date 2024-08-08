@@ -79,6 +79,8 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
     public operaciones = [];
     public zonaSanitaria = null;
     public contactoCorrecto = false;
+    public patronDocumento = /^[1-9]{1}[0-9]{4,7}$/;
+    public patronContactoNumerico = /^[0-9]{3,4}[0-9]{6}$/;
     constructor(
         private formsService: FormsService,
         private plex: Plex,
@@ -275,16 +277,23 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
             && this.contacto.domicilio && this.contacto.fechaUltimoContacto && this.contacto.tipoContacto);
 
         if (this.contactoCorrecto) {
-            this.contactosEstrechos.push(this.contacto);
-            this.contacto = {
-                apellidoNombre: '',
-                documento: '',
-                telefono: '',
-                domicilio: '',
-                fechaUltimoContacto: '',
-                tipoContacto: ''
-            };
-            this.plex.toast('success', 'El contacto estrecho se ha agregado satisfactoriamente!');
+            const documentoCorrecto = this.patronDocumento.test(this.contacto.documento);
+            const telefonoCorrecto = this.patronContactoNumerico.test(this.contacto.telefono);
+            if (documentoCorrecto && telefonoCorrecto) {
+                this.contactosEstrechos.push(this.contacto);
+                this.contacto = {
+                    apellidoNombre: '',
+                    documento: '',
+                    telefono: '',
+                    domicilio: '',
+                    fechaUltimoContacto: '',
+                    tipoContacto: ''
+                };
+                this.plex.toast('success', 'El contacto estrecho se ha agregado satisfactoriamente!');
+            } else {
+                this.plex.info('danger', 'Revise los datos ingresados');
+            }
+
         } else {
             this.plex.info('danger', 'Debe completar los datos requeridos');
         }

@@ -90,12 +90,12 @@
                                     </td>
                                     <td *plTableCol="'documento'">
                                         <plex-text name="documento" [(ngModel)]="contacto.documento"
-                                                   [readonly]="!editFicha" required="true">
+                                                   [readonly]="!editFicha" required="true" [pattern]="patronDocumento">
                                         </plex-text>
                                     </td>
                                     <td *plTableCol="'telefono'">
                                         <plex-phone name="telefono" [(ngModel)]="contacto.telefono"
-                                                    [readonly]="!editFicha" required="true">
+                                                    [readonly]="!editFicha" required="true" [pattern]="patronContactoNumerico">
                                         </plex-phone>
                                     </td>
                                     <td *plTableCol="'domicilio'">
