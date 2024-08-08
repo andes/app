@@ -1,0 +1,54 @@
+$blue: #00a8e0;
+$lightblue: #d6f7ff;
+
+.info-basica {
+    padding: 15px;
+    border: solid 1px $blue;
+    border-radius: 8px;
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    gap: 5%;
+    font-size: smaller;
+
+}
+
+.info-basica .datos {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.titulo-grupo {
+    background-color: #fff;
+    color: $blue;
+}
+
+table {
+    tr {
+        border: 1px solid white;
+    }
+
+    td {
+        font-size: small;
+        vertical-align: middle;
+    }
+
+    thead {
+        th {
+            border-top: none;
+        }
+    }
+
+    tbody {
+        tr:hover {
+            background-color: $lightblue;
+            border: 1px solid $blue;
+
+            td {
+                border-top: 1px solid $blue;
+                border-bottom: 1px solid $blue;
+            }
+        }
+    }
+}
