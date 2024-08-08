@@ -26,12 +26,6 @@
     </plex-title>
     <div class="mt-4">
         <plex-grid cols="2">
-            <div class="registros">
-                <plex-icon name="historial" class="icon-info" size="xl"></plex-icon>
-                <plex-badge type="xs" type="info">
-                    Registros
-                </plex-badge>
-            </div>
             <div>
                 <plex-grid cols="3" class="mt-0">
                     <div>
@@ -85,7 +79,10 @@
         </plex-grid>
     </div>
     <div class="mt-4">
-        <b>Evolución</b>
+        <h5><b>Detalle de la evolución</b></h5>
+        <div *ngIf="!registro.evoluciones[indice].evolucion">
+            - No hay ningun detalle de la evolución -
+        </div>
         <article [innerHTML]="registro.evoluciones[indice].evolucion">
         </article>
     </div>
