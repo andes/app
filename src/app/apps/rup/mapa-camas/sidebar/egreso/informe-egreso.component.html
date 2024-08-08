@@ -1,9 +1,21 @@
+<plex-title justify titulo="EGRESO" size="md">
+    <ng-content></ng-content>
+</plex-title>
+<ng-container *ngIf="mapaCamasService.resumenInternacion$ | async as resumen">
+    <fieldset>
+        <div class="row">
+            <div class="col">
+                <b>Fecha de egreso</b>
+                <p>{{resumen.fechaEgreso | date: 'dd/MM/yyyy HH:mm'}}</p>
+            </div>
+            <div class="col">
+                <b>Tipo de egreso</b>
+                <p>{{resumen.tipo_egreso}}</p>
+            </div>
+        </div>
+    </fieldset>
+</ng-container>
 <ng-container *ngIf="prestacion$ | async as prestacion">
-    <plex-title justify titulo="EGRESO" size="md">
-        <ng-container *ngIf="prestacion.estadoActual.tipo !== 'validada'">
-            <ng-content></ng-content>
-        </ng-container>
-    </plex-title>
     <ng-container *ngIf="registro$ | async as registro">
         <ng-container *ngIf="informeEgreso$ | async as informeEgreso">
             <fieldset>
