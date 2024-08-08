@@ -48,20 +48,20 @@
                                      [(ngModel)]="field.type" [data]="tiposList">
                         </plex-select>
 
-                        <plex-text *ngIf="field.type && field.type.id === 'snomed'" name="Snomed-{{ i }}"
+                        <plex-text *ngIf="field.type?.id === 'snomed'" name="Snomed-{{ i }}"
                                    label="Snomed Code / Query" [(ngModel)]="field.snomedCodeOrQuery">
                         </plex-text>
 
-                        <plex-int *ngIf="field.type && field.type.id === 'int'" label="Mínimo"
+                        <plex-int *ngIf="field.type?.id === 'int'" label="Mínimo"
                                   name="minimo-{{ field.key }}" [(ngModel)]="field.min">
                         </plex-int>
-                        <plex-int *ngIf="field.type && field.type.id === 'int'" label="Máximo"
+                        <plex-int *ngIf="field.type?.id === 'int'" label="Máximo"
                                   name="maximo-{{ field.key }}" [(ngModel)]="field.max">
                         </plex-int>
                         <plex-select [multiple]="true" [(ngModel)]="field.sections" name="seccion-{{ i }}"
                                      [data]="secciones" idField="id" labelField="name" label="Sección">
                         </plex-select>
-                        <plex-select *ngIf="field.type && field.type.id === 'select'" name="select-recurso-{{ i }}"
+                        <plex-select *ngIf="field.type?.id === 'select'" name="select-recurso-{{ i }}"
                                      [(ngModel)]="field.resources" [data]="recursos" labelField="name"
                                      label="Tipo de recurso" idField="id" required>
                         </plex-select>
