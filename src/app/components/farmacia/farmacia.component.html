@@ -1,0 +1,256 @@
+<plex-layout [main]="showSidebar? 8 : 12">
+    <plex-layout-main *ngIf="!showcreate else elseFarmacia">
+        <plex-title main titulo="FARMACIAS">
+            <plex-button label="volver" type="danger" size="sm" position="left" routerLink='/inicio'></plex-button>
+            <plex-button class="ml-1" size="sm" *ngIf="puedeCrearFarmacia()" label="Nueva Farmacia" type="success"
+                         position="right" (click)="crearEditarFarmacia('create')"></plex-button>
+        </plex-title>
+
+        <plex-wrapper>
+            <plex-text [(ngModel)]="filtros.denominacion" name="denominacion" label="Denominación"
+                       placeholder="Ingrese denominación" (change)="filtrar()">
+            </plex-text>
+            <plex-text [(ngModel)]="filtros.razonSocial" name="razonSocial" label="Razon Social"
+                       placeholder="Ingrese razon social" (change)="filtrar()">
+            </plex-text>
+            <plex-text [(ngModel)]="filtros.cuit" name="cuit" label="CUIT" placeholder="Ingrese CUIT"
+                       (change)="filtrar()">
+            </plex-text>
+            <plex-text [(ngModel)]="filtros.DTResponsable" name="DTResponsable" label="D.T Responsable"
+                       placeholder="Ingrese Director Técnico Responsable" (change)="filtrar()">
+            </plex-text>
+        </plex-wrapper>
+        <div *ngIf="!(listadoFarmacia$ | async)?.length" class="mt-5">
+            <plex-label class="flex-column" icon="magnify" type="info" justify="center" size="xl" direction="column"
+                        titulo="No hay resultados para esta búsqueda"
+                        subtitulo="Edite algún filtro para realizar una nueva">
+            </plex-label>
+        </div>
+        <ng-container *ngIf="(listadoFarmacia$ | async)?.length">
+            <plex-table [columns]="columns" #table="plTable" (scroll)="onScroll()" [offset]="102">
+                <plex-title titulo="Listado de farmacias" size="sm">
+                    <plex-button size="sm" type="info" label="Descargar"> </plex-button>
+                    <plex-table-columns>
+                    </plex-table-columns>
+                </plex-title>
+
+                <tr *ngFor="let farmacia of (listadoFarmacia$ | plSort:table | async)"
+                    (click)="seleccionarFarmacia(farmacia)" [class.selected]="farmaciaSelected === farmacia"
+                    [class.selectable]="true">
+                    <td *plTableCol="'denominacion'">{{farmacia.denominacion}}</td>
+                    <td *plTableCol="'razonSocial'">{{farmacia.razonSocial}}</td>
+                    <td *plTableCol="'cuit'">{{farmacia.cuit}}</td>
+                    <td *plTableCol="'DTResponsable'">{{farmacia.DTResponsable}}</td>
+                    <td *plTableCol="'matriculaDTR'">{{farmacia.matriculaDTResponsable}}</td>
+                    <td *plTableCol="'disposicionAltaDT'">{{farmacia.disposicionAltaDT}}</td>
+                </tr>
+            </plex-table>
+        </ng-container>
+    </plex-layout-main>
+    <ng-template #elseFarmacia>
+        <farmacia-create-update [farmaciaSeleccionada]="farmaciaSelected" (data)='volver()'></farmacia-create-update>
+    </ng-template>
+
+    <plex-layout-sidebar type="invert">
+        <plex-title titulo="DETALLE DE FARMACIA">
+            <plex-button *ngIf="puedeCrearFarmacia()" size="sm" type="warning" [icon]="'pencil'"
+                         (click)="crearEditarFarmacia('update')" tooltip="Editar farmacia">
+            </plex-button>
+            <plex-button class="ml-1" size="sm" type="danger" [icon]="'close'" (click)="cerrar()" tooltip="Cerrar">
+            </plex-button>
+        </plex-title>
+        <ng-container *ngIf="farmaciaSelected">
+            <plex-detail [direction]="'column'" [justify]="'start'">
+                <plex-icon size="md" name="farmacia" type="info"></plex-icon>
+                <div title case="capitalize" title>{{farmaciaSelected.denominacion }}</div>
+                <div subtitle>{{ farmaciaSelected?.cuit}} </div>
+                <plex-label *ngIf="farmaciaSelected.razonSocial" titulo="Razón Social"
+                            subtitulo="{{ farmaciaSelected.razonSocial}}">
+                </plex-label>
+                <plex-label *ngIf="farmaciaSelected.DTResponsable" titulo="D.T Responsable"
+                            subtitulo="{{ farmaciaSelected.DTResponsable}}">
+                </plex-label>
+                <plex-label *ngIf="farmaciaSelected.matriculaDTResponsable" titulo="Matrícula D.T"
+                            subtitulo="{{ farmaciaSelected.matriculaDTResponsable}}">
+                </plex-label>
+                <plex-label *ngIf="farmaciaSelected.disposicionAltaDT" titulo="Disposición Alta D.T"
+                            subtitulo="{{ farmaciaSelected.disposicionAltaDT}}">
+                </plex-label>
+                <plex-label *ngIf="farmaciaSelected.asociadoA" titulo="Asociado a"
+                            subtitulo="{{ farmaciaSelected.asociadoA}}">
+                </plex-label>
+                <plex-label *ngIf="farmaciaSelected.disposicionHabilitacion" titulo="Disposición/hab."
+                            subtitulo="{{ farmaciaSelected.disposicionHabilitacion}}">
+                </plex-label>
+
+                <plex-label *ngIf="farmaciaSelected.expedientePapel" titulo="Expediente papel"
+                            subtitulo="{{ farmaciaSelected.expedientePapel}}">
+                </plex-label>
+                <plex-label *ngIf="farmaciaSelected.expedienteGDE" titulo="Expediente GDE"
+                            subtitulo="{{ farmaciaSelected.expedienteGDE}}">
+                </plex-label>
+                <plex-label *ngIf="farmaciaSelected.nroCaja" titulo="Expediente GDE"
+                            subtitulo="{{ farmaciaSelected.nroCaja}}">
+                </plex-label>
+            </plex-detail>
+            <br>
+
+            <!-- FECHAS -->
+            <plex-title titulo="FECHAS HABILITACIÓN" size="sm"></plex-title>
+            <plex-grid type="full" cols="3" size="lg" responsive>
+                <plex-label *ngIf="farmaciaSelected.fechaHabilitacion" titulo="Fecha habilitación"
+                            subtitulo="{{ farmaciaSelected.fechaHabilitacion | fecha}}">
+                </plex-label>
+                <plex-label *ngIf="farmaciaSelected.fechaRenovacion" titulo="Fecha renovación"
+                            subtitulo="{{ farmaciaSelected.fechaRenovacion | fecha}}">
+                </plex-label>
+                <plex-label *ngIf="farmaciaSelected.vencimientoHabilitacion" titulo="Vencimiento"
+                            subtitulo="{{ farmaciaSelected.vencimientoHabilitacion | fecha}}">
+                </plex-label>
+            </plex-grid>
+            <br>
+
+            <!-- FARMACÉUTICOS -->
+            <plex-title titulo="FARMACÉUTICOS AUXILIARES" size="sm"></plex-title>
+            <plex-table [columns]="columFarmac" #table="plTable">
+                <plex-table-columns>
+                </plex-table-columns>
+                <tr *ngFor="let farmac of farmaciaSelected.farmaceuticosAuxiliares">
+                    <td *plTableCol="'farmaceutico'">{{farmac.farmaceutico}}</td>
+                    <td *plTableCol="'matricula'">{{farmac.matricula}}</td>
+                    <td *plTableCol="'disposicionAlta'">{{farmac.disposicionAlta}}</td>
+                </tr>
+            </plex-table>
+            <br>
+
+            <!-- HORARIOS DE ATENCIÓN -->
+            <plex-title titulo="HORARIOS" size="sm"></plex-title>
+            <plex-table [columns]="columHora" #table="plTable">
+                <plex-table-columns>
+                </plex-table-columns>
+                <tr *ngFor="let data of farmaciaSelected.horarios">
+                    <td>
+                        <plex-label icon="reloj" titulo="{{ data.dia }}"></plex-label>
+                    </td>
+                </tr>
+            </plex-table>
+            <br>
+
+            <!-- CONTACTOS-->
+            <plex-title titulo="Contactos" size="sm"></plex-title>
+            <plex-table [columns]="columHora" #table="plTable">
+                <plex-table-columns>
+                </plex-table-columns>
+                <tr *ngFor="let contacto of farmaciaSelected.contactos">
+                    <td>
+                        <plex-label *ngIf="contacto.tipo === 'fijo'" icon="telefono"
+                                    titulo="{{ contacto.valor}}"></plex-label>
+                        <plex-label *ngIf="contacto.tipo === 'celular'" icon="celular"
+                                    titulo="{{ contacto.valor}}"></plex-label>
+                        <plex-label *ngIf="contacto.tipo === 'email'" icon="email"
+                                    titulo="{{ contacto.valor}}"></plex-label>
+                    </td>
+                </tr>
+            </plex-table>
+            <br>
+
+            <!-- DISPOSICIONES-->
+            <form #formularioDisp="ngForm" class="mr-1">
+                <plex-title titulo="DISPOSICIONES" size="sm">
+                    <plex-button *ngIf="!showFormDisp && !tieneDisposicion" label="Agregar disposición" type="success"
+                                 size="sm" class='mr-1' (click)="agregarElem('disposicion')">
+                    </plex-button>
+                    <plex-button *ngIf="showFormDisp" icon="check" type="success" size="sm"
+                                 (click)="guardar('disposicion')" [disabled]="!formularioDisp?.valid" tooltip="Guardar">
+                    </plex-button>
+                    <plex-button class="ml-1" *ngIf="showFormDisp" icon="close" size="sm" type="danger"
+                                 (click)="cancelar('disposicion')" tooltip="Cancelar">
+                    </plex-button>
+                </plex-title>
+                <plex-grid *ngIf="!showFormDisp && !tieneDisposicion">
+                    <section>
+                        <div class="d-flex justify-content-start align-items-center">
+                            <plex-label icon="informacion" type="warning" size="md" direction="row"
+                                        titulo="No hay ninguna disposición aún"
+                                        subtitulo="Para agregar una disposicion presioná el botón AGREGAR DISPOSICIÓN"></plex-label>
+                        </div>
+                    </section>
+                </plex-grid>
+                <plex-table *ngIf="!showFormDisp && tieneDisposicion" [columns]="columSancion" #table="plTable">
+                    <plex-table-columns>
+                    </plex-table-columns>
+                    <tr *ngFor="let disposicion of farmaciaSelected.disposiciones">
+                        <td *plTableCol="'numero'">{{disposicion.numero}}</td>
+                        <td *plTableCol="'descripcion'">{{disposicion.descripcion}}</td>
+                        <td>
+                            <plex-button size="sm" type="danger" icon="cesto" class="float-right ml-1"
+                                         tooltip="Eliminar" (click)="eliminar('disposicion')">
+                            </plex-button>
+                            <plex-button size="sm" type="warning" icon="pencil" class="float-right" tooltip="Editar"
+                                         (click)="editar('disposicion', disposicion)">
+                            </plex-button>
+                        </td>
+                </plex-table>
+                <ng-container *ngIf="showFormDisp">
+                    <plex-wrapper>
+                        <plex-text label="Número" [(ngModel)]="numeroDisp" name="numeroDisposicion" [required]="true"
+                                   placeholder="Ingrese número..."></plex-text>
+                        <plex-text label="Descripción" [(ngModel)]="descripcionDisp" name="descripcionDisposicion"
+                                   [required]="true" placeholder="Ingrese descripción..."></plex-text>
+                    </plex-wrapper>
+                </ng-container>
+                <br>
+            </form>
+
+            <!-- SANCIONES -->
+            <form #formularioSanc="ngForm" class="mr-1">
+                <plex-title titulo="SANCIONES" size="sm">
+                    <plex-button *ngIf="!showFormSanc" label="Agregar sanción" type="success" size="sm" class='mr-1'
+                                 (click)="agregarElem('sancion')">
+                    </plex-button>
+                    <plex-button *ngIf="showFormSanc" icon="check" type="success" size="sm" (click)="guardar('sancion')"
+                                 [disabled]="!formularioSanc?.valid" tooltip="Guardar">
+                    </plex-button>
+                    <plex-button class="ml-1" *ngIf="showFormSanc" icon="close" size="sm" type="danger"
+                                 (click)="cancelar('sancion')" tooltip="Cancelar">
+                    </plex-button>
+                </plex-title>
+                <plex-grid *ngIf="!showFormSanc && !tieneSancion">
+                    <section>
+                        <div class="d-flex justify-content-start align-items-center">
+                            <plex-label icon="informacion" type="warning" size="md" direction="row"
+                                        titulo="No hay ninguna sanción aún"
+                                        subtitulo="Para agregar una sanción presioná el botón AGREGAR SANCIÓN"></plex-label>
+                        </div>
+                    </section>
+                </plex-grid>
+                <plex-table *ngIf="!showFormSanc && tieneSancion" [columns]="columSancion" #table="plTable">
+                    <plex-table-columns>
+                    </plex-table-columns>
+                    <tr *ngFor="let sancion of farmaciaSelected.sancion">
+                        <td *plTableCol="'numero'">{{sancion.numero}}</td>
+                        <td *plTableCol="'descripcion'">{{sancion.descripcion}}</td>
+                        <td>
+                            <plex-button size="sm" type="danger" icon="cesto" class="float-right ml-1"
+                                         tooltip="Eliminar" (click)="eliminar('sancion')">
+                            </plex-button>
+                            <plex-button size="sm" type="warning" icon="pencil" class="float-right" tooltip="Editar"
+                                         (click)="editar('sancion',sancion)">
+                            </plex-button>
+                        </td>
+                </plex-table>
+                <ng-container *ngIf="showFormSanc">
+                    <plex-wrapper>
+                        <plex-text label="Número" [(ngModel)]="numeroSanc" name="numeroDisposicion" [required]="true"
+                                   placeholder="Ingrese número..."></plex-text>
+                        <plex-text label="Descripción" [(ngModel)]="descripcionSanc" name="descripcionDisposicion"
+                                   [required]="true" placeholder="Ingrese descripción..."></plex-text>
+                    </plex-wrapper>
+                </ng-container>
+            </form>
+
+        </ng-container>
+
+    </plex-layout-sidebar>
+
+</plex-layout>
