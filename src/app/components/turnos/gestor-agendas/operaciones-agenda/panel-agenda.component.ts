@@ -24,7 +24,6 @@ export class PanelAgendaComponent implements OnInit {
     @Input('editaAgendaPanel')
     set editaAgendaPanel(value: any) {
         this._editarAgendaPanel = value;
-        this.agenda = value;
         if (value.otroEspacioFisico) {
             this.espacioFisicoPropio = false;
         } else {
@@ -33,7 +32,6 @@ export class PanelAgendaComponent implements OnInit {
     }
 
     get editaAgendaPanel(): any {
-        this.eliminarProfBaja();
         return this._editarAgendaPanel;
     }
 
@@ -45,7 +43,6 @@ export class PanelAgendaComponent implements OnInit {
 
     showEditarAgendaPanel: Boolean = true;
     public showMapa = false;
-    public agenda: any = {};
     public alertas: any[] = [];
     public espaciosList = [];
     textoEspacio = 'Espacios físicos de la organización';
@@ -76,40 +73,26 @@ export class PanelAgendaComponent implements OnInit {
         }
     }
 
-    eliminarProfBaja() {
-        const profesionales = [];
-        if (this.agenda.profesionales) {
-            for (let i = 0; i < this.agenda.profesionales.length; i++) {
-                this.servicioProfesional.get({ id: this.agenda.profesionales[i].id }).subscribe(resultado => {
-                    if (resultado[0].habilitado) {
-                        profesionales.push(this.agenda.profesionales[i]);
-                    }
-                });
-            };
-            this.agenda.profesionales = profesionales;
-        }
-    }
-
     guardarAgenda(agenda: IAgenda) {
 
         if (this.alertas.length === 0) {
             // Quitar cuando esté solucionado inconveniente de plex-select
             let profesional = [];
-            if (this.agenda.profesionales && this.agenda.profesionales.length > 40) {
+            if (this.editaAgendaPanel.profesionales?.length > 40) {
                 this.plex.info('warning', 'Seleccione un profesional de la lista');
             } else {
-                if (this.agenda.profesionales) {
-                    profesional = this.agenda.profesionales;
+                if (this.editaAgendaPanel.profesionales) {
+                    profesional = this.editaAgendaPanel.profesionales;
                 }
                 let espacioFisico;
                 let otroEspacioFisico;
                 // Para asegurar que guarde una de las dos opciones, espacioFisico u otroEspaciofisico
                 if (this.espacioFisicoPropio) {
-                    espacioFisico = this.agenda.espacioFisico;
+                    espacioFisico = this.editaAgendaPanel.espacioFisico;
                     otroEspacioFisico = null;
                 } else {
                     espacioFisico = null;
-                    otroEspacioFisico = this.agenda.otroEspacioFisico;
+                    otroEspacioFisico = this.editaAgendaPanel.otroEspacioFisico;
                 }
 
                 const patch = {
@@ -120,12 +103,12 @@ export class PanelAgendaComponent implements OnInit {
                     'otroEspacioFisico': otroEspacioFisico,
                     'prestaciones': agenda.tipoPrestaciones,
                     'organizacion': this.auth.organizacion.id,
-                    enviarSms: this.agenda.enviarSms
+                    enviarSms: this.editaAgendaPanel.enviarSms
                 };
 
                 this.serviceAgenda.patch(agenda.id, patch).subscribe({
                     next: (resultado: any) => {
-                        this.agenda = resultado;
+                        this.editaAgendaPanel = resultado;
                         this.plex.toast('success', 'La agenda se guardó correctamente', 'Información');
                         this.actualizarEstadoEmit.emit(true);
                     },
@@ -157,7 +140,7 @@ export class PanelAgendaComponent implements OnInit {
                 event.callback(listaEdificios);
             });
         } else {
-            event.callback(this.agenda.edificios || []);
+            event.callback(this.editaAgendaPanel.edificios || []);
         }
     }
 
@@ -170,8 +153,8 @@ export class PanelAgendaComponent implements OnInit {
             query['activo'] = true;
             if (this.espacioFisicoPropio) {
                 this.servicioEspacioFisico.get(query).subscribe(resultado => {
-                    if (this.agenda.espacioFisico && this.agenda.espacioFisico.id) {
-                        listaEspaciosFisicos = this.agenda.espacioFisico ? [this.agenda.espacioFisico].concat(resultado) : resultado;
+                    if (this.editaAgendaPanel.espacioFisico?.id) {
+                        listaEspaciosFisicos = this.editaAgendaPanel.espacioFisico ? [this.editaAgendaPanel.espacioFisico].concat(resultado) : resultado;
                     } else {
                         listaEspaciosFisicos = resultado;
                     }
@@ -185,8 +168,8 @@ export class PanelAgendaComponent implements OnInit {
                 });
             }
         } else {
-            if (this.agenda.espacio) {
-                event.callback([this.agenda.espacioFisico]);
+            if (this.editaAgendaPanel.espacio) {
+                event.callback([this.editaAgendaPanel.espacioFisico]);
 
             } else {
                 event.callback([]);
@@ -233,8 +216,8 @@ export class PanelAgendaComponent implements OnInit {
     selectEspacio($data) {
         this.validarSolapamientos('espacioFisico');
         if (this.alertas.length === 0) {
-            this.agenda.espacioFisico = $data;
-            this.guardarAgenda(this.agenda);
+            this.editaAgendaPanel.espacioFisico = $data;
+            this.guardarAgenda(this.editaAgendaPanel);
         }
     }
 
@@ -247,19 +230,19 @@ export class PanelAgendaComponent implements OnInit {
 
         if (tipo === 'profesionales') {
             // Loop profesionales
-            if (this.agenda.profesionales) {
-                this.agenda.profesionales.forEach((profesional, index) => {
+            if (this.editaAgendaPanel.profesionales) {
+                this.editaAgendaPanel.profesionales.forEach((profesional) => {
                     const params = {
                         idProfesional: profesional.id,
                         rango: true,
-                        desde: this.agenda.horaInicio,
-                        hasta: this.agenda.horaFin,
+                        desde: this.editaAgendaPanel.horaInicio,
+                        hasta: this.editaAgendaPanel.horaFin,
                         estados: ['planificacion', 'disponible', 'publicada', 'pausada']
                     };
                     this.serviceAgenda.get(params).subscribe(agendas => {
                         // Hay problemas de solapamiento?
                         const agendasConSolapamiento = agendas.filter(agenda => {
-                            return agenda.id !== this.agenda.id || !this.agenda.id; // Ignorar agenda actual
+                            return agenda.id !== this.editaAgendaPanel.id || !this.editaAgendaPanel.id; // Ignorar agenda actual
                         });
 
                         // Si encontramos una agenda que coincida con la búsqueda...
@@ -271,23 +254,23 @@ export class PanelAgendaComponent implements OnInit {
             }
         } else if (tipo === 'espacioFisico') {
             // Loop Espacios Físicos
-            if (this.agenda.espacioFisico) {
+            if (this.editaAgendaPanel.espacioFisico) {
                 const params = {
-                    espacioFisico: this.agenda.espacioFisico._id,
+                    espacioFisico: this.editaAgendaPanel.espacioFisico._id,
                     rango: true,
-                    desde: this.agenda.horaInicio,
-                    hasta: this.agenda.horaFin,
+                    desde: this.editaAgendaPanel.horaInicio,
+                    hasta: this.editaAgendaPanel.horaFin,
                     estados: ['planificacion', 'disponible', 'publicada', 'pausada']
                 };
                 this.serviceAgenda.get(params).subscribe(agendas => {
                     // Hay problemas de solapamiento?
                     const agendasConSolapamiento = agendas.filter(agenda => {
-                        return agenda.id !== this.agenda.id || !this.agenda.id; // Ignorar agenda actual
+                        return agenda.id !== this.editaAgendaPanel.id || !this.editaAgendaPanel.id; // Ignorar agenda actual
                     });
 
                     // Si encontramos una agenda que coincida con la búsqueda...
                     if (agendasConSolapamiento.length > 0) {
-                        this.alertas = [... this.alertas, 'El ' + this.agenda.espacioFisico.nombre + ' está asignado a otra agenda en ese horario'];
+                        this.alertas = [... this.alertas, 'El ' + this.editaAgendaPanel.espacioFisico.nombre + ' está asignado a otra agenda en ese horario'];
                     }
                 });
             }

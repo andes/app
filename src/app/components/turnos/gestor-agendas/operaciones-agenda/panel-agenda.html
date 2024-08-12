@@ -1,11 +1,11 @@
 <plex-title size="md" titulo="Editar Agenda">
-    <plex-bool [(ngModel)]="agenda.enviarSms" label="Enviar notificación" name="enviarSms" type="slide">
+    <plex-bool [(ngModel)]="editaAgendaPanel.enviarSms" label="Enviar notificación" name="enviarSms" type="slide">
     </plex-bool>
 </plex-title>
 <plex-grid type="full">
     <!-- Equipo de Salud -->
-    <plex-select [(ngModel)]="agenda.profesionales" name="profesionales" tmProfesionales label="Equipo de Salud"
-                 placeholder="Seleccione el equipo de salud" closeAfterSelect="true"
+    <plex-select [(ngModel)]="editaAgendaPanel.profesionales" name="profesionales" tmProfesionales
+                 label="Equipo de Salud" placeholder="Seleccione el equipo de salud" closeAfterSelect="true"
                  (change)="validarSolapamientos('profesionales')" [multiple]="true">
     </plex-select>
 </plex-grid>
@@ -15,12 +15,12 @@
     </plex-bool>
 </plex-title>
 <plex-grid type="full">
-    <plex-select *ngIf="espacioFisicoPropio" [(ngModel)]="agenda.espacioFisico" name="espacioFisico"
+    <plex-select *ngIf="espacioFisicoPropio" [(ngModel)]="editaAgendaPanel.espacioFisico" name="espacioFisico"
                  (getData)="loadEspacios($event)" label="Espacio Físico" placeholder="Seleccione un espacio"
                  labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio.descripcion + ')'"
                  (change)="validarSolapamientos('espacioFisico')">
     </plex-select>
-    <plex-select *ngIf="!espacioFisicoPropio" [(ngModel)]="agenda.otroEspacioFisico" name="otroEspacio"
+    <plex-select *ngIf="!espacioFisicoPropio" [(ngModel)]="editaAgendaPanel.otroEspacioFisico" name="otroEspacio"
                  (getData)="loadEspacios($event)" label="Espacio Físico" placeholder="Seleccione un espacio"
                  labelField="nombre">
     </plex-select>
@@ -34,5 +34,6 @@
 </div>
 
 <filtros-mapa-espacio-fisico *ngIf="showMapa" (onChange)="espaciosChange($event)"></filtros-mapa-espacio-fisico>
-<mapa-espacio-fisico *ngIf="showMapa" [agendaSeleccionada]="agenda" [espacioTable]="espaciosList"
-                     (onEspacioClick)="selectEspacio($event)"></mapa-espacio-fisico>
+<mapa-espacio-fisico *ngIf="showMapa" [agendaSeleccionada]="editaAgendaPanel" [espacioTable]="espaciosList"
+                     (onEspacioClick)="selectEspacio($event)">
+</mapa-espacio-fisico>
