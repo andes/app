@@ -23,8 +23,9 @@
                 <plex-select [(ngModel)]="selectorMotivo" name="motivo" label="Motivo" [data]="motivos"
                              (change)="actualizarFiltros($event,'motivo')">
                 </plex-select>
-                <plex-select [(ngModel)]="selectorOrganizacion" name="organizacion" label="Organización" [required]="true"
-                             [data]="listaOrganizaciones"  [multiple]="true" (change)="actualizarFiltros($event,'organizacion')">
+                <plex-select [(ngModel)]="selectorOrganizacion" name="organizacion" label="Organización"
+                             [required]="true" [data]="listaOrganizaciones" [multiple]="true"
+                             (change)="actualizarFiltros($event,'organizacion')">
                 </plex-select>
             </plex-wrapper>
         </form>

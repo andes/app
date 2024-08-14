@@ -136,6 +136,9 @@ export class DemandaInsatisfechaComponent implements OnInit {
     public actualizarDemanda(demanda) {
         const i = this.listaEspera.findIndex(item => item.id === demanda.id);
         this.listaEspera[i] = demanda;
+        this.listaEspera.forEach(item => {
+            item.motivos = [...new Set(item.demandas.map(({ motivo }) => motivo))];
+        });
     }
 
     public actualizarFiltros({ value }, tipo) {
