@@ -2,8 +2,8 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { cache } from '@andes/shared';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { combineLatest, Observable, of, Subscription } from 'rxjs';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
@@ -18,6 +18,7 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
 import { ListadoInternacionCapasService } from '../../views/listado-internacion-capas/listado-internacion-capas.service';
+import { NgForm } from '@angular/forms';
 @Component({
     selector: 'app-egresar-paciente',
     templateUrl: './egresar-paciente.component.html',
@@ -26,7 +27,7 @@ import { ListadoInternacionCapasService } from '../../views/listado-internacion-
 export class EgresarPacienteComponent implements OnInit, OnDestroy {
     // EVENTOS
     @Output() onSave = new EventEmitter<any>();
-
+    @ViewChild('formEgreso', { static: true }) formEgreso: NgForm;
     // CONSTANTES
     public listaTipoEgreso = listaTipoEgreso;
     public causaExterna = causaExterna;
@@ -89,14 +90,17 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     public existeCausaExterna = false;
     public listaProcedimientosQuirurgicos: any[];
     public prestacionValidada = false;
-    public disableButton = false;
+
+    public disableSave = true;
+    public checkDisableSave$: Observable<boolean>;
+    private refreshSaveButton = new BehaviorSubject<any>(null);
+
     public inProgress = false;
     public resumen;
     private subscription: Subscription;
     private subscription2: Subscription;
     private subscription3: Subscription;
     private subscription4: Subscription;
-    public disableButton$: Observable<boolean>;
 
     constructor(
         public auth: Auth,
@@ -126,25 +130,30 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.subscription4.unsubscribe();
         }
     }
-    ngOnInit() {
-        this.inProgress = true;
-        this.fecha = this.mapaCamasService.fecha;
 
-        this.disableButton$ = this.mapaCamasService.snapshot$.pipe(
-            map((camas) => {
+    ngOnInit() {
+        this.fecha = this.mapaCamasService.fecha;
+        this.formEgreso.valueChanges.subscribe(() => {
+            this.inProgress = true;
+            this.refreshSaveButton.next({});
+        });
+
+        this.checkDisableSave$ = combineLatest([
+            this.mapaCamasService.snapshot$,
+            this.refreshSaveButton
+        ]).pipe(
+            map(([camas, disparador]) => {
                 this.inProgress = false;
-                if (this.cama?.sala) {
-                    return false;
+                if (!this.cama || this.cama?.sala || this.formEgreso.invalid || (this.capa === 'estadistica' && this.prestacionValidada)) {
+                    return true;
                 }
-                const camaActual = camas.find(c => c.id === this.cama?.id);
-                // condicion: 1.disponible 2.ocupada por el mismo paciente 3.tiene prestacion
+                const camaActual = camas.find(c => c.id === (this.cama as any)?._id);
+                // else: this.cama tiene valor, el form de egreso es valido y de ser capa estadistica la prestacion no esta validada
                 const condicion = camaActual?.estado === 'disponible'
                     || (camaActual?.estado === 'ocupada' && camaActual?.idInternacion === this.cama?.idInternacion)
                     || this.prestacion;
-                if (condicion) {
-                    return false;
-                }
-                return true;
+
+                return !condicion;
             })
         );
 
@@ -229,11 +238,12 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     const fechaABuscarMax = this.hayEgreso ? moment(this.registro.valor.InformeEgreso.fechaEgreso).add(-10, 's').toDate() : moment().toDate(); // para excluir el egreso
                     const idInternacion = resumen?.id || prestacion.id;
                     this.subscription2 = this.camasHTTP.historialInternacion(ambito, capa, fechaABuscarMin, fechaABuscarMax, idInternacion)
-                        .subscribe((snapshot) => {
-                            snapshot.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
-                            this.cama = snapshot[0];
+                        .subscribe(movimientos => {
+                            movimientos.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+                            this.cama = movimientos[0];
                             if (this.cama) {
                                 this.cama.id = this.cama.idCama;
+                                this.refreshSaveButton.next({});
                                 this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').toDate();
                                 this.checkHistorial(fecha);
                                 if (this.subscription3) {
@@ -253,23 +263,20 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 }
                 const fechaABuscarMax = resumen.fechaEgreso ? moment(resumen.fechaEgreso).add(-10, 's').toDate() : moment().toDate(); // para excluir el egreso
                 this.subscription2 = this.camasHTTP.historialInternacion(ambito, capa, resumen.fechaIngreso, fechaABuscarMax, resumen.id)
-                    .subscribe((snapshot) => {
-                        snapshot.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
-                        const ultimoMovimiento = snapshot[0];
+                    .subscribe(movimientos => {
+                        movimientos.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+                        const ultimoMovimiento = movimientos[0];
+                        this.cama = ultimoMovimiento;
+                        this.refreshSaveButton.next({});
                         this.fechaMin = moment(ultimoMovimiento.fecha).add(1, 'm').toDate();
                         this.checkHistorial(fecha);
+
+                        this.subscription3 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
+                            this.estadoDestino = relacionesPosibles[0].destino;
+                        });
                     });
             }
 
-            if (cama.id && cama.id !== ' ') {
-                this.cama = cama;
-                if (this.subscription3) {
-                    this.subscription3.unsubscribe();
-                }
-                this.subscription3 = this.mapaCamasService.getRelacionesPosibles(cama).subscribe((relacionesPosibles) => {
-                    this.estadoDestino = relacionesPosibles[0].destino;
-                });
-            }
             this.fecha = moment(fecha).toDate();
             this.setDiasEstada();
         });
@@ -304,7 +311,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
     guardar(valid) {
         if (valid.formValid) {
-            this.disableButton = true;
+            this.inProgress = true;
             const afterSave = {
                 complete: () => {
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
@@ -382,7 +389,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         return saveInternacion().pipe(
             switchMap(resumenSaved => {
                 this.onSave.emit();
-                this.disableButton = false;
+                this.inProgress = false;
 
                 if (this.capa !== 'estadistica' && !this.cama.sala && !resumenSaved) {
                     /*  si hubo algun error actualizando el resumen, no debería actualizar el estado de la cama para
@@ -706,16 +713,15 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         );
     }
 
-    disableGuardar(formEgreso, disable) {
+    disableGuardar(formEgreso) {
         let condicion = false;
         if (this.capa === 'estadistica') {
             condicion = this.prestacionValidada;
         }
 
         return formEgreso.invalid
-            || this.disableButton
+            || this.disableSave
             || this.inProgress
-            || condicion
-            || disable;
+            || condicion;
     }
 }

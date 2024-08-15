@@ -1,10 +1,8 @@
 <div class="mt-2">
-    <!-- <ng-container *ngIf="!editarIngreso && !editarEgreso"> -->
     <plex-options #options [items]="items" (activated)="onActiveOption($event)"></plex-options>
-    <!-- </ng-container> -->
 
     <ng-container *ngIf="mostrar === 'ingreso'">
-        <ng-container *ngIf="!editarIngreso">
+        <ng-container *ngIf="!editarIngresoIdInternacion">
             <!-- ASISTENCIAL - ESTADISTICA-V2 -->
             <app-informe-ingreso-estadistica-v2 *ngIf="capa !== 'estadistica'" (accion)="onAccion($event)"
                                                 (cancel)="activateOption('ingreso')" (toggleEditar)="toggleEdit()">
@@ -21,7 +19,7 @@
                              icon="pencil" type="warning" size="sm" (click)="toggleEdit()" class="mr-1">
                 </plex-button>
                 <ng-container *ngIf="anular$ | async">
-                    <plex-button size="sm" icon="account-off" type="danger" tooltip="Deshacer Internacion"
+                    <plex-button size="sm" icon="account-off" type="danger" tooltip="Deshacer Internación"
                                  tooltipPosition="left" (click)="onAnularInternacion()">
                     </plex-button>
                 </ng-container>
@@ -33,7 +31,7 @@
             </app-periodos-censables>
         </ng-container>
 
-        <app-ingresar-paciente *ngIf="editarIngreso" (onSave)="toggleEdit()">
+        <app-ingresar-paciente *ngIf="editarIngresoIdInternacion" (onSave)="toggleEdit()">
             <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="toggleEdit()">
             </plex-button>
         </app-ingresar-paciente>

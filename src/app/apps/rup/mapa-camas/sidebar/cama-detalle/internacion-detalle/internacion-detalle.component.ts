@@ -19,7 +19,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     puedeDesocupar$: Observable<any>;
     resumenInternacion$: Observable<any>;
     public estadoPrestacion;
-    public editarIngreso;
+    public editarIngresoIdInternacion;
     public editarEgreso;
     public existeIngreso;
     public existeEgreso;
@@ -74,7 +74,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
 
     ngOnInit() {
         this.mostrar = 'ingreso';
-        this.editarIngreso = false;
+        this.editarIngresoIdInternacion = null;
         this.editarEgreso = false;
         this.capa = this.mapaCamasService.capa;
 
@@ -111,7 +111,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
         // Configura los tabs a mostrar según capa y vista
         this.mapaCamasService.resumenInternacion$.pipe(
             map(resumen => {
-                if (!!this.editarIngreso && this.editarIngreso !== resumen.paciente?.id) {
+                if (this.editarIngresoIdInternacion && this.editarIngresoIdInternacion !== resumen.paciente?.id) {
                     this.toggleEdit();
                 }
                 this.capa = this.mapaCamasService.capa;
@@ -187,8 +187,8 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
             this.editarEgreso = !this.editarEgreso;
             this.editarEgreso ? this.accion.emit({ accion: 'editando' }) : this.accion.emit(null);
         } else {
-            this.editarIngreso = !!this.editarIngreso ? null : this.ingresoPacienteService.selectedPaciente.getValue();
-            !!this.editarIngreso ? this.accion.emit({ accion: 'editando' }) : this.accion.emit(null);
+            this.editarIngresoIdInternacion = !!this.editarIngresoIdInternacion ? null : this.ingresoPacienteService.selectedPaciente.getValue();
+            this.editarIngresoIdInternacion ? this.accion.emit({ accion: 'editando' }) : this.accion.emit(null);
         }
     }
 
@@ -238,18 +238,15 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     }
 
     puedeEgresar() {
-        let condicion = true; // solo estadistica
+        let condicion = true;
         if (this.capa === 'estadistica') {
             condicion = this.existeIngreso;
         }
-        return this.mapaCamasService.view.getValue() === 'listado-internacion'
-            && this.permisosMapaCamasService.egreso
-            && this.estadoPrestacion !== 'validada'
-            && condicion;
+        return this.permisosMapaCamasService.egreso && this.estadoPrestacion !== 'validada' && condicion;
     }
 
     puedeEditarEgreso() {
-        let condicion = true; // solo asistencial
+        let condicion = true;
         if (this.capa === 'medica') {
             condicion = this.mapaCamasService.view.getValue() === 'listado-internacion';
         }
