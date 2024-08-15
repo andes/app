@@ -10,17 +10,22 @@
                 </plex-text>
                 <plex-select [(ngModel)]="selectorPrestacion" name="prestacion"
                              (change)="actualizarFiltros($event,'prestacion')" label="Prestación" tmPrestaciones
-                             preload="true" tipo="nominalizadas">
+                             preload="true" tipo="nominalizadas" [multiple]="true">
                 </plex-select>
                 <plex-datetime type="date" [(ngModel)]="filtros.fechaDesde" name="fechaDesde" label="Desde"
                                class="fechas" [max]="filtros.fechaHasta"
                                (change)="actualizarFiltros($event,'fechaDesde')" [required]="true">
                 </plex-datetime>
                 <plex-datetime type="date" [(ngModel)]="filtros.fechaHasta" name="fechaHasta" label="Hasta"
-                               class="fechas" [required]="false" (change)="actualizarFiltros($event,'fechaHasta')">
+                               [min]="filtros.fechaDesde" class="fechas" [required]="false"
+                               (change)="actualizarFiltros($event,'fechaHasta')">
                 </plex-datetime>
-                <plex-select [(ngModel)]="selectorMotivo" ambito="ambulatorio" name="motivo" label="Motivo"
-                             [data]="motivos" (change)="actualizarFiltros($event,'motivo')">
+                <plex-select [(ngModel)]="selectorMotivo" name="motivo" label="Motivo" [data]="motivos"
+                             (change)="actualizarFiltros($event,'motivo')">
+                </plex-select>
+                <plex-select [(ngModel)]="selectorOrganizacion" name="organizacion" label="Organización"
+                             [required]="true" [data]="listaOrganizaciones" [multiple]="true"
+                             (change)="actualizarFiltros($event,'organizacion')">
                 </plex-select>
             </plex-wrapper>
         </form>
