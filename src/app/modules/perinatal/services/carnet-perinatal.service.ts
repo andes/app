@@ -46,7 +46,8 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
                 }
                 const params: any = {
                     limit: this.limit,
-                    skip: this.skip
+                    skip: this.skip,
+                    sort: 'fecha'
                 };
                 if (paciente) {
                     params.paciente = '^' + (paciente as string).toUpperCase();
@@ -63,7 +64,9 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
                 if (profesional) {
                     params.profesional = (profesional as IProfesional).id;
                 }
-                params.fechaControl = this.queryDateParams(fechaDesde as Date, fechaHasta as Date);
+                const desde = fechaDesde ? moment(fechaDesde).startOf('day').toDate() : undefined;
+                const hasta = fechaHasta ? moment(fechaHasta).endOf('day').toDate() : undefined;
+                params.fecha = this.queryDateParams(desde, hasta);
 
                 return this.search(params).pipe(
                     map(resultados => {
