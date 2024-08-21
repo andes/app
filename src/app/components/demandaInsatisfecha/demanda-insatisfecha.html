@@ -12,7 +12,7 @@
                              (change)="actualizarFiltros($event,'prestacion')" label="Prestación" tmPrestaciones
                              preload="true" tipo="nominalizadas" [multiple]="true">
                 </plex-select>
-                <plex-datetime type="date" [(ngModel)]="filtros.fechaDesde" name="fechaDesde" label="Desde"
+                <plex-datetime type="date" [(ngModel)]="selectorFechaDesde" name="fechaDesde" label="Desde"
                                class="fechas" [max]="filtros.fechaHasta"
                                (change)="actualizarFiltros($event,'fechaDesde')" [required]="true">
                 </plex-datetime>
@@ -37,12 +37,12 @@
             </plex-label>
         </div>
         <ng-container>
-            <plex-table *ngIf="listaEspera.length" [columns]="columns" #table="plTable" [offset]="105"
-                        (scroll)="onScroll()">
+            <plex-table *ngIf="listaEspera.length" [columns]="columns" #table="plTable" [offset]="102"
+                        [headOpacity]="100">
                 <plex-title titulo="Listado de pacientes" size="sm"></plex-title>
                 <tr *ngFor="let item of listaEspera" (click)="seleccionarDemanda(item)"
                     [class.selected]="item._id === itemSelected?._id" [class.selectable]="true">
-                    <td>{{item.paciente | nombre}}</td>
+                    <td>{{item.paciente.apellido}}, {{item.paciente.nombre}}</td>
                     <td>{{item.paciente | documento }}</td>
                     <td>{{item.tipoPrestacion.term}}</td>
                     <td>{{item.fecha | fecha}}</td>
@@ -77,18 +77,27 @@
                                            [items]="itemsListado">
                             </plex-dropdown>
                         </plex-title>
-                        <plex-list>
-                            <ng-container>
-                                <plex-item *ngFor="let demanda of itemSelected.demandas">
-                                    <plex-label size="md" titulo="Prestacion"
-                                                subtitulo="{{ itemSelected.tipoPrestacion.term }}">
-                                    </plex-label>
-                                    <plex-label size="md" titulo="Efector"
-                                                subtitulo="{{ demanda.organizacion.nombre }}">
-                                    </plex-label>
-                                </plex-item>
-                            </ng-container>
-                        </plex-list>
+                        <div class="my-3">
+                            <plex-label size="md" titulo="Prestación"
+                                        subtitulo="{{ itemSelected.tipoPrestacion.nombre }}">
+                            </plex-label>
+                        </div>
+                        <plex-table [columns]="columnsDemandas" [headOpacity]="70" #table="plTable"
+                                    (scroll)="onScroll()" [height]="500">
+                            <plex-table-columns>
+                            </plex-table-columns>
+                            <tr *ngFor="let demanda of listaDemandas" style="height: 75px;">
+                                <td *plTableCol="'col-1'">
+                                    <span><small>{{ demanda.fecha | date: 'dd/MM/YYYY HH:mm' }}hs</small></span>
+                                </td>
+                                <td *plTableCol="'col-2'">
+                                    <span><small>{{ demanda.motivo }}</small></span>
+                                </td>
+                                <td *plTableCol="'col-3'">
+                                    <span><small>{{ demanda.organizacion.nombre }}</small></span>
+                                </td>
+                            </tr>
+                        </plex-table>
                     </ng-container>
                 </plex-tab>
                 <plex-tab label="LLAMADOS">
@@ -162,13 +171,11 @@
                     <plex-title titulo="Historial de turnos" size="md">
                         <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()"></plex-button>
                     </plex-title>
-                    <ng-container>
-                        <plex-label *ngIf="!listaHistorial?.length" class="flex-column" icon="informacion"
-                                    type="warning" size="lg" direction="column" titulo="No hay resultados"
-                                    subtitulo="No se ha registrado ningún turno para el paciente"
-                                    class="d-flex justify-content-center mt-4">
-                        </plex-label>
-                    </ng-container>
+                    <plex-label *ngIf="!listaHistorial?.length" class="flex-column" icon="informacion" type="warning"
+                                size="lg" direction="column" titulo="No hay resultados"
+                                subtitulo="No se ha registrado ningún turno para el paciente"
+                                class="d-flex justify-content-center mt-4">
+                    </plex-label>
                     <ng-container>
                         <plex-list *ngIf="listaHistorial?.length">
                             <plex-item *ngFor="let historial of listaHistorial">

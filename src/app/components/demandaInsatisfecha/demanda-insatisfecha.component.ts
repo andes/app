@@ -20,12 +20,14 @@ export class DemandaInsatisfechaComponent implements OnInit {
     public listado$: Observable<any[]>;
     public listaLlamados = [];
     public listaHistorial = [];
+    public listaDemandas = [];
     public itemSelected = null;
     public filtros: any = {};
     public selectorPrestacion;
     public selectorOrganizacion;
     public selectorMotivo;
     public selectorEstadoLlamado;
+    public selectorFechaDesde;
     public nuevoLlamado: ILlamado = {};
     public selectedPaciente;
     public showTurnos;
@@ -83,6 +85,7 @@ export class DemandaInsatisfechaComponent implements OnInit {
         },
         {
             key: 'estado',
+            label: ''
         }
     ];
 
@@ -97,8 +100,24 @@ export class DemandaInsatisfechaComponent implements OnInit {
 
     public skip = 0;
     public limit = 15;
+    public columnsDemandas = [
+        {
+            key: 'col-1',
+            label: 'Fecha',
+        },
+        {
+            key: 'col-2',
+            label: 'Motivo',
+        },
+        {
+            key: 'col-3',
+            label: 'Organizacion',
+        },
+    ];
+
+    public max = 10;
     public tabIndex = 0;
-    public pacienteFields = ['sexo', 'fechaNacimiento', 'cuil', 'financiador', 'numeroAfiliado', 'direccion'];
+    public pacienteFields = ['sexo', 'fechaNacimiento', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'edad', 'telefono'];
 
     @ViewChild('formLlamados', { read: NgForm }) formLlamados: NgForm;
 
@@ -110,41 +129,29 @@ export class DemandaInsatisfechaComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        const fechaDesdeInicial = moment().subtract(7, 'days').startOf('day');
+        this.selectorFechaDesde = moment().subtract(7, 'days').startOf('day').toDate();
+        this.filtros.fechaDesde = this.selectorFechaDesde;
 
-        this.filtros.fechaDesde = fechaDesdeInicial;
-        this.filtros.organizacion = this.auth.organizacion.id;
-        this.selectorOrganizacion = this.auth.organizacion.id;
-
-        this.getDemandas();
+        if (this.auth.organizacion.id) {
+            this.filtros.organizacion = this.auth.organizacion.id;
+            this.selectorOrganizacion = this.auth.organizacion.id;
+            this.getListaEsperas({ fechaDesde: this.selectorFechaDesde, organizacion: this.auth.organizacion.id });
+        }
 
         this.auth.organizaciones(true).subscribe((organizaciones) => {
             this.listaOrganizaciones = organizaciones;
         });
     }
 
-    private getDemandas(reset?: boolean) {
-        if (this.filtros.fechaDesde && this.filtros.organizacion) {
-            if (reset) { this.skip = 0; }
-
-            this.listaEsperaService.get({ ...this.filtros, estado: 'pendiente', skip: this.skip, limit: this.limit }).subscribe((listaEspera) => {
-                this.listaEspera = reset ? listaEspera : [...this.listaEspera, ...listaEspera];
-
+    private getListaEsperas(filtros) {
+        if (filtros.fechaDesde && filtros.organizacion) {
+            this.listaEsperaService.get({ ...filtros, estado: 'pendiente' }).subscribe((listaEspera: any[]) => {
+                this.listaEspera = listaEspera;
                 this.listaEspera.forEach(item => {
                     item.motivos = [...new Set(item.demandas.map(({ motivo }) => motivo))];
                 });
             });
         }
-    }
-
-    public obtenerObjetoMasAntiguo() {
-        if (this.listaEspera.length === 0) {
-            return null;
-        }
-
-        return this.listaEspera.reduce((masAntiguo, item) => {
-            return item.fecha < masAntiguo.fecha ? item : masAntiguo;
-        });
     }
 
     public getHistorial(historial) {
@@ -166,14 +173,19 @@ export class DemandaInsatisfechaComponent implements OnInit {
         this.tabIndex = value;
     }
 
-    public seleccionarDemanda(demanda) {
-        this.itemSelected = demanda;
+    public seleccionarDemanda(item) {
+        this.itemSelected = item;
+        this.listaDemandas = item.demandas.slice(0, this.max);
         this.listaHistorial = null;
         this.tabIndex = 0;
         this.listaLlamados = !this.itemSelected.llamados ? [] : [...this.itemSelected.llamados];
     }
 
-    public actualizarDemanda(demanda) {
+    private eliminarItem(id) {
+        this.listaEspera = this.listaEspera.filter(item => item.id !== id);
+    }
+
+    public actualizarLista(demanda) {
         const i = this.listaEspera.findIndex(item => item.id === demanda.id);
 
         this.listaEspera[i] = demanda;
@@ -182,37 +194,40 @@ export class DemandaInsatisfechaComponent implements OnInit {
         });
     }
 
-    public actualizarFiltros({ value }, tipo) {
-        if (tipo === 'paciente') {
-            this.filtros = { ...this.filtros, paciente: value };
-        }
+    public actualizarFiltros(event?, tipo?) {
+        if (event && tipo) {
+            const { value } = event;
 
-        if (tipo === 'fechaDesde') {
-            this.filtros = { ...this.filtros, fechaDesde: value };
-        }
+            if (tipo === 'paciente') {
+                this.filtros = { ...this.filtros, paciente: value };
+            }
 
-        if (tipo === 'fechaHasta') {
-            this.filtros = { ...this.filtros, fechaHasta: value };
-        }
+            if (tipo === 'fechaDesde') {
+                const fechaDesde = value ? moment(value).startOf('day').toDate() : null;
+                this.filtros = { ...this.filtros, fechaDesde };
+            }
 
-        if (tipo === 'prestacion') {
-            const values = value?.map(prestacion => prestacion.term);
-            this.filtros = { ...this.filtros, prestacion: values?.join(',') };
-        }
+            if (tipo === 'fechaHasta') {
+                const fechaHasta = value ? moment(value).startOf('day').toDate() : null;
+                this.filtros = { ...this.filtros, fechaHasta };
+            }
 
-        if (tipo === 'motivo') {
-            this.filtros = { ...this.filtros, motivo: value?.nombre };
-        }
+            if (tipo === 'prestacion') {
+                const values = value?.map(prestacion => prestacion.term);
+                this.filtros = { ...this.filtros, prestacion: values?.join(',') };
+            }
 
-        if (tipo === 'organizacion') {
-            const values = value?.map(organizacion => organizacion.id);
+            if (tipo === 'motivo') {
+                this.filtros = { ...this.filtros, motivo: value?.nombre };
+            }
 
-            if (values) {
+            if (tipo === 'organizacion') {
+                const values = value?.map(organizacion => organizacion.id);
                 this.filtros = { ...this.filtros, organizacion: values?.join(',') };
             }
         }
 
-        this.getDemandas(true);
+        this.getListaEsperas(this.filtros);
     }
 
     public cerrar() { this.itemSelected = null; }
@@ -224,21 +239,21 @@ export class DemandaInsatisfechaComponent implements OnInit {
         this.formLlamados?.form.markAsPristine();
     }
 
-    public async guardarLlamado() {
+    public guardarLlamado(id) {
         this.formLlamados.control.markAllAsTouched();
 
         if (this.formLlamados.form.valid) {
-            try {
-                this.listaLlamados.push({ ...this.nuevoLlamado, createdBy: this.auth.usuario, createdAt: moment() });
+            this.listaLlamados.push({ ...this.nuevoLlamado, createdBy: this.auth.usuario, createdAt: moment() });
 
-                this.listaEsperaService.patch(this.itemSelected._id, 'llamados', this.listaLlamados).subscribe((demanda) => {
+            this.listaEsperaService.patch(id, 'llamados', this.listaLlamados).subscribe({
+                next: (item) => {
                     this.plex.toast('success', 'Llamado registrado exitosamente');
                     this.agregarLlamado();
-                    this.actualizarDemanda(demanda);
-                });
-            } catch (error) {
-                this.plex.toast('danger', 'Error al guardar el llamado');
-            }
+                    this.actualizarLista(item);
+                }, error: () => {
+                    this.plex.toast('danger', 'Ha ocurrido un error al guardar el llamado');
+                }
+            });
         }
     }
 
@@ -257,17 +272,24 @@ export class DemandaInsatisfechaComponent implements OnInit {
             motivo: (datosTurno) ? 'Turno asignado' : 'Finalizada',
             observacion: this.textoOtros || '',
         };
+
         if (datosTurno) {
             data['turno'] = {
                 id: datosTurno.idTurno,
                 idAgenda: datosTurno.idAgenda,
             };
         };
-        this.listaEsperaService.patch(this.itemSelected._id, 'estado', data).subscribe(() => {
-            this.plex.toast('success', 'Demanda cerrada exitosamente');
-            this.actualizarFiltros({ value: '' }, '');
+
+        this.listaEsperaService.patch(this.itemSelected.id, 'estado', data).subscribe({
+            next: (item) => {
+                this.plex.toast('success', 'Demanda cerrada exitosamente');
+                this.eliminarItem(item.id);
+            }, error: () => {
+                this.plex.toast('danger', 'Ha ocurrido un error al cerrar la demanda');
+            }
         });
-        this.itemSelected = false;
+
+        this.cerrar();
         this.volver();
     }
 
@@ -293,7 +315,9 @@ export class DemandaInsatisfechaComponent implements OnInit {
     }
 
     public onScroll() {
-        this.skip += this.limit;
-        this.getDemandas();
+        const longitud = this.listaDemandas.length;
+        const nuevosItems = this.itemSelected.demandas.slice(longitud, longitud + this.max);
+
+        this.listaDemandas = [...this.listaDemandas, ...nuevosItems];
     }
 }
