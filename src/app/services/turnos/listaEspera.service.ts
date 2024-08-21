@@ -56,7 +56,7 @@ export class ListaEsperaService {
             fecha: moment().toDate(),
             origen
         };
-        const datosPaciente: IPacienteBasico = {
+        const datosPaciente = {
             id: paciente.id,
             nombre: paciente.nombre,
             alias: paciente.alias,
@@ -65,7 +65,11 @@ export class ListaEsperaService {
             numeroIdentificacion: paciente.numeroIdentificacion,
             fechaNacimiento: paciente.fechaNacimiento,
             sexo: paciente.sexo,
-            genero: paciente.genero
+            genero: paciente.genero,
+            estado: paciente.estado,
+            direccion: paciente.direccion,
+            financiador: paciente.financiador,
+            contacto: paciente.contacto,
         };
         const listaEspera: IListaEspera = {
             paciente: datosPaciente,
