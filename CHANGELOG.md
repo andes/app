@@ -1,3 +1,10 @@
+# [5.147.0](https://github.com/andes/app/compare/v5.146.0...v5.147.0) (2024-08-21)
+
+
+### Features
+
+* **HUDS:** modifica vista en evolucion de trastornos ([#3051](https://github.com/andes/app/issues/3051)) ([5a70028](https://github.com/andes/app/commit/5a700282b07222e274384078c53b0ec20cccf509))
+
 # [5.146.0](https://github.com/andes/app/compare/v5.145.0...v5.146.0) (2024-08-07)
 
 
