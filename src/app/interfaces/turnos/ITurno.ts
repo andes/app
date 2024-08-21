@@ -55,4 +55,5 @@ export interface ITurno {
         type: string;
         enum: ['pendiente', 'no enviado', 'enviado', 'fallido'];
     };
+    notificar: boolean;
 }

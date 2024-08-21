@@ -139,7 +139,8 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                     idBloque: this.datosAgenda.idBloque,
                     idTurno: this.datosAgenda.idTurno
                 }
-            }
+            },
+            notificar: turno.notificar
         };
 
         // Guardo el Turno nuevo en la Agenda seleccionada como destino (PATCH)
