@@ -2,8 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IFarmacia } from 'src/app/interfaces/IFarmacia';
 import { Plex } from '@andes/plex';
 import { FarmaciaService } from 'src/app/services/farmacia.service';
-import { Observable, map } from 'rxjs';
-import { IPais } from 'src/app/interfaces/IPais';
+import { Observable } from 'rxjs';
 import { PaisService } from 'src/app/services/pais.service';
 import { cache } from '@andes/shared';
 import { IProvincia } from 'src/app/interfaces/IProvincia';
@@ -31,11 +30,8 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
         DTResponsable: '',
         matriculaDTResponsable: '',
         disposicionAltaDT: '',
-        farmaceuticosAuxiliares: [{
-            farmaceutico: '',
-            matricula: '',
-            disposicionAlta: '',
-        }],
+        activo: true,
+        farmaceuticosAuxiliares: [],
         horarios: [{
             dia: ''
         }],
@@ -47,13 +43,7 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
                 localidad: null
             }
         },
-        contactos: [
-            {
-                tipo: '',
-                valor: '',
-                activo: true
-            }
-        ],
+        contactos: [],
         asociadoA: '',
         disposicionHabilitacion: '',
         fechaHabilitacion: null,
@@ -64,29 +54,27 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
         expedientePapel: '',
         expedienteGDE: '',
         nroCaja: '',
-        disposiciones: [{
-            numero: '',
-            descripcion: '',
-        }],
-        sancion: [{
-            numero: '',
-            descripcion: '',
-        }]
-    }
-
+        disposiciones: [],
+        sancion: []
+    };
     public validado = false;
-    public listadoFarmacia$: Observable<IFarmacia[]>;
-    public paises$: Observable<IPais[]>;
     public provincias$: Observable<IProvincia[]>;
     public localidades$: Observable<ILocalidad[]>;
-    public paisCargado;
     public gabinete = false;
     public laboratorio = false;
-    public diaHorario;
     public tipoComunicacion;
+    public asociado;
     patronContactoCelular = /^[0-9]{3,4}[0-9]{6}$/;
     patronContactoFijo = /^[0-9]{7}$/;
     patronContactoAlfabetico = /^[-\w.%+]{1,61}@[a-z]+(.[a-z]+)+$/;
+    patronNumerico = /^\d*$/;
+    patronCUIT = /^\d{2}-\d{8}-\d$/;
+    public arrayAsociado = [
+        { id: 'colegio', nombre: 'Colegio de Farmacéuticos' },
+        { id: 'farmacia', nombre: 'Farmacias Sociales' },
+        { id: 'camara', nombre: 'Camara de Farmacéuticos' },
+        { id: 'independiente', nombre: 'Independientes' }
+    ];
 
     constructor(
         private plex: Plex,
@@ -97,20 +85,16 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        // console.log(this.farmaciaSeleccionada);
         if (this.farmaciaSeleccionada) {
             this.farmacia = this.farmaciaSeleccionada;
+            this.asociado = { id: this.farmaciaSeleccionada.asociadoA, nombre: this.farmaciaSeleccionada.asociadoA };
         }
-        this.paises$ = this.paisService.get({}).pipe(
-            cache()
-        );
         this.provincias$ = this.provinciaService.get({}).pipe(
             cache()
         );
         this.gabinete = this.farmacia.gabineteInyenctables;
         this.laboratorio = this.farmacia.laboratoriosMagistrales;
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
-        console.log(this.farmacia);
     }
 
     volver() {
@@ -118,37 +102,22 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
     }
 
     save() {
-        // si estamos editado
+        this.farmacia.asociadoA = this.asociado.nombre;
+        // si estamos editado una farmacia.
         if (this.farmaciaSeleccionada) {
             const farmaciaUpdate = Object.assign({}, this.farmacia);
-            return this.farmaciaService.update(this.farmacia.id, farmaciaUpdate).subscribe(() => {
-                this.plex.info('success', 'Farmacia editada con éxito');
-                this.volver();
+            this.farmaciaService.update(this.farmacia.id, farmaciaUpdate).subscribe({
+                next: () => this.plex.toast('success', 'Farmacia editada con éxito.'),
+                error: () => this.plex.toast('danger', 'Error al editar la farmacia.')
             });
         } else {
-            // Si ingresamos una farmacia nueva
-            const nuevaFarmacia = Object.assign({}, this.farmacia);
-            console.log(this.farmacia);
-            return this.farmaciaService.create(this.farmacia).subscribe(() => {
-                this.plex.info('success', 'Farmacia creada con éxito.');
-                this.volver();
+            // si estamos creando una farmacia nueva.
+            this.farmaciaService.create(this.farmacia).subscribe({
+                next: () => this.plex.toast('success', 'Farmacia creada con éxito.'),
+                error: () => this.plex.toast('danger', 'Error al crear la farmacia.')
             });
         }
-    }
-
-    addFarmaceutico() {
-        const indexUltimo = this.farmacia.farmaceuticosAuxiliares.length - 1;
-        const ultimoAuxiliar = this.farmacia.farmaceuticosAuxiliares[indexUltimo];
-        if (ultimoAuxiliar.farmaceutico && ultimoAuxiliar.matricula && ultimoAuxiliar.disposicionAlta) {
-            const nuevoFarmaceutico = Object.assign({}, {
-                farmaceutico: null,
-                matricula: null,
-                disposicionAlta: null
-            });
-            this.farmacia.farmaceuticosAuxiliares.push(nuevoFarmaceutico);
-        } else {
-            this.plex.toast('info', 'Debe completar los campos anteriores.');
-        }
+        this.volver();
     }
 
     removeElement(tipo, i) {
@@ -190,14 +159,29 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
     }
 
     addContacto() {
-        const indexUltimo = this.farmacia.contactos.length - 1;
-        if (this.farmacia.contactos[indexUltimo].valor) {
-            const nuevoContacto = Object.assign({}, {
-                tipo: 'email',
+        const contactos = this.farmacia.contactos;
+        const ultimoContacto = contactos[contactos.length - 1];
+
+        if (!contactos.length || ultimoContacto.valor) {
+            contactos.push({
+                tipo: null,
                 valor: '',
                 activo: true
             });
-            this.farmacia.contactos.push(nuevoContacto);
+        } else {
+            this.plex.toast('info', 'Debe completar los campos anteriores.');
+        }
+    }
+
+    addFarmaceutico() {
+        const auxiliares = this.farmacia.farmaceuticosAuxiliares;
+        const ultimoAuxiliar = auxiliares[auxiliares.length - 1];
+        if (!auxiliares.length || (ultimoAuxiliar.farmaceutico && ultimoAuxiliar.matricula && ultimoAuxiliar.disposicionAlta)) {
+            auxiliares.push({
+                farmaceutico: null,
+                matricula: null,
+                disposicionAlta: null
+            });
         } else {
             this.plex.toast('info', 'Debe completar los campos anteriores.');
         }
@@ -210,4 +194,16 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
         return this.farmacia.contactos[index].tipo.id;
     }
 
+    formatoCuit(event: any): void {
+        let cuit = event.target.value.replace(/\D/g, '');
+
+        if (cuit.length > 2) {
+            cuit = cuit.slice(0, 2) + '-' + cuit.slice(2);
+        }
+        if (cuit.length > 11) {
+            cuit = cuit.slice(0, 11) + '-' + cuit.slice(11, 12);
+        }
+
+        this.farmacia.cuit = cuit;
+    }
 }
