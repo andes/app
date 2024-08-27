@@ -121,6 +121,9 @@
                     <td colspan="3">
                         <ng-container *ngIf="indBloque === 0">
                             <plex-title size="sm" titulo="Seleccione horario">
+                                <plex-bool *ngIf="turnoSeleccionado" [(ngModel)]="turnoSeleccionado.notificar"
+                                           label="Enviar notificación" name="notificar" type="slide" class="pr-1">
+                                </plex-bool>
                                 <plex-button class="pr-1" type="success" size="sm" icon="check"
                                              [disabled]="!turnoSeleccionado" tooltip="Confirmar"
                                              (click)="reasignarTurno()">
