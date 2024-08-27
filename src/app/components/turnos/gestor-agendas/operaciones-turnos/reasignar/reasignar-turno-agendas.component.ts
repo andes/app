@@ -175,19 +175,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                 this.agendaDestino.agenda = resultado;
                 this.agendaDestino.turno = turno;
 
-                // Enviar SMS sólo en Producción
-                if (environment.production === true && this.smsStatus) {
-                    const diaOrig = moment(datosTurnoReasignado.turno.horaInicio).format('DD/MM/YYYY');
-                    const tmOrig = moment(datosTurnoReasignado.turno.horaInicio).format('HH:mm');
-                    const dia = moment(turno.horaInicio).format('DD/MM/YYYY');
-                    const tm = moment(turno.horaInicio).format('HH:mm');
-                    const mensaje = 'AVISO:  Su turno de ' + this.turnoAReasignar.tipoPrestacion.term + ' del ' + diaOrig + ' a las ' + tmOrig
-                        + ' hs. fue REASIGNADO  al ' + dia + ' a las ' + tm + ' hs.   ' + this.auth.organizacion.nombre;
-                    this.plex.toast('info', 'Se informó al paciente mediante un SMS');
-                    this.enviarSMS(this.turnoAReasignar.paciente, mensaje);
-                } else {
-                    this.plex.toast('info', 'INFO: SMS no enviado');
-                }
                 if (this.esTurnoDoble(turnoReasignado)) {
                     const patch: any = {
                         op: 'darTurnoDoble',
@@ -277,31 +264,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                 this.asignarTurno(this.bloqueSeleccionado, this.turnoSeleccionado, this.turnoSiguiente, solicitud, tipoTurno);
             });
         }
-    }
-
-    // esta funcion se repite en suspender turno
-    // TODO: aplicar buenas practicas de programacion
-    enviarSMS(paciente: any, mensaje) {
-        if (!paciente.telefono) {
-            return;
-        }
-        const smsParams = {
-            telefono: paciente.telefono,
-            mensaje: mensaje,
-        };
-        this.smsService.enviarSms(smsParams).subscribe(sms => {
-            const resultado = sms;
-            // "if 0 errores"
-            if (resultado === '0') {
-                this.plex.toast('info', 'Se envió SMS al paciente ' + (paciente.alias || paciente.nombre) + ' ' + paciente.apellido);
-            } else {
-                this.plex.toast('danger', 'ERROR: SMS no enviado');
-            }
-        }, err => {
-            if (err) {
-                this.plex.toast('danger', 'ERROR: Servicio caído');
-            }
-        });
     }
 
     siguienteDisponible(bloque, indiceTurno) {
