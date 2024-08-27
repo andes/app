@@ -3,7 +3,7 @@ import { Plex } from '@andes/plex';
 import { AfterContentInit, Component, EventEmitter, Input, Optional, Output, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { InternacionResumenHTTP } from 'src/app/apps/rup/mapa-camas/services/resumen-internacion.http';
 import { SECCION_CLASIFICACION } from 'src/app/modules/epidemiologia/constantes';
 import { FormsEpidemiologiaService } from 'src/app/modules/epidemiologia/services/ficha-epidemiologia.service';
@@ -15,6 +15,8 @@ import { IPSService } from '../../services/dominios-nacionales.service';
 import { EmitConcepto, RupEjecucionService } from '../../services/ejecucion.service';
 import { HUDSService } from '../../services/huds.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
+import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'rup-hudsBusqueda',
@@ -159,7 +161,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
         private formEpidemiologiaService: FormsEpidemiologiaService,
         private resumenHTTP: InternacionResumenHTTP,
         public ipsService: IPSService,
-        @Optional() private ejecucionService: RupEjecucionService
+        @Optional() private ejecucionService: RupEjecucionService,
+        private pacienteService: PacienteService
     ) {
     }
 
@@ -294,11 +297,26 @@ export class HudsBusquedaComponent implements AfterContentInit {
         this.huds.toogle(registro, tipo);
     }
 
+    getPacientePrincipal(id): Observable<IPaciente> {
+        return this.pacienteService.getById(id);
+    }
+
     listarInternaciones() {
-        this.resumenHTTP.search({
-            ingreso: this.resumenHTTP.queryDateParams(this.fechaInicio, this.fechaFin),
-            paciente: this.paciente.id,
-        }).subscribe((internaciones) => this.internaciones = internaciones);
+        let request;
+        if (this.paciente.idPacientePrincipal) {
+            request = this.getPacientePrincipal(this.paciente.idPacientePrincipal).pipe(
+                switchMap((paciente: IPaciente) => this.resumenHTTP.search({
+                    ingreso: this.resumenHTTP.queryDateParams(this.fechaInicio, this.fechaFin),
+                    paciente: paciente.vinculos
+                }))
+            );
+        } else {
+            request = this.resumenHTTP.search({
+                ingreso: this.resumenHTTP.queryDateParams(this.fechaInicio, this.fechaFin),
+                paciente: this.paciente.vinculos
+            });
+        }
+        request.subscribe((internaciones) => this.internaciones = internaciones);
     }
 
     listarPrestaciones() {
