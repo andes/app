@@ -253,6 +253,7 @@ export class DemandaInsatisfechaComponent implements OnInit {
             this.plex.toast('success', 'Demanda cerrada exitosamente');
             this.actualizarFiltros({ value: '' }, '');
         });
+        this.itemSelected = false;
         this.volver();
     }
 
