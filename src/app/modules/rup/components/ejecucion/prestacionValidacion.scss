@@ -81,25 +81,25 @@
 
 .containterPrimeraVez {
     position: relative;
-    top: -259px; 
+    top: -259px;
 
-    .row{
+    .row {
         padding-right: 0;
-    padding-left: 39px;
-    
+        padding-left: 39px;
+
     }
 
     .icon {
         font-size: 28px;
         color: #00A8E0;
-margin-left: 19px;
-        }
+        margin-left: 19px;
+    }
 
 
     .titulo {
         display: flex;
         align-items: flex-start !important;
-        padding: 5px 0;    
+        padding: 5px 0;
         text-transform: capitalize;
 
         i,
@@ -124,4 +124,15 @@ margin-left: 19px;
     }
 }
 
+.modal-contents {
+    .content-row:last-child {
+        border-bottom: none;
+    }
+}
 
+.content-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #999;
+}
