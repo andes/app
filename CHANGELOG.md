@@ -1,3 +1,11 @@
+## [5.147.1](https://github.com/andes/app/compare/v5.147.0...v5.147.1) (2024-08-28)
+
+
+### Bug Fixes
+
+* **CIT:** edicion de profesionales en agenda ([#3055](https://github.com/andes/app/issues/3055)) ([2c63a09](https://github.com/andes/app/commit/2c63a097b6e223693bb140757d995223a9904d24))
+* **IN:** incluye pacientes vinculados en la huds ([#3060](https://github.com/andes/app/issues/3060)) ([ce2f519](https://github.com/andes/app/commit/ce2f519a8e3172650c5d6bed3a0ea14b71e4f1b5))
+
 # [5.147.0](https://github.com/andes/app/compare/v5.146.0...v5.147.0) (2024-08-21)
 
 
