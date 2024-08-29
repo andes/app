@@ -302,21 +302,10 @@ export class HudsBusquedaComponent implements AfterContentInit {
     }
 
     listarInternaciones() {
-        let request;
-        if (this.paciente.idPacientePrincipal) {
-            request = this.getPacientePrincipal(this.paciente.idPacientePrincipal).pipe(
-                switchMap((paciente: IPaciente) => this.resumenHTTP.search({
-                    ingreso: this.resumenHTTP.queryDateParams(this.fechaInicio, this.fechaFin),
-                    paciente: paciente.vinculos
-                }))
-            );
-        } else {
-            request = this.resumenHTTP.search({
-                ingreso: this.resumenHTTP.queryDateParams(this.fechaInicio, this.fechaFin),
-                paciente: this.paciente.vinculos
-            });
-        }
-        request.subscribe((internaciones) => this.internaciones = internaciones);
+        this.resumenHTTP.search({
+            ingreso: this.resumenHTTP.queryDateParams(this.fechaInicio, this.fechaFin),
+            paciente: this.paciente.id
+        }).subscribe((internaciones) => this.internaciones = internaciones);
     }
 
     listarPrestaciones() {
