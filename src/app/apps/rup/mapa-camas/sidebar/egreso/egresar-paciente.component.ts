@@ -95,7 +95,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     public checkDisableSave$: Observable<boolean>;
     private refreshSaveButton = new BehaviorSubject<any>(null);
 
-    public inProgress = false;
+    public inProgress = true;
     public resumen;
     private subscription: Subscription;
     private subscription2: Subscription;
@@ -194,10 +194,9 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.view,
             this.mapaCamasService.capa2,
             this.mapaCamasService.ambito2,
-            this.mapaCamasService.selectedCama,
             this.mapaCamasService.prestacion$,
             this.mapaCamasService.resumenInternacion$
-        ]).subscribe(([view, capa, ambito, cama, prestacion, resumen]) => {
+        ]).subscribe(([view, capa, ambito, prestacion, resumen]) => {
             this.inProgress = false;
             this.resumen = resumen;
             let fecha = moment(resumen?.fechaEgreso || this.mapaCamasService.fecha).toDate();
@@ -255,9 +254,9 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                             }
                         });
                 }
-            } else {
+            } else if (this.resumen?.id) {
                 // asistencial
-                if (this.resumen?.fechaEgreso) {
+                if (this.resumen.fechaEgreso) {
                     this.fechaEgresoOriginal = moment(this.resumen.fechaEgreso).toDate();
                     this.registro.valor.InformeEgreso.tipoEgreso = this.listaTipoEgreso.find(tipo => tipo.nombre === this.resumen.tipo_egreso);
                 }
@@ -326,7 +325,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                         this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
                     }
                 },
-                error: () => {
+                error: (err) => {
                     this.plex.info('warning', 'Ocurrió un error egresando al paciente. Revise los movimientos de la internación e intente nuevamente.', 'Atención');
                 }
             };
@@ -362,7 +361,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         } else {
             // cama
             estadoPatch = {
-                _id: this.cama.id,
+                _id: this.cama.id || this.cama._id,
                 estado: estado,
                 idInternacion: null,
                 paciente: null,
@@ -683,6 +682,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 }
 
             }
+            this.inProgress = false;
         });
     }
 
