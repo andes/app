@@ -125,7 +125,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         if (!this.auth.getPermissions('rup:?').length) {
             this.redirect('inicio');
         }
-        if (!this.auth.profesionalHabilitado || !this.auth.profesional) {
+        if (!this.auth.profesional) {
             this.redirect('inicio');
         } else {
             this.tieneAccesoHUDS = this.auth.check('huds:visualizacionHuds');

@@ -98,17 +98,9 @@ export class AppComponent {
                 this.checkPermissions();
             }
             if (this.auth.profesional) {
-                const params = {
-                    documento: this.auth.usuario.documento,
-                    busquedaExacta: true
-                };
-                this.profesionalService.get(params).subscribe(profesional => {
-                    if (profesional.length) {
-                        // En caso de que vengan dos o mas profesionales con el mismo DNI buscamos aquel que se encuentre habilitado
-                        // Si ninguno se encuentra habilitado se queda con el primero.
-                        const profHabilitado = profesional.find(prof => prof.habilitado);
-                        this.profesional = profHabilitado || profesional[0];
-                        this.auth.setProfesionalHabilitado(profHabilitado.habilitado);
+                this.profesionalService.getByID(this.auth.profesional).subscribe((profesional: IProfesional) => {
+                    if (profesional) {
+                        this.profesional = profesional;
                         this.profesional.formacionGrado?.forEach(item => {
                             item['estado'] = this.verificarEstado(item);
                         });
