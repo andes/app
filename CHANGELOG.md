@@ -1,3 +1,10 @@
+## [5.147.2](https://github.com/andes/app/compare/v5.147.1...v5.147.2) (2024-09-04)
+
+
+### Bug Fixes
+
+* **huds:**  unificaciones ([#3063](https://github.com/andes/app/issues/3063)) ([20cb494](https://github.com/andes/app/commit/20cb494a31f5bdfbff5f918dd2c12a87c2ecceca))
+
 ## [5.147.1](https://github.com/andes/app/compare/v5.147.0...v5.147.1) (2024-08-28)
 
 
