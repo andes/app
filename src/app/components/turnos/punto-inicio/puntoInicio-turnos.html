@@ -67,10 +67,11 @@
                             </plex-button>
                         </td>
                         <td class="align-middle">
-                            <plex-button *ngIf="puedeDarTurno" type="info" tooltip="Demanda insatisfecha"
-                                         icon="account-cruz"
-                                         (click)="verificarOperacion('demandaInsatisfecha', paciente)">
-                            </plex-button>
+                            <plex-help size="md" type="help" icon="account-cruz" tooltip="Demanda insatisfecha">
+                                <demandaInsatisfecha (demandaCerrada)="cerrarDemandaInsatisfecha()"
+                                                     [paciente]='paciente' *plHelp>
+                                </demandaInsatisfecha>
+                            </plex-help>
                         </td>
                     </tr>
                 </tbody>
@@ -86,8 +87,7 @@
         </div>
         <div *ngIf="showMostrarEstadisticasPacientes && paciente" type="info">
             <estadisticas-pacientes [paciente]="paciente" [showTab]="showTab"
-                                    [demandaInsatisfecha]="showDemandaInsatisfecha"
-                                    (demandaCerrada)="demandaCerrada($event)">
+                                    [demandaInsatisfecha]="showDemandaInsatisfecha" (demandaCerrada)="demandaCerrada()">
             </estadisticas-pacientes>
         </div>
         <div *ngIf="showIngresarSolicitud && paciente" type="info">

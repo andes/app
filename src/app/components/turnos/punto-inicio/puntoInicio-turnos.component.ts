@@ -187,13 +187,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.showIngresarSolicitud = false;
                 this.showActivarApp = true;
                 break;
-            case 'demandaInsatisfecha':
-                this.showDashboard = true;
-                this.showMostrarEstadisticasPacientes = true;
-                this.showDemandaInsatisfecha = true;
-                this.showIngresarSolicitud = false;
-                this.showTab = 1;
-                break;
         }
     }
 
@@ -254,4 +247,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showDemandaInsatisfecha = false;
     }
 
+    cerrarDemandaInsatisfecha() {
+        this.paciente = null;
+    }
 }
