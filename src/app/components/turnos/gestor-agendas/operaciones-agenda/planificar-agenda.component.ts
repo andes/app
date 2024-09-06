@@ -45,7 +45,7 @@ export class PlanificarAgendaComponent implements OnInit {
 
     @Output() volverAlGestor = new EventEmitter<boolean>();
 
-    public modelo: any = { nominalizada: true, dinamica: false, multiprofesional: false };
+    public modelo: any = { nominalizada: true, dinamica: false, multiprofesional: false, enviarSms: true };
     public noNominalizada = false;
     public dinamica = false;
     public multiprofesional = false;

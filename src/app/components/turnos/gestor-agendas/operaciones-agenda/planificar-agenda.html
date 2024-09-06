@@ -4,7 +4,8 @@
     <plex-layout-main>
         <form #form="ngForm">
             <plex-title titulo="{{(!editaAgenda)?'Crear nueva agenda':'Editar agenda'}}" size="md">
-                <plex-bool class="mr-1" [(ngModel)]="modelo.enviarSms" label="Enviar SMS" name="enviarSms" type="slide">
+                <plex-bool class="mr-1" [(ngModel)]="modelo.enviarSms" label="Enviar Notificación" name="enviarSms"
+                           type="slide">
                 </plex-bool>
                 <plex-button type="danger" label="Cancelar" (click)="cancelar()" size="sm">
                 </plex-button>
