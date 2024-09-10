@@ -11,7 +11,8 @@
             -1].matriculaNumero:''):'NO MATRICULADO'}}</span>
 
     </plex-badge>
-    <plex-badge *ngIf="!profesionalHabilitado" type="danger">DESHABILITADO</plex-badge>
+    <plex-badge *ngIf="profesional && !profesional.habilitado" type="danger">DESHABILITADO</plex-badge>
+
     <ng-template #notProfesional>
         <plex-badge type="default">
             Sin datos
