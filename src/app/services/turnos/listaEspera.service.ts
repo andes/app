@@ -1,9 +1,8 @@
-import { IDemanda, IListaEspera } from './../../interfaces/turnos/IListaEspera';
-import { Injectable } from '@angular/core';
-import { Server } from '@andes/shared';
-import { Observable } from 'rxjs';
-import { IPacienteBasico } from 'src/app/core/mpi/interfaces/IPaciente';
 import { Plex } from '@andes/plex';
+import { Server } from '@andes/shared';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { IDemanda, IListaEspera } from './../../interfaces/turnos/IListaEspera';
 
 @Injectable()
 export class ListaEsperaService {
@@ -56,19 +55,8 @@ export class ListaEsperaService {
             fecha: moment().toDate(),
             origen
         };
-        const datosPaciente: IPacienteBasico = {
-            id: paciente.id,
-            nombre: paciente.nombre,
-            alias: paciente.alias,
-            apellido: paciente.apellido,
-            documento: paciente.documento,
-            numeroIdentificacion: paciente.numeroIdentificacion,
-            fechaNacimiento: paciente.fechaNacimiento,
-            sexo: paciente.sexo,
-            genero: paciente.genero
-        };
         const listaEspera: IListaEspera = {
-            paciente: datosPaciente,
+            paciente,
             fecha: moment().toDate(),
             vencimiento: null,
             estado,

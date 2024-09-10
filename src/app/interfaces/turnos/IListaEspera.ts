@@ -15,12 +15,7 @@ export interface IDemanda {
 
 export interface IListaEspera {
     id?: String;
-    paciente: {
-        id: String;
-        nombre: String;
-        apellido: String;
-        documento: String;
-    };
+    paciente: { id: string };
     tipoPrestacion: any;
     fecha: Date;
     vencimiento?: Date;

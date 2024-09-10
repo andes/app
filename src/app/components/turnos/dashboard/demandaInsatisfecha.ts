@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ListaEsperaService } from 'src/app/services/turnos/listaEspera.service';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
-import { ProfesionalService } from './../../../services/profesional.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import { ListaEsperaService } from 'src/app/services/turnos/listaEspera.service';
+import { ProfesionalService } from './../../../services/profesional.service';
 
 @Component({
     selector: 'demandaInsatisfecha',
@@ -53,7 +53,7 @@ export class demandaInsatisfechaComponent {
 
     guardar() {
         if (this.motivo && this.tipoPrestacion) {
-            this.listaEsperaService.save(this.paciente, this.tipoPrestacion, this.estado, this.profesional, this.organizacion, this.motivo.nombre, this.origen).subscribe({
+            this.listaEsperaService.save({ id: this.paciente.id }, this.tipoPrestacion, this.estado, this.profesional, this.organizacion, this.motivo.nombre, this.origen).subscribe({
                 complete: () => {
                     this.plex.toast('success', 'Demanda insatisfecha guardada exitosamente!');
                     this.cerrar();
