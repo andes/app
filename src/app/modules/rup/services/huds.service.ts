@@ -108,7 +108,7 @@ export class HUDSService {
     }
 
     someOpen(registro: Registro, index?: number) {
-        return this._registrosHUDS.some(item => registro.id === item.data.id && index === item.data.index);
+        return this._registrosHUDS.some(item => registro?.id === item.data.id && index === item.data.index);
     }
 
     /**

@@ -139,7 +139,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
     /**
      * Ids correspondientes a Prescripción de Medicamentos y Seguimiento Hídrico respectivamente
      */
-    public condicionRegistros = ['33633005', '430147008'];
+    public planIndicaciones = ['33633005', '430147008'];
 
     public filtros = [
         { key: 'planes', titulo: 'prestaciones', icono: 'clipboard-check-outline' },
@@ -229,7 +229,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
             this.ejecucionService.agregarConcepto(data.concepto, false, null, data.valor);
         }
     }
-
 
     emitTabs(registro, tipo, index: number) {
         switch (tipo) {
@@ -333,6 +332,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         this.servicioPrestacion.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
             this.prestacionesTotales = prestaciones;
             const validadas = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
+
             this.prestaciones = groupBy(validadas).map(p => {
                 if (Array.isArray(p)) {
                     return {
@@ -560,23 +560,17 @@ export class HudsBusquedaComponent implements AfterContentInit {
         const filtroPrestaciones = prestaciones.filter(prestacion =>
             !prestacionesEnInternacion.some(filtro => filtro.data.id === prestacion.data.id));
 
-        const registros = filtroPrestaciones.flatMap((prestacion) => prestacion.data.ejecucion.registros);
+        const indiceRegistros = filtroPrestaciones.reduce((grupo, prestacion) => {
+            const { solicitud: { tipoPrestacion: { conceptId, term } }, id, createdAt: fecha } = prestacion.data;
+            const data = { conceptId, term, id, fecha };
 
-        const indiceRegistros = registros.reduce((grupo, registro) => {
-            const { concepto: { conceptId, term }, id, idPrestacion, createdAt: fecha } = registro;
-            const data = { conceptId, term, id, idPrestacion, fecha };
-
-            if (this.condicionRegistros.includes(data.conceptId)) {
-                return ({
-                    indices: { ...grupo.indices, [data.conceptId]: data },
-                    registros: { ...grupo.registros, [data.conceptId]: { ...grupo.registros[data.conceptId], [data.conceptId]: registro } }
-                });
-            }
-
-            return ({ indices: { ...grupo.indices, ['otras']: { ...grupo.indices['otras'], [data.conceptId]: data } }, registros: { ...grupo.registros, ['otras']: { ...grupo.registros['otras'], [data.conceptId]: registro } } });
+            return ({
+                indices: { ...grupo.indices, ['otras']: { ...grupo.indices['otras'], [data.conceptId]: data } },
+                registros: { ...grupo.registros, ['otras']: { ...grupo.registros['otras'], [data.conceptId]: prestacion } }
+            });
         }, { indices: {}, registros: {} });
 
-        const fechas = registros.map((registro) => registro.createdAt);
+        const fechas = filtroPrestaciones.map(({ data }) => data.estadoActual.createdAt);
         const fechaDesde = fechas[fechas.length - 1];
         const fechaHasta = fechas[0];
 
@@ -599,7 +593,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
                 } else { return null; }
             });
 
-            const indicePrestaciones = prestacionesPorInternacion.reduce((grupo, prestacion, index) => {
+            const indicePrestaciones = prestacionesPorInternacion.reduce((grupo, prestacion) => {
                 return ({ ...grupo, [prestacion.data.id]: prestacion });
             }, {});
 
@@ -608,7 +602,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
             const grupoRegistros = registros.reduce((grupo, registro) => {
                 const dataRegistro = { conceptId: registro.concepto.conceptId, term: registro.concepto.term, id: registro.id, idPrestacion: registro.idPrestacion };
 
-                if (this.condicionRegistros.includes(registro.concepto.conceptId)) {
+                if (this.planIndicaciones.includes(registro.concepto.conceptId)) {
                     return ({ ...grupo, [registro.concepto.conceptId]: dataRegistro });
                 }
 
