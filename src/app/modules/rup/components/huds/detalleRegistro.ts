@@ -3,6 +3,7 @@ import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { HUDSService } from '../../services/huds.service';
+import { ElementosRUPService } from '../../services/elementosRUP.service';
 
 @Component({
     selector: 'detalle-registro',
@@ -22,6 +23,7 @@ export class DetalleRegistronComponent implements OnInit {
 
     constructor(
         public prestacionesService: PrestacionesService,
+        public elementosRUPService: ElementosRUPService,
         public huds: HUDSService
     ) { }
 

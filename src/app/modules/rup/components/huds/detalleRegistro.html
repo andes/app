@@ -47,8 +47,8 @@
                                     (registro.evoluciones[indice]?.fechaInicio | fromNow) : 'Sin registro de inicio' }}
                                 </small>
                                 <small *ngIf="registro?.valor?.fechaInicio">
-                                    {{ registro.valor.fechaInicio ? (registro.valor.fechaInicio | fromNow) : 'Sin
-                                    registro de inicio' }}
+                                    {{ registro.valor.fechaInicio ? (registro.valor.fechaInicio | fromNow)
+                                    : 'Sin registro de inicio' }}
                                 </small>
                             </ng-container>
                         </p>
@@ -67,7 +67,7 @@
                             <ng-container *ngIf="relacionAux">
                                 <rup class="columna-completa align"
                                      [elementoRUP]="elementosRUPService.elementoRegistro(relacionAux)"
-                                     [prestacion]="prestacion" [paciente]="paciente" [registro]="relacionAux"
+                                     [paciente]="paciente" [registro]="relacionAux"
                                      [params]="elementosRUPService.elementoRegistro(relacionAux).params"
                                      [soloValores]="true">
                                 </rup>
