@@ -328,6 +328,14 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.getAgendas();
     }
 
+    actualizarSeleccionada(agendas) {
+        agendas.forEach(nuevaAgenda => {
+            if (this.agendasSeleccionadas && this.agendasSeleccionadas[0].id === nuevaAgenda.id) {
+                this.agendasSeleccionadas[0] = nuevaAgenda;
+            }
+        });
+    }
+
     getAgendas() {
         if (this.lastRequestFecha) {
             this.lastRequestFecha.unsubscribe();
@@ -365,6 +373,9 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                 this.scrollEnd = true;
             }
 
+            if (this.agendasSeleccionadas[0]) {
+                this.actualizarSeleccionada(agendas);
+            }
         }, err => this.loader = false
         );
     }
@@ -387,7 +398,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
         }
         this.getAgendas();
-
     }
 
     agregarNotaAgenda() {

@@ -1,10 +1,10 @@
-import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
-import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { IAgenda } from './../../../../../interfaces/turnos/IAgenda';
-import { ITurno } from './../../../../../interfaces/turnos/ITurno';
+import { Plex } from '@andes/plex';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AgendaService } from '../../../../../services/turnos/agenda.service';
 import { TurnoService } from '../../../../../services/turnos/turno.service';
+import { IAgenda } from './../../../../../interfaces/turnos/IAgenda';
+import { ITurno } from './../../../../../interfaces/turnos/ITurno';
 import { TiposDeTurnos } from './../../../enums';
 
 @Component({
@@ -67,7 +67,7 @@ export class ReasignarTurnoComponent implements OnInit {
 
     actualizar() {
         this.serviceAgenda.getById(this.agendaAReasignar.id).subscribe(agendaActualizada => {
-            this.agendaAReasignar = agendaActualizada;
+            this.agendaAReasignar = this.filtrarTurnos(agendaActualizada);
         });
     }
 
@@ -155,4 +155,19 @@ export class ReasignarTurnoComponent implements OnInit {
         this.showReasignarTurno = false;
     }
 
+    filtrarTurnos(agenda) {
+        agenda.bloques.forEach((bloque) => {
+            const aReasignar = [];
+
+            bloque.turnos.forEach(turno => {
+                if (turno.estado === 'suspendido' && turno.fechaHoraDacion) {
+                    aReasignar.push(turno);
+                }
+            });
+
+            bloque.turnos = aReasignar;
+        });
+
+        return agenda;
+    }
 }
