@@ -7,22 +7,22 @@
         </plex-title>
         <plex-wrapper (change)="changeCollapse($event)">
 
-            <plex-datetime grow="1" type="date" [(ngModel)]="fechaDesdeEntrada" name="fechaDesde" [debounce]="200"
+            <plex-datetime grow="1" type="date" [(ngModel)]="fechaDesdeEntrada" name="fechaDesde" [debounce]="600"
                            label="Fecha Desde" class="fechas" [max]="fechaHastaEntrada" (change)="filtrar()">
             </plex-datetime>
-            <plex-datetime grow="1" type="date" [(ngModel)]="fechaHastaEntrada" name="fechaHasta" [debounce]="200"
+            <plex-datetime grow="1" type="date" [(ngModel)]="fechaHastaEntrada" name="fechaHasta" [debounce]="600"
                            label="Fecha Hasta" class="fechas" [min]="fechaDesdeEntrada" (change)="filtrar()">
             </plex-datetime>
 
-            <plex-datetime grow="1" type="date" [(ngModel)]="fechaCita" name="fechaCita" [debounce]="200"
+            <plex-datetime grow="1" type="date" [(ngModel)]="fechaCita" name="fechaCita" [debounce]="600"
                            label="Fecha de cita" class="fechas" (change)="filtrar()">
             </plex-datetime>
 
-            <plex-datetime grow="1" type="date" [(ngModel)]="fechaUltimoControl" name="fechaControl" [debounce]="200"
+            <plex-datetime grow="1" type="date" [(ngModel)]="fechaUltimoControl" name="fechaControl" [debounce]="600"
                            label="Último control" class="fechas" (change)="filtrar()">
             </plex-datetime>
 
-            <plex-text grow="1" [(ngModel)]="paciente" name="paciente" label="Buscar paciente" [debounce]="500"
+            <plex-text grow="1" [(ngModel)]="paciente" name="paciente" label="Buscar paciente" [debounce]="600"
                        (change)="filtrar()"></plex-text>
 
             <div collapse>
