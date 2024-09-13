@@ -35,6 +35,7 @@ export class SuspenderAgendaComponent implements OnInit {
     public showData = false;
     public showConfirmar = false;
     public telefonos = [];
+    public enviarNotificacion = '';
     /**
      * Array con todos los turnos de la agenda.
      *
@@ -108,6 +109,7 @@ export class SuspenderAgendaComponent implements OnInit {
                 this.turnos.push(sobreturno);
             }
         });
+        this.enviarNotificacion = this.agenda.enviarSms ? 'Si' : 'No';
     }
 
     suspenderAgenda() {

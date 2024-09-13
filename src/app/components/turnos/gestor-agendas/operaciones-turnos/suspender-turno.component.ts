@@ -67,7 +67,7 @@ export class SuspenderTurnoComponent implements OnInit {
     seleccionarTurno(turno) {
         const indice = this.seleccionadosSMS.indexOf(turno);
         if (indice === -1) {
-            if (turno.paciente && turno.paciente.id) {
+            if (turno.paciente?.id) {
                 this.seleccionadosSMS = [...this.seleccionadosSMS, turno];
             }
         } else {
@@ -84,9 +84,6 @@ export class SuspenderTurnoComponent implements OnInit {
         }
     }
 
-    tienePaciente(turno) {
-        return turno.paciente != null && turno.paciente.id != null;
-    }
 
     suspenderTurno() {
 
