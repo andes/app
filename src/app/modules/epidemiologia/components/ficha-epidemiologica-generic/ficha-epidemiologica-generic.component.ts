@@ -257,12 +257,17 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
         if (field.dependency) {
             const seccion = this.secciones.find(seccion => seccion.fields[field.dependency.id]);
             if (!seccion) {
+                res = false;
                 const seccionBuscada = this.secciones.find(seccion => seccion.fields[field.key]);
                 if (seccionBuscada) {
                     seccionBuscada.fields[field.key] = null;
                 }
+            } else {
+                if (field.dependency.valor) {
+                    const campo = seccion.fields[field.dependency.id];
+                    res = field.dependency.valor === campo || field.dependency.valor === campo?.id;
+                }
             }
-            res = seccion ? true : false;
         }
         return res;
     }
