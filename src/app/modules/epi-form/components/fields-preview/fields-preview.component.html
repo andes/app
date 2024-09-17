@@ -1,0 +1,61 @@
+<ul class="mr-2 unstyled" style="padding-left: 0 !important;">
+    <li *ngFor="let field of section.fields; let fileIndex = index"
+        style="list-style-type: none !important;">
+        <plex-grid cols="2">
+            <!-- Campo tipo string -->
+            <plex-text *ngIf="field.type?.id === 'string'" label="{{ field.name }}"
+                name="name-{{ field.name }}" [(ngModel)]="field.value"
+                [required]="field.required"></plex-text>
+            <!-- Campo tipo int -->
+            <plex-float *ngIf="field.type?.id === 'int'" label="{{ field.name }}"
+                name="name-{{ field.name }}" [(ngModel)]="field.value"
+                [required]="field.required"></plex-float>
+            <!-- Campo tipo select -->
+            <plex-select *ngIf="field.type?.id === 'select'" label="{{ field.name }}"
+                name="name-{{ field.name }}" [(ngModel)]="field.value"
+                [required]="field.required"></plex-select>
+            <!-- Campo tipo selectStatic -->
+            <plex-select *ngIf="field.type?.id === 'selectStatic'" label="{{ field.name }}"
+                name="name-{{ field.name }}" [(ngModel)]="field.value" [required]="field.required"
+                [data]="field.selectList"></plex-select>
+            <!-- Campo tipo date -->
+            <plex-datetime *ngIf="field.type?.id === 'date' && !field.datePeriod" type="date"
+                label="{{ field.name }}" name="name-{{ field.name }}" [(ngModel)]="field.value"
+                [required]="field.required"></plex-datetime>
+            <!-- Campo tipo date period -->
+            <plex-grid *ngIf="field.type?.id === 'date' && field.datePeriod" cols="2">
+                <plex-datetime type="date" label="{{ field.name }}" name="name-{{ field.name }}"
+                    [(ngModel)]="field.value1" [required]="field.required"></plex-datetime>
+                <plex-datetime type="date" label="{{ field.name }}" name="name-{{ field.name }}"
+                    [(ngModel)]="field.value2" [required]="field.required"></plex-datetime>
+            </plex-grid>
+            <!-- Campo tipo boolean -->
+            <plex-bool *ngIf="field.type?.id === 'boolean'" type="slide" label="{{ field.name }}"
+                name="name-{{ field.name }}" [(ngModel)]="field.value"
+                [required]="field.required"></plex-bool>
+            <!-- Campo tipo phone -->
+            <plex-phone *ngIf="field.type?.id === 'phone'" label="{{ field.name }}"
+                name="name-{{ field.name }}" [(ngModel)]="field.value"
+                [required]="field.required"></plex-phone>
+            <!-- Campo tipo dependencia -->
+            <plex-text *ngIf="field.type?.id === 'dependencia'" label="{{ field.name }}"
+                name="name-{{ field.name }}" [(ngModel)]="field.value"></plex-text>
+            <!-- Campo tipo snomed -->
+            <plex-text *ngIf="field.type?.id === 'snomed'" label="{{ field.name }}"
+                name="name-{{ field.name }}" [(ngModel)]="field.value"
+                [required]="field.required"></plex-text>
+            <!-- Campo tipo table -->
+            <plex-text *ngIf="field.type?.id === 'table'" label="{{ field.name }}"
+                name="name-{{ field.name }}" [(ngModel)]="field.value"></plex-text>
+            <div justify="end" class="mt-4">
+                <plex-help *ngIf="field.description" type="info" titulo="Descripción"
+                    subtitulo="{{ field.description }}"></plex-help>
+                <plex-button size="sm" type="warning" icon="pencil" tooltip="Editar"
+                    (click)="onEditField(sectionIndex, fileIndex)" class="ml-1"></plex-button>
+                <plex-button size="sm" type="danger" icon="delete" tooltip="Eliminar"
+                    (click)="onRemoveField(sectionIndex, fileIndex)"
+                    class="ml-1 mr-3"></plex-button>
+            </div>
+        </plex-grid>
+    </li>
+</ul>

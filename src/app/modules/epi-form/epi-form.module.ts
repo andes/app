@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ScrollingModule } from '@angular/cdk/scrolling';
+// import { ScrollingModule } from '@angular/cdk/scrolling';
 import { RouterModule } from '@angular/router';
 
 import { PlexModule } from '@andes/plex';
@@ -23,7 +23,7 @@ import { FormConfigComponent } from './components/form-config/form-config.compon
         ReactiveFormsModule,
         HttpClientModule,
         RouterModule,
-        ScrollingModule,
+        // ScrollingModule,
         EpiFormsRouting
     ],
     providers: [],
