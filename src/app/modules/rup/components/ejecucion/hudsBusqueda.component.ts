@@ -3,7 +3,7 @@ import { Plex } from '@andes/plex';
 import { AfterContentInit, Component, EventEmitter, Input, Optional, Output, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { InternacionResumenHTTP } from 'src/app/apps/rup/mapa-camas/services/resumen-internacion.http';
 import { SECCION_CLASIFICACION } from 'src/app/modules/epidemiologia/constantes';
 import { FormsEpidemiologiaService } from 'src/app/modules/epidemiologia/services/ficha-epidemiologia.service';
@@ -11,7 +11,6 @@ import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneable
 import { gtag } from '../../../../shared/services/analytics.service';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { getSemanticClass } from '../../pipes/semantic-class.pipes';
-import { IPSService } from '../../services/dominios-nacionales.service';
 import { EmitConcepto, RupEjecucionService } from '../../services/ejecucion.service';
 import { HUDSService } from '../../services/huds.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
@@ -40,8 +39,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
     public loading = false;
 
     public cdas = [];
-
-    public dominios$: Observable<any[]>;
 
     @Input() paciente: any;
 
@@ -109,7 +106,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
         elementoderegistro: ['elemento de registro'],
         laboratorios: ['laboratorios'],
         vacunas: ['vacunas'],
-        dominios: ['dominios']
     };
     public prestacionesTotales;
     public registrosTotales = {
@@ -127,8 +123,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
     };
 
     public filtroRegistrosTrastornos;
-
-    public dominios = [];
 
     public txtABuscar;
 
@@ -150,7 +144,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
         { key: 'producto', titulo: 'productos', icono: 'pildoras' },
         { key: 'laboratorios', titulo: 'laboratorios', icono: 'recipiente' },
         { key: 'vacunas', titulo: 'vacunas', icono: 'vacuna' },
-        { key: 'dominios', titulo: 'dominios nacionales', icono: 'hospital' },
     ];
 
     constructor(
@@ -160,7 +153,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
         public huds: HUDSService,
         private formEpidemiologiaService: FormsEpidemiologiaService,
         private resumenHTTP: InternacionResumenHTTP,
-        public ipsService: IPSService,
         @Optional() private ejecucionService: RupEjecucionService,
         private pacienteService: PacienteService
     ) {
@@ -176,7 +168,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
             this.listarInternaciones();
             this.listarPrestaciones();
             this.listarConceptos();
-            this.listarDominios();
         }
         const token = this.huds.getHudsToken();
         // Cuando se inicia una prestación debemos volver a consultar si hay CDA nuevos al ratito.
@@ -427,14 +418,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
         });
     }
 
-    listarDominios() {
-        this.dominios$ = this.ipsService.getDominiosIdPaciente(this.paciente.id).pipe(
-            tap((dominios) => {
-                this.dominios = dominios;
-            })
-        );
-    }
-
     private cargarSolicitudesMezcladas() {
         this.solicitudesMezcladas = this.solicitudes.concat(this.solicitudesTOP);
 
@@ -529,8 +512,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
                 return this.vacunas.length;
             case 'solicitudes':
                 return this.solicitudesMezcladas.length;
-            case 'dominios':
-                return this.dominios.length;
         }
     }
 
