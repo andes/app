@@ -1,3 +1,19 @@
+# [5.148.0](https://github.com/andes/app/compare/v5.147.2...v5.148.0) (2024-09-18)
+
+
+### Bug Fixes
+
+* **EPI:** Agrega cambios en campos con dependecias ([#3074](https://github.com/andes/app/issues/3074)) ([e9a9911](https://github.com/andes/app/commit/e9a991191c500d52ec843e442ec975a49c745853))
+* **huds:** carga de huds incluyendo pacientes unificados ([#3069](https://github.com/andes/app/issues/3069)) ([52cfc3c](https://github.com/andes/app/commit/52cfc3cdf10f2edb9d552f80aaf9210cf4656c2b))
+* **HUDS-122:** error al visualizar registro con relaciones ([#3068](https://github.com/andes/app/issues/3068)) ([0f88bcb](https://github.com/andes/app/commit/0f88bcb2ae5bca9d3f53542ad6d2ade3b4fe1ff6))
+* **per:** filtros de listado perinatal ([#3057](https://github.com/andes/app/issues/3057)) ([274e835](https://github.com/andes/app/commit/274e83532bfe8ce8b554d6f97f20768819f5ee61))
+
+
+### Features
+
+* **CIT:** implementa filtros de reasignacion de turnos ([#3062](https://github.com/andes/app/issues/3062)) ([71bd458](https://github.com/andes/app/commit/71bd4580b31e800ef0c1d573af6e931f42ae3822))
+* **HUDS:** implementa mejoras en buscador ([#3054](https://github.com/andes/app/issues/3054)) ([c222bf4](https://github.com/andes/app/commit/c222bf49b330e1d294b3fcd88e60231afd34b724))
+
 ## [5.147.2](https://github.com/andes/app/compare/v5.147.1...v5.147.2) (2024-09-04)
 
 
