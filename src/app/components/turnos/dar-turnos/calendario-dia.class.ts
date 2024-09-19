@@ -60,9 +60,9 @@ export class CalendarioDia {
 
                         /* Quedan en estado 'disponible' (Para mostrarse en el calendario) las agendas que ..
                            - Sean exclusivas de gestión y tengan turnos disponibles
-                           - Tengan tusnos del dia o programados disponibles
+                           - Tengan turnos del dia o programados disponibles
                         */
-                        if (this.contieneExclusivoGestion(unaAgenda)) {
+                        if (this.esExclusivoGestion(unaAgenda)) {
                             this.estado = (unaAgenda.turnosRestantesGestion > 0) ? 'disponible' : 'ocupado';
                             this.turnosDisponibles = unaAgenda.turnosRestantesGestion;
                         } else {
@@ -152,8 +152,8 @@ export class CalendarioDia {
         }
     }
 
-    // retorna true si algun bloque de la agenda es exclusivo de gestión
-    contieneExclusivoGestion(agenda: any): boolean {
-        return agenda.bloques.some(bloque => bloque.reservadoGestion > 0 && bloque.accesoDirectoDelDia === 0 && bloque.accesoDirectoProgramado === 0 && bloque.reservadoProfesional === 0);
+    // retorna true si todos los bloques de la agenda son de gestión
+    esExclusivoGestion(agenda: any): boolean {
+        return agenda.bloques.every(bloque => bloque.reservadoGestion > 0 && bloque.accesoDirectoDelDia === 0 && bloque.accesoDirectoProgramado === 0 && bloque.reservadoProfesional === 0);
     }
 }
