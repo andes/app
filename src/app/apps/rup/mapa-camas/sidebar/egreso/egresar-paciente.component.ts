@@ -144,7 +144,9 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         ]).pipe(
             map(([camas, disparador]) => {
                 this.inProgress = false;
-                if (!this.cama || this.cama?.sala || this.formEgreso.invalid || (this.capa === 'estadistica' && this.prestacionValidada)) {
+                if (this.cama?.sala) {
+                    return false;
+                } else if (!this.cama || this.formEgreso.invalid || (this.capa === 'estadistica' && this.prestacionValidada)) {
                     return true;
                 }
                 const camaActual = camas.find(c => c.id === (this.cama as any)?._id);
@@ -194,9 +196,10 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.view,
             this.mapaCamasService.capa2,
             this.mapaCamasService.ambito2,
+            this.mapaCamasService.selectedCama,
             this.mapaCamasService.prestacion$,
             this.mapaCamasService.resumenInternacion$
-        ]).subscribe(([view, capa, ambito, prestacion, resumen]) => {
+        ]).subscribe(([view, capa, ambito, cama, prestacion, resumen]) => {
             this.inProgress = false;
             this.resumen = resumen;
             let fecha = moment(resumen?.fechaEgreso || this.mapaCamasService.fecha).toDate();
@@ -248,14 +251,15 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                                 if (this.subscription3) {
                                     this.subscription3.unsubscribe();
                                 }
-                                this.subscription3 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
-                                    this.estadoDestino = relacionesPosibles[0].destino;
-                                });
+                                this.setEstadoDestino();
                             }
                         });
+                } else {
+                    this.cama = cama;
+                    this.setEstadoDestino();
                 }
             } else if (this.resumen?.id) {
-                // asistencial
+                // asistencial (no sala)
                 if (this.resumen.fechaEgreso) {
                     this.fechaEgresoOriginal = moment(this.resumen.fechaEgreso).toDate();
                     this.registro.valor.InformeEgreso.tipoEgreso = this.listaTipoEgreso.find(tipo => tipo.nombre === this.resumen.tipo_egreso);
@@ -270,14 +274,23 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                         this.fechaMin = moment(ultimoMovimiento.fecha).add(1, 'm').toDate();
                         this.checkHistorial(fecha);
 
-                        this.subscription3 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
-                            this.estadoDestino = relacionesPosibles[0].destino;
-                        });
+                        this.setEstadoDestino();
                     });
+            } else if (cama.sala) {
+                this.cama = cama;
             }
 
             this.fecha = moment(fecha).toDate();
             this.setDiasEstada();
+        });
+    }
+
+    /* Calcula cual seria el siguiente estado correcto que corresponderia partir del movimiento actual
+        en base a la maquina de estados y se lo asigna a la variable 'estadoDestino'
+        */
+    private setEstadoDestino() {
+        this.subscription3 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
+            this.estadoDestino = relacionesPosibles[0].destino;
         });
     }
 
@@ -414,7 +427,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             };
             return this.servicioPrestacion.patch(this.prestacion.id, params).pipe(
                 switchMap(prestacion => {
-                    if (this.view === 'listado-internacion') {
+                    if (this.view === 'listado-internacion' || this.capa === 'estadistica') {
                         this.mapaCamasService.selectPrestacion(prestacion);
                     }
                     if (this.capa === 'estadistica-v2' && this.resumen?.fechaEgreso) {

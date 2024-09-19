@@ -91,7 +91,7 @@
                         <plex-button class="mr-1" size="sm" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO
                         </plex-button>
                     </ng-container>
-                    <ng-container *ngIf="!cama.sala && !registraEgreso">
+                    <ng-container *ngIf="puedeDeshacer()">
                         <ng-container *ngIf="capa !== 'interconsultores' && capa !== 'farmaceutica'">
                             <plex-button *ngIf="unicoMovimiento" size="sm" icon="account-off" type="danger"
                                          tooltip="Deshacer Internación" tooltipPosition="left"

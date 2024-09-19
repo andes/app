@@ -151,7 +151,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
             auditTime(1),
             map(([prestacion, registraEgreso, vista, loading]) => {
                 this.activateOption(this.items[0].key);
-                return prestacion?.estadoActual?.tipo !== 'validada' && !registraEgreso && vista === 'listado-internacion' && !loading;
+                return prestacion?.estadoActual?.tipo !== 'validada' && vista === 'listado-internacion' && !loading;
             })
         );
     }

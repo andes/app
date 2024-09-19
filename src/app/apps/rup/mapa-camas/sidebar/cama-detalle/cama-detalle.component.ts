@@ -1,13 +1,12 @@
 import { Plex } from '@andes/plex';
-import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { combineLatest, Observable, of } from 'rxjs';
+import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { filter, first, map, switchMap } from 'rxjs/operators';
 import { TurneroService } from 'src/app/apps/turnero/services/turnero.service';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
-import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { IMAQEstado, IMAQRelacion } from '../../interfaces/IMaquinaEstados';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
@@ -22,7 +21,7 @@ import { Auth } from '@andes/auth';
     selector: 'app-cama-detalle',
     templateUrl: 'cama-detalle.component.html'
 })
-export class CamaDetalleComponent implements OnInit, AfterViewChecked {
+export class CamaDetalleComponent implements OnInit, AfterViewChecked, OnDestroy {
     public cama$: Observable<ISnapshot>;
     public estadoCama$: Observable<IMAQEstado>;
     public relaciones$: Observable<IMAQRelacion[]>;
@@ -43,7 +42,6 @@ export class CamaDetalleComponent implements OnInit, AfterViewChecked {
     // VARIABLES
     public capa: string;
     public cama: ISnapshot;
-    public prestacion: IPrestacion;
     public estadoCama;
     public genero;
     public censable;
@@ -69,6 +67,8 @@ export class CamaDetalleComponent implements OnInit, AfterViewChecked {
     public botonRegistroHabilitado$;
     public itemsDropdown: any = [];
     public unicoMovimiento = false;
+    public subscripcion: Subscription;
+    public prestacion;
 
     items = [
         {
@@ -103,6 +103,10 @@ export class CamaDetalleComponent implements OnInit, AfterViewChecked {
     ) {
     }
 
+    ngOnDestroy() {
+        this.subscripcion.unsubscribe();
+    }
+
     ngOnInit() {
         this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
         this.capa = this.mapaCamasService.capa;
@@ -111,6 +115,7 @@ export class CamaDetalleComponent implements OnInit, AfterViewChecked {
         this.relaciones$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getRelacionesPosibles(cama)));
         this.accionesEstado$ = this.mapaCamasService.prestacionesPermitidas(this.mapaCamasService.selectedCama);
         this.organizacionV2$ = this.organizacionService.usaCapasUnificadas(this.auth.organizacion.id);
+        this.subscripcion = this.mapaCamasService.prestacion$.subscribe(p => this.prestacion = p);
 
         this.paciente$ = this.cama$.pipe(
             filter(cama => !!cama.paciente),
@@ -122,6 +127,7 @@ export class CamaDetalleComponent implements OnInit, AfterViewChecked {
             this.mapaCamasService.maquinaDeEstado$
         ]).pipe(
             map(([cama, estado]) => {
+                this.cama = cama;
                 this.loadingDataEgreso = true;
                 if (cama.idInternacion) {
                     const turnero = estado.turnero || {};
@@ -215,6 +221,13 @@ export class CamaDetalleComponent implements OnInit, AfterViewChecked {
             this.plex.info('success', 'Nota guardada');
             this.editNota = false;
         });
+    }
+
+    puedeDeshacer() {
+        const capaEstadistica = this.capa === 'estadistica';
+        const estadoInternacion = this.prestacion?.estadoActual.tipo || '';
+        const esSala = this.cama?.sala;
+        return !esSala && !this.loadingDataEgreso && (!this.registraEgreso || capaEstadistica && estadoInternacion !== 'validada');
     }
 
     // parametro 'completo' indica si se borra solo un movimiento ó la internación completa

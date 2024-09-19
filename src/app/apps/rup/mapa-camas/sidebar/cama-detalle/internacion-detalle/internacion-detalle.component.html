@@ -14,21 +14,24 @@
                 </ng-container>
             </app-informe-ingreso-estadistica-v2>
             <!-- ESTADISTICA -->
-            <app-informe-ingreso *ngIf="capa === 'estadistica'" (cancel)="activateOption('ingreso')">
-                <plex-button *ngIf="permisosMapaCamasService.ingreso" tooltip="Editar ingreso" tooltipPosition="left"
-                             icon="pencil" type="warning" size="sm" (click)="toggleEdit()" class="mr-1">
-                </plex-button>
-                <ng-container *ngIf="anular$ | async">
-                    <plex-button size="sm" icon="account-off" type="danger" tooltip="Deshacer Internación"
-                                 tooltipPosition="left" (click)="onAnularInternacion()">
+            <ng-container *ngIf="capa === 'estadistica'">
+                <app-informe-ingreso (cancel)="activateOption('ingreso')">
+                    <plex-button *ngIf="permisosMapaCamasService.ingreso" tooltip="Editar ingreso"
+                                 tooltipPosition="left" icon="pencil" type="warning" size="sm" (click)="toggleEdit()"
+                                 class="mr-1">
                     </plex-button>
-                </ng-container>
-            </app-informe-ingreso>
-            <app-periodos-censables [editable]="estadoPrestacion !== 'validada'"
-                                    *ngIf="capa === 'estadistica' || capa === 'estadistica-v2'">
-                <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="toggleEdit()">
-                </plex-button>
-            </app-periodos-censables>
+                    <ng-container *ngIf="anular$ | async">
+                        <plex-button size="sm" icon="account-off" type="danger" tooltip="Deshacer Internación"
+                                     tooltipPosition="left" (click)="onAnularInternacion()">
+                        </plex-button>
+                    </ng-container>
+                </app-informe-ingreso>
+                <app-periodos-censables [editable]="estadoPrestacion !== 'validada'"
+                                        *ngIf="(capa === 'estadistica' || capa === 'estadistica-v2')">
+                    <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="toggleEdit()">
+                    </plex-button>
+                </app-periodos-censables>
+            </ng-container>
         </ng-container>
 
         <app-ingresar-paciente *ngIf="editarIngresoIdInternacion" (onSave)="toggleEdit()">
@@ -67,8 +70,8 @@
     <ng-container *ngIf="mostrar === 'registros' && permisosMapaCamasService.registros">
         <app-registros-huds-detalle *ngIf="!(paciente | pacienteRestringido)"
                                     (accion)="onAccion($event)"></app-registros-huds-detalle>
-        <plex-label *ngIf="paciente | pacienteRestringido" class="mt-4" type="warning" icon="informacion" justify="center"
-                    direction="column">
+        <plex-label *ngIf="paciente | pacienteRestringido" class="mt-4" type="warning" icon="informacion"
+                    justify="center" direction="column">
             No tiene permiso para ingresar a este paciente.
         </plex-label>
     </ng-container>
