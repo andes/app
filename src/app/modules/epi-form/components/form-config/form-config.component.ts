@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
+import { FormResourcesService } from '../../services/resources.service';
 
 @Component({
     selector: 'form-config',
@@ -11,26 +12,7 @@ import { NgForm } from '@angular/forms';
 export class FormConfigComponent implements OnInit {
 
     @ViewChild('formulario', { static: false }) formControl: NgForm;
-    public tiposList = [
-        { id: 'string', nombre: 'Texto' },
-        { id: 'int', nombre: 'Numérico' },
-        { id: 'select', nombre: 'Selección' },
-        { id: 'selectStatic', nombre: 'Selección estática' },
-        { id: 'date', nombre: 'Fecha' },
-        { id: 'boolean', nombre: 'Verdadero o Falso' },
-        { id: 'phone', nombre: 'Teléfono' },
-        { id: 'dependencia', nombre: 'Dependencia' },
-        { id: 'snomed', nombre: 'Snomed' },
-        { id: 'table', nombre: 'Tabla' }
-    ];
-    public resources = [
-        { id: 'provincias', nombre: 'Provincias' },
-        { id: 'localidades', nombre: 'Localidades' },
-        { id: 'personal', nombre: 'Personal' },
-        { id: 'efectores', nombre: 'Efectores' },
-        { id: 'enfermedades', nombre: 'Enfermedades' },
-        { id: 'paises', nombre: 'Países' }
-    ];
+
     public isFormSnomedizable = false;
     public form: any = {
         name: '',
@@ -38,23 +20,14 @@ export class FormConfigComponent implements OnInit {
         snomedCode: '',
         sections: []
     };
+    public sidebar = false;
     public fieldToConfig = null;
     public fieldIndex: number | null = null;
-    public sectionIndex: number;
-    public selectItem: String;
-    public selectColumns = [
-        {
-            key: 'name',
-            label: 'Nombre',
-        },
-        {
-            key: 'actions',
-            label: 'Acciones',
-        }
-    ];
+    public sectionIndex: number | null = null;
     constructor(
         private auth: Auth,
-        private router: Router
+        private router: Router,
+        private formResourceService: FormResourcesService
     ) {}
 
     ngOnInit() {
@@ -62,6 +35,7 @@ export class FormConfigComponent implements OnInit {
             this.router.navigate(['inicio']);
         }
     }
+
 
     onAddSection() {
         this.form.sections.push({
@@ -83,13 +57,22 @@ export class FormConfigComponent implements OnInit {
     }
 
     onAddField(sectionIndex) {
-        this.sectionIndex = sectionIndex;
-        this.fieldToConfig = {
-            key: '',
-            name: '',
-            type: '',
-            selectList: [],
-        };
+        this.closeFieldConfig;
+        setTimeout(() => {
+            this.sectionIndex = sectionIndex;
+            this.sidebar = true;
+        }, 300);
+    }
+
+    onSaveField(field) {
+        if (this.fieldIndex !== null) {
+            this.form.sections[this.sectionIndex].fields[this.fieldIndex] = { ...field };
+            this.fieldIndex = null;
+        } else {
+            this.form.sections[this.sectionIndex].fields.push(field);
+            this.form.sections[this.sectionIndex].fields = [... this.form.sections[this.sectionIndex].fields];
+        }
+        this.closeFieldConfig();
     }
 
     onRemoveField(sectionIndex, fieldIndex) {
@@ -98,34 +81,18 @@ export class FormConfigComponent implements OnInit {
     }
 
     closeFieldConfig() {
+        this.sectionIndex = null;
         this.fieldToConfig = null;
-    }
-
-    onSaveField(sectionIndex, field) {
-        if (this.fieldIndex !== null) {
-            this.form.sections[sectionIndex].fields[this.fieldIndex] = { ...field };
-            this.fieldIndex = null;
-        } else {
-            this.form.sections[sectionIndex].fields.push(field);
-            this.form.sections[sectionIndex].fields = [... this.form.sections[sectionIndex].fields];
-        }
-        this.closeFieldConfig();
+        this.sidebar = false;
     }
 
     onEditField(sectionIndex, fieldIndex) {
-        this.sectionIndex = sectionIndex;
-        this.fieldIndex = fieldIndex;
-        this.fieldToConfig = { ...this.form.sections[sectionIndex].fields[fieldIndex] };
-    }
-
-    onSaveSelectItem() {
-        this.fieldToConfig.selectList.push({ id: this.selectItem.toLowerCase(), nombre: this.selectItem });
-        this.fieldToConfig.selectList = [...this.fieldToConfig.selectList];
-        this.selectItem = '';
-    }
-
-    onRemoveSelectItem(selectIndex) {
-        this.fieldToConfig.selectList.splice(selectIndex, 1);
-        this.fieldToConfig.selectList = [...this.fieldToConfig.selectList];
+        this.closeFieldConfig();
+        setTimeout(() => {
+            this.sectionIndex = sectionIndex;
+            this.fieldIndex = fieldIndex;
+            this.fieldToConfig = { ...this.form.sections[sectionIndex].fields[fieldIndex] };
+            this.sidebar = true;
+        }, 300);
     }
 }

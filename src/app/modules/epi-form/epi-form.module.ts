@@ -10,11 +10,15 @@ import { FormsListComponent } from './components/forms-list/forms-list.component
 import { EpiFormsRouting } from './epi-form.routing';
 import { FormConfigComponent } from './components/form-config/form-config.component';
 
+import { FormResourcesService } from './services/resources.service';
+import { FieldConfigComponent } from './components/field-config/field-config.component';
+
 
 @NgModule({
     declarations: [
         FormsListComponent,
-        FormConfigComponent
+        FormConfigComponent,
+        FieldConfigComponent
     ],
     imports: [
         CommonModule,
@@ -26,7 +30,9 @@ import { FormConfigComponent } from './components/form-config/form-config.compon
         // ScrollingModule,
         EpiFormsRouting
     ],
-    providers: [],
+    providers: [
+        FormResourcesService,
+    ],
     exports: []
 })
 export class EpiFormModule {}
