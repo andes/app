@@ -207,11 +207,12 @@
             <ng-container *ngIf="tipoPaciente !== 'bebe'">
                 <plex-title titulo="identidad de género" size="sm" class="mt-2"></plex-title>
                 <plex-wrapper>
-                    <plex-text label="Nombre" [(ngModel)]="paciente.alias" name="nombreAutopercibido"
+                    <plex-text label="Nombre autopercibido" [(ngModel)]="paciente.alias" name="nombreAutopercibido"
                                [pattern]="nombrePattern" (change)="completaExtranjero()"></plex-text>
 
-                    <plex-select label="Seleccione género" [(ngModel)]="paciente.genero" [data]="generos|async"
-                                 (change)="completaExtranjero()" name="genero" [required]="requiereGenero">
+                    <plex-select label="Seleccione género autopercibido" [(ngModel)]="paciente.genero"
+                                 [data]="generos|async" (change)="completaExtranjero()" name="genero"
+                                 [required]="requiereGenero">
                     </plex-select>
                 </plex-wrapper>
             </ng-container>
