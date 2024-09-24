@@ -37,6 +37,7 @@ export class DetalleRegistroInternacionComponent implements OnInit {
     public selectorSizePagina = 30;
     public pagina = 1;
     public paginaInvalida = false;
+    public collapse = false;
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -222,3 +223,5 @@ export class DetalleRegistroInternacionComponent implements OnInit {
         return concepto;
     }
 }
+
+
