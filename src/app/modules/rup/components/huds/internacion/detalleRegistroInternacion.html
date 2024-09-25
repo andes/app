@@ -106,86 +106,81 @@
                     </plex-button>
                 </plex-title>
                 <div class="mt-1">
-                    <plex-accordion activeLast="true" (click)="colapsar(iPrestacion)">
-                        <plex-panel class="lista-panel">
+                    <div class="collapse-wrapper" (click)="colapsar(iPrestacion)">
+                        <plex-label class="prestacion-label" size="md" case="capitalize" titulo="Fecha De Validación"
+                                    subtitulo="{{ prestacion.data.estadoActual.createdAt | date: 'EEE dd/MM/yyyy HH:mm' }}">
+                        </plex-label>
+                        <div class="prestacion-info">
+                            <plex-label class="prestacion-label" size="md" case="capitalize"
+                                        titulo="Profesional que valida"
+                                        subtitulo="{{ prestacion.data.solicitud.profesional | nombre }}">
+                            </plex-label>
+                            <plex-label *ngIf="tipo === 'registrosInternacion'" class="prestacion-label" size="md"
+                                        case="capitalize" titulo="Unidad organizativa"
+                                        subtitulo="{{ prestacion.data.unidadOrganizativa?.term || 'Sin unidad organizativa' }}">
+                            </plex-label>
+                        </div>
+                        <plex-button class="collapse-button" type="primary" size="sm"
+                                     icon="{{ colapsable.includes(iPrestacion) ? 'chevron-up' : 'chevron-down'}}">
+                        </plex-button>
+                    </div>
 
-                            <div plex-accordion-title class="accordion-title" case="capitalize">
-                                <plex-label class="prestacion-label" size="md" case="capitalize"
-                                            titulo="Fecha De Validación"
-                                            subtitulo="{{ prestacion.data.estadoActual.createdAt | date: 'EEE dd/MM/yyyy HH:mm' }}">
-                                </plex-label>
-                                <div class="prestacion-info">
-                                    <plex-label class="prestacion-label" size="md" case="capitalize"
-                                                titulo="Profesional que valida"
-                                                subtitulo="{{ prestacion.data.solicitud.profesional | nombre }}">
-                                    </plex-label>
-                                    <plex-label *ngIf="tipo === 'registrosInternacion'" class="prestacion-label"
-                                                size="md" case="capitalize" titulo="Unidad organizativa"
-                                                subtitulo="{{ prestacion.data.unidadOrganizativa?.term || 'Sin unidad organizativa' }}">
-                                    </plex-label>
-                                    <plex-button disabled type="info" size="sm" icon="chevron-down" class="float-right">
-                                    </plex-button>
+                    <div *ngIf="colapsable.includes(iPrestacion)" class="collapse-content">
+                        <ng-container *ngFor="let elemento of prestacion.data.ejecucion.registros; let i = index">
+                            <div class="rup-card {{ elemento | semanticClass }}">
+                                <div class="rup-header">
+                                    <div class="icon-rup">
+                                        <i class="adi {{ elemento | semanticIcon }}"></i>
+                                    </div>
+                                    <div class="title">
+                                        <ng-container *ngIf="elemento?.nombre">
+                                            {{ elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1) }}
+                                        </ng-container>
+                                        <div class="float-left"
+                                             *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 1">
+                                            <b class="clearfix">Relacionado con:</b>
+                                            <ng-container *ngFor="let relacionado of elemento?.relacionadoCon">
+                                                <plex-badge size="sm" type="info mr-1">
+                                                    {{ relacionado | relacionRUP }}
+                                                </plex-badge>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                    <div class="actions">
+                                        <plex-badge *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length === 1"
+                                                    size="sm" type="info">
+                                            <b> Relacionado con: </b>
+                                            {{ elemento.relacionadoCon[0].concepto?.term[0].toUpperCase() +
+                                            elemento.relacionadoCon[0].concepto?.term.slice(1)}}
+                                        </plex-badge>
+                                        <plex-badge size="sm" type="info" *ngIf="elemento.esDiagnosticoPrincipal">
+                                            Procedimiento / diagnóstico principal
+                                        </plex-badge>
+                                    </div>
+                                </div>
+                                <div class="rup-body">
+                                    <div class="legend">
+                                        <span>
+                                            {{ (elemento.esSolicitud) ? 'solicitud' :
+                                            elemento.concepto.semanticTag}}
+                                        </span>
+                                    </div>
+                                    <div class="content">
+                                        <div class="row" *ngIf="prestacion.data.paciente">
+                                            <div class="col-12">
+                                                <rup [elementoRUP]="elementosRUPService.elementoRegistro(elemento)"
+                                                     [params]="elementosRUPService.getParams(elemento)"
+                                                     [prestacion]="prestacion.data" [registro]="elemento"
+                                                     [paciente]="prestacion.data.paciente" [soloValores]="true"
+                                                     [vistaHUDS]="false">
+                                                </rup>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            <ng-container *ngFor="let elemento of prestacion.data.ejecucion.registros; let i = index">
-                                <div *ngIf="colapsable.includes(iPrestacion)"
-                                     class="rup-card {{ elemento | semanticClass }}">
-                                    <div class="rup-header">
-                                        <div class="icon-rup">
-                                            <i class="adi {{ elemento | semanticIcon }}"></i>
-                                        </div>
-                                        <div class="title">
-                                            <ng-container *ngIf="elemento?.nombre">
-                                                {{ elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1) }}
-                                            </ng-container>
-                                            <div class="float-left"
-                                                 *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 1">
-                                                <b class="clearfix">Relacionado con:</b>
-                                                <ng-container *ngFor="let relacionado of elemento?.relacionadoCon">
-                                                    <plex-badge size="sm" type="info mr-1">
-                                                        {{ relacionado | relacionRUP }}
-                                                    </plex-badge>
-                                                </ng-container>
-                                            </div>
-                                        </div>
-                                        <div class="actions">
-                                            <plex-badge *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length === 1"
-                                                        size="sm" type="info">
-                                                <b> Relacionado con: </b>
-                                                {{ elemento.relacionadoCon[0].concepto?.term[0].toUpperCase() +
-                                                elemento.relacionadoCon[0].concepto?.term.slice(1)}}
-                                            </plex-badge>
-                                            <plex-badge size="sm" type="info" *ngIf="elemento.esDiagnosticoPrincipal">
-                                                Procedimiento / diagnóstico principal
-                                            </plex-badge>
-                                        </div>
-                                    </div>
-                                    <div class="rup-body">
-                                        <div class="legend">
-                                            <span>
-                                                {{ (elemento.esSolicitud) ? 'solicitud' :
-                                                elemento.concepto.semanticTag}}
-                                            </span>
-                                        </div>
-                                        <div class="content">
-                                            <div class="row" *ngIf="prestacion.data.paciente">
-                                                <div class="col-12">
-
-                                                    <rup [elementoRUP]="elementosRUPService.elementoRegistro(elemento)"
-                                                         [params]="elementosRUPService.getParams(elemento)"
-                                                         [prestacion]="prestacion.data" [registro]="elemento"
-                                                         [paciente]="prestacion.data.paciente" [soloValores]="true"
-                                                         [vistaHUDS]="false">
-                                                    </rup>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </plex-panel>
-                    </plex-accordion>
+                        </ng-container>
+                    </div>
                 </div>
             </div>
         </div>

@@ -139,24 +139,27 @@
      }
  }
 
- .accordion-title {
+ .collapse-wrapper {
+     cursor: pointer;
+     padding: 10px;
+     display: flex;
+     border: 1px solid rgba(0, 0, 0, .125);
+     border-radius: .25rem;
+     justify-content: space-between;
+     align-items: center;
      border-left: 5px solid #0070cc;
-     border-radius: calc(0.25rem - 1px);
-     padding-left: 20px;
-     margin-left: -20px;
-     height: 60px;
-     margin-top: -12px;
-     margin-bottom: -12px;
-     width: calc(100% + 20px);
-     justify-content: normal;
-
-     .prestacion-label {
-         flex-grow: 1;
-     }
+     background-color: #f2f2f2;
 
      .prestacion-info {
          display: flex;
          align-items: center;
-         width: 70%;
+         width: 50%;
+         justify-content: space-between;
      }
+ }
+
+ .collapse-content {
+     padding: 10px;
+     border: 1px solid rgba(0, 0, 0, .125);
+     border-top: none;
  }
