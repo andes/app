@@ -1,3 +1,10 @@
+## [5.148.1](https://github.com/andes/app/compare/v5.148.0...v5.148.1) (2024-09-25)
+
+
+### Bug Fixes
+
+* **CIT:** visibilizacion de agendas bloques de acc directo y gestion simultaneamente ([#3075](https://github.com/andes/app/issues/3075)) ([4369e2e](https://github.com/andes/app/commit/4369e2ed1fbd72952bc0a64f2d1b6070c6e6dd82))
+
 # [5.148.0](https://github.com/andes/app/compare/v5.147.2...v5.148.0) (2024-09-18)
 
 
