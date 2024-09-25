@@ -10,29 +10,30 @@
         <form #formExtranjero="ngForm">
             <plex-wrapper>
                 <plex-text label="Apellido" [(ngModel)]="pacienteExtranjero.apellido" name="apellido"
-                           [disabled]="botonRegistroDNI" required="true">
+                           [disabled]="botonRegistroDNI" required="true" (change)="completaExtranjero()">
                 </plex-text>
                 <plex-text label="Nombre" [(ngModel)]="pacienteExtranjero.nombre" name="nombre"
-                           [disabled]="botonRegistroDNI" required="true">
+                           [disabled]="botonRegistroDNI" required="true" (change)="completaExtranjero()">
                 </plex-text>
 
                 <plex-select [(ngModel)]="pacienteExtranjero.sexo" label="Seleccione sexo" [data]="sexos" name="sexo"
                              required="true" [disabled]="botonRegistroDNI" placeholder="Seleccione..."
-                             (change)="completarGenero()">
+                             (change)="completaExtranjero();mapeoGenero()">
                 </plex-select>
             </plex-wrapper>
             <plex-wrapper>
                 <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date"
                                [(ngModel)]="pacienteExtranjero.fechaNacimiento" name="fechaNacimiento" required="true"
-                               grow="3" [disabled]="botonRegistroDNI">
+                               grow="3" [disabled]="botonRegistroDNI" (change)="completaExtranjero()">
                 </plex-datetime>
 
                 <plex-select label="Tipo de identificación" [(ngModel)]="pacienteExtranjero.tipoIdentificacion"
                              [data]="tipoIdentificacion" name="tipoIdentificacion" placeholder="Seleccione..." grow="3"
-                             [disabled]="botonRegistroDNI">
+                             [disabled]="botonRegistroDNI" (change)="completaExtranjero()">
                 </plex-select>
                 <plex-text label="Número de identificación" [(ngModel)]="pacienteExtranjero.numeroIdentificacion"
-                           name="numeroIdentificacion" grow="3" [disabled]="botonRegistroDNI">
+                           name="numeroIdentificacion" grow="3" [disabled]="botonRegistroDNI"
+                           (change)="completaExtranjero()">
                 </plex-text>
             </plex-wrapper>
         </form>
@@ -53,7 +54,7 @@
                     </plex-text>
 
                     <plex-select [(ngModel)]="paciente.sexo" label="Seleccione sexo" [data]="sexos" name="sexoBebe"
-                                 [required]="true" placeholder="Seleccione..." grow="4">
+                                 [required]="true" placeholder="Seleccione..." grow="4" (change)="mapeoGenero()">
                     </plex-select>
 
                     <plex-datetime label="Fecha y hora de Nacimiento" [max]="hoy" type="datetime"
@@ -137,7 +138,7 @@
                         </plex-int>
                         <plex-select [(ngModel)]="paciente.sexo" label="Seleccione sexo" [data]="sexos" name="sexo"
                                      required="true" placeholder="Seleccione..." [readonly]="validado"
-                                     (change)="completarGenero(); checkDisableValidar()" grow="3">
+                                     (change)="mapeoGenero(); checkDisableValidar()" grow="3">
                         </plex-select>
 
                         <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="true"
@@ -174,7 +175,7 @@
 
                     <plex-select [(ngModel)]="paciente.sexo" label="Seleccione sexo" [data]="sexos" name="sexo"
                                  required="true" placeholder="Seleccione..." [readonly]="validado"
-                                 (change)="completarGenero(); checkDisableValidar()" grow="3">
+                                 (change)="mapeoGenero();checkDisableValidar()" grow="3">
                     </plex-select>
 
                     <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="validado"
@@ -201,16 +202,21 @@
 
 
         <!-- IDENTIDAD DE GENERO -->
-        <ng-container *ngIf="tipoPaciente !== 'bebe'">
-            <plex-title titulo="identidad de género" size="sm" class="mt-2"></plex-title>
-            <plex-wrapper>
-                <plex-text label="Nombre" [(ngModel)]="paciente.alias" name="nombreAutopercibido"
-                           [pattern]="nombrePattern"></plex-text>
+        <form #formGenero="ngForm">
 
-                <plex-select label="Seleccione género" [(ngModel)]="paciente.genero" [data]="generos" name="genero">
-                </plex-select>
-            </plex-wrapper>
-        </ng-container>
+            <ng-container *ngIf="tipoPaciente !== 'bebe'">
+                <plex-title titulo="identidad de género" size="sm" class="mt-2"></plex-title>
+                <plex-wrapper>
+                    <plex-text label="Nombre autopercibido" [(ngModel)]="paciente.alias" name="nombreAutopercibido"
+                               [pattern]="nombrePattern" (change)="completaExtranjero()"></plex-text>
+
+                    <plex-select label="Seleccione género autopercibido" [(ngModel)]="paciente.genero"
+                                 [data]="generos|async" (change)="completaExtranjero()" name="genero"
+                                 [required]="requiereGenero">
+                    </plex-select>
+                </plex-wrapper>
+            </ng-container>
+        </form>
 
         <!-- Reporte de error en datos -->
         <ng-container *ngIf="validado">

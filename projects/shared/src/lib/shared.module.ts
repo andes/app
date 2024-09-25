@@ -18,6 +18,7 @@ import { GaleriaArchivosComponent } from './components/galeria-archivos/galeria-
 import { FormsModule } from '@angular/forms';
 import { DocumentoPipe } from './pipes/documento.pipe';
 import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
+import { CapitalizeFirstPipe } from './pipes/capitalizeFirst.pipe';
 
 @NgModule({
     imports: [
@@ -40,7 +41,8 @@ import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe'
         GaleriaArchivosComponent,
         UploadFileComponent,
         NotasComponent,
-        PacienteRestringidoPipe
+        PacienteRestringidoPipe,
+        CapitalizeFirstPipe
     ],
     exports: [
         FechaPipe,
@@ -57,7 +59,8 @@ import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe'
         GaleriaArchivosComponent,
         UploadFileComponent,
         NotasComponent,
-        PacienteRestringidoPipe
+        PacienteRestringidoPipe,
+        CapitalizeFirstPipe
     ],
     providers: [
         PacienteRestringidoPipe
