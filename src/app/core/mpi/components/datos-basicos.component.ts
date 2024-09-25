@@ -128,9 +128,16 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     }
 
     public checkForm() {
+        let requiereActualizarGenero = false;
+        if (this.paciente.genero && this.paciente.genero !== this.paciente.sexo && ['femenino', 'masculino', 'otro'].includes(this.paciente.genero)) {
+            // Para que pacientes ya existentes con identidad autopercibida especificada con valores viejos actualicen el género
+            this.paciente.genero = null;
+            this.requiereGenero = true;
+            requiereActualizarGenero = true;
+        }
         this.formBasico.control.markAllAsTouched();
         this.formGenero.control.markAllAsTouched();
-        return this.formBasico.control.valid && this.formGenero.control.valid;
+        return this.formBasico.control.valid && this.formGenero.control.valid && !requiereActualizarGenero;
     }
 
     public checkFormExtranjero() {
