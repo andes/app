@@ -129,11 +129,13 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
 
     public checkForm() {
         this.formBasico.control.markAllAsTouched();
+        this.formGenero.control.markAllAsTouched();
         return this.formBasico.control.valid && this.formGenero.control.valid;
     }
 
     public checkFormExtranjero() {
         this.formExtranjero.control.markAllAsTouched();
+        this.formGenero.control.markAllAsTouched();
         return this.formExtranjero.control.valid && this.formGenero.control.valid;
     }
 

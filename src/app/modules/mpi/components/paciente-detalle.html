@@ -51,11 +51,11 @@
             </ng-container>
         </div>
 
-        <plex-label *ngIf="showSexo" titulo="Sexo" subtitulo="{{ paciente.sexo }}"
+        <plex-label *ngIf="showSexo" titulo="Sexo" subtitulo="{{ paciente.sexo | capitalizeFirst }}"
                     [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
-        <plex-label *ngIf="showSexo" titulo="Identidad de género" subtitulo="{{ paciente.genero }}"
+        <plex-label *ngIf="showSexo" titulo="Identidad de género" subtitulo="{{ paciente.genero | capitalizeFirst }}"
                     [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
@@ -89,7 +89,8 @@
                     [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
-        <plex-label *ngIf="showDireccion" titulo="Dirección" [subtitulo]="direccion || 'Sin dirección'"
+        <plex-label *ngIf="showDireccion" titulo="Dirección"
+                    [subtitulo]="(direccion | capitalizeFirst) || 'Sin dirección'"
                     [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
