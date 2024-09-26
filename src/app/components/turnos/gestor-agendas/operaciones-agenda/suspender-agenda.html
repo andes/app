@@ -70,7 +70,7 @@
         <plex-help *ngIf="agenda.nota" class="mr-1" type="help" icon="message">
             {{ agenda.nota }}
         </plex-help>
-        <plex-button *ngIf="agenda.enviarSms" type="default" icon="email-outline" size="sm"
+        <plex-button *ngIf="agenda.enviarSms" type="info" tooltip="Enviar notificación" icon="email-outline" size="sm"
                      (click)="notificar()"></plex-button>
         <plex-button type="danger" tooltip="Cerrar" icon="close" (click)="cerrarSidebarTurnos()" class="ml-1" size="sm">
         </plex-button>

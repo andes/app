@@ -146,7 +146,7 @@ export class SuspenderAgendaComponent implements OnInit {
 
 
     notificar() {
-        // Se envían SMS sólo en Producción
+        // Se envían notificaciones sólo en Producción
         if (environment.production === true) {
             for (let x = 0; x < this.seleccionadosSMS.length; x++) {
                 if (this.seleccionadosSMS[x].avisoSuspension !== 'enviado') {
@@ -155,7 +155,7 @@ export class SuspenderAgendaComponent implements OnInit {
                 }
             }
         } else {
-            this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
+            this.plex.toast('info', 'INFO: Notificación no enviada (activa sólo en Producción)');
         }
 
     }
