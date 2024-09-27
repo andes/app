@@ -69,7 +69,13 @@
             <div class="list-group mt-2" *ngIf="!showNewOrgView">
                 <div justify class="list-group-item" *ngFor="let org of data.orgList">
                     {{ org.nombre }}
+                    <plex-badge *ngIf="org.updatedAt" size="sm" type="default" class="mr-auto pl-2">
+                        <plex-icon name="clipboard-account"
+                                   title="Actualizado por {{org.updatedBy.nombreCompleto}} ({{org.updatedAt |date}} {{ org.updatedAt |hora}})"
+                                   titlePosition="right"></plex-icon>
+                    </plex-badge>
                     <span *ngIf="organizacionesConPermisos.includes(org)">
+
                         <ng-container *ngIf="org.activo && !readOnly">
                             <plex-button type="danger" size="sm" title="Desactivar" titlePosition="left"
                                          (click)="toogleActivo(org)">
