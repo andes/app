@@ -39,7 +39,7 @@
                         <plex-text name="name-{{ sectionIndex }}" label="Nombre de la sección"
                             [(ngModel)]="section.name" [required]="true" (change)="onChanges($event)">
                         </plex-text>
-                        <plex-text name="key-{{ sectionIndex }}" label="Llave del campo" [(ngModel)]="section.key" [required]="true"></plex-text>
+                        <plex-text name="key-{{ sectionIndex }}" label="Llave de sección" [(ngModel)]="section.key" [required]="true"></plex-text>
                         <div justify="end" class="mt-4">
                             <plex-button type="success" size="sm" icon="plus" align="center"
                                 (click)="onAddField(sectionIndex)" tooltip="Agregar campo"></plex-button>
@@ -67,7 +67,7 @@
                                 <!-- Campo tipo selectStatic -->
                                 <plex-select *ngIf="field.type?.id === 'selectStatic'" label="{{ field.name }}"
                                     name="name-{{ field.name }}" [(ngModel)]="field.value" [required]="field.required"
-                                    [data]="field.selectList"></plex-select>
+                                    [data]="field.selectList" labelField="name"></plex-select>
                                 <!-- Campo tipo date -->
                                 <plex-datetime *ngIf="field.type?.id === 'date' && !field.datePeriod" type="date"
                                     label="{{ field.name }}" name="name-{{ field.name }}" [(ngModel)]="field.value"
