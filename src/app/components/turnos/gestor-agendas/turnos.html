@@ -195,6 +195,9 @@
                             class="mr-1" size="sm" type="danger" tooltip="Aun no reasignado" tooltipPosition="left">
                     <plex-icon name="account-alert"></plex-icon>
                 </plex-badge>
+                <plex-badge *ngIf="turno.estado ==='suspendido' && !agenda.enviarSms" type="info" title="Notificación pendiente">
+                    <plex-icon name="message-processing"></plex-icon>
+                </plex-badge>
                 <ng-container *ngIf="agenda | botonesTurnos:turnosSeleccionados as botones">
                     <plex-button *ngIf="botones.turnoDoble && turnosSeleccionados[0]?.id === turno.id"
                                  ariaLabel="Turno doble" size="sm" type="default" icon="numeric-2-box-multiple-outline"

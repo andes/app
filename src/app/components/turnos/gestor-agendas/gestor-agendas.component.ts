@@ -352,7 +352,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                 agenda.bloques.forEach(bloque => {
                     bloque.turnos.forEach(turno => {
                         // Cuenta la cantidad de turnos suspendidos (no reasignados) con paciente en cada agenda
-                        if ((turno.paciente && turno.paciente.id) && ((turno.estado === 'suspendido') || (agenda.estado === 'suspendida'))
+                        if ((turno.paciente?.id) && ((turno.estado === 'suspendido') || (agenda.estado === 'suspendida'))
                             && (!turno.reasignado || !turno.reasignado.siguiente)) {
                             count++;
                         }
@@ -566,6 +566,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     verAgenda(agenda, multiple, e) {
+
         if (this.showElegirSobreTurno) {
             this.showSobreturno = false;
             this.showElegirSobreTurno = false;
@@ -581,7 +582,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             this.showTurnos = false;
             this.showSuspendida = false;
             this.showEditarAgendaPanel = false;
-            if (agenda && agenda.id) {
+            if (agenda?.id) {
                 this.serviceAgenda.getById(agenda.id).subscribe(ag => {
                     // Actualizo la agenda local
                     agenda = ag;
@@ -638,7 +639,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     onSeleccionAgendaNoMultiple(ag) {
-        if (ag && ag.estado && ag.estado === 'suspendida') {
+        if (ag?.estado && ag.estado === 'suspendida') {
             this.showSuspendida = true; // Mostramos los pacientes y sus teléfonos de la agenda suspendida
         }
         this.agendasSeleccionadas = [];
