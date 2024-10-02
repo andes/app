@@ -1,3 +1,16 @@
+# [5.149.0](https://github.com/andes/app/compare/v5.148.1...v5.149.0) (2024-10-02)
+
+
+### Bug Fixes
+
+* **HUDS:** repara error al hacer click en registro ([#3077](https://github.com/andes/app/issues/3077)) ([6ab8c22](https://github.com/andes/app/commit/6ab8c22549d5d7508d8665529c64dabb5cb22b38))
+* **Login:** filtro profesional habilitado en login ([#3070](https://github.com/andes/app/issues/3070)) ([1dc5007](https://github.com/andes/app/commit/1dc500749adcf79abce8723995d8b30efa4949ae))
+
+
+### Features
+
+* **HUDS-124:** Modificar íconos en Panel de Búsqueda HUDS ([#3076](https://github.com/andes/app/issues/3076)) ([3c8a8be](https://github.com/andes/app/commit/3c8a8be6d137dfd56d6aae9c6fc6f4b97e5fc878))
+
 ## [5.148.1](https://github.com/andes/app/compare/v5.148.0...v5.148.1) (2024-09-25)
 
 
