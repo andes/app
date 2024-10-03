@@ -17,6 +17,7 @@ export class FieldConfigComponent implements OnInit {
         id: '';
         name: '';
     };
+    public hasDependency = false;
     public tiposList = [
         { id: 'string', nombre: 'Texto' },
         { id: 'int', nombre: 'Numérico' },
@@ -49,13 +50,20 @@ export class FieldConfigComponent implements OnInit {
 
     ngOnInit(): void {
         this.form = this.fb.group({
-            name: [''],
-            key: [''],
-            type: [null],
+            name: ['', Validators.required],
+            key: ['', Validators.required],
+            type: [null, Validators.required],
             required: [false],
             datePeriod: [false],
             description: [''],
-            dependency: [null],
+            hasDependency: [false],
+            dependencies: this.fb.group({
+                section: [null],
+                field: [null],
+                condition: [null],
+                action: [null],
+                value: ['']
+            }),
             resources: [null],
             min: [null],
             max: [null],
@@ -70,7 +78,7 @@ export class FieldConfigComponent implements OnInit {
                 required: this.field.required,
                 datePeriod: this.field.datePeriod,
                 description: this.field.description,
-                dependency: this.field.dependency,
+                dependencies: this.field.dependency,
                 resources: this.field.resources,
                 min: this.field.min,
                 max: this.field.max,
@@ -87,6 +95,11 @@ export class FieldConfigComponent implements OnInit {
 
         this.form.get('type')?.valueChanges.subscribe(value => {
             this.type = value;
+            this.selectList.clear();
+        });
+
+        this.form.get('hasDependency')?.valueChanges.subscribe(value => {
+            this.hasDependency = value;
         });
 
         this.form.get('name')?.valueChanges.subscribe(value => {

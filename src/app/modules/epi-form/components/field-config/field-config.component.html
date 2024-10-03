@@ -5,16 +5,16 @@
         <plex-button type="danger" icon="close" size="sm" tooltip="cerrar" class="ml-1 mr-1"
             (click)="closeFieldConfig()"></plex-button>
     </plex-title>
-    <plex-text name="field-name" label="Nombre" required="true" formControlName="name"></plex-text>
-    <plex-text name="field-key" label="Key" required="true" formControlName="key"></plex-text>
-    <plex-select name="field-type" label="Tipo de campo" required="true" formControlName="type"
+    <plex-text name="field-name" label="Nombre" formControlName="name"></plex-text>
+    <plex-text name="field-key" label="Key" formControlName="key"></plex-text>
+    <plex-select name="field-type" label="Tipo de campo" formControlName="type"
         [data]="tiposList"></plex-select>
     <plex-bool type="slide" name="field-required" label="Campo Obligatorio" formControlName="required"
         class="mt-3"></plex-bool>
     <plex-bool *ngIf="type?.id === 'date'" type="slide" name="date-period"
         label="Fecha desde/hasta" formControlName="datePeriod" class="mt-3"></plex-bool>
-    <plex-select name="field-dependency" label="Dependencia"
-        formControlName="dependency"></plex-select>
+    <plex-bool type="slide" name="hasDependency" label="Tiene dependencia"
+        formControlName="hasDependency"></plex-bool>
     <plex-text name="field-description" label="Descripción" formControlName="description"></plex-text>
     <!-- Campo dinámico select -->
     <plex-select *ngIf="type?.id === 'select'" label="Tipo de recurso" name="field-resources"
@@ -23,7 +23,16 @@
     <plex-int *ngIf="type?.id === 'int'" label="Mínimo" name="minimo-{{ this.form.name }}"
         formControlName="min"></plex-int>
     <plex-int *ngIf="type?.id === 'int'" label="Maximo" name="maximo-{{ this.form.name }}"
-        formControlName="max"></plex-int>
+    formControlName="max"></plex-int>
+    <!-- Campos dinámicos dependencia -->
+    <div *ngIf="hasDependency" formGroupName="dependencies">
+        <plex-title titulo="Configuración dependencia" size="sm"></plex-title>
+        <plex-select name="section-dependency" label="Sección" formControlName="section"></plex-select>
+        <plex-select name="field-dependency" label="Campo" formControlName="field"></plex-select>
+        <plex-select name="condition-dependency" label="Condición" formControlName="condition"></plex-select>
+        <plex-select name="action-dependency" label="Acción" formControlName="action"></plex-select>
+        <plex-text name="value-dependency" label="Valor" formControlName="value"></plex-text>
+    </div>
     <!-- Campos dinámicos select static -->
     <br>
     <plex-table *ngIf="type?.id === 'selectStatic'" [columns]="selectColumns" #table="plTable" formArrayName="selectList">
@@ -44,4 +53,5 @@
             </td>
         </tr>
     </plex-table>
+     
 </div>
