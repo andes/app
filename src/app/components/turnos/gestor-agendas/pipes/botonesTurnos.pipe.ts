@@ -42,7 +42,7 @@ export class BotonesTurnosPipe implements PipeTransform {
         }
         if (agenda && turnos.length === 1) {
             // Liberar turno: está "asignado" ==> el estado pasa a "disponible" y se elimina el paciente
-            botones.liberar = puedeLiberarTurno && this.agendaNoCerrada(agenda) && (!turnos[0].sobreturno && this.agendaNoSuspendida(agenda) && this.tienenPacientes(turnos) && this.noTienenAsistencia(turnos) && this.todosConEstado('asignado', turnos)) && !this.tienenDiagnostico(turnos);
+            botones.liberar = puedeLiberarTurno && this.agendaNoCerrada(agenda) && (this.agendaNoSuspendida(agenda) && this.tienenPacientes(turnos) && this.noTienenAsistencia(turnos) && this.todosConEstado('asignado', turnos)) && !this.tienenDiagnostico(turnos);
             // Se verifica si el siguiente turno se encuentra disponible
             botones.turnoDoble = puedeMarcarTurnDoble && this.agendaNoCerrada(agenda) && this.agendaNoSuspendida(agenda) && this.tienenPacientes(turnos) && this.noTienenAsistencia(turnos) && this.todosConEstado('asignado', turnos) && this.siguienteDisponible(agenda, turnos);
             // Se puede quitar turno doble sólo si está en ese estado

@@ -163,10 +163,8 @@
                                 titulo="{{turno.horaInicio | date: 'HH:mm' }}hs | {{turno.paciente | nombre }}">
                     </plex-label>
                     <small>
-                        <span *ngIf="turno?.paciente?.id && turno.paciente.documento !== ''">
-                            DNI {{ turno.paciente.documento }}</span>
-                        <span *ngIf="turno?.paciente?.id && turno.paciente.documento === ''">
-                            Sin documento (temporal)
+                        <span *ngIf="turno?.paciente?.id">
+                            Documento {{ turno.paciente | documento }}
                         </span>
                         <span *ngIf="turno.estado ==='asignado' && turno.paciente.carpetaEfectores">
                             <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
@@ -201,7 +199,8 @@
                     <plex-button *ngIf="botones.turnoDoble && turnosSeleccionados[0]?.id === turno.id"
                                  ariaLabel="Turno doble" size="sm" type="default" icon="numeric-2-box-multiple-outline"
                                  (click)="asignarTurnoDoble('darTurnoDoble')" tooltip="Turno doble"
-                                 tooltipPosition="top"></plex-button>
+                                 tooltipPosition="top">
+                    </plex-button>
                     <plex-button *ngIf="botones.quitarTurnoDoble && turnosSeleccionados[0]?.id === turno.id"
                                  ariaLabel="Quitar Turno doble" size="sm" type="default" icon="numeric-1-box-outline"
                                  (click)="eventosTurno('quitarTurnoDoble', agenda)" tooltip="Quitar Turno doble"
@@ -209,13 +208,13 @@
                     </plex-button>
                     <plex-help *ngIf="botones.editarCarpeta && turnosSeleccionados[0]?.id === turno.id" type="info"
                                btnType="info" icon="folder-account" tooltip="Editar Carpeta" tooltipPosition="top">
-                        <plex-title size="sm" titulo="Editar N° de carpeta del paciente"></plex-title>
+                        <plex-title size="sm" titulo="Editar carpeta"></plex-title>
                         <plex-label class="text-white" titulo="Paciente"
                                     subtitulo="{{turnosSeleccionados[0].paciente | nombre }}" icon="paciente">
                         </plex-label>
                         <carpeta-paciente class="text-white" [turnoSeleccionado]="turnosSeleccionados[0] "
-                                          (guardarCarpetaEmit)="afterComponenteCarpeta($event)
-                                " (cancelarCarpetaEmit)="afterComponenteCarpeta($event) ">
+                                          (guardarCarpetaEmit)="afterComponenteCarpeta($event)"
+                                          (cancelarCarpetaEmit)="afterComponenteCarpeta($event)">
                         </carpeta-paciente>
                     </plex-help>
                     <plex-button *ngIf="botones.sms && turnosSeleccionados[0]?.id === turno.id"
@@ -271,10 +270,8 @@
                                 titulo="{{sobreturno.horaInicio | date: 'HH:mm' }}hs | {{sobreturno.paciente | nombre }}">
                     </plex-label>
                     <small>
-                        <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.documento !== ''">
-                            DNI {{ sobreturno.paciente.documento }}</span>
-                        <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.documento === ''">
-                            Sin documento
+                        <span *ngIf="sobreturno?.paciente?.id">
+                            Documento {{ sobreturno.paciente | documento }}
                         </span>
                         <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.carpetaEfectores?.length > 0">
                             <span *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores">
@@ -295,6 +292,33 @@
                             size="sm" type="danger" tooltip="No asistió" tooltipPosition="left">
                     <plex-icon name="account-remove"></plex-icon>
                 </plex-badge>
+
+                <ng-container *ngIf="agenda | botonesTurnos:turnosSeleccionados as botones">
+                    <plex-help *ngIf="botones.editarCarpeta && turnosSeleccionados[0]?.id === sobreturno.id" type="info"
+                               btnType="info" icon="folder-account" tooltip="Editar Carpeta" tooltipPosition="top">
+                        <plex-title size="sm" titulo="Editar carpeta"></plex-title>
+                        <plex-label class="text-white" titulo="Paciente"
+                                    subtitulo="{{turnosSeleccionados[0].paciente | nombre }}" icon="paciente">
+                        </plex-label>
+                        <carpeta-paciente class="text-white" [turnoSeleccionado]="turnosSeleccionados[0] "
+                                          (guardarCarpetaEmit)="afterComponenteCarpeta($event)"
+                                          (cancelarCarpetaEmit)="afterComponenteCarpeta($event)">
+                        </carpeta-paciente>
+                    </plex-help>
+                    <plex-button *ngIf="botones.sms && turnosSeleccionados[0]?.id === sobreturno.id"
+                                 ariaLabel="Enviar un mensaje al paciente" size="sm" type="info" icon="email-outline"
+                                 (click)="enviarSMS()" tooltip="Enviar un mensaje al paciente" tooltipPosition="top">
+                    </plex-button>
+                    <plex-help *ngIf="botones.liberar && turnosSeleccionados[0]?.id === sobreturno.id"
+                               class="help-liberar-turnos" type="info" btnType="danger" icon="account-off"
+                               tooltip="Liberar turnos" tooltipPosition="left">
+                        <liberar-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados"
+                                       [desdeAgenda]="true" (saveLiberarTurno)="saveLiberarTurno($event)"
+                                       (reasignarTurnoLiberado)="reasignarTurnoLiberado($event)"
+                                       (cancelaLiberarTurno)="cancelaLiberarTurno()">
+                        </liberar-turno>
+                    </plex-help>
+                </ng-container>
             </td>
         </tr>
     </plex-table>

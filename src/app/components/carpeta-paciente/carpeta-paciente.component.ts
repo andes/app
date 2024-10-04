@@ -42,6 +42,7 @@ export class CarpetaPacienteComponent implements OnInit {
     showEdit = false;
     nroCarpetaSugerido: string;
     nuevoNroCarpeta: string;
+    patronValidoCarpeta = /[^\s]/;
     public editarCarpeta = false;
     constructor(
         public auth: Auth,
@@ -62,9 +63,8 @@ export class CarpetaPacienteComponent implements OnInit {
         };
         // Hay paciente?
         if (this.turnoSeleccionado && this.turnoSeleccionado.paciente.id) {
-            this.paciente = this.turnoSeleccionado.paciente;
             // Obtenemos el paciente completo. (entró por parametro el turno)
-            this.servicioPaciente.getById(this.paciente.id).subscribe(resultado => {
+            this.servicioPaciente.getById(this.turnoSeleccionado.paciente.id).subscribe(resultado => {
                 this.paciente = resultado;
                 this.getCarpetas(this.paciente);
             });
@@ -80,7 +80,7 @@ export class CarpetaPacienteComponent implements OnInit {
     }
 
     private getCarpetas(paciente) {
-        if (paciente && paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) { // este paciente tiene carpetas?
+        if (paciente?.carpetaEfectores?.length) { // este paciente tiene carpetas?
             // Filtramos y traemos sólo la carpeta de la organización actual
             this.carpetaEfectores = paciente.carpetaEfectores;
             const result = paciente.carpetaEfectores.find((elemento, indice) => {
@@ -129,7 +129,7 @@ export class CarpetaPacienteComponent implements OnInit {
 
     guardarCarpetaPaciente(nuevaCarpeta = false) {
         if (this.autorizado && this.nuevoNroCarpeta) {
-            if (/^\s*$/.test(this.nuevoNroCarpeta)) {
+            if (!this.nuevoNroCarpeta.trim().length) {
                 this.plex.toast('warning', '', 'Ingrese un número de carpeta válido');
                 this.nuevoNroCarpeta = '';
                 return;
