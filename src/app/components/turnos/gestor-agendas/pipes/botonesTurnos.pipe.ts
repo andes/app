@@ -65,7 +65,7 @@ export class BotonesTurnosPipe implements PipeTransform {
     }
 
     agendaNoSuspendida(agenda) {
-        return agenda.estado !== 'suspendida';
+        return agenda.estado !== 'suspendida' || agenda.enviarSms;
     }
 
     noTienenAsistencia(turnos) {
@@ -79,7 +79,7 @@ export class BotonesTurnosPipe implements PipeTransform {
 
     ningunoConEstado(estado, turnos) {
         for (let x = 0; x < turnos.length; x++) {
-            if (turnos[x].estado === estado) {
+            if (turnos[x].estado === estado && turnos[x].avisoSuspension !== 'no enviado') {
                 return false;
             }
         }

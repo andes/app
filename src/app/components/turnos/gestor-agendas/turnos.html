@@ -48,10 +48,7 @@
             <plex-button *ngIf="botones.cambiarDisponible  && turnosSeleccionados?.length" class="mr-1" type="warning"
                          size="sm" icon="undo" tooltip="Cambiar a disponible" tooltipPosition="top"
                          (click)="cambiarADisponible()">
-
             </plex-button>
-
-
         </ng-container>
         <plex-help *ngIf="!agenda.dinamica" type="help" icon="cog">
             <plex-title titulo="Prestaciones asociadas" size="sm"></plex-title>
@@ -195,8 +192,13 @@
                             class="mr-1" size="sm" type="danger" tooltip="Aun no reasignado" tooltipPosition="left">
                     <plex-icon name="account-alert"></plex-icon>
                 </plex-badge>
-                <plex-badge *ngIf="turno.estado ==='suspendido' && !agenda.enviarSms" type="info" title="Notificación pendiente">
+                <plex-badge *ngIf="turno.estado ==='suspendido' && turno.avisoSuspension === 'no enviado'" type="info"
+                            title="Notificación pendiente" class="mr-1" tooltipPosition="left">
                     <plex-icon name="message-processing"></plex-icon>
+                </plex-badge>
+                <plex-badge *ngIf="turno.estado ==='suspendido' && turno.avisoSuspension ==='enviado'" type="info"
+                            title="Notificación enviada">
+                    <plex-icon name="message-text-outline"></plex-icon>
                 </plex-badge>
                 <ng-container *ngIf="agenda | botonesTurnos:turnosSeleccionados as botones">
                     <plex-button *ngIf="botones.turnoDoble && turnosSeleccionados[0]?.id === turno.id"
