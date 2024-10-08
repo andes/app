@@ -34,6 +34,7 @@ export class RupAsignarTurnoComponent implements OnInit {
     public fin: Date;
     public guardado = false;
     private prestacionesProfesional;
+    public isButtonDisabled = false;
 
     // Eventos
     @Input() agenda: IAgenda;
@@ -175,6 +176,7 @@ export class RupAsignarTurnoComponent implements OnInit {
     }
 
     confirmar() {
+        this.isButtonDisabled = true;
         const paciente = this.datosTurno.paciente;
         let fechaTurno;
 
