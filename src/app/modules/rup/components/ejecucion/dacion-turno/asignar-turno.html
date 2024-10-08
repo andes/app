@@ -68,7 +68,7 @@
     <plex-button modal left type="danger" (click)="cerrar()">
         Cancelar
     </plex-button>
-    <plex-button modal right type="success" (click)="confirmar()">
+    <plex-button modal right type="success" [disabled]="isButtonDisabled" (click)="confirmar()">
         Confirmar
     </plex-button>
 </plex-modal>

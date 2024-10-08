@@ -50,6 +50,7 @@ export class DarTurnosComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
     autocitado = false;
     puedeDarSobreturno;
+    isButtonDisabled = false;
 
     tipoPrestacionesPermitidas: ITipoPrestacion[];
 
@@ -877,6 +878,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     turnoDinamico() {
+        this.isButtonDisabled = true;
         this.turnoDoble = false;
         this.turno = {};
         if (this.paciente) {
@@ -891,6 +893,7 @@ export class DarTurnosComponent implements OnInit {
             }
             this.darTurno();
         } else {
+            this.isButtonDisabled = false;
             this.plex.info('warning', 'Debe seleccionar un paciente');
         }
     }
