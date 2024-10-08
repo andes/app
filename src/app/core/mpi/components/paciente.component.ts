@@ -57,6 +57,7 @@ export class PacienteComponent implements OnInit {
     pacienteBase: IPaciente;
     pacienteExtranjero: IPaciente;
     registroDNI = false;
+    nombreApellidoIgual = false;
 
     public contacto: IContacto = {
         tipo: 'celular',
@@ -120,6 +121,8 @@ export class PacienteComponent implements OnInit {
         entidadesValidadoras: [this.entidadValidadora],
         scan: null,
         reportarError: false,
+        nombreCorrecto: '',
+        apellidoCorrecto: '',
         notaError: '',
         vinculos: [null],
         documentos: [],
@@ -309,6 +312,11 @@ export class PacienteComponent implements OnInit {
             return;
         }
 
+        if (this.nombreApellidoIgual) {
+            this.plex.info('warning', 'El paciente no debe tener el mismo nombre o apellido');
+            return;
+        }
+
         this.disableIgnorarGuardar = ignoreSuggestions;
         this.disableGuardar = true;
 
@@ -421,6 +429,12 @@ export class PacienteComponent implements OnInit {
                 });
             }
         } else {
+            if (this.paciente.nombreCorrecto) {
+                this.pacienteModel.nombreCorrecto = this.paciente.nombreCorrecto;
+            }
+            if (this.paciente.apellidoCorrecto) {
+                this.pacienteModel.apellidoCorrecto = this.paciente.apellidoCorrecto;
+            }
             const paciente = this.prepararPaciente(this.mergePaciente(this.pacienteModel, this.pacienteExtranjero), ignoreSuggestions);
             if (paciente) {
                 this.guardarPaciente(paciente).subscribe((paciente) => {
@@ -586,6 +600,17 @@ export class PacienteComponent implements OnInit {
         if (data.datosBasicos) {
             this.visualizarIgnorarGuardar = false;
             this.disableGuardar = false;
+        }
+        if (data.pacienteError) {
+            this.nombreApellidoIgual = (data.pacienteError.nombre === this.paciente.nombre && data.pacienteError.apellido === this.paciente.apellido) ? true : false;
+            if (!this.nombreApellidoIgual) {
+                if (data.pacienteError.nombre !== this.paciente.nombre) {
+                    this.paciente.nombreCorrecto = data.pacienteError.nombre;
+                }
+                if (data.pacienteError.apellido !== this.paciente.apellido) {
+                    this.paciente.apellidoCorrecto = data.pacienteError.apellido;
+                }
+            }
         }
     }
     documentos(documentosNew) {

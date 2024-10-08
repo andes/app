@@ -35,12 +35,14 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     noPoseeDNI = false;
     botonRegistroDNI = false;
     pacienteExtranjero: IPaciente;
+    pacienteEditado = { nombre: '', apellido: '' };
     public requiereGenero: boolean;
     public nuevoPaciente = false;
     public disableRegistro = false;
     public nombrePattern: string;
     public patronDocumento = /^[1-9]{1}[0-9]{4,7}$/;
     hoy = moment().endOf('day').toDate();
+    public reportarError = false;
 
     // para registro de bebes
     busquedaTutor: IPacienteMatch[] | IPaciente[] = [];
@@ -198,7 +200,12 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
         this.changes.emit({ registroDNI: this.botonRegistroDNI });
     }
 
-
+    registrarError() {
+        this.pacienteEditado.nombre = this.paciente.nombre;
+        this.pacienteEditado.apellido = this.paciente.apellido;
+        this.paciente.reportarError = true;
+        this.changes.emit({ pacienteError: this.pacienteEditado });
+    }
     // --------------  PARA REGISTRO DE BEBES -----------------
 
     onSearchStart() {
@@ -330,5 +337,15 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
             this.contactoImportado = false;
         }
         this.changes.emit({ refreshData: true, relaciones: [] });
+    }
+
+    verificarNombreApellido(data) {
+        if (data.nombre) {
+            this.pacienteEditado.nombre = data.nombre;
+        }
+        if (data.apellido) {
+            this.pacienteEditado.apellido = data.apellido;
+        }
+        this.changes.emit({ pacienteError: this.pacienteEditado });
     }
 }
