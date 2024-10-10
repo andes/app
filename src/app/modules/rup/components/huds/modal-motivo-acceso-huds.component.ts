@@ -48,7 +48,7 @@ export class ModalMotivoAccesoHudsComponent implements OnInit {
     ngOnInit(): void {
         if (this.auth.profesional) {
             this._profesionalService.getFirma({ id: this.auth.profesional }).pipe(catchError(() => of(null))).subscribe(resp => {
-                this.urlFirma = resp.length ? this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp) : null;
+                this.urlFirma = resp?.length ? this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp) : null;
             });
             this._profesionalService.getFirma({ firmaAdmin: this.auth.profesional }).pipe(catchError(() => of(null))).subscribe(resp => {
                 if (resp?.firma) {
