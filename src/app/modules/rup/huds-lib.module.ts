@@ -33,6 +33,7 @@ import { VistaSolicitudTopComponent } from './components/huds/vistaSolicitudTop'
 import { ElementosRUPModule } from './elementos-rup.module';
 import { RUPLibModule } from './rup-lib.module';
 import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
+import { VistaLaboratorioComponent } from './components/ejecucion/laboratorios/vista-laboratorio.component';
 
 @NgModule({
     imports: [
@@ -55,6 +56,7 @@ import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
     ],
     declarations: [
         VistaCDAComponent,
+        VistaLaboratorioComponent,
         VistaIPSComponent,
         ResumenPacienteEstaticoComponent,
         ResumenPacienteDinamicoComponent,
@@ -76,6 +78,7 @@ import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
     ],
     exports: [
         VistaCDAComponent,
+        VistaLaboratorioComponent,
         VistaIPSComponent,
         ResumenPacienteEstaticoComponent,
         ResumenPacienteDinamicoComponent,
