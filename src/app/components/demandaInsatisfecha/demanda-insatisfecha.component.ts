@@ -3,11 +3,11 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ILlamado } from 'src/app/interfaces/turnos/IListaEspera';
 import { ListaEsperaService } from 'src/app/services/turnos/listaEspera.service';
 import { TurnoService } from 'src/app/services/turnos/turno.service';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 
 @Component({
     selector: 'demanda-insatisfecha',
@@ -20,12 +20,14 @@ export class DemandaInsatisfechaComponent implements OnInit {
     public listado$: Observable<any[]>;
     public listaLlamados = [];
     public listaHistorial = [];
+    public listaDemandas = [];
     public itemSelected = null;
     public filtros: any = {};
     public selectorPrestacion;
     public selectorOrganizacion;
     public selectorMotivo;
     public selectorEstadoLlamado;
+    public selectorFechaDesde;
     public nuevoLlamado: ILlamado = {};
     public selectedPaciente;
     public showTurnos;
@@ -91,8 +93,24 @@ export class DemandaInsatisfechaComponent implements OnInit {
         },
     ];
 
+    public columnsDemandas = [
+        {
+            key: 'col-1',
+            label: 'Fecha',
+        },
+        {
+            key: 'col-2',
+            label: 'Motivo',
+        },
+        {
+            key: 'col-3',
+            label: 'Organizacion',
+        },
+    ];
+
+    public max = 10;
     public tabIndex = 0;
-    public pacienteFields = ['sexo', 'fechaNacimiento', 'cuil', 'financiador', 'numeroAfiliado', 'direccion'];
+    public pacienteFields = ['sexo', 'fechaNacimiento', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'edad', 'telefono'];
 
     @ViewChild('formLlamados', { read: NgForm }) formLlamados: NgForm;
 
@@ -104,36 +122,29 @@ export class DemandaInsatisfechaComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        const fechaDesdeInicial = moment().subtract(7, 'days').startOf('day');
+        this.selectorFechaDesde = moment().subtract(7, 'days').startOf('day').toDate();
+        this.filtros.fechaDesde = this.selectorFechaDesde;
 
-        this.filtros.fechaDesde = fechaDesdeInicial;
-        this.filtros.organizacion = this.auth.organizacion.id;
-
-        this.getDemandas({ fechaDesde: fechaDesdeInicial, organizacion: this.auth.organizacion.id });
+        if (this.auth.organizacion.id) {
+            this.filtros.organizacion = this.auth.organizacion.id;
+            this.selectorOrganizacion = this.auth.organizacion.id;
+            this.getListaEsperas({ fechaDesde: this.selectorFechaDesde, organizacion: this.auth.organizacion.id });
+        }
 
         this.auth.organizaciones(true).subscribe((organizaciones) => {
             this.listaOrganizaciones = organizaciones;
         });
     }
 
-    private getDemandas(filtros) {
-        this.listaEsperaService.get({ ...filtros, estado: 'pendiente' }).subscribe((listaEspera: any[]) => {
-            this.listaEspera = listaEspera;
-            this.listaEspera.forEach(item => {
-                item.motivos = [...new Set(item.demandas.map(({ motivo }) => motivo))];
+    private getListaEsperas(filtros) {
+        if (filtros.fechaDesde && filtros.organizacion) {
+            this.listaEsperaService.get({ ...filtros, estado: 'pendiente' }).subscribe((listaEspera: any[]) => {
+                this.listaEspera = listaEspera;
+                this.listaEspera.forEach(item => {
+                    item.motivos = [...new Set(item.demandas.map(({ motivo }) => motivo))];
+                });
             });
-        });
-    }
-
-
-    public obtenerObjetoMasAntiguo() {
-        if (this.listaEspera.length === 0) {
-            return null;
         }
-
-        return this.listaEspera.reduce((masAntiguo, item) => {
-            return item.fecha < masAntiguo.fecha ? item : masAntiguo;
-        });
     }
 
     public getHistorial(historial) {
@@ -155,50 +166,61 @@ export class DemandaInsatisfechaComponent implements OnInit {
         this.tabIndex = value;
     }
 
-    public seleccionarDemanda(demanda) {
-        this.itemSelected = demanda;
+    public seleccionarDemanda(item) {
+        this.itemSelected = item;
+        this.listaDemandas = item.demandas.slice(0, this.max);
         this.listaHistorial = null;
         this.tabIndex = 0;
         this.listaLlamados = !this.itemSelected.llamados ? [] : [...this.itemSelected.llamados];
     }
 
-    public actualizarDemanda(demanda) {
+    private eliminarItem(id) {
+        this.listaEspera = this.listaEspera.filter(item => item.id !== id);
+    }
+
+    public actualizarLista(demanda) {
         const i = this.listaEspera.findIndex(item => item.id === demanda.id);
+
         this.listaEspera[i] = demanda;
         this.listaEspera.forEach(item => {
             item.motivos = [...new Set(item.demandas.map(({ motivo }) => motivo))];
         });
     }
 
-    public actualizarFiltros({ value }, tipo) {
+    public actualizarFiltros(event?, tipo?) {
+        if (event && tipo) {
+            const { value } = event;
 
-        if (tipo === 'paciente') {
-            this.filtros = { ...this.filtros, paciente: value };
+            if (tipo === 'paciente') {
+                this.filtros = { ...this.filtros, paciente: value };
+            }
+
+            if (tipo === 'fechaDesde') {
+                const fechaDesde = value ? moment(value).startOf('day').toDate() : null;
+                this.filtros = { ...this.filtros, fechaDesde };
+            }
+
+            if (tipo === 'fechaHasta') {
+                const fechaHasta = value ? moment(value).startOf('day').toDate() : null;
+                this.filtros = { ...this.filtros, fechaHasta };
+            }
+
+            if (tipo === 'prestacion') {
+                const values = value?.map(prestacion => prestacion.term);
+                this.filtros = { ...this.filtros, prestacion: values?.join(',') };
+            }
+
+            if (tipo === 'motivo') {
+                this.filtros = { ...this.filtros, motivo: value?.nombre };
+            }
+
+            if (tipo === 'organizacion') {
+                const values = value?.map(organizacion => organizacion.id);
+                this.filtros = { ...this.filtros, organizacion: values?.join(',') };
+            }
         }
 
-        if (tipo === 'fechaDesde') {
-            this.filtros = { ...this.filtros, fechaDesde: value };
-        }
-
-        if (tipo === 'fechaHasta') {
-            this.filtros = { ...this.filtros, fechaHasta: value };
-        }
-
-        if (tipo === 'prestacion') {
-            const values = value?.map(prestacion => prestacion.term);
-            this.filtros = { ...this.filtros, prestacion: values?.join(',') };
-        }
-
-        if (tipo === 'motivo') {
-            this.filtros = { ...this.filtros, motivo: value?.nombre };
-        }
-
-        if (tipo === 'organizacion') {
-            const values = value?.map(organizacion => organizacion.id);
-            this.filtros = { ...this.filtros, organizacion: values?.join(',') };
-        }
-
-        this.getDemandas(this.filtros);
+        this.getListaEsperas(this.filtros);
     }
 
     public cerrar() { this.itemSelected = null; }
@@ -210,21 +232,21 @@ export class DemandaInsatisfechaComponent implements OnInit {
         this.formLlamados?.form.markAsPristine();
     }
 
-    public async guardarLlamado(id) {
+    public guardarLlamado(id) {
         this.formLlamados.control.markAllAsTouched();
 
         if (this.formLlamados.form.valid) {
-            try {
-                this.listaLlamados.push({ ...this.nuevoLlamado, createdBy: this.auth.usuario, createdAt: moment() });
+            this.listaLlamados.push({ ...this.nuevoLlamado, createdBy: this.auth.usuario, createdAt: moment() });
 
-                this.listaEsperaService.patch(id, 'llamados', this.listaLlamados).subscribe((demanda) => {
+            this.listaEsperaService.patch(id, 'llamados', this.listaLlamados).subscribe({
+                next: (item) => {
                     this.plex.toast('success', 'Llamado registrado exitosamente');
                     this.agregarLlamado();
-                    this.actualizarDemanda(demanda);
-                });
-            } catch (error) {
-                this.plex.toast('danger', 'Error al guardar el llamado');
-            }
+                    this.actualizarLista(item);
+                }, error: () => {
+                    this.plex.toast('danger', 'Ha ocurrido un error al guardar el llamado');
+                }
+            });
         }
     }
 
@@ -243,17 +265,24 @@ export class DemandaInsatisfechaComponent implements OnInit {
             motivo: (datosTurno) ? 'Turno asignado' : 'Finalizada',
             observacion: this.textoOtros || '',
         };
+
         if (datosTurno) {
             data['turno'] = {
                 id: datosTurno.idTurno,
                 idAgenda: datosTurno.idAgenda,
             };
         };
-        this.listaEsperaService.patch(this.itemSelected.id, 'estado', data).subscribe(() => {
-            this.plex.toast('success', 'Demanda cerrada exitosamente');
-            this.actualizarFiltros({ value: '' }, '');
+
+        this.listaEsperaService.patch(this.itemSelected.id, 'estado', data).subscribe({
+            next: (item) => {
+                this.plex.toast('success', 'Demanda cerrada exitosamente');
+                this.eliminarItem(item.id);
+            }, error: () => {
+                this.plex.toast('danger', 'Ha ocurrido un error al cerrar la demanda');
+            }
         });
-        this.itemSelected = false;
+
+        this.cerrar();
         this.volver();
     }
 
@@ -264,17 +293,24 @@ export class DemandaInsatisfechaComponent implements OnInit {
         this.prestacion.paciente = this.paciente;
     }
 
-    finalizarDemanda() {
+    public finalizarDemanda() {
         this.showFinalizarDemanda = true;
     }
 
-    volver() {
+    public volver() {
         this.showTurnos = false;
         this.showFinalizarDemanda = false;
         this.selectorFinalizar = null;
     }
 
-    onInputChange() {
+    public onInputChange() {
         this.textoOtros = null;
+    }
+
+    public onScroll() {
+        const longitud = this.listaDemandas.length;
+        const nuevosItems = this.itemSelected.demandas.slice(longitud, longitud + this.max);
+
+        this.listaDemandas = [...this.listaDemandas, ...nuevosItems];
     }
 }
