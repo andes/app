@@ -1,20 +1,19 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import * as moment from 'moment';
-import { ISnapshot } from '../../interfaces/ISnapshot';
-import { MapaCamasService } from '../../services/mapa-camas.service';
-import { Observable } from 'rxjs';
-import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
-import { map, tap, take } from 'rxjs/operators';
-import { of } from 'rxjs';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { MapaCamaListadoColumns } from '../../interfaces/mapa-camas.internface';
-import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import * as moment from 'moment';
+import { Observable, of } from 'rxjs';
+import { map, take, tap } from 'rxjs/operators';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
-import { WebSocketService } from 'src/app/services/websocket.service';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
+import { WebSocketService } from 'src/app/services/websocket.service';
+import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
+import { ISnapshot } from '../../interfaces/ISnapshot';
+import { MapaCamaListadoColumns } from '../../interfaces/mapa-camas.internface';
+import { MapaCamasService } from '../../services/mapa-camas.service';
+import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 
 @Component({
     selector: 'app-mapa-camas-capa',
@@ -61,6 +60,9 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
     public sortBy: string;
     public sortOrder = 'desc';
+    public fechaSelector;
+    public fechaInput;
+    public isValidDate = true;
 
     itemsCrearDropdown = [];
 
@@ -157,6 +159,9 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         this.getSnapshot();
 
         this.fecha$ = this.mapaCamasService.fecha2;
+
+        this.fechaSelector = moment();
+        this.fechaInput = moment().format('DD/MM/YYYY HH:mm');
     }
 
     getSnapshot(fecha = null) {
@@ -280,5 +285,31 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
     onVisualizar() {
         this.router.navigate(['visualizacion'], { relativeTo: this.route });
+    }
+
+    setFecha(fecha?: Date, $event?: any) {
+        $event?.preventDefault();
+
+        const format = 'DD/MM/YYYY HH:mm';
+        const nuevaFecha = moment(fecha || new Date(), format);
+
+        if (nuevaFecha.isValid()) {
+            this.fechaSelector = nuevaFecha;
+            this.fechaInput = nuevaFecha.format(format);
+            this.mapaCamasService.setFecha(nuevaFecha.toDate());
+        }
+    }
+
+    checkFecha(fecha?: Date) {
+        const nuevaFecha = moment(fecha || new Date(), 'DD/MM/YYYY HH:mm');
+
+        this.isValidDate = nuevaFecha.isValid();
+    }
+
+    closeDatetimeSelector() {
+        if (!this.fechaInput || !this.isValidDate) {
+            this.fechaInput = this.fechaSelector.format('DD/MM/YYYY HH:mm');
+            this.isValidDate = true;
+        }
     }
 }
