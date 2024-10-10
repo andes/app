@@ -37,15 +37,20 @@
             </plex-label>
         </div>
         <ng-container>
-            <plex-table *ngIf="listaEspera.length" [columns]="columns" #table="plTable" [offset]="102">
+            <plex-table *ngIf="listaEspera.length" [columns]="columns" #table="plTable" [offset]="105"
+                        (scroll)="onScroll()">
                 <plex-title titulo="Listado de pacientes" size="sm"></plex-title>
                 <tr *ngFor="let item of listaEspera" (click)="seleccionarDemanda(item)"
-                    [class.selected]="item.id === itemSelected?.id" [class.selectable]="true">
-                    <td>{{item.paciente.nombreCompleto}}</td>
-                    <td>{{item.tipoPrestacion.nombre}}</td>
+                    [class.selected]="item._id === itemSelected?._id" [class.selectable]="true">
+                    <td>{{item.paciente | nombre}}</td>
+                    <td>{{item.paciente | documento }}</td>
+                    <td>{{item.tipoPrestacion.term}}</td>
                     <td>{{item.fecha | fecha}}</td>
-                    <td>{{item.motivos.join(' - ')}}</td>
+                    <td>{{item.motivos?.join(' - ')}}</td>
                     <td class="align-center" justify="center">
+                        <plex-badge class="ml-1" size="sm" type="info">
+                            {{item.demandas.length}}
+                        </plex-badge>
                         <plex-badge class="ml-1" size="sm" type="info">
                             {{item.estado}}
                         </plex-badge>
@@ -76,7 +81,7 @@
                             <ng-container>
                                 <plex-item *ngFor="let demanda of itemSelected.demandas">
                                     <plex-label size="md" titulo="Prestacion"
-                                                subtitulo="{{ itemSelected.tipoPrestacion.nombre }}">
+                                                subtitulo="{{ itemSelected.tipoPrestacion.term }}">
                                     </plex-label>
                                     <plex-label size="md" titulo="Efector"
                                                 subtitulo="{{ demanda.organizacion.nombre }}">
@@ -98,7 +103,7 @@
                             </plex-button>
                         </ng-container>
                         <ng-container *ngIf="verFormularioLlamado">
-                            <plex-button size="sm" type="success" icon="check" (click)="guardarLlamado(itemSelected.id)"
+                            <plex-button size="sm" type="success" icon="check" (click)="guardarLlamado()"
                                          ariaLabel="Guardar llamado" class="mr-1">
                             </plex-button>
                             <plex-button size="sm" type="danger" icon="close" (click)="agregarLlamado()"

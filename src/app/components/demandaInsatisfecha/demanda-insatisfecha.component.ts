@@ -3,11 +3,11 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ILlamado } from 'src/app/interfaces/turnos/IListaEspera';
 import { ListaEsperaService } from 'src/app/services/turnos/listaEspera.service';
 import { TurnoService } from 'src/app/services/turnos/turno.service';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 
 @Component({
     selector: 'demanda-insatisfecha',
@@ -40,8 +40,8 @@ export class DemandaInsatisfechaComponent implements OnInit {
         },
         paciente: null
     };
+
     public estadosLlamado = [
-        { id: 'turnoAsignado', nombre: 'Turno asignado' },
         { id: 'noContesta', nombre: 'No contesta' },
         { id: 'numeroEquivocado', nombre: 'Numero equivocado' },
         { id: 'otro', nombre: 'Otro' }
@@ -63,7 +63,11 @@ export class DemandaInsatisfechaComponent implements OnInit {
     public columns = [
         {
             key: 'paciente',
-            label: 'Paciente'
+            label: 'Nombre'
+        },
+        {
+            key: 'dni',
+            label: 'DNI'
         },
         {
             key: 'prestacion',
@@ -91,6 +95,8 @@ export class DemandaInsatisfechaComponent implements OnInit {
         },
     ];
 
+    public skip = 0;
+    public limit = 15;
     public tabIndex = 0;
     public pacienteFields = ['sexo', 'fechaNacimiento', 'cuil', 'financiador', 'numeroAfiliado', 'direccion'];
 
@@ -108,23 +114,28 @@ export class DemandaInsatisfechaComponent implements OnInit {
 
         this.filtros.fechaDesde = fechaDesdeInicial;
         this.filtros.organizacion = this.auth.organizacion.id;
+        this.selectorOrganizacion = this.auth.organizacion.id;
 
-        this.getDemandas({ fechaDesde: fechaDesdeInicial, organizacion: this.auth.organizacion.id });
+        this.getDemandas();
 
         this.auth.organizaciones(true).subscribe((organizaciones) => {
             this.listaOrganizaciones = organizaciones;
         });
     }
 
-    private getDemandas(filtros) {
-        this.listaEsperaService.get({ ...filtros, estado: 'pendiente' }).subscribe((listaEspera: any[]) => {
-            this.listaEspera = listaEspera;
-            this.listaEspera.forEach(item => {
-                item.motivos = [...new Set(item.demandas.map(({ motivo }) => motivo))];
-            });
-        });
-    }
+    private getDemandas(reset?: boolean) {
+        if (this.filtros.fechaDesde && this.filtros.organizacion) {
+            if (reset) { this.skip = 0; }
 
+            this.listaEsperaService.get({ ...this.filtros, estado: 'pendiente', skip: this.skip, limit: this.limit }).subscribe((listaEspera) => {
+                this.listaEspera = reset ? listaEspera : [...this.listaEspera, ...listaEspera];
+
+                this.listaEspera.forEach(item => {
+                    item.motivos = [...new Set(item.demandas.map(({ motivo }) => motivo))];
+                });
+            });
+        }
+    }
 
     public obtenerObjetoMasAntiguo() {
         if (this.listaEspera.length === 0) {
@@ -143,7 +154,7 @@ export class DemandaInsatisfechaComponent implements OnInit {
         });
 
         if (historial) {
-            this.serviceTurno.getHistorial({ pacienteId: this.itemSelected.paciente.id }).pipe(
+            this.serviceTurno.getHistorial({ pacienteId: this.itemSelected.paciente._id }).pipe(
                 map(historial => historial.filter(item => moment(item.horaInicio).isAfter(moment(primerDemanda.fecha))))
             ).subscribe(historialFiltrado => {
                 this.listaHistorial = historialFiltrado;
@@ -164,6 +175,7 @@ export class DemandaInsatisfechaComponent implements OnInit {
 
     public actualizarDemanda(demanda) {
         const i = this.listaEspera.findIndex(item => item.id === demanda.id);
+
         this.listaEspera[i] = demanda;
         this.listaEspera.forEach(item => {
             item.motivos = [...new Set(item.demandas.map(({ motivo }) => motivo))];
@@ -171,7 +183,6 @@ export class DemandaInsatisfechaComponent implements OnInit {
     }
 
     public actualizarFiltros({ value }, tipo) {
-
         if (tipo === 'paciente') {
             this.filtros = { ...this.filtros, paciente: value };
         }
@@ -195,10 +206,13 @@ export class DemandaInsatisfechaComponent implements OnInit {
 
         if (tipo === 'organizacion') {
             const values = value?.map(organizacion => organizacion.id);
-            this.filtros = { ...this.filtros, organizacion: values?.join(',') };
+
+            if (values) {
+                this.filtros = { ...this.filtros, organizacion: values?.join(',') };
+            }
         }
 
-        this.getDemandas(this.filtros);
+        this.getDemandas(true);
     }
 
     public cerrar() { this.itemSelected = null; }
@@ -210,14 +224,14 @@ export class DemandaInsatisfechaComponent implements OnInit {
         this.formLlamados?.form.markAsPristine();
     }
 
-    public async guardarLlamado(id) {
+    public async guardarLlamado() {
         this.formLlamados.control.markAllAsTouched();
 
         if (this.formLlamados.form.valid) {
             try {
                 this.listaLlamados.push({ ...this.nuevoLlamado, createdBy: this.auth.usuario, createdAt: moment() });
 
-                this.listaEsperaService.patch(id, 'llamados', this.listaLlamados).subscribe((demanda) => {
+                this.listaEsperaService.patch(this.itemSelected._id, 'llamados', this.listaLlamados).subscribe((demanda) => {
                     this.plex.toast('success', 'Llamado registrado exitosamente');
                     this.agregarLlamado();
                     this.actualizarDemanda(demanda);
@@ -264,17 +278,22 @@ export class DemandaInsatisfechaComponent implements OnInit {
         this.prestacion.paciente = this.paciente;
     }
 
-    finalizarDemanda() {
+    public finalizarDemanda() {
         this.showFinalizarDemanda = true;
     }
 
-    volver() {
+    public volver() {
         this.showTurnos = false;
         this.showFinalizarDemanda = false;
         this.selectorFinalizar = null;
     }
 
-    onInputChange() {
+    public onInputChange() {
         this.textoOtros = null;
+    }
+
+    public onScroll() {
+        this.skip += this.limit;
+        this.getDemandas();
     }
 }
