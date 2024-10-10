@@ -2,6 +2,7 @@ import { IPrestacionEstado } from './prestacion.estado.interface';
 import { IPrestacionRegistro } from './prestacion.registro.interface';
 import { ISnomedConcept } from './snomed-concept.interface';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
+import { IPacienteBasico } from 'src/app/core/mpi/interfaces/IPaciente';
 
 export class IPrestacion {
     id: string;
@@ -10,20 +11,7 @@ export class IPrestacion {
     elementoRUP: string;
     inicio: string;
     // Datos principales del paciente
-    paciente: {
-        // requirido, validar en middleware
-        id: string;
-        nombre: string;
-        alias: string;
-        apellido: string;
-        documento: string;
-        numeroIdentificacion: string;
-        telefono: string;
-        sexo: string;
-        genero: string;
-        fechaNacimiento: Date;
-        obraSocial?: IObraSocial; // Refactor cobertura
-    };
+    paciente: IPacienteBasico;
     // Datos de la solicitud
     solicitud: {
         ambitoOrigen: string;

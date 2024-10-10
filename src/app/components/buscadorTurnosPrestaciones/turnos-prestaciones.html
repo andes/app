@@ -213,7 +213,7 @@
                     <plex-badge *ngIf="prestacion.paciente.estado === 'validado'" type="success">
                         {{ prestacion.paciente.estado | uppercase }}
                     </plex-badge>
-                    <plex-badge *ngIf="_paciente.estado !== 'validado'" type="warning">
+                    <plex-badge *ngIf="paciente.estado !== 'validado'" type="warning">
                         {{ prestacion.paciente.estado | uppercase }}
                     </plex-badge>
                 </div>

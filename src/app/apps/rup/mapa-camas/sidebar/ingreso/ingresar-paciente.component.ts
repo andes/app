@@ -3,7 +3,7 @@ import { Plex } from '@andes/plex';
 import { Component, EventEmitter, OnDestroy, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { auditTime, filter, map, switchMap, take } from 'rxjs/operators';
-import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
+import { IPaciente, pacienteToBasico } from 'src/app/core/mpi/interfaces/IPaciente';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { ObraSocialService } from 'src/app/services/obraSocial.service';
 import { RUPComponent } from '../../../../../modules/rup/components/core/rup.component';
@@ -181,7 +181,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                     return this.mapaCamasService.getPaciente({ id: pacID }, false);
                 })
             )]
-        ).subscribe(([estado, view, capa, cama, prestacion, resumen, /* sinMovimientos,*/ paciente]: [IMaquinaEstados, string, string, ISnapshot, IPrestacion, IResumenInternacion, /* Boolean,*/ IPaciente]) => {
+        ).subscribe(([estado, view, capa, cama, prestacion, resumen, paciente]: [IMaquinaEstados, string, string, ISnapshot, IPrestacion, IResumenInternacion, /* Boolean,*/ IPaciente]) => {
             this.capa = capa;
             this.prestacion = prestacion;
             this.paciente = paciente;
@@ -406,19 +406,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     private confirmarGuardar() {
         this.disableButton = true;
-        const dtoPaciente = {
-            id: this.paciente.id,
-            documento: this.paciente.documento,
-            numeroIdentificacion: this.paciente.numeroIdentificacion,
-            nombre: this.paciente.nombre,
-            alias: this.paciente.alias,
-            apellido: this.paciente.apellido,
-            sexo: this.paciente.sexo,
-            genero: this.paciente.genero,
-            fechaNacimiento: this.paciente.fechaNacimiento,
-            direccion: this.paciente.direccion,
-            telefono: this.paciente.telefono
-        };
+        const dtoPaciente = pacienteToBasico(this.paciente, ['telefono', 'direccion', 'obraSocial']);
 
         if (this.capa === 'estadistica' || (this.capa === 'estadistica-v2' && !this.prestacion)) {
             this.ingresoExtendido(dtoPaciente);
@@ -584,7 +572,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         const cambios = {
             op: 'registros',
             registros: this.prestacion.ejecucion.registros,
-            paciente: this.paciente
+            paciente
         };
         this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe((prestacion: any) => {
             this.informeIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso;
