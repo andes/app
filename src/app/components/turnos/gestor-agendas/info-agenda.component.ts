@@ -16,6 +16,7 @@ export class InfoAgendaComponent {
         this.turnosSeleccionados = [];
         this.horaInicio = moment(this._agenda.horaInicio).format('dddd').toUpperCase();
         this.arrayDelDia = [];
+        this.enviarNotificacion = value.enviarSms ? 'Si' : 'No';
     }
     get agenda(): any {
         return this._agenda;
@@ -30,6 +31,7 @@ export class InfoAgendaComponent {
     hoy: Date;
     public delDia = false;
     public arrayDelDia = [];
+    public enviarNotificacion = '';
 
     public volverAtras() {
         this.volver.emit();

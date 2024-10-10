@@ -34,6 +34,7 @@ export class SuspenderTurnoComponent implements OnInit {
     public motivoSuspension: any[];
     public motivoSuspensionSelect = { select: null };
     public seleccionadosSMS = [];
+    public avisoSuspension = 'no enviado';
     public suspendio = false;
 
     constructor(public plex: Plex, public auth: Auth, public listaEsperaService: ListaEsperaService, public serviceAgenda: AgendaService, public smsService: SmsService) { }
@@ -67,7 +68,7 @@ export class SuspenderTurnoComponent implements OnInit {
     seleccionarTurno(turno) {
         const indice = this.seleccionadosSMS.indexOf(turno);
         if (indice === -1) {
-            if (turno.paciente && turno.paciente.id) {
+            if (turno.paciente?.id) {
                 this.seleccionadosSMS = [...this.seleccionadosSMS, turno];
             }
         } else {
@@ -78,15 +79,14 @@ export class SuspenderTurnoComponent implements OnInit {
 
     estaSeleccionado(turno) {
         if (this.seleccionadosSMS.indexOf(turno) >= 0) {
+            this.avisoSuspension = 'enviado';
             return true;
         } else {
+            this.avisoSuspension = 'no enviado';
             return false;
         }
     }
 
-    tienePaciente(turno) {
-        return turno.paciente != null && turno.paciente.id != null;
-    }
 
     suspenderTurno() {
 
@@ -102,6 +102,7 @@ export class SuspenderTurnoComponent implements OnInit {
                 turnos: this.turnosSeleccionados.map((resultado) => {
                     return resultado.id;
                 }),
+                avisoSuspension: this.avisoSuspension,
                 motivoSuspension: this.motivoSuspensionSelect.select.nombre
             };
         } else {

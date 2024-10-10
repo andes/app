@@ -1192,12 +1192,12 @@ export class DarTurnosComponent implements OnInit {
                     this.resultado = sms;
                     if (this.resultado === '0') {
                         if (paciente.alias) {
-                            this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.alias + ' ' + paciente.apellido);
+                            this.plex.toast('info', 'Se notificó al paciente ' + paciente.alias + ' ' + paciente.apellido);
                         } else {
-                            this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombre + ' ' + paciente.apellido);
+                            this.plex.toast('info', 'Se notificó al paciente ' + paciente.nombre + ' ' + paciente.apellido);
                         }
                     } else {
-                        this.plex.toast('danger', 'ERROR: SMS no enviado');
+                        this.plex.toast('danger', 'ERROR: Notificación no enviada');
                     }
                 },
                 error: (err) => {
@@ -1207,7 +1207,7 @@ export class DarTurnosComponent implements OnInit {
                 }
             });
         } else {
-            this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
+            this.plex.toast('info', 'INFO: Notificación no enviada (activa sólo en Producción)');
         }
     }
 

@@ -49,6 +49,9 @@
                               class="text-danger">Espacio físico no asignado</span>
                     </div>
                 </div>
+                <div>
+                    <label>Enviar notificación: </label> {{enviarNotificacion}}
+                </div>
                 <div *ngIf="agenda.dinamica" class="row">
                     <div class="col-12">
                         <label>Cupos disponibles</label>
@@ -67,7 +70,8 @@
         <plex-help *ngIf="agenda.nota" class="mr-1" type="help" icon="message">
             {{ agenda.nota }}
         </plex-help>
-        <plex-button type="default" icon="email-outline" size="sm" (click)="notificar()"></plex-button>
+        <plex-button *ngIf="agenda.enviarSms" type="info" tooltip="Enviar notificación" icon="email-outline" size="sm"
+                     (click)="notificar()"></plex-button>
         <plex-button type="danger" tooltip="Cerrar" icon="close" (click)="cerrarSidebarTurnos()" class="ml-1" size="sm">
         </plex-button>
     </plex-title>
@@ -140,7 +144,7 @@
                                     title="Notificación enviada">
                             <plex-icon name="message-text-outline"></plex-icon>
                         </plex-badge>
-                        <plex-badge *ngIf="turno.avisoSuspension ==='no enviado'" type="info"
+                        <plex-badge *ngIf="turno.avisoSuspension ==='no enviado' && agenda.enviarSms" type="info"
                                     title="Notificación pendiente">
                             <plex-icon name="message-processing"></plex-icon>
                         </plex-badge>
