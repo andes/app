@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, EventEmitter, HostBinding, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, HostBinding, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, forkJoin, of, Subscription } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -17,6 +17,7 @@ import { HUDSService } from '../../services/huds.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 
 
 @Component({
@@ -34,6 +35,8 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     elementoRUP: any;
     @HostBinding('class.plex-layout') layout = true;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
+    @ViewChild('modalSolicitud', { static: true }) modal: PlexModalComponent;
+
     // Orden en que se muestran los registros
     public ordenSeleccionado: string;
     public tipoOrden: any[] = null;
@@ -308,7 +311,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                     const recorrerRegistros = registro => {
                         if (!seCreoSolicitud && registro.esSolicitud && registro.valor?.solicitudPrestacion?.organizacionDestino) {
                             seCreoSolicitud = true;
-                            this.plex.info('success', 'La solicitud está en la bandeja de entrada de la organización destino', 'Información');
+                            this.modal.show();
                         }
 
                         if (registro.hasSections) { // COLONO O EPICRISIS
