@@ -14,6 +14,9 @@ export class VistaLaboratorioComponent implements OnInit {
     public gruposLaboratorio;
     public laboratorios: any = {};
 
+    public keysGrupos;
+    public keysTitulos;
+
     @Input() protocolo;
     @Input() index: number;
 
@@ -21,19 +24,37 @@ export class VistaLaboratorioComponent implements OnInit {
         const id = this.protocolo.data.idProtocolo;
 
         this.laboratorioService.getByProtocolo(id).subscribe((resultados) => {
-            this.laboratorios = this.groupByArea(resultados[0].Data);
-            this.gruposLaboratorio = Object.keys(this.laboratorios);
-        });
+            this.gruposLaboratorio = this.groupByTitulo(resultados[0].Data);
 
+            this.keysGrupos = Object.keys(this.gruposLaboratorio);
+
+            this.keysGrupos.forEach(grupo => {
+                this.keysTitulos = { ...this.keysTitulos, [grupo]: Object.keys(this.gruposLaboratorio[grupo]) };
+            });
+        });
     }
 
-    public groupByArea(data: any): { [key: string]: any[] } {
-        return data?.reduce((acc, item) => {
-            if (!acc[item.grupo]) {
-                acc[item.grupo] = [];
+    public groupByTitulo(elementos: any): { [key: string]: any[] } {
+        const resultado = {};
+
+        elementos.forEach(elemento => {
+            if (elemento.esTitulo === 'True') {
+                if (!resultado[elemento.grupo]) {
+                    resultado[elemento.grupo] = {};
+                }
+
+                if (!resultado[elemento.grupo][elemento.item]) {
+                    resultado[elemento.grupo][elemento.item] = [];
+                }
+            } else {
+                if (resultado[elemento.grupo]) {
+                    for (const titulo in resultado[elemento.grupo]) {
+                        resultado[elemento.grupo][titulo].push(elemento);
+                    }
+                }
             }
-            acc[item.grupo].push(item);
-            return acc;
-        }, {} as { [key: string]: any[] });
+        });
+
+        return resultado;
     }
 }
