@@ -1,3 +1,19 @@
+# [5.150.0](https://github.com/andes/app/compare/v5.149.0...v5.150.0) (2024-10-16)
+
+
+### Bug Fixes
+
+* **CIT:** liberar turno y edit nro carpeta en sobreturnos ([#3079](https://github.com/andes/app/issues/3079)) ([1ca90a5](https://github.com/andes/app/commit/1ca90a5c5182d6e71df51517621a5615a6d98601))
+
+
+### Features
+
+* **CIT:** modifica recuperacion de pacientes ([#3072](https://github.com/andes/app/issues/3072)) ([02adc46](https://github.com/andes/app/commit/02adc4640d7975818e96c6955800f7baedfc210e))
+* **GDU-68:** Punto de inicio gestor de usuarios ([#3078](https://github.com/andes/app/issues/3078)) ([cc4f099](https://github.com/andes/app/commit/cc4f099b0885364698f43942c81cb1e0d195b6a6))
+* **IN:** mockups en visualizacion de camas ([#3056](https://github.com/andes/app/issues/3056)) ([d741e34](https://github.com/andes/app/commit/d741e34a1fb57d9d3b1c8a2c1958b332d550e250))
+* **LAB:** implementa vista de laboratorios ([#3038](https://github.com/andes/app/issues/3038)) ([2c25013](https://github.com/andes/app/commit/2c25013ccccab69fdc79443f1b35fbdcbac0eeb5))
+* **RUP:** implementa modal con info de solicitudes al validar ([#3064](https://github.com/andes/app/issues/3064)) ([d468bfb](https://github.com/andes/app/commit/d468bfb2e44f6531b8dae8940ced7b6c4deb0711))
+
 # [5.149.0](https://github.com/andes/app/compare/v5.148.1...v5.149.0) (2024-10-02)
 
 
