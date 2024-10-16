@@ -294,6 +294,8 @@ export class CamaDetalleComponent implements OnInit {
     }
 
     setDropDown(relacion, drop) {
+        const HOY = moment().toDate();
+        const desde = moment(this.mapaCamasService.fecha).subtract(1, 'd').toDate();
         this.relacionesPosibles = { ...relacion };
         if (this.openedDropDown) {
             this.openedDropDown.open = (this.openedDropDown === drop) ? true : false;
@@ -314,12 +316,19 @@ export class CamaDetalleComponent implements OnInit {
                 this.relacionesPosibles.accion = 'cambiarUO';
                 this.accionCama.emit(this.relacionesPosibles);
             }
-        }, {
-            label: 'Egresar paciente',
-            handler: ($event: Event) => {
-                $event.stopPropagation();
-                this.relacionesPosibles.accion = 'egresarPaciente';
-                this.accionCama.emit(this.relacionesPosibles);
+        });
+        this.mapaCamasService.historial('internacion', desde, HOY).subscribe(mov => {
+            if (!mov.length || !mov[mov.length - 1].extras?.egreso) {
+                this.itemsDropdown.push(
+                    {
+                        label: 'Egresar paciente',
+                        handler: ($event: Event) => {
+                            $event.stopPropagation();
+                            this.relacionesPosibles.accion = 'egresarPaciente';
+                            this.accionCama.emit(this.relacionesPosibles);
+                        }
+                    }
+                );
             }
         });
     }
