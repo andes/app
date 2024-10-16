@@ -8,8 +8,6 @@ import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 import { EstadosAgenda } from './../enums';
 import * as moment from 'moment';
-import { switchMap } from 'rxjs/operators';
-import { EMPTY } from 'rxjs';
 import { TurnoService } from 'src/app/services/turnos/turno.service';
 
 @Component({
@@ -229,6 +227,12 @@ export class TurnosComponent implements OnInit {
         // Siempre es 1 sólo el seleccionado cuando se edita una carpeta
         if (carpetas) {
             this.turnosSeleccionados[0].paciente.carpetaEfectores = carpetas;
+            this.serviceTurno.patch(
+                this.agenda.id,
+                this.bloqueSelected.id,
+                this.turnosSeleccionados[0].id,
+                { carpetaEfectores: carpetas }
+            ).subscribe();
         }
         this.showCarpetaPaciente = false;
         this.showTurnos = true;
