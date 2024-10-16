@@ -16,26 +16,33 @@
     </div>
     <div class="w-100 mt-2">
         <plex-title titulo="Resultados" size="md"></plex-title>
-        <table class="table table-striped table-hover">
-            <thead class="text-center">
-                <tr>
-                    <th></th>
-                    <th class="text-center">Resultado</th>
-                    <th class="text-center">Referencia/Método</th>
-                    <th class="text-center">Profesional</th>
-                </tr>
-            </thead>
-            <tbody *ngFor="let grupo of this.gruposLaboratorio">
-                <tr>
-                    <th class="titulo-grupo"><b>{{grupo}}</b></th>
-                </tr>
-                <tr *ngFor="let resultado of laboratorios[grupo]" class="align-items-center">
-                    <td><b>{{resultado.item}}</b></td>
-                    <td class="text-center">{{resultado.resultado}}</td>
-                    <td class="text-center">{{resultado.valorReferencia}}{{ resultado.Metodo ? '/' + resultado.Metodo : '' }}</td>
-                    <td class="text-center"><plex-badge type="info" size="sm">{{resultado.userValida}}</plex-badge></td>
-                </tr>
-            </tbody>
-        </table>
+
+        <ng-container *ngFor="let grupo of keysGrupos">
+            <div class="titulo-grupo">{{grupo}}</div>
+            <ng-container *ngFor="let titulo of keysTitulos[grupo]">
+                <span><b>{{titulo}}</b></span>
+                <table class="table table-striped table-hover">
+                    <thead class="text-center">
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th class="text-center">Resultado</th>
+                            <th class="text-center">Referencia/Método</th>
+                            <th class="text-center">Profesional</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let resultado of gruposLaboratorio[grupo][titulo]">
+                            <td></td>
+                            <td><b>{{resultado.item}}</b></td>
+                            <td class="text-center">{{resultado.resultado || resultado.Resultado}}</td>
+                            <td class="text-center">{{resultado.valorReferencia}}{{ resultado.Metodo ? '/' +
+                                resultado.Metodo : '' }}</td>
+                            <td class="text-center">{{resultado.userValida}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-container>
+        </ng-container>
     </div>
 </ng-container>
