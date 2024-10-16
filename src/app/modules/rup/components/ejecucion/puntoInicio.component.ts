@@ -737,6 +737,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         });
 
         // busquemos si hay sobreturnos para vincularlos con la prestacion correspondiente
+        agenda.sobreturnos = agenda.sobreturnos.filter(s => s.paciente);
         if (agenda.sobreturnos) {
             agenda.sobreturnos.forEach(sobreturno => {
                 const prestaciones = this.prestaciones.filter(prestacion => {
