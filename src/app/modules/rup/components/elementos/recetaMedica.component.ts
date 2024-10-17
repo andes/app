@@ -1,33 +1,51 @@
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
 import { RupElement } from '.';
 import { forkJoin } from 'rxjs';
+import { getRegistros, populateRelaciones, unPopulateRelaciones } from '../../operators/populate-relaciones';
 import { Unsubscribe } from '@andes/shared';
+import { NgForm } from '@angular/forms';
 @Component({
     selector: 'rup-recetaMedica',
-    templateUrl: 'recetaMedica.html'
+    templateUrl: 'recetaMedica.html',
+    styleUrls: ['recetaMedica.scss'],
 })
+
+
 @RupElement('RecetaMedicaComponent')
 export class RecetaMedicaComponent extends RUPComponent implements OnInit {
+
+    @ViewChild('formMedicamento') formMedicamento: NgForm;
+
     public medicamento: any = {
         generico: null,
         presentacion: null,
         unidades: null,
         cantidad: null,
         diagnostico: '',
-        tipoReceta: 'simple',
+        tipoReceta: null,
         tratamientoProlongado: false,
+        tiempoTratamiento: null,
         dosisDiaria: {
             cantidad: null,
-            dias: null
+            dias: null,
+            notaMedica: null
         }
     };
+    public collapse = false;
+
+    public diagnosticos = [];
     public unidades = [];
     public genericos = [];
+    public registros = [];
+    public comprimidosEditados = false;
     public opcionesTipoReceta = [
-        { id: 'simple', label: 'Simple' },
         { id: 'duplicado', label: 'Duplicado' },
         { id: 'triplicado', label: 'Triplicado' }
+    ];
+    public tiemposTratamiento = [
+        { id: '3meses', nombre: '3 meses' },
+        { id: '6meses', nombre: '6 meses' }
     ];
     ngOnInit() {
         if (!this.registro.valor) {
@@ -36,10 +54,18 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         if (!this.registro.valor.medicamentos) {
             this.registro.valor.medicamentos = [];
         }
+        this.registros = this.prestacion.ejecucion.registros.filter(reg => {
+            reg.nombre !== 'receta';
+        }
+        ).map(reg => { if (reg.nombre !== 'receta') { return { id: reg.id, nombre: reg.nombre, elementoRUP: reg.elementoRUP }; } });
+
+
     }
+
 
     @Unsubscribe()
     loadMedicamentoGenerico(event) {
+        this.comprimidosEditados = false;
         const input = event.query;
         if (input && input.length > 2) {
             const query: any = {
@@ -50,6 +76,31 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         } else {
             event.callback([]);
         }
+    }
+    loadRegistros() {
+        this.registros = this.prestacion.ejecucion.registros
+            .filter(reg => reg.nombre !== 'receta')
+            .map(reg => {
+                return {
+                    id: reg.id,
+                    nombre: reg.nombre,
+                    elementoRUP: reg.elementoRUP
+                };
+            });
+
+    };
+    editarComprimidos() {
+        if (!this.comprimidosEditados) {
+            this.plex.confirm('La cantidad recetada no se encuentra en ninguna presentación comercial ¿Desea continuar?', 'Atención').then(confirmacion => {
+                if (confirmacion) {
+                    this.medicamento.unidades = 0;
+                    this.comprimidosEditados = true;
+                }
+            });
+        } else {
+            this.comprimidosEditados = false;
+        }
+
     }
 
     loadPresentaciones() {
@@ -67,8 +118,9 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
                 search: ''
             };
             forkJoin(
-                [this.snomedService.get(queryPresentacion),
-                 this.snomedService.get(queryUnidades)]
+                [
+                    this.snomedService.get(queryPresentacion),
+                    this.snomedService.get(queryUnidades)]
             ).subscribe(([resultado, presentaciones]) => {
                 this.medicamento.presentacion = resultado[0];
                 this.unidades = presentaciones.map(elto => {
@@ -78,10 +130,11 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         }
     }
 
+
     agregarMedicamento(form) {
         if (form.formValid) {
             if (this.registro.valor.medicamentos.length < this.params.limiteMedicamentos) {
-                if (this.medicamento.unidades.valor) {
+                if (this.medicamento.unidades?.valor) {
                     this.medicamento.unidades = Number(this.medicamento.unidades.valor);
                 }
                 this.registro.valor.medicamentos.push(this.medicamento);
@@ -92,19 +145,23 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
                     unidades: null,
                     cantidad: null,
                     diagnostico: '',
-                    tipoReceta: 'simple',
+                    tipoReceta: null,
                     tratamientoProlongado: false,
+                    tiempoTratamiento: null,
                     dosisDiaria: {
                         cantidad: null,
-                        dias: null
+                        dias: null,
+                        notaMedica: null
                     }
                 };
+                this.formMedicamento.reset();
+                this.formMedicamento.form.markAsPristine();
+                this.formMedicamento.form.markAsUntouched();
             } else {
                 this.plex.toast('warning', `No se permite cargar más de ${this.params.limiteMedicamentos} medicamentos.`);
             }
         }
     }
-
     borrarMedicamento(medicamento) {
         this.plex.confirm('¿Está seguro que desea eliminar el medicamento de la receta?').then((resultado) => {
             if (resultado) {
@@ -113,4 +170,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
             }
         });
     }
+    colapsar() {
+        this.collapse = !this.collapse;
+    }
+
 }
