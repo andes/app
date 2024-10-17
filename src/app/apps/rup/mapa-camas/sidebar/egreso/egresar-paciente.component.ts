@@ -2,8 +2,8 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { cache } from '@andes/shared';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { combineLatest, Observable, of, Subscription } from 'rxjs';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
@@ -17,6 +17,8 @@ import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
+import { ListadoInternacionCapasService } from '../../views/listado-internacion-capas/listado-internacion-capas.service';
+import { NgForm } from '@angular/forms';
 @Component({
     selector: 'app-egresar-paciente',
     templateUrl: './egresar-paciente.component.html',
@@ -25,7 +27,7 @@ import { ListadoInternacionService } from '../../views/listado-internacion/lista
 export class EgresarPacienteComponent implements OnInit, OnDestroy {
     // EVENTOS
     @Output() onSave = new EventEmitter<any>();
-
+    @ViewChild('formEgreso', { static: true }) formEgreso: NgForm;
     // CONSTANTES
     public listaTipoEgreso = listaTipoEgreso;
     public causaExterna = causaExterna;
@@ -88,14 +90,17 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     public existeCausaExterna = false;
     public listaProcedimientosQuirurgicos: any[];
     public prestacionValidada = false;
-    public disableButton = false;
-    public inProgress = false;
+
+    public disableSave = true;
+    public checkDisableSave$: Observable<boolean>;
+    private refreshSaveButton = new BehaviorSubject<any>(null);
+
+    public inProgress = true;
     public resumen;
     private subscription: Subscription;
     private subscription2: Subscription;
     private subscription3: Subscription;
     private subscription4: Subscription;
-    public disableButton$: Observable<boolean>;
 
     constructor(
         public auth: Auth,
@@ -106,6 +111,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         public mapaCamasService: MapaCamasService,
         public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
         private listadoInternacionService: ListadoInternacionService,
+        private listadoInternacionCapasService: ListadoInternacionCapasService,
         private internacionResumenService: InternacionResumenHTTP,
         private camasHTTP: MapaCamasHTTP,
     ) { }
@@ -124,21 +130,32 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.subscription4.unsubscribe();
         }
     }
-    ngOnInit() {
-        this.inProgress = true;
-        this.fecha = this.mapaCamasService.fecha;
 
-        this.disableButton$ = this.mapaCamasService.snapshot$.pipe(
-            map((camas) => {
+    ngOnInit() {
+        this.fecha = this.mapaCamasService.fecha;
+        this.formEgreso.valueChanges.subscribe(() => {
+            this.inProgress = true;
+            this.refreshSaveButton.next({});
+        });
+
+        this.checkDisableSave$ = combineLatest([
+            this.mapaCamasService.snapshot$,
+            this.refreshSaveButton
+        ]).pipe(
+            map(([camas, disparador]) => {
                 this.inProgress = false;
                 if (this.cama?.sala) {
                     return false;
+                } else if (!this.cama || this.formEgreso.invalid || (this.capa === 'estadistica' && this.prestacionValidada)) {
+                    return true;
                 }
-                const camaActual = camas.find(c => c.id === this.cama?.id);
-                if ((camaActual?.estado === 'ocupada' && camaActual?.idInternacion === this.cama?.idInternacion) || this.prestacion) {
-                    return false;
-                }
-                return true;
+                const camaActual = camas.find(c => c.id === (this.cama as any)?._id);
+                // else: this.cama tiene valor, el form de egreso es valido y de ser capa estadistica la prestacion no esta validada
+                const condicion = camaActual?.estado === 'disponible'
+                    || (camaActual?.estado === 'ocupada' && camaActual?.idInternacion === this.cama?.idInternacion)
+                    || this.prestacion;
+
+                return !condicion;
             })
         );
 
@@ -220,39 +237,60 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                         this.subscription2.unsubscribe();
                     }
                     const fechaABuscarMin = moment(this.informeIngreso.fechaIngreso).add(-1, 's').toDate();
-                    const fechaABuscarMax = this.hayEgreso ? moment(this.registro.valor.InformeEgreso.fechaEgreso).add(-10, 's').toDate() : moment().toDate();
+                    const fechaABuscarMax = this.hayEgreso ? moment(this.registro.valor.InformeEgreso.fechaEgreso).add(-10, 's').toDate() : moment().toDate(); // para excluir el egreso
                     const idInternacion = resumen?.id || prestacion.id;
                     this.subscription2 = this.camasHTTP.historialInternacion(ambito, capa, fechaABuscarMin, fechaABuscarMax, idInternacion)
-                        .subscribe((snapshot) => {
-                            snapshot.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
-                            this.cama = snapshot[0];
+                        .subscribe(movimientos => {
+                            movimientos.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+                            this.cama = movimientos[0];
                             if (this.cama) {
                                 this.cama.id = this.cama.idCama;
+                                this.refreshSaveButton.next({});
                                 this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').toDate();
                                 this.checkHistorial(fecha);
                                 if (this.subscription3) {
                                     this.subscription3.unsubscribe();
                                 }
-                                this.subscription3 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
-                                    this.estadoDestino = relacionesPosibles[0].destino;
-                                });
+                                this.setEstadoDestino();
                             }
                         });
+                } else {
+                    this.cama = cama;
+                    this.setEstadoDestino();
                 }
-            }
-            if (cama.id && cama.id !== ' ') {
+            } else if (this.resumen?.id) {
+                // asistencial (no sala)
+                if (this.resumen.fechaEgreso) {
+                    this.fechaEgresoOriginal = moment(this.resumen.fechaEgreso).toDate();
+                    this.registro.valor.InformeEgreso.tipoEgreso = this.listaTipoEgreso.find(tipo => tipo.nombre === this.resumen.tipo_egreso);
+                }
+                const fechaABuscarMax = resumen.fechaEgreso ? moment(resumen.fechaEgreso).add(-10, 's').toDate() : moment().toDate(); // para excluir el egreso
+                this.subscription2 = this.camasHTTP.historialInternacion(ambito, capa, resumen.fechaIngreso, fechaABuscarMax, resumen.id)
+                    .subscribe(movimientos => {
+                        movimientos.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+                        const ultimoMovimiento = movimientos[0];
+                        this.cama = ultimoMovimiento;
+                        this.refreshSaveButton.next({});
+                        this.fechaMin = moment(ultimoMovimiento.fecha).add(1, 'm').toDate();
+                        this.checkHistorial(fecha);
+
+                        this.setEstadoDestino();
+                    });
+            } else if (cama.sala) {
                 this.cama = cama;
-                this.fechaMin = moment(this.cama.fecha).add(1, 'm').toDate();
-                this.checkHistorial(fecha);
-                if (this.subscription3) {
-                    this.subscription3.unsubscribe();
-                }
-                this.subscription3 = this.mapaCamasService.getRelacionesPosibles(cama).subscribe((relacionesPosibles) => {
-                    this.estadoDestino = relacionesPosibles[0].destino;
-                });
             }
+
             this.fecha = moment(fecha).toDate();
             this.setDiasEstada();
+        });
+    }
+
+    /* Calcula cual seria el siguiente estado correcto que corresponderia partir del movimiento actual
+        en base a la maquina de estados y se lo asigna a la variable 'estadoDestino'
+        */
+    private setEstadoDestino() {
+        this.subscription3 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
+            this.estadoDestino = relacionesPosibles[0].destino;
         });
     }
 
@@ -265,7 +303,10 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     setFecha() {
-        const nuevaFecha = (this.fecha) ? moment(this.fecha).toDate() : moment().toDate();
+        if (!this.fecha) {
+            return;
+        }
+        const nuevaFecha = moment(this.fecha).toDate();
         this.mapaCamasService.setFecha(nuevaFecha);
         this.registro.valor.InformeEgreso.fechaEgreso = nuevaFecha;
         if (this.capa === 'estadistica' || this.capa === 'estadistica-v2') {
@@ -282,17 +323,22 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
     guardar(valid) {
         if (valid.formValid) {
-            this.disableButton = true;
+            this.inProgress = true;
             const afterSave = {
                 complete: () => {
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
                     if (this.view === 'listado-internacion') {
-                        this.listadoInternacionService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
+                        const fechaHasta = moment(this.registro.valor.InformeEgreso.fechaEgreso).add(1, 'minute').toDate();
+                        // actualiza el listado
+                        this.listadoInternacionService.setFechaHasta(fechaHasta);
+                        this.listadoInternacionCapasService.setFechaHasta(fechaHasta);
+                        this.mapaCamasService.selectPrestacion(null);
+                        this.mapaCamasService.selectResumen(null);
                     } else if (this.view === 'mapa-camas') {
                         this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
                     }
                 },
-                error: () => {
+                error: (err) => {
                     this.plex.info('warning', 'Ocurrió un error egresando al paciente. Revise los movimientos de la internación e intente nuevamente.', 'Atención');
                 }
             };
@@ -328,7 +374,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         } else {
             // cama
             estadoPatch = {
-                _id: this.cama.id,
+                _id: this.cama.id || this.cama._id,
                 estado: estado,
                 idInternacion: null,
                 paciente: null,
@@ -355,14 +401,18 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         return saveInternacion().pipe(
             switchMap(resumenSaved => {
                 this.onSave.emit();
-                this.disableButton = false;
+                this.inProgress = false;
 
                 if (this.capa !== 'estadistica' && !this.cama.sala && !resumenSaved) {
                     /*  si hubo algun error actualizando el resumen, no debería actualizar el estado de la cama para
                             no generar datos inconsistentes entre internacion y movimientos */
                     throw new Error();
                 }
-                return this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso);
+                if (this.fechaEgresoOriginal) {
+                    return this.mapaCamasService.changeTime(this.cama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, this.cama.idInternacion);
+                } else {
+                    return this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso);
+                }
             })
         );
     }
@@ -377,7 +427,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             };
             return this.servicioPrestacion.patch(this.prestacion.id, params).pipe(
                 switchMap(prestacion => {
-                    if (this.view === 'listado-internacion') {
+                    if (this.view === 'listado-internacion' || this.capa === 'estadistica') {
                         this.mapaCamasService.selectPrestacion(prestacion);
                     }
                     if (this.capa === 'estadistica-v2' && this.resumen?.fechaEgreso) {
@@ -645,23 +695,24 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 }
 
             }
+            this.inProgress = false;
         });
     }
 
     /*
         Controla que no se haya internado y egresado otro paciente hasta la fecha seleccionada.
-        Define la fecha maxima para el egreso actual según corresponda.
+        Define las fechas minima y maxima para el egreso actual según corresponda.
     */
     checkHistorial(fecha: Date) {
         if (this.subscription4) {
             this.subscription4.unsubscribe();
         }
         this.subscription4 = this.mapaCamasService.historial('cama', this.cama.fecha, moment().toDate(), this.cama).subscribe(
-            (historialCama) => {
+            historialCama => {
                 this.fechaMax = null;
                 for (const historial of historialCama) {
                     if (!this.fechaMax && historial.estado === 'ocupada' && historial.idInternacion !== this.cama?.idInternacion) {
-                        this.fechaMax = historial.fecha;
+                        this.fechaMax = new Date(historial.fecha);
                     }
                 }
                 if (moment(fecha).isSameOrAfter(moment(this.fechaMax))) {
@@ -675,7 +726,15 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         );
     }
 
-    egresarPaciente(formEgreso, disable) {
-        return formEgreso.invalid || this.prestacionValidada || this.disableButton || this.inProgress || disable;
+    disableGuardar(formEgreso) {
+        let condicion = false;
+        if (this.capa === 'estadistica') {
+            condicion = this.prestacionValidada;
+        }
+
+        return formEgreso.invalid
+            || this.disableSave
+            || this.inProgress
+            || condicion;
     }
 }

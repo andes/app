@@ -5,6 +5,8 @@ import { map } from 'rxjs/operators';
 import { aporteOxigeno, monitorFisiologico, monitorTelemetrico, respirador } from '../../../constantes-internacion';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
+import { MapaCamasHTTP } from '../../../services/mapa-camas.http';
+import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'tr[app-item-cama]',
@@ -28,15 +30,12 @@ export class ItemCamaComponent implements OnChanges {
         })
     );
     public capa = this.mapaCamasService.capa;
-
     public equipos = {
         aporteOxigeno: false,
         respirador: false,
         monitorParamedico: false,
         usaRespirador: false
     };
-
-    openedDropDown = null;
     public itemsDropdown: any = [];
 
     get sectorCama() {
@@ -47,13 +46,14 @@ export class ItemCamaComponent implements OnChanges {
         public auth: Auth,
         private router: Router,
         private mapaCamasService: MapaCamasService,
+        private camasHTTP: MapaCamasHTTP,
         public permisosMapaCamasService: PermisosMapaCamasService,
+        private plex: Plex
     ) {
     }
 
     ngOnChanges() {
         this.canEdit = this.cama.sala ? this.permisosMapaCamasService.salaEdit : this.permisosMapaCamasService.camaEdit;
-
         this.equipos = {
             aporteOxigeno: false,
             respirador: false,
@@ -97,32 +97,44 @@ export class ItemCamaComponent implements OnChanges {
     }
 
     setDropDown(relacion, drop) {
-        if (this.openedDropDown) {
-            this.openedDropDown.open = (this.openedDropDown === drop) ? true : false;
+        if (drop.disabled) {
+            drop.open = false;
+            return;
         }
+        this.itemsDropdown = [];
+
         if (relacion) {
-            this.openedDropDown = drop;
-            this.itemsDropdown = [];
-            this.itemsDropdown.push({
-                label: 'Cambiar de cama',
-                handler: ($event: Event) => {
-                    $event.stopPropagation();
-                    this.relacionesPosibles.accion = 'cambiarCama';
-                    this.accionCama.emit(this.relacionesPosibles);
-                }
-            }, {
-                label: 'Pase de unidad organizativa',
-                handler: ($event: Event) => {
-                    $event.stopPropagation();
-                    this.relacionesPosibles.accion = 'cambiarUO';
-                    this.accionCama.emit(this.relacionesPosibles);
-                }
-            }, {
-                label: 'Egresar paciente',
-                handler: ($event: Event) => {
-                    $event.stopPropagation();
-                    this.relacionesPosibles.accion = 'egresarPaciente';
-                    this.accionCama.emit(this.relacionesPosibles);
+            const fechaDesdeBusqueda = this.mapaCamasService.fecha;
+            this.camasHTTP.historialInternacion('internacion', this.capa, fechaDesdeBusqueda, null, this.cama.idInternacion).subscribe(historial => {
+
+                const registraEgreso = historial.some(mov => mov.extras.egreso);
+                if (registraEgreso) {
+                    this.plex.toast('danger', 'El paciente ya está egresado', 'Acción denegada');
+                    drop.disabled = true;
+                    drop.open = false;
+                } else {
+                    this.itemsDropdown.push({
+                        label: 'Cambiar de cama',
+                        handler: ($event: Event) => {
+                            $event.stopPropagation();
+                            this.relacionesPosibles.accion = 'cambiarCama';
+                            this.accionCama.emit(this.relacionesPosibles);
+                        }
+                    }, {
+                        label: 'Pase de unidad organizativa',
+                        handler: ($event: Event) => {
+                            $event.stopPropagation();
+                            this.relacionesPosibles.accion = 'cambiarUO';
+                            this.accionCama.emit(this.relacionesPosibles);
+                        }
+                    }, {
+                        label: 'Egresar paciente',
+                        handler: ($event: Event) => {
+                            $event.stopPropagation();
+                            this.relacionesPosibles.accion = 'egresarPaciente';
+                            this.accionCama.emit(this.relacionesPosibles);
+                        }
+                    });
                 }
             });
         }

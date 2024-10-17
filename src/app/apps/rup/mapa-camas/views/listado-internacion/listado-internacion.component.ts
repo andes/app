@@ -270,7 +270,7 @@ export class InternacionListadoComponent implements OnInit {
         this.editando = $event?.accion === 'editando';
     }
 
-    validar(selectedPrestacion: IPrestacion, fechaHasta: Date) {
+    validar(selectedPrestacion: IPrestacion) {
         this.plex.confirm('Luego de validar la prestación ya no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
             if (validar) {
                 if (selectedPrestacion.ejecucion.registros[1]) {
@@ -278,12 +278,13 @@ export class InternacionListadoComponent implements OnInit {
                     if (egresoExiste && selectedPrestacion.estados[selectedPrestacion.estados.length - 1].tipo !== 'validada') {
                         if (egresoExiste.InformeEgreso.fechaEgreso && egresoExiste.InformeEgreso.tipoEgreso &&
                             egresoExiste.InformeEgreso.diagnosticoPrincipal) {
-                            this.prestacionService.validarPrestacion(selectedPrestacion).subscribe(prestacion => {
-                                this.listadoInternacionService.setFechaHasta(fechaHasta);
-                                this.mapaCamasService.selectPrestacion(prestacion);
-                                this.verificarPrestacion(prestacion);
-                            }, (err) => {
-                                this.plex.info('danger', 'ERROR: No es posible validar la prestación');
+                            this.prestacionService.validarPrestacion(selectedPrestacion).subscribe({
+                                next: prestacion => {
+                                    this.mapaCamasService.selectPrestacion(prestacion);
+                                    this.verificarPrestacion(prestacion);
+                                    this.listadoInternacionService.refresh.next(true);
+                                },
+                                error: () => this.plex.info('danger', 'ERROR: No es posible validar la prestación')
                             });
                         } else {
                             this.plex.info('danger', 'ERROR: Faltan datos');
@@ -296,7 +297,7 @@ export class InternacionListadoComponent implements OnInit {
         });
     }
 
-    romperValidacion(selectedPrestacion: IPrestacion, fechaHasta: Date) {
+    romperValidacion(selectedPrestacion: IPrestacion,) {
         this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {
             if (validar) {
                 // hacemos el patch y luego creamos los planes
@@ -305,12 +306,13 @@ export class InternacionListadoComponent implements OnInit {
                     desdeInternacion: true
                 };
                 // En api el estado de la prestación cambia a ejecucion
-                this.prestacionService.patch(selectedPrestacion.id, cambioEstado).subscribe(prestacion => {
-                    this.listadoInternacionService.setFechaHasta(fechaHasta);
-                    this.mapaCamasService.selectPrestacion(prestacion);
-                    this.verificarPrestacion(prestacion);
-                }, (err) => {
-                    this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
+                this.prestacionService.patch(selectedPrestacion.id, cambioEstado).subscribe({
+                    next: prestacion => {
+                        this.mapaCamasService.selectPrestacion(prestacion);
+                        this.verificarPrestacion(prestacion);
+                        this.listadoInternacionService.refresh.next(true);
+                    },
+                    error: () => this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación')
                 });
             }
         });
