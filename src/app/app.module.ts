@@ -177,7 +177,6 @@ import { FinanciadorService } from './services/financiador.service';
 import { FormTerapeuticoService } from './services/formTerapeutico/formTerapeutico.service';
 import { ValidacionService } from './services/fuentesAutenticas/validacion.service';
 import { LocalidadService } from './services/localidad.service';
-import { LogService } from './services/log.service';
 import { LogPacienteService } from './services/logPaciente.service';
 import { ModulosService } from './services/novedades/modulos.service';
 import { NovedadesService } from './services/novedades/novedades.service';
@@ -383,7 +382,6 @@ registerLocaleData(localeEs, 'es');
         SIISAService,
         ElementosRUPService,
         ConceptObserverService,
-        LogService,
         ValidacionService,
         LogPacienteService,
         UsuarioService,

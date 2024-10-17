@@ -8,7 +8,6 @@ import { MapaCamasHTTP } from 'src/app/apps/rup/mapa-camas/services/mapa-camas.h
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
-import { LogService } from '../../../../services/log.service';
 import { HUDSService } from '../../services/huds.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
@@ -37,7 +36,6 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         private router: Router,
         private route: ActivatedRoute,
         private servicioPaciente: PacienteService,
-        private logService: LogService,
         private conceptObserverService: ConceptObserverService,
         public huds: HUDSService,
         private location: Location,
@@ -90,20 +88,8 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                 });
             });
         } else {
-            // Loggeo de lo que ve el profesional
             this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
-            this.logService.post('rup', 'hudsPantalla', {
-                paciente: {
-                    id: this.paciente.id,
-                    nombre: this.paciente.nombre,
-                    apellido: this.paciente.apellido,
-                    sexo: this.paciente.sexo,
-                    fechaNacimiento: this.paciente.fechaNacimiento,
-                    documento: this.paciente.documento
-                }
-            }).subscribe(() => {
-                return true;
-            });
+            return true;
         }
 
     }
