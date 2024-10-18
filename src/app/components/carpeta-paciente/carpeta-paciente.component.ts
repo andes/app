@@ -141,8 +141,8 @@ export class CarpetaPacienteComponent implements OnInit {
                     this.carpetaEfectores.push(this.carpetaPaciente);
                     this.indiceCarpeta = this.carpetaEfectores.length - 1;
                 }
-                this.servicioPaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.carpetaEfectores }).subscribe(
-                    resultadoCarpeta => {
+                this.servicioPaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.carpetaEfectores }).subscribe({
+                    complete: () => {
                         this.guardarCarpetaEmit.emit(this.carpetaEfectores);
                         this.plex.toast('success', 'Nuevo número de carpeta establecido');
                         this.nroCarpetaOriginal = this.carpetaPaciente.nroCarpeta;
@@ -151,14 +151,14 @@ export class CarpetaPacienteComponent implements OnInit {
                             this.servicioCarpetaPaciente.incrementarNroCarpeta().subscribe();
                         }
                     },
-                    error => {
+                    error: () => {
                         this.plex.toast('danger', 'El número de carpeta ya existe');
                         if (this.indiceCarpeta < 0) {
                             this.carpetaEfectores.pop();
                         }
                         this.carpetaPaciente.nroCarpeta = this.nroCarpetaOriginal;
                     }
-                );
+                });
             }
         } else {
             this.plex.toast('warning', '', 'Ingrese un número de carpeta válido');
