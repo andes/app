@@ -56,7 +56,7 @@ export class DarTurnosComponent implements OnInit {
     @Input('pacienteSeleccionado')
     set pacienteSeleccionado(value: any) {
         this._pacienteSeleccionado = value;
-        this.actualizarDatosPaciente(this._pacienteSeleccionado.id);
+        this.actualizarDatosPaciente(this._pacienteSeleccionado);
     }
     get pacienteSeleccionado() {
         return this._pacienteSeleccionado;
@@ -80,7 +80,7 @@ export class DarTurnosComponent implements OnInit {
                 this._solicitudPrestacion.solicitud.registros[0].valor && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion &&
                 this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.motivo ? this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.motivo : this.motivoConsulta;
             this.turnoTipoPrestacion = this._solicitudPrestacion.solicitud.tipoPrestacion;
-            this.actualizarDatosPaciente(this._solicitudPrestacion.paciente.id);
+            this.actualizarDatosPaciente(this._solicitudPrestacion.paciente);
             if (this._solicitudPrestacion.inicio === 'top') {
                 this.tipoTurno = 'gestion';
             }
@@ -251,7 +251,8 @@ export class DarTurnosComponent implements OnInit {
         this.actualizar();
     }
 
-    actualizarDatosPaciente(idPaciente) {
+    actualizarDatosPaciente(paciente) {
+        const idPaciente = paciente._id || paciente.id;
         this.servicePaciente.getById(idPaciente).subscribe(
             pacienteMPI => {
                 this.paciente = pacienteMPI;
