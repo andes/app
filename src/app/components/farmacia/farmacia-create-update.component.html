@@ -1,0 +1,163 @@
+<plex-layout [main]="12">
+    <plex-layout-main>
+        <plex-title size="md" titulo="{{farmaciaSeleccionada ? 'EDITAR' : 'NUEVA'}} FARMACIA">
+            <plex-button size="sm" label="volver" type="danger" position="left" (click)="volver()"></plex-button>
+            <plex-button class="ml-1" label="Guardar" size="sm" type="success" position="right" (click)='save()'
+                         [disabled]="formulario.invalid">
+            </plex-button>
+        </plex-title>
+        <form #formulario="ngForm">
+            <!-- DATOS BASICOS DE LA FARMACIA -->
+            <plex-grid type="full" responsive cols="3" colsSm="1">
+                <plex-text label="Denominación" [(ngModel)]="farmacia.denominacion" name="denominacionFarmacia"
+                           [required]="true">
+                </plex-text>
+                <plex-text label="Razón Social" [(ngModel)]="farmacia.razonSocial" name="razonSocialFarmacia"
+                           [required]="true">
+                </plex-text>
+                <plex-text label="CUIT" [(ngModel)]="farmacia.cuit" name="farmaciaCuit" [required]="true"
+                           [pattern]="patronCUIT" (input)="formatoCuit($event)" placeholder="XX-XXXXXXXX-X">
+                </plex-text>
+                <plex-text label="D.T Responsable" [(ngModel)]="farmacia.DTResponsable" name="DTRespFarmacia"
+                           [required]="true">
+                </plex-text>
+                <plex-text label="Matrícula D.T" [(ngModel)]="farmacia.matriculaDTResponsable" name="MatDTFarmacia"
+                           [required]="true" [pattern]="patronNumerico">
+                </plex-text>
+                <plex-text label="Disposición Alta D.T" [(ngModel)]="farmacia.disposicionAltaDT"
+                           name="dispAltaDTFarmacia" [required]="true">
+                </plex-text>
+                <plex-select [(ngModel)]="asociado" [data]="arrayAsociado" name="asociado" label="Asociado"
+                             [required]="true">
+                </plex-select>
+                <plex-text label="Disposición habilitación" [(ngModel)]="farmacia.disposicionHabilitacion"
+                           name="dispHabilitacion" [required]="true">
+                </plex-text>
+                <plex-datetime label="Fecha habilitación" [(ngModel)]="farmacia.fechaHabilitacion"
+                               name="fechaHabilitacion">
+                </plex-datetime>
+                <plex-datetime label="Fecha renovación" [(ngModel)]="farmacia.fechaRenovacion" name="fechaRenovacion"
+                               [required]="true">
+                </plex-datetime>
+                <plex-datetime label="Vencimiento habilitación" [(ngModel)]="farmacia.vencimientoHabilitacion"
+                               name="vencimientoHabilitacion" [required]="true">
+                </plex-datetime>
+                <plex-text label="Expediente papel" [(ngModel)]="farmacia.expedientePapel" name="expedientePapel"
+                           [required]="true">
+                </plex-text>
+                <plex-text label="Expediente GDE" [(ngModel)]="farmacia.expedienteGDE" name="expedienteGDE"
+                           [required]="true">
+                </plex-text>
+                <plex-text label="Número caja" [(ngModel)]="farmacia.nroCaja" name="nroCaja" [required]="true">
+                </plex-text>
+                <plex-grid type="full" cols="2" size="lg">
+                    <plex-bool class="bool-posicion" label="Gabinete Inyectables" [(ngModel)]="gabinete" name="gabinete"
+                               type="slide">
+                    </plex-bool>
+                    <plex-bool class="bool-posicion" label="Laboratorio Magistrales" [(ngModel)]="laboratorio"
+                               name="laboratorio" type="slide">
+                    </plex-bool>
+                </plex-grid>
+            </plex-grid>
+            <br>
+
+            <!-- FARMACÉUTICOS AUXILIARES -->
+            <plex-title size="sm" titulo="Farmacéuticos auxiliares">
+                <plex-button type="success" icon="plus" name="agregarfarmaceutico" (click)="addFarmaceutico()"
+                             tooltip="Agregar farmacéutico" tooltipPosition="left" size="sm">
+                </plex-button>
+            </plex-title>
+            <plex-label *ngIf="!farmacia.farmaceuticosAuxiliares.length"> Para agregar un farmacéutico auxiliar
+                seleccione el botón ' + ' </plex-label>
+            <plex-grid type="full" cols="1" size="lg" responsive>
+                <plex-wrapper *ngFor="let auxiliar of farmacia.farmaceuticosAuxiliares; let i = index">
+                    <plex-text label="Farmacéutico" [(ngModel)]="auxiliar.farmaceutico" name="auxFarmaceutico-{{i}}"
+                               [required]="true">
+                    </plex-text>
+                    <plex-text label="Matrícula" [(ngModel)]="auxiliar.matricula" name="auxMatricula-{{i}}"
+                               [required]="true" [pattern]="patronNumerico">
+                    </plex-text>
+                    <plex-text label="Disposición Alta" [(ngModel)]="auxiliar.disposicionAlta" name="auxDispAlta-{{i}}"
+                               [required]="true">
+                    </plex-text>
+                    <plex-button *ngIf="i >= 0" label="" type="danger" icon="close"
+                                 (click)="removeElement('auxiliar',i)" tooltip="Remover farmacéutico"
+                                 tooltipPosition="left" size="sm">
+                    </plex-button>
+                </plex-wrapper>
+            </plex-grid>
+            <br>
+
+            <!-- HORARIOS DE ATENCIÓN -->
+            <plex-title size="sm" titulo="Horarios"></plex-title>
+            <plex-wrapper *ngFor="let data of farmacia.horarios; let i = index">
+                <plex-text label="Día y horario" [(ngModel)]="data.dia" name="diaHora-{{i}}" [required]="true">
+                </plex-text>
+                <plex-button *ngIf="i === 0" type="success" icon="plus" name="agregarDia" (click)="addDia()"
+                             tooltip="Agregar día y horario" tooltipPosition="left" size="sm">
+                </plex-button>
+                <plex-button *ngIf="i > 0" label="" type="danger" icon="close" (click)="removeDia(i)"
+                             tooltip="Remover dia y horario" tooltipPosition="left" size="sm">
+                </plex-button>
+            </plex-wrapper>
+            <br>
+
+            <!-- DOMICILIO DE LA FARMACIA -->
+            <plex-title size="sm" titulo="Domicilios"></plex-title>
+            <plex-grid type="full" cols="1" size="lg" responsive>
+                <plex-wrapper>
+                    <plex-select [(ngModel)]="farmacia.domicilio.ubicacion.provincia" name="provincia"
+                                 [data]="provincias$ | async" label="Provincia"
+                                 (change)="loadLocalidades(farmacia.domicilio.ubicacion.provincia)" idField="nombre"
+                                 labelField="nombre" [required]="true">
+                    </plex-select>
+                    <plex-select [disabled]="!farmacia.domicilio.ubicacion.provincia" label="Localidad"
+                                 [(ngModel)]="farmacia.domicilio.ubicacion.localidad" name="localidad"
+                                 [data]="localidades$ | async" labelField="nombre" idField="nombre"
+                                 (change)="loadDireccion(farmacia.domicilio.ubicacion.localidad)" [required]="true">
+                    </plex-select>
+                    <plex-text [disabled]="!farmacia.domicilio.ubicacion.localidad" label="Dirección"
+                               [(ngModel)]="farmacia.domicilio.valor" name="domicilio" [required]="true">
+                    </plex-text>
+                </plex-wrapper>
+            </plex-grid>
+            <br>
+
+            <!-- CONTACTOS DE LA FARMACIA -->
+            <plex-title size="sm" titulo="Contactos">
+                <plex-button title="Agregar contacto" titlePosition="right" type="success" icon="plus"
+                             name="agregarfarmaceutico" (click)="addContacto()" tooltip="Agregar contacto"
+                             tooltipPosition="left" size="sm">
+                </plex-button>
+            </plex-title>
+            <plex-label *ngIf="!farmacia.contactos.length"> Para agregar un contacto seleccione el botón ' + '
+            </plex-label>
+            <plex-grid type="full" cols="1" size="lg" responsive>
+                <plex-wrapper *ngFor="let contacto of farmacia.contactos; let i = index">
+                    <plex-select [(ngModel)]="contacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}" label="Tipo"
+                                 [required]="true" (change)="contacto.valor=''">
+                    </plex-select>
+                    <ng-container *ngIf="contacto.tipo">
+                        <plex-phone *ngIf="contacto.tipo === 'celular' || contacto.tipo.id === 'celular'"
+                                    label="Número Celular" [(ngModel)]="contacto.valor" placeholder="Ej: 2990000000"
+                                    name="celular-{{i}}" [required]="true" [pattern]="patronContactoCelular">
+                        </plex-phone>
+                        <plex-phone *ngIf="contacto.tipo === 'fijo' || contacto.tipo.id === 'fijo'" label="Número Fijo"
+                                    [(ngModel)]="contacto.valor" placeholder="Ej: 4400000" name="fijo-{{i}}"
+                                    [required]="true" [pattern]="patronContactoFijo">
+                        </plex-phone>
+                        <plex-text *ngIf="contacto.tipo === 'email' || contacto.tipo.id === 'email'" label="Dirección"
+                                   [(ngModel)]="contacto.valor" placeholder="Ej: ejemplo@email.com"
+                                   name="Direccion-{{i}}" [required]="true" [pattern]="patronContactoAlfabetico">
+                        </plex-text>
+                    </ng-container>
+                    <plex-button *ngIf="i >= 0" label="" type="danger" icon="close"
+                                 (click)="removeElement('contacto',i)" tooltip="Remover contacto" tooltipPosition="left"
+                                 size="sm">
+                    </plex-button>
+                </plex-wrapper>
+            </plex-grid>
+            <br>
+        </form>
+    </plex-layout-main>
+</plex-layout>

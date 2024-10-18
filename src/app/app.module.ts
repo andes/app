@@ -79,8 +79,10 @@ import { SolicitudManualComponent } from './components/prestamosHC/solicitudes/s
 import { FirmaProfesionalComponent } from './components/profesional/firma/firma-profesional.component';
 import { InscripcionProfesionalesComponent } from './components/profesional/inscripcion-profesionales/inscripcion-profesionales.component';
 import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
+import { FarmaciaCreateUpdateComponent } from './components/farmacia/farmacia-create-update.component';
 // ... Tablas Maestras
 import { ProfesionalComponent } from './components/profesional/profesional.component';
+import { FarmaciaComponent } from './components/farmacia/farmacia.component';
 // PUCO/ObraSocial
 import { PucoComponent } from './components/puco/puco.component';
 import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
@@ -193,6 +195,7 @@ import { PrestamosService } from './services/prestamosHC/prestamos-hc.service';
 import { ProcedimientosQuirurgicosService } from './services/procedimientosQuirurgicos.service';
 import { ProfeService } from './services/profe.service';
 import { ProfesionalService } from './services/profesional.service';
+import { FarmaciaService } from './services/farmacia.service';
 import { ProvinciaService } from './services/provincia.service';
 import { QueriesService } from './services/query.service';
 import { SectoresService } from './services/sectores.service';
@@ -289,6 +292,8 @@ registerLocaleData(localeEs, 'es');
         PuntoInicioInternacionComponent,
         ValidarCertificadoComponent,
         demandaInsatisfechaComponent,
+        FarmaciaComponent,
+        FarmaciaCreateUpdateComponent,
 
         // Solicitudes
         PrestamosHcComponent,
@@ -431,7 +436,8 @@ registerLocaleData(localeEs, 'es');
             useClass: TokenExpiredInterceptor,
             multi: true,
         },
-        NgxImageCompressService
+        NgxImageCompressService,
+        FarmaciaService
     ]
 })
 
