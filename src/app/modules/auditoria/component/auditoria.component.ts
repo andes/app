@@ -150,7 +150,7 @@ export class AuditoriaComponent implements OnInit {
     }
 
     showVinculados(paciente: IPaciente) {
-    // Actualizamos sidebar de vinculaciones
+        // Actualizamos sidebar de vinculaciones
         this.pacienteSelected = paciente;
         this.showInSidebar('vinculaciones');
         this.vincularPacientes.loadVinculados(paciente);
@@ -237,5 +237,17 @@ export class AuditoriaComponent implements OnInit {
         this.searchClear = true;
         this.loading = false;
         this.resultadoBusqueda = [];
+    }
+
+    tieneNombreApellidoCorrecto() {
+        return (this.pacienteSelected.nombreCorrecto && !this.pacienteSelected.apellidoCorrecto) || !this.pacienteSelected.nombreCorrecto && this.pacienteSelected.apellidoCorrecto;
+    }
+
+    tieneNotaError() {
+        return !this.pacienteSelected.nombreCorrecto && !this.pacienteSelected.apellidoCorrecto && this.pacienteSelected.notaError;
+    }
+
+    noTieneNotaError() {
+        return !this.pacienteSelected.nombreCorrecto && !this.pacienteSelected.apellidoCorrecto && !this.pacienteSelected.notaError;
     }
 }
