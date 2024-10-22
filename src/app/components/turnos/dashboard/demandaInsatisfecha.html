@@ -15,3 +15,61 @@
     <plex-select label="Motivo" [(ngModel)]="motivo" [required]="true" [data]="motivos" name="motivos"
                  placeholder="Seleccione motivo"></plex-select>
 </form>
+
+<plex-modal size="sm" #modalSolicitudes [allowEscClose]="true" [allowBackdropClose]="false">
+    <plex-icon name="check-circle" type="success"></plex-icon>
+    <plex-modal-subtitle class="font-title text-center" type="success" size="sm"><b>¡Demanda insatisfecha guardada
+            exitosamente!</b></plex-modal-subtitle>
+    <main>
+        <div class="modal-contents">
+            <p class="text-center">
+                Existen solicitudes asociadas a la prestación:
+            </p>
+            <ng-container *ngFor="let registro of solicitudesAsociadas">
+                <small>
+                    Fecha de solicitud: {{ registro.solicitud.fecha | fecha }} {{ registro.solicitud.fecha | hora }}
+                </small>
+                <div class="content-row">
+                    <plex-label size="sm" style="width: 100%;" color="#0070cc" icon="mano-corazon"
+                                titulo="Tipos de solicitud"
+                                subtitulo="{{ registro.solicitud.tipoPrestacion.term }}"></plex-label>
+
+                    <plex-label size="sm" style="width: 100%;" color="#0070cc" icon="hospital"
+                                titulo="Organización destino"
+                                subtitulo="{{ registro.solicitud.organizacion.nombre }}"></plex-label>
+                </div>
+            </ng-container>
+        </div>
+    </main>
+    <plex-button modal center type="success" (click)="cerrar()">
+        ACEPTAR
+    </plex-button>
+</plex-modal>
+
+<plex-modal size="sm" #modalTurno [allowEscClose]="true" [allowBackdropClose]="false">
+    <plex-icon name="alert-outline" type="warning"></plex-icon>
+    <plex-modal-subtitle class="font-title text-center" type="warning" size="sm"><b>No es posible registrar la
+            demanda</b></plex-modal-subtitle>
+    <main>
+        <div class="modal-contents">
+            <div *ngIf="turnoAsociado">
+                <p class="text-center"> <b>Existe un turno pendiente para la prestacíon seleccionada.</b>
+                </p>
+                <plex-label size="sm" icon="calendar-clock" titulo="Fecha" color="#FF8C00"
+                            subtitulo="{{ turnoAsociado.dia}} a las {{ turnoAsociado.horario}}">
+                </plex-label>
+
+                <plex-label size="sm" color="#FF8C00" icon="hospital" titulo="Organización"
+                            subtitulo="{{ turnoAsociado.organizacion}}">
+                </plex-label>
+
+                <plex-label size="sm" color="#FF8C00" icon="circulo-medico" titulo="Profesional/es"
+                            subtitulo="{{ turnoAsociado.profesionales}}">
+                </plex-label>
+            </div>
+        </div>
+    </main>
+    <plex-button modal center type="warning" (click)="modalTurno.close()">
+        ACEPTAR
+    </plex-button>
+</plex-modal>
