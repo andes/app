@@ -1,0 +1,16 @@
+main {
+    min-height: auto !important;
+}
+
+.modal-contents {
+    .content-row:last-child {
+        border-bottom: none;
+    }
+}
+
+.content-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #999;
+}
