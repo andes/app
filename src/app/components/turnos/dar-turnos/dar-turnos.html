@@ -275,7 +275,7 @@
                 <plex-list *ngIf="estadoT == 'dinamica'" size="md" [selectable]="false">
                     <plex-item>
                         <plex-button *ngIf="agendaDeHoy()" label="Dar Turno" type="success" (click)="turnoDinamico()"
-                                     size="sm">
+                                     [disabled]="isButtonDisabled" size="sm">
                         </plex-button>
                         <plex-badge *ngIf="agenda.cupo > 1" type="info">{{agenda.cupo}} cupos disponibles
                         </plex-badge>
