@@ -16,6 +16,7 @@ import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.comp
 import { InscripcionProfesionalesComponent } from './components/profesional/inscripcion-profesionales/inscripcion-profesionales.component';
 import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
 import { ProfesionalComponent } from './components/profesional/profesional.component';
+import { FarmaciaComponent } from './components/farmacia/farmacia.component';
 // ... Obras sociales
 import { PucoComponent } from './components/puco/puco.component';
 import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
@@ -51,6 +52,7 @@ const appRoutes: Routes = [
     { path: 'tm/especialidad', component: EspecialidadComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'tm/espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'tm/mapa_espacio_fisico', component: MapaEspacioFisicoVistaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+    { path: 'tm/farmacia', component: FarmaciaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     // MPI
     { path: 'apps/mpi/busqueda', component: BusquedaMpiComponent, canActivate: [RoutingGuard] },
     { path: 'apps/mpi/paciente', component: PacienteComponent, canActivate: [RoutingGuard] },
