@@ -35,13 +35,11 @@ export class UsuarioDetalleComponent implements OnChanges {
             this.usuario$.next(changes['usuario'].currentValue);
         }
 
-        const esTemporal = !this.usuario.lastLogin;
-
         this.getProfesional(this.usuario.documento).subscribe((profesional) => {
             const permission = this.auth.getPermissions('usuarios:?');
             const profesionalHabilitado = profesional.find(prof => prof.habilitado === true);
             this.profesional = profesionalHabilitado || profesional[0];
-            this.editable = (permission.includes('cuenta') || permission.includes('*')) && !!profesional[0]?.id && esTemporal;
+            this.editable = (permission.includes('cuenta') || permission.includes('*')) && !!profesional[0]?.id;
         });
 
         this.email = this.usuario.email;
