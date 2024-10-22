@@ -26,6 +26,8 @@ export class PlanificarAgendaComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
     private _editarAgenda: any;
+    bloquesAux: any[];
+    ultimaPrestacion: any;
     @Input('editaAgenda')
     set editaAgenda(value: any) {
         if (value.otroEspacioFisico) {
@@ -98,6 +100,7 @@ export class PlanificarAgendaComponent implements OnInit {
             this.modelo.bloques = [];
             this.bloqueActivo = -1;
         }
+        this.bloquesAux = [];
     }
 
     cargarAgenda(agenda: IAgenda) {
@@ -359,13 +362,12 @@ export class PlanificarAgendaComponent implements OnInit {
     cambioPrestaciones() {
         // limpiamos profesionales al cambiar la selección de prestaciones
         this.modelo.profesionales = [];
-
         // Valores por defecto
-        this.noNominalizada = false;
         this.dinamica = false;
         this.multiprofesional = false;
-        this.modelo.nominalizada = true;
-
+        this.ultimaPrestacion = this.modelo.tipoPrestaciones?.filter(
+            prestacion => !this.bloquesAux.some(aux => aux.conceptId === prestacion.conceptId)
+        );
         if (this.modelo.tipoPrestaciones?.length === 1) {
             if (this.modelo.tipoPrestaciones[0].noNominalizada) {
                 this.noNominalizada = true;
@@ -394,22 +396,37 @@ export class PlanificarAgendaComponent implements OnInit {
                     });
                 }
                 // Si se agrego una prestacion, la agrego a los bloques
-                if (this.modelo.tipoPrestaciones) {
-                    this.modelo.tipoPrestaciones.forEach((prestacion) => {
-                        const copiaPrestacion = operaciones.clonarObjeto(prestacion);
-                        copiaPrestacion.activo = false;
-                        const tipo = bloque.tipoPrestaciones.find(x => x.nombre === copiaPrestacion.nombre);
-                        const i = bloque.tipoPrestaciones.indexOf(tipo);
-                        if (i < 0) {
-                            bloque.tipoPrestaciones.push(copiaPrestacion);
+                const ingresoNominalizada = this.modelo.tipoPrestaciones ? !this.modelo.tipoPrestaciones.find(x => x.noNominalizada) : false;
+                if (this.modelo.tipoPrestaciones?.length === 1 || ingresoNominalizada) {
+                    if (this.modelo.tipoPrestaciones) {
+                        this.modelo.tipoPrestaciones.forEach((prestacion) => {
+                            const copiaPrestacion = operaciones.clonarObjeto(prestacion);
+                            copiaPrestacion.activo = false;
+                            const tipo = bloque.tipoPrestaciones.find(x => x.nombre === copiaPrestacion.nombre);
+                            const i = bloque.tipoPrestaciones.indexOf(tipo);
+                            if (i < 0) {
+                                bloque.tipoPrestaciones.push(copiaPrestacion);
+                            }
+                        });
+                    }
+                    if (bloque.tipoPrestaciones.length === 1) {
+                        bloque.tipoPrestaciones[0].activo = true;
+                    }
+                    this.noNominalizada = !ingresoNominalizada;
+                    this.modelo.nominalizada = ingresoNominalizada;
+                } else {
+                    if (this.modelo.tipoPrestaciones) {
+                        this.modelo.tipoPrestaciones = this.modelo.tipoPrestaciones ? this.modelo.tipoPrestaciones.filter(prestacion => prestacion.conceptId !== this.ultimaPrestacion[0].conceptId) : [];
+                        if (this.ultimaPrestacion[0]?.noNominalizada) {
+                            this.plex.info('warning', 'No es posible agregar prestaciones no nominalizadas en agenda con otras prestaciones');
+                        } else {
+                            this.plex.info('warning', 'No es posible agregar más prestaciones en una agenda no nominalizada');
                         }
-                    });
-                }
-                if (bloque.tipoPrestaciones.length === 1) {
-                    bloque.tipoPrestaciones[0].activo = true;
+                    }
                 }
             });
         }
+        this.bloquesAux = this.modelo.tipoPrestaciones ? [...this.modelo.tipoPrestaciones] : [];
     }
 
     private resetBloques() {
