@@ -1,9 +1,10 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { ListaEsperaService } from 'src/app/services/turnos/listaEspera.service';
+import { TurnoService } from 'src/app/services/turnos/turno.service';
 import { ProfesionalService } from './../../../services/profesional.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { ProfesionalService } from './../../../services/profesional.service';
     templateUrl: 'demandaInsatisfecha.html',
 })
 
-export class demandaInsatisfechaComponent {
+export class demandaInsatisfechaComponent implements OnInit {
 
     @Input() paciente: IPaciente;
     @Input() origen = 'citas';
@@ -35,6 +36,7 @@ export class demandaInsatisfechaComponent {
         public conceptosTurneablesService: ConceptosTurneablesService,
         public profesionalService: ProfesionalService,
         public listaEsperaService: ListaEsperaService,
+        private serviceTurno: TurnoService,
     ) { }
 
     loadTipoPrestaciones(event) {
@@ -54,9 +56,18 @@ export class demandaInsatisfechaComponent {
     guardar() {
         if (this.motivo && this.tipoPrestacion) {
             this.listaEsperaService.save({ id: this.paciente.id }, this.tipoPrestacion, this.estado, this.profesional, this.organizacion, this.motivo.nombre, this.origen).subscribe({
-                complete: () => {
-                    this.plex.toast('success', 'Demanda insatisfecha guardada exitosamente!');
-                    this.cerrar();
+                next: ({ status, data }) => {
+                    console.log(status, data);
+
+                    if (status === 'existeTurno') {
+                        const dia = moment(data.horaInicio).format('LL');
+                        const horario = moment(data.horaInicio).format('HH:mm');
+                        const profesionales = data.profesionales?.map(prof => ` ${prof.nombre} ${prof.apellido}`);
+                        this.plex.info('warning', `<p>Existe un turno asignado para la prestacíon seleccionada:</p><p><b>${dia}</b> a las <b>${horario}</b> hs.<br><small>${profesionales.length ? `Profesionales: <br>${profesionales}` : '- Sin profesionales asignados -'}</small></p>`);
+                    } else {
+                        this.plex.toast('success', 'Demanda insatisfecha guardada exitosamente!');
+                        this.cerrar();
+                    }
                 },
                 error: (e) => this.plex.toast('danger', e.message, 'Ha ocurrido un error al guardar')
             });
@@ -67,4 +78,7 @@ export class demandaInsatisfechaComponent {
         this.demandaCerrada.emit();
     }
 
+    ngOnInit() {
+
+    }
 }

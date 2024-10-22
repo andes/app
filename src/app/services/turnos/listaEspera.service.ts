@@ -22,7 +22,7 @@ export class ListaEsperaService {
         return this.server.get(this.listaEsperaUrl, { params: params, showError: true });
     }
 
-    post(listaEspera: IListaEspera): Observable<IListaEspera> {
+    post(listaEspera: IListaEspera): Observable<any> {
         return this.server.post(this.listaEsperaUrl, listaEspera);
     }
 
