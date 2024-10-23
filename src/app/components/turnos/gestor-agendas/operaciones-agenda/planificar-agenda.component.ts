@@ -788,7 +788,20 @@ export class PlanificarAgendaComponent implements OnInit {
             indice++;
         } while (bloqueConPrestActiva && indice < this.modelo.bloques.length);
 
-        if ($event.formValid && this.verificarNoNominalizada() &&
+        // Verificamos si las prestaciones de la agenda incluyen ambito ambulatorio.
+        let prestaciones = '';
+        let incluyeAmbulatorio = true;
+        this.modelo.tipoPrestaciones.forEach(prestacion => {
+            if (!prestacion.ambito.includes('ambulatorio')) {
+                prestaciones += prestacion.term + ', ';
+            }
+        });
+        if (prestaciones !== '') {
+            prestaciones = prestaciones.slice(0, -2);
+            incluyeAmbulatorio = false;
+        }
+
+        if ((!clonar || (clonar && incluyeAmbulatorio)) && $event.formValid && this.verificarNoNominalizada() &&
             bloqueConPrestActiva &&
             arrayPrestaciones.length === this.modelo.tipoPrestaciones.length) {
             this.fecha = new Date(this.modelo.fecha);
@@ -897,6 +910,8 @@ export class PlanificarAgendaComponent implements OnInit {
                 this.plex.info('warning', 'Existe un bloque con todas sus prestaciones inactivas.');
             } else if (arrayPrestaciones.length !== this.modelo.tipoPrestaciones.length) {
                 this.plex.info('warning', 'Por lo menos una de las prestaciones de la agenda está sin activar.');
+            } else if (!incluyeAmbulatorio) {
+                this.plex.info('warning', `Las prestaciones <b>${prestaciones} </b> ya no están habilitadas para crear agendas.`);
             } else {
                 this.plex.info('warning', 'Debe completar los datos requeridos');
             }
