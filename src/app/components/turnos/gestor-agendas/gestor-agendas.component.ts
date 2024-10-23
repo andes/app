@@ -431,12 +431,19 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showAgregarNotaAgenda = false;
     }
 
-    clonar() {
+    clonar(agenda) {
         if (this.lastRequestFecha) {
             this.lastRequestFecha.unsubscribe();
         }
-        this.showGestorAgendas = false;
-        this.showClonar = true;
+
+        // Verificamos si las prestaciones de la agenda a clonar incluyen ambito ambulatorio.
+        const incluyeAmbulatorio = agenda.tipoPrestaciones.some(prestacion => !prestacion.ambito.includes('ambulatorio'));
+        if (incluyeAmbulatorio) {
+            this.showGestorAgendas = false;
+            this.showClonar = true;
+        } else {
+            this.plex.info('warning', 'Una o más prestaciones ya no están habilitadas para crear agendas.');
+        }
     }
 
     // vuelve al gestor luego de alguna operación y refresca la agenda modificada.
