@@ -1,3 +1,18 @@
+# [5.151.0](https://github.com/andes/app/compare/v5.150.0...v5.151.0) (2024-10-23)
+
+
+### Bug Fixes
+
+* **CIT-286:** Corregir la creación de agendas no nominalizadas ([#3082](https://github.com/andes/app/issues/3082)) ([38af5be](https://github.com/andes/app/commit/38af5beefa92d248f79b491c131e164c973206c1))
+* **CITAS:** actualiza carpetaEfectores en el turno ([#3084](https://github.com/andes/app/issues/3084)) ([c07279d](https://github.com/andes/app/commit/c07279d0c6d69066ff67554c0c2145999c71c0c3))
+* **CITAS:** se corrige error al dar turno en demanda rechazada ([#3087](https://github.com/andes/app/issues/3087)) ([9ec841e](https://github.com/andes/app/commit/9ec841ea019560f6b020d3e012ecbe54acd0c68f))
+* **RUP:** agendas mias/todas ([#3083](https://github.com/andes/app/issues/3083)) ([a15bd75](https://github.com/andes/app/commit/a15bd7533ba72d1b3c8b1179b611a10d5f397eee))
+
+
+### Features
+
+* **GDU:** quita restricción para usuario temporal en edición de email ([#3089](https://github.com/andes/app/issues/3089)) ([e25e123](https://github.com/andes/app/commit/e25e123273975ee96c0c621e3c7340b2050b9455))
+
 # [5.150.0](https://github.com/andes/app/compare/v5.149.0...v5.150.0) (2024-10-16)
 
 
