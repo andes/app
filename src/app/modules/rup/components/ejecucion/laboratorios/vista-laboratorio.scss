@@ -20,11 +20,16 @@ $lightblue: #d6f7ff;
 }
 
 .titulo-grupo {
-    background-color: #fff;
-    color: $blue;
+    padding: 10px 0;
+    color: #00a8e0;
+    font-size: larger;
+    border-bottom: 1px solid #00a8e0;
+    margin-bottom: 10px;
 }
 
 table {
+    margin-bottom: 30px;
+
     tr {
         border: 1px solid white;
     }
@@ -37,18 +42,17 @@ table {
     thead {
         th {
             border-top: none;
+            font-size: smaller;
+            font-weight: 600;
+            padding: 0;
+            padding-bottom: 10px;
         }
     }
 
     tbody {
         tr:hover {
             background-color: $lightblue;
-            border: 1px solid $blue;
-
-            td {
-                border-top: 1px solid $blue;
-                border-bottom: 1px solid $blue;
-            }
+            border: 1px solid white;
         }
     }
 }
