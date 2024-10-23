@@ -87,16 +87,21 @@
                     {{ listaReportes[0].createdAt | fecha:'utc' }}</plex-badge>
             </plex-title>
 
-            <plex-text *ngIf="pacienteSelected.notaError" readonly="true" multiline="true" name="motivo"
-                       [(ngModel)]="pacienteSelected.notaError">
-            </plex-text>
+            <plex-grid *ngIf="pacienteSelected.nombreCorrecto || pacienteSelected.apellidoCorrecto"
+                       [cols]="pacienteSelected.nombreCorrecto && pacienteSelected.apellidoCorrecto ? 3 : 2">
+                <plex-label *ngIf="pacienteSelected.nombreCorrecto" titulo="Nombre correcto"
+                            subtitulo="{{ pacienteSelected.nombreCorrecto }}">
+                </plex-label>
+                <plex-label *ngIf="pacienteSelected.apellidoCorrecto" titulo="Apellido correcto"
+                            subtitulo="{{ pacienteSelected.apellidoCorrecto }}">
+                </plex-label>
+                <plex-button *ngIf="permisoEdicion" class="pt-2 pb-4" label="corregir" justify="end" type="warning"
+                             (click)="onSelectCorregir()">
+                </plex-button>
+            </plex-grid>
 
-            <plex-label *ngIf="!pacienteSelected.notaError">
-                No se ha encontrado alguna descripción del error
-            </plex-label>
-
-            <plex-button *ngIf="permisoEdicion && pacienteSelected.reportarError" class="pt-2 pb-4" label="corregir"
-                         justify="end" type="warning" (click)="onSelectCorregir()"> </plex-button>
+            <plex-label *ngIf="tieneNotaError()">{{pacienteSelected.notaError}}</plex-label>
+            <plex-label *ngIf="noTieneNotaError()">No se ha encontrado alguna descripción del error</plex-label>
 
             <plex-title titulo="Historial de errores reportados" size="sm"> </plex-title>
 
@@ -107,8 +112,14 @@
                                     subtitulo="{{ 'Agente: ' + reporte.createdBy.nombreCompleto }}">
                         </plex-label>
 
-                        <plex-label titulo="Descripción" subtitulo="{{ reporte.error || ''}}">
-                        </plex-label>
+                        <plex-label *ngIf="reporte.error" titulo="Descripción"
+                                    subtitulo="{{ reporte.error }}"></plex-label>
+                        <ng-container *ngIf="!reporte.error">
+                            <plex-label *ngIf="pacienteSelected.nombreCorrecto" titulo="Nombre correcto"
+                                        subtitulo="{{ pacienteSelected.nombreCorrecto}}"></plex-label>
+                            <plex-label *ngIf="pacienteSelected.apellidoCorrecto" titulo="Apellido correcto"
+                                        subtitulo="{{ pacienteSelected.apellidoCorrecto}}"></plex-label>
+                        </ng-container>
                     </plex-item>
                 </ng-container>
             </plex-list>
