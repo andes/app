@@ -29,7 +29,10 @@ export class LaboratorioService {
     }
 
     getProtocolos({ estado, dni, fecNac, apellido, fechaDde, fechaHta }) {
-        return this.server.get(`/modules/rup/protocolosLab?estado=${estado}&dni=${dni}&fecNac=${fecNac}&apellido=${apellido}&fechaDde=${fechaDde}&fechaHta=${fechaHta}`);
+        if (dni) {
+            return this.server.get(`/modules/rup/protocolosLab?estado=${estado}&dni=${dni}&fecNac=${fecNac}&apellido=${apellido}&fechaDde=${fechaDde}&fechaHta=${fechaHta}`);
+        }
+        return;
     }
 
     getByProtocolo(id: number) {

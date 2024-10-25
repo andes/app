@@ -3,7 +3,7 @@ import { Plex } from '@andes/plex';
 import { AfterContentInit, Component, EventEmitter, Input, Optional, Output, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
 import { LaboratorioService } from 'projects/portal/src/app/services/laboratorio.service';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, lastValueFrom } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { InternacionResumenHTTP } from 'src/app/apps/rup/mapa-camas/services/resumen-internacion.http';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
@@ -446,11 +446,20 @@ export class HudsBusquedaComponent implements AfterContentInit {
     }
 
     // Trae los cdas registrados para el paciente
-    buscarCDAPacientes(token) {
-        const { estado, documento: dni, fechaNacimiento, apellido } = this.paciente;
+    async buscarCDAPacientes(token) {
+        const { estado, fechaNacimiento, apellido } = this.paciente;
         const fecNac = moment(fechaNacimiento).format('yyyyMMDD');
         const fechaHta = moment().format('yyyyMMDD');
-
+        let dni = this.paciente.documento;
+        if (!dni) {
+            for (const relaciones of this.paciente.relaciones) {
+                if (relaciones.nombre = 'progenitor/a') {
+                    const pacienteRel = await lastValueFrom(this.pacienteService.getById(relaciones.referencia));
+                    dni = pacienteRel ? pacienteRel.documento : null;
+                    break;
+                }
+            }
+        }
         forkJoin({
             protocolos: this.laboratorioService.getProtocolos({ estado, dni, fecNac, apellido, fechaDde: '20200101', fechaHta }),
             cdaByPaciente: this.servicioPrestacion.getCDAByPaciente(this.paciente.id, token)
