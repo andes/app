@@ -70,22 +70,24 @@ export class FichaEpidemiologicaComponent implements OnInit {
 
         this.formsService.search().subscribe(fichas => {
             fichas.forEach(element => {
-                if (element.snomedCode) {
-                    this.snomedService.getQuery({ expression: element.snomedCode }).subscribe(res => {
+                if (element.active) {
+                    if (element.snomedCode) {
+                        this.snomedService.getQuery({ expression: element.snomedCode }).subscribe(res => {
+                            this.itemsDropdownFichas.push({
+                                'label': res[0] ? res[0].fsn : element.name, handler: () => {
+                                    this.selectedForm = element;
+                                    this.mostrarFicha(element.name);
+                                }
+                            });
+                        });
+                    } else {
                         this.itemsDropdownFichas.push({
-                            'label': res[0] ? res[0].fsn : element.name, handler: () => {
+                            'label': element.name, handler: () => {
                                 this.selectedForm = element;
                                 this.mostrarFicha(element.name);
                             }
                         });
-                    });
-                } else {
-                    this.itemsDropdownFichas.push({
-                        'label': element.name, handler: () => {
-                            this.selectedForm = element;
-                            this.mostrarFicha(element.name);
-                        }
-                    });
+                    }
                 }
 
             });
