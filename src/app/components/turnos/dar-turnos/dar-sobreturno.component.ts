@@ -36,6 +36,7 @@ export class DarSobreturnoComponent implements OnChanges {
         obraSocial: '',
         prepaga: ''
     };
+    public disableGuardar = true;
 
     @ViewChild('modalSobreturno', { static: true }) modal: PlexModalComponent;
     @Output() volver = new EventEmitter();
@@ -124,6 +125,7 @@ export class DarSobreturnoComponent implements OnChanges {
 
     guardar($event) {
         if ($event.formValid) {
+            this.disableGuardar = false;
             const indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
 
             if (indiceCarpeta > -1) {
@@ -210,7 +212,8 @@ export class DarSobreturnoComponent implements OnChanges {
                 }
 
                 this.sobreturno = resultado.sobreturnos.slice(-1)[0];
-                this.modal.show();
+                this.plex.toast('success', 'El sobreturno se asignó correctamente.');
+                this.volver.emit();
             });
         } else {
             this.plex.info('warning', 'Debe completar los datos requeridos');

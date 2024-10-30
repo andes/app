@@ -1106,7 +1106,7 @@ export class DarTurnosComponent implements OnInit {
         }
         const agendaid = this.agenda.id;
         this.agenda = null;
-        this.plex.toast('info', 'El turno se asignó correctamente');
+        this.plex.toast('success', 'El turno se asignó correctamente');
         this.hideDarTurno = false;
         this.plex.clearNavbar();
         this.actualizarPaciente();
