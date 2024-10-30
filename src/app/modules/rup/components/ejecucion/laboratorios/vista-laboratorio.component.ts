@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { LaboratorioService } from 'projects/portal/src/app/services/laboratorio.service';
+import { DocumentosService } from '../../../../../services/documentos.service';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'vista-laboratorio',
@@ -9,10 +11,14 @@ import { LaboratorioService } from 'projects/portal/src/app/services/laboratorio
 
 export class VistaLaboratorioComponent implements OnInit {
 
-    constructor(private laboratorioService: LaboratorioService) { }
+    constructor(
+        private laboratorioService: LaboratorioService,
+        private servicioDocumentos: DocumentosService,
+        private auth: Auth) { }
 
     public gruposLaboratorio;
     public laboratorios: any = {};
+    public resultados;
 
     public keysGrupos;
     public keysTitulos;
@@ -56,5 +62,12 @@ export class VistaLaboratorioComponent implements OnInit {
         });
 
         return resultado;
+    }
+
+    descargarLab() {
+        this.servicioDocumentos.descargarLaboratorio({
+            protocolo: this.protocolo,
+            usuario: this.auth.usuario.nombreCompleto
+        }, 'Laboratorio').subscribe();
     }
 }
