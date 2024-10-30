@@ -230,7 +230,8 @@ export class UsuariosListComponent implements OnInit {
             perfiles: [],
             nombre: this.orgSelected.nombre,
             id: this.orgSelected.id,
-            _id: this.orgSelected.id
+            _id: this.orgSelected.id,
+            activo: true
         };
         return this.usuariosHttp.addOrganizacion(this.userSelected.usuario, this.orgSelected.id, body).subscribe(() => {
             this.plex.toast('success', 'Organizacion agregada exitosamente!');
