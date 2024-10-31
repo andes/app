@@ -4,8 +4,7 @@
             <plex-button *ngIf="hasPacs" type="info" (click)="onPacs()" size="sm" class="mr-1">
                 VER IMAGEN
             </plex-button>
-            <help-solicitud *ngIf="prestacion?.solicitud" [solicitud]='prestacion.solicitud'></help-solicitud>
-            <rup-acciones-envio-informe *ngIf="prestacion?.solicitud" [prestacion]="prestacion">
+            <rup-acciones-envio-informe *ngIf="prestacion?.solicitud && paciente" [prestacion]="prestacion" [paciente]="paciente">
             </rup-acciones-envio-informe>
         </plex-title>
         <plex-grid *ngIf="prestacion?.solicitud?.ambitoOrigen==='ambulatorio'" cols="2" justify>
@@ -235,11 +234,14 @@
                 Cada solicitud está en la bandeja de entrada de la organización de destino.
             </p>
             <ng-container *ngFor="let registro of prestacion?.ejecucion.registros">
-                <div class="content-row" *ngIf="registro.esSolicitud && registro.valor.solicitudPrestacion.organizacionDestino">
-                    <plex-label size="sm" style="width: 100%;" color="#0070cc" icon="mano-corazon" titulo="Tipos de solicitud"
+                <div class="content-row"
+                     *ngIf="registro.esSolicitud && registro.valor.solicitudPrestacion.organizacionDestino">
+                    <plex-label size="sm" style="width: 100%;" color="#0070cc" icon="mano-corazon"
+                                titulo="Tipos de solicitud"
                                 subtitulo="{{ registro.valor.solicitudPrestacion.prestacionSolicitada.term }}"></plex-label>
 
-                    <plex-label size="sm" style="width: 100%;" color="#0070cc" icon="hospital" titulo="Organización destino"
+                    <plex-label size="sm" style="width: 100%;" color="#0070cc" icon="hospital"
+                                titulo="Organización destino"
                                 subtitulo="{{ registro.valor.solicitudPrestacion.organizacionDestino.nombre }}"></plex-label>
                 </div>
             </ng-container>

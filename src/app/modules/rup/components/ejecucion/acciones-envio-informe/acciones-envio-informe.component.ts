@@ -1,9 +1,12 @@
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { IPrestacion } from '../../../interfaces/prestacion.interface';
 import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
+import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { PrestacionesService } from '../../../services/prestaciones.service';
 import { Auth } from '@andes/auth';
 import { DocumentosService } from '../../../../../services/documentos.service';
+import { FormsEpidemiologiaService } from '../../../../epidemiologia/services/ficha-epidemiologia.service';
 import { ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
@@ -32,6 +35,8 @@ export class RUPAccionesEnvioInformeComponent {
 
     @Input() registro: IPrestacionRegistro = null;
 
+    @Input() paciente: IPaciente;
+
     public showModalEmails = false;
 
     public requestInProgress = false;
@@ -44,7 +49,9 @@ export class RUPAccionesEnvioInformeComponent {
         private servicioDocumentos: DocumentosService,
         private activeRoute: ActivatedRoute,
         private plex: Plex,
-        private organizacionService: OrganizacionService
+        private organizacionService: OrganizacionService,
+        private router: Router,
+        private formEpidemiologiaService: FormsEpidemiologiaService
     ) {
     }
 
@@ -180,5 +187,13 @@ export class RUPAccionesEnvioInformeComponent {
             );
         }
         return this.hasEmails$;
+    }
+
+    irFichaEpidemiologica() {
+        if (this.paciente) {
+            this.formEpidemiologiaService.setPaciente(this.paciente);
+            this.router.navigate(['/epidemiologia/ficha-epidemiologica']);
+        }
+
     }
 }

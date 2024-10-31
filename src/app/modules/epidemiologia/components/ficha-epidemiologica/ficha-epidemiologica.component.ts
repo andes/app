@@ -21,6 +21,7 @@ export class FichaEpidemiologicaComponent implements OnInit {
     public showLabel = true;
     public selectedForm = {};
     public pacienteSelected = null;
+    public pacienteRup: IPaciente;
     public resultadoBusqueda = null;
     public fichasPaciente: Observable<any>;
     public fichaPaciente$: Observable<any>;
@@ -67,6 +68,12 @@ export class FichaEpidemiologicaComponent implements OnInit {
             { route: '/', name: 'EPIDEMIOLOGÍA' },
             { name: 'Ficha epidemiológica' }
         ]);
+
+
+        this.pacienteRup = this.formEpidemiologiaService.getPaciente();
+        if (this.pacienteRup) {
+            this.onSelect(this.pacienteRup);
+        }
 
         this.formsService.search().subscribe(fichas => {
             fichas.forEach(element => {

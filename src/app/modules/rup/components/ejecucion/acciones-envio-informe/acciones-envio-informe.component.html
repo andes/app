@@ -1,10 +1,7 @@
-<ng-container *ngIf="showPrevisualizacion">
-    <plex-button type="success" icon="eye mdi-14px" class="float-right ml-1" title="Previsualizar Resúmen PDF"
-                 titlePosition="top" (click)="descargarInforme()" [disabled]="requestInProgress">
-    </plex-button>
-</ng-container>
-
 <ng-container *ngIf="showEnviosBtn">
+    <plex-button *ngIf="paciente" type="info" [size]="btnSize" icon="file-tree" title="Ficha epidemiológica"
+                 class="ml-1" (click)="irFichaEpidemiologica()" titlePosition="left">
+    </plex-button>
     <plex-button type="info" [size]="btnSize" icon="download" title="Descargar PDF" class="ml-1"
                  [disabled]="requestInProgress" (click)="descargarInforme()" titlePosition="left">
     </plex-button>

@@ -2,9 +2,11 @@ import { ResourceBaseHttp, Server } from '@andes/shared';
 import { ElementosRUPService } from '../../../../../src/app/modules/rup/services/elementosRUP.service';
 import { Injectable } from '@angular/core';
 import { SECCION_CLASIFICACION } from '../constantes';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 @Injectable({ providedIn: 'root' })
 export class FormsEpidemiologiaService extends ResourceBaseHttp {
+    private pacienteData: IPaciente;
     protected url = '/modules/forms/forms-epidemiologia/formEpidemiologia';
 
     constructor(
@@ -81,5 +83,13 @@ export class FormsEpidemiologiaService extends ResourceBaseHttp {
             }
         });
         return conceptos;
+    }
+
+    setPaciente(paciente: any) {
+        this.pacienteData = paciente;
+    }
+
+    getPaciente() {
+        return this.pacienteData;
     }
 }
