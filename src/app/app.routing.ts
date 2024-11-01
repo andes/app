@@ -136,6 +136,12 @@ const appRoutes: Routes = [
         canActivate: [RoutingNavBar, RoutingGuard],
         runGuardsAndResolvers: 'always'
     },
+    {
+        path: 'epi-form',
+        loadChildren: () => import('./modules/epi-form/epi-form.module').then(m => m.EpiFormModule),
+        canActivate: [RoutingNavBar, RoutingGuard],
+        runGuardsAndResolvers: 'always'
+    },
     // Mapa de camas
     { path: 'internacion/inicio', component: PuntoInicioInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 

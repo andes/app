@@ -1,0 +1,100 @@
+<plex-layout [main]="fieldToConfig ? 9 : 12" resizable="true" min="2" max="4">
+    <plex-layout-main>
+        <form #formulario="ngForm">
+            <plex-title main titulo="Alta de tipo de formulario">
+                <plex-button type="success">
+                    Guardar
+                </plex-button>
+                <plex-button type="info" class="ml-1">
+                    SISA
+                </plex-button>
+                <plex-button type="warning" class="ml-1">
+                    Inactivar
+                </plex-button>
+                <plex-button type="danger" class="ml-1 mr-1">
+                    Cancelar
+                </plex-button>
+            </plex-title>
+            <plex-wrapper>
+                <plex-grid cols="2">
+                    <div>
+                        <plex-text label="Nombre" name="nombre" [(ngModel)]="form.name" required="true"></plex-text>
+                        <plex-text label="Clave/Identificador" name="tipo" [(ngModel)]="form.type" required="true" class=""></plex-text>
+                    </div>
+                    <plex-text label="Descripción" name="descripcion" [(ngModel)]="form.description" html="true" height="90px" required="true" placeholder="Texto a visualizarse en el encabezado de la ficha"></plex-text>
+                    <plex-grid cols="4" span="2">
+                        <plex-bool label="¿Es Snomed?" type="slide" name="isSnomed" [(ngModel)]="isFormSnomedizable" required="true" class="mt-5"></plex-bool>
+                        <plex-text *ngIf="isFormSnomedizable" label="Código Snomed" name="snomed" [(ngModel)]="form.snomedCode" required="true"></plex-text>
+                    </plex-grid>
+                </plex-grid>
+            </plex-wrapper>
+            <plex-title size="sm" titulo="Crear formulario">
+                <plex-button type="success" size="sm" (click)="onAddSection()" class="mr-1">
+                    AGREGAR SECCIÓN
+                </plex-button>
+            </plex-title>
+
+            <cdk-virtual-scroll-viewport itemSize="80" class="form-section">
+                <ul class="mr-2 unstyled" style="padding-left: 0 !important;">
+                    <li *cdkVirtualFor="let section of form.sections ; let sectionIndex = index" style="list-style-type: none !important;">
+                        <plex-grid cols="2" class="mb-4">
+                            <plex-text name="name-{{ sectionIndex }}" label="Nombre de la sección" [(ngModel)]="section.name" [required]="true">
+                            </plex-text>
+                            <div justify="end" class="row">
+                                <plex-button type="success" size="sm" icon="plus" align="center" (click)="onAddField(sectionIndex)" tooltip="Agregar campo"></plex-button>
+                                <plex-button type="danger" size="sm" icon="trash-can" align="center" (click)="onRemoveSection(sectionIndex)" tooltip="Eliminar sección" class="ml-1 mr-4"></plex-button>
+                            </div>
+                        </plex-grid>
+                        <plex-list>
+                            <plex-item *ngFor="let field of section.fields; let fileIndex = index">
+                                {{ field.name }}
+                                <plex-button size="sm" type="warning" icon="pencil" tooltip="Editar"></plex-button>
+                                <plex-button size="sm" type="danger" icon="trash-can" tooltip="Eliminar" (click)="onRemoveField(sectionIndex, fileIndex)"></plex-button>
+                            </plex-item>
+                        </plex-list>
+                    </li>
+                    <br><br><br><br><br><br>
+                </ul>
+            </cdk-virtual-scroll-viewport>
+        </form>
+    </plex-layout-main>
+    <plex-layout-sidebar type="invert">
+        <plex-title titulo="CREAR CAMPOS" size="md">
+            <plex-button type="success" icon="check" size="sm" tooltip="guardar" class="m-1" (click)="onSaveField(indexSection, fieldToConfig)"></plex-button>
+            <plex-button type="danger" icon="close" size="sm" tooltip="cerrar" class="ml-1 mr-1" (click)="closeFieldConfig()"></plex-button>
+        </plex-title>
+        <ng-container *ngIf="fieldToConfig">
+            <plex-text name="field-name" label="Nombre" required="true" [(ngModel)]="fieldToConfig.name"></plex-text>
+            <plex-select name="field-type" label="Tipo de campo" required="true" [(ngModel)]="fieldToConfig.type" [data]="tiposList"></plex-select>
+            <plex-bool type="slide" name="field-required" label="Campo Obligatorio" [(ngModel)]="fieldToConfig.required" class="mt-3"></plex-bool>
+            <plex-select name="field-dependency" label="Dependencia" [(ngModel)]="fieldToConfig.dependency"></plex-select>
+            <plex-text name="field-description" label="Descripción" [(ngModel)]="fieldToConfig.description"></plex-text>
+
+            <!-- Campo dinámico select -->
+            <plex-select *ngIf="fieldToConfig.type?.id === 'select'" label="Tipo de recurso" name="field-resources" required="true" [(ngModel)]="fieldToConfig.resources" [data]="resources"></plex-select>
+            <!-- Campos dinámicos numérico -->
+            <plex-int *ngIf="fieldToConfig.type?.id === 'int'" label="Mínimo" name="minimo-{{ fieldToConfig.name }}" [(ngModel)]="fieldToConfig.min"></plex-int>
+            <plex-int *ngIf="fieldToConfig.type?.id === 'int'" label="Maximo" name="maximo-{{ fieldToConfig.name }}" [(ngModel)]="fieldToConfig.max"></plex-int>
+            <!-- Campos dinámicos select static -->
+            <plex-list *ngIf="fieldToConfig.type?.id === 'selectStatic'" [columns]="selectColumns" #table="plTable">
+                <plex-title titulo="ELEMENTOS SELECCIONABLES" size="sm">
+                    <plex-table-columns ></plex-table-columns>
+                </plex-title>
+                <!-- <plex-item *ngFor="let item of fieldToConfig.selectList">
+                    <plex-label *plTableCol="'name'">{{ item.nombre }}</plex-label>
+                    <plex-label *plTableCol="'actions'"></plex-label>
+                </plex-item> -->
+                <plex-item>
+                    <plex-label *plTableCol="'name'">
+                        <plex-text *ngIf="fieldToConfig.type?.id === 'selectStatic'" name="select" [(ngModel)]="selectItem"></plex-text>
+                    </plex-label>
+                    <plex-label *plTableCol="'actions'">
+                        <plex-button type="success" icon="check" size="sm" tooltip="guardar" align="center" justify="end"></plex-button>
+                    </plex-label>
+                </plex-item>
+            </plex-list>
+
+
+        </ng-container>
+    </plex-layout-sidebar>
+</plex-layout>
