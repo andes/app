@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
-import { FormResourcesService } from '../../services/resources.service';
 
 @Component({
     selector: 'form-config',
@@ -27,7 +26,6 @@ export class FormConfigComponent implements OnInit {
     constructor(
         private auth: Auth,
         private router: Router,
-        private formResourceService: FormResourcesService
     ) {}
 
     ngOnInit() {
@@ -40,6 +38,8 @@ export class FormConfigComponent implements OnInit {
     onAddSection() {
         this.form.sections.push({
             name: '',
+            type: '',
+            key: '',
             fields: []
         });
         this.form.sections = [...this.form.sections];
