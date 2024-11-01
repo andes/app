@@ -102,7 +102,20 @@ export class FormConfigComponent implements OnInit {
     }
 
     dropField(event: CdkDragDrop<any[]>, sectionIndex: number) {
-        moveItemInArray(this.form.sections[sectionIndex].fields, event.previousIndex, event.currentIndex);
+        const previousSection = this.form.sections[event.previousContainer.id];
+        const currentSection = this.form.sections[sectionIndex];
+
+        if (event.previousContainer === event.container) {
+            moveItemInArray(currentSection.fields, event.previousIndex, event.currentIndex);
+        } else {
+            console.log(event);
+            transferArrayItem(
+                previousSection.fields,
+                currentSection.fields,
+                event.previousIndex,
+                event.currentIndex
+            );
+        }
         // if (event.previousContainer === event.container) {
         //     // Mover dentro de la misma sección
         //     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -110,7 +123,7 @@ export class FormConfigComponent implements OnInit {
         //     // Mover a otra sección
         //     transferArrayItem(
         //         event.previousContainer.data,
-        //         event.container.data,
+        //         this.form.sections[sectionIndex].fields,
         //         event.previousIndex,
         //         event.currentIndex
         //     );
