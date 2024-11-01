@@ -11,10 +11,6 @@ import { NgForm } from '@angular/forms';
 export class FormConfigComponent implements OnInit {
 
     @ViewChild('formulario', { static: false }) formControl: NgForm;
-    // selectColsVisibles = {
-    //     'name': true,
-    //     'actions': true,
-    // };
     public tiposList = [
         { id: 'string', nombre: 'Texto' },
         { id: 'int', nombre: 'Numérico' },
@@ -43,22 +39,24 @@ export class FormConfigComponent implements OnInit {
         sections: []
     };
     public fieldToConfig = null;
-    public indexSection: Number;
+    public fieldIndex: number | null = null;
+    public sectionIndex: number;
     public selectItem: String;
     public selectColumns = [
         {
             key: 'name',
-            label: 'Nombre'
+            label: 'Nombre',
         },
         {
             key: 'actions',
-            label: 'Acciones'
+            label: 'Acciones',
         }
     ];
     constructor(
         private auth: Auth,
         private router: Router
     ) {}
+
     ngOnInit() {
         if (!this.auth.check('formBuilder:update')) {
             this.router.navigate(['inicio']);
@@ -78,17 +76,19 @@ export class FormConfigComponent implements OnInit {
             }
         }, 100);
     }
-    onRemoveSection(i) {
-        this.form.sections.splice(i, 1);
+
+    onRemoveSection(sectionIndex) {
+        this.form.sections.splice(sectionIndex, 1);
         this.form.sections = [... this.form.sections];
     }
 
-    onAddField(i) {
-        this.indexSection = i;
+    onAddField(sectionIndex) {
+        this.sectionIndex = sectionIndex;
         this.fieldToConfig = {
             key: '',
             name: '',
-            type: ''
+            type: '',
+            selectList: [],
         };
     }
 
@@ -101,9 +101,31 @@ export class FormConfigComponent implements OnInit {
         this.fieldToConfig = null;
     }
 
-    onSaveField(i, field) {
-        this.form.sections[i].fields.push(field);
-        this.form.sections[i].fields = [... this.form.sections[i].fields];
+    onSaveField(sectionIndex, field) {
+        if (this.fieldIndex !== null) {
+            this.form.sections[sectionIndex].fields[this.fieldIndex] = { ...field };
+            this.fieldIndex = null;
+        } else {
+            this.form.sections[sectionIndex].fields.push(field);
+            this.form.sections[sectionIndex].fields = [... this.form.sections[sectionIndex].fields];
+        }
         this.closeFieldConfig();
+    }
+
+    onEditField(sectionIndex, fieldIndex) {
+        this.sectionIndex = sectionIndex;
+        this.fieldIndex = fieldIndex;
+        this.fieldToConfig = { ...this.form.sections[sectionIndex].fields[fieldIndex] };
+    }
+
+    onSaveSelectItem() {
+        this.fieldToConfig.selectList.push({ id: this.selectItem.toLowerCase(), nombre: this.selectItem });
+        this.fieldToConfig.selectList = [...this.fieldToConfig.selectList];
+        this.selectItem = '';
+    }
+
+    onRemoveSelectItem(selectIndex) {
+        this.fieldToConfig.selectList.splice(selectIndex, 1);
+        this.fieldToConfig.selectList = [...this.fieldToConfig.selectList];
     }
 }
