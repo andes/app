@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
     selector: 'form-config',
@@ -94,5 +95,25 @@ export class FormConfigComponent implements OnInit {
             this.fieldToConfig = { ...this.form.sections[sectionIndex].fields[fieldIndex] };
             this.sidebar = true;
         }, 300);
+    }
+
+    dropSection(event: CdkDragDrop<any[]>) {
+        moveItemInArray(this.form.sections, event.previousIndex, event.currentIndex);
+    }
+
+    dropField(event: CdkDragDrop<any[]>, sectionIndex: number) {
+        moveItemInArray(this.form.sections[sectionIndex].fields, event.previousIndex, event.currentIndex);
+        // if (event.previousContainer === event.container) {
+        //     // Mover dentro de la misma sección
+        //     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+        // } else {
+        //     // Mover a otra sección
+        //     transferArrayItem(
+        //         event.previousContainer.data,
+        //         event.container.data,
+        //         event.previousIndex,
+        //         event.currentIndex
+        //     );
+        // }
     }
 }

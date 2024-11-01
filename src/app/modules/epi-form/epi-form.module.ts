@@ -13,6 +13,8 @@ import { FormConfigComponent } from './components/form-config/form-config.compon
 import { FormResourcesService } from './services/resources.service';
 import { FieldConfigComponent } from './components/field-config/field-config.component';
 
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
 
 @NgModule({
     declarations: [
@@ -27,7 +29,7 @@ import { FieldConfigComponent } from './components/field-config/field-config.com
         ReactiveFormsModule,
         HttpClientModule,
         RouterModule,
-        // ScrollingModule,
+        DragDropModule,
         EpiFormsRouting
     ],
     providers: [

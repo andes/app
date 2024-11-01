@@ -27,10 +27,9 @@
     <!-- Campos dinámicos dependencia -->
     <div *ngIf="hasDependency" formGroupName="dependencies">
         <plex-title titulo="Configuración dependencia" size="sm"></plex-title>
-        <plex-select name="section-dependency" label="Sección" formControlName="section"></plex-select>
-        <plex-select name="field-dependency" label="Campo" formControlName="field"></plex-select>
-        <plex-select name="condition-dependency" label="Condición" formControlName="condition"></plex-select>
-        <plex-select name="action-dependency" label="Acción" formControlName="action"></plex-select>
+        <plex-text name="field-dependency" label="Key del campo" formControlName="field"></plex-text>
+        <plex-select name="condition-dependency" label="Condición" formControlName="condition" [data]="typeDependency"></plex-select>
+        <plex-select name="action-dependency" label="Acción" formControlName="action" [data]="action"></plex-select>
         <plex-text name="value-dependency" label="Valor" formControlName="value"></plex-text>
     </div>
     <!-- Campos dinámicos select static -->

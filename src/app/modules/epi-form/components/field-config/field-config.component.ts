@@ -17,6 +17,18 @@ export class FieldConfigComponent implements OnInit {
         id: '';
         name: '';
     };
+    public action = [
+        { id: 'show', nombre: 'Mostrar' },
+        { id: 'hide', nombre: 'Ocultar' },
+        { id: 'enable', nombre: 'Habilitar' },
+        { id: 'disable', nombre: 'Deshabilitar' }
+    ];
+    public typeDependency = [
+        { id: 'equals', nombre: 'Igual a' },
+        { id: 'graterThan', nombre: 'Mayor que' },
+        { id: 'lessThan', nombre: 'Menor que' },
+        { id: 'contains', nombre: 'Contiene' }
+    ];
     public hasDependency = false;
     public tiposList = [
         { id: 'string', nombre: 'Texto' },
@@ -58,7 +70,6 @@ export class FieldConfigComponent implements OnInit {
             description: [''],
             hasDependency: [false],
             dependencies: this.fb.group({
-                section: [null],
                 field: [null],
                 condition: [null],
                 action: [null],

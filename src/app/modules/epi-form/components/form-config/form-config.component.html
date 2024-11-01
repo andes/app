@@ -32,26 +32,27 @@
                     AGREGAR SECCIÓN
                 </plex-button>
             </plex-title>
-            <ul class="mr-2 unstyled" style="padding-left: 0 !important;">
+            <ul class="mr-2 unstyled" style="padding-left: 0 !important;" cdkDropList (cdkDropListDropped)="dropSection($event)" cdkDropListGroup>
                 <li *ngFor="let section of form.sections ; let sectionIndex = index"
-                    style="list-style-type: none !important;">
+                    style="list-style-type: none !important; border: 2px;" cdkDrag>
+                    <div class="custom-placeholder" *cdkDragPlaceholder></div>
                     <plex-grid cols="3" class="mb-4">
                         <plex-text name="name-{{ sectionIndex }}" label="Nombre de la sección"
-                            [(ngModel)]="section.name" [required]="true" (change)="onChanges($event)">
-                        </plex-text>
-                        <plex-text name="key-{{ sectionIndex }}" label="Llave de sección" [(ngModel)]="section.key" 
-                            [required]="true"></plex-text>
+                        [(ngModel)]="section.name" [required]="true" (change)="onChanges($event)">
+                    </plex-text>
+                    <plex-text name="key-{{ sectionIndex }}" label="Llave de sección" [(ngModel)]="section.key" 
+                    [required]="true"></plex-text>
                         <div justify="end" class="mt-4">
                             <plex-button type="success" size="sm" icon="plus" align="center"
-                                (click)="onAddField(sectionIndex)" tooltip="Agregar campo"></plex-button>
+                            (click)="onAddField(sectionIndex)" tooltip="Agregar campo"></plex-button>
                             <plex-button type="danger" size="sm" icon="delete" align="center"
-                                (click)="onRemoveSection(sectionIndex)" tooltip="Eliminar sección"
-                                class="ml-1 mr-4"></plex-button>
+                            (click)="onRemoveSection(sectionIndex)" tooltip="Eliminar sección"
+                            class="ml-1 mr-4"></plex-button>
                         </div>
                     </plex-grid>
-                    <ul class="mr-2 unstyled" style="padding-left: 0 !important;">
+                    <ul class="mr-2 unstyled" style="padding-left: 0 !important;" cdkDropList (cdkDropListDropped)="dropField($event, sectionIndex)">
                         <li *ngFor="let field of section.fields; let fileIndex = index"
-                            style="list-style-type: none !important;">
+                            style="list-style-type: none !important;" cdkDrag >
                             <plex-grid cols="2">
                                 <!-- Campo tipo string -->
                                 <plex-text *ngIf="field.type?.id === 'string'" label="{{ field.name }}"
@@ -106,10 +107,12 @@
                                         class="ml-1 mr-3"></plex-button>
                                 </div>
                             </plex-grid>
+                            <div class="custom-placeholder" *cdkDragPlaceholder></div>
                         </li>
                     </ul>
+                    <hr>
                 </li>
-                <br><br><br><br><br><br>
+                <br><br><br>
             </ul>
         </form>
     </plex-layout-main>
