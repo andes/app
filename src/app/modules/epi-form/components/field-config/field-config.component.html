@@ -1,4 +1,4 @@
-<form [formGroup]="form">
+<div [formGroup]="form">
     <plex-title titulo="CREAR CAMPOS" size="md">
         <plex-button type="success" icon="check" size="sm" tooltip="guardar" class="m-1"
             (click)="onSaveField()"></plex-button>
@@ -20,31 +20,28 @@
     <plex-select *ngIf="type?.id === 'select'" label="Tipo de recurso" name="field-resources"
         required="true" formControlName="resources" [data]="resources" labelField="name"></plex-select>
     <!-- Campos dinámicos numérico -->
-    <plex-int *ngIf="type?.id === 'int'" label="Mínimo" name="minimo-{{ fieldToConfig.name }}"
+    <plex-int *ngIf="type?.id === 'int'" label="Mínimo" name="minimo-{{ this.form.name }}"
         formControlName="min"></plex-int>
-    <plex-int *ngIf="type?.id === 'int'" label="Maximo" name="maximo-{{ fieldToConfig.name }}"
+    <plex-int *ngIf="type?.id === 'int'" label="Maximo" name="maximo-{{ this.form.name }}"
         formControlName="max"></plex-int>
     <!-- Campos dinámicos select static -->
     <br>
-</form>
-    <plex-table *ngIf="type?.id === 'selectStatic'" [columns]="selectColumns" #table="plTable">
-        <plex-title titulo="ELEMENTOS SELECCIONABLES" size="sm"></plex-title>
+    <plex-table *ngIf="type?.id === 'selectStatic'" [columns]="selectColumns" #table="plTable" formArrayName="selectList">
+        <plex-title titulo="ELEMENTOS SELECCIONABLES" size="sm">
+            <plex-button type="success" icon="plus" size="sm" tooltip="Agregar" class="mr-1"
+                (click)="addSelectItem()">
+            </plex-button>
+        </plex-title>
         <plex-table-columns></plex-table-columns>
-        <tr *ngFor="let item of selectList; let selectIndex = index">
-            <td *plTableCol="'name'">{{ item.nombre }}</td>
+        <tr  *ngFor="let selectItem of selectList.controls; let selectIndex = index" [formGroup]="selectItem">
+            <td *plTableCol="'name'">
+                <plex-text name="item-{{selectIndex}}" formControlName="name"placeholder="nombre">
+                </plex-text>
+            </td>
             <td *plTableCol="'actions'">
                 <plex-button type="danger" icon="delete" align="center" tooltip="eliminar" size="sm"
-                    (click)="onRemoveSelectItem(selectIndex)"></plex-button>
-            </td>
-        </tr>
-        <tr>
-            <td *plTableCol="'name'">
-                <plex-text *ngIf="type?.id === 'selectStatic'" name="select"
-                    [(ngModel)]="selectItem"></plex-text>
-            </td>
-            <td *plTableCol="'actions'">
-                <plex-button type="success" icon="check" size="sm" tooltip="guardar" align="center"
-                    justify="end" (click)="onSaveSelectItem()"></plex-button>
+                    (click)="deleteSelectItem(selectIndex)"></plex-button>
             </td>
         </tr>
     </plex-table>
+</div>

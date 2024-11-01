@@ -1,15 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormResourcesService } from '../../services/resources.service';
-
-
 
 @Component({
     selector: 'field-config',
     templateUrl: './field-config.component.html'
 })
 export class FieldConfigComponent implements OnInit {
-
     @Input() field: any;
     @Input() sectionIndex: number;
     @Output() saveField: EventEmitter<any> = new EventEmitter<any>();
@@ -20,7 +17,6 @@ export class FieldConfigComponent implements OnInit {
         id: '';
         name: '';
     };
-    public selectItem: String;
     public tiposList = [
         { id: 'string', nombre: 'Texto' },
         { id: 'int', nombre: 'Numérico' },
@@ -79,9 +75,13 @@ export class FieldConfigComponent implements OnInit {
                 min: this.field.min,
                 max: this.field.max,
             });
-
-            this.field.selectList.forEach(selectItem => {
-                this.addSelectItem(selectItem);
+            this.type = this.field.type;
+            this.field.selectList.forEach(item => {
+                const selectItem = this.fb.group({
+                    name: [item.name, Validators.required],
+                    id: [item.id]
+                });
+                this.selectList.push(selectItem);
             });
         }
 
@@ -90,13 +90,19 @@ export class FieldConfigComponent implements OnInit {
         });
 
         this.form.get('name')?.valueChanges.subscribe(value => {
-            console.log(value);
             if (value) {
-                this.form.get('key').setValue(`${value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\w\s]/gi, '').replace(' ', '-').toLowerCase()}-${this.sectionIndex}`);
+                this.form.get('key').
+                    setValue(`${value
+                        .normalize('NFD')
+                        .replace(/[\u0300-\u036f]/g, '')
+                        .replace(/[^\w\s]/gi, '')
+                        .replace(/\s+/g, '-')
+                        .toLowerCase()}-${this.sectionIndex}`);
             } else {
                 this.form.get('key').setValue('');
             }
         });
+
         this.formResourceService.search({}).subscribe(resultado => {
             resultado.forEach(r => {
                 r.type === 'section' ? this.prebuiltSections.push(r) : this.resources.push(r);
@@ -104,12 +110,22 @@ export class FieldConfigComponent implements OnInit {
         });
     }
 
-    get selectList(): FormArray {
-        return this.form.get('selectList') as FormArray;
+    get selectList() {
+        return this.form.controls['selectList'] as FormArray;
     }
 
-    addSelectItem(selectItem): void {
-        this.selectList.push(this.fb.group(selectItem));
+    addSelectItem() {
+        const selectItem = this.fb.group({
+            name: ['', Validators.required],
+            id: ['']
+        });
+        selectItem.get('name')?.valueChanges.subscribe(value => {
+            selectItem.get('id')?.setValue(value);
+        });
+        this.selectList.push(selectItem);
+    }
+    deleteSelectItem(selectItemIndex: number) {
+        this.selectList.removeAt(selectItemIndex);
     }
 
     closeFieldConfig() {
@@ -119,15 +135,5 @@ export class FieldConfigComponent implements OnInit {
         if (this.form.valid) {
             this.saveField.emit(this.form.value);
         }
-    }
-
-    onSaveSelectItem() {
-        this.addSelectItem({ id: this.selectItem.toLowerCase, name: this.selectItem });
-        this.selectItem = '';
-    }
-
-    onRemoveSelectItem(selectIndex) {
-        const selectList = this.form.get('selectList').value.splice(selectIndex, 1);
-        this.form.get('selectList').setValue(selectList);
     }
 }
