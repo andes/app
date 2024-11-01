@@ -108,7 +108,6 @@ export class FormConfigComponent implements OnInit {
         if (event.previousContainer === event.container) {
             moveItemInArray(currentSection.fields, event.previousIndex, event.currentIndex);
         } else {
-            console.log(event);
             transferArrayItem(
                 previousSection.fields,
                 currentSection.fields,
@@ -116,17 +115,5 @@ export class FormConfigComponent implements OnInit {
                 event.currentIndex
             );
         }
-        // if (event.previousContainer === event.container) {
-        //     // Mover dentro de la misma sección
-        //     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-        // } else {
-        //     // Mover a otra sección
-        //     transferArrayItem(
-        //         event.previousContainer.data,
-        //         this.form.sections[sectionIndex].fields,
-        //         event.previousIndex,
-        //         event.currentIndex
-        //     );
-        // }
     }
 }
