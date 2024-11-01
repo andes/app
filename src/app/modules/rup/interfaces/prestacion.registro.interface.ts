@@ -56,6 +56,8 @@ export class IPrestacionRegistro {
 
     idEvolucion: string;
 
+    conceptoAsociado: ISnomedConcept;
+
     constructor(elementoRUP: IElementoRUP, snomedConcept: ISnomedConcept, prestacion?: IPrestacion) {
         this.id = (new ObjectID()).toString();
         this.elementoRUP = elementoRUP ? elementoRUP.id : null;

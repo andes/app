@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { RupElement } from '.';
 import { RUPComponent } from './../core/rup.component';
 
@@ -7,21 +7,18 @@ import { RUPComponent } from './../core/rup.component';
     templateUrl: 'solicitudPrestacionDefault.html'
 })
 @RupElement('SolicitudPrestacionDefaultComponent')
-export class SolicitudPrestacionDefaultComponent extends RUPComponent implements OnInit, AfterViewInit {
-
+export class SolicitudPrestacionDefaultComponent extends RUPComponent implements OnInit {
     public reglasMatch = [];
     public reglaSelected = null;
     public formulario = null;
     public profesionales = '';
     public organizaciones: any[] = [];
+    public conceptoAsociado = null;
+    public asociados: any[] = [];
+
+    @ViewChild('selector') selector: ElementRef;
 
     data = {};
-
-    ngAfterViewInit() {
-        setTimeout(() => {
-        }, 300);
-    }
-
 
     ngOnInit() {
         if (!this.registro.valor) {
@@ -59,6 +56,11 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
             });
         }
 
+        this.ejecucionService?.hasActualizacion().subscribe(async (estado) => {
+            const registros = this.ejecucionService.getPrestacionRegistro();
+
+            this.actualizarRelaciones(registros, estado);
+        });
     }
 
     onOrganizacionChange() {
@@ -84,5 +86,33 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
     isEmpty() {
         const value = this.registro.valor.solicitudPrestacion;
         return !value.motivo && !value.indicaciones && !value.organizacionDestino;
+    }
+
+    actualizarRelaciones(registros, estado: string) {
+        this.constantesService.search({ source: 'solicitud:conceptosAsociados' }).subscribe(async (constantes) => {
+            const query = constantes[0].query;
+
+            this.snomedService?.get({
+                search: query
+            }).subscribe((resultados) => {
+                const conceptos = resultados.map(concepto => concepto.conceptId);
+
+                this.asociados = registros?.filter((registro) => conceptos.includes(registro.concepto.conceptId)) || [];
+                this.conceptoAsociado = this.asociados.find(elem => elem.concepto.conceptId === this.registro.valor.solicitudPrestacion['conceptoAsociado'].conceptId);
+
+                if (estado === 'eliminar') {
+                    const existe = this.asociados?.find((elem) => elem.conceptId === this.conceptoAsociado.conceptId);
+
+                    if (!existe) {
+                        this.conceptoAsociado = null;
+                    }
+                }
+            });
+        });
+
+    }
+
+    selectAsociado(event) {
+        this.registro.valor.solicitudPrestacion['conceptoAsociado'] = this.conceptoAsociado?.concepto || null;
     }
 }

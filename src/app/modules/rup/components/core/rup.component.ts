@@ -1,7 +1,7 @@
 import { Auth } from '@andes/auth';
 import { Plex, PlexVisualizadorService } from '@andes/plex';
 import { calcularEdad } from '@andes/shared';
-import { AfterViewInit, Component, ComponentFactoryResolver, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, QueryList, ViewChild, ViewChildren, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ComponentFactoryResolver, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Optional, Output, QueryList, SimpleChanges, ViewChild, ViewChildren, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Engine } from 'json-rules-engine';
@@ -38,7 +38,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
     encapsulation: ViewEncapsulation.None,
     template: ''
 })
-export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
+export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
     @ViewChildren(RUPComponent) rupElements: QueryList<RUPComponent>;
     @ViewChild('form', { static: false }) formulario: any;
     public rupInstance: any;
@@ -53,6 +53,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() params: any;
     @Input() style: any;
     @Input() habilitado: any;
+    @Input() public conceptosAsociados: any = [];
 
     public mensaje: any = {};
 
@@ -104,6 +105,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
         componentReference.instance['params'] = this.params;
         componentReference.instance['style'] = this.style;
         componentReference.instance['habilitado'] = this.habilitado;
+        componentReference.instance['conceptosAsociados'] = this.conceptosAsociados || [];
 
         // Event bubbling
         componentReference.instance['change'].subscribe(value => {
@@ -150,10 +152,10 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
         public plantillasService: PlantillasService,
         public vacunasService: VacunasService,
         public driveService: DriveService,
-        @Optional() public ejecucionService: RupEjecucionService,
         public pacienteService: PacienteService,
         public plexVisualizador: PlexVisualizadorService,
-        public constantesService: ConstantesService
+        public constantesService: ConstantesService,
+        @Optional() public ejecucionService: RupEjecucionService
     ) {
     }
 
@@ -169,6 +171,12 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.rulesEngine) {
             (this.rulesEngine as any).removeAllListeners();
             this.rulesEngine.stop();
+        }
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (this.rupInstance) {
+            this.rupInstance['conceptosAsociados'] = changes.conceptosAsociados.currentValue[0] || [];
         }
     }
 

@@ -38,6 +38,9 @@ export class RupEjecucionService {
     private sugeridos = new Subject<ISnomedConcept[]>();
     private segeridos$ = this.sugeridos.asObservable();
 
+    private actualizacion = new BehaviorSubject<string>('');
+    private actualizacion$ = this.actualizacion.asObservable();
+
     constructor(
         private plex: Plex,
         private prestacionService: PrestacionesService,
@@ -48,6 +51,14 @@ export class RupEjecucionService {
 
     getSeccion() {
         return this.seccion$;
+    }
+
+    hasActualizacion() {
+        return this.actualizacion$;
+    }
+
+    actualizar(concept: string) {
+        this.actualizacion.next(concept);
     }
 
     setSeccion(concepto?: ISnomedConcept) {
