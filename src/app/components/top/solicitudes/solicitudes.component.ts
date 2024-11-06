@@ -1,24 +1,22 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 import { Unsubscribe } from '@andes/shared';
+import { Location } from '@angular/common';
 import { Component, ElementRef, HostBinding, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, concatWith, map } from 'rxjs';
-import { concat, switchMap } from 'rxjs';
+import { catchError, concatWith, map, switchMap } from 'rxjs';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
+import { IMotivoAcceso } from 'src/app/modules/rup/interfaces/IMotivoAcceso';
+import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
+import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 import { RouterService } from 'src/app/services/router.service';
 import { HUDSService } from '../../../modules/rup/services/huds.service';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
-import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
-import { Location } from '@angular/common';
-import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
-import { IPrestacion } from 'src/app/interfaces/turnos/IPrestacion';
-import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
-import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
-import { IMotivosHuds } from 'src/app/interfaces/IMotivosHuds';
-import { IMotivoAcceso } from 'src/app/modules/rup/interfaces/IMotivoAcceso';
+import { ConstantesService } from 'src/app/services/constantes.service';
+import { SnomedService } from 'src/app/apps/mitos';
 
 
 @Component({
@@ -122,6 +120,8 @@ export class SolicitudesComponent implements OnInit {
     public mostrarMasOpcionesSalida = false;
     public mostrarMasOpcionesEntrada = false;
     public mostrarAlertaRangoDias = false;
+    public conceptoAsociado = null;
+    public listaConceptosAsociados = [];
     public seleccionado;
     public actualizacion = false;
     public check;
@@ -171,7 +171,9 @@ export class SolicitudesComponent implements OnInit {
         private routerService: RouterService,
         private location: Location,
         private pacienteRestringido: PacienteRestringidoPipe,
-        public motivosHudsService: MotivosHudsService
+        public motivosHudsService: MotivosHudsService,
+        public constantesService: ConstantesService,
+        public snomedService: SnomedService,
     ) {
     }
 
@@ -209,6 +211,7 @@ export class SolicitudesComponent implements OnInit {
             this.fechaDesde = moment(this.fechaHasta).subtract(this.diasIntervalo, 'days').toDate();
             this.estadoEntrada = { id: 'asignada', nombre: 'ASIGNADA' };
         }
+
         this.buscarSolicitudes();
     }
 
@@ -475,6 +478,9 @@ export class SolicitudesComponent implements OnInit {
             if (this.pacienteEntrada && this.pacienteEntrada.length >= 3) {
                 params['paciente'] = this.pacienteEntrada;
             }
+            if (this.conceptoAsociado) {
+                params['conceptoAsociado'] = this.conceptoAsociado;
+            }
         } else {
             params.estados.push('rechazada');
             if (!this.check) {
@@ -563,6 +569,7 @@ export class SolicitudesComponent implements OnInit {
                     this.scrollEnd = true;
                 }
                 this.loader = false;
+                this.cargarConceptosAsociados();
             });
     }
 
@@ -903,5 +910,22 @@ export class SolicitudesComponent implements OnInit {
             return (prestacion.solicitud.historial.findIndex(elem => elem.accion === 'notificar') !== -1) ? true : false;
         }
         return null;
+    }
+
+    setConceptoAsociado(event) {
+        this.conceptoAsociado = event.value?.id || null;
+        this.cargarSolicitudes();
+    }
+
+    cargarConceptosAsociados() {
+        this.constantesService.search({ source: 'solicitud:conceptosAsociados' }).subscribe(async (constantes) => {
+            const query = constantes[0].query;
+
+            this.snomedService?.get({
+                search: query
+            }).subscribe((resultados) => {
+                this.listaConceptosAsociados = resultados.map(concepto => ({ id: concepto.conceptId, nombre: concepto.term }));
+            });
+        });
     }
 }
