@@ -111,6 +111,9 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
         // Configura los tabs a mostrar según capa y vista
         this.mapaCamasService.resumenInternacion$.pipe(
             map(resumen => {
+                if (this.capa === 'estadistica') {
+                    return;
+                }
                 if (this.editarIngresoIdInternacion && this.editarIngresoIdInternacion !== resumen.paciente?.id) {
                     this.toggleEdit();
                 }

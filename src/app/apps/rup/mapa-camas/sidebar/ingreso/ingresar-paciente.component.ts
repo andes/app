@@ -23,6 +23,7 @@ import { ListadoInternacionService } from '../../views/listado-internacion/lista
 import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paciente-workflow.service';
 import { cache } from '@andes/shared';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
+import { ListadoInternacionCapasService } from '../../views/listado-internacion-capas/listado-internacion-capas.service';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -97,6 +98,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         private servicioPrestacion: PrestacionesService,
         public mapaCamasService: MapaCamasService,
         private listadoInternacionService: ListadoInternacionService,
+        private historialInternacionService: ListadoInternacionCapasService,
         private auth: Auth,
         private ingresoPacienteService: IngresoPacienteService,
         public elementosRUPService: ElementosRUPService,
@@ -181,7 +183,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                     return this.mapaCamasService.getPaciente({ id: pacID }, false);
                 })
             )]
-        ).subscribe(([estado, view, capa, cama, prestacion, resumen, /* sinMovimientos,*/ paciente]: [IMaquinaEstados, string, string, ISnapshot, IPrestacion, IResumenInternacion, /* Boolean,*/ IPaciente]) => {
+        ).subscribe(([estado, view, capa, cama, prestacion, resumen, paciente]: [IMaquinaEstados, string, string, ISnapshot, IPrestacion, IResumenInternacion, IPaciente]) => {
             this.capa = capa;
             this.prestacion = prestacion;
             this.paciente = paciente;
@@ -197,14 +199,14 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             if (this.prestacion) {
                 // capa estadistica o estadistica-v2 con ingreso cargado
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
-                this.fechaIngresoOriginal = this.informeIngreso.fechaIngreso;
+                this.fechaIngresoOriginal = new Date(this.informeIngreso.fechaIngreso);
                 this.paciente.obraSocial = this.prestacion.paciente.obraSocial;
             } else {
                 // capa medica/enfermeria, ingreso en estadistica o carga de prestacion en estadistica-v2
                 if (paciente.id) {
                     const fechaIngresoInicial = resumen?.fechaIngreso || this.mapaCamasService.fecha;
-                    this.informeIngreso.fechaIngreso = fechaIngresoInicial;
-                    this.fechaIngresoOriginal = fechaIngresoInicial;
+                    this.informeIngreso.fechaIngreso = new Date(fechaIngresoInicial);
+                    this.fechaIngresoOriginal = new Date(fechaIngresoInicial);
                     if (this.backupObraSocial) {
                         this.paciente.obraSocial = {
                             nombre: this.backupObraSocial.financiador,
@@ -431,11 +433,12 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         }
     }
 
-    private sincronizarCamaResumen(idInternacion): Observable<IResumenInternacion> {
+    // Sincroniza las fechas editadas entre la cama y elresumen/prestacion
+    private sincronizarCamaInternacion(idInternacion, fechaIngresoOriginal, fechaIngreso): Observable<IResumenInternacion> {
         return this.mapaCamasService.snapshot(this.fechaIngresoOriginal, idInternacion).pipe(
             switchMap(snapshot => {
                 const primeraCama = snapshot[0];
-                return this.mapaCamasService.changeTime(primeraCama, this.fechaIngresoOriginal, this.informeIngreso.fechaIngreso, idInternacion);
+                return this.mapaCamasService.changeTime(primeraCama, fechaIngresoOriginal, fechaIngreso, idInternacion);
             }),
             switchMap(cama => {
                 if (!cama.id) {
@@ -461,14 +464,14 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         // Se modifica el estado de la cama
         this.cama.estado = estado;
         this.cama.paciente = paciente;
-        this.cama.fechaIngreso = this.informeIngreso.fechaIngreso;
+        this.cama.fechaIngreso = new Date(this.informeIngreso.fechaIngreso);
 
         if (this.prestacion && this.poseeMovimientos) {
             // Se actualiza fecha y hora en camas
             this.cama.idInternacion = idInternacion;
             if (this.informeIngreso.fechaIngreso.getTime() !== this.fechaIngresoOriginal.getTime()) {
                 // Recuperamos snapshot inicial, por si hay un cambio de cama
-                this.sincronizarCamaResumen(idInternacion).subscribe(() => {
+                this.sincronizarCamaInternacion(idInternacion, this.fechaIngresoOriginal, this.informeIngreso.fechaIngreso).subscribe(() => {
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
                     this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
                     this.listadoInternacionService.setFechaHasta(this.informeIngreso.fechaIngreso);
@@ -492,10 +495,12 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             }
             if (this.cama.idInternacion) {
                 // Edición de internación existente por capa medica/enfermeria
-                this.sincronizarCamaResumen(this.cama.idInternacion).subscribe(() => {
+                this.sincronizarCamaInternacion(this.cama.idInternacion, this.fechaIngresoOriginal, this.informeIngreso.fechaIngreso).subscribe(() => {
                     this.onSave.emit();
                     this.disableButton = false;
+                    this.mapaCamasService.fecha2.next(this.informeIngreso.fechaIngreso); // para vista del mapa
                     this.mapaCamasService.select(this.cama);
+                    this.historialInternacionService.refresh.next(null); // para vista del historial
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
                 }, () => {
                     this.plex.info('danger', 'Ocurrió un error actualizando los datos. Revise los movimientos e intente nuevamente.', 'Atención');
@@ -588,6 +593,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         };
         this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe((prestacion: any) => {
             this.informeIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso;
+            this.mapaCamasService.selectPrestacion(prestacion);
             const idInternacion = this.capa === 'estadistica' ? prestacion._id : this.resumen.id;
             this.ingresoSimplificado('ocupada', paciente, idInternacion);
         }, (err) => {
@@ -707,7 +713,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 }
             });
             if (movimientoEncontrado && movimientoEncontrado.length) {
-                this.informeIngreso.fechaIngreso = this.fechaIngresoOriginal;
+                this.informeIngreso.fechaIngreso = new Date(this.fechaIngresoOriginal);
                 this.plex.info('warning', 'No es posible realizar el cambio de fecha porque la internacion tiene movimientos previos a la fecha ingresada');
             }
         });
@@ -722,7 +728,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                     const controlEstadisticaV2 = this.resumen && cama.idInternacion !== this.resumen.id;
                     // como la cama esta ocupada, se controla que sea por la misma internación
                     if (!cama.idInternacion || controlEstadistica || controlEstadisticaV2) {
-                        this.informeIngreso.fechaIngreso = this.fechaIngresoOriginal;
+                        this.informeIngreso.fechaIngreso = new Date(this.fechaIngresoOriginal);
                         this.plex.info('warning', `No es posible realizar el cambio de fecha porque la cama ${this.cama.nombre.bold()} no se encuentra disponible`,
                             'Cama no disponible');
                         this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
