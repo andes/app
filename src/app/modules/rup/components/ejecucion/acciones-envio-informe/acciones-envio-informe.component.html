@@ -1,6 +1,7 @@
 <ng-container *ngIf="showEnviosBtn">
     <plex-button *ngIf="paciente" type="info" [size]="btnSize" icon="file-tree" title="Ficha epidemiológica"
-                 class="ml-1" (click)="irFichaEpidemiologica()" titlePosition="left">
+                 class="ml-1" (click)="irFichaEpidemiologica()" titlePosition="left" tooltip="Ficha epidemiológica"
+                 tooltipPosition="left">
     </plex-button>
     <plex-button type="info" [size]="btnSize" icon="download" title="Descargar PDF" class="ml-1"
                  [disabled]="requestInProgress" (click)="descargarInforme()" titlePosition="left">

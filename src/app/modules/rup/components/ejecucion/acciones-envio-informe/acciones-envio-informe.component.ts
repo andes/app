@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { IPrestacion } from '../../../interfaces/prestacion.interface';
 import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
@@ -7,7 +7,6 @@ import { PrestacionesService } from '../../../services/prestaciones.service';
 import { Auth } from '@andes/auth';
 import { DocumentosService } from '../../../../../services/documentos.service';
 import { FormsEpidemiologiaService } from '../../../../epidemiologia/services/ficha-epidemiologia.service';
-import { ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import { map } from 'rxjs/operators';
