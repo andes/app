@@ -113,11 +113,11 @@ export class PanelAgendaComponent implements OnInit {
                         this.actualizarEstadoEmit.emit(true);
                     },
                     error: (err: any) => {
-                        if (err.error?.tipoError !== 'errorPrestaciones') {
+                        if (typeof err === 'string') { // profesional/es sin permiso para alguna prestacion
+                            this.plex.info('warning', err, 'Atención');
+                        } else {
                             this.plex.info('warning', 'Otro usuario ha modificado el estado de la agenda seleccionada, su gestor se ha actualizado', err);
                             this.actualizarEstadoEmit.emit(true);
-                        } else {
-                            this.plex.info('warning', '', err.error.msg);
                         }
                     }
                 });
