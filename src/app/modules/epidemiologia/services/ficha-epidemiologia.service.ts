@@ -85,7 +85,7 @@ export class FormsEpidemiologiaService extends ResourceBaseHttp {
         return conceptos;
     }
 
-    setPaciente(paciente: any) {
+    setPaciente(paciente: IPaciente) {
         this.pacienteData = paciente;
     }
 

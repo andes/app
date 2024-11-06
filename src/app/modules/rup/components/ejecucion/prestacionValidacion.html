@@ -4,7 +4,8 @@
             <plex-button *ngIf="hasPacs" type="info" (click)="onPacs()" size="sm" class="mr-1">
                 VER IMAGEN
             </plex-button>
-            <rup-acciones-envio-informe *ngIf="prestacion?.solicitud && paciente" [prestacion]="prestacion" [paciente]="paciente">
+            <rup-acciones-envio-informe *ngIf="prestacion?.solicitud && paciente" [prestacion]="prestacion"
+                                        [paciente]="paciente">
             </rup-acciones-envio-informe>
         </plex-title>
         <plex-grid *ngIf="prestacion?.solicitud?.ambitoOrigen==='ambulatorio'" cols="2" justify>
@@ -236,8 +237,7 @@
             <ng-container *ngFor="let registro of prestacion?.ejecucion.registros">
                 <div class="content-row"
                      *ngIf="registro.esSolicitud && registro.valor.solicitudPrestacion.organizacionDestino">
-                    <plex-label size="sm" style="width: 100%;" color="#0070cc" icon="mano-corazon"
-                                titulo="Tipos de solicitud"
+                    <plex-label size="sm" class="tipo-solicitud" icon="mano-corazon" titulo="Tipos de solicitud"
                                 subtitulo="{{ registro.valor.solicitudPrestacion.prestacionSolicitada.term }}"></plex-label>
 
                     <plex-label size="sm" style="width: 100%;" color="#0070cc" icon="hospital"
