@@ -194,7 +194,7 @@ export class ResumenInternacionComponent implements OnInit {
                     .filter(prestacion => prestacion.estadoActual.tipo === 'validada' || prestacion.solicitud.tipoPrestacion.conceptId === '32485007')
                     .filter((prestacion) => {
                         const fechaIni = moment(this.internacion.fechaIngreso);
-                        const fechaFin = moment(this.internacion.fechaEgreso);
+                        const fechaFin = moment(this.internacion.fechaEgreso || undefined);
                         const fecha = moment(prestacion.ejecucion.fecha);
                         return fecha.isSameOrBefore(fechaFin, 'd') && fecha.isSameOrAfter(fechaIni, 'd');
                     }).sort((a, b) => {
