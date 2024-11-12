@@ -69,8 +69,7 @@ import { VistaCDAComponent } from './views/mapa-camas-capa/vista-cda/vista-cda.c
 import { IngresoPacienteService } from './sidebar/ingreso/ingreso-paciente-workflow/ingreso-paciente-workflow.service';
 import { PeriodosCensablesComponent } from './sidebar/periodos-censables/periodos-censables.component';
 import { ListadoMedicamentosCapasComponent } from './views/listado-internacion-capas/listado-medicamentos-capas.component';
-
-
+import { CITASLibModule } from '../../../components/turnos/citas.module';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -150,7 +149,8 @@ export const INTERNACION_PROVIDERS = [
         ScrollingModule,
         CdkTableModule,
         HammerModule,
-        DirectiveLibModule
+        DirectiveLibModule,
+        CITASLibModule
     ],
     declarations: [
         ...INTERNACION_COMPONENTS,
