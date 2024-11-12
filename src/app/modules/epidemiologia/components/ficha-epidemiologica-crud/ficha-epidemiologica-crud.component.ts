@@ -374,7 +374,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             this.formEpidemiologiaService.save(fichaFinal).subscribe({
                 next: (fichaFinal) => {
                     const msg = fichaFinal.configLaboratorio?.interopera ? `La ficha con el identificador: ${fichaFinal.configLaboratorio.nroIdentificador} fue registrada correctamente` : 'La ficha fue generada correctamente';
-                    this.plex.info('succses', msg);
+                    this.plex.info('success', msg);
                     this.postSave(fichaFinal);
                 },
                 error: () => {
