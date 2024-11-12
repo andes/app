@@ -33,7 +33,8 @@ export const snomedEgreso = {
 export const pacienteAsociado = [
     { id: 'Plan de salud privado o Mutual', nombre: 'Plan de salud privado o Mutual' },
     { id: 'Plan o Seguro público', nombre: 'Plan o Seguro público' },
-    { id: 'Ninguno', nombre: 'Ninguno' }
+    { id: 'Ninguno', nombre: 'Ninguno' },
+    { id: 'Sin Datos', nombre: 'Sin Datos' }
 ];
 
 export const origenHospitalizacion = [

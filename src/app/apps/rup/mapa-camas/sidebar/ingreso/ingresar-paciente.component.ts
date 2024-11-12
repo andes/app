@@ -89,6 +89,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public poseeMovimientos: Boolean;
     private subscription: Subscription;
     private subscription2: Subscription;
+    public selectedOS = false;
+    public financiador;
 
     constructor(
         private plex: Plex,
@@ -254,6 +256,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             } else {
                 this.cama = null;
             }
+
+            if (this.informeIngreso.asociado?.id === 'Plan de salud privado o Mutual' || this.informeIngreso.asociado?.id === 'Plan o Seguro público') {
+                this.selectedOS = true;
+            }
         });
 
         this.camas$ = combineLatest([
@@ -290,10 +296,18 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     changeTipoObraSocial() {
+        this.selectedOS = false;
+        if (this.informeIngreso.asociado?.id === 'Plan de salud privado o Mutual' || this.informeIngreso.asociado?.id === 'Plan o Seguro público') {
+            this.selectedOS = true;
+        }
         this.esPrepaga = this.informeIngreso.asociado?.id === 'Plan de salud privado o Mutual';
-        if (this.esPrepaga || this.informeIngreso.asociado?.id === 'Ninguno') {
+        if (this.esPrepaga || !this.informeIngreso.asociado) {
             this.paciente.obraSocial = null;
-        } else if (this.backupObraSocial) {
+        } else if (this.informeIngreso.asociado?.id === 'Ninguno') {
+            this.paciente.obraSocial = 'Ninguno';
+        } else if (this.informeIngreso.asociado?.id === 'Sin Datos') {
+            this.paciente.obraSocial = 'Sin Datos';
+        } else {
             this.paciente.obraSocial = this.backupObraSocial;
         }
     }
@@ -419,7 +433,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             genero: this.paciente.genero,
             fechaNacimiento: this.paciente.fechaNacimiento,
             direccion: this.paciente.direccion,
-            telefono: this.paciente.telefono
+            telefono: this.paciente.telefono,
+            financiador: this.financiador
         };
 
         if (this.capa === 'estadistica' || (this.capa === 'estadistica-v2' && !this.prestacion)) {
@@ -825,5 +840,9 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         } else {
             reg.esCensable = false;
         }
+    }
+
+    public setFinanciador(financiador) {
+        this.financiador = financiador;
     }
 }
