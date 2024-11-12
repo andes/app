@@ -105,21 +105,15 @@
         </ng-container>
         <ng-container *ngIf="capa === 'estadistica' || capa === 'estadistica-v2'">
             <plex-title size="sm" justify titulo="COBERTURA SOCIAL"></plex-title>
-            <plex-wrapper>
-                <plex-select [(ngModel)]="informeIngreso.asociado" name="asociado" [data]="pacienteAsociado"
-                             placeholder="Seleccione... " label="Cobertura" idField="nombre" labelField="nombre"
-                             (change)="changeTipoObraSocial()">
-                </plex-select>
-                <plex-select *ngIf="esPrepaga" [(ngModel)]="paciente.obraSocial" name="prepaga"
-                             placeholder="Seleccione... " label="Seleccione prepaga" idField="nombre"
-                             labelField="nombre" [data]="prepagas$ | async">
-                </plex-select>
-
-                <plex-text *ngIf="paciente.obraSocial && informeIngreso.asociado && !esPrepaga"
-                           [(ngModel)]="paciente.obraSocial.nombre" label="Obra Social" name="obraSocial"
-                           [readonly]="true">
-                </plex-text>
-            </plex-wrapper>
+            <plex-select [(ngModel)]="informeIngreso.asociado" name="asociado" [data]="pacienteAsociado"
+                         placeholder="Seleccione... " label="Cobertura" idField="nombre" labelField="nombre"
+                         (change)="changeTipoObraSocial()">
+            </plex-select>
+            <plex-select class="w-100" *ngIf="selectedOS" [(ngModel)]="financiador" name="financiador"
+                         [data]="selectorFinanciadores" label="Seleccione una Obra Social" idField="nombre"
+                         labelField="nombre" [required]="true">
+            </plex-select>
+            <br>
 
             <plex-title size="sm" justify titulo="DATOS ESTADISTICOS"></plex-title>
             <plex-wrapper>
