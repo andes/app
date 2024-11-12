@@ -234,7 +234,7 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
             configLaboratorio: {
                 interopera: this.form ? true : this.fichaPaciente.configLaboratorio.interopera,
                 resultado: this.form ? '' : this.fichaPaciente.configLaboratorio.resultado,
-                nroIdentificador: this.form ? '' : this.fichaPaciente.configLaboratorio.nroIdentificador
+                nroIdentificacion: this.form ? '' : this.fichaPaciente.configLaboratorio.nroIdentificacion
             }
         };
 
@@ -251,7 +251,8 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
         } else {
             this.formsEpidemiologiaService.save(fichaFinal).subscribe({
                 next: (fichaFinal) => {
-                    const msg = fichaFinal.configLaboratorio?.interopera ? `La ficha con el identificador: ${fichaFinal.configLaboratorio.nroIdentificador} fue registrada correctamente` : 'La ficha fue generada correctamente';
+                    console.log()
+                    const msg = fichaFinal.configLaboratorio?.interopera ? `La ficha con el identificador: ${fichaFinal.configLaboratorio.nroIdentificacion} fue registrada correctamente` : 'La ficha fue generada correctamente';
                     this.plex.info('success', msg);
                 },
                 error: () => {
