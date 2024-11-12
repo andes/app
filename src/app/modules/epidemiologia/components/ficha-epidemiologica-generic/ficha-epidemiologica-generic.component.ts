@@ -251,7 +251,6 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
         } else {
             this.formsEpidemiologiaService.save(fichaFinal).subscribe({
                 next: (fichaFinal) => {
-                    console.log()
                     const msg = fichaFinal.configLaboratorio?.interopera ? `La ficha con el identificador: ${fichaFinal.configLaboratorio.nroIdentificacion} fue registrada correctamente` : 'La ficha fue generada correctamente';
                     this.plex.info('success', msg);
                 },
