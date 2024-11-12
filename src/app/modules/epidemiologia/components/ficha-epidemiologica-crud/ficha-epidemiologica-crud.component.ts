@@ -361,24 +361,26 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         }
 
         if (this.fichaPaciente) {
-            try {
-                this.formEpidemiologiaService.update(this.fichaPaciente._id, fichaFinal).subscribe((fichaFinal) => {
+            this.formEpidemiologiaService.update(this.fichaPaciente._id, fichaFinal).subscribe({
+                next: (fichaFinal) => {
                     this.plex.toast('success', 'Su ficha fue actualizada correctamente');
                     this.postSave(fichaFinal);
-                });
-            } catch (error) {
-                this.plex.toast('danger', 'ERROR: La ficha no pudo ser actualizada');
-            }
+                },
+                error: () => {
+                    this.plex.toast('danger', 'ERROR: La ficha no pudo ser actualizada');
+                }
+            });
         } else {
-            try {
-                this.formEpidemiologiaService.save(fichaFinal).subscribe( (fichaFinal) => {
-                    const msg = fichaFinal.configLaboratorio?.interopera ? `La ficha con el identificador: ${fichaFinal.configLaboratorio.nroIdentificador} fue registrada correctamente` : 'La ficha fue guardada correctamente';
-                    this.plex.info('success', msg);
+            this.formEpidemiologiaService.save(fichaFinal).subscribe({
+                next: (fichaFinal) => {
+                    const msg = fichaFinal.configLaboratorio?.interopera ? `La ficha con el identificador: ${fichaFinal.configLaboratorio.nroIdentificador} fue registrada correctamente` : 'La ficha fue generada correctamente';
+                    this.plex.info('succses', msg);
                     this.postSave(fichaFinal);
-                });
-            } catch (error) {
-                this.plex.toast('danger', 'ERROR: La ficha no pudo ser registrada');
-            }
+                },
+                error: () => {
+                    this.plex.toast('danger', 'ERROR: La ficha no pudo ser registrada');
+                }
+            });
         }
     }
 
