@@ -1,3 +1,12 @@
+## [5.151.1](https://github.com/andes/app/compare/v5.151.0...v5.151.1) (2024-11-13)
+
+
+### Bug Fixes
+
+* **CIT:** modifica el manejo de errores ([#3101](https://github.com/andes/app/issues/3101)) ([f629439](https://github.com/andes/app/commit/f62943934af651a366f05be93105701f1c9be651))
+* **IN:** cambiar profesional a cargo (estadistica) y validar ([#3102](https://github.com/andes/app/issues/3102)) ([4c226a0](https://github.com/andes/app/commit/4c226a0c5c048c837a9ce1d5597e2f9ba06e0f96))
+* **IN:** exploración visual de internación en curso ([#3104](https://github.com/andes/app/issues/3104)) ([f04c1a7](https://github.com/andes/app/commit/f04c1a7147337fad8663a6efce92e590cbb77380))
+
 # [5.151.0](https://github.com/andes/app/compare/v5.150.0...v5.151.0) (2024-10-23)
 
 
