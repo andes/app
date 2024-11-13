@@ -232,9 +232,9 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
                 genero: this.paciente.genero
             },
             configLaboratorio: {
-                interopera: this.form ? true : this.fichaPaciente.configLaboratorio.interopera,
-                resultado: this.form ? '' : this.fichaPaciente.configLaboratorio.resultado,
-                nroIdentificacion: this.form ? '' : this.fichaPaciente.configLaboratorio.nroIdentificacion
+                interopera: this.form ? this.form.configLaboratorio?.interopera : this.fichaPaciente.configLaboratorio.interopera,
+                resultado: this.form ? '' : this.fichaPaciente.configLaboratorio?.resultado,
+                nroIdentificacion: this.form ? '' : this.fichaPaciente.configLaboratorio?.nroIdentificacion
             }
         };
 
