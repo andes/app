@@ -16,7 +16,7 @@ export class VistaLaboratorioComponent implements OnInit {
         private servicioDocumentos: DocumentosService,
         private auth: Auth) { }
 
-    public gruposLaboratorio;
+    public areasLaboratorio = [];
     public laboratorios: any = {};
     public resultados;
 
@@ -30,38 +30,48 @@ export class VistaLaboratorioComponent implements OnInit {
         const id = this.protocolo.data.idProtocolo;
 
         this.laboratorioService.getByProtocolo(id).subscribe((resultados) => {
-            this.gruposLaboratorio = this.groupByTitulo(resultados[0].Data);
+            this.areasLaboratorio = this.agrupar(resultados[0].Data);
 
-            this.keysGrupos = Object.keys(this.gruposLaboratorio);
-
-            this.keysGrupos.forEach(grupo => {
-                this.keysTitulos = { ...this.keysTitulos, [grupo]: Object.keys(this.gruposLaboratorio[grupo]) };
-            });
         });
     }
 
-    public groupByTitulo(elementos: any): { [key: string]: any[] } {
-        const resultado = {};
+    public agrupar(elementos) {
+        const setAreas = new Set(elementos.map(d => d.area));
+        const areasStr = Array.from(setAreas);
 
-        elementos.forEach(elemento => {
-            if (elemento.esTitulo === 'True') {
-                if (!resultado[elemento.grupo]) {
-                    resultado[elemento.grupo] = {};
-                }
-
-                if (!resultado[elemento.grupo][elemento.item]) {
-                    resultado[elemento.grupo][elemento.item] = [];
-                }
-            } else {
-                if (resultado[elemento.grupo]) {
-                    for (const titulo in resultado[elemento.grupo]) {
-                        resultado[elemento.grupo][titulo].push(elemento);
-                    }
-                }
-            }
+        const areas = [];
+        const toItem = (e) => ({
+            nombre: e.item,
+            esTitulo: e.esTitulo === 'True' ? true : false,
+            resultado: e.Resultado || e.resultado,
+            unidadMedida: e.UnidadMedida || e.unidadMedida,
+            metodo: e.Metodo,
+            valorReferencia: e.valorReferencia,
+            firma: e.esTitulo === 'True' ? '' : e.userValida
         });
 
-        return resultado;
+        areasStr.forEach(area => {
+            const detallesArea = elementos.filter(d => d.area === area);
+            const setGrupos = new Set(detallesArea.map(d => d.grupo));
+            const grupos = Array.from(setGrupos);
+            const item = {
+                area,
+                grupos: grupos.map(g => {
+                    const detallesAreaGrupo = detallesArea.filter(da => da.grupo === g);
+                    const res: any = {};
+                    res.grupo = g;
+                    if (detallesAreaGrupo.length === 1 && detallesAreaGrupo[0].grupo === g) {
+                        res.items = [toItem(detallesAreaGrupo[0])];
+                    } else {
+                        res.items = detallesAreaGrupo.map(toItem);
+                    }
+
+                    return res;
+                })
+            };
+            areas.push(item);
+        });
+        return areas;
     }
 
     descargarLab() {
