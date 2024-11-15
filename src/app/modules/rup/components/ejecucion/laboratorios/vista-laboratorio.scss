@@ -27,8 +27,11 @@ $lightblue: #d6f7ff;
     margin-bottom: 10px;
 }
 
+
+
 table {
     margin-bottom: 30px;
+    width: 100%;
 
     tr {
         border: 1px solid white;
@@ -37,6 +40,12 @@ table {
     td {
         font-size: small;
         vertical-align: middle;
+        width: 25%;
+    }
+
+    td.esTitulo {
+        background-color: #d6f7ff;
+        text-transform: uppercase;
     }
 
     thead {
@@ -46,6 +55,7 @@ table {
             font-weight: 800;
             padding: 0;
             padding-bottom: 10px;
+            width: 25%;
         }
     }
 
