@@ -3,39 +3,47 @@
         <div class="info-basica">
             <div class="d-flex flex-column">
                 <plex-badge type="info">
-                    Protocolo {{protocolo.data.idProtocolo}}
+                    Protocolo {{protocolo.data.numero}}
                 </plex-badge>
-                <b class="mt-1">{{protocolo.data.fecha | fecha}} {{protocolo.data.fecha | hora}}hs</b>
+                <b class="mt-1">{{protocolo.data.fecha | fecha}}</b>
             </div>
-            <plex-grid type="full" cols="3" size="sm">
+            <plex-grid type="full" cols="4" size="sm">
                 <div class="datos"><span>Medico solicitante</span><b>{{protocolo.data.medicoSolicitante}}</b></div>
                 <div class="datos"><span>Origen</span><b>{{protocolo.data.origen}}</b></div>
-                <div class="datos"><span>Efector</span><b>{{protocolo.data.efectorSolicitante}}</b></div>
+                <div class="datos"><span>Efector Solicitante</span><b>{{protocolo.data.efectorSolicitante}}</b></div>
+                <div class="datos"><span>Laboratorio</span><b>{{protocolo.data.Laboratorio}}</b></div>
             </plex-grid>
         </div>
     </div>
     <div class="w-100 mt-2">
         <plex-title titulo="Resultados" size="md"></plex-title>
-        <table class="table table-striped table-hover">
-            <thead class="text-center">
-                <tr>
-                    <th></th>
-                    <th class="text-center">Resultado</th>
-                    <th class="text-center">Referencia/Método</th>
-                    <th class="text-center">Profesional</th>
-                </tr>
-            </thead>
-            <tbody *ngFor="let grupo of this.gruposLaboratorio">
-                <tr>
-                    <th class="titulo-grupo"><b>{{grupo}}</b></th>
-                </tr>
-                <tr *ngFor="let resultado of laboratorios[grupo]" class="align-items-center">
-                    <td><b>{{resultado.item}}</b></td>
-                    <td class="text-center">{{resultado.resultado}}</td>
-                    <td class="text-center">{{resultado.valorReferencia}}{{ resultado.Metodo ? '/' + resultado.Metodo : '' }}</td>
-                    <td class="text-center"><plex-badge type="info" size="sm">{{resultado.userValida}}</plex-badge></td>
-                </tr>
-            </tbody>
-        </table>
+
+        <ng-container *ngFor="let grupo of keysGrupos">
+            <div class="titulo-grupo">{{grupo}}</div>
+            <ng-container *ngFor="let titulo of keysTitulos[grupo]">
+                <span><b>{{titulo}}</b></span>
+                <table class="table table-striped table-hover">
+                    <thead class="text-center">
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th class="text-center">Resultado</th>
+                            <th class="text-center">Referencia/Método</th>
+                            <th class="text-center">Profesional</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let resultado of gruposLaboratorio[grupo][titulo]">
+                            <td></td>
+                            <td><b>{{resultado.item}}</b></td>
+                            <td class="text-center">{{resultado.resultado || resultado.Resultado}}</td>
+                            <td class="text-center">{{resultado.valorReferencia}}{{ resultado.Metodo ? '/' +
+                                resultado.Metodo : '' }}</td>
+                            <td class="text-center">{{resultado.userValida}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-container>
+        </ng-container>
     </div>
 </ng-container>
