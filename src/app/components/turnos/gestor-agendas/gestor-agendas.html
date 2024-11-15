@@ -230,11 +230,11 @@
                 <panel-agenda [editaAgendaPanel]="agendasSeleccionadas[0]"
                               (showVistaTurnosEmit)="showVistaTurnos($event)"
                               (actualizarEstadoEmit)="actualizarGestor($event)" (editarEspacioFisicoEmit)="true"
-                              #guardarAgendaPanel></panel-agenda>
+                              (profesionalExistente)="showGuardarDisabled($event)" #guardarAgendaPanel></panel-agenda>
                 <div class="mt-3" justify="between">
                     <plex-button type="danger" label="Cancelar" (click)="guardarAgendaPanel.cancelar()">
                     </plex-button>
-                    <plex-button type="success" label="Guardar"
+                    <plex-button type="success" label="Guardar" [disabled]="profesionalExistente"
                                  (click)="guardarAgendaPanel.guardarAgenda(agendasSeleccionadas[0])"></plex-button>
                 </div>
             </div>
