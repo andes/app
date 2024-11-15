@@ -11,12 +11,16 @@
                 <div class="datos"><span>Medico solicitante</span><b>{{protocolo.data.medicoSolicitante}}</b></div>
                 <div class="datos"><span>Origen</span><b>{{protocolo.data.origen}}</b></div>
                 <div class="datos"><span>Efector Solicitante</span><b>{{protocolo.data.efectorSolicitante}}</b></div>
-                <div class="datos"><span>Laboratorio</span><b>{{protocolo.data.Laboratorio}}</b></div>
+                <div class="datos"><span>Laboratorio</span><b>{{protocolo.data.Laboratorio ||
+                        protocolo.data.laboratorio}}</b></div>
             </plex-grid>
         </div>
     </div>
     <div class="w-100 mt-2">
-        <plex-title titulo="Resultados" size="md"></plex-title>
+        <plex-title titulo="Resultados" size="md">
+            <plex-button [disabled]="!gruposLaboratorio" type="info" size="sm" icon="download mdi-18px"
+                         tooltip="Descargar" (click)="descargarLab()"></plex-button>
+        </plex-title>
 
         <ng-container *ngFor="let grupo of keysGrupos">
             <div class="titulo-grupo">{{grupo}}</div>
@@ -36,7 +40,8 @@
                         <tr *ngFor="let resultado of gruposLaboratorio[grupo][titulo]">
                             <td></td>
                             <td><b>{{resultado.item}}</b></td>
-                            <td class="text-center">{{resultado.resultado || resultado.Resultado}}</td>
+                            <td class="text-center">{{resultado.resultado || resultado.Resultado}}
+                                {{resultado.unidadMedida}}</td>
                             <td class="text-center">{{resultado.valorReferencia}}{{ resultado.Metodo ? '/' +
                                 resultado.Metodo : '' }}</td>
                             <td class="text-center">{{resultado.userValida}}</td>
