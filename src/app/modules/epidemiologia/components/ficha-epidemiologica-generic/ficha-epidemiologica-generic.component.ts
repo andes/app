@@ -230,25 +230,35 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
                 direccion: this.paciente.direccion,
                 sexo: this.paciente.sexo,
                 genero: this.paciente.genero
+            },
+            configLaboratorio: {
+                interopera: this.form ? this.form.config?.interoperaLab : this.fichaPaciente.configLaboratorio.interopera,
+                resultado: this.form ? '' : this.fichaPaciente.configLaboratorio?.resultado,
+                nroIdentificacion: this.form ? '' : this.fichaPaciente.configLaboratorio?.nroIdentificacion
             }
         };
 
         if (this.fichaPaciente) {
-            this.formsEpidemiologiaService.update(this.fichaPaciente._id, fichaFinal).subscribe(
-                () => {
+            this.formsEpidemiologiaService.update(this.fichaPaciente._id, fichaFinal).subscribe({
+                next: () => {
                     this.plex.toast('success', 'Su ficha fue actualizada correctamente');
                     this.volver.emit();
                 },
-                () => this.plex.toast('danger', 'ERROR: La ficha no pudo ser actualizada')
-            );
+                error: () => {
+                    this.plex.toast('danger', 'ERROR: La ficha fue actualizada correctamente');
+                }
+            });
         } else {
-            this.formsEpidemiologiaService.save(fichaFinal).subscribe(
-                () => {
-                    this.plex.toast('success', 'Su ficha fue registrada correctamente');
+            this.formsEpidemiologiaService.save(fichaFinal).subscribe({
+                next: (fichaFinal) => {
+                    const msg = fichaFinal.configLaboratorio?.interopera ? `La ficha con el identificador: ${fichaFinal.configLaboratorio.nroIdentificacion} fue registrada correctamente` : 'La ficha fue generada correctamente';
                     this.volver.emit();
+                    this.plex.info('success', msg);
                 },
-                () => this.plex.toast('danger', 'ERROR: La ficha no pudo ser registrada')
-            );
+                error: () => {
+                    this.plex.toast('danger', 'ERROR: La ficha no pudo ser registrada');
+                }
+            });
         }
     }
 

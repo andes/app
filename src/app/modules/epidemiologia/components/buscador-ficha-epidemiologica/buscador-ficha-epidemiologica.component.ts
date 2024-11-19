@@ -32,6 +32,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     public idClasificacion = null;
     public idTipoConfirmacion = null;
     public idClasificacionFinal = null;
+    public nroIdentificacion = null;
     public dataType$: Observable<any>;
     public fichas$: Observable<any>;
     public showFicha = false;
@@ -134,6 +135,12 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
             opcional: true,
             sorteable: false,
             right: true
+        },
+        {
+            key: 'nroIdentificacion',
+            label: 'Id Laboratorio',
+            opcional: true,
+            sorteable: false
         }
     ];
     colsVisibles = {
@@ -144,7 +151,8 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
         'clasificacion': false,
         'acciones': true,
         'sisa': true,
-        'pcr': true
+        'pcr': true,
+        'nroIdentificacion': true
     };
 
     constructor(
@@ -188,6 +196,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
             tipoConfirmacion: this.idTipoConfirmacion?.id,
             zonaSanitaria: this.zonaSanitaria?._id,
             clasificacionFinal: this.idClasificacionFinal?.id,
+            nroIdentificacion: this.nroIdentificacion,
             skip: 0,
             limit: 15
         };

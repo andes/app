@@ -50,6 +50,9 @@
                         <plex-select grow="1" name="clasificacionFinal" [data]="clasificacionFinal"
                                      label="Clasificación Final" [(ngModel)]="idClasificacionFinal" labelField="nombre">
                         </plex-select>
+                        <plex-text grow="1" name="nroIdentificacion" label="Identificación Laboratorio" 
+                                    [(ngModel)]="nroIdentificacion" labelField="nombre">
+                        </plex-text>
                     </div>
                 </plex-wrapper>
             </plex-grid>
@@ -91,6 +94,7 @@
                         </plex-badge>
                     </ng-container>
                 </td>
+                <td *plTableCol="'nroIdentificacion'">{{ficha.configLaboratorio?.nroIdentificacion }}</td>
             </tr>
         </plex-table>
         <div *ngIf="!(fichas$ | async)?.length && !inProgress" justify="center" class="mt-5">

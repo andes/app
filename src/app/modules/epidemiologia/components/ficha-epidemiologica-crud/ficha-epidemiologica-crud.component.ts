@@ -361,21 +361,26 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         }
 
         if (this.fichaPaciente) {
-            this.formEpidemiologiaService.update(this.fichaPaciente._id, fichaFinal).subscribe(
-                () => {
+            this.formEpidemiologiaService.update(this.fichaPaciente._id, fichaFinal).subscribe({
+                next: (fichaFinal) => {
                     this.plex.toast('success', 'Su ficha fue actualizada correctamente');
                     this.postSave(fichaFinal);
                 },
-                () => this.plex.toast('danger', 'ERROR: La ficha no pudo ser actualizada')
-            );
+                error: () => {
+                    this.plex.toast('danger', 'ERROR: La ficha no pudo ser actualizada');
+                }
+            });
         } else {
-            this.formEpidemiologiaService.save(fichaFinal).subscribe(
-                () => {
-                    this.plex.toast('success', 'Su ficha fue registrada correctamente');
+            this.formEpidemiologiaService.save(fichaFinal).subscribe({
+                next: (fichaFinal) => {
+                    const msg = fichaFinal.configLaboratorio?.interopera ? `La ficha con el identificador: ${fichaFinal.configLaboratorio.nroIdentificador} fue registrada correctamente` : 'La ficha fue generada correctamente';
+                    this.plex.info('success', msg);
                     this.postSave(fichaFinal);
                 },
-                () => this.plex.toast('danger', 'ERROR: La ficha no pudo ser registrada')
-            );
+                error: () => {
+                    this.plex.toast('danger', 'ERROR: La ficha no pudo ser registrada');
+                }
+            });
         }
     }
 
