@@ -438,7 +438,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         let prestaciones = '';
         // Verificamos si las prestaciones de la agenda a clonar incluyen ambito ambulatorio.
         agenda.tipoPrestaciones.forEach(prestacion => {
-            if (!prestacion.ambito.includes('ambulatorio')) {
+            if (!prestacion.ambito?.includes('ambulatorio')) {
                 prestaciones += prestacion.term + ', ';
             }
         });

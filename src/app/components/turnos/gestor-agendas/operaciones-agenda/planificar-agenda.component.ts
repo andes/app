@@ -792,7 +792,7 @@ export class PlanificarAgendaComponent implements OnInit {
         let prestaciones = '';
         let incluyeAmbulatorio = true;
         this.modelo.tipoPrestaciones.forEach(prestacion => {
-            if (!prestacion.ambito.includes('ambulatorio')) {
+            if (!prestacion.ambito?.includes('ambulatorio')) {
                 prestaciones += prestacion.term + ', ';
             }
         });
