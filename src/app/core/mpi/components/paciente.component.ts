@@ -313,7 +313,7 @@ export class PacienteComponent implements OnInit {
         }
 
         if (this.nombreApellidoIgual) {
-            this.plex.info('warning', 'El paciente no debe tener el mismo nombre o apellido');
+            this.plex.info('warning', 'Los datos reportados como erróneos no pueden coincidir con los datos actuales del paciente');
             return;
         }
 

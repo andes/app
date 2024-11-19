@@ -228,18 +228,22 @@
 
                 <plex-text label="Ingrese apellido correcto" [(ngModel)]="pacienteEditado.apellido" name="apellidoError"
                            [required]="true" [debounce]="500"
-                           (change)="verificarNombreApellido({apellido: pacienteEditado.apellido})"> </plex-text>
+                           (change)="verificarNombreApellido({apellido: pacienteEditado.apellido})">
+                </plex-text>
                 <plex-text label="Ingrese nombre correcto" [(ngModel)]="pacienteEditado.nombre" name="nombreError"
                            [required]="true" [debounce]="500"
-                           (change)="verificarNombreApellido({nombre: pacienteEditado.nombre})"> </plex-text>
+                           (change)="verificarNombreApellido({nombre: pacienteEditado.nombre})">
+                </plex-text>
                 <br>
-                <plex-label class="flex-column" icon="cruz" size="xl" titulo="Si hay un error en RENAPER, la persona deberá
-                                            informar el
+                <plex-label size="md" titulo="Si hay un error en RENAPER, la persona deberá informar el
                                             problema en la delegación de RENAPER más cercana a su domicilio para corregir la situación de su
                                             DNI." type="info">
+                    <plex-icon name="cruz" size="xs"></plex-icon>
                 </plex-label>
-                <plex-label class="flex-column" icon="informacion" size="xl" titulo="Le recordamos que el apartado Notas lo puede utilizar
-                                para aclarar asuntos referidos a datos filiatorios." type="info"></plex-label>
+                <plex-label size="md" titulo="Le recordamos que el apartado Notas lo puede utilizar
+                                para aclarar asuntos referidos a datos filiatorios." type="info">
+                    <plex-icon name="informacion" size="xs"></plex-icon>
+                </plex-label>
             </div>
         </ng-container>
     </form>
