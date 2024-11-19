@@ -3,6 +3,7 @@ import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { FormPresetResourcesService } from 'src/app/modules/forms-builder/services/preset.resources.service';
 
 @Component({
     selector: 'form-config',
@@ -24,22 +25,51 @@ export class FormConfigComponent implements OnInit {
     public fieldToConfig = null;
     public fieldIndex: number | null = null;
     public sectionIndex: number | null = null;
+    public seccionesSelect = [
+        { id: 'seccion', nombre: 'Seccion custom' },
+        { id: 'usuario', nombre: 'Usuario' },
+        { id: 'mpi', nombre: 'MPI' },
+        { id: 'tabla', nombre: 'Tabla' }
+    ];
+    public itemsDropdown = [
+        {
+            label: 'Seccion vacia',
+            handler: () => { this.onAddSection(); }
+        },
+        {
+            label: 'Tabla',
+            handler: () => { this.onAddTableSection(); }
+        }
+    ];
     constructor(
         private auth: Auth,
         private router: Router,
+        private formDefaultResourceService: FormPresetResourcesService,
     ) {}
 
     ngOnInit() {
         if (!this.auth.check('formBuilder:update')) {
             this.router.navigate(['inicio']);
         }
+
+        this.loadDefaultResources();
     }
 
+    private loadDefaultResources() {
+        this.formDefaultResourceService.search({}).subscribe((data: any) => {
+            data.map(d => (
+                this.itemsDropdown.push({
+                    label: d.id,
+                    handler: () => { this.loadPresetSection(d); }
+                })));
+            this.itemsDropdown = [...this.itemsDropdown];
+        });
+    }
 
     onAddSection() {
         this.form.sections.push({
             name: '',
-            type: '',
+            type: 'section',
             key: '',
             fields: []
         });
@@ -55,6 +85,16 @@ export class FormConfigComponent implements OnInit {
     onRemoveSection(sectionIndex) {
         this.form.sections.splice(sectionIndex, 1);
         this.form.sections = [... this.form.sections];
+    }
+
+    onAddTableSection() {
+        this.form.sections.push({
+            name: '',
+            type: 'table',
+            key: '',
+            fields: []
+        });
+        this.form.sections = [...this.form.sections];
     }
 
     onAddField(sectionIndex) {
@@ -115,5 +155,26 @@ export class FormConfigComponent implements OnInit {
                 event.currentIndex
             );
         }
+    }
+
+    loadPresetSection(presetSection) {
+        const section = presetSection;
+        section.type = 'preset-section';
+        section.fields = presetSection.fields.map(field => (
+            {
+                name: field.label,
+                key: field.key,
+                type: { id: field.type },
+                required: field.required,
+                description: field.description,
+                resources: field.resources
+            }
+        ));
+        this.form.sections.push(section);
+        this.form.sections = [...this.form.sections];
+    }
+
+    logForm() {
+        console.log(this.form);
     }
 }
