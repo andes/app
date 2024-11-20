@@ -49,9 +49,11 @@ export class BotonesSolicitudPipe implements PipeTransform {
                     }
                 }
                 if (prestacion.estadoActual.tipo === 'auditoria' && prestacion.solicitud.historial.length) {
+                    botones.cancelar = true;
                     botones.comunicacionPaciente = true;
                 }
                 if ((this.esEfectorDestino(prestacion) && prestacion.estadoActual.tipo === 'auditoria')) {
+                    botones.anular = true;
                     botones.auditar = true;
                 }
             }
