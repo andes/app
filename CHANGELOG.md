@@ -1,3 +1,15 @@
+# [5.152.0](https://github.com/andes/app/compare/v5.151.1...v5.152.0) (2024-11-20)
+
+
+### Bug Fixes
+
+* **HUDS:** Soluciona agrupamiento de determinaciones para laboratorios ([#3109](https://github.com/andes/app/issues/3109)) ([6879bf0](https://github.com/andes/app/commit/6879bf0edb413c40b6c037e14e3998f6c441d4a4))
+
+
+### Features
+
+* **HUDS-104:** Implementar descarga en PDF de laboratorios ([#3097](https://github.com/andes/app/issues/3097)) ([bec79f4](https://github.com/andes/app/commit/bec79f4e3d95e4a94e1170c3f555f81d00a8e0cc))
+
 ## [5.151.1](https://github.com/andes/app/compare/v5.151.0...v5.151.1) (2024-11-13)
 
 
