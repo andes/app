@@ -451,7 +451,8 @@
                             </plex-help>
 
                             <!-- CANCELAR -->
-                            <plex-button class="mr-1" *ngIf="botones.cancelar && tipoSolicitud === 'salida'"
+                            <plex-button class="mr-1"
+                                         *ngIf="botones.cancelar && tipoSolicitud === 'salida' && permisoAnular"
                                          icon="cancel" tooltip="Cancelar" size="sm" type="danger"
                                          (click)="onCancelar()">
                             </plex-button>
