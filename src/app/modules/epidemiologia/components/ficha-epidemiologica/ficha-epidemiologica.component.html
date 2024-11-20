@@ -1,8 +1,9 @@
 <plex-layout main="8" resizable="true" min="1" max="4">
     <plex-layout-main *ngIf="!showFicha ; else elseFicha">
         <plex-title titulo="punto de inicio - ficha epidemiológica">
-            <plex-button *ngIf="botonRup" icon="medico" (click)="volverRup()" type="info"
-                         position="left" tooltip="Punto Inicio" tooltipPosition="left"></plex-button>
+            <plex-button *ngIf="botonRup" icon="medico" (click)="volverRup()" type="info" tooltip="Punto Inicio RUP"
+                         tooltipPosition="left">
+            </plex-button>
         </plex-title>
         <paciente-busqueda (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="onSearchClear()"
                            (selected)="onSelect($event)" [offset]="110">

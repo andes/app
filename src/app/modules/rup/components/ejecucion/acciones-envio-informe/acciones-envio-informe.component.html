@@ -1,13 +1,13 @@
 <ng-container *ngIf="showEnviosBtn">
-    <plex-button *ngIf="paciente" type="info" [size]="btnSize" icon="file-tree" title="Ficha epidemiológica"
-                 class="ml-1" (click)="irFichaEpidemiologica()" titlePosition="left" tooltip="Ficha epidemiológica"
+    <plex-button *ngIf="paciente" type="info" [size]="btnSize" icon="file-tree" class="ml-1"
+                 (click)="irFichaEpidemiologica()" tooltipPosition="left" tooltip="Fichas epidemiológicas"
                  tooltipPosition="left">
     </plex-button>
-    <plex-button type="info" [size]="btnSize" icon="download" title="Descargar PDF" class="ml-1"
-                 [disabled]="requestInProgress" (click)="descargarInforme()" titlePosition="left">
+    <plex-button type="info" [size]="btnSize" icon="download" tooltip="Descargar PDF" class="ml-1"
+                 [disabled]="requestInProgress" (click)="descargarInforme()" tooltipPosition="left">
     </plex-button>
     <plex-button type="info" [size]="btnSize" icon="email" [disabled]="requestInProgress" *ngIf="getHasEmail() | async"
-                 title="Enviar PDF" (click)="openModalEmails()" class="ml-1" titlePosition="left">
+                 tooltip="Enviar PDF" (click)="openModalEmails()" class="ml-1" tooltipPosition="left">
     </plex-button>
 </ng-container>
 
