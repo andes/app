@@ -1,0 +1,15 @@
+<div [formGroup]="form">
+    <plex-title titulo="CONFIGURAR COLUMNAS" size="sm">
+        <plex-button type="success" icon="check" size="sm" tooltip="guardar"
+            class="m-1" (click)="onSaveTable()"></plex-button>
+        <plex-button type="danger" icon="close" size="sm" tooltip="cerrar"
+            class="ml-1 mr-1" (click)="closeTableConfig()"></plex-button>
+    </plex-title>
+    <div *ngIf="columnas.length > 0" formArrayName="columnas">
+        <div *ngFor="let columna of columnas.controls" [formGroup]="columna">
+            <plex-text name="label" label="Nombre de la columna" formControlName="label"></plex-text>
+            <plex-select name="type" label="Tipo de columna" formControlName="type" [data]="tiposList"></plex-select>
+            <hr>
+        </div>
+    </div>
+</div>

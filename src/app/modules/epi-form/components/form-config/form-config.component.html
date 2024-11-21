@@ -1,4 +1,4 @@
-<plex-layout [main]="sidebar ? 9 : 12" resizable="true" min="2" max="4">
+<plex-layout [main]="(sidebar || sidebarTable) ? 9 : 12" resizable="true" min="2" max="4">
     <plex-layout-main>
         <form #formulario="ngForm">
             <plex-title main titulo="Alta de tipo de formulario">
@@ -27,7 +27,6 @@
                 </plex-grid>
             </plex-wrapper>
             <plex-title titulo="Secciones">
-                <plex-button (click)="logForm()" size="sm" class="mr-1">Form</plex-button>
                 <plex-dropdown label="AGREGAR SECCIÓN" type="success" size="sm" class="mr-1" [items]="itemsDropdown">
                 </plex-dropdown>
             </plex-title>
@@ -199,12 +198,22 @@
                             <plex-int name="num-cols-{{ sectionIndex }}" label="Numero de columnas"
                                 [(ngModel)]="section.nroCols" [required]="true" class="px-3"></plex-int>
                             <div justify="end" class="mt-4">
+                                <plex-button type="warning" size="sm" icon="pencil" align="center"
+                                    (click)="onEditTable(sectionIndex)" tooltip="Editar tabla"></plex-button>
                                 <plex-button type="danger" size="sm" icon="delete" align="center"
                                     (click)="onRemoveSection(sectionIndex)" tooltip="Eliminar sección"
                                     class="ml-1 mr-4"></plex-button>
                             </div>
                         </plex-grid>
                     </div>
+                    <plex-table *ngIf="section.type === 'table'" [columns]="section.cols" #table="plTable" class="mr-1">
+                        <plex-table-columns></plex-table-columns>
+                        <tr>
+                            <ng-component *ngFor="let col of section.cols">
+                                <td *plTableCol="'{{col.label}}'"> </td>
+                            </ng-component>
+                        </tr>
+                    </plex-table>
                 </li>
                 <br>
             </ul>
@@ -213,5 +222,8 @@
     <plex-layout-sidebar type="invert">
         <field-config *ngIf="sidebar" [field]="fieldToConfig" [sectionIndex]="this.sectionIndex"
             (closeField)="closeFieldConfig()" (saveField)="onSaveField($event)"></field-config>
+        <table-config *ngIf="sidebarTable" [sectionTable]="this.tableToConfig" 
+            [sectionIndex]="this.sectionIndex" (closeTable)="closeFieldConfig()" 
+            (saveTable)="onSaveTable($event)"></table-config>
     </plex-layout-sidebar>
 </plex-layout>

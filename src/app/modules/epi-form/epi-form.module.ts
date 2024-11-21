@@ -14,13 +14,15 @@ import { FormResourcesService } from './services/resources.service';
 import { FieldConfigComponent } from './components/field-config/field-config.component';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { TableConfigComponent } from './components/table-config/table-config.component';
 
 
 @NgModule({
     declarations: [
         FormsListComponent,
         FormConfigComponent,
-        FieldConfigComponent
+        FieldConfigComponent,
+        TableConfigComponent
     ],
     imports: [
         CommonModule,

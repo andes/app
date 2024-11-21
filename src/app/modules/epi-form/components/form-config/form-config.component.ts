@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormPresetResourcesService } from 'src/app/modules/forms-builder/services/preset.resources.service';
+import { Plex } from '@andes/plex';
+import { threadId } from 'worker_threads';
 
 @Component({
     selector: 'form-config',
@@ -22,7 +24,9 @@ export class FormConfigComponent implements OnInit {
         sections: []
     };
     public sidebar = false;
+    public sidebarTable = false;
     public fieldToConfig = null;
+    public tableToConfig = null;
     public fieldIndex: number | null = null;
     public sectionIndex: number | null = null;
     public seccionesSelect = [
@@ -45,6 +49,7 @@ export class FormConfigComponent implements OnInit {
         private auth: Auth,
         private router: Router,
         private formDefaultResourceService: FormPresetResourcesService,
+        private plex: Plex,
     ) {}
 
     ngOnInit() {
@@ -92,9 +97,25 @@ export class FormConfigComponent implements OnInit {
             name: '',
             type: 'table',
             key: '',
-            fields: []
+            nroCols: null,
+            cols: []
         });
         this.form.sections = [...this.form.sections];
+    }
+
+    onEditTable(sectionIndex) {
+        this.sectionIndex = sectionIndex;
+        if (this.form.sections[this.sectionIndex].nroCols > 0) {
+            this.tableToConfig = this.form.sections[sectionIndex];
+            this.sidebarTable = true;
+        } else {
+            this.plex.toast('danger', 'No se puede configurar la tabla. Agregue Numero de columnas', 'Atención');
+        }
+    }
+
+    onSaveTable(st) {
+        this.form.sections[this.sectionIndex] = st;
+        this.closeFieldConfig();
     }
 
     onAddField(sectionIndex) {
@@ -124,6 +145,8 @@ export class FormConfigComponent implements OnInit {
     closeFieldConfig() {
         this.sectionIndex = null;
         this.fieldToConfig = null;
+        this.sidebarTable = null;
+        this.tableToConfig = null;
         this.sidebar = false;
     }
 
@@ -172,9 +195,5 @@ export class FormConfigComponent implements OnInit {
         ));
         this.form.sections.push(section);
         this.form.sections = [...this.form.sections];
-    }
-
-    logForm() {
-        console.log(this.form);
     }
 }
