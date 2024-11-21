@@ -220,12 +220,30 @@
 
         <!-- Reporte de error en datos -->
         <ng-container *ngIf="validado">
-            <plex-bool [(ngModel)]="paciente.reportarError" name="reportarError" type="slide"
-                       label="Considero que los datos son incorrectos y quiero reportar el error">
+            <plex-bool [(ngModel)]="reportarError" name="reportarError" type="slide"
+                       label="Los datos validados con RENAPER tienen un error y quiero reportarlo"
+                       (change)="registrarError()">
             </plex-bool>
-            <div class="mt-2" *ngIf="paciente.reportarError">
-                <plex-text label="Descripción del error" [(ngModel)]="paciente.notaError" name="notaError"
-                           [required]="paciente.reportarError ? 'true' : 'false'"> </plex-text>
+            <div class="mt-2" *ngIf="reportarError">
+
+                <plex-text label="Ingrese apellido correcto" [(ngModel)]="pacienteEditado.apellido" name="apellidoError"
+                           [required]="true" [debounce]="500"
+                           (change)="verificarNombreApellido({apellido: pacienteEditado.apellido})">
+                </plex-text>
+                <plex-text label="Ingrese nombre correcto" [(ngModel)]="pacienteEditado.nombre" name="nombreError"
+                           [required]="true" [debounce]="500"
+                           (change)="verificarNombreApellido({nombre: pacienteEditado.nombre})">
+                </plex-text>
+                <br>
+                <plex-label size="md" titulo="Si hay un error en RENAPER, la persona deberá informar el
+                                            problema en la delegación de RENAPER más cercana a su domicilio para corregir la situación de su
+                                            DNI." type="info">
+                    <plex-icon name="cruz" size="xs"></plex-icon>
+                </plex-label>
+                <plex-label size="md" titulo="Le recordamos que el apartado Notas lo puede utilizar
+                                para aclarar asuntos referidos a datos filiatorios." type="info">
+                    <plex-icon name="informacion" size="xs"></plex-icon>
+                </plex-label>
             </div>
         </ng-container>
     </form>

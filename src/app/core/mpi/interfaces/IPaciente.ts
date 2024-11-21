@@ -47,6 +47,8 @@ export interface IPaciente {
     entidadesValidadoras?: [string];
     scan: string;
     reportarError: Boolean;
+    nombreCorrectoReportado: String;
+    apellidoCorrectoReportado: String;
     notaError: string;
     carpetaEfectores?: [{
         organizacion: {
