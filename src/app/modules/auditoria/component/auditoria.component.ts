@@ -240,14 +240,14 @@ export class AuditoriaComponent implements OnInit {
     }
 
     tieneNombreApellidoCorrecto() {
-        return (this.pacienteSelected.nombreCorrecto && !this.pacienteSelected.apellidoCorrecto) || !this.pacienteSelected.nombreCorrecto && this.pacienteSelected.apellidoCorrecto;
+        return (this.pacienteSelected.nombreCorrectoReportado && !this.pacienteSelected.apellidoCorrectoReportado) || !this.pacienteSelected.nombreCorrectoReportado && this.pacienteSelected.apellidoCorrectoReportado;
     }
 
     tieneNotaError() {
-        return !this.pacienteSelected.nombreCorrecto && !this.pacienteSelected.apellidoCorrecto && this.pacienteSelected.notaError;
+        return !this.pacienteSelected.nombreCorrectoReportado && !this.pacienteSelected.apellidoCorrectoReportado && this.pacienteSelected.notaError;
     }
 
     noTieneNotaError() {
-        return !this.pacienteSelected.nombreCorrecto && !this.pacienteSelected.apellidoCorrecto && !this.pacienteSelected.notaError;
+        return !this.pacienteSelected.nombreCorrectoReportado && !this.pacienteSelected.apellidoCorrectoReportado && !this.pacienteSelected.notaError;
     }
 }

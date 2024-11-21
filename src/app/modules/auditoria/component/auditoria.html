@@ -87,13 +87,13 @@
                     {{ listaReportes[0].createdAt | fecha:'utc' }}</plex-badge>
             </plex-title>
 
-            <plex-grid *ngIf="pacienteSelected.nombreCorrecto || pacienteSelected.apellidoCorrecto"
-                       [cols]="pacienteSelected.nombreCorrecto && pacienteSelected.apellidoCorrecto ? 3 : 2">
-                <plex-label *ngIf="pacienteSelected.nombreCorrecto" titulo="Nombre correcto"
-                            subtitulo="{{ pacienteSelected.nombreCorrecto }}">
+            <plex-grid *ngIf="pacienteSelected.nombreCorrectoReportado || pacienteSelected.apellidoCorrectoReportado"
+                       [cols]="pacienteSelected.nombreCorrectoReportado && pacienteSelected.apellidoCorrectoReportado ? 3 : 2">
+                <plex-label *ngIf="pacienteSelected.nombreCorrectoReportado" titulo="Nombre correcto"
+                            subtitulo="{{ pacienteSelected.nombreCorrectoReportado }}">
                 </plex-label>
-                <plex-label *ngIf="pacienteSelected.apellidoCorrecto" titulo="Apellido correcto"
-                            subtitulo="{{ pacienteSelected.apellidoCorrecto }}">
+                <plex-label *ngIf="pacienteSelected.apellidoCorrectoReportado" titulo="Apellido correcto"
+                            subtitulo="{{ pacienteSelected.apellidoCorrectoReportado }}">
                 </plex-label>
                 <plex-button *ngIf="permisoEdicion" class="pt-2 pb-4" label="corregir" justify="end" type="warning"
                              (click)="onSelectCorregir()">
@@ -115,10 +115,10 @@
                         <plex-label *ngIf="reporte.error" titulo="Descripción"
                                     subtitulo="{{ reporte.error }}"></plex-label>
                         <ng-container *ngIf="!reporte.error">
-                            <plex-label *ngIf="pacienteSelected.nombreCorrecto" titulo="Nombre correcto"
-                                        subtitulo="{{ pacienteSelected.nombreCorrecto}}"></plex-label>
-                            <plex-label *ngIf="pacienteSelected.apellidoCorrecto" titulo="Apellido correcto"
-                                        subtitulo="{{ pacienteSelected.apellidoCorrecto}}"></plex-label>
+                            <plex-label *ngIf="pacienteSelected.nombreCorrectoReportado" titulo="Nombre correcto"
+                                        subtitulo="{{ pacienteSelected.nombreCorrectoReportado}}"></plex-label>
+                            <plex-label *ngIf="pacienteSelected.apellidoCorrectoReportado" titulo="Apellido correcto"
+                                        subtitulo="{{ pacienteSelected.apellidoCorrectoReportado}}"></plex-label>
                         </ng-container>
                     </plex-item>
                 </ng-container>

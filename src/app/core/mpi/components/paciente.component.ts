@@ -121,8 +121,8 @@ export class PacienteComponent implements OnInit {
         entidadesValidadoras: [this.entidadValidadora],
         scan: null,
         reportarError: false,
-        nombreCorrecto: '',
-        apellidoCorrecto: '',
+        nombreCorrectoReportado: '',
+        apellidoCorrectoReportado: '',
         notaError: '',
         vinculos: [null],
         documentos: [],
@@ -429,11 +429,11 @@ export class PacienteComponent implements OnInit {
                 });
             }
         } else {
-            if (this.paciente.nombreCorrecto) {
-                this.pacienteModel.nombreCorrecto = this.paciente.nombreCorrecto;
+            if (this.paciente.nombreCorrectoReportado) {
+                this.pacienteModel.nombreCorrectoReportado = this.paciente.nombreCorrectoReportado;
             }
-            if (this.paciente.apellidoCorrecto) {
-                this.pacienteModel.apellidoCorrecto = this.paciente.apellidoCorrecto;
+            if (this.paciente.apellidoCorrectoReportado) {
+                this.pacienteModel.apellidoCorrectoReportado = this.paciente.apellidoCorrectoReportado;
             }
             const paciente = this.prepararPaciente(this.mergePaciente(this.pacienteModel, this.pacienteExtranjero), ignoreSuggestions);
             if (paciente) {
@@ -605,10 +605,10 @@ export class PacienteComponent implements OnInit {
             this.nombreApellidoIgual = (data.pacienteError.nombre === this.paciente.nombre && data.pacienteError.apellido === this.paciente.apellido) ? true : false;
             if (!this.nombreApellidoIgual) {
                 if (data.pacienteError.nombre !== this.paciente.nombre) {
-                    this.paciente.nombreCorrecto = data.pacienteError.nombre;
+                    this.paciente.nombreCorrectoReportado = data.pacienteError.nombre;
                 }
                 if (data.pacienteError.apellido !== this.paciente.apellido) {
-                    this.paciente.apellidoCorrecto = data.pacienteError.apellido;
+                    this.paciente.apellidoCorrectoReportado = data.pacienteError.apellido;
                 }
             }
         }
