@@ -1,0 +1,47 @@
+.solicitud-wrapper {
+    .titulo-badges {
+        display: flex;
+        column-gap: 5px;
+        align-items: center;
+    }
+
+    .registros {
+        display: flex;
+        align-items: center;
+        grid-gap: 20px;
+
+        .icon-info {
+            color: var(--nav-bar-color);
+            padding: 10px;
+            border: 1px solid var(--nav-bar-color);
+            border-radius: 100%;
+            width: 60px;
+            height: 60px;
+            align-items: center;
+            display: flex;
+            justify-content: center;
+        }
+
+        .info-registro {
+            display: flex;
+            flex-direction: column;
+
+            plex-badge {
+                margin-bottom: 10px;
+            }
+
+            hr {
+                float: left;
+                margin: 0.75rem 0;
+                width: 35px;
+                border: solid 0.5px var(--nav-bar-color);
+            }
+        }
+    }
+
+    .texto-detalle {
+        text-transform: capitalize;
+        font-size: 80%;
+        line-height: normal;
+    }
+}
