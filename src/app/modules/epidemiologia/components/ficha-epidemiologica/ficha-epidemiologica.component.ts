@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { FormsService } from '../../../forms-builder/services/form.service';
@@ -14,13 +14,14 @@ import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/hud
     selector: 'app-ficha-epidemiologica',
     templateUrl: './ficha-epidemiologica.component.html'
 })
-export class FichaEpidemiologicaComponent implements OnInit {
+export class FichaEpidemiologicaComponent implements OnInit, OnDestroy {
     fichaSelected = {};
     itemsDropdownFichas = [];
     public showFicha = null;
     public showLabel = true;
     public selectedForm = {};
     public pacienteSelected = null;
+    public pacienteRup: IPaciente;
     public resultadoBusqueda = null;
     public fichasPaciente: Observable<any>;
     public fichaPaciente$: Observable<any>;
@@ -29,6 +30,7 @@ export class FichaEpidemiologicaComponent implements OnInit {
     public puedeCrear: boolean;
     public puedeVer: boolean;
     public editFicha = false;
+    public botonRup = false;
 
     public columns = [
         {
@@ -67,6 +69,13 @@ export class FichaEpidemiologicaComponent implements OnInit {
             { route: '/', name: 'EPIDEMIOLOGÍA' },
             { name: 'Ficha epidemiológica' }
         ]);
+
+
+        this.pacienteRup = this.formEpidemiologiaService.getPaciente();
+        if (this.pacienteRup) {
+            this.botonRup = true;
+            this.onSelect(this.pacienteRup);
+        }
 
         this.formsService.search().subscribe(fichas => {
             fichas.forEach(element => {
@@ -170,5 +179,13 @@ export class FichaEpidemiologicaComponent implements OnInit {
         this.showFicha = null;
         this.pacienteSelected = null;
         this.resultadoBusqueda = [];
+    }
+
+    volverRup() {
+        this.router.navigate(['/rup']);
+    }
+
+    ngOnDestroy() {
+        this.formEpidemiologiaService.setPaciente(null);
     }
 }
