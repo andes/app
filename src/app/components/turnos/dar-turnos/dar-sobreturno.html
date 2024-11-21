@@ -43,41 +43,9 @@
         <div class="row" class="botones">
             <plex-button type="danger" label="Cancelar" (click)="cancelar()">
             </plex-button>
-            <plex-button *ngIf="paciente" [validateForm]="form" label="Guardar" type="success"
-                         (click)="guardar($event)">
+            <plex-button *ngIf="paciente" [validateForm]="form" label="Guardar" type="success" (click)="guardar($event)"
+                         [disabled]="!disableGuardar">
             </plex-button>
         </div>
     </span>
 </form>
-
-<!-- MODAL: Reporte de errores -->
-<plex-modal size="sm" #modalSobreturno [startOpen]="false" [allowEscClose]="true" [allowBackdropClose]="true">
-    <plex-icon name="check-circle" type="success"></plex-icon>
-    <plex-modal-subtitle class="font-title text-center" type="success" size="sm"><b>El sobreturno se
-            guardó<br>correctamente</b></plex-modal-subtitle>
-    <main>
-        <section class="w-100 h-100">
-            <plex-title titulo="Datos del sobreturno" size="sm"></plex-title>
-            <plex-grid size="md" type="full" cols="2">
-                <plex-label size="sm" grow="full" case="capitalize" titulo="{{ sobreturno?.horaInicio | date: 'EEEE' | uppercase }} {{sobreturno?.horaInicio | date:
-                    'dd/MM/yyyy'}}" subtitulo="{{sobreturno?.horaInicio | date: 'HH:mm'}} hs"
-                            icon="calendario-fecha-abajo">
-                </plex-label>
-                <plex-label size="sm" grow="full" case="capitalize" titulo="{{ paciente | nombre }}"
-                            subtitulo="{{ paciente | documento }}" icon="account">
-                </plex-label>
-                <plex-label size="sm" grow="full" case="capitalize" titulo="{{ sobreturno?.tipoPrestacion.nombre }}"
-                            subtitulo="Prestación" icon="mano-corazon">
-                </plex-label>
-                <plex-label size="sm" grow="full" case="capitalize" titulo="{{ getEquipoProfesional() }}"
-                            subtitulo="Equipo profesional" icon="paciente">
-                </plex-label>
-
-            </plex-grid>
-        </section>
-    </main>
-    <plex-button modal center type="success" (click)="aceptar()">
-        ACEPTAR
-    </plex-button>
-</plex-modal>
-<!-- FIN MODAL -->
