@@ -45,13 +45,6 @@ import { DirectiveLibModule } from 'src/app/directives/directives.module';
         Tabla2DComponent,
         TopComponent
     ],
-    entryComponents: [
-        FiltrosComponent,
-        FiltrosSolicitudesComponent,
-        CitasComponent,
-        RupPacientesComponent,
-        GraficosComponent
-    ],
     exports: [],
     providers: [
         EstAgendasService,

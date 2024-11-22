@@ -42,8 +42,6 @@ import { PacientePanelComponent } from './components/paciente-panel.component';
         CarpetaPacienteComponent,
         FotoDirective
     ],
-    entryComponents: [
-    ],
     exports: [
         PacienteBuscarComponent,
         PacienteListadoComponent,
@@ -54,7 +52,7 @@ import { PacientePanelComponent } from './components/paciente-panel.component';
         PacienteDetalleComponent,
         CarpetaPacienteComponent,
         FotoDirective
-    ],
+    ]
 })
 export class MPILibModule {
 }

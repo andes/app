@@ -259,7 +259,6 @@ registerLocaleData(localeEs, 'es');
         RecaptchaModule,
         RecaptchaFormsModule,
         VisualizacionInformacionModule
-
     ],
     declarations: [
         AppComponent,
@@ -313,7 +312,6 @@ registerLocaleData(localeEs, 'es');
         ImprimirSolicitudesComponent,
         SolicitudManualComponent,
         PucoComponent,
-
         // MPI
         NotaComponent,
         RelacionesPacientesComponent,
@@ -330,18 +328,12 @@ registerLocaleData(localeEs, 'es');
         FormTerapeuticoDetallePageComponent,
         AddformTerapeuticoComponent,
         PucoComponent,
-
         // Campañas Salud
         CampaniaSaludComponent,
         CampaniaVisualizacionComponent,
         CampaniaFormComponent,
-
         LogoSvgComponent,
         AcronimoSvgComponent,
-
-    ],
-    entryComponents: [
-        HeaderPacienteComponent
     ],
     bootstrap: [
         AppComponent
