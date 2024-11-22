@@ -429,10 +429,10 @@ export class PacienteComponent implements OnInit {
                 });
             }
         } else {
-            if (this.paciente.nombreCorrectoReportado) {
+            if (this.paciente?.nombreCorrectoReportado) {
                 this.pacienteModel.nombreCorrectoReportado = this.paciente.nombreCorrectoReportado;
             }
-            if (this.paciente.apellidoCorrectoReportado) {
+            if (this.paciente?.apellidoCorrectoReportado) {
                 this.pacienteModel.apellidoCorrectoReportado = this.paciente.apellidoCorrectoReportado;
             }
             const paciente = this.prepararPaciente(this.mergePaciente(this.pacienteModel, this.pacienteExtranjero), ignoreSuggestions);
