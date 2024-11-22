@@ -1,10 +1,10 @@
-import { PlexModule } from '@andes/plex';
-import { CommonModule } from '@angular/common';
+import { FormBuilderComponent } from './form-builder/form-builder.component';
+import { FormBuilderItemComponent } from './form-builder-item/form-builder-item.component';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { PlexModule } from '@andes/plex';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'projects/shared/src/lib/shared.module';
-import { FormBuilderItemComponent } from './form-builder-item/form-builder-item.component';
-import { FormBuilderComponent } from './form-builder/form-builder.component';
 
 
 
