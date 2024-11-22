@@ -27,12 +27,10 @@ import { GeorrefMapComponent } from '../../core/mpi/components/georref-map.compo
         SectoresItemComponent,
         GeorrefMapComponent // Lo mando acá hasta que venga shared como monorepo
     ],
-    entryComponents: [
-    ],
     exports: [
         SectoresItemComponent,
         GeorrefMapComponent
-    ],
+    ]
 })
 export class OrganizacionLibModule {
 }
