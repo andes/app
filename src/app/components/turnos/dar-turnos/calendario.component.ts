@@ -2,8 +2,6 @@ import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CalendarioDia } from './calendario-dia.class';
 import * as moment from 'moment';
-import { DataLayerManager } from '@agm/core';
-import { IPrestacion } from '../../../modules/rup/interfaces/prestacion.interface';
 
 @Component({
     selector: 'app-calendario',
