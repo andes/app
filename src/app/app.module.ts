@@ -14,7 +14,6 @@ de la siguiente manera:
 */
 
 // Angular
-import { AgmCoreModule } from '@agm/core';
 import { Auth, AuthModule } from '@andes/auth';
 // Global
 import { Plex, PlexModule } from '@andes/plex';
@@ -221,7 +220,6 @@ import { VacunasService } from './services/vacunas.service';
 import { WebSocketService } from './services/websocket.service';
 import { AcronimoSvgComponent } from './styles/acronimo.svg';
 import { LogoSvgComponent } from './styles/logo.svg';
-import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
 
 
@@ -242,9 +240,6 @@ registerLocaleData(localeEs, 'es');
         MitosModule.forRoot(),
         NgDragDropModule.forRoot(),
         routing,
-        AgmCoreModule.forRoot({
-            apiKey: environment.MAPS_KEY
-        }),
         InfiniteScrollModule,
         GestorUsuariosProvidersModule,
         MPILibModule,
@@ -267,7 +262,6 @@ registerLocaleData(localeEs, 'es');
         ProfesionalComponent, ProfesionalCreateUpdateComponent, FirmaProfesionalComponent,
         ProfesionalCreateUpdateComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
-        MapsComponent,
         PlanificarAgendaComponent,
         BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         GestorAgendasComponent, TurnosComponent, ClonarAgendaComponent, ModalAgendaComponent,
