@@ -26,10 +26,6 @@ import { PantallaDetalleComponent } from './views/pantalla-detalle.component';
         PantallasComponent,
         PantallaDetalleComponent
     ],
-    entryComponents: [
-        PantallasComponent,
-        PantallaDetalleComponent
-    ],
     exports: [],
     providers: [
         HttpClient,
