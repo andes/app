@@ -138,49 +138,51 @@
                         style="list-style-type: none !important; background-color: #fff;" cdkDrag>
                         <div class="row p-2">
                             <plex-icon name="drag" size="xl" align="center" cdkDragHandle></plex-icon>
-                            <!-- Campo tipo string -->
-                            <plex-text *ngIf="field.type?.id === 'string'" label="{{ field.name }}"
-                                name="name-{{ field.name }}" [(ngModel)]="field.value"
-                                [required]="field.required"></plex-text>
-                            <!-- Campo tipo int -->
-                            <plex-float *ngIf="field.type?.id === 'int'" label="{{ field.name }}"
-                                name="name-{{ field.name }}" [(ngModel)]="field.value"
-                                [required]="field.required"></plex-float>
-                            <!-- Campo tipo select -->
-                            <plex-select *ngIf="field.type?.id === 'select'" label="{{ field.name }}"
-                                name="name-{{ field.name }}" [(ngModel)]="field.value"
-                                [required]="field.required"></plex-select>
-                            <!-- Campo tipo selectStatic -->
-                            <plex-select *ngIf="field.type?.id === 'selectStatic'" label="{{ field.name }}"
-                                name="name-{{ field.name }}" [(ngModel)]="field.value"
-                                [required]="field.required" [data]="field.selectList"
-                                labelField="name"></plex-select>
-                            <!-- Campo tipo date -->
-                            <plex-datetime *ngIf="field.type?.id === 'date' && !field.datePeriod" type="date"
-                                label="{{ field.name }}" name="name-{{ field.name }}" [(ngModel)]="field.value"
-                                [required]="field.required"></plex-datetime>
-                            <!-- Campo tipo date period -->
-                            <plex-grid *ngIf="field.type?.id === 'date' && field.datePeriod" cols="2">
-                                <plex-datetime type="date" label="{{ field.name }}" name="name-{{ field.name }}"
-                                    [(ngModel)]="field.value1" [required]="field.required"></plex-datetime>
-                                <plex-datetime type="date" label="{{ field.name }}" name="name-{{ field.name }}"
-                                    [(ngModel)]="field.value2" [required]="field.required"></plex-datetime>
+                            <plex-grid cols="2" class="px-3">
+                                <!-- Campo tipo string -->
+                                <plex-text *ngIf="field.type?.id === 'string'" label="{{ field.name }}"
+                                    name="name-{{ field.name }}" [(ngModel)]="field.value"
+                                    [required]="field.required"></plex-text>
+                                <!-- Campo tipo int -->
+                                <plex-float *ngIf="field.type?.id === 'int'" label="{{ field.name }}"
+                                    name="name-{{ field.name }}" [(ngModel)]="field.value"
+                                    [required]="field.required"></plex-float>
+                                <!-- Campo tipo select -->
+                                <plex-select *ngIf="field.type?.id === 'select'" label="{{ field.name }}"
+                                    name="name-{{ field.name }}" [(ngModel)]="field.value"
+                                    [required]="field.required"></plex-select>
+                                <!-- Campo tipo selectStatic -->
+                                <plex-select *ngIf="field.type?.id === 'selectStatic'" label="{{ field.name }}"
+                                    name="name-{{ field.name }}" [(ngModel)]="field.value"
+                                    [required]="field.required" [data]="field.selectList"
+                                    labelField="name"></plex-select>
+                                <!-- Campo tipo date -->
+                                <plex-datetime *ngIf="field.type?.id === 'date' && !field.datePeriod" type="date"
+                                    label="{{ field.name }}" name="name-{{ field.name }}" [(ngModel)]="field.value"
+                                    [required]="field.required"></plex-datetime>
+                                <!-- Campo tipo date period -->
+                                <plex-grid *ngIf="field.type?.id === 'date' && field.datePeriod" cols="2">
+                                    <plex-datetime type="date" label="{{ field.name }}" name="name-{{ field.name }}"
+                                        [(ngModel)]="field.value1" [required]="field.required"></plex-datetime>
+                                    <plex-datetime type="date" label="{{ field.name }}" name="name-{{ field.name }}"
+                                        [(ngModel)]="field.value2" [required]="field.required"></plex-datetime>
+                                </plex-grid>
+                                <!-- Campo tipo boolean -->
+                                <plex-bool *ngIf="field.type?.id === 'boolean'" type="slide"
+                                    label="{{ field.name }}" name="name-{{ field.name }}" [(ngModel)]="field.value"
+                                    [required]="field.required"></plex-bool>
+                                <!-- Campo tipo phone -->
+                                <plex-phone *ngIf="field.type?.id === 'phone'" label="{{ field.name }}"
+                                    name="name-{{ field.name }}" [(ngModel)]="field.value"
+                                    [required]="field.required"></plex-phone>
+                                <!-- Campo tipo dependencia -->
+                                <plex-text *ngIf="field.type?.id === 'dependencia'" label="{{ field.name }}"
+                                    name="name-{{ field.name }}" [(ngModel)]="field.value"></plex-text>
+                                <!-- Campo tipo snomed -->
+                                <plex-text *ngIf="field.type?.id === 'snomed'" label="{{ field.name }}"
+                                    name="name-{{ field.name }}" [(ngModel)]="field.value"
+                                    [required]="field.required"></plex-text>
                             </plex-grid>
-                            <!-- Campo tipo boolean -->
-                            <plex-bool *ngIf="field.type?.id === 'boolean'" type="slide"
-                                label="{{ field.name }}" name="name-{{ field.name }}" [(ngModel)]="field.value"
-                                [required]="field.required"></plex-bool>
-                            <!-- Campo tipo phone -->
-                            <plex-phone *ngIf="field.type?.id === 'phone'" label="{{ field.name }}"
-                                name="name-{{ field.name }}" [(ngModel)]="field.value"
-                                [required]="field.required"></plex-phone>
-                            <!-- Campo tipo dependencia -->
-                            <plex-text *ngIf="field.type?.id === 'dependencia'" label="{{ field.name }}"
-                                name="name-{{ field.name }}" [(ngModel)]="field.value"></plex-text>
-                            <!-- Campo tipo snomed -->
-                            <plex-text *ngIf="field.type?.id === 'snomed'" label="{{ field.name }}"
-                                name="name-{{ field.name }}" [(ngModel)]="field.value"
-                                [required]="field.required"></plex-text>
                         </div>
                         <div class="custom-placeholder" *cdkDragPlaceholder></div>
                     </li>

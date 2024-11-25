@@ -43,7 +43,7 @@ export class TableConfigComponent implements OnInit {
         if (this.sectionTable.cols.length > 0) {
             this.sectionTable.cols.forEach(col => {
                 const columna = this.fb.group({
-                    label: [col.name, Validators.required],
+                    label: [col.label, Validators.required],
                     key: [col.key],
                     type: [col.type, Validators.required]
                 });
