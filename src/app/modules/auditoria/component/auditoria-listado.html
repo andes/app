@@ -41,8 +41,7 @@
             </plex-dropdown>
 
             <!-- Exclusivo tab reporte de errores -->
-
-            <plex-label *ngIf="errorTab"
+            <plex-label *ngIf="errorTab && registroReportes.length"
                         titulo="{{ registroReportes[paciente.id][0]?.createdBy.nombreCompleto || 'Sin datos'}}"
                         subtitulo="{{ registroReportes[paciente.id][0]?.createdBy.organizacion.nombre || ''}}">
             </plex-label>
@@ -51,7 +50,7 @@
                 Corregido
             </plex-badge>
 
-            <plex-badge *ngIf="errorTab" type="info">
+            <plex-badge *ngIf="errorTab && registroReportes.length" type="info">
                 {{ registroReportes[paciente.id][0]?.createdAt | fecha:'utc'}}
             </plex-badge>
 
