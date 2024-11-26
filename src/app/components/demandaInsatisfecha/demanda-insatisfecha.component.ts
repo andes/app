@@ -263,7 +263,7 @@ export class DemandaInsatisfechaComponent implements OnInit {
                 idAgenda: datosTurno.idAgenda,
             };
         };
-        this.listaEsperaService.patch(this.itemSelected.id, 'estado', data).subscribe(() => {
+        this.listaEsperaService.patch(this.itemSelected._id, 'estado', data).subscribe(() => {
             this.plex.toast('success', 'Demanda cerrada exitosamente');
             this.actualizarFiltros({ value: '' }, '');
         });
