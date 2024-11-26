@@ -19,7 +19,7 @@ export class ReporteErroresComponent implements OnInit {
 
     showSidebar = false;
     filtroPaciente: string;
-    pacientesReportados;
+    pacientesReportados = [];
     corregirPaciente: Number;
     showReporteError = false; // se muestra en el sidebar datos del error reportado
     permisoEdicion: Boolean;
@@ -42,13 +42,14 @@ export class ReporteErroresComponent implements OnInit {
             this.pacienteService.get({ reportarError: true, activo: true }), // pacientes
             this.logPacienteService.get({ operacion: 'error:reportar' }) // registros de errores reportados
         ]).subscribe(respuesta => {
-            this.pacientesReportados = respuesta[0];
-            this.corregirPaciente = null;
-            const erroresReportados = respuesta[1];
-            this.pacientesReportados.forEach(pac => {
-                this.reportes[pac.id] = erroresReportados.filter((reg: any) => reg.paciente.id === pac.id);
-            });
-
+            if (respuesta?.length) {
+                this.pacientesReportados = respuesta[0];
+                this.corregirPaciente = null;
+                const erroresReportados = respuesta[1];
+                this.pacientesReportados.forEach(pac => {
+                    this.reportes[pac.id] = erroresReportados.filter((reg: any) => reg.paciente.id === pac.id);
+                });
+            }
             this.pacientes = this.pacientesReportados;
         });
     }
