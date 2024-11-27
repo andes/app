@@ -1,11 +1,10 @@
-import { environment } from './../../../../../environments/environment';
-import * as moment from 'moment';
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../../../interfaces/turnos/ITurno';
 import { ListaEsperaService } from '../../../../services/turnos/listaEspera.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
+import { TurnoService } from './../../../../services/turnos/turno.service';
 import { SmsService } from './../../../../services/turnos/sms.service';
 import { Auth } from '@andes/auth';
 
@@ -37,7 +36,14 @@ export class SuspenderTurnoComponent implements OnInit {
     public avisoSuspension = 'no enviado';
     public suspendio = false;
 
-    constructor(public plex: Plex, public auth: Auth, public listaEsperaService: ListaEsperaService, public serviceAgenda: AgendaService, public smsService: SmsService) { }
+    constructor(
+        public plex: Plex,
+        public auth: Auth,
+        public listaEsperaService: ListaEsperaService,
+        public serviceAgenda: AgendaService,
+        public smsService: SmsService,
+        public turnosService: TurnoService
+    ) { }
 
     ngOnInit() {
 
@@ -127,13 +133,8 @@ export class SuspenderTurnoComponent implements OnInit {
                 this.suspendio = true;
                 this.saveSuspenderTurno.emit(this.agenda);
 
-                // Se envían notificación sólo en Producción
-                if (environment.production === true) {
-                    for (let x = 0; x < this.seleccionadosSMS.length; x++) {
-                        this.enviarNotificacion(this.seleccionadosSMS[x]);
-                    }
-                } else {
-                    this.plex.toast('info', 'INFO: notificacion no enviado (activo sólo en Producción)');
+                for (let x = 0; x < this.seleccionadosSMS.length; x++) {
+                    this.enviarNotificacion(this.seleccionadosSMS[x]);
                 }
             },
         );
@@ -159,8 +160,6 @@ export class SuspenderTurnoComponent implements OnInit {
 
                     this.plex.info('warning', 'Los pacientes seleccionados pasaron a Lista de Espera');
 
-                    // this.enviarSMS(this.turnos[x], 'Su turno fue cancelado, queda en lista de espera');
-
                 });
             });
         }
@@ -168,9 +167,7 @@ export class SuspenderTurnoComponent implements OnInit {
 
     reasignarTurno(paciente: any) {
         this.reasignar = { 'paciente': paciente.paciente, 'idTurno': paciente.id, 'idAgenda': this.agenda.id };
-
         this.suspenderTurno();
-
         this.reasignarTurnoSuspendido.emit(this.reasignar);
     }
 
@@ -182,7 +179,25 @@ export class SuspenderTurnoComponent implements OnInit {
             evento: 'notificaciones:turno:suspender',
             dto: turno
         };
-        this.smsService.enviarNotificacion(params).subscribe(resultado => { });
+        let idBloque;
+        this.agenda.bloques.forEach(element => {
+            const indice = element.turnos.findIndex(t => {
+                return (t.id === turno.id);
+            });
+            idBloque = (indice !== -1) ? element.id : -1;
+        });
+        this.smsService.enviarNotificacion(params).subscribe((msg: any) => {
+            const aviso = msg.resultado === 1 ? 'enviado' : 'fallido';
+            const data = {
+                idAgenda: this.agenda.id,
+                idBloque: idBloque,
+                idTurno: turno.id,
+                avisoSuspension: aviso
+            };
+            this.turnosService.patch(this.agenda.id, idBloque, turno.id, data).subscribe(resultado => {
+                turno.avisoSuspension = aviso;
+            });
+        });
     }
 
     cancelar() {

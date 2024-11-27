@@ -18,13 +18,11 @@ import { ProfesionalService } from '../../../services/profesional.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 import { idCMI } from '../constantes';
-import { environment } from './../../../../environments/environment';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 // Interfaces
 import { IBloque } from './../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { ObraSocialService } from './../../../services/obraSocial.service';
-import { SmsService } from './../../../services/turnos/sms.service';
 import { TurnoService } from './../../../services/turnos/turno.service';
 import { EstadosAgenda } from './../enums';
 import { CalendarioDia } from './calendario-dia.class';
@@ -210,7 +208,6 @@ export class DarTurnosComponent implements OnInit {
         public conceptosTurneablesService: ConceptosTurneablesService,
         public servicioPrestacionPaciente: PrestacionesService,
         public servicioOS: ObraSocialService,
-        public smsService: SmsService,
         public plex: Plex,
         public auth: Auth,
         private router: Router,
@@ -1136,9 +1133,6 @@ export class DarTurnosComponent implements OnInit {
     }
 
     private afterSaveTurno(datosTurno) {
-        if (!this.agenda.dinamica && this.agenda.enviarSms) {
-            this.enviarSMS(datosTurno.paciente);
-        }
         this.estadoT = 'noSeleccionada';
         const agendaReturn = this.agenda; // agendaReturn será devuelta al gestor.
         let turnoSiguiente = null;
@@ -1195,65 +1189,6 @@ export class DarTurnosComponent implements OnInit {
         }
         this.actualizar();
         this.turnoTipoPrestacion = undefined; // blanquea el select de tipoPrestacion
-    }
-
-    enviarSMS(paciente: any) {
-        // Enviar SMS sólo en Producción
-        if (environment.production === true && paciente.telefono) {
-            const dia = moment(this.turno.horaInicio).format('DD/MMM');
-            const horario = moment(this.turno.horaInicio).format('HH:mm');
-            // Inicial del nombre. más Apellidos (Max 20 caracteres)
-            const nombrePaciente = (paciente.alias || paciente.nombre).substr(0, 1) + '. ' + this.paciente.apellido.substr(0, 20);
-            // Max 30 caracteres
-            const prestacion = this.turnoTipoPrestacion.term.substr(0, 30);
-            let nombreOrganizacion = this.agenda.organizacion.nombre.toLocaleLowerCase();
-            // Se reemplazan nombres de organización por abreviaturas
-            if (nombreOrganizacion.indexOf('hospital') !== -1) {
-                nombreOrganizacion = nombreOrganizacion.replace('hospital', 'HOSP');
-            } else if (nombreOrganizacion.indexOf('centro de salud') !== -1) {
-                nombreOrganizacion = nombreOrganizacion.replace('centro de salud', 'CS');
-            } else if (nombreOrganizacion.indexOf('puesto sanitario') !== -1) {
-                nombreOrganizacion = nombreOrganizacion.replace('puesto sanitario', 'PS');
-            }
-            // Cortar del guion "-" en adelante
-            // Max 30 caracteres
-            if (nombreOrganizacion.indexOf('-') !== -1) {
-                nombreOrganizacion = nombreOrganizacion.substr(0, nombreOrganizacion.indexOf('-'));
-                nombreOrganizacion = nombreOrganizacion.substring(0, 30);
-            }
-
-            let mensaje = 'Confirmación turno ' + nombrePaciente + ' | ' + dia + ' | ' + horario + 'Hs | ' + prestacion + ' | ' + nombreOrganizacion;
-            // Palabra consultorio -> consult. (Max 30 caracteres)
-            if (this.agenda.espacioFisico) {
-                const consultorioNombre = this.agenda.espacioFisico.nombre.toLocaleLowerCase().replace('consultorio', 'consult.');
-                mensaje = mensaje + ' | ' + consultorioNombre.substr(0, 30);
-            }
-            const smsParams = {
-                telefono: paciente.telefono,
-                mensaje: mensaje.toLocaleUpperCase(),
-            };
-            this.smsService.enviarSms(smsParams).subscribe({
-                next: (sms) => {
-                    this.resultado = sms;
-                    if (this.resultado === '0') {
-                        if (paciente.alias) {
-                            this.plex.toast('info', 'Se notificó al paciente ' + paciente.alias + ' ' + paciente.apellido);
-                        } else {
-                            this.plex.toast('info', 'Se notificó al paciente ' + paciente.nombre + ' ' + paciente.apellido);
-                        }
-                    } else {
-                        this.plex.toast('danger', 'ERROR: Notificación no enviada');
-                    }
-                },
-                error: (err) => {
-                    if (err) {
-                        this.plex.toast('danger', 'Error de servicio');
-                    }
-                }
-            });
-        } else {
-            this.plex.toast('info', 'INFO: Notificación no enviada (activa sólo en Producción)');
-        }
     }
 
     tieneTurnos(bloque: IBloque): boolean {

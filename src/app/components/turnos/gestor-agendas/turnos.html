@@ -224,10 +224,6 @@
                                           (cancelarCarpetaEmit)="afterComponenteCarpeta($event)">
                         </carpeta-paciente>
                     </plex-help>
-                    <plex-button *ngIf="botones.sms && turnosSeleccionados[0]?.id === turno.id"
-                                 ariaLabel="Enviar un mensaje al paciente" size="sm" type="info" icon="email-outline"
-                                 (click)="enviarSMS()" tooltip="Enviar un mensaje al paciente" tooltipPosition="top">
-                    </plex-button>
                     <plex-help *ngIf="botones.liberar && turnosSeleccionados[0]?.id === turno.id"
                                class="help-liberar-turnos" type="info" btnType="danger" icon="account-off"
                                tooltip="Liberar turnos" tooltipPosition="left">
@@ -312,10 +308,6 @@
                                           (cancelarCarpetaEmit)="afterComponenteCarpeta($event)">
                         </carpeta-paciente>
                     </plex-help>
-                    <plex-button *ngIf="botones.sms && turnosSeleccionados[0]?.id === sobreturno.id"
-                                 ariaLabel="Enviar un mensaje al paciente" size="sm" type="info" icon="email-outline"
-                                 (click)="enviarSMS()" tooltip="Enviar un mensaje al paciente" tooltipPosition="top">
-                    </plex-button>
                     <plex-help *ngIf="botones.liberar && turnosSeleccionados[0]?.id === sobreturno.id"
                                class="help-liberar-turnos" type="info" btnType="danger" icon="account-off"
                                tooltip="Liberar turnos" tooltipPosition="left">
