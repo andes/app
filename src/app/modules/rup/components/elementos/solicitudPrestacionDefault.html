@@ -1,12 +1,17 @@
 <ng-container *ngIf="!soloValores">
     <div class="row">
         <div class="col-md">
-            <plex-select *ngIf="asociados.length" [(ngModel)]="conceptoAsociado" [data]="asociados" label="Diagnóstico"
-                         placeholder="" labelField="nombre" (change)="selectAsociado($event)"
-                         [disabled]="!asociados.length">
+            <plex-select *ngIf="asociados.length" [(ngModel)]="conceptoAsociado" [data]="asociados"
+                         label="Diagnóstico asociado" placeholder="" labelField="nombre"
+                         (change)="selectAsociado($event)" [disabled]="!asociados.length">
             </plex-select>
 
-            <plex-text *ngIf="!asociados.length" label="Diagnóstico" multiline="true" [autoFocus]="true"
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md">
+            <plex-text label="Detalle de Diagnóstico/Motivo" multiline="true" [autoFocus]="true"
                        [(ngModel)]="registro.valor.solicitudPrestacion.motivo" name="motivo"></plex-text>
         </div>
     </div>
@@ -53,7 +58,11 @@
             <plex-label *ngIf="registro.valor.solicitudPrestacion?.conceptoAsociado" titulo="Diagnóstico asociado"
                         subtitulo="{{registro.valor.solicitudPrestacion?.conceptoAsociado?.term || 'Sin diagnóstico asociado'}}">
             </plex-label>
-            <plex-label *ngIf="!registro.valor.solicitudPrestacion?.conceptoAsociado" titulo="Diagnóstico/Motivo"
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md">
+            <plex-label *ngIf="registro.valor.solicitudPrestacion?.motivo" titulo="Detalle de Diagnóstico/Motivo"
                         subtitulo="{{registro.valor.solicitudPrestacion.motivo || 'Sin diagnóstico'}}">
             </plex-label>
         </div>

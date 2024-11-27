@@ -54,13 +54,13 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
                     this.emitChange(false);
                 }
             });
-        }
 
+        }
         this.ejecucionService?.hasActualizacion().subscribe(async (estado) => {
             const registros = this.ejecucionService.getPrestacionRegistro();
-
             this.actualizarRelaciones(registros, estado);
         });
+
     }
 
     onOrganizacionChange() {
@@ -89,27 +89,17 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
     }
 
     actualizarRelaciones(registros, estado: string) {
-        this.constantesService.search({ source: 'solicitud:conceptosAsociados' }).subscribe(async (constantes) => {
-            const query = constantes[0].query;
+        const conceptos = this.elementosRUPService.cacheDiagnosticosSolicitudes.map(concepto => concepto.conceptId);
+        this.asociados = registros?.filter((registro) => conceptos.includes(registro.concepto.conceptId)) || [];
+        this.conceptoAsociado = this.asociados.find(elem => elem.concepto.conceptId === this.registro.valor.solicitudPrestacion['conceptoAsociado']?.conceptId);
 
-            this.snomedService?.get({
-                search: query
-            }).subscribe((resultados) => {
-                const conceptos = resultados.map(concepto => concepto.conceptId);
+        if (estado === 'eliminar') {
+            const existe = this.asociados?.find((elem) => elem.conceptId === this.conceptoAsociado.conceptId);
 
-                this.asociados = registros?.filter((registro) => conceptos.includes(registro.concepto.conceptId)) || [];
-                this.conceptoAsociado = this.asociados.find(elem => elem.concepto.conceptId === this.registro.valor.solicitudPrestacion['conceptoAsociado'].conceptId);
-
-                if (estado === 'eliminar') {
-                    const existe = this.asociados?.find((elem) => elem.conceptId === this.conceptoAsociado.conceptId);
-
-                    if (!existe) {
-                        this.conceptoAsociado = null;
-                    }
-                }
-            });
-        });
-
+            if (!existe) {
+                this.conceptoAsociado = null;
+            }
+        }
     }
 
     selectAsociado(event) {

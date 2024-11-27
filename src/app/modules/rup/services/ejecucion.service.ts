@@ -10,6 +10,8 @@ import { ISnomedConcept } from '../interfaces/snomed-concept.interface';
 import { getRegistros } from '../operators/populate-relaciones';
 import { ElementosRUPService } from './elementosRUP.service';
 import { PrestacionesService } from './prestaciones.service';
+import { ConstantesService } from './../../../services/constantes.service';
+import { SnomedService } from '../../../apps/mitos';
 
 
 @Injectable()
@@ -44,7 +46,9 @@ export class RupEjecucionService {
     constructor(
         private plex: Plex,
         private prestacionService: PrestacionesService,
-        private elementosRUPService: ElementosRUPService
+        private elementosRUPService: ElementosRUPService,
+        private constantesService: ConstantesService,
+        private snomedService: SnomedService
     ) {
 
     }
@@ -98,6 +102,17 @@ export class RupEjecucionService {
 
     conceptosStream() {
         return this.conceptoBuffer$;
+    }
+
+    conceptosAsociadosSolicitud() {
+        this.constantesService.search({ source: 'solicitud:conceptosAsociados' }).subscribe(async (constantes) => {
+            if (constantes?.length) {
+                this.snomedService?.get({
+                    search: constantes[0].query
+                });
+            }
+
+        });
     }
 
     chequearRepetido(data: EmitConcepto) {
