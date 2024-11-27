@@ -524,6 +524,9 @@ export class SolicitudesComponent implements OnInit {
             if (this.pacienteSalida && this.pacienteSalida.length >= 3) {
                 params['paciente'] = this.pacienteSalida;
             }
+            if (this.conceptoAsociado) {
+                params['conceptoAsociado'] = this.conceptoAsociado;
+            }
         }
         this.setOrganizacionesParams(params);
         params['skip'] = this.skip;
