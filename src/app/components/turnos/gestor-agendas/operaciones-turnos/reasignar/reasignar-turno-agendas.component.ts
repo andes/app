@@ -1,4 +1,3 @@
-import { environment } from './../../../../../../environments/environment';
 import { Component, Input, EventEmitter, Output, OnInit, ViewChild } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';

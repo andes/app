@@ -337,46 +337,7 @@ export class TurnosComponent implements OnInit {
         this.listaEsperaService.postXIdAgenda(agenda.id, patch).subscribe(resultado => {
             this.agenda = resultado;
             this.plex.info('warning', 'El paciente pasó a Lista de Espera');
-            // this.enviarSMS();
         });
-    }
-
-    enviarSMS() {
-        let turno;
-        for (let x = 0; x < this.turnosSeleccionados.length; x++) {
-            const idTurno = this.turnosSeleccionados[x].id;
-            this.turnos.filter((el, index, arr) => {
-                if (el.id === idTurno) {
-                    turno = el;
-                }
-            });
-
-            turno.smsVisible = true;
-            turno.smsLoader = true;
-            if (!this.turnosSeleccionados[x].paciente || !this.turnosSeleccionados[x].paciente.telefono) {
-                return;
-            }
-
-            // Siempre chequear que exista el id de paciente, porque puede haber una key "paciente" vacía
-            if (this.turnosSeleccionados[x].paciente && this.turnosSeleccionados[x].paciente.id) {
-
-                this.smsService.enviarSms(this.turnosSeleccionados[x].paciente.telefono).subscribe({
-                    next: resultado => {
-                        turno = this.turnosSeleccionados[x];
-                        if (resultado === '0') {
-                            turno.smsEnviado = true;
-                            turno.smsNoEnviado = false;
-                            turno.smsLoader = false;
-                        } else {
-                            turno.smsEnviado = false;
-                            turno.smsNoEnviado = true;
-                            turno.smsLoader = false;
-                        }
-                    },
-                    error: () => this.plex.toast('error', 'Error al enviar SMS.')
-                });
-            }
-        }
     }
 
     cambiarADisponible() {
