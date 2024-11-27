@@ -1,3 +1,18 @@
+# [5.153.0](https://github.com/andes/app/compare/v5.152.0...v5.153.0) (2024-11-27)
+
+
+### Bug Fixes
+
+* **CIT:** modifica envio de id de demanda para cerrar ([#3113](https://github.com/andes/app/issues/3113)) ([f4e7306](https://github.com/andes/app/commit/f4e7306dd14137d74ad31f7aa7a155ed99ed13f2))
+* **MPI:** Agrega control por repote  de error ([#3112](https://github.com/andes/app/issues/3112)) ([3383479](https://github.com/andes/app/commit/3383479a5ae9a24b7aab7b7262fdfebda7c63c2c))
+* **MPI:** Controla reporte de error en auditoria  mpi ([#3114](https://github.com/andes/app/issues/3114)) ([fa06cac](https://github.com/andes/app/commit/fa06caccc0646d832d4a8d9409d0faafcfec7f95))
+
+
+### Features
+
+* **CIT-348:** Guardado incorrecto de sobreturnos ([#3098](https://github.com/andes/app/issues/3098)) ([fec8204](https://github.com/andes/app/commit/fec82046504f6575c6a8b162904c3f9d903d5121))
+* **HUDS:** implementa vista exclusiva para procedimientos ([#3045](https://github.com/andes/app/issues/3045)) ([8c39d58](https://github.com/andes/app/commit/8c39d58aaf47057dfbcc1858f9991681352218b5))
+
 # [5.152.0](https://github.com/andes/app/compare/v5.151.1...v5.152.0) (2024-11-20)
 
 
