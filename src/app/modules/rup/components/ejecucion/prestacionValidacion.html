@@ -172,7 +172,7 @@
                                     </rup>
                                 </plex-grid>
                                 <plex-grid *ngIf="(elemento.concepto.semanticTag !== 'elemento de registro')">
-                                    <ng-container *ngIf="elementoRUP.requiereDiagnosticoPrincipal && prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado'"
+                                    <ng-container *ngIf="esDiagonisticoPrincipal(elemento)"
                                                   title="Establecer como Procedimiento/Diagnóstico principal"
                                                   class="diagnostico-principal d-flex align-items-end">
                                         <plex-radio [data]="opcionDiagnosticoPrincipal"
@@ -181,10 +181,10 @@
                                                     [(ngModel)]="elemento.esDiagnosticoPrincipal" type="horizontal">
                                         </plex-radio>
                                     </ng-container>
-                                    <ng-container *ngIf="codigosCie10 && codigosCie10[elemento.id] && codigosCie10[elemento.id].c2 && !validada"
+                                    <ng-container *ngIf="esPrimeraVez(elemento)"
                                                   class="diagnostico-principal d-flex align-items-end"
                                                   title="Indicar si es primera vez">
-                                        <plex-radio [data]="opcionPrimeraVez" label="Es primera Vez?"
+                                        <plex-radio [data]="opcionPrimeraVez" label="¿Es primera Vez?"
                                                     [(ngModel)]="elemento.esPrimeraVez" type="horizontal">
                                         </plex-radio>
                                     </ng-container>
