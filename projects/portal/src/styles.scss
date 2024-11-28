@@ -54,11 +54,11 @@ nav .actions {
 
 //@import 'app/modules/rup/assets/font.css';
 
-$adi-font-path: '~@andes/icons/fonts/';
-@import '~@andes/icons/scss/andes-icons';
-@import "~@andes/plex/src/lib/css/variables.scss";
+$adi-font-path: '@andes/icons/fonts/';
+@import '@andes/icons/scss/andes-icons';
+@import "@andes/plex/src/lib/css/variables.scss";
 // Plex
-//  @import '~@andes/plex/src/lib/styles.scss';
+//  @import '@andes/plex/src/lib/styles.scss';
 
 div[collapse] {
     overflow-x: scroll;

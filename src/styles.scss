@@ -54,21 +54,17 @@ nav .actions {
     text-align: left;
 }
 
-$adi-font-path: "~@andes/icons/fonts/";
-@import "~@andes/icons/scss/andes-icons";
+@import "@andes/icons/scss/andes-icons.scss";
 
 // [TODO]: Migrar a adi y eliminar
-$mdi-font-path: "~@mdi/font/fonts/";
-@import "~@mdi/font/scss/materialdesignicons";
+@import "@mdi/font/scss/materialdesignicons";
 
 // Plex
-@import "~@andes/plex/src/lib/styles.scss";
+@import "@andes/plex/src/lib/styles.scss";
 @import "./src/app/components/novedades/novedades.scss";
 
 // IMPORTS DE MÓDULOS
 // RUP
-// @andrrrl ver con @jfgabriel
-// @import './src/app/styles/turnos/turnos';
 
 .grow-reverse {
     display: flex;
