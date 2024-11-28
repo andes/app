@@ -1,7 +1,6 @@
-@import "~@andes/plex/src/lib/css/variables";
+@import "@andes/plex/src/lib/css/variables";
 
 .sortable:hover {
     text-decoration: underline !important;
     cursor: pointer;
 }
-
