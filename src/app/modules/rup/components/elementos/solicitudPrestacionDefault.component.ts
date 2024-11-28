@@ -93,7 +93,7 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
         this.asociados = registros?.filter((registro) => conceptos.includes(registro.concepto.conceptId)) || [];
         this.conceptoAsociado = this.asociados.find(elem => elem.concepto.conceptId === this.registro.valor.solicitudPrestacion['conceptoAsociado']?.conceptId);
 
-        if (estado === 'eliminar') {
+        if (estado === 'eliminar' && this.conceptoAsociado) {
             const existe = this.asociados?.find((elem) => elem.conceptId === this.conceptoAsociado.conceptId);
 
             if (!existe) {
