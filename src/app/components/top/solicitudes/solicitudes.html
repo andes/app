@@ -49,12 +49,13 @@
                         <plex-text [(ngModel)]="pacienteEntrada" name="paciente" (change)="onPacienteChange()"
                                    label="Filtrar por paciente" debounce="400">
                         </plex-text>
+                        <plex-select [readonly]="asignadas" [(ngModel)]="estadoEntrada" (change)="cargarSolicitudes()"
+                                     [data]="selectEstados" name="estado" label="Estado"
+                                     ngModelOptions="{standalone: true}">
+                        </plex-select>
+
 
                         <div collapse>
-                            <plex-select [readonly]="asignadas" [(ngModel)]="estadoEntrada"
-                                         (change)="cargarSolicitudes()" [data]="selectEstados" name="estado"
-                                         label="Estado" ngModelOptions="{standalone: true}">
-                            </plex-select>
                             <plex-select [(ngModel)]="organizacionesOrigen" name="organizacion" tmOrganizaciones
                                          label="Organización origen" placeholder="Seleccione la organización"
                                          labelField="nombre" [multiple]="true" (change)="cargarSolicitudes()">
@@ -67,6 +68,10 @@
                             <plex-select [(ngModel)]="prioridadEntrada" [data]="prioridades" name="prioridad"
                                          label="Prioridad" ngModelOptions="{standalone: true}"
                                          (change)="cargarSolicitudes()">
+                            </plex-select>
+                            <plex-select [(ngModel)]="conceptoAsociado" name="conceptoAsociado"
+                                         label="Diagnóstico asociado" name="conceptoAsociado"
+                                         [data]="listaConceptosAsociados" (change)="setConceptoAsociado($event)">
                             </plex-select>
                             <plex-bool class="bool-actualizacion" [(ngModel)]="check" label="Actualización"
                                        (change)="onChange()" [ngModelOptions]="{standalone: true}" type="slide">
@@ -89,7 +94,7 @@
                 </plex-title>
 
                 <plex-table *ngIf="prestacionesEntrada?.length" [columns]="columns" #table="plTable"
-                            (scroll)="onScroll()" [offset]="collapse ? 252 : 180" height="60vh">
+                            (scroll)="onScroll()" [offset]="collapse ? 252 : 180" height="60vh" [headOpacity]="80">
                     <plex-table-columns #columnas>
                     </plex-table-columns>
 
@@ -134,6 +139,11 @@
                         </td>
                         <!-- BOTONERA -->
                         <td class="column-right my-3 d-flex align-items-center">
+                            <plex-badge class="mr-1"
+                                        *ngIf="prestacion.solicitud.registros[0]?.valor.solicitudPrestacion?.conceptoAsociado"
+                                        type="warning">
+                                <plex-icon name="alert-decagram" size="md"></plex-icon>
+                            </plex-badge>
                             <plex-badge *ngIf="prestacion | linkTurnoRemoto | async | isNotEmpty" type="info"
                                         tooltip="Agenda Virtual" tooltipPosition="top">
                                 <plex-icon name="monitor" size="md"></plex-icon>
@@ -215,11 +225,11 @@
                         </plex-select>
                         <plex-text [(ngModel)]="pacienteSalida" name="paciente" (change)="onPacienteChange()"
                                    label="Filtrar por paciente" debounce="400"></plex-text>
+                        <plex-select [(ngModel)]="estadoSalida" (change)="cargarSolicitudes()" [data]="selectEstados"
+                                     name="estado" label="Estado" ngModelOptions="{standalone: true}">
+                        </plex-select>
                         <div collapse>
-                            <plex-select [(ngModel)]="estadoSalida" (change)="cargarSolicitudes()"
-                                         [data]="selectEstados" name="estado" label="Estado"
-                                         ngModelOptions="{standalone: true}">
-                            </plex-select>
+
                             <plex-select [(ngModel)]="organizacionesDestino" name="organizacion" tmOrganizaciones
                                          label="Organización destino" placeholder="Seleccione la organización"
                                          labelField="nombre" [multiple]="true" (change)="cargarSolicitudes()">
@@ -227,6 +237,10 @@
                             <plex-select [(ngModel)]="prioridadSalida" [data]="prioridades" name="prioridad"
                                          label="Prioridad" ngModelOptions="{standalone: true}"
                                          (change)="cargarSolicitudes()">
+                            </plex-select>
+                            <plex-select [(ngModel)]="conceptoAsociado" name="conceptoAsociado"
+                                         label="Diagnóstico asociado" name="conceptoAsociado"
+                                         [data]="listaConceptosAsociados" (change)="setConceptoAsociado($event)">
                             </plex-select>
                             <plex-bool class="bool-actualizacion" [(ngModel)]="check" label="Actualización"
                                        (change)="onChange()" [ngModelOptions]="{standalone: true}" type="slide">
@@ -238,7 +252,7 @@
                 <plex-title *ngIf="prestacionesSalida?.length" titulo="Listado de solicitudes" size="sm">
                 </plex-title>
                 <plex-table *ngIf="prestacionesSalida?.length" [columns]="columns" #table="plTable"
-                            (scroll)="onScroll()" [offset]="collapse?252:180" height="60vh">
+                            (scroll)="onScroll()" [offset]="collapse?252:180" height="60vh" [headOpacity]="80">
                     <plex-table-columns #columnas>
                     </plex-table-columns>
                     <tr *ngFor="let prestacion of prestacionesSalida; let i=index" (click)="seleccionar(prestacion)"
@@ -280,6 +294,11 @@
                         </td>
                         <!-- ESTADO Y ACCIONES -->
                         <td class="column-right my-3 d-flex align-items-center">
+                            <plex-badge class="mr-1"
+                                        *ngIf="prestacion.solicitud.registros[0]?.valor.solicitudPrestacion?.conceptoAsociado"
+                                        type="warning">
+                                <plex-icon name="alert-decagram" size="md"></plex-icon>
+                            </plex-badge>
                             <plex-badge *ngIf="existeNotificacion(prestacion)" type="info"
                                         tooltip="Paciente notificado">
                                 <plex-icon name="telefono" size="sm"></plex-icon>
