@@ -3,9 +3,10 @@ import { Plex } from '@andes/plex';
 import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of } from 'rxjs';
-import { Subject } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { SnomedService } from 'src/app/apps/mitos/services/snomed.service';
+import { ConstantesService } from 'src/app/services/constantes.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
@@ -98,6 +99,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     public hasPacs = false;
 
+    public conceptosAsociados;
+
     constructor(
         public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -111,6 +114,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         public huds: HUDSService,
         public ps: PlantillasService,
         public ejecucionService: RupEjecucionService,
+        public constantesService: ConstantesService
     ) { }
 
     /**
@@ -237,6 +241,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                             }
                         }
 
+                        this.ejecucionService.actualizar('inicializar');
                     }, (err) => {
                         if (err) {
                             this.plex.info('danger', err, 'Error');
@@ -440,6 +445,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             this.indexEliminar = null;
             this.confirmarEliminar = false;
             this.scopeEliminar = '';
+            this.ejecucionService.actualizar('eliminar');
         }
     }
 
@@ -499,6 +505,9 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         // Agregamos al array de registros
         this.prestacion.ejecucion.registros = [...this.prestacion.ejecucion.registros, nuevoRegistro];
         this.activeIndex = 0;
+
+        this.ejecucionService.actualizar('cargar');
+
         return nuevoRegistro;
     }
 

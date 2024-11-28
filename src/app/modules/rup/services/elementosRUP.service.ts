@@ -6,6 +6,8 @@ import { IElementoRUP } from './../interfaces/elementoRUP.interface';
 import { IElementosRUPCache } from './../interfaces/elementosRUPCache.interface';
 import { ISnomedConcept } from './../interfaces/snomed-concept.interface';
 import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';
+import { ConstantesService } from './../../../services/constantes.service';
+import { SnomedService } from '../../../apps/mitos';
 
 const url = '/modules/rup/elementos-rup';
 
@@ -22,7 +24,8 @@ export class ElementosRUPService {
     private defaults: IElementosRUPCache = {};
     // Precalcula los elementos default para solicitudes
     private defaultsParaSolicitud: IElementosRUPCache = {};
-
+    // Mantiene una catche de conceptos para asociar con solicitudes
+    public cacheDiagnosticosSolicitudes = [];
     // Indica que el servicio está listo para usarse.
     // BehaviorSubject permite que el subscribe se ejecute con el ultimo valor (aunque no haya cambios)
     public ready = new BehaviorSubject<boolean>(false);
@@ -40,7 +43,7 @@ export class ElementosRUPService {
      */
     public coleccionRetsetId = {};
 
-    constructor(private server: Server) {
+    constructor(private server: Server, private constantesService: ConstantesService, private snomedService: SnomedService) {
         // Precachea la lista completa de elementos RUP
         this.get().subscribe((data: IElementoRUP[]) => {
             this.cache = {};
@@ -65,6 +68,16 @@ export class ElementosRUPService {
                         } else {
                             this.defaults[semanticTag] = elementoRUP;
                         }
+                    });
+                }
+            });
+
+            this.constantesService.search({ source: 'solicitud:conceptosAsociados' }).subscribe(async (constantes) => {
+                if (constantes?.length) {
+                    this.snomedService?.get({
+                        search: constantes[0].query
+                    }).subscribe((resultados) => {
+                        this.cacheDiagnosticosSolicitudes = resultados;
                     });
                 }
             });

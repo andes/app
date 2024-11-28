@@ -167,7 +167,8 @@
                                             <rup [elementoRUP]="elementosRUPService.elementoRegistro(registro)"
                                                  [prestacion]="prestacion" [paciente]="paciente" [registro]="registro"
                                                  [soloValores]="false" (ejecutarAccion)="recibirAccion($event, 'tab')"
-                                                 [params]="elementosRUPService.getParams(registro)">
+                                                 [params]="elementosRUPService.getParams(registro)"
+                                                 [conceptosAsociados]="conceptosAsociados">
                                             </rup>
                                         </div>
                                     </div>

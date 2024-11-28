@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { RupElement } from '.';
 import { RUPComponent } from './../core/rup.component';
 
@@ -7,21 +7,18 @@ import { RUPComponent } from './../core/rup.component';
     templateUrl: 'solicitudPrestacionDefault.html'
 })
 @RupElement('SolicitudPrestacionDefaultComponent')
-export class SolicitudPrestacionDefaultComponent extends RUPComponent implements OnInit, AfterViewInit {
-
+export class SolicitudPrestacionDefaultComponent extends RUPComponent implements OnInit {
     public reglasMatch = [];
     public reglaSelected = null;
     public formulario = null;
     public profesionales = '';
     public organizaciones: any[] = [];
+    public conceptoAsociado = null;
+    public asociados: any[] = [];
+
+    @ViewChild('selector') selector: ElementRef;
 
     data = {};
-
-    ngAfterViewInit() {
-        setTimeout(() => {
-        }, 300);
-    }
-
 
     ngOnInit() {
         if (!this.registro.valor) {
@@ -57,7 +54,12 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
                     this.emitChange(false);
                 }
             });
+
         }
+        this.ejecucionService?.hasActualizacion().subscribe(async (estado) => {
+            const registros = this.ejecucionService.getPrestacionRegistro();
+            this.actualizarRelaciones(registros, estado);
+        });
 
     }
 
@@ -84,5 +86,23 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
     isEmpty() {
         const value = this.registro.valor.solicitudPrestacion;
         return !value.motivo && !value.indicaciones && !value.organizacionDestino;
+    }
+
+    actualizarRelaciones(registros, estado: string) {
+        const conceptos = this.elementosRUPService.cacheDiagnosticosSolicitudes.map(concepto => concepto.conceptId);
+        this.asociados = registros?.filter((registro) => conceptos.includes(registro.concepto.conceptId)) || [];
+        this.conceptoAsociado = this.asociados.find(elem => elem.concepto.conceptId === this.registro.valor.solicitudPrestacion['conceptoAsociado']?.conceptId);
+
+        if (estado === 'eliminar' && this.conceptoAsociado) {
+            const existe = this.asociados?.find((elem) => elem.conceptId === this.conceptoAsociado.conceptId);
+
+            if (!existe) {
+                this.conceptoAsociado = null;
+            }
+        }
+    }
+
+    selectAsociado(event) {
+        this.registro.valor.solicitudPrestacion['conceptoAsociado'] = this.conceptoAsociado?.concepto || null;
     }
 }

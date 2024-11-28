@@ -10,6 +10,8 @@ import { ISnomedConcept } from '../interfaces/snomed-concept.interface';
 import { getRegistros } from '../operators/populate-relaciones';
 import { ElementosRUPService } from './elementosRUP.service';
 import { PrestacionesService } from './prestaciones.service';
+import { ConstantesService } from './../../../services/constantes.service';
+import { SnomedService } from '../../../apps/mitos';
 
 
 @Injectable()
@@ -38,16 +40,29 @@ export class RupEjecucionService {
     private sugeridos = new Subject<ISnomedConcept[]>();
     private segeridos$ = this.sugeridos.asObservable();
 
+    private actualizacion = new BehaviorSubject<string>('');
+    private actualizacion$ = this.actualizacion.asObservable();
+
     constructor(
         private plex: Plex,
         private prestacionService: PrestacionesService,
-        private elementosRUPService: ElementosRUPService
+        private elementosRUPService: ElementosRUPService,
+        private constantesService: ConstantesService,
+        private snomedService: SnomedService
     ) {
 
     }
 
     getSeccion() {
         return this.seccion$;
+    }
+
+    hasActualizacion() {
+        return this.actualizacion$;
+    }
+
+    actualizar(concept: string) {
+        this.actualizacion.next(concept);
     }
 
     setSeccion(concepto?: ISnomedConcept) {
@@ -87,6 +102,17 @@ export class RupEjecucionService {
 
     conceptosStream() {
         return this.conceptoBuffer$;
+    }
+
+    conceptosAsociadosSolicitud() {
+        this.constantesService.search({ source: 'solicitud:conceptosAsociados' }).subscribe(async (constantes) => {
+            if (constantes?.length) {
+                this.snomedService?.get({
+                    search: constantes[0].query
+                });
+            }
+
+        });
     }
 
     chequearRepetido(data: EmitConcepto) {
