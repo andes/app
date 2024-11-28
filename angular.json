@@ -119,7 +119,9 @@
                 "test": {
                     "builder": "@angular-devkit/build-angular:karma",
                     "options": {
-                        "main": "src/test.ts",
+                        "include": [
+                            "src/**/*.spec.ts"
+                        ],
                         "karmaConfig": "./karma.conf.js",
                         "scripts": [
                             "./node_modules/intro.js/intro.js"
@@ -218,7 +220,7 @@
                         "scripts": [],
                         "vendorChunk": true,
                         "extractLicenses": false,
-                        "aot": false,
+                        "aot": true,
                         "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,

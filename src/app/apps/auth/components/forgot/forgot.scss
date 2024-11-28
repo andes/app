@@ -1,4 +1,5 @@
-@import '~@andes/plex/src/lib/css/variables';
+@import '@andes/plex/src/lib/css/variables';
+
 .forgot-container {
     position: fixed;
     top: 0;
@@ -10,13 +11,16 @@
     height: 100%;
     z-index: 1030;
     background: #EEE;
+
     // Form
     .forgot-form {
         box-shadow: 0px 0px 22px 2px rgba(0, 0, 0, 0.45);
+
         // Header
         .forgot-header {
             height: 80px;
             background: var(--nav-bar-color);
+
             // OneLogin
             .onelogin {
                 width: 120px;
@@ -27,6 +31,7 @@
                 background-position: center left;
                 background-image: var(--login-logo-1);
             }
+
             // Andes
             .andes {
                 width: 200px;
@@ -38,6 +43,7 @@
                 background-image: url('../../../../assets/img/andes-logo-v-white.svg');
             }
         }
+
         // Content
         .forgot-content {
             padding-top: 30px;
@@ -45,23 +51,27 @@
             background: var(--nav-bar-icon-color);
             color: white;
             align-items: center;
-            
+
             .input-group-addon {
                 background: var(--nav-bar-color) !important;
             }
+
             input {
                 border-color: white;
             }
+
             plex-button,
             .btn {
                 display: block;
                 width: 100%;
             }
         }
+
         // Footer
         .forgot-footer {
             height: 60px;
             background: var(--nav-bar-color);
+
             // Red TICS
             .redTICS {
                 width: 200px;
@@ -72,6 +82,7 @@
                 background-position: center left;
                 background-image: var(--login-logo-3);
             }
+
             // Ministerio
             .ministerio {
                 width: 200px;
@@ -85,7 +96,7 @@
         }
     }
 
-    
+
 }
 
 
@@ -101,8 +112,11 @@
         height: calc(100vh - 140px);
     }
 
-    .onelogin, .andes, .ministerio, .redTICS {
+    .onelogin,
+    .andes,
+    .ministerio,
+    .redTICS {
         background-size: 75px;
-        width: 100px!important;
+        width: 100px !important;
     }
 }
