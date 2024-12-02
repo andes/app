@@ -50,6 +50,9 @@
                 </plex-select>
             </plex-wrapper>
             <plex-wrapper>
+                <plex-select *ngIf="conceptosAsociados.length" [(ngModel)]="modelo.solicitud.conceptoAsociado" [data]="conceptosAsociados" label="Diagnóstico asociado"
+                             labelField="term" idField="conceptId" name="conceptoAsociado">
+                </plex-select>
                 <plex-text [(ngModel)]="motivo" label="Notas / Diagnóstico / Motivo" name="motivo" [required]="true"
                            multiline="true"></plex-text>
             </plex-wrapper>
@@ -94,6 +97,10 @@
                 </plex-select>
             </plex-wrapper>
             <plex-wrapper>
+                <plex-select *ngIf="conceptosAsociados.length" [(ngModel)]="modelo.solicitud.conceptoAsociado"
+                             [data]="conceptosAsociados" label="Diagnóstico asociado" labelField="term" idField="conceptId"
+                             name="conceptoAsociado">
+                </plex-select>
                 <plex-text [(ngModel)]="motivo" label="Notas / Diagnóstico / Motivo" name="motivo" [required]="true"
                            multiline="true"></plex-text>
             </plex-wrapper>

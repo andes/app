@@ -1,7 +1,8 @@
 <div *ngIf="!showCargarSolicitud">
     <plex-title main titulo="Solicitudes">
-        <plex-button *ngIf="puedeCrearSolicitud" type="success" label="Cargar Solicitud nueva"
-                     (click)="formularioSolicitud()"></plex-button>
+         <plex-dropdown #drop *ngIf="puedeCrearSolicitud" type="success" [right]="true" [items]="itemsDropdown" size="md"
+                       label="Nueva Solicitud">
+        </plex-dropdown>
     </plex-title>
     <div class="row mt-2">
         <div class="col-12">
@@ -71,6 +72,6 @@
         </div>
     </div>
 </div>
-<solicitud-turno-ventanilla *ngIf="showCargarSolicitud" [paciente]="paciente"
+<solicitud-turno-ventanilla *ngIf="showCargarSolicitud" [paciente]="paciente" [tipoSolicitud]="tipoSolicitud"
                             (cerrarSolicitudVentanilla)="cerrarSolicitudVentanilla($event)">
 </solicitud-turno-ventanilla>

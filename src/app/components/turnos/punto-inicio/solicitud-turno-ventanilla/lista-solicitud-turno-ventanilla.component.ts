@@ -33,6 +33,19 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
     public autorizado = false;
     public solicitudesPrestaciones = [];
     showCargarSolicitud = false;
+    public tipoSolicitud = 'entrada';
+    public itemsDropdown = [
+        {
+            id: 'entrada', label: 'ENTRADA', handler: () => {
+                this.formularioSolicitud('entrada');
+            }
+        },
+        {
+            id: 'salida', label: 'SALIDA', handler: () => {
+                this.formularioSolicitud('salida');
+            }
+        }
+    ];
     // VER SI HACE FALTA
     // public prioridadesPrestacion = enumToArray(PrioridadesPrestacion);
     public puedeCrearSolicitud = false;
@@ -78,8 +91,9 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
 
     }
 
-    formularioSolicitud() {
+    formularioSolicitud(tipoSolicitud) {
         this.showCargarSolicitud = true;
+        this.tipoSolicitud = tipoSolicitud;
     }
 
     cerrarSolicitudVentanilla(event) {
