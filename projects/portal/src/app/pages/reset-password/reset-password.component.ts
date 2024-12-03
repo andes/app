@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { map, catchError, switchMap } from 'rxjs/operators';
 
@@ -21,7 +21,7 @@ export class ResetPasswordComponent implements OnInit {
     public formRegistro: any;
     public titulo: string;
     public mensaje = '';
-    constructor(private plex: Plex, private auth: Auth, private route: ActivatedRoute, private formBuilder: FormBuilder, private router: Router) { }
+    constructor(private plex: Plex, private auth: Auth, private route: ActivatedRoute, private formBuilder: UntypedFormBuilder, private router: Router) { }
 
     ngOnInit(): void {
         this.route.queryParams.subscribe(params => {

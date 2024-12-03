@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, Validators, NgForm } from '@angular/forms';
+import { UntypedFormBuilder, Validators, NgForm } from '@angular/forms';
 import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
 import { BarcodeFormat } from '@zxing/library';
@@ -44,7 +44,7 @@ export class RegistroCuentaComponent implements OnInit {
     torchAvailable$ = new BehaviorSubject<boolean>(false);
     tryHarder = false;
 
-    constructor(private plex: Plex, private formBuilder: FormBuilder, private router: Router, private scanParser: ScanParser, private pacienteService: PacientePortalService) {
+    constructor(private plex: Plex, private formBuilder: UntypedFormBuilder, private router: Router, private scanParser: ScanParser, private pacienteService: PacientePortalService) {
         this.captchaEnabled = captcha.enabled;
     }
 
