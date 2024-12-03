@@ -48,7 +48,7 @@
     "@typescript-eslint/eslint-plugin-tslint": "^4.28.5",
     "@zxing/browser": "0.0.9",
     "@zxing/library": "^0.18.6",
-    "@zxing/ngx-scanner": "3.5.0",
+    "@zxing/ngx-scanner": "^3.9.1",
     "bowser": "^1.9.4",
     "bson": "^4.0.0-rc5",
     "chart.js": "^2.7.3",
@@ -57,12 +57,12 @@
     "file-saver": "^2.0.2",
     "json-rules-engine": "^5.0.4",
     "ng-drag-drop": "^5.0.0",
-    "ng-recaptcha": "^9.0.0",
+    "ng-recaptcha": "^10.0.0",
     "ng2-charts": "^2.4.2",
     "ng2-slugify": "^0.1.0",
     "ngx-image-compress": "^13.1.16",
     "ngx-infinite-scroll": "^8.0.0",
-    "ngx-observe": "^5.0.0",
+    "ngx-observe": "^7.0.0",
     "ol": "^5.3.3",
     "rxjs": "^7.0.0",
     "shiro-trie": "^0.4.9",
@@ -77,7 +77,7 @@
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-builders/custom-webpack": "^13.1.0",
+    "@angular-builders/custom-webpack": "^14.1.0",
     "@angular-devkit/build-angular": "^14.2.13",
     "@angular-devkit/build-ng-packagr": "^0.1002.4",
     "@angular/cli": "^14.2.13",
@@ -100,7 +100,7 @@
     "semantic-release": "^17.0.8",
     "ts-node": "~7.0.1",
     "tsickle": "^0.39.1",
-    "typescript": "4.6.4"
+    "typescript": "^4.8.4"
   },
   "release": {
     "branches": [
