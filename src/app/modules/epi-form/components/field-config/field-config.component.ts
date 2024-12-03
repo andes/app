@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormResourcesService } from '../../services/resources.service';
+import { DynamicResourcesService } from '../../services/dynamic-resource.service';
 
 @Component({
     selector: 'field-config',
@@ -24,6 +25,10 @@ export class FieldConfigComponent implements OnInit {
         { id: 'disable', nombre: 'Deshabilitar' }
     ];
     public typeDependency = [
+        { id: 'filter', nombre: 'Filtrado' },
+        { id: 'comparison', nombre: 'Comparación' }
+    ];
+    public typeComparison = [
         { id: 'equals', nombre: 'Igual a' },
         { id: 'graterThan', nombre: 'Mayor que' },
         { id: 'lessThan', nombre: 'Menor que' },
@@ -57,7 +62,8 @@ export class FieldConfigComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private formResourceService: FormResourcesService
+        private formResourceService: FormResourcesService,
+        private dynamicResourcesService: DynamicResourcesService,
     ) {}
 
     ngOnInit(): void {
@@ -115,13 +121,14 @@ export class FieldConfigComponent implements OnInit {
 
         this.form.get('name')?.valueChanges.subscribe(value => {
             if (value) {
+                const uniqueString = this.generarStringUnico();
                 this.form.get('key').
                     setValue(`${value
                         .normalize('NFD')
                         .replace(/[\u0300-\u036f]/g, '')
                         .replace(/[^\w\s]/gi, '')
                         .replace(/\s+/g, '-')
-                        .toLowerCase()}-${this.sectionIndex}`);
+                        .toLowerCase()}-${uniqueString}`);
             } else {
                 this.form.get('key').setValue('');
             }
@@ -160,4 +167,41 @@ export class FieldConfigComponent implements OnInit {
             this.saveField.emit(this.form.value);
         }
     }
+
+    generarStringUnico(): string {
+        const numero = Math.floor(10 + Math.random() * 90);
+        const chars = 'abcdefghijklmnopqrstuvwxyz';
+        const charsLength = chars.length;
+        let characters = '';
+        for ( let i = 0 ; i < 2 ; i++ ) {
+            characters += chars.charAt(Math.floor(Math.random() * charsLength));
+        }
+        return `${characters}${numero}`;
+    };
+
+    getPaths(obj, prefix = ''): Array<string> {
+        let paths = [];
+
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                const fullPath = prefix ? `${prefix}.${key}` : key;
+
+                if (Array.isArray(obj[key])) {
+                    obj[key].forEach((_, index) => {
+                        paths.push(`${fullPath}[${index}]`);
+                        if (typeof obj[key][index] === 'object' && obj[key][index] !== null) {
+                            paths = paths.concat(this.getPaths(obj[key][index], `${fullPath}[${index}]`));
+                        }
+                    });
+                } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                    paths = paths.concat(this.getPaths(obj[key], fullPath));
+                } else {
+                    paths.push(fullPath);
+                }
+            }
+        }
+        return paths;
+    }
+
+    
 }

@@ -15,6 +15,7 @@ import { FieldConfigComponent } from './components/field-config/field-config.com
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TableConfigComponent } from './components/table-config/table-config.component';
+import { DynamicResourcesService } from './services/dynamic-resource.service';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { TableConfigComponent } from './components/table-config/table-config.com
     ],
     providers: [
         FormResourcesService,
+        DynamicResourcesService,
     ],
     exports: []
 })

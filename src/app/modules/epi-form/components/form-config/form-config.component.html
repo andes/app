@@ -150,7 +150,7 @@
                                 <!-- Campo tipo select -->
                                 <plex-select *ngIf="field.type?.id === 'select'" label="{{ field.name }}"
                                     name="name-{{ field.name }}" [(ngModel)]="field.value"
-                                    [required]="field.required"></plex-select>
+                                    [required]="field.required" [data]></plex-select>
                                 <!-- Campo tipo selectStatic -->
                                 <plex-select *ngIf="field.type?.id === 'selectStatic'" label="{{ field.name }}"
                                     name="name-{{ field.name }}" [(ngModel)]="field.value"

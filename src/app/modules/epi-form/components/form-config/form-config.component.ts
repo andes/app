@@ -196,4 +196,8 @@ export class FormConfigComponent implements OnInit {
         this.form.sections.push(section);
         this.form.sections = [...this.form.sections];
     }
+
+    loadResource(field) {
+        
+    }
 }

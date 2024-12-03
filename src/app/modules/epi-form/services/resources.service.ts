@@ -5,6 +5,7 @@ export interface FormResources {
     id: string;
     type: string;
     activo: boolean;
+    url: string;
 }
 @Injectable({ providedIn: 'root' })
 export class FormResourcesService extends ResourceBaseHttp<Event> {
