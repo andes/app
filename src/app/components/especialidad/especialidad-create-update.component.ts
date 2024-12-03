@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { UntypedFormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { EspecialidadService } from './../../services/especialidad.service';
 import { IEspecialidad } from './../../interfaces/IEspecialidad';
 
@@ -13,7 +13,7 @@ export class EspecialidadCreateUpdateComponent implements OnInit {
     @Input() seleccion: IEspecialidad;
     @Output() data: EventEmitter<IEspecialidad> = new EventEmitter<IEspecialidad>();
     // createForm: FormGroup;
-    constructor(private formBuilder: FormBuilder, private especialidadService: EspecialidadService) { }
+    constructor(private formBuilder: UntypedFormBuilder, private especialidadService: EspecialidadService) { }
 
     ngOnInit() {
         Object.assign(this.modelo, this.seleccion);
