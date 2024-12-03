@@ -1,0 +1,56 @@
+<ng-container *ngIf="!soloValores">
+    <form #formColposcopia="ngForm">
+        <plex-select label='Colposcopia' [(ngModel)]="colposcopiaRegistro.colposcopia" name="colposcopia1"
+                     [data]="colposcopia" (change)="onChange()">
+        </plex-select>
+        <plex-text [(ngModel)]="colposcopiaRegistro.detalle" label="Detalle colposcopia" name="detalle" multiline="true"
+                   grow="full" (change)="onChange()">
+        </plex-text>
+        <plex-select label='Visibilidad de la unión escamocolumnar' [(ngModel)]="colposcopiaRegistro.visibilidadUEC"
+                     name="visibilidadUEC" [data]="visibilidadUEC" (change)="onChange()">
+        </plex-select>
+        <plex-radio [(ngModel)]="colposcopiaRegistro.zona" label="Zona de transformación" [data]="zonaTransformacion"
+                    name="zona" (change)="onChange()">
+        </plex-radio>
+        <plex-select label='Hallazgos colposcopicos' [(ngModel)]="colposcopiaRegistro.hallazgos" name="hallazgos"
+                     [data]="hallazgos" (change)="onChange()">
+        </plex-select>
+        <hr>
+        <plex-wrapper>
+            <plex-bool type="checkbox" label="¿Se toma biopsia?" [(ngModel)]="colposcopiaRegistro.biopsia"
+                       name="biopsia" (change)="onChange()">
+            </plex-bool>
+            <plex-text *ngIf="colposcopiaRegistro.biopsia" [(ngModel)]="colposcopiaRegistro.descripcionBiopsia"
+                       label="Descripción Biopsia" name="biopsiaDescripcion" multiline="true" grow="full" (change)="onChange()">
+            </plex-text>
+        </plex-wrapper>
+        <plex-bool type="checkbox" label="¿Se evalua conducto endocervical?"
+                   [(ngModel)]="colposcopiaRegistro.evaluacionEndocervical" name="evaluacionEndocervical" (change)="onChange()">
+        </plex-bool>
+        <plex-radio label="Test de Schiller" [(ngModel)]="colposcopiaRegistro.testSchiller" name="testSchiller"
+                    [data]="testSchiller" (change)="onChange()">
+        </plex-radio>
+    </form>
+</ng-container>
+<div *ngIf="soloValores">
+    <plex-label [tituloBold]="true" titulo="Colposcopia {{registro.valor.colposcopia?.colposcopia?.nombre }}"
+                subtitulo="{{ registro.valor.colposcopia?.detalle}}"></plex-label>
+    <plex-badge *ngIf="registro.valor.colposcopia?.zona" type="info" hintIcon="informacion">Zona Transformación
+        {{registro.valor.colposcopia.zona}}</plex-badge>
+    <plex-badge *ngIf="registro.valor.colposcopia.hallazgos"
+                type="info">{{registro.valor.colposcopia?.hallazgos?.nombre}}
+    </plex-badge>
+    <plex-badge *ngIf="registro.valor.colposcopia.visibilidadUEC" type="info"> UEC
+        {{registro.valor.colposcopia.visibilidadUEC.nombre}}
+    </plex-badge>
+    <plex-badge *ngIf="registro.valor.colposcopia.biopsia" type="info"> Se toma biopsia
+    </plex-badge>
+    <plex-badge *ngIf="!registro.valor.colposcopia.biopsia" type="info"> No toma biopsia
+    </plex-badge>
+    <plex-badge *ngIf="registro.valor.colposcopia.testSchiller" type="info">Test Schiller positivo
+    </plex-badge>
+    <plex-badge *ngIf="!registro.valor.colposcopia.testSchiller" type="info"> Test Schiller negativo
+    </plex-badge>
+    <plex-badge *ngIf="registro.valor.colposcopia.evaluacionEndocervical" type="info">Conducto endocervical evaluado
+    </plex-badge>
+</div>
