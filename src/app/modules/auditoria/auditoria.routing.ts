@@ -1,5 +1,5 @@
 
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { PlexModule } from '@andes/plex';
 import { SharedModule } from '@andes/shared';
@@ -13,7 +13,7 @@ import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 
 import { AuditoriaComponent } from './component/auditoria.component';
 
-export const AuditoriaRoutes = [
+export const AuditoriaRoutes: Routes = [
     { path: '', component: AuditoriaComponent, pathMatch: 'full' }
 ];
 

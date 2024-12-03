@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { MapaCamasMainComponent } from './mapa-camas-main.component';
 import { CamaMainComponent } from './views/cama/cama.component';
 import { CensosDiariosComponent } from './views/censos/censo-diario/censo-diario.component';
@@ -14,7 +14,7 @@ import { ResumenInternacionComponent } from './views/resumen-internacion/resumen
 import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
 import { TimelineMapaCamasComponent } from './views/timelinea-mapa-camas/timeline-mapa-camas.component';
 
-export const INTERNACION_ROUTES = [
+export const INTERNACION_ROUTES: Routes = [
 
 
     { path: ':ambito/cama/:id', component: CamaMainComponent },

@@ -2,7 +2,7 @@
 import { Matching } from '@andes/match';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ValidacionService } from '../../services/fuentesAutenticas/validacion.service';
@@ -42,7 +42,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         return this.createForm;
     }
 
-    createForm: FormGroup;
+    createForm: UntypedFormGroup;
     // Definición de arreglos
     sexos: any[];
     generos: any[];
