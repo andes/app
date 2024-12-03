@@ -306,7 +306,6 @@
             }
         }
     },
-    "defaultProject": "andes_app",
     "schematics": {
         "@schematics/angular:component": {
             "prefix": "app",
