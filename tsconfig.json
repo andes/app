@@ -12,7 +12,7 @@
     "module": "es2020",
     "moduleResolution": "node",
     "outDir": "../dist/out-tsc",
-    "target": "es2020",
+    "target": "ES2022",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -26,7 +26,8 @@
       "@andes/form-builder": [
         "projects/form-builder/src/public-api.ts"
       ]
-    }
+    },
+    "useDefineForClassFields": false
   },
   "files": [
     "src/main.ts",
