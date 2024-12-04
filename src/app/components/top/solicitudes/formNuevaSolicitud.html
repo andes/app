@@ -3,7 +3,7 @@
                  (click)="cancelar()">
     </plex-button>
     <plex-button [size]="size? size : ''" position="right" class="float-right mr-1" type="success" label="Guardar"
-                (click)="confirmGuardar($event)" [autodisabled]="true" [validateForm]="form"> </plex-button>
+                 (click)="confirmGuardar($event)" [autodisabled]="true" [validateForm]="form"> </plex-button>
 </plex-title>
 <form #form="ngForm">
     <!-- SOLICITUD ENTRADA -->
@@ -32,7 +32,7 @@
             <plex-bool [(ngModel)]="autocitado" label="Autocitado" grow="1" name="autocitado">
             </plex-bool>
         </plex-grid>
-        <plex-grid type="full" cols="2">
+        <plex-grid type="full" cols="1">
             <plex-wrapper>
                 <plex-select *ngIf="!autocitado" [(ngModel)]="prestacionOrigen" [data]="dataTipoPrestacionesOrigen"
                              name="tipoPrestacion" (change)="onSelect()" label="Tipos de Prestación Origen"
@@ -50,8 +50,9 @@
                 </plex-select>
             </plex-wrapper>
             <plex-wrapper>
-                <plex-select *ngIf="conceptosAsociados.length" [(ngModel)]="modelo.solicitud.conceptoAsociado" [data]="conceptosAsociados" label="Diagnóstico asociado"
-                             labelField="term" idField="conceptId" name="conceptoAsociado">
+                <plex-select *ngIf="conceptosAsociados.length" [(ngModel)]="modelo.solicitud.conceptoAsociado"
+                             [data]="conceptosAsociados" label="Diagnóstico asociado" labelField="term"
+                             idField="conceptId" name="conceptoAsociado">
                 </plex-select>
                 <plex-text [(ngModel)]="motivo" label="Notas / Diagnóstico / Motivo" name="motivo" [required]="true"
                            multiline="true"></plex-text>
@@ -79,7 +80,7 @@
                          [data]="dataOrganizacionesDestino" [required]="true" (change)="onSelectOrganizacionDestino()">
             </plex-select>
         </plex-wrapper>
-        <plex-grid type="full" cols="2">
+        <plex-grid type="full" cols="1">
             <plex-wrapper>
                 <plex-select [(ngModel)]="modelo.solicitud.profesionalOrigen" name="profesionalOrigen"
                              (getData)="loadProfesionales($event)" label="Profesional solicitante"
@@ -95,11 +96,9 @@
                              placeholder="Escriba el apellido de un Profesional" labelField="apellido + ' ' + nombre"
                              grow="full">
                 </plex-select>
-            </plex-wrapper>
-            <plex-wrapper>
                 <plex-select *ngIf="conceptosAsociados.length" [(ngModel)]="modelo.solicitud.conceptoAsociado"
-                             [data]="conceptosAsociados" label="Diagnóstico asociado" labelField="term" idField="conceptId"
-                             name="conceptoAsociado">
+                             [data]="conceptosAsociados" label="Diagnóstico asociado" labelField="term"
+                             idField="conceptId" name="conceptoAsociado">
                 </plex-select>
                 <plex-text [(ngModel)]="motivo" label="Notas / Diagnóstico / Motivo" name="motivo" [required]="true"
                            multiline="true"></plex-text>
@@ -108,7 +107,8 @@
     </ng-container>
     <!-- /SOLICITUD SALIDA -->
     <!-- Adjuntar Archivos -->
-    <plex-title titulo="Cargar adjuntos">
+    <plex-title [size]="size? size : ''" titulo="Cargar adjuntos"></plex-title>
+    <plex-wrapper>
         <upload-file label="Adjuntar archivo" (onUpload)="onUpload($event)" [extensiones]="extensions" [modulo]="'top'">
         </upload-file>
         <br><br>
@@ -116,7 +116,7 @@
             <plex-badge type="danger" size="sm" hint="Estos son los archivos que podes subir: {{ extensions }}"
                         detach="top" hintType="danger">Archivo inválido.</plex-badge>
         </span>
-    </plex-title>
+    </plex-wrapper>
     <shared-galeria-archivos [files]="documentosUrl" [loading]="waiting" (remove)="imageRemoved($event)">
     </shared-galeria-archivos>
 </form>
