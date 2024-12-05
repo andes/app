@@ -40,6 +40,7 @@ export class PanelAgendaComponent implements OnInit {
     // Usados en tag <panel-agenda> en gestor-agendas.html
     @Output() actualizarEstadoEmit = new EventEmitter<boolean>();
     @Output() showVistaTurnosEmit = new EventEmitter<Boolean>();
+    @Output() profesionalExistente = new EventEmitter<Boolean>();
 
     showEditarAgendaPanel: Boolean = true;
     public showMapa = false;
@@ -249,6 +250,11 @@ export class PanelAgendaComponent implements OnInit {
                         if (agendasConSolapamiento.length > 0) {
                             this.alertas = [... this.alertas, 'El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario'];
                         }
+                        if (this.alertas.length > 0) {
+                            this.profesionalExistente.emit(true);
+                        } else {
+                            this.profesionalExistente.emit(false);
+                        }
                     });
                 });
             }
@@ -271,6 +277,11 @@ export class PanelAgendaComponent implements OnInit {
                     // Si encontramos una agenda que coincida con la búsqueda...
                     if (agendasConSolapamiento.length > 0) {
                         this.alertas = [... this.alertas, 'El ' + this.editaAgendaPanel.espacioFisico.nombre + ' está asignado a otra agenda en ese horario'];
+                    }
+                    if (this.alertas.length > 0) {
+                        this.profesionalExistente.emit(true);
+                    } else {
+                        this.profesionalExistente.emit(false);
                     }
                 });
             }
