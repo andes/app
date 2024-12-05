@@ -134,9 +134,9 @@ export class DatosContactoComponent implements OnInit {
                 this.viveLocActual = ubicacion.localidad && ubicacion.localidad.id === this.localidadActual.id;
 
                 const lugarNac = this.paciente.lugarNacimiento;
-                this.nacioPaisActual = lugarNac.pais?.id === this.paisActual[0].id;
-                this.nacioProvActual = lugarNac.provincia?.id === this.provinciaActual.id;
-                this.nacioLocActual = lugarNac.localidad?.id === this.localidadActual.id;
+                this.nacioPaisActual = lugarNac.pais?.id === this.paisActual[0]?.id;
+                this.nacioProvActual = lugarNac.provincia?.id === this.provinciaActual?.id;
+                this.nacioLocActual = lugarNac.localidad?.id === this.localidadActual?.id;
 
                 let direccionCompleta;
 

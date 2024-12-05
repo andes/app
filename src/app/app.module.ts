@@ -223,6 +223,7 @@ import { AcronimoSvgComponent } from './styles/acronimo.svg';
 import { LogoSvgComponent } from './styles/logo.svg';
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
+import { ObraSocialComponent } from './core/mpi/components/obra-social.component';
 
 
 registerLocaleData(localeEs, 'es');
@@ -321,6 +322,7 @@ registerLocaleData(localeEs, 'es');
         DatosBasicosComponent,
         DatosContactoComponent,
         DocumentosPacienteComponent,
+        ObraSocialComponent,
 
         // form Terapeutico
         FormTerapeuticoComponent,
