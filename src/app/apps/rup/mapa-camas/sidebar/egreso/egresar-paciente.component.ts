@@ -290,7 +290,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         */
     private setEstadoDestino() {
         this.subscription3 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
-            this.estadoDestino = relacionesPosibles[0].destino;
+            this.estadoDestino = relacionesPosibles[0]?.destino;
         });
     }
 
