@@ -1,0 +1,30 @@
+.editable {
+    display: flex;
+    flex-direction: column;
+
+    ul {
+        list-style: none;
+        padding-left: 18px;
+        gap: 5px;
+        display: flex;
+        flex-direction: column;
+
+        .item-lista {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+
+    .selector-wrapper {
+        display: flex;
+        flex-direction: row;
+        flex-grow: 1;
+        align-items: flex-end;
+
+        .selector {
+            flex-grow: 1;
+            margin-right: 15px;
+        }
+    }
+
+}
