@@ -195,11 +195,12 @@
                         </div>
                         <div class="col-6 p-0 m-0">
                             <div class="d-flex justify-content-end">
-                                <plex-badge size="sm" [type]="item | semanticClass: filtroActual === 'planes' || item.esSolicitud">
+                                <plex-badge size="sm"
+                                            [type]="item | semanticClass: filtroActual === 'planes' || item.esSolicitud">
                                     {{ (item.esSolicitud || filtroActual === 'planes') ? 'solicitud' :
                                     item.semanticTag }}
                                 </plex-badge>
-                                <plex-button type="info" size="sm" icon="plus" (click)="seleccionarConcepto(item, i)"
+                                <plex-button type="info" size="sm" icon="plus" (click)="verificarProfesional(item, i)"
                                              tooltip="agregar a la consulta" tooltipPosition="left">
                                 </plex-button>
                                 <plex-button class="ml-1" type="info" size="sm" icon="graph"
