@@ -46,15 +46,21 @@ export class LiberarTurnoComponent implements OnInit {
                 turnos: this.turnos.map(resultado => resultado._id),
                 observaciones: this.motivoLiberacionSelect.nombre === 'Otro' ? this.otroMotivoLiberacion : this.motivoLiberacionSelect.nombre
             };
+
+            if (this.turnos[0].sobreturno || !this.turnos[0].tipoTurno) {
+                patch['sobreturno'] = true;
+            }
             const mensaje = this.turnos.length === 1 ? 'El turno seleccionado fue liberado' : 'Los turnos seleccionados fueron liberados';
 
             this.serviceAgenda.patch(this.agenda.id, patch).subscribe({
                 complete: () => {
-                    this.plex.toast('success', mensaje, 'Liberar turno', 4000);
+                    (this.turnos[0].sobreturno || !this.turnos[0].tipoTurno) ? this.plex.toast('success', 'El sobreturno fue liberado exitosamente.', 'Liberar sobreturno', 4000) : this.plex.toast('success', mensaje, 'Liberar turno', 4000);
                     this.saveLiberarTurno.emit(this.agenda);
                 },
                 error: () => {
-                    this.plex.info('warning', 'El turno ya tiene una prestación iniciada', 'Información');
+                    (this.turnos[0].sobreturno || !this.turnos[0].tipoTurno) ?
+                        this.plex.info('warning', 'El sobreturno ya tiene una prestación iniciada.', 'Información') :
+                        this.plex.info('warning', 'El turno ya tiene una prestación iniciada.', 'Información');
                     this.cancelaLiberarTurno.emit(true);
                 }
             });
