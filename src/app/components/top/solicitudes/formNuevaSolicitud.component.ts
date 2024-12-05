@@ -7,6 +7,8 @@ import { ReglaService } from '../../../services/top/reglas.service';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
 import { FileObject, FILE_EXT, IMAGENES_EXT, VIDEO_EXT } from '@andes/shared';
 import { DriveService } from 'src/app/services/drive.service';
+import { ConstantesService } from './../../../services/constantes.service';
+import { SnomedService } from '../../../apps/mitos';
 
 @Component({
     selector: 'form-nueva-solicitud',
@@ -37,6 +39,8 @@ export class FormNuevaSolicitudComponent implements OnInit {
     extensions = FILE_EXT;
     videos = VIDEO_EXT;
     public documentosUrl = [];
+    public conceptosAsociados = [];
+    public unConcepto = null;
 
     modelo: any = {
         inicio: 'top',
@@ -57,7 +61,8 @@ export class FormNuevaSolicitudComponent implements OnInit {
             turno: null,
             tipoPrestacion: null,
             tipoPrestacionOrigen: null,
-            registros: []
+            registros: [],
+            conceptoAsociado: null
         },
         estados: [],
         prestacionOrigen: null
@@ -78,7 +83,9 @@ export class FormNuevaSolicitudComponent implements OnInit {
         private servicioPrestacion: PrestacionesService,
         private servicioReglas: ReglaService,
         private adjuntosService: AdjuntosService,
-        private driveService: DriveService
+        private driveService: DriveService,
+        private constantesService: ConstantesService,
+        private snomedService: SnomedService
     ) { }
 
     ngOnInit() {
@@ -90,6 +97,15 @@ export class FormNuevaSolicitudComponent implements OnInit {
         this.extensions = this.extensions.concat(this.imagenes, this.videos);
         this.adjuntosService.token$.subscribe((data: any) => {
             this.fileToken = data.token;
+        });
+        this.constantesService.search({ source: 'solicitud:conceptosAsociados' }).subscribe(async (constantes) => {
+            if (constantes?.length) {
+                this.snomedService.get({
+                    search: constantes[0].query
+                }).subscribe((resultados) => {
+                    this.conceptosAsociados = [...resultados];
+                });
+            }
         });
     }
 
@@ -294,7 +310,8 @@ export class FormNuevaSolicitudComponent implements OnInit {
             valor: {
                 solicitudPrestacion: {
                     motivo: this.motivo,
-                    autocitado: this.autocitado
+                    autocitado: this.autocitado,
+                    conceptoAsociado: this.modelo.solicitud.conceptoAsociado ? this.modelo.solicitud.conceptoAsociado : undefined,
                 },
                 documentos: this.documentos
             },

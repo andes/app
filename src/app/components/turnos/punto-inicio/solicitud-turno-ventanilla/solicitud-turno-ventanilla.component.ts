@@ -11,8 +11,6 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;
 
-    // @Input('paciente') paciente: IPaciente;
-
     private _paciente: any;
 
     @Input('paciente')
@@ -23,6 +21,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
         return this._paciente;
     }
 
+    @Input() tipoSolicitud: string;
     @Output() cerrarSolicitudVentanilla = new EventEmitter<boolean>();
 
     public permisos = [];
