@@ -34,9 +34,7 @@
     "src/polyfills.ts"
   ],
   "include": [
-    "projects/auth/**/*.ts",
-    "projects/form-builder/**/*.ts",
-    "projects/shared/**/*.ts",
+    "./**/*.ts",
     "./karma.conf.js",
     "./webpack.config.js",
     ".eslintrc.js",
@@ -44,12 +42,11 @@
     "node_modules/@andes/plex/**/*.ts"
   ],
   "exclude": [
-    "**/test.ts",
-    "**/*.spec.ts",
+    "projects/portal/**/*.ts", // hasta retomar proyecto
+    "node_modules/@andes/plex/**/*.spec.ts",
     "node_modules/@schematics/**/*.ts",
     "node_modules/karma/**/*.ts",
-    "src/app/environment.ts",
-    "src/environments/**"
+    "**/environments/*.ts"
   ],
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": false,
