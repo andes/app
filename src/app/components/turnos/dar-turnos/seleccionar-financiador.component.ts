@@ -6,6 +6,7 @@ import { ObraSocialService } from 'src/app/services/obraSocial.service';
 @Component({
     selector: 'seleccionar-financiador',
     templateUrl: 'seleccionar-financiador.html',
+    styleUrls: ['seleccionar-financiador.scss']
 })
 
 export class SeleccionarFinanciadorComponent implements OnChanges {
@@ -23,7 +24,13 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
         codigoPuco: undefined,
     };
 
+    public obrasSocialesPUCO: any[] = [];
+    public financiadoresANDES: any[] = [];
+    public opcionesFinanciadores: any[] = [];
+    public financiadorSeleccionado: any;
+
     @Input() paciente;
+    @Input() editable = false;
     @Output() setFinanciador = new EventEmitter<any>();
 
     constructor(
@@ -87,10 +94,59 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
             this.showListado = false;
             this.financiador = undefined;
 
-            this.pacienteService.getById(changes.paciente.currentValue.id).subscribe(paciente => {
-                this.cargarObraSocial(paciente);
-                this.cargarPrepagas();
-            });
+            // this.pacienteService.getById(changes.paciente.currentValue.id).subscribe(paciente => {
+            this.cargarObraSocial(this.paciente);
+            this.cargarPrepagas();
+            // });
+
+            if (this.editable) {
+                this.cargarObrasSocialesPUCO();
+                this.cargarFinanciadoresANDES();
+                this.cargarOpcionesFinanciadores();
+            }
         }
+    }
+
+    // NUEVO: Cargar el listado de obras sociales con origen "PUCO"
+    cargarObrasSocialesPUCO() {
+        this.obrasSocialesPUCO = this.paciente.financiador.filter(
+            (financiador: any) => financiador.origen === 'PUCO'
+        );
+    }
+
+    // NUEVO: Cargar el listado de financiadores con origen "ANDES"
+    cargarFinanciadoresANDES() {
+        this.financiadoresANDES = this.paciente.financiador.filter(
+            (financiador: any) => financiador.origen === 'ANDES'
+        );
+    }
+
+    // NUEVO: Cargar opciones de financiadores excluyendo los ya asociados
+    cargarOpcionesFinanciadores() {
+        this.obraSocialService.getListado({}).subscribe((financiadores: any[]) => {
+            const financiadoresExistentes = [
+                ...this.obrasSocialesPUCO.map((f) => f.id),
+                ...this.financiadoresANDES.map((f) => f.id),
+            ];
+
+            this.opcionesFinanciadores = financiadores.filter(
+                (financiador) => !financiadoresExistentes.includes(financiador.id)
+            );
+        });
+    }
+
+    // NUEVO: Agregar un financiador al listado editable
+    agregarFinanciador(financiador: any) {
+        if (financiador) {
+            this.financiadoresANDES.push(financiador);
+            this.cargarOpcionesFinanciadores();
+            this.financiadorSeleccionado = null;
+        }
+    }
+
+    // NUEVO: Eliminar un financiador del listado editable
+    eliminarFinanciador(index: number) {
+        this.financiadoresANDES.splice(index, 1);
+        this.cargarOpcionesFinanciadores();
     }
 }
