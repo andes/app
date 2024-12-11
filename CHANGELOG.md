@@ -1,3 +1,10 @@
+# [5.154.0](https://github.com/andes/app/compare/v5.153.0...v5.154.0) (2024-12-11)
+
+
+### Features
+
+* **CITAS:** Agrega Conceptos asociados a solicitudes desde ventanilla ([#3119](https://github.com/andes/app/issues/3119)) ([c3c2ac1](https://github.com/andes/app/commit/c3c2ac18f868f42e9a5749cbefb4be6fd4a04c2c))
+
 # [5.153.0](https://github.com/andes/app/compare/v5.152.0...v5.153.0) (2024-11-27)
 
 
