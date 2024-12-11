@@ -481,18 +481,19 @@ export class BuscadorComponent implements OnInit, OnChanges {
             };
             this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
                 if (resultado.length) {
-                    this.plex.confirm(`El paciente ya tiene una solicitud en curso para ${concepto.term}. ¿Desea continuar?`, 'Paciente con solicitud en curso').then(confirmar => {
-                        if (confirmar) {
-                            this.agregarConcepto(concepto);
-                        }
-                    });
-                    this.plex.toast('danger', `El paciente ya tiene una solicitud en curso para ${concepto.term}`);
-                } else {
-                    this.agregarConcepto(concepto);
+                    const existeSolicitud = resultado.find(registro => registro.inicio === 'top');
+                    if (existeSolicitud) {
+                        this.plex.confirm(`El paciente ya tiene una solicitud en curso para ${concepto.term}. ¿Desea continuar?`, 'Paciente con solicitud en curso').then(confirmar => {
+                            if (confirmar) {
+                                this.agregarConcepto(concepto);
+                            }
+                        });
+                    } else {
+                        this.agregarConcepto(concepto);
+                    }
+
                 }
             });
-        } else {
-            this.agregarConcepto(concepto);
         }
     }
 
