@@ -1,0 +1,12 @@
+<plex-layout>
+    <plex-layout-main>
+        <plex-title main titulo="Listado de Formularios">
+            <plex-button class="mr-1" type="danger" [routerLink]="'/home'"> Volver </plex-button>
+            <plex-button *ngIf="canCreate" type="info" [routerLink]="['create']"> Nuevo formulario </plex-button>
+        </plex-title>
+        <div>
+            hola
+        </div>
+    </plex-layout-main>
+</plex-layout>
+
