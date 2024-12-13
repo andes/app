@@ -17,7 +17,10 @@ export interface Section {
 export interface Field {
     name: string;
     key: string;
-    type: string;
+    type: {
+        id: string;
+        name: string;
+    };
     description?: string;
     label?: string;
     options?: any[];

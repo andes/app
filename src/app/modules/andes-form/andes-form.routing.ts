@@ -12,4 +12,4 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     providers: []
 })
-export class EpiFormsRouting {}
+export class AndesFormsRouting {}

@@ -32,33 +32,43 @@
             </plex-title>
             <ul class="mr-2 unstyled" style="padding-left: 0 !important;" cdkDropList
                 (cdkDropListDropped)="dropSection($event)" cdkDropListGroup>
-                <li *ngFor="let section of form.sections ; let sectionIndex = index" style="list-style-type: none !important; border: 1px solid #b9b9b9; background-color: #fff; padding-left: 5px;
-                    margin-bottom: 5px;" cdkDrag>
+                <li *ngFor="let section of form.sections ; let sectionIndex = index" style="list-style-type: none !important; 
+                    background-color: #eee; padding-left: 5px; border-radius: 8px; border: 1px #aaa solid;
+                    margin-bottom: 8px; box-shadow: 5px 5px 3px #b0b0b0;" cdkDrag>
                     <div class="custom-placeholder" *cdkDragPlaceholder></div>
                     <!-- Section editable -->
                     <div *ngIf="section.type === 'section'" class="row px-2 py-1">
-                        <plex-icon name="drag" size="xl" align="center" cdkDragHandle></plex-icon>
-                        <plex-grid cols="3" class="mb-3">
-                            <plex-text name="name-{{ sectionIndex }}" label="Nombre de la sección"
-                                [(ngModel)]="section.name" [required]="true" (change)="onChanges($event)"
-                                class="px-3"></plex-text>
-                            <plex-text name="key-{{ sectionIndex }}" label="Llave de sección" [(ngModel)]="section.key"
-                                [required]="true" class="px-3"></plex-text>
+                        <plex-icon name="drag" size="xl" align="center" cdkDragHandle tooltip="Arrastrar sección"
+                            tooltipPosition="right"></plex-icon>
+                        <plex-grid cols="2" class="mb-3" *ngIf="section.key === ''">
+                            <div justify="start">
+                                <plex-text name="name-{{ sectionIndex }}" label="Nombre de la sección"
+                                    [(ngModel)]="section.name" [required]="true" (change)="onChanges($event)"
+                                    class="px-3"></plex-text>
+                                <plex-button type="success" size="sm" icon="check" align="center" class="mt-4" 
+                                    (click)="saveNameSection(sectionIndex)" tooltip="Confirmar nombre"></plex-button>
+                            </div>
                             <div justify="end" class="mt-4">
-                                <plex-button type="success" size="sm" icon="plus" align="center"
-                                    (click)="onAddField(sectionIndex)" tooltip="Agregar campo"></plex-button>
                                 <plex-button type="danger" size="sm" icon="delete" align="center"
                                     (click)="onRemoveSection(sectionIndex)" tooltip="Eliminar sección"
                                     class="ml-1 mr-4"></plex-button>
                             </div>
                         </plex-grid>
+                        <plex-title *ngIf="section.key !== ''" [titulo]="section.name" style="flex-grow: 1;" class="mr-4">
+                            <plex-button type="success" size="sm" icon="plus" align="center"
+                                    (click)="onAddField(sectionIndex)" tooltip="Agregar campo"></plex-button>
+                            <plex-button type="danger" size="sm" icon="delete" align="center"
+                                    (click)="onRemoveSection(sectionIndex)" tooltip="Eliminar sección"
+                                    class="ml-1 mr-3"></plex-button>
+                        </plex-title>
                     </div>
                     <ul *ngIf="section.type === 'section'" class="mr-2 unstyled" style="padding-left: 0 !important;"
                         cdkDropList [id]="sectionIndex" (cdkDropListDropped)="dropField($event, sectionIndex)">
-                        <li *ngFor="let field of section.fields; let fileIndex = index"
-                            style="list-style-type: none !important; background-color: #fff;" cdkDrag>
+                        <li class="campo" *ngFor="let field of section.fields; let fileIndex = index"
+                            style="list-style-type: none !important; background-color: #eee" cdkDrag>
                             <div class="row p-2">
-                                <plex-icon name="drag" size="xl" align="center" cdkDragHandle></plex-icon>
+                                <plex-icon name="drag" size="xl" align="center" cdkDragHandle tooltip="Arrastrar campo"
+                                    tooltipPosition="right"></plex-icon>
                                 <plex-grid cols="2" class="px-3">
                                     <!-- Campo tipo string -->
                                     <plex-text *ngIf="field.type?.id === 'string'" label="{{ field.name }}"
@@ -118,82 +128,79 @@
                     </ul>
                     <!-- Section preset -->
                     <div *ngIf="section.type === 'preset-section'" class="row px-2 py-1">
-                        <plex-icon name="drag" size="xl" align="center" cdkDragHandle></plex-icon>
-                        <plex-grid cols="3" class="mb-3">
-                            <plex-text name="name-{{ sectionIndex }}" label="Nombre de la sección"
-                                [(ngModel)]="section.name" [required]="true" (change)="onChanges($event)"
-                                class="px-3"></plex-text>
-                            <plex-text name="key-{{ sectionIndex }}" label="Llave de sección" [(ngModel)]="section.key"
-                                [required]="true" class="px-3"></plex-text>
-                            <div justify="end" class="mt-4">
-                                <plex-button type="danger" size="sm" icon="delete" align="center"
-                                    (click)="onRemoveSection(sectionIndex)" tooltip="Eliminar sección"
-                                    class="ml-1 mr-4"></plex-button>
-                            </div>
-                        </plex-grid>
+                        <plex-icon name="drag" size="xl" align="center" cdkDragHandle tooltip="Arrastrar sección"
+                            tooltipPosition="right"></plex-icon>
+                        <plex-title [titulo]="section.name" style="flex-grow: 1;" class="mr-4">
+                            <plex-button type="danger" size="sm" icon="delete" align="center"
+                                (click)="onRemoveSection(sectionIndex)" tooltip="Eliminar sección"
+                                class="ml-1 mr-3"></plex-button>
+                        </plex-title>
                     </div>
-                    <ul *ngIf="section.type === 'preset-section'" class="mr-2 unstyled" style="padding-left: 0 !important;"
-                    cdkDropList [id]="sectionIndex" (cdkDropListDropped)="dropField($event, sectionIndex)">
-                    <li *ngFor="let field of section.fields; let fileIndex = index"
-                        style="list-style-type: none !important; background-color: #fff;" cdkDrag>
-                        <div class="row p-2">
-                            <plex-icon name="drag" size="xl" align="center" cdkDragHandle></plex-icon>
-                            <plex-grid cols="2" class="px-3">
-                                <!-- Campo tipo string -->
-                                <plex-text *ngIf="field.type?.id === 'string'" label="{{ field.name }}"
-                                    name="name-{{ field.name }}" [(ngModel)]="field.value"
-                                    [required]="field.required"></plex-text>
-                                <!-- Campo tipo int -->
-                                <plex-float *ngIf="field.type?.id === 'int'" label="{{ field.name }}"
-                                    name="name-{{ field.name }}" [(ngModel)]="field.value"
-                                    [required]="field.required"></plex-float>
-                                <!-- Campo tipo select -->
-                                <plex-select *ngIf="field.type?.id === 'select'" label="{{ field.name }}"
-                                    name="name-{{ field.name }}" [(ngModel)]="field.value"
-                                    [required]="field.required" [data]></plex-select>
-                                <!-- Campo tipo selectStatic -->
-                                <plex-select *ngIf="field.type?.id === 'selectStatic'" label="{{ field.name }}"
-                                    name="name-{{ field.name }}" [(ngModel)]="field.value"
-                                    [required]="field.required" [data]="field.selectList"
-                                    labelField="name"></plex-select>
-                                <!-- Campo tipo date -->
-                                <plex-datetime *ngIf="field.type?.id === 'date' && !field.datePeriod" type="date"
-                                    label="{{ field.name }}" name="name-{{ field.name }}" [(ngModel)]="field.value"
-                                    [required]="field.required"></plex-datetime>
-                                <!-- Campo tipo date period -->
-                                <plex-grid *ngIf="field.type?.id === 'date' && field.datePeriod" cols="2">
-                                    <plex-datetime type="date" label="{{ field.name }}" name="name-{{ field.name }}"
-                                        [(ngModel)]="field.value1" [required]="field.required"></plex-datetime>
-                                    <plex-datetime type="date" label="{{ field.name }}" name="name-{{ field.name }}"
-                                        [(ngModel)]="field.value2" [required]="field.required"></plex-datetime>
+                    <ul *ngIf="section.type === 'preset-section'" class="mr-2 unstyled"
+                        style="padding-left: 0 !important;" cdkDropList [id]="sectionIndex"
+                        (cdkDropListDropped)="dropField($event, sectionIndex)">
+                        <li class="campo" *ngFor="let field of section.fields; let fileIndex = index"
+                            style="list-style-type: none !important;  background-color: #eee" cdkDrag>
+                            <div class="row p-2">
+                                <plex-icon name="drag" size="xl" align="center" cdkDragHandle tooltip="Arrastrar campo"
+                                    tooltipPosition="right" class="ml-1"></plex-icon>
+                                <plex-grid cols="2" class="px-3">
+                                    <!-- Campo tipo string -->
+                                    <plex-text *ngIf="field.type?.id === 'string'" label="{{ field.name }}"
+                                        name="name-{{ field.name }}" [(ngModel)]="field.value"
+                                        [required]="field.required"></plex-text>
+                                    <!-- Campo tipo int -->
+                                    <plex-float *ngIf="field.type?.id === 'int'" label="{{ field.name }}"
+                                        name="name-{{ field.name }}" [(ngModel)]="field.value"
+                                        [required]="field.required"></plex-float>
+                                    <!-- Campo tipo select -->
+                                    <plex-select *ngIf="field.type?.id === 'select'" label="{{ field.name }}"
+                                        name="name-{{ field.name }}" [(ngModel)]="field.value"
+                                        [required]="field.required" [data]></plex-select>
+                                    <!-- Campo tipo selectStatic -->
+                                    <plex-select *ngIf="field.type?.id === 'selectStatic'" label="{{ field.name }}"
+                                        name="name-{{ field.name }}" [(ngModel)]="field.value"
+                                        [required]="field.required" [data]="field.selectList"
+                                        labelField="name"></plex-select>
+                                    <!-- Campo tipo date -->
+                                    <plex-datetime *ngIf="field.type?.id === 'date' && !field.datePeriod" type="date"
+                                        label="{{ field.name }}" name="name-{{ field.name }}" [(ngModel)]="field.value"
+                                        [required]="field.required"></plex-datetime>
+                                    <!-- Campo tipo date period -->
+                                    <plex-grid *ngIf="field.type?.id === 'date' && field.datePeriod" cols="2">
+                                        <plex-datetime type="date" label="{{ field.name }}" name="name-{{ field.name }}"
+                                            [(ngModel)]="field.value1" [required]="field.required"></plex-datetime>
+                                        <plex-datetime type="date" label="{{ field.name }}" name="name-{{ field.name }}"
+                                            [(ngModel)]="field.value2" [required]="field.required"></plex-datetime>
+                                    </plex-grid>
+                                    <!-- Campo tipo boolean -->
+                                    <plex-bool *ngIf="field.type?.id === 'boolean'" type="slide"
+                                        label="{{ field.name }}" name="name-{{ field.name }}" [(ngModel)]="field.value"
+                                        [required]="field.required"></plex-bool>
+                                    <!-- Campo tipo phone -->
+                                    <plex-phone *ngIf="field.type?.id === 'phone'" label="{{ field.name }}"
+                                        name="name-{{ field.name }}" [(ngModel)]="field.value"
+                                        [required]="field.required"></plex-phone>
+                                    <!-- Campo tipo dependencia -->
+                                    <plex-text *ngIf="field.type?.id === 'dependencia'" label="{{ field.name }}"
+                                        name="name-{{ field.name }}" [(ngModel)]="field.value"></plex-text>
+                                    <!-- Campo tipo snomed -->
+                                    <plex-text *ngIf="field.type?.id === 'snomed'" label="{{ field.name }}"
+                                        name="name-{{ field.name }}" [(ngModel)]="field.value"
+                                        [required]="field.required"></plex-text>
                                 </plex-grid>
-                                <!-- Campo tipo boolean -->
-                                <plex-bool *ngIf="field.type?.id === 'boolean'" type="slide"
-                                    label="{{ field.name }}" name="name-{{ field.name }}" [(ngModel)]="field.value"
-                                    [required]="field.required"></plex-bool>
-                                <!-- Campo tipo phone -->
-                                <plex-phone *ngIf="field.type?.id === 'phone'" label="{{ field.name }}"
-                                    name="name-{{ field.name }}" [(ngModel)]="field.value"
-                                    [required]="field.required"></plex-phone>
-                                <!-- Campo tipo dependencia -->
-                                <plex-text *ngIf="field.type?.id === 'dependencia'" label="{{ field.name }}"
-                                    name="name-{{ field.name }}" [(ngModel)]="field.value"></plex-text>
-                                <!-- Campo tipo snomed -->
-                                <plex-text *ngIf="field.type?.id === 'snomed'" label="{{ field.name }}"
-                                    name="name-{{ field.name }}" [(ngModel)]="field.value"
-                                    [required]="field.required"></plex-text>
-                            </plex-grid>
-                        </div>
-                        <div class="custom-placeholder" *cdkDragPlaceholder></div>
-                    </li>
-                    <br>
-                </ul>
+                            </div>
+                            <div class="custom-placeholder" *cdkDragPlaceholder></div>
+                        </li>
+                        <br>
+                    </ul>
                     <!-- Section table -->
                     <div *ngIf="section.type === 'table'" class="row px-2 py-1">
-                        <plex-icon name="drag" size="xl" align="center" cdkDragHandle></plex-icon>
+                        <plex-icon name="drag" size="xl" align="center" cdkDragHandle tooltip="Arrastrar sección"
+                            tooltipPosition="right"></plex-icon>
                         <plex-grid cols="4" class="mb-3">
                             <plex-text name="name-{{ sectionIndex }}" label="Nombre de la sección"
-                                [(ngModel)]="section.name" [required]="true" (change)="onChanges($event)"
+                                [(ngModel)]="section.name" [required]="true"
                                 class="px-3"></plex-text>
                             <plex-text name="key-{{ sectionIndex }}" label="Llave de sección" [(ngModel)]="section.key"
                                 [required]="true" class="px-3"></plex-text>
@@ -222,10 +229,9 @@
         </form>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
-        <field-config *ngIf="sidebar" [field]="fieldToConfig" [sectionIndex]="this.sectionIndex"
+        <field-config *ngIf="sidebar" [field]="fieldToConfig" [sectionIndex]="this.sectionIndex" [fullForm]="form"
             (closeField)="closeFieldConfig()" (saveField)="onSaveField($event)"></field-config>
-        <table-config *ngIf="sidebarTable" [sectionTable]="this.tableToConfig" 
-            [sectionIndex]="this.sectionIndex" (closeTable)="closeFieldConfig()" 
-            (saveTable)="onSaveTable($event)"></table-config>
+        <table-config *ngIf="sidebarTable" [sectionTable]="this.tableToConfig" [sectionIndex]="this.sectionIndex"
+            (closeTable)="closeFieldConfig()" (saveTable)="onSaveTable($event)"></table-config>
     </plex-layout-sidebar>
 </plex-layout>

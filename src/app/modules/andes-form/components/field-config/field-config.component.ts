@@ -2,21 +2,23 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormResourcesService } from '../../services/resources.service';
 import { DynamicResourcesService } from '../../services/dynamic-resource.service';
+import { Field } from '../../andes-form.interfaces';
 
 @Component({
     selector: 'field-config',
     templateUrl: './field-config.component.html'
 })
 export class FieldConfigComponent implements OnInit {
-    @Input() field: any;
+    @Input() field: Field;
     @Input() sectionIndex: number;
+    @Input() fullForm: any;
     @Output() saveField: EventEmitter<any> = new EventEmitter<any>();
     @Output() closeField: EventEmitter<void> = new EventEmitter<void>();
 
     public form: FormGroup;
     public type: {
-        id: '';
-        name: '';
+        id: string;
+        name: string;
     };
     public action = [
         { id: 'show', nombre: 'Mostrar' },
@@ -59,7 +61,8 @@ export class FieldConfigComponent implements OnInit {
     ];
     public resources = [];
     public prebuiltSections = [];
-
+    public dynamicResources = [];
+    public dependency = [];
     constructor(
         private fb: FormBuilder,
         private formResourceService: FormResourcesService,
@@ -75,12 +78,7 @@ export class FieldConfigComponent implements OnInit {
             datePeriod: [false],
             description: [''],
             hasDependency: [false],
-            dependencies: this.fb.group({
-                field: [null],
-                condition: [null],
-                action: [null],
-                value: ['']
-            }),
+            dependencies: this.fb.array([]),
             resources: [null],
             min: [null],
             max: [null],
@@ -95,7 +93,7 @@ export class FieldConfigComponent implements OnInit {
                 required: this.field.required,
                 datePeriod: this.field.datePeriod,
                 description: this.field.description,
-                dependencies: this.field.dependency,
+                dependencies: this.field.dependencies,
                 resources: this.field.resources,
                 min: this.field.min,
                 max: this.field.max,
@@ -134,15 +132,23 @@ export class FieldConfigComponent implements OnInit {
             }
         });
 
+        this.dependencies.at(-1)?.valueChanges.subscribe(value =>{
+            this.dependency = value;
+        });
+
         this.formResourceService.search({}).subscribe(resultado => {
             resultado.forEach(r => {
                 r.type === 'section' ? this.prebuiltSections.push(r) : this.resources.push(r);
             });
         });
-    }
+
+    };
 
     get selectList() {
         return this.form.controls['selectList'] as FormArray;
+    };
+    get dependencies() {
+        return this.form.controls['dependencies'] as FormArray;
     }
 
     addSelectItem() {
@@ -154,19 +160,19 @@ export class FieldConfigComponent implements OnInit {
             selectItem.get('id')?.setValue(value);
         });
         this.selectList.push(selectItem);
-    }
+    };
     deleteSelectItem(selectItemIndex: number) {
         this.selectList.removeAt(selectItemIndex);
-    }
+    };
 
     closeFieldConfig() {
         this.closeField.emit();
-    }
+    };
     onSaveField() {
         if (this.form.valid) {
             this.saveField.emit(this.form.value);
         }
-    }
+    };
 
     generarStringUnico(): string {
         const numero = Math.floor(10 + Math.random() * 90);
@@ -177,6 +183,18 @@ export class FieldConfigComponent implements OnInit {
             characters += chars.charAt(Math.floor(Math.random() * charsLength));
         }
         return `${characters}${numero}`;
+    };
+
+    onAddDependency() {
+        const dependency = this.fb.group({
+            type: [null, Validators.required],
+            section: [null, Validators.required],
+            field: [null, Validators.required],
+            condition: [''],
+            action: [''],
+            value: ['']
+        });
+        this.dependencies.push(dependency);
     };
 
     getPaths(obj, prefix = ''): Array<string> {
@@ -201,7 +219,23 @@ export class FieldConfigComponent implements OnInit {
             }
         }
         return paths;
-    }
+    };
+    getOneObjectOfResource(url): any {
+        const listResource = this.dynamicResourcesService.get(url);
+        return listResource[0];
+    };
+    getSectionList(): any {
+        const listSections = [];
+        this.fullForm.sections.map(s => {
+            const section = {
+                id: s.key,
+                nombre: `${s.name} ${s.key}`
+            };
+            listSections.push(section);
+        });
+        return listSections;
+    };
 
-    
+
+
 }

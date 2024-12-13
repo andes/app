@@ -50,7 +50,7 @@ export class FormConfigComponent implements OnInit {
         private router: Router,
         private formDefaultResourceService: FormPresetResourcesService,
         private plex: Plex,
-    ) {}
+    ) { }
 
     ngOnInit() {
         if (!this.auth.check('formBuilder:update')) {
@@ -196,8 +196,28 @@ export class FormConfigComponent implements OnInit {
         this.form.sections.push(section);
         this.form.sections = [...this.form.sections];
     }
-
-    loadResource(field) {
-        
+    generarStringUnico(): string {
+        const numero = Math.floor(10 + Math.random() * 90);
+        const chars = 'abcdefghijklmnopqrstuvwxyz';
+        const charsLength = chars.length;
+        let characters = '';
+        for ( let i = 0 ; i < 2 ; i++ ) {
+            characters += chars.charAt(Math.floor(Math.random() * charsLength));
+        }
+        return `${characters}${numero}`;
+    };
+    saveNameSection(sectionIndex) {
+        const unique = this.generarStringUnico();
+        const key = this.form.sections[sectionIndex].name
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^\w\s]/gi, '')
+            .replace(/\s+/g, '-')
+            .toLowerCase().concat(unique);
+        this.form.sections[sectionIndex].key = key;
+        console.log(this.form);
     }
+
+    // loadResource(field) {
+    // }
 }

@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DynamicResourcesService {
-    constructor( private server: Server) { }
+    constructor( private server: Server ) { }
 
-    get(url, params): Observable<any[]> {
+    get(url, params?): Observable<any[]> {
         return this.server.get(url, { params, showError: true });
     }
 }

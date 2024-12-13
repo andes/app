@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 
 import { PlexModule } from '@andes/plex';
 import { FormsListComponent } from './components/forms-list/forms-list.component';
-import { EpiFormsRouting } from './epi-form.routing';
+import { AndesFormsRouting } from './andes-form.routing';
 import { FormConfigComponent } from './components/form-config/form-config.component';
 
 import { FormResourcesService } from './services/resources.service';
@@ -33,7 +33,7 @@ import { DynamicResourcesService } from './services/dynamic-resource.service';
         HttpClientModule,
         RouterModule,
         DragDropModule,
-        EpiFormsRouting
+        AndesFormsRouting
     ],
     providers: [
         FormResourcesService,
@@ -41,4 +41,4 @@ import { DynamicResourcesService } from './services/dynamic-resource.service';
     ],
     exports: []
 })
-export class EpiFormModule {}
+export class AndesFormModule {}

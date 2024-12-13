@@ -137,8 +137,8 @@ const appRoutes: Routes = [
         runGuardsAndResolvers: 'always'
     },
     {
-        path: 'epi-form',
-        loadChildren: () => import('./modules/epi-form/epi-form.module').then(m => m.EpiFormModule),
+        path: 'andes-form',
+        loadChildren: () => import('./modules/andes-form/andes-form.module').then(m => m.AndesFormModule),
         canActivate: [RoutingNavBar, RoutingGuard],
         runGuardsAndResolvers: 'always'
     },
