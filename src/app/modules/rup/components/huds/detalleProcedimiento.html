@@ -79,7 +79,7 @@
                     <div class="col-12">
                         <rup class="columna-completa align"
                              [elementoRUP]="elementosRUPService.elementoRegistro(registro)"
-                             [prestacion]="prestacionRelacionada" [paciente]="paciente" [registro]="registro"
+                             [prestacion]="prestacionRelacionada" [paciente]="paciente" [registro]="registroRUP"
                              [params]="elementosRUPService.elementoRegistro(registro)?.params" [soloValores]="true"
                              [vistaHUDS]="false">
                         </rup>
@@ -90,9 +90,9 @@
     </div>
     <hr>
     <div class="mt-3">
-        <plex-title titulo="Registros de la prestación" size="sm"></plex-title>
+        <plex-title titulo="Otros registros de la prestación" size="sm"></plex-title>
         <div class="mt-3">
-            <plex-accordion>
+            <plex-accordion *ngIf="registrosPrestacion.length">
                 <plex-panel class="lista-panel" *ngFor="let registro of registrosPrestacion;let i =index">
                     <div plex-accordion-title case="capitalize">
                         <div class="titulo">
@@ -106,6 +106,10 @@
                     </div>
                 </plex-panel>
             </plex-accordion>
+
+            <div class="text-center" *ngIf="!registrosPrestacion.length">
+                No hay más registros en la prestación
+            </div>
         </div>
     </div>
 </div>
