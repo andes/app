@@ -215,7 +215,6 @@ export class FormConfigComponent implements OnInit {
             .replace(/\s+/g, '-')
             .toLowerCase().concat(unique);
         this.form.sections[sectionIndex].key = key;
-        console.log(this.form);
     }
 
     // loadResource(field) {
