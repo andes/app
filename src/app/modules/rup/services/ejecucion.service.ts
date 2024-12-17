@@ -3,15 +3,15 @@ import { cache } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, from, of, Subject } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
+import { SnomedService } from '../../../apps/mitos';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { IElementoRUP } from '../interfaces/elementoRUP.interface';
 import { IPrestacion } from '../interfaces/prestacion.interface';
 import { ISnomedConcept } from '../interfaces/snomed-concept.interface';
 import { getRegistros } from '../operators/populate-relaciones';
+import { ConstantesService } from './../../../services/constantes.service';
 import { ElementosRUPService } from './elementosRUP.service';
 import { PrestacionesService } from './prestaciones.service';
-import { ConstantesService } from './../../../services/constantes.service';
-import { SnomedService } from '../../../apps/mitos';
 
 
 @Injectable()
@@ -151,7 +151,7 @@ export class RupEjecucionService {
                 switchMap((registro) => {
                     if (registro && registro.evoluciones[0].estado === 'activo') {
                         return from(
-                            this.plex.confirm('¿Desea evolucionar el mismo?', 'El problema ya se encuentra registrado')
+                            this.plex.confirm('¿Desea evolucionar el mismo?', `El trastorno ${concepto.term} se encuentra activo`, 'Si, evolucionar', 'No, crear nuevo')
                         ).pipe(
                             map((confirmar) => {
                                 if (confirmar) {
