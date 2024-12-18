@@ -74,9 +74,10 @@
                             </div>
                             <div class="col-md-12"
                                  *ngIf=" turno.horaInicio >= todaysdate && turno.estado !== 'suspendido' && turno.organizacion._id === auth.organizacion.id">
-                                <plex-button *ngIf="puedeLiberarTurno && turno.asistencia !== 'asistio' && turno.bloque_id"
-                                             class="float-right mr-1" type="danger" label="Liberar Turno" size="sm"
-                                             (click)="liberarTurno(turno)">
+                                <plex-button *ngIf="puedeLiberarTurno && turno.asistencia !== 'asistio'"
+                                             class="float-right mr-1" type="danger"
+                                             label="{{ turno.tipoTurno ? 'Liberar Turno' : 'Liberar Sobreturno' }}"
+                                             size="sm" (click)="liberarTurno(turno)">
                                 </plex-button>
 
                                 <plex-button *ngIf="puedeRegistrarAsistencia && turno.asistencia !== 'asistio'&& isToday(turno)"
