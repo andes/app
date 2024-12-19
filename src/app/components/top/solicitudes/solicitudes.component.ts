@@ -356,6 +356,7 @@ export class SolicitudesComponent implements OnInit {
             this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
                 () => this.cargarSolicitudes()
             );
+            this.observacionesAnular = '';
         }
     }
 
