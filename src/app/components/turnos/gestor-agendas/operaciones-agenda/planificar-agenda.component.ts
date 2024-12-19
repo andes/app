@@ -2,7 +2,7 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 import * as moment from 'moment';
-import { Subscription } from 'rxjs';
+import { EMPTY, Subscription, catchError, forkJoin, map, of, switchMap } from 'rxjs';
 import { InstitucionService } from '../../../../services/turnos/institucion.service';
 import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
@@ -790,142 +790,146 @@ export class PlanificarAgendaComponent implements OnInit {
             indice++;
         } while (bloqueConPrestActiva && indice < this.modelo.bloques.length);
 
-        // Verificamos si las prestaciones de la agenda incluyen ambito ambulatorio.
-        let prestaciones = '';
-        let incluyeAmbulatorio = true;
-        this.modelo.tipoPrestaciones.forEach(prestacion => {
-            if (!prestacion.ambito.includes('ambulatorio')) {
-                prestaciones += prestacion.term + ', ';
-            }
-            this.conceptoTurneablesService.search({ ids: prestacion._id }).subscribe(conceptos => {
-                conceptos.forEach(concepto => {
-                    if (concepto.ambito && !concepto.ambito.includes('ambulatorio')) {
-                        prestaciones += prestacion.term + ', ';
-                    }
-                });
-                if (prestaciones !== '') {
-                    prestaciones = prestaciones.slice(0, -2);
-                    incluyeAmbulatorio = false;
-                }
-                if ((!clonar || (clonar && incluyeAmbulatorio)) && $event.formValid && this.verificarNoNominalizada() &&
+        const observables$ = this.modelo.tipoPrestaciones.map(prestacion =>
+            this.conceptoTurneablesService.search({ ids: prestacion._id })
+        );
+
+        forkJoin(observables$).pipe(
+            catchError(() => {
+                this.plex.toast('danger', 'Error al obtener prestaciones');
+                return EMPTY;
+            }),
+            map((resultados: any) => resultados.flat()),
+            map((prestaciones) => ({
+                prestaciones: prestaciones.filter(p => !p.ambito.includes('ambulatorio')),
+                incluyeAmbulatorio: prestaciones.every(p => p.ambito.includes('ambulatorio')),
+            })),
+            switchMap(({ prestaciones, incluyeAmbulatorio }) => {
+                const prestacionesText = prestaciones.map(p => p.term).join(', ');
+                if ((!clonar || (clonar && incluyeAmbulatorio)) &&
+                    $event.formValid &&
+                    this.verificarNoNominalizada() &&
                     bloqueConPrestActiva &&
-                    arrayPrestaciones.length === this.modelo.tipoPrestaciones.length) {
-                    this.fecha = new Date(this.modelo.fecha);
-                    this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
-                    this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
-
-                    // Si es una agenda nueva, no tiene ID y se genera un ID en '0' para el mapa de espacios físicos
-                    if (this.modelo.id === '0') {
-                        delete this.modelo.id;
-                    }
-
-                    this.modelo.organizacion = this.auth.organizacion;
-                    const bloques = this.modelo.bloques;
-                    if (this.espacioFisicoPropios) {
-                        this.modelo.otroEspacioFisico = null;
-                    } else {
-                        this.modelo.espacioFisico = null;
-                    }
-
-                    bloques.forEach((bloque, index) => {
-                        bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
-                        bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
-                        bloque.turnos = [];
-                        bloque.turnosMobile = bloque.accesoDirectoProgramado > 0 ? bloque.turnosMobile : false;
-                        if (!this.dinamica) {
-                            if (bloque.pacienteSimultaneos) {
-                                bloque.restantesDelDia = bloque.accesoDirectoDelDia * bloque.cantidadSimultaneos;
-                                bloque.restantesProgramados = bloque.accesoDirectoProgramado * bloque.cantidadSimultaneos;
-                                bloque.restantesGestion = bloque.reservadoGestion * bloque.cantidadSimultaneos;
-                                bloque.restantesProfesional = bloque.reservadoProfesional * bloque.cantidadSimultaneos;
-                                bloque.restantesMobile = bloque.accesoDirectoProgramado > 0 ? bloque.cupoMobile * bloque.cantidadSimultaneos : 0;
-                            } else {
-                                bloque.restantesDelDia = bloque.accesoDirectoDelDia;
-                                bloque.restantesProgramados = bloque.accesoDirectoProgramado;
-                                bloque.restantesGestion = bloque.reservadoGestion;
-                                bloque.restantesProfesional = bloque.reservadoProfesional;
-                                bloque.restantesMobile = bloque.accesoDirectoProgramado > 0 ? bloque.cupoMobile : 0;
-                            }
-
-                            for (let i = 0; i < bloque.cantidadTurnos; i++) {
-                                const turno = {
-                                    estado: 'disponible',
-                                    horaInicio: this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000)),
-                                    tipoTurno: undefined,
-                                    auditable: !bloque.tipoPrestaciones.some(p => !p.auditable)
-                                };
-
-                                if (bloque.pacienteSimultaneos) {
-                                    // Simultaneos: Se crean los turnos según duración, se guardan n (cantSimultaneos) en c/ horario
-                                    for (let j = 0; j < bloque.cantidadSimultaneos; j++) {
-                                        bloque.turnos.push(turno);
-                                    }
-                                } else {
-                                    if (bloque.citarPorBloque) {
-                                        // Citar x Bloque: Se generan los turnos según duración y cantidadPorBloque
-                                        for (let j = 0; j < bloque.cantidadBloque; j++) {
-                                            turno.horaInicio = this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * bloque.cantidadBloque * 60000));
-                                            if (turno.horaInicio.getTime() < bloque.horaFin.getTime()) {
-                                                if (bloque.turnos.length < bloque.cantidadTurnos) {
-                                                    bloque.turnos.push(turno);
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        // Bloque sin simultaneos ni Citación por bloque
-                                        bloque.turnos.push(turno);
-                                    }
-                                }
-                            }
-                        }
-                        if (!this.dinamica) {
-                            bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter((el) => {
-                                return el.activo === true;
-                            });
-                        }
-                    });
-
-                    // Si la agenda no es nominalizada, se limpia la posible información residual relacionada a turnos
-                    if (!this.modelo.nominalizada) {
-                        this.cleanDatosTurnos();
-                    }
-                    const espOperation = this.serviceAgenda.save(this.modelo);
-                    espOperation.subscribe((resultado: any) => {
-                        if ((resultado as any).tipoError) {
-                            this.datos = resultado;
-                            this.showModal = true;
-                            this.datos.clonarOguardar = 'guardar';
-                        } else {
-                            this.plex.toast('success', 'La agenda se guardó correctamente');
-                            this.modelo.id = resultado.id;
-                            if (clonar) {
-                                this.showClonar = true;
-                                this.showAgenda = false;
-                            } else {
-                                this.modelo = {};
-                                this.showAgenda = false;
-                                this.volverAlGestor.emit(true);
-                            }
-                            this.hideGuardar = false;
-                        }
-                    });
+                    arrayPrestaciones.length === this.modelo.tipoPrestaciones.length
+                ) {
+                    this.prepararModelo();
+                    return this.serviceAgenda.save(this.modelo).pipe(
+                        map(resultado => ({ resultado, incluyeAmbulatorio, prestacionesText }))
+                    );
                 } else {
-                    if (!this.verificarNoNominalizada()) {
-                        this.plex.info('warning', 'Solo puede haber una prestación en las agendas no nominalizadas');
-                    } else if (!bloqueConPrestActiva) {
-                        this.plex.info('warning', 'Existe un bloque con todas sus prestaciones inactivas.');
-                    } else if (arrayPrestaciones.length !== this.modelo.tipoPrestaciones.length) {
-                        this.plex.info('warning', 'Por lo menos una de las prestaciones de la agenda está sin activar.');
-                    } else if (!incluyeAmbulatorio) {
-                        this.plex.info('warning', `Las prestaciones <b>${prestaciones} </b> ya no están habilitadas para crear agendas.`);
-                    } else {
-                        this.plex.info('warning', 'Debe completar los datos requeridos');
-                    }
-                    this.hideGuardar = false;
+                    this.manejarErrores(incluyeAmbulatorio, prestacionesText, bloqueConPrestActiva, arrayPrestaciones);
+                    return EMPTY;
                 }
-            });
+            })
+        ).subscribe({
+            next: (resp) => {
+                this.manejarExito(resp.resultado, clonar);
+            },
+            error: () => {
+                this.plex.toast('danger', 'ERROR: La agenda no se pudo guardar.');
+            }
         });
+    }
 
+    prepararModelo() {
+        this.fecha = new Date(this.modelo.fecha);
+        this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
+        this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
+        if (this.modelo.id === '0') {
+            delete this.modelo.id;
+        }
+        this.modelo.organizacion = this.auth.organizacion;
+        this.modelo.bloques = this.procesarBloques(this.modelo.bloques);
+        if (!this.modelo.nominalizada) {
+            this.cleanDatosTurnos();
+        }
+    }
+
+    procesarBloques(bloques) {
+        return bloques.map(bloque => {
+            bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
+            bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
+            bloque.turnos = this.generarTurnos(bloque);
+            if (!this.dinamica) {
+                bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(el => el.activo);
+            }
+            return bloque;
+        });
+    }
+
+    generarTurnos(bloque) {
+        const turnos = [];
+        if (bloque.pacienteSimultaneos) {
+            bloque.restantesDelDia = bloque.accesoDirectoDelDia * bloque.cantidadSimultaneos;
+            bloque.restantesProgramados = bloque.accesoDirectoProgramado * bloque.cantidadSimultaneos;
+            bloque.restantesGestion = bloque.reservadoGestion * bloque.cantidadSimultaneos;
+            bloque.restantesProfesional = bloque.reservadoProfesional * bloque.cantidadSimultaneos;
+            bloque.restantesMobile = bloque.accesoDirectoProgramado > 0 ? bloque.cupoMobile * bloque.cantidadSimultaneos : 0;
+        } else {
+            bloque.restantesDelDia = bloque.accesoDirectoDelDia;
+            bloque.restantesProgramados = bloque.accesoDirectoProgramado;
+            bloque.restantesGestion = bloque.reservadoGestion;
+            bloque.restantesProfesional = bloque.reservadoProfesional;
+            bloque.restantesMobile = bloque.accesoDirectoProgramado > 0 ? bloque.cupoMobile : 0;
+        }
+        for (let i = 0; i < bloque.cantidadTurnos; i++) {
+            const turno = {
+                estado: 'disponible',
+                horaInicio: this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000)),
+                tipoTurno: undefined,
+                auditable: !bloque.tipoPrestaciones.some(p => !p.auditable)
+            };
+            if (bloque.pacienteSimultaneos) {
+                for (let j = 0; j < bloque.cantidadSimultaneos; j++) {
+                    turnos.push(turno);
+                }
+            } else {
+                if (bloque.citarPorBloque) {
+                    // Citar x Bloque: Se generan los turnos según duración y cantidadPorBloque
+                    for (let j = 0; j < bloque.cantidadBloque; j++) {
+                        turno.horaInicio = this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * bloque.cantidadBloque * 60000));
+                        if (turno.horaInicio.getTime() < bloque.horaFin.getTime()) {
+                            if (turnos.length < bloque.cantidadTurnos) {
+                                turnos.push(turno);
+                            }
+                        }
+                    }
+                } else {
+                    // Bloque sin simultaneos ni Citación por bloque
+                    turnos.push(turno);
+                }
+            }
+        }
+        return turnos;
+    }
+
+    manejarErrores(incluyeAmbulatorio, prestacionesText, bloqueConPrestActiva, arrayPrestaciones) {
+        if (!this.verificarNoNominalizada()) {
+            this.plex.info('warning', 'Solo puede haber una prestación en las agendas no nominalizadas');
+        } else if (!bloqueConPrestActiva) {
+            this.plex.info('warning', 'Existe un bloque con todas sus prestaciones inactivas.');
+        } else if (arrayPrestaciones.length !== this.modelo.tipoPrestaciones.length) {
+            this.plex.info('warning', 'Por lo menos una de las prestaciones de la agenda está sin activar.');
+        } else if (!incluyeAmbulatorio) {
+            this.plex.info('warning', `Una o más prestaciones (<b>${prestacionesText}</b>) no están habilitadas para crear agendas.`);
+        } else {
+            this.plex.info('warning', 'Debe completar los datos requeridos');
+        }
+        this.hideGuardar = false;
+    }
+
+    manejarExito(resultado, clonar) {
+        this.plex.toast('success', 'La agenda se guardó correctamente');
+        this.modelo.id = resultado.id;
+        if (clonar) {
+            this.showClonar = true;
+            this.showAgenda = false;
+        } else {
+            this.modelo = {};
+            this.showAgenda = false;
+            this.volverAlGestor.emit(true);
+        }
+        this.hideGuardar = false;
     }
 
     /**

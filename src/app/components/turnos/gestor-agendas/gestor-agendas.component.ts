@@ -3,7 +3,7 @@ import { Plex } from '@andes/plex';
 import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin, map } from 'rxjs';
 import { BiQueriesComponent } from 'src/app/modules/visualizacion-informacion/components/bi-queries/bi-queries.component';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { QueriesService } from 'src/app/services/query.service';
@@ -436,23 +436,31 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         if (this.lastRequestFecha) {
             this.lastRequestFecha.unsubscribe();
         }
+
         let prestaciones = '';
-        // Verificamos si las prestaciones de la agenda a clonar incluyen ambito ambulatorio.
-        agenda.tipoPrestaciones.forEach(prestacion => {
-            this.conceptoTurneablesService.search({ ids: prestacion._id }).subscribe(conceptos => {
-                conceptos.forEach(concepto => {
-                    if (concepto.ambito && !concepto.ambito.includes('ambulatorio')) {
-                        prestaciones += prestacion.term + ', ';
-                    }
-                });
-                if (prestaciones === '') {
-                    this.showGestorAgendas = false;
-                    this.showClonar = true;
-                } else {
-                    prestaciones = prestaciones.slice(0, -2);
-                    this.plex.info('warning', `Las prestaciones <b>${prestaciones} </b> ya no están habilitadas para crear agendas.`);
+
+        const observables$ = agenda.tipoPrestaciones.map(prestacion =>
+            this.conceptoTurneablesService.search({ ids: prestacion._id })
+        );
+
+        forkJoin(observables$).subscribe((resultados: any) => {
+            const result = resultados.flat();
+            result.forEach(concepto => {
+                if (concepto.ambito && !concepto.ambito.includes('ambulatorio')) {
+                    prestaciones += concepto.term + ', ';
                 }
             });
+
+            if (prestaciones === '') {
+                this.showGestorAgendas = false;
+                this.showClonar = true;
+            } else {
+                prestaciones = prestaciones.slice(0, -2);
+                this.plex.info(
+                    'warning',
+                    `Una o más prestaciones (<b>${prestaciones}</b>) no están habilitadas para crear agendas.`
+                );
+            }
         });
     }
 
