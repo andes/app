@@ -578,5 +578,13 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         this.servicioPrestacion.visualizarImagen(this.prestacion);
     }
 
+    esPrimeraVez(elemento) {
+        return this.codigosCie10 && this.codigosCie10[elemento.id] && this.codigosCie10[elemento.id].c2 && !this.validada && (elemento.valor?.estado !== 'inactivo' && elemento.valor?.estado !== 'resuelto');
+    }
+
+    esDiagonisticoPrincipal(elemento) {
+        return this.elementoRUP.requiereDiagnosticoPrincipal && this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado';
+    }
+
 }
 
