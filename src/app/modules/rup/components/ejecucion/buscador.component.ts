@@ -440,7 +440,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
                     } else {
                         this.agregarConcepto(concepto);
                     }
-
+                } else {
+                    this.agregarConcepto(concepto);
                 }
             });
         }
