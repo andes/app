@@ -284,7 +284,33 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     agregarSolicitud(concepto, helpSolicitudes: PlexHelpComponent) {
         helpSolicitudes.toggle();
-        this.ejecucionService.agregarConcepto(concepto, true);
+        if (this.ejecucionService.paciente && concepto) {
+            const params: any = {
+                estados: [
+                    'auditoria',
+                    'pendiente',
+                    'ejecucion'
+                ],
+                idPaciente: this.ejecucionService.paciente.id,
+                prestacionDestino: concepto.conceptId
+            };
+            this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
+                if (resultado.length) {
+                    const existeSolicitud = resultado.find(registro => registro.inicio === 'top');
+                    if (existeSolicitud) {
+                        this.plex.confirm(`El paciente ya tiene una solicitud en curso para ${concepto.term}. ¿Desea continuar?`, 'Paciente con solicitud en curso').then(confirmar => {
+                            if (confirmar) {
+                                this.ejecucionService.agregarConcepto(concepto, true);
+                            }
+                        });
+                    }
+                } else {
+                    this.ejecucionService.agregarConcepto(concepto, true);
+                }
+            });
+        } else {
+            this.ejecucionService.agregarConcepto(concepto, true);
+        }
     }
 
     public onCloseTab(index) {
