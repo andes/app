@@ -1,3 +1,11 @@
+# [5.155.0](https://github.com/andes/app/compare/v5.154.0...v5.155.0) (2024-12-25)
+
+
+### Features
+
+* **CIT-346:** Sobreturno se guarda sin paciente cuando se elimina ([#3100](https://github.com/andes/app/issues/3100)) ([634127a](https://github.com/andes/app/commit/634127adec7b5dea365dc8fbf2699d5a7d200cb6))
+* **RUP:** modifica controles en moleculas ([#3092](https://github.com/andes/app/issues/3092)) ([6519727](https://github.com/andes/app/commit/65197279c0730ef3d92f761d865ebe68d44282b3))
+
 # [5.154.0](https://github.com/andes/app/compare/v5.153.0...v5.154.0) (2024-12-11)
 
 
