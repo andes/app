@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormResourcesService } from '../../services/resources.service';
 import { DynamicResourcesService } from '../../services/dynamic-resource.service';
-import { Field } from '../../andes-form.interfaces';
+import { Field, Form, Section } from '../../andes-form.interfaces';
 
 @Component({
     selector: 'field-config',
@@ -11,7 +11,7 @@ import { Field } from '../../andes-form.interfaces';
 export class FieldConfigComponent implements OnInit {
     @Input() field: Field;
     @Input() sectionIndex: number;
-    @Input() fullForm: any;
+    @Input() fullForm: Form;
     @Output() saveField: EventEmitter<any> = new EventEmitter<any>();
     @Output() closeField: EventEmitter<void> = new EventEmitter<void>();
 
@@ -36,7 +36,6 @@ export class FieldConfigComponent implements OnInit {
         { id: 'lessThan', nombre: 'Menor que' },
         { id: 'contains', nombre: 'Contiene' }
     ];
-    public hasDependency = false;
     public tiposList = [
         { id: 'string', nombre: 'Texto' },
         { id: 'int', nombre: 'Numérico' },
@@ -62,7 +61,8 @@ export class FieldConfigComponent implements OnInit {
     public resources = [];
     public prebuiltSections = [];
     public dynamicResources = [];
-    public dependency = [];
+    // public dependency = [];
+    public hasDependency = false;
     constructor(
         private fb: FormBuilder,
         private formResourceService: FormResourcesService,
@@ -93,6 +93,7 @@ export class FieldConfigComponent implements OnInit {
                 required: this.field.required,
                 datePeriod: this.field.datePeriod,
                 description: this.field.description,
+                hasDependency: this.hasDependency,
                 dependencies: this.field.dependencies,
                 resources: this.field.resources,
                 min: this.field.min,
@@ -132,16 +133,12 @@ export class FieldConfigComponent implements OnInit {
             }
         });
 
-        this.dependencies.at(-1)?.valueChanges.subscribe(value =>{
-            this.dependency = value;
-        });
-
         this.formResourceService.search({}).subscribe(resultado => {
             resultado.forEach(r => {
                 r.type === 'section' ? this.prebuiltSections.push(r) : this.resources.push(r);
             });
         });
-
+        console.log(this.fullForm);
     };
 
     get selectList() {
@@ -188,11 +185,11 @@ export class FieldConfigComponent implements OnInit {
     onAddDependency() {
         const dependency = this.fb.group({
             type: [null, Validators.required],
+            condition: [null, Validators.required],
             section: [null, Validators.required],
             field: [null, Validators.required],
-            condition: [''],
-            action: [''],
-            value: ['']
+            action: [null],
+            value: [null]
         });
         this.dependencies.push(dependency);
     };
@@ -221,21 +218,51 @@ export class FieldConfigComponent implements OnInit {
         return paths;
     };
     getOneObjectOfResource(url): any {
-        const listResource = this.dynamicResourcesService.get(url);
+        const listResource = this.dynamicResourcesService.get(url, { limit: 10 });
         return listResource[0];
     };
-    getSectionList(): any {
+    getSectionList(event): any {
+        console.log('get data section')
         const listSections = [];
         this.fullForm.sections.map(s => {
             const section = {
                 id: s.key,
-                nombre: `${s.name} ${s.key}`
+                nombre: s.name
             };
             listSections.push(section);
         });
-        return listSections;
+        event.callback(listSections);
     };
-
-
-
+    getFieldList(dependency, event): any {
+        console.log(dependency);
+        const fieldList = [];
+        const section = dependency.get('section')?.value;
+        console.log(section);
+        const sectionForm = this.fullForm.sections.find((s) => s.key === section.id);
+        console.log(sectionForm);
+        sectionForm.fields?.map(f => {
+            const field = {
+                id: f.key,
+                nombre: f.name
+            };
+            fieldList.push(field);
+        });
+        event.callback(fieldList);
+    };
+    getDataForValueSelect(): any {
+        const selectList = [];
+        const url = this.form.get('resources')?.value.url;
+        console.log(url);
+        const example = this.getOneObjectOfResource(url);
+        console.log(example);
+        console.log(this.getPaths(example));
+        this.getPaths(example).map(p => {
+            const select = {
+                id: p,
+                nombre: p,
+            };
+            selectList.push(select);
+        });
+        return selectList;
+    }
 }

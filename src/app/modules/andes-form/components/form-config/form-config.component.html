@@ -43,9 +43,8 @@
                         <plex-grid cols="2" class="mb-3" *ngIf="section.key === ''">
                             <div justify="start">
                                 <plex-text name="name-{{ sectionIndex }}" label="Nombre de la sección"
-                                    [(ngModel)]="section.name" [required]="true" (change)="onChanges($event)"
-                                    class="px-3"></plex-text>
-                                <plex-button type="success" size="sm" icon="check" align="center" class="mt-4" 
+                                    [(ngModel)]="section.name" [required]="true" class="px-3"></plex-text>
+                                <plex-button type="success" size="sm" icon="check" align="center" class="mt-4"
                                     (click)="saveNameSection(sectionIndex)" tooltip="Confirmar nombre"></plex-button>
                             </div>
                             <div justify="end" class="mt-4">
@@ -54,12 +53,13 @@
                                     class="ml-1 mr-4"></plex-button>
                             </div>
                         </plex-grid>
-                        <plex-title *ngIf="section.key !== ''" [titulo]="section.name" style="flex-grow: 1;" class="mr-4">
+                        <plex-title *ngIf="section.key !== ''" [titulo]="section.name" style="flex-grow: 1;"
+                            class="mr-4">
                             <plex-button type="success" size="sm" icon="plus" align="center"
-                                    (click)="onAddField(sectionIndex)" tooltip="Agregar campo"></plex-button>
+                                (click)="onAddField(sectionIndex)" tooltip="Agregar campo"></plex-button>
                             <plex-button type="danger" size="sm" icon="delete" align="center"
-                                    (click)="onRemoveSection(sectionIndex)" tooltip="Eliminar sección"
-                                    class="ml-1 mr-3"></plex-button>
+                                (click)="onRemoveSection(sectionIndex)" tooltip="Eliminar sección"
+                                class="ml-1 mr-3"></plex-button>
                         </plex-title>
                     </div>
                     <ul *ngIf="section.type === 'section'" class="mr-2 unstyled" style="padding-left: 0 !important;"
@@ -198,17 +198,21 @@
                     <div *ngIf="section.type === 'table'" class="row px-2 py-1">
                         <plex-icon name="drag" size="xl" align="center" cdkDragHandle tooltip="Arrastrar sección"
                             tooltipPosition="right"></plex-icon>
-                        <plex-grid cols="4" class="mb-3">
+                        <plex-title *ngIf="section.key !== ''" [titulo]="section.name" style="flex-grow: 1;" class="mr-4">
+                            <plex-button type="warning" size="sm" icon="pencil" align="center"
+                                (click)="onEditTable(sectionIndex)" tooltip="Editar tabla"></plex-button>
+                            <plex-button type="danger" size="sm" icon="delete" align="center"
+                                (click)="onRemoveSection(sectionIndex)" tooltip="Eliminar sección"
+                                class="ml-1 mr-3"></plex-button>
+                        </plex-title>
+                        <plex-grid cols="3" class="mb-3">
                             <plex-text name="name-{{ sectionIndex }}" label="Nombre de la sección"
-                                [(ngModel)]="section.name" [required]="true"
-                                class="px-3"></plex-text>
-                            <plex-text name="key-{{ sectionIndex }}" label="Llave de sección" [(ngModel)]="section.key"
-                                [required]="true" class="px-3"></plex-text>
+                                [(ngModel)]="section.name" [required]="true" class="px-3"></plex-text>
                             <plex-int name="num-cols-{{ sectionIndex }}" label="Numero de columnas"
                                 [(ngModel)]="section.nroCols" [required]="true" class="px-3"></plex-int>
                             <div justify="end" class="mt-4">
                                 <plex-button type="warning" size="sm" icon="pencil" align="center"
-                                    (click)="onEditTable(sectionIndex)" tooltip="Editar tabla"></plex-button>
+                                    (click)="saveNameTable(sectionIndex)" tooltip="Editar tabla"></plex-button>
                                 <plex-button type="danger" size="sm" icon="delete" align="center"
                                     (click)="onRemoveSection(sectionIndex)" tooltip="Eliminar sección"
                                     class="ml-1 mr-4"></plex-button>

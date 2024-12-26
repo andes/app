@@ -205,7 +205,7 @@ export class FormConfigComponent implements OnInit {
             characters += chars.charAt(Math.floor(Math.random() * charsLength));
         }
         return `${characters}${numero}`;
-    };
+    }
     saveNameSection(sectionIndex) {
         const unique = this.generarStringUnico();
         const key = this.form.sections[sectionIndex].name
@@ -213,9 +213,18 @@ export class FormConfigComponent implements OnInit {
             .replace(/[\u0300-\u036f]/g, '')
             .replace(/[^\w\s]/gi, '')
             .replace(/\s+/g, '-')
-            .toLowerCase().concat(unique);
+            .toLowerCase().concat('-', unique);
         this.form.sections[sectionIndex].key = key;
     }
+    saveNameTable(sectionIndex) {
+        if (this.form.sections[this.sectionIndex].nroCols > 0) {
+            this.saveNameSection(sectionIndex);
+        } else {
+            this.plex.toast('danger', 'No se puede configurar la tabla. Agregue Numero de columnas', 'Atención');
+        }
+    }
+
+
 
     // loadResource(field) {
     // }
