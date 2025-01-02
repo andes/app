@@ -231,6 +231,7 @@ export class PanelAgendaComponent implements OnInit {
 
         if (tipo === 'profesionales') {
             // Loop profesionales
+            this.profesionalExistente.emit(true);
             if (this.editaAgendaPanel.profesionales) {
                 this.editaAgendaPanel.profesionales.forEach((profesional) => {
                     const params = {
@@ -257,6 +258,8 @@ export class PanelAgendaComponent implements OnInit {
                         }
                     });
                 });
+            } else {
+                this.profesionalExistente.emit(false);
             }
         } else if (tipo === 'espacioFisico') {
             // Loop Espacios Físicos
