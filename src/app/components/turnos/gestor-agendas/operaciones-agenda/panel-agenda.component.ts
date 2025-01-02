@@ -257,6 +257,8 @@ export class PanelAgendaComponent implements OnInit {
                         }
                     });
                 });
+            } else {
+                this.profesionalExistente.emit(false);
             }
         } else if (tipo === 'espacioFisico') {
             // Loop Espacios Físicos
