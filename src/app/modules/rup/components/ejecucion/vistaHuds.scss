@@ -17,6 +17,17 @@ plex-tab {
     }
 }
 
+.nav-item-receta {
+    a {
+        color: #7b2ff7 !important;
+
+        &.active {
+            color: #ffffff !important;
+            background-color: #7b2ff7 !important;
+        }
+    }
+}
+
 form~form {
     border: none;
 }

@@ -1,0 +1,17 @@
+.table {
+    td {
+        font-weight: normal;
+        padding: 5px;
+
+        &:first-child {
+            max-width: 130px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    th {
+        padding: 5px;
+    }
+}

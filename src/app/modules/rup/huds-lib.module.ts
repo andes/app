@@ -35,6 +35,8 @@ import { ElementosRUPModule } from './elementos-rup.module';
 import { RUPLibModule } from './rup-lib.module';
 import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 import { VistaLaboratorioComponent } from './components/ejecucion/laboratorios/vista-laboratorio.component';
+import { VistaRecetaComponent } from './components/huds/vistaReceta';
+import { SuspenderMedicacionComponent } from './components/ejecucion/recetas/suspenderMedicacion';
 
 @NgModule({
     imports: [
@@ -68,6 +70,7 @@ import { VistaLaboratorioComponent } from './components/ejecucion/laboratorios/v
         DetalleRegistroInternacionComponent,
         DetalleRegistroInternoComponent,
         DetalleProcedimientoComponent,
+        VistaRecetaComponent,
         ListadoRegistrosComponent,
         DetalleRegistronComponent,
         DetallePacienteComponent,
@@ -77,6 +80,7 @@ import { VistaLaboratorioComponent } from './components/ejecucion/laboratorios/v
         VistaHistorialTurnosComponent,
         HudsBusquedaComponent,
         ListadoInternacionHudsComponent,
+        SuspenderMedicacionComponent
     ],
     exports: [
         VistaCDAComponent,
@@ -92,12 +96,14 @@ import { VistaLaboratorioComponent } from './components/ejecucion/laboratorios/v
         DetalleRegistronComponent,
         DetalleRegistroInternoComponent,
         DetalleProcedimientoComponent,
+        VistaRecetaComponent,
         VistaDetalleRegistroComponent,
         VistaAccesosHudsComponent,
         VistaSolicitudTopComponent,
         VistaHistorialTurnosComponent,
         HudsBusquedaComponent,
-        ListadoInternacionHudsComponent
+        ListadoInternacionHudsComponent,
+        SuspenderMedicacionComponent
     ],
 
     providers: [MotivosHudsService]

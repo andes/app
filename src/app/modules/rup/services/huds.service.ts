@@ -104,6 +104,10 @@ export class HUDSService {
                             return i;
                         }
                         break;
+
+                    case 'receta':
+                        if (registro.conceptId === _registro.conceptId) { return i; }
+                        break;
                 }
             }
         }
