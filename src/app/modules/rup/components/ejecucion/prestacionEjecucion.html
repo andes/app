@@ -305,6 +305,10 @@
                                                            [editFicha]="false" [hideVolver]="true">
                             </app-ficha-epidemiologica-crud>
                         </plex-tab>
+
+                        <plex-tab *ngIf="registro.tipo === 'receta'" color="receta" class="tab-receta" [allowClose]="true" [label]="recetaService.getLabel(registro.data.recetas)">
+                            <vista-receta [registro]="registro.data" [paciente]="paciente"></vista-receta>
+                        </plex-tab>
                     </ng-container>
 
                     <ng-container *ngIf="detalleRegistrosHUDS && detalleConceptoHUDS">

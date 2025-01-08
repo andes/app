@@ -1,7 +1,7 @@
 <ng-container *ngIf="!soloValores">
     <form class="mt-1" #formMedicamento="ngForm">
         <plex-select [(ngModel)]="medicamento.diagnostico" hintType="info" label="Diagnóstico" [data]="registros"
-                     name="diagnostico" multiline="true" (click)="loadRegistros()" [required]="true" labelField="term"
+                     name="diagnostico" multiline="true" [required]="true" labelField="term"
                      idField="conceptId" hint="Se listaran los conceptos registrados en esta consulta" hintType="info"
                      hintIcon="eye">
 

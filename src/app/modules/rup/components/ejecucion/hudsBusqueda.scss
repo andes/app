@@ -112,6 +112,10 @@
             @include card-estilo($trastorno);
         }
 
+        .recetas {
+            @include card-estilo($recetas);
+        }
+
         .procedimiento {
             @include card-estilo($procedimiento);
         }
@@ -232,6 +236,13 @@
     }
 }
 
+
+.menu-titulo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .titulo-filtro {
     margin: 5px 0;
 
@@ -249,6 +260,10 @@
 
     &.trastorno {
         color: $trastorno
+    }
+
+    &.recetas {
+        color: $recetas
     }
 
     &.procedimiento {
@@ -283,6 +298,28 @@
 
     .col {
         column-gap: 5px;
+    }
+}
+
+.listado {
+    li {
+        display: flex;
+        gap: 10px;
+
+        .titulo {
+            white-space: break-spaces;
+        }
+
+        .vista-badges {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            align-items: flex-end;
+        }
+
+        .icon-rup {
+            max-width: 55px !important;
+        }
     }
 }
 

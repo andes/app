@@ -19,7 +19,12 @@
             </plex-card>
         </div>
     </div>
-    <h6 class="titulo-filtro {{filtroActual}}">{{ getTitulo(filtroActual) | uppercase }}</h6>
+    <div class="menu-titulo">
+        <h6 class="titulo-filtro {{filtroActual}}">{{ getTitulo(filtroActual) | uppercase }}</h6>
+        
+        <suspender-medicacion *ngIf="filtroActual==='recetas' && seleccionRecetas.length > 0" [seleccionRecetas]="seleccionRecetas" [motivoSelector]="motivoSuspensionSelector"
+                             [motivosSuspension]="motivosSuspension" [profesional]="profesional" (reset)="resetSeleccionRecetas()"></suspender-medicacion>
+    </div>
     <div class="grow" *ngIf="filtroActual === 'planes'">
         <plex-options class="filtros-ambitos" (activated)='setAmbitoOrigen($event)' [items]="filtrosAmbitos">
         </plex-options>
@@ -44,12 +49,92 @@
                    label="{{filtroTrastornos ? 'Activos' : 'Todos'}}">
         </plex-bool>
     </div>
+
+
+    <!-- Vista Recetas -->
+    <ng-container *ngIf="filtroActual === 'recetas'">
+        <plex-text [(ngModel)]="searchRecetas" name="searchRecetas" (change)="filtrarRecetas()"
+                   placeholder="Buscar recetas..." [autoFocus]="true">
+        </plex-text>
+        <div class="my-2">
+            <ul *ngIf="busquedaRecetas.length" class="hover listado list-unstyled">
+                <ng-container *ngFor="let grupo of busquedaRecetas; let iReceta = index">
+                    <li>
+                        <plex-bool [readonly]="!esRecetaSeleccionable(grupo?.recetas[0])"
+                                   [ngModel]="seleccionRecetas[iReceta]" name="seleccionada" type="checkbox"
+                                   (change)="seleccionarReceta($event, grupo.recetas, iReceta)">
+                        </plex-bool>
+                        <div class="rup-card mini recetas" [ngClass]="{'active': huds.isOpen(grupo, 'receta')}"
+                             (click)="emitTabs(grupo, 'receta', iReceta)">
+                            <div class="rup-header">
+                                <div class="rup-border rup-border-recetas"
+                                     [ngClass]="{'active': huds.isOpen(grupo, 'receta')}">
+                                    <div class="row p-0 m-0 border-secondary border-left-0">
+                                        <div class="col-9 p-0 m-0">
+                                            <div class="row m-0 p-0">
+                                                <div class="col-2 icon-rup drag-handle">
+                                                    <i class="adi adi-listado-receta"></i>
+                                                </div>
+                                                <div class="col p-0 pl-2 float-left">
+                                                    <div class="row p-0 m-0 titulo">
+                                                        {{ grupo.recetas[0].medicamento.concepto.term }}</div>
+                                                    <div class="row p-0 m-0">
+                                                        <div class="col-10 p-0 m-0">
+                                                            <div class="sugerido">
+                                                                <small>Fecha de Registro:
+                                                                    {{ grupo.recetas[0].fechaRegistro | date:'short' }}
+                                                                </small>
+                                                                <br>
+                                                                <small>Profesional: {{
+                                                                    grupo.recetas[0].profesional.nombre }} {{
+                                                                    grupo.recetas[0].profesional.apellido }}
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3 p-0 m-0">
+                                            <div class="p-0 pt-1 pr-1 float-right">
+                                                <div class="vista-badges">
+                                                    <plex-badge *ngIf="grupo.recetas[0].estadoActual" size="sm"
+                                                                [type]="estadoReceta[grupo.recetas[0].estadoActual.tipo]">
+                                                        {{ grupo.recetas[0].estadoActual.tipo.replace('-', ' ') }}
+                                                    </plex-badge>
+                                                    <plex-badge *ngIf="grupo.recetas[0].estadoDispensaActual" size="sm"
+                                                                [type]="estadoDispensa[grupo.recetas[0].estadoDispensaActual.tipo]">
+                                                        {{ grupo.recetas[0].estadoDispensaActual.tipo.replace('-', ' ')
+                                                        }}
+                                                    </plex-badge>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ng-container>
+            </ul>
+        </div>
+
+        <div *ngIf="!busquedaRecetas.length">
+            <hr class="mt-0">
+            <div class="item-lista-vacia">
+                <plex-label size="sm" justify="center" icon="adi adi-listado-receta"
+                            titulo="No hay recetas registradas">
+                </plex-label>
+            </div>
+        </div>
+    </ng-container>
+
 </ng-container>
 <div class="row huds-busqueda">
     <div class="col mb-0">
         <!-- Vista: SOLICITUDES -->
         <ng-container *ngIf="filtroActual === 'solicitudes'">
-            <ul class="hover conceptos list-unstyled mb-0">
+            <ul class="hover listado list-unstyled mb-0">
                 <ng-container *ngFor="let registro of solicitudesMezcladas; let iPrestacion = index">
                     <li>
                         <div class="rup-card mini procedimiento"
@@ -133,7 +218,7 @@
 
         <!-- Vista: HALLAZGOS -->
         <ng-container *ngIf="filtroActual === 'hallazgo'">
-            <ul *ngIf="hasRegistrosTotales(filtroActual)" class="hover conceptos list-unstyled">
+            <ul *ngIf="hasRegistrosTotales(filtroActual)" class="hover listado list-unstyled">
                 <ng-container *ngFor="let registro of registrosTotales.hallazgo ; let iConcepto = index">
                     <li>
                         <div class="rup-card mini hallazgo"
@@ -193,7 +278,7 @@
 
         <!-- Vista: TRASTORNOS -->
         <ng-container *ngIf="filtroActual === 'trastorno'">
-            <ul *ngIf="hasRegistrosTotales(filtroActual)" class="hover conceptos list-unstyled" cdkDropList>
+            <ul *ngIf="hasRegistrosTotales(filtroActual)" class="hover listado list-unstyled" cdkDropList>
                 <ng-container *ngFor="let registro of registrosTotales.trastorno; let iConcepto = index">
                     <li>
                         <div class="rup-card mini trastorno"
@@ -266,7 +351,7 @@
 
         <!-- Vista: PROCEDIMIENTOS -->
         <ng-container *ngIf="filtroActual === 'procedimiento'">
-            <ul *ngIf="hasRegistrosTotales(filtroActual)" class="hover conceptos list-unstyled">
+            <ul *ngIf="hasRegistrosTotales(filtroActual)" class="hover listado list-unstyled">
                 <ng-container *ngFor="let registro of registrosTotales.procedimiento; let iPrestacion = index">
                     <li>
                         <div class="rup-card mini procedimiento"
@@ -355,7 +440,7 @@
                 </div>
             </ng-container>
 
-            <ul *ngIf="prestaciones" class="mt-2 hover conceptos list-unstyled">
+            <ul *ngIf="prestaciones" class="mt-2 hover listado list-unstyled">
                 <div class="lista-internacion" *ngIf="ambitoOrigen === 'internacion'">
                     <ng-container>
                         <plex-accordion activeLast="true" *ngFor="let internacion of indiceInternaciones">
@@ -519,33 +604,25 @@
             <ul *ngIf="hasRegistrosTotales(filtroActual)" class="conceptos hover list-unstyled">
                 <ng-container *ngFor="let registro of this.registrosTotales.producto; let iCronico = index">
                     <li>
-                        <div class="rup-card mini producto" [ngClass]="{'active': huds.isOpen(registro, 'concepto')}">
+                        <div class="rup-card mini producto" [ngClass]="{'active': huds.isOpen(registro, 'concepto')}"
+                             (click)="emitTabs(registro, 'concepto', iCronico)">
                             <div class="rup-header">
                                 <div class="rup-border rup-border-producto">
                                     <div class="row p-0 m-0 border-secondary border-left-0">
-                                        <div class="col-10 p-0 m-0">
-                                            <div class="row m-0 p-0">
-                                                <ng-container>
-                                                    <div class="icon-rup">
-                                                        <i class="adi adi-pildoras"></i>
-                                                    </div>
-                                                </ng-container>
-                                                <div class="col p-0 pl-2 float-left"
-                                                     (click)="emitTabs(registro, 'concepto',iCronico)">
-                                                    {{ registro.concepto.term }}
-                                                    <div class="row p-0 m-0">
-                                                        <div class="col-10 p-0 m-0">
-                                                            <ng-container *ngIf="registro.evoluciones">
-                                                                <small class="sugerido">Prestación:
-                                                                    {{ registro.tipoPrestacion }}
-                                                                </small>
-                                                                <br>
-                                                                <small class="sugerido">
-                                                                    último registro:
-                                                                    {{ registro.fechaEjecucion | fecha }}
-                                                                </small>
-                                                            </ng-container>
-                                                        </div>
+                                        <div class="col-2 icon-rup drag-handle">
+                                            <i class="adi adi-pildoras"></i>
+                                        </div>
+                                        <div class="col p-0 pl-2 float-left">
+                                            {{ registro.concepto.term }}
+                                            <div class="row p-0 m-0">
+                                                <div class="col-10 p-0 m-0">
+                                                    <div class="sugerido">
+                                                        <ng-container *ngIf="registro.evoluciones">
+                                                            <small>Prestación: {{ registro.tipoPrestacion }}</small>
+                                                            <br>
+                                                            <small>Último registro: {{ registro.fechaEjecucion | fecha
+                                                                }}</small>
+                                                        </ng-container>
                                                     </div>
                                                 </div>
                                             </div>
@@ -554,7 +631,7 @@
                                             <div class="p-0 pt-1 pr-1 float-right">
                                                 <ng-container *ngIf="registro.evoluciones">
                                                     <plex-badge size="sm"
-                                                                type="{{ registro.evoluciones[registro.evoluciones.length-1].estado === 'activo' ? 'success' : 'danger' }}">
+                                                                [type]="registro.evoluciones[registro.evoluciones.length-1].estado === 'activo' ? 'success' : 'danger'">
                                                         {{ registro.evoluciones[registro.evoluciones.length-1].estado }}
                                                     </plex-badge>
                                                 </ng-container>
@@ -580,7 +657,7 @@
         <!-- Vista: LABORATORIOS -->
         <ng-container *ngIf="filtroActual === 'laboratorios'">
             <div *ngIf="laboratorios.length" class="conceptos hover list-unstyled">
-                <ul class="conceptos list-unstyled">
+                <ul class="listado list-unstyled">
                     <ng-container *ngFor="let laboratorio of laboratorios; let iLaboratorio = index">
                         <li>
                             <div class="rup-card mini laboratorio"
@@ -656,7 +733,7 @@
         <!-- Vista: VACUNAS -->
         <ng-container *ngIf="filtroActual === 'vacunas'">
             <div *ngIf="vacunas && vacunas.length > 0" class="conceptos hover list-unstyled">
-                <ul class="conceptos list-unstyled">
+                <ul class="listado list-unstyled">
                     <ng-container *ngFor="let unaVacuna of vacunas; let iVacuna = index">
                         <li>
                             <div class="rup-card mini vacuna" [ngClass]="{'active': huds.isOpen(unaVacuna, 'cda')}">
