@@ -188,11 +188,12 @@ export class RUPAccionesEnvioInformeComponent {
         return this.hasEmails$;
     }
 
-    irFichaEpidemiologica() {
-        if (this.paciente) {
-            this.formEpidemiologiaService.setPaciente(this.paciente);
-            this.router.navigate(['/epidemiologia/ficha-epidemiologica']);
-        }
+    mostrarFichaEpidemiologica() {
+        const verPermiso = (this.paciente && this.auth.getPermissions('epidemiologia:create:?').length > 0 && this.auth.getPermissions('matriculaciones:?').length > 0);
+        return verPermiso;
+    }
 
+    irFichaEpidemiologica() {
+        this.router.navigate(['/epidemiologia/ficha-epidemiologica']);
     }
 }

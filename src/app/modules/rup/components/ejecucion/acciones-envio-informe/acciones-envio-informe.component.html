@@ -1,5 +1,5 @@
 <ng-container *ngIf="showEnviosBtn">
-    <plex-button *ngIf="paciente" type="info" [size]="btnSize" icon="file-tree" class="ml-1"
+    <plex-button *ngIf="mostrarFichaEpidemiologica()" type="info" [size]="btnSize" icon="file-tree" class="ml-1"
                  (click)="irFichaEpidemiologica()" tooltipPosition="left" tooltip="Fichas epidemiológicas"
                  tooltipPosition="left">
     </plex-button>
