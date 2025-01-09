@@ -336,9 +336,35 @@
                     <plex-text *ngIf="agenda.link" label="Link" name="link" [(ngModel)]="link"></plex-text>
                 </ng-container>
                 <plex-button *ngIf="estadoT === 'seleccionada'" class="mt-1" justify="end" label="Confirmar"
-                             type="success" (click)="darTurno()" [disabled]="!bloque">
+                             type="success" (click)="verTurnosFuturos()" [disabled]="!bloque">
                 </plex-button>
             </div>
+        </ng-container>
+        <ng-container *ngIf="modalTurnosRepetidos">
+            <plex-modal #modal size="sm" [startOpen]="true" [allowEscClose]="false" [allowBackdropClose]="false">
+                <plex-icon name="alert-outline" size="sm" type="warning mt-2 mb-2"></plex-icon>
+                <plex-modal-subtitle type="warning" class="font-subtitle text-muted text-center">Usted ya tiene esta
+                    prestación asignada:
+                </plex-modal-subtitle>
+                <br>
+                <main>
+                    <div>
+                        <ul class="list-item-group" *ngFor="let turno of turnosFuturos; let i = index">
+                            <li class="list-item text-capitalize">
+                                <div><b>Fecha y hora:</b> {{ turno.horaInicio | date:'EEEE dd/MM/yyyy HH:mm' }}</div>
+                                <div><b>Organización:</b> {{ turno.organizacion }}</div>
+                                <div><b>Tipo de prestación:</b> {{ turno.tipoPrestacion }}</div>
+                            </li>
+                        </ul>
+                    </div>
+                </main>
+                <plex-button class="mb-4" modal left type="danger" (click)="modalClose()">
+                    Cancelar
+                </plex-button>
+                <plex-button class="mb-4" modal right type="success" (click)="darTurno()">
+                    Aceptar
+                </plex-button>
+            </plex-modal>
         </ng-container>
     </plex-layout-sidebar>
 </plex-layout>
