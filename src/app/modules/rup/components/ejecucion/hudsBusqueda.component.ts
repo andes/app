@@ -41,7 +41,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
     public cdas = [];
 
-    @Input() paciente: any;
+    @Input() paciente: IPaciente;
 
     @Input() _dragScope: String;
     @Input() _dragOverClass: String = 'drag-over-border';
@@ -446,18 +446,16 @@ export class HudsBusquedaComponent implements AfterContentInit {
     }
 
     // Trae los cdas registrados para el paciente
-    async buscarCDAPacientes(token) {
+    buscarCDAPacientes(token) {
         const { estado, fechaNacimiento, apellido } = this.paciente;
         const fecNac = moment(fechaNacimiento).format('yyyyMMDD');
         const fechaHta = moment().format('yyyyMMDD');
-        let dni = this.paciente.documento;
+        let dni = this.paciente.documento || null;
         if (!dni) {
-            for (const relaciones of this.paciente.relaciones) {
-                if (relaciones.nombre = 'progenitor/a') {
-                    const pacienteRel = await lastValueFrom(this.pacienteService.getById(relaciones.referencia));
-                    dni = pacienteRel ? pacienteRel.documento : null;
-                    break;
-                }
+            const tutorProgenitor = this.paciente.relaciones.find(rel => rel.relacion.nombre === 'progenitor/a') || this.paciente.relaciones.find(rel => rel.relacion.nombre === 'tutor');
+            dni = tutorProgenitor?.documento || tutorProgenitor?.numeroIdentificacion || null;
+            if (!dni) {
+                return;
             }
         }
         forkJoin({
