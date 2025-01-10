@@ -1,13 +1,13 @@
 <ng-container *ngIf="!soloValores">
     <form class="mt-1" #formMedicamento="ngForm">
         <plex-select [(ngModel)]="medicamento.diagnostico" hintType="info" label="Diagnóstico" [data]="registros"
-                     name="diagnostico" multiline="true" (click)="loadRegistros()" [required]="true"
-                     hint="Se listaran los conceptos registrados en esta consulta" hintType="info" hintIcon="eye">
+                     name="diagnostico" multiline="true" (click)="loadRegistros()" [required]="true" labelField="term"
+                     idField="conceptId" hint="Se listaran los conceptos registrados en esta consulta" hintType="info"
+                     hintIcon="eye">
 
         </plex-select>
 
         <plex-grid cols="2">
-
             <plex-select [(ngModel)]="medicamento.generico" name="generico" (getData)="loadMedicamentoGenerico($event)"
                          placeholder="Medicamento genérico" label="Medicamento" idField="conceptId" labelField="term"
                          (change)="loadPresentaciones()" required="true">
@@ -44,7 +44,6 @@
 
         <div class="mt-2">
             <plex-title name="tipoReceta" titulo="Tipo de receta" size="sm"></plex-title>
-
             <plex-radio class="m-2" [(ngModel)]="medicamento.tipoReceta" [data]="opcionesTipoReceta" name="tipoReceta">
             </plex-radio>
         </div>
@@ -61,8 +60,8 @@
                 <div class="d-flex">
                     <plex-text name="dosis" label="Dosis" [(ngModel)]="medicamento.dosisDiaria.dosis" required="false">
                     </plex-text>
-                    <plex-select name="Frecuencia" label="Frecuencia" [(ngModel)]="medicamento.dosisDiaria.frecuencia"
-                                 required="false" [data]="horas">
+                    <plex-select name="Frecuencia" label="Intervalo" [(ngModel)]="medicamento.dosisDiaria.intervalo"
+                                 required="false" [data]="intervalos$ | async">
                     </plex-select>
                     <plex-int name="Duracion" label="Duración (días)" [(ngModel)]="medicamento.dosisDiaria.dias"
                               required="false" min="1" max="90">
@@ -84,14 +83,14 @@
         <plex-item *ngFor="let item of registro.valor.medicamentos">
             <plex-icon size="md" *ngIf="true" name="pildoras" class="icon icon--border--producto mr-2">
             </plex-icon>
-            <plex-label [tituloBold]="true" titulo="{{ item.generico.term  }}" subtitulo=" {{ item.cantEnvases}} envase(s) de {{ item.cantidad}} {{item.presentacion.term }}(s)  {{ item.dosisDiaria.dosis? '| ' + item.dosisDiaria.dosis : '| ' }} {{ item.dosisDiaria.frecuencia? ' cada ' + item.dosisDiaria.frecuencia.nombre: '' }}  {{ item.dosisDiaria.dias? ' durante ' + item.dosisDiaria.dias + ' día(s)':'' }} 
+            <plex-label [tituloBold]="true" titulo="{{ item.generico.term  }}" subtitulo=" {{ item.cantEnvases}} envase(s) de {{ item.cantidad}} {{item.presentacion.term }}(s)  {{ item.dosisDiaria.dosis? '| ' + item.dosisDiaria.dosis : '| ' }} {{ item.dosisDiaria.intervalo? ' cada ' + item.dosisDiaria.intervalo.nombre: '' }}  {{ item.dosisDiaria.dias? ' durante ' + item.dosisDiaria.dias + ' día(s)':'' }} 
                         "></plex-label>
             <plex-badge *ngIf="item.diagnostico" size="sm" type="warning" hintType="warning">
-                {{ truncateDiagnostico(item.diagnostico.nombre) }}
+                {{ truncateDiagnostico(item.diagnostico.term) }}
             </plex-badge>
             <plex-badge *ngIf="item.tratamientoProlongado" type="info">Tratamiento prolongado
             </plex-badge>
-            <plex-badge *ngIf="item.tipoReceta" type="info">{{item.tipoReceta}}
+            <plex-badge *ngIf="item.tipoReceta?.nombre" type="info">{{item.tipoReceta?.nombre}}
             </plex-badge>
             <plex-button type="danger" size="sm" (click)="borrarMedicamento(item)" icon="delete"></plex-button>
         </plex-item>
@@ -100,14 +99,14 @@
 <div *ngIf="soloValores">
     <plex-list size="md" *ngIf="registro.valor.medicamentos">
         <plex-item *ngFor="let item of registro.valor.medicamentos">
-            <plex-label [tituloBold]="true" titulo="{{ item.generico.term  }}" subtitulo=" {{ item.cantEnvases}} envase(s) de {{ item.cantidad}} {{item.presentacion.term }}(s)  {{ item.dosisDiaria.dosis? '| ' + item.dosisDiaria.dosis : '| ' }}  {{ item.dosisDiaria.frecuencia? ' cada ' + item.dosisDiaria.frecuencia.nombre: '' }}  {{ item.dosisDiaria.dias ? ' durante ' + item.dosisDiaria.dias + ' día(s)':'' }} 
+            <plex-label [tituloBold]="true" titulo="{{ item.generico.term  }}" subtitulo=" {{ item.cantEnvases}} envase(s) de {{ item.cantidad}} {{item.presentacion.term }}(s)  {{ item.dosisDiaria.dosis? '| ' + item.dosisDiaria.dosis : '| ' }}  {{ item.dosisDiaria.intervalo? ' cada ' + item.dosisDiaria.intervalo.nombre: '' }}  {{ item.dosisDiaria.dias ? ' durante ' + item.dosisDiaria.dias + ' día(s)':'' }} 
                                     "></plex-label>
             <plex-badge *ngIf="item.diagnostico" size="sm" type="warning" hintType="warning">
-                {{ truncateDiagnostico(item.diagnostico.nombre) }}
+                {{ truncateDiagnostico(item.diagnostico.term) }}
             </plex-badge>
             <plex-badge *ngIf="item.tratamientoProlongado" type="info">Tratamiento prolongado
             </plex-badge>
-            <plex-badge *ngIf="item.tipoReceta" type="info">{{item.tipoReceta}}
+            <plex-badge *ngIf="item.tipoReceta?.nombre" type="info">{{item.tipoReceta?.nombre}}
             </plex-badge>
         </plex-item>
     </plex-list>

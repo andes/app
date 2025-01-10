@@ -1,7 +1,7 @@
 import { Component, Output, Input, EventEmitter, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
 import { RupElement } from '.';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { Unsubscribe } from '@andes/shared';
 import { NgForm } from '@angular/forms';
 @Component({
@@ -15,14 +15,14 @@ import { NgForm } from '@angular/forms';
 export class RecetaMedicaComponent extends RUPComponent implements OnInit {
 
     @ViewChild('formMedicamento') formMedicamento: NgForm;
-
+    intervalos$: Observable<any>;
     public medicamento: any = {
         generico: null,
         presentacion: null,
         cantidad: null,
         cantEnvases: null,
-        diagnostico: '',
-        tipoReceta: 'Simple',
+        diagnostico: null,
+        tipoReceta: { id: 'simple', label: 'Simple' },
         tratamientoProlongado: false,
         tiempoTratamiento: null,
         dosisDiaria: {
@@ -47,6 +47,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         { id: '3meses', nombre: '3 meses' },
         { id: '6meses', nombre: '6 meses' }
     ];
+
     ngOnInit() {
         if (!this.registro.valor) {
             this.registro.valor = {};
@@ -54,16 +55,10 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         if (!this.registro.valor.medicamentos) {
             this.registro.valor.medicamentos = [];
         }
-        this.registros = this.prestacion.ejecucion.registros.filter(reg => {
-            reg.nombre !== 'receta';
-        }
-        ).map(reg => { if (reg.nombre !== 'receta') { return { id: reg.id, nombre: reg.nombre, elementoRUP: reg.elementoRUP }; } });
-        for (let i = 1; i <= 24; i++) {
-            this.horas.push({ id: i, nombre: i + ' hora' + (i > 1 ? 's' : '') });
-        }
+        this.registros = this.prestacion.ejecucion.registros.filter(reg => reg.id !== this.registro.id).map(reg => reg.concepto);
+        this.intervalos$ = this.constantesService.search({ source: 'plan-indicaciones:frecuencia' });
 
     }
-
 
     @Unsubscribe()
     loadMedicamentoGenerico(event) {
@@ -79,18 +74,13 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
             event.callback([]);
         }
     }
+
     loadRegistros() {
         this.registros = this.prestacion.ejecucion.registros
-            .filter(reg => reg.nombre !== 'receta')
-            .map(reg => {
-                return {
-                    id: reg.id,
-                    nombre: reg.nombre,
-                    elementoRUP: reg.elementoRUP
-                };
-            });
+            .filter(reg => reg.id !== this.registro.id)
+            .map(reg => reg.concepto);
+    }
 
-    };
     editarComprimidos() {
         if (!this.comprimidosEditados) {
             this.plex.confirm('La cantidad recetada no se encuentra en ninguna presentación comercial ¿Desea continuar?', 'Atención').then(confirmacion => {
@@ -102,7 +92,6 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         } else {
             this.comprimidosEditados = false;
         }
-
     }
 
     loadPresentaciones() {
@@ -132,7 +121,6 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         }
     }
 
-
     agregarMedicamento(form) {
         if (form.formValid) {
             if (this.medicamento.cantidad?.valor) {
@@ -145,8 +133,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
                 presentacion: null,
                 cantidad: null,
                 cantEnvases: null,
-                diagnostico: '',
-                tipoReceta: 'Simple',
+                diagnostico: null,
+                tipoReceta: { id: 'simple', label: 'Simple' },
                 tratamientoProlongado: false,
                 tiempoTratamiento: null,
                 dosisDiaria: {
@@ -161,6 +149,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
 
         }
     }
+
     borrarMedicamento(medicamento) {
         this.plex.confirm('¿Está seguro que desea eliminar el medicamento de la receta?').then((resultado) => {
             if (resultado) {
@@ -169,9 +158,11 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
             }
         });
     }
+
     colapsar() {
         this.collapse = !this.collapse;
     }
+
     truncateDiagnostico(nombre: string): string {
         if (nombre.length > 20) {
             return nombre.substring(0, 20) + '...';
