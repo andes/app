@@ -1,68 +1,112 @@
 <ng-container *ngIf="!soloValores">
-    <form #formMedicamento="ngForm">
-        <plex-wrapper>
+    <form class="mt-1" #formMedicamento="ngForm">
+        <plex-select [(ngModel)]="medicamento.diagnostico" hintType="info" label="Diagnóstico" [data]="registros"
+                     name="diagnostico" multiline="true" (click)="loadRegistros()" [required]="true" labelField="term"
+                     idField="conceptId" hint="Se listaran los conceptos registrados en esta consulta" hintType="info"
+                     hintIcon="eye">
+
+        </plex-select>
+
+        <plex-grid cols="2">
             <plex-select [(ngModel)]="medicamento.generico" name="generico" (getData)="loadMedicamentoGenerico($event)"
                          placeholder="Medicamento genérico" label="Medicamento" idField="conceptId" labelField="term"
                          (change)="loadPresentaciones()" required="true">
             </plex-select>
-            <plex-select name="unidades" *ngIf="unidades.length > 0" [(ngModel)]="medicamento.unidades"
-                         [data]="unidades" placeholder="Seleccione una opción" label="Unidades por presentación"
-                         labelField="valor" required="true">
-            </plex-select>
-            <plex-int name="unidades" label="Unidades por presentación" [(ngModel)]="medicamento.unidades"
-                      *ngIf="unidades.length == 0" required="true" min="1" max="90">
+
+            <div>
+                <plex-select class="formEditar" name="unidades" *ngIf="unidades.length > 0 && !comprimidosEditados"
+                             [(ngModel)]="medicamento.cantidad" [data]="unidades" placeholder="Seleccione una opción"
+                             label="Cantidad" labelField="valor" required="true">
+                </plex-select>
+                <plex-int class="formEditar" name="comprimidos" *ngIf="unidades.length == 0 || comprimidosEditados"
+                          label="Cantidad" [(ngModel)]="medicamento.cantidad" required="true" min="1" max="90">
+                </plex-int>
+                <plex-button class="d-inline-flex" name="editar" type="warning" icon="pencil" tooltip="Editar cantidad"
+                             size="md" (click)="editarComprimidos()">
+                </plex-button>
+            </div>
+        </plex-grid>
+        <plex-grid cols="2">
+
+            <plex-int name="envases" label="Cantidad de envases" [(ngModel)]="medicamento.cantEnvases" required="true"
+                      min="1" max="90">
             </plex-int>
-            <plex-int name="envases" label="Envases" [(ngModel)]="medicamento.cantidad" required="true" min="1"
-                      max="90">
-            </plex-int>
-            <plex-text [(ngModel)]="medicamento.diagnostico" label="Diagnóstico" name="motivo" multiline="true"
-                       grow="full">
-            </plex-text>
-            <plex-radio [(ngModel)]="medicamento.tipoReceta" label="Tipo de receta" type="horizontal"
-                        [data]="opcionesTipoReceta" name="tipoReceta">
+
+            <plex-grid cols="2" style="margin-top: 2rem;grid-gap: 0;">
+                <plex-bool [(ngModel)]="medicamento.tratamientoProlongado" name="tratamientoProlongado" type="slide"
+                           label="Tratamiento prolongado">
+                </plex-bool>
+                <plex-select *ngIf="medicamento.tratamientoProlongado" [(ngModel)]="medicamento.tiempoTratamiento"
+                             name="tiempoTratamiento" [data]="tiemposTratamiento" required="true">
+                </plex-select>
+            </plex-grid>
+        </plex-grid>
+
+        <div class="mt-2">
+            <plex-title name="tipoReceta" titulo="Tipo de receta" size="sm"></plex-title>
+            <plex-radio class="m-2" [(ngModel)]="medicamento.tipoReceta" [data]="opcionesTipoReceta" name="tipoReceta">
             </plex-radio>
-            <plex-bool [(ngModel)]="medicamento.tratamientoProlongado" label="Tratamiento prolongado"
-                       name="tratamientoProlongado">
-            </plex-bool>
-        </plex-wrapper>
-        <plex-title titulo="Dosis diaria" size="sm"></plex-title>
+        </div>
+
+        <plex-title titulo="Indicaciones diarias" size="sm">
+            <plex-button name="botonCollapse" class="collapse-button" type="primary" size="sm"
+                         icon="{{ collapse ? 'chevron-down' : 'chevron-up'}}"
+                         title="{{ collapse ? 'Expandir' : 'Colapsar'}}" titlePosition="left" (click)="colapsar()">
+            </plex-button>
+        </plex-title>
         <plex-wrapper>
-            <plex-int name="cantidadDiaria" label="Dosis" [(ngModel)]="medicamento.dosisDiaria.cantidad"
-                      required="false" min="1" max="90">
-            </plex-int>
-            <plex-int name="duracion" label="Cantidad de días" [(ngModel)]="medicamento.dosisDiaria.dias"
-                      required="false" min="1" max="90">
-            </plex-int>
+
+            <div [hidden]="collapse" class="w-100">
+                <div class="d-flex">
+                    <plex-text name="dosis" label="Dosis" [(ngModel)]="medicamento.dosisDiaria.dosis" required="false">
+                    </plex-text>
+                    <plex-select name="Frecuencia" label="Intervalo" [(ngModel)]="medicamento.dosisDiaria.intervalo"
+                                 required="false" [data]="intervalos$ | async">
+                    </plex-select>
+                    <plex-int name="Duracion" label="Duración (días)" [(ngModel)]="medicamento.dosisDiaria.dias"
+                              required="false" min="1" max="90">
+                    </plex-int>
+                    <plex-text name="notaMedica" label="Notas médicas" [(ngModel)]="medicamento.dosisDiaria.notaMedica"
+                               required="false" min="1" max="90">
+                    </plex-text>
+                </div>
+            </div>
         </plex-wrapper>
-        <plex-button type="success" [disabled]="!formMedicamento.valid" (click)="agregarMedicamento($event)"
-                     [validateForm]="formMedicamento">Agregar
-        </plex-button>
+        <div class="d-flex justify-content-end">
+            <plex-button name="botonAgregar" type="info" [disabled]="!formMedicamento.valid"
+                         (click)="agregarMedicamento($event)" [validateForm]="formMedicamento">
+                Agregar
+            </plex-button>
+        </div>
     </form>
-    <plex-list size="sm" *ngIf="registro.valor.medicamentos" class="mt-3">
+    <plex-list size="md" *ngIf="registro.valor.medicamentos" class="mt-3">
         <plex-item *ngFor="let item of registro.valor.medicamentos">
-            <plex-label [tituloBold]="true" titulo="{{ item.generico.term  }}" subtitulo="{{ item.unidades }} {{item.presentacion.term }}(s) por {{ item.cantidad }} envase(s) o {{ item.dosisDiaria.cantidad }} {{item.presentacion.term }}(s) por {{ item.dosisDiaria.dias }} días
-            "></plex-label>
-            <plex-badge *ngIf="item.diagnostico" type="warning" hint="{{item.diagnostico}}" hintIcon="informacion"
-                        hintType="warning">Diagnóstico
+            <plex-icon size="md" *ngIf="true" name="pildoras" class="icon icon--border--producto mr-2">
+            </plex-icon>
+            <plex-label [tituloBold]="true" titulo="{{ item.generico.term  }}" subtitulo=" {{ item.cantEnvases}} envase(s) de {{ item.cantidad}} {{item.presentacion.term }}(s)  {{ item.dosisDiaria.dosis? '| ' + item.dosisDiaria.dosis : '| ' }} {{ item.dosisDiaria.intervalo? ' cada ' + item.dosisDiaria.intervalo.nombre: '' }}  {{ item.dosisDiaria.dias? ' durante ' + item.dosisDiaria.dias + ' día(s)':'' }} 
+                        "></plex-label>
+            <plex-badge *ngIf="item.diagnostico" size="sm" type="warning" hintType="warning">
+                {{ truncateDiagnostico(item.diagnostico.term) }}
             </plex-badge>
             <plex-badge *ngIf="item.tratamientoProlongado" type="info">Tratamiento prolongado
             </plex-badge>
-            <plex-badge type="info">{{item.tipoReceta}}
+            <plex-badge *ngIf="item.tipoReceta?.nombre" type="info">{{item.tipoReceta?.nombre}}
             </plex-badge>
             <plex-button type="danger" size="sm" (click)="borrarMedicamento(item)" icon="delete"></plex-button>
         </plex-item>
     </plex-list>
 </ng-container>
 <div *ngIf="soloValores">
-    <plex-list size="sm" *ngIf="registro.valor.medicamentos">
+    <plex-list size="md" *ngIf="registro.valor.medicamentos">
         <plex-item *ngFor="let item of registro.valor.medicamentos">
-            <plex-label [tituloBold]="true" titulo="{{ item.generico.term  }}" subtitulo="{{ item.unidades }} {{item.presentacion.term }}(s) por {{ item.cantidad }} envase(s) o {{ item.dosisDiaria.cantidad }} {{item.presentacion.term }}(s) por {{ item.dosisDiaria.dias }} días
-                "></plex-label>
-            <plex-badge *ngIf="item.diagnostico" type="warning" hint="{{item.diagnostico}}" hintIcon="informacion"
-                        hintType="warning"> Diagnóstico</plex-badge>
+            <plex-label [tituloBold]="true" titulo="{{ item.generico.term  }}" subtitulo=" {{ item.cantEnvases}} envase(s) de {{ item.cantidad}} {{item.presentacion.term }}(s)  {{ item.dosisDiaria.dosis? '| ' + item.dosisDiaria.dosis : '| ' }}  {{ item.dosisDiaria.intervalo? ' cada ' + item.dosisDiaria.intervalo.nombre: '' }}  {{ item.dosisDiaria.dias ? ' durante ' + item.dosisDiaria.dias + ' día(s)':'' }} 
+                                    "></plex-label>
+            <plex-badge *ngIf="item.diagnostico" size="sm" type="warning" hintType="warning">
+                {{ truncateDiagnostico(item.diagnostico.term) }}
+            </plex-badge>
             <plex-badge *ngIf="item.tratamientoProlongado" type="info">Tratamiento prolongado
             </plex-badge>
-            <plex-badge type="info">{{item.tipoReceta}}
+            <plex-badge *ngIf="item.tipoReceta?.nombre" type="info">{{item.tipoReceta?.nombre}}
             </plex-badge>
         </plex-item>
     </plex-list>
