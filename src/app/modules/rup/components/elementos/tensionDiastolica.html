@@ -1,7 +1,7 @@
 <form #form="ngForm">
-    <plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 30 y 300" required="true"
+    <plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 30 y 200" required="false"
               [(ngModel)]="registro.valor" name="tensionDiastolica" label="Tensión Diastólica" suffix=" mmHG " min="30"
-              max="300" (change)="emitChange()">
+              max="200" (change)="emitChange()">
     </plex-int>
 
     <p *ngIf="soloValores" class="readonly">
