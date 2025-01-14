@@ -189,7 +189,7 @@ export class RUPAccionesEnvioInformeComponent {
     }
 
     mostrarFichaEpidemiologica() {
-        const verPermiso = (this.paciente && this.auth.getPermissions('epidemiologia:create:?').length > 0 && this.auth.getPermissions('matriculaciones:?').length > 0);
+        const verPermiso = (this.paciente && (this.auth.getPermissions('epidemiologia:create:?').length > 0 || this.auth.profesional));
         return verPermiso;
     }
 

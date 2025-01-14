@@ -49,23 +49,31 @@ export class InicioComponent implements AfterViewInit {
                         if (modulo.activo) {
                             modulo.permisos.forEach((permiso) => {
                                 if (!tienePermiso) {
-                                    // El usuario tiene permiso?
-                                    if (this.auth.getPermissions(permiso).length > 0) {
-                                        tienePermiso = true;
-                                        if (modulo.submodulos && modulo.submodulos.length > 0) {
-                                            // Es Módulo
-                                            modulo.principal = true;
-                                            this.modulos.push(modulo);
+                                    if (permiso === 'epidemiologia:?' && this.auth.profesional) {
+                                        modulo.principal = true;
+                                        this.modulos.push(modulo);
+                                        if (!modulo.submodulos.length) {
+                                            modulo.nombreSubmodulo = `Punto Inicio<br><b>${modulo.nombre}</b>`;
+                                        }
+                                    } else {
+                                        // El usuario tiene permiso?
+                                        if (this.auth.getPermissions(permiso).length > 0) {
+                                            tienePermiso = true;
+                                            if (modulo.submodulos && modulo.submodulos.length > 0) {
+                                                // Es Módulo
+                                                modulo.principal = true;
+                                                this.modulos.push(modulo);
 
-                                            // Se generan Submódulos
-                                            (modulo.submodulos as any) = modulo.submodulos.filter(x => x.permisos.some(y => this.auth.getPermissions(y).length > 0));
+                                                // Se generan Submódulos
+                                                (modulo.submodulos as any) = modulo.submodulos.filter(x => x.permisos.some(y => this.auth.getPermissions(y).length > 0));
 
-                                            if (!modulo.submodulos.length) {
-                                                modulo.nombreSubmodulo = `Punto Inicio<br><b>${modulo.nombre}</b>`;
+                                                if (!modulo.submodulos.length) {
+                                                    modulo.nombreSubmodulo = `Punto Inicio<br><b>${modulo.nombre}</b>`;
+                                                }
+                                            } else {
+                                                // Es Sección
+                                                this.modulos.push(modulo);
                                             }
-                                        } else {
-                                            // Es Sección
-                                            this.modulos.push(modulo);
                                         }
                                     }
                                 }
