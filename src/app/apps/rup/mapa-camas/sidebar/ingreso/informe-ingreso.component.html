@@ -31,6 +31,9 @@
                 </plex-label>
                 <plex-label titulo="Origen" subtitulo="{{ informeIngreso.origen }}">
                 </plex-label>
+                <plex-label *ngIf="informeIngreso.organizacionOrigen" titulo="Organización origen"
+                            subtitulo="{{ informeIngreso.organizacionOrigen.nombre || informeIngreso.organizacionOrigen }}">
+                </plex-label>
                 <plex-label titulo="Especialidad/es"
                             subtitulo="{{ informeIngreso.especialidades | enumerar: ['term'] }}">
                 </plex-label>

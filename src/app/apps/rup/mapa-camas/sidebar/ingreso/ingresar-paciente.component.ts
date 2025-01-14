@@ -66,7 +66,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     private backupObraSocial;
     public registrosIngresoResumen$: Observable<any>;;
     public get origenExterno() {
-        return this.informeIngreso && this.informeIngreso.origen && this.informeIngreso.origen.id === 'traslado';
+        return this.informeIngreso?.origen?.id === 'traslado' || this.informeIngreso.origen === 'Traslado';
     }
     public check = false;
     public informeIngreso = {
@@ -199,6 +199,9 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             if (this.prestacion) {
                 // capa estadistica o estadistica-v2 con ingreso cargado
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
+                if (this.origenExterno) {
+                    this.check = typeof this.informeIngreso.organizacionOrigen === 'string';
+                }
                 this.fechaIngresoOriginal = new Date(this.informeIngreso.fechaIngreso);
                 this.paciente.obraSocial = this.prestacion.paciente.obraSocial;
             } else {
@@ -557,18 +560,18 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     ingresoExtendido(paciente) {
-        // Verificamos si es de origen externo
-        if (this.origenExterno) {
-            this.informeIngreso.organizacionOrigen = {
-                id: this.informeIngreso.organizacionOrigen.id,
-                nombre: this.informeIngreso.organizacionOrigen.nombre
-            };
-        }
         // construimos el informe de ingreso
         this.informeIngreso.situacionLaboral = (this.informeIngreso.situacionLaboral) ? this.informeIngreso.situacionLaboral.nombre : null;
         this.informeIngreso.nivelInstruccion = ((typeof this.informeIngreso.nivelInstruccion === 'string')) ? this.informeIngreso.nivelInstruccion : (Object(this.informeIngreso.nivelInstruccion).nombre);
         this.informeIngreso.asociado = ((typeof this.informeIngreso.asociado === 'string')) ? this.informeIngreso.asociado : (Object(this.informeIngreso.asociado).nombre);
         this.informeIngreso.origen = ((typeof this.informeIngreso.origen === 'string')) ? this.informeIngreso.origen : (Object(this.informeIngreso.origen).nombre);
+        // Verificamos si es de origen externo
+        if (this.origenExterno && !this.check) {
+            this.informeIngreso.organizacionOrigen = {
+                id: this.informeIngreso.organizacionOrigen.id,
+                nombre: this.informeIngreso.organizacionOrigen.nombre
+            };
+        }
         this.informeIngreso.PaseAunidadOrganizativa = this.informeIngreso.PaseAunidadOrganizativa;
         this.informeIngreso.obraSocial = this.paciente.obraSocial;
 
