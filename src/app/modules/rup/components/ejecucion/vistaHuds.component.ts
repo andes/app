@@ -11,6 +11,7 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 import { HUDSService } from '../../services/huds.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
+import * as moment from 'moment';
 
 @Component({
     selector: 'rup-vistaHuds',
@@ -67,6 +68,24 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                 this.activeIndexPrestacion = this.activeIndexPrestacion - 1;
             }
             this.registros = [...datos];
+            this.registros.forEach((elemento, index) => {
+                if (elemento.tipo === 'internacion' && elemento.data && elemento.data.indices && elemento.data.registros.length > 0) {
+                    const registrosAux = elemento.data.registros[0];
+                    const keys = Object.keys(registrosAux);
+                    const allRegistros = [];
+                    keys.forEach(key => {
+                        if (registrosAux[key] && registrosAux[key].fecha) {
+                            allRegistros.push(registrosAux[key]);
+                        }
+                    });
+                    allRegistros.sort((a, b) => {
+                        const fechaA = moment(a.fecha);
+                        const fechaB = moment(b.fecha);
+                        return fechaB.diff(fechaA);
+                    });
+                    this.registros[index].data.registros[0] = allRegistros;
+                }
+            });
         });
         // Limpiar los valores observados al iniciar la ejecución
         // Evita que se autocompleten valores de una consulta anterior
