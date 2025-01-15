@@ -4,12 +4,14 @@ import { BuscadorFichaEpidemiologicaComponent } from './components/buscador-fich
 import { FichaEpidemiologicaContactosComponent } from './components/ficha-epidemiologica-contactos/ficha-epidemiologica-contactos.component';
 import { FichaEpidemiologicaComponent } from './components/ficha-epidemiologica/ficha-epidemiologica.component';
 import { SeguimientoEpidemiologiaComponent } from './components/seguimiento/seguimientoEpidemiologia.component';
+import { RoutingGuard, RoutingNavBar } from '../../../app/app.routings-guard.class';
 
 
 const routes: Routes = [
     {
         path: 'ficha-epidemiologica',
-        component: FichaEpidemiologicaComponent
+        component: FichaEpidemiologicaComponent,
+        canActivate: [RoutingNavBar, RoutingGuard]
     },
     {
         path: 'buscador-ficha-epidemiologica',

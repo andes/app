@@ -58,12 +58,12 @@ export class FichaEpidemiologicaComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
-        if (!this.auth.getPermissions('epidemiologia:?').length) {
+        if (!this.auth.getPermissions('epidemiologia:?').length && !this.auth.profesional) {
             this.router.navigate(['inicio']);
         }
-        this.puedeEditar = this.auth.check('epidemiologia:update');
-        this.puedeVer = this.auth.check('epidemiologia:read');
-        this.puedeCrear = this.auth.check('epidemiologia:create');
+        this.puedeEditar = this.auth.check('epidemiologia:update') || (this.auth.profesional !== null);
+        this.puedeVer = this.auth.check('epidemiologia:read') || (this.auth.profesional !== null);
+        this.puedeCrear = this.auth.check('epidemiologia:create') || (this.auth.profesional !== null);
 
         this.plex.updateTitle([
             { route: '/', name: 'EPIDEMIOLOGÍA' },
