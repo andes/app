@@ -1,3 +1,10 @@
+## [5.155.1](https://github.com/andes/app/compare/v5.155.0...v5.155.1) (2025-01-15)
+
+
+### Bug Fixes
+
+* **RUP:** cambia máximos y requeridos en CSV ([#3131](https://github.com/andes/app/issues/3131)) ([13d3718](https://github.com/andes/app/commit/13d37182919e7213bd5e162c306a3047f2814d32))
+
 # [5.155.0](https://github.com/andes/app/compare/v5.154.0...v5.155.0) (2024-12-25)
 
 
