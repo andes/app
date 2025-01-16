@@ -168,38 +168,60 @@ export class AppComponent {
 
         this.modulos$.subscribe(registros => {
             registros.forEach((modulo) => {
+                const menuOption = {
+                    id: modulo._id,
+                    label: modulo.nombre,
+                    icon: modulo.icono,
+                    prefix: 'adi',
+                    color: modulo.color,
+                    submodulos: []
+                };
+
                 modulo.permisos.forEach((permiso, index) => {
                     if (this.auth.getPermissions(permiso).length > 0) {
                         if (modulos.indexOf(modulo._id) === -1) {
-
                             modulosNovedades.push(modulo._id);
                             if (modulo.submodulos && modulo.submodulos.length > 0) {
                                 modulo.submodulos = modulo.submodulos.filter(x => this.auth.getPermissions(x.permisos[0]).length > 0);
                                 modulo.submodulos.forEach((submodulo, key) => {
                                     modulos.push(submodulo._id);
-                                    const menuOptionSub = { id: key, label: `${modulo.nombre}: ${submodulo.nombre.replace(/<[^>]*>?/gm, ' ').replace('- ', '')}`, icon: `${submodulo.icono}`, route: submodulo.linkAcceso };
-                                    if (this.menuList.findIndex(x => x.label === menuOptionSub.label) === -1) {
-                                        this.menuList.push(menuOptionSub);
+                                    const subMenuOption = {
+                                        id: key,
+                                        label: submodulo.nombre.replace(/<[^>]*>?/gm, ' ').replace('- ', ''),
+                                        route: submodulo.linkAcceso,
+                                        prefix: 'adi'
+                                    };
+
+                                    if (!menuOption.submodulos.some(sub => sub.id === subMenuOption.id && sub.label === subMenuOption.label)) {
+                                        menuOption.submodulos.push(subMenuOption);
                                     }
                                 });
                             } else {
                                 modulos.push(modulo._id);
-                                const menuOption = { id: index, label: `${modulo.nombre}: ${modulo.subtitulo}`, icon: `${modulo.icono}`, route: modulo.linkAcceso };
+                                const subMenuOption = {
+                                    id: index,
+                                    label: modulo.subtitulo,
+                                    route: modulo.linkAcceso,
+                                    prefix: 'adi'
+                                };
+
+                                if (!menuOption.submodulos.some(sub => sub.id === subMenuOption.id && sub.label === subMenuOption.label)) {
+                                    menuOption.submodulos.push(subMenuOption);
+                                }
+                            }
+                            if (this.menuList.findIndex(x => x.label === menuOption.label) === -1) {
                                 this.menuList.push(menuOption);
                             }
                         }
                     }
                 });
             });
+
             if (modulosNovedades.length) {
                 this.commonNovedadesService.setNovedadesSinFiltrar(modulosNovedades);
-                this.commonNovedadesService.getNovedadesSinFiltrar().subscribe((novedades) => {
-                    this.tieneNovedades = novedades.length > 0;
-                });
             }
-            this.menuList.push({ divider: true });
-            this.menuList.push({ label: 'Cerrar Sesión', icon: 'logout', route: '/auth/logout' });
-            this.plex.updateMenu(this.menuList);
+
+            console.log(this.menuList);
         });
     }
 
