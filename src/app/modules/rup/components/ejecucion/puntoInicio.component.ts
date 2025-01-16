@@ -81,7 +81,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     private interval;
 
     public showModalMotivo = false;
-    public motivoVerContinuarPrestacion = 'Continuidad del cuidado del paciente';
+    public motivoVerContinuarPrestacion = 'continuidad';
     public routeToParams = [];
     public accesoHudsPrestacion = null;
     public prestacionNominalizada;
