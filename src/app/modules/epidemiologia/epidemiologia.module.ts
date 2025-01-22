@@ -55,6 +55,6 @@ import { FichaEpidemiologicaGenericComponent } from './components/ficha-epidemio
         SemaforoModule
     ],
     providers: [FormsService, SelectSearchService],
-    exports: [FichaEpidemiologicaCrudComponent]
+    exports: [FichaEpidemiologicaCrudComponent, FichaEpidemiologicaGenericComponent]
 })
 export class EpidemiologiaModule { }
