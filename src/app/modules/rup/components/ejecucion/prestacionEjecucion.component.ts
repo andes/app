@@ -147,6 +147,10 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             this.registrosHUDS = [...datos];
         });
 
+        if (!this.tieneAccesoHUDS) {
+            this.panelIndex = 0;
+        }
+
         this.servicioPrestacion.clearRefSetData();
 
         // Limpiar los valores observados al iniciar la ejecución
