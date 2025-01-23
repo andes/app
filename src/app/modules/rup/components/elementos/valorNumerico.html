@@ -1,7 +1,7 @@
 <form #form="ngForm">
     <div class="row flex-column">
         <div class="col-12">
-            <ng-container *ngIf="!soloValores; else showSoloValores">
+            <ng-container *ngIf="!soloValores && params; else showSoloValores">
                 <plex-int [label]="params.title ? params.title : registro.concepto.term" name="intValue"
                           *ngIf="params.numericType === 'integer'" [(ngModel)]="registro.valor"
                           [suffix]="params.unit ? params.unit : '' " [min]="params.min" [max]="params.max"
@@ -24,7 +24,10 @@
                 <ng-template #showTerm>
                     <label class="text-capitalize">{{ registro.concepto.term }}</label>
                 </ng-template>
-                {{registro.valor}} {{params.unit}}
+                <div *ngIf="params">
+                    {{registro.valor}} {{params.unit}}
+                </div>
+
             </ng-template>
         </div>
     </div>

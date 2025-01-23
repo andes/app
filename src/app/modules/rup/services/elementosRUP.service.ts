@@ -150,7 +150,7 @@ export class ElementosRUPService {
      * @returns {IElementoRUP} Elemento que implementa el concepto
      * @memberof ElementosRUPService
      */
-    buscarElemento(concepto: ISnomedConcept, esSolicitud: boolean, esIndicacion?: boolean): IElementoRUP {
+    buscarElemento(concepto: ISnomedConcept, esSolicitud?: boolean, esIndicacion?: boolean): IElementoRUP {
         // Busca el elemento RUP que implemente el concepto
         if (typeof concepto.conceptId === 'undefined') {
             concepto = concepto[1];
