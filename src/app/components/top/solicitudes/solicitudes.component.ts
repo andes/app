@@ -354,8 +354,12 @@ export class SolicitudesComponent implements OnInit {
                 }
             };
             this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
-                () => this.cargarSolicitudes()
+                () => {
+                    this.cargarSolicitudes();
+                    this.plex.toast('success', 'Solicitud anulada exitosamente');
+                }
             );
+            this.observacionesAnular = '';
         }
     }
 
