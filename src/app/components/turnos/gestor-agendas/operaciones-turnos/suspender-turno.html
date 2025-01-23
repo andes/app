@@ -21,17 +21,17 @@
             {{turno.horaInicio | date: 'H:mm'}} hs
         </div>
         <div [ngClass]="{'col-6': !agenda.enviarSms, 'col-4': agenda.enviarSms}">
-            <span *ngIf="turno.paciente?.id">{{turno.paciente | nombre }} {{turno.estado}}</span>
+            <span *ngIf="turno.paciente?.id">{{turno.paciente | nombre }}</span>
             <span *ngIf="!turno.paciente?.id && turno.estado !== 'turnoDoble'">sin paciente asignado</span>
             <span *ngIf="turno.estado === 'turnoDoble'">turno doble</span>
         </div>
         <div *ngIf="agenda.enviarSms" class="col-4" (click)="seleccionarTurno(turno)">
             <span *ngIf="!turno.paciente?.id">-</span>
             <span *ngIf="!estaSeleccionado(turno) && turno.paciente?.id">
-                <plex-icon size="lg" style="margin-left: 45px;" name="checkbox-blank-outline"></plex-icon>
+                <plex-icon size="lg" class="ml-5" name="checkbox-blank-outline"></plex-icon>
             </span>
             <span *ngIf="estaSeleccionado(turno) && turno.paciente?.id">
-                <plex-icon size="lg" type="info" style="margin-left: 45px;" name="checkbox-marked"></plex-icon>
+                <plex-icon size="lg" type="info" class="ml-5" name="checkbox-marked"></plex-icon>
             </span>
         </div>
     </div>
