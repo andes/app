@@ -69,12 +69,12 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
             }
             this.registros = [...datos];
             this.registros.forEach((elemento, index) => {
-                if (elemento.tipo === 'internacion' && elemento.data && elemento.data.indices && elemento.data.registros.length > 0) {
+                if (elemento.tipo === 'internacion' && elemento.data?.indices && elemento.data.registros?.length > 0) {
                     const registrosAux = elemento.data.registros[0];
                     const keys = Object.keys(registrosAux);
                     const allRegistros = [];
                     keys.forEach(key => {
-                        if (registrosAux[key] && registrosAux[key].fecha) {
+                        if (registrosAux[key]?.fecha) {
                             allRegistros.push(registrosAux[key]);
                         }
                     });
