@@ -1,3 +1,16 @@
+# [5.156.0](https://github.com/andes/app/compare/v5.155.1...v5.156.0) (2025-01-29)
+
+
+### Bug Fixes
+
+* **HUDS:** Se  corrige la visualización de fichas  desde la HUDS ([#3138](https://github.com/andes/app/issues/3138)) ([f44f13d](https://github.com/andes/app/commit/f44f13d34549faeb8b7868771736a6b27c7cb436))
+* **RUP-348:** Quitar primera vez de trastornos inactivos o resueltos ([#3118](https://github.com/andes/app/issues/3118)) ([daa7052](https://github.com/andes/app/commit/daa705236c99d00d935efa5fc97c24db68a5216b))
+
+
+### Features
+
+* **HUDS:** corrige muestra de registros RUP en procedimientos ([#3126](https://github.com/andes/app/issues/3126)) ([4a10673](https://github.com/andes/app/commit/4a10673a434d73e26cb0660fee5301a9fcc8ccb7))
+
 ## [5.155.1](https://github.com/andes/app/compare/v5.155.0...v5.155.1) (2025-01-15)
 
 
