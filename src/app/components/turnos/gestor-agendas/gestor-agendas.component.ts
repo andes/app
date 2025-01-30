@@ -73,7 +73,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public showCarpetas = false;
     public showSuspenderAgenda = false;
     public showSuspendida = false;
-    public profesionalExistente = false;
+    public disabledGuardar = false;
     public agendas: any = [];
     public agenda: any = {};
     public modelo: any = {};
@@ -480,8 +480,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showAgregarNotaAgenda = false;
     }
 
-    showGuardarDisabled(profesionalExiste: boolean) {
-        this.profesionalExistente = profesionalExiste;
+    setDisabledGuardar(haySolapamiento: boolean) {
+        this.disabledGuardar = haySolapamiento;
     }
 
     insertarAgenda() {
