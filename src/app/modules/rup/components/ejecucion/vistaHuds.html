@@ -108,12 +108,12 @@
                         <app-ficha-epidemiologica-crud *ngIf="registro.data.type.name == 'covid19'"
                                                        [paciente]="paciente" [fichaPaciente]="registro.data"
                                                        [editFicha]="false" [fichaName]="registro.data.type.name"
-                                                       [hideVolver]="true">
+                                                       [hideVolver]="true" [accesoHuds]="true">
                         </app-ficha-epidemiologica-crud>
                         <app-ficha-epidemiologica-generic *ngIf="registro.data.type.name != 'covid19'"
                                                           [paciente]="paciente" [fichaPaciente]="registro.data"
                                                           [editFicha]="false" [fichaName]="registro.data.type.name"
-                                                          [volverBuscador]=false>
+                                                          [volverBuscador]="false" [accesoHuds]="true">
                         </app-ficha-epidemiologica-generic>
                     </plex-tab>
 
