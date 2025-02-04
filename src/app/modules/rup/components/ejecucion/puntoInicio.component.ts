@@ -914,7 +914,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
         const doRoute = () => this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
         if ((this.tieneAccesoHUDS || this.motivoVerContinuarPrestacion === motivo) && motivo) {
-            if (this.prestacionNominalizada) {
+            if (!this.tieneAccesoHUDS && (this.agendaSeleccionada?.nominalizada || this.agendaSeleccionada === 'fueraAgenda')) {
                 this.accesoHudsPaciente = null;
             }
             if (!this.accesoHudsPaciente && !this.accesoHudsPrestacion && this.routeToParams && this.routeToParams[0] === 'huds') {
@@ -961,7 +961,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         const esPrestacionNoNominalizada = prestacion.solicitud.tipoPrestacion.noNominalizada;
         if (!esPrestacionNoNominalizada) {
             this.setRouteToParams([estado, prestacion.id]);
-            this.accesoHudsPaciente = prestacion.paciente;
+            this.tieneAccesoHUDS ? this.accesoHudsPaciente = prestacion.paciente : this.accesoHudsPaciente = null;
             this.accesoHudsTurno = null;
             this.accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id;
             this.motivosHudsService.getMotivo('continuidad').subscribe(motivoH => {

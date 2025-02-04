@@ -353,7 +353,7 @@
                                                 <plex-button *ngIf="turno.botonera.continuar" class="ml-1"
                                                              tooltip="Continuar registro" tooltipPosition="left"
                                                              icon="lapiz-documento" type="primary btn-sm"
-                                                             (click)="setRouteToParams(['ejecucion', chequearPrestacion(turno).id]); accesoHudsPaciente = turno.paciente; accesoHudsTurno = turno.id; accesoHudsPrestacion = turno.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)">
+                                                             (click)="setRouteToParams(['ejecucion', chequearPrestacion(turno).id]);  accesoHudsTurno = turno.id;preAccesoHuds(motivoVerContinuarPrestacion)">
                                                 </plex-button>
                                                 <plex-button class="ml-1" tooltip="Ver resumen"
                                                              icon="documento-paciente" *ngIf="turno.botonera.resumen"
