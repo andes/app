@@ -282,7 +282,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         const existeDiagnostico = this.registros.find(p => p.esDiagnosticoPrincipal === true);
         const diagnosticoRepetido = this.registros.filter(p => p.esDiagnosticoPrincipal === true).length > 1;
 
-        const existeC2 = this.registros.find(p => (p.esPrimeraVez === undefined && this.codigosCie10[p.id] && this.codigosCie10[p.id].c2));
+        const existeC2 = this.registros.find(p => p.valor.estado === 'activo' && p.esPrimeraVez === undefined && this.codigosCie10[p.id] && this.codigosCie10[p.id].c2);
         if (existeC2) {
             this.plex.toast('info', existeC2.concepto.term.toUpperCase() + '. Debe indicar si es primera vez.');
             return false;
