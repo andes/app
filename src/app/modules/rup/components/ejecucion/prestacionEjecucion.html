@@ -269,7 +269,8 @@
                                               [registro]="registro.data" [paciente]="paciente">
                             </detalle-registro>
 
-                            <detalle-procedimiento *ngIf="registro.data.class === 'procedimiento'" [registro]="registro.data" [paciente]="paciente">
+                            <detalle-procedimiento *ngIf="registro.data.class === 'procedimiento'"
+                                                   [registro]="registro.data" [paciente]="paciente">
                             </detalle-procedimiento>
 
                             <detalle-prestacion *ngIf="prestacionVisible(registro)" [registro]="registro.data"
@@ -351,7 +352,8 @@
                                       (_onDragStart)="arrastrandoConcepto(true)"
                                       (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
                 </plex-tab>
-                <plex-tab icon="file-tree" color="info" *ngIf="prestacion.solicitud.ambitoOrigen === 'ambulatorio'">
+                <plex-tab icon="file-tree" color="info"
+                          *ngIf="prestacion.solicitud.ambitoOrigen === 'ambulatorio' && tieneAccesoHUDS">
                     <div class="pt-2">
                         <rup-relaciones [registros]="prestacion.ejecucion.registros"></rup-relaciones>
                     </div>
