@@ -3,12 +3,13 @@
         <plex-title titulo="Historia única de Salud">
             <plex-button type="info" size="sm" (click)="volver()">Volver</plex-button>
         </plex-title>
-        <div class="mt-4">
-            <plex-tabs (close)="onCloseTab($event)" [activeIndex]="activeIndexPrestacion"
+        <div class="w-100 h-100 mt-4">
+            <plex-tabs (close)=" onCloseTab($event)" [activeIndex]="activeIndexPrestacion"
                        *ngIf="elementosRUPService.ready | async">
                 <plex-button *feature="'hudsExploracion'" label="Exploración" tooltip="Exploración Visual de HUDS"
                              type="info" size="sm" class="mr-2" (click)="onExploracionClick()">
                 </plex-button>
+
                 <plex-tab label="Resumen del Paciente">
                     <rup-resumenPaciente-estatico [paciente]="paciente" esTab="true">
                     </rup-resumenPaciente-estatico>
@@ -42,6 +43,7 @@
                         </plex-tab>
                     </plex-tabs>
                 </plex-tab>
+
                 <ng-container *ngFor="let registro of registros">
                     <plex-tab [allowClose]="true" [label]="registro.data.concepto.term" [class]="registro.data.class"
                               [color]="registro.data.class" *ngIf="registro.tipo === 'concepto'">
