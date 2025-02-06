@@ -138,6 +138,8 @@
                         <plex-badge *ngIf="turno.tipoTurno === 'programado' && turno.estado === 'asignado'"
                                     type="warning">
                             Programado</plex-badge>
+                        <plex-badge *ngIf="turno.reasignado?.anterior" type="info">Reasignado
+                        </plex-badge>
                         <plex-badge *ngIf="turno.tipoTurno === 'delDia' && turno.estado === 'asignado'" type="success">
                             Del
                             día
