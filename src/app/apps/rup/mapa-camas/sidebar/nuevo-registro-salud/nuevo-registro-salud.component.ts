@@ -37,7 +37,7 @@ export class NuevoRegistroSaludComponent implements OnInit {
     }
     get horaMin() {
         if (this.dia && moment(this.dia).startOf('day').diff(this.fechaMin) === 0) {
-            if (moment(this.internacion.fechaIngreso).format('ss') === '00') {
+            if (moment(this.internacion.fechaIngreso).format('ss') === '00' || moment(this.internacion.fechaIngreso).format('HH:mm') === '00:00') {
                 return moment(this.internacion.fechaIngreso).toDate();
             } else {
                 return moment(this.internacion.fechaIngreso).subtract(1, 'minutes').toDate();
