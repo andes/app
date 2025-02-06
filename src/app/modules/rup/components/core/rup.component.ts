@@ -176,7 +176,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
 
     ngOnChanges(changes: SimpleChanges): void {
         if (this.rupInstance) {
-            this.rupInstance['conceptosAsociados'] = changes.conceptosAsociados.currentValue[0] || [];
+            this.rupInstance['conceptosAsociados'] = changes.conceptosAsociados?.currentValue[0] || [];
         }
     }
 
