@@ -34,7 +34,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     searchTerm: string;
     hallazgosCronicosAux: any[];
     hallazgosNoActivosAux: any;
-    filtroActual: any = 'trastorno';
+    filtroActual;
     filtroTrastornos = true;
 
     solicitudesMezcladas = [];
@@ -169,6 +169,11 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         'dispensada': 'success',
         'dispensa-parcial': 'warning'
     } as { [key: string]: string };
+    public permisosCompletos;
+    public permisosParciales;
+    public permisosLab;
+    public permisosVac;
+    public permisosRec;
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -207,10 +212,20 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     ngOnInit() {
         this.groupRecetas();
         this.getProfesional();
+        this.permisosCompletos = this.auth.check('huds:visualizacionHuds');
+        this.permisosParciales = this.auth.check('huds:visualizacionParcialHuds:*');
+        this.permisosLab = this.auth.check('huds:visualizacionParcialHuds:laboratorio');
+        this.permisosVac = this.auth.check('huds:visualizacionParcialHuds:vacuna');
+        this.permisosRec = this.auth.check('huds:visualizacionParcialHuds:receta');
+
+        this.filtroActual = this.permisosCompletos ? 'trastorno' :
+            (this.permisosParciales || this.permisosLab) ? 'laboratorios' :
+                this.permisosVac ? 'vacunas' :
+                    'recetas';
     }
 
     getTitulo(filtroactual) {
-        return this.filtros.find(filtro => filtro.key === filtroactual).titulo;
+        return this.filtros.find(filtro => filtro.key === filtroactual)?.titulo;
     }
 
     dragStart(e) {
@@ -597,6 +612,19 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         if (key === 'planes') {
             this.setAmbitoOrigen('ambulatorio');
         }
+    }
+
+    mostrarItem(item) {
+        if (this.permisosCompletos) {
+            return true;
+        } else if (item.key === 'laboratorios' && (this.permisosLab || this.permisosParciales)) {
+            return true;
+        } else if (item.key === 'vacunas' && (this.permisosVac || this.permisosParciales)) {
+            return true;
+        } else if (item.key === 'recetas' && (this.permisosRec || this.permisosParciales)) {
+            return true;
+        }
+        return false;
     }
 
     filtrarTrastornos() {

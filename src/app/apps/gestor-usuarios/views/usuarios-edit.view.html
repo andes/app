@@ -27,13 +27,13 @@
             <plex-button type="success" (click)="grabar()">
                 GUARDAR
             </plex-button>
-            <plex-button type="danger" (click)="borrar()">
+            <plex-button type="danger" (click)="borrar()" tooltip="Borrar permisos" tooltipPosition="left">
                 <plex-icon name="delete"></plex-icon>
             </plex-button>
-            <plex-button type="info" (click)="copy()" title="Copiar permisos" titlePosition="left">
+            <plex-button type="info" (click)="copy()" tooltip="Copiar permisos" tooltipPosition="left">
                 <plex-icon name="content-copy"></plex-icon>
             </plex-button>
-            <plex-button type="info" (click)="paste()" title="Pegar permisos" titlePosition="left"
+            <plex-button type="info" (click)="paste()" tooltip="Pegar permisos" tooltipPosition="left"
                          *ngIf="permisosService.hasCopy()">
                 <plex-icon name="content-paste"></plex-icon>
             </plex-button>
