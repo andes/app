@@ -7,7 +7,8 @@
         <div class="slider-filtros">
             <plex-card class="card-filtro" *ngFor="let filtro of filtros; let iPrestacion = index"
                        (click)="filtroBuscador(filtro.key)">
-                <div class="card-content {{filtro.key}}" [ngClass]="{'active': filtroActual === filtro.key}">
+                <div *ngIf="mostrarItem(filtro)" class="card-content {{filtro.key}}"
+                     [ngClass]="{'active': filtroActual === filtro.key}">
                     <div class="icon-wrapper">
                         <div class="contador"><small *ngIf="getCantidadResultados(filtro.key)">
                                 {{getCantidadResultados(filtro.key)}}
