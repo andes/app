@@ -244,25 +244,27 @@ export class PanelAgendaComponent implements OnInit {
             }));
         }
         if (!req.length) {
+            this.alertas = [];
             this.agendasSolapadas.emit(false);
         }
         forkJoin(req).pipe(
             map((agendas: any[2]) => {
                 agendas = agendas.flat();
-                const agendasConSolapamiento = agendas.filter(agenda => {
+                const agendasConSolapamiento = agendas?.filter(agenda => {
                     return agenda.id !== this.editaAgendaPanel.id || !this.editaAgendaPanel.id; // Ignorar agenda actual
                 });
                 this.alertas = [];
                 if (!agendasConSolapamiento.length) {
+                    this.agendasSolapadas.emit(false);
                     return;
                 }
                 // Si encontramos una agenda que coincida con la búsqueda...
                 const equipoSalud = this.editaAgendaPanel.profesionales;
-                const profesionalesSolapados = equipoSalud.filter(prof => agendasConSolapamiento.some(ag => ag.profesionales.find(profSolap => profSolap.id === prof.id)));
-                const espacioFisico = this.espacioFisicoPropio ? this.editaAgendaPanel.espacioFisico : [];
-                const solapamientoEFisico = espacioFisico && agendasConSolapamiento.some(ag => ag.espacioFisico.id === espacioFisico.id);
+                const profesionalesSolapados = equipoSalud?.filter(prof => agendasConSolapamiento.some(ag => ag.profesionales.find(profSolap => profSolap.id === prof.id)));
+                const espacioFisico = this.espacioFisicoPropio ? this.editaAgendaPanel.espacioFisico : null;
+                const solapamientoEFisico = !!espacioFisico && agendasConSolapamiento.some(ag => ag.espacioFisico?.id === espacioFisico.id);
 
-                if (profesionalesSolapados.length) {
+                if (profesionalesSolapados?.length) {
                     profesionalesSolapados.map(p => {
                         this.alertas = [... this.alertas, 'El profesional ' + p.nombre + ' ' + p.apellido + ' está asignado a otra agenda en ese horario'];
                     });
