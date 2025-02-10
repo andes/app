@@ -1,7 +1,7 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { switchMap } from 'rxjs';
 import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
@@ -183,7 +183,6 @@ export class DarTurnosComponent implements OnInit {
     showTab = 0;
     equipoSalud;
     prestacionesAlternativa;
-    origen = '';
 
     // Muestra sólo las agendas a las que se puede asignar el turno (oculta las "con/sin alternativa")
     mostrarNoDisponibles = false;
@@ -214,8 +213,7 @@ export class DarTurnosComponent implements OnInit {
         public auth: Auth,
         private router: Router,
         private osService: ObraSocialCacheService,
-        private reglasService: ReglaService,
-        private route: ActivatedRoute
+        private reglasService: ReglaService
     ) { }
 
     ngOnInit() {
@@ -223,9 +221,6 @@ export class DarTurnosComponent implements OnInit {
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
         this.puedeDarSobreturno = this.auth.check('turnos:puntoInicio:darSobreturno');
         this.opciones.fecha = moment().toDate();
-        this.route.params.subscribe(params => {
-            this.origen = params['origen'];
-        });
 
         this.carpetaEfector = {
             organizacion: {
@@ -438,7 +433,7 @@ export class DarTurnosComponent implements OnInit {
             const agendaDinamicaOconLlave = (publicada && accesoDirectoConTurnosDisponibles) ||
                 ((publicada || disponible) && (gestionConTurnosDisponibles || dinamicaDelDiaConCupoDisponible || agenda.condicionLlave));
 
-            if (this.origen === 'listado-solicitudes') { // citas, dando turno desde el listado
+            if (this.solicitudPrestacion?.id && this.router.url.includes('citas/punto-inicio')) { // citas, dando turno desde el listado de solicitudes
                 // Verificamos si existen agendas con llave y limpiamos el array (por si existen agendas programadas y del dia).
                 if (agendaDinamicaOconLlave) {
                     if (arrAgendas.length && (arrAgendas[arrAgendas.length - 1].turnosRestantesDelDia > 0 || arrAgendas[arrAgendas.length - 1].turnosRestantesProgramados > 0)) {
