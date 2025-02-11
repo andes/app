@@ -343,8 +343,8 @@
         <ng-container *ngIf="modalTurnosRepetidos">
             <plex-modal #modal size="sm" [startOpen]="true" [allowEscClose]="false" [allowBackdropClose]="false">
                 <plex-icon name="alert-outline" size="sm" type="warning mt-2 mb-2"></plex-icon>
-                <plex-modal-subtitle type="warning" class="font-subtitle text-muted text-center">El paciente
-                    seleccionado tiene esta prestación asignada, desea dar el turno?
+                <plex-modal-subtitle type="warning" class="font-subtitle text-muted text-center">Este paciente ya posee
+                    turno para <b>{{ turnoTipoPrestacion.term }}</b>, deséa asignarlo de todas formas?
                 </plex-modal-subtitle>
                 <br>
                 <main>
@@ -353,7 +353,6 @@
                             <li class="list-item text-capitalize">
                                 <div><b>Fecha y hora:</b> {{ turno.horaInicio | date:'EEEE dd/MM/yyyy HH:mm' }}</div>
                                 <div><b>Organización:</b> {{ turno.organizacion }}</div>
-                                <div><b>Tipo de prestación:</b> {{ turno.tipoPrestacion }}</div>
                             </li>
                         </ul>
                     </div>

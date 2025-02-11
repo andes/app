@@ -43,9 +43,35 @@
         <div class="row" class="botones">
             <plex-button type="danger" label="Cancelar" (click)="cancelar()">
             </plex-button>
-            <plex-button *ngIf="paciente" [validateForm]="form" label="Guardar" type="success" (click)="guardar($event)"
-                         [disabled]="!disableGuardar">
+            <plex-button *ngIf="paciente" [validateForm]="form" label="Guardar" type="success"
+                         (click)="verTurnosFuturos($event)" [disabled]="!disableGuardar">
             </plex-button>
         </div>
+        <ng-container *ngIf="modalTurnosRepetidos">
+            <plex-modal #modal size="sm" [startOpen]="true" [allowEscClose]="false" [allowBackdropClose]="false">
+                <plex-icon name="alert-outline" size="sm" type="warning mt-2 mb-2"></plex-icon>
+                <plex-modal-subtitle type="warning" class="font-subtitle text-muted text-center">Este paciente ya posee
+                    turno para <b>{{ tipoPrestacion.term }}</b>, deséa asignarlo de todas formas?
+                </plex-modal-subtitle>
+                <br>
+                <main>
+                    <div>
+                        <ul class="list-item-group" *ngFor="let turno of turnosFuturos; let i = index">
+                            <li class="list-item text-capitalize">
+                                <div><b>Fecha y hora:</b> {{ turno.horaInicio | date:'EEEE dd/MM/yyyy HH:mm' }}
+                                </div>
+                                <div><b>Organización:</b> {{ turno.organizacion }}</div>
+                            </li>
+                        </ul>
+                    </div>
+                </main>
+                <plex-button class="mb-4" modal left type="danger" (click)="modalClose()">
+                    Cancelar
+                </plex-button>
+                <plex-button class="mb-4" modal right type="success" (click)="guardar()">
+                    Aceptar
+                </plex-button>
+            </plex-modal>
+        </ng-container>
     </span>
 </form>
