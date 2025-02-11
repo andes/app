@@ -7,6 +7,7 @@ import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { TurnoService } from './../../../../services/turnos/turno.service';
 import { SmsService } from './../../../../services/turnos/sms.service';
 import { Auth } from '@andes/auth';
+import { mergeMap } from 'rxjs/operators';
 
 @Component({
     selector: 'suspender-turno',
@@ -186,18 +187,20 @@ export class SuspenderTurnoComponent implements OnInit {
             });
             idBloque = (indice !== -1) ? element.id : -1;
         });
-        this.smsService.enviarNotificacion(params).subscribe((msg: any) => {
-            const aviso = msg.resultado === 1 ? 'enviado' : 'fallido';
-            const data = {
-                idAgenda: this.agenda.id,
-                idBloque: idBloque,
-                idTurno: turno.id,
-                avisoSuspension: aviso
-            };
-            this.turnosService.patch(this.agenda.id, idBloque, turno.id, data).subscribe(resultado => {
-                turno.avisoSuspension = aviso;
-            });
-        });
+        this.smsService.enviarNotificacion(params).pipe(
+            mergeMap((msg: any) => {
+                const aviso = msg.resultado === 1 ? 'enviado' : 'fallido';
+                const data = {
+                    idAgenda: this.agenda.id,
+                    idBloque: idBloque,
+                    idTurno: turno.id,
+                    avisoSuspension: aviso
+                };
+                return this.turnosService.patch(this.agenda.id, idBloque, turno.id, data);
+            })
+        ).subscribe(turnoSaved => {
+            turno.avisoSuspension = (turnoSaved as any).aviso;
+        });;
     }
 
     cancelar() {
