@@ -1,3 +1,18 @@
+# [5.157.0](https://github.com/andes/app/compare/v5.156.0...v5.157.0) (2025-02-12)
+
+
+### Bug Fixes
+
+* **HUDS:** scroll infinito en accesos ([#3140](https://github.com/andes/app/issues/3140)) ([cf7c2e7](https://github.com/andes/app/commit/cf7c2e7ab7126c2219ff54ffd32c6c0c6c6a3783))
+* **IN:** organizacion origen ([#3132](https://github.com/andes/app/issues/3132)) ([17fb13c](https://github.com/andes/app/commit/17fb13c99005d70a5c1eb20394b5027a5f102bac))
+* **RUP:** toast primera vez en transtornos resueltos o inactivos ([#3146](https://github.com/andes/app/issues/3146)) ([c9de9be](https://github.com/andes/app/commit/c9de9be46be52f7b0372b6198a42dd908c5261bb))
+* **RUP:** validar prestacion ([#3147](https://github.com/andes/app/issues/3147)) ([f609f42](https://github.com/andes/app/commit/f609f42f7d614044721b998418aa0f72d7655c5b))
+
+
+### Features
+
+* **RUP:** modifica modal de evolución de trastorno ([#3127](https://github.com/andes/app/issues/3127)) ([32af355](https://github.com/andes/app/commit/32af355e5a10ff1791fdaff97e652cf53b8ad631))
+
 # [5.156.0](https://github.com/andes/app/compare/v5.155.1...v5.156.0) (2025-01-29)
 
 
