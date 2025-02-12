@@ -1,0 +1,23 @@
+<ng-container *ngIf="!soloValores">
+    <form class="mt-1" #formMedicamento="ngForm">
+        <plex-select [(ngModel)]="medicamentoSeleccionado" name="term" [data]="medicamentoCargados"
+                     placeholder="Seleccione medicamento" label="Medicamento" required="true">
+        </plex-select>
+        <div class="mt-4 d-flex justify-content-end">
+            <plex-button name="botonAgregar" type="info"
+                         [disabled]="!formMedicamento.valid || medicamentoCargados?.length < 1"
+                         (click)="agregarMedicamento($event)" [validateForm]="formMedicamento">
+                Agregar
+            </plex-button>
+        </div>
+    </form>
+    <plex-list size="md" *ngIf="registro.valor.medicamentos" class="mt-3">
+        <plex-item *ngFor="let item of registro.valor.medicamentos">
+            <plex-icon size="md" *ngIf="true" name="pildoras" class="icon icon--border--producto mr-2">
+            </plex-icon>
+            <plex-label [tituloBold]="true" titulo="{{ item.generico.term  }}" subtitulo=" {{ item.cantEnvases}} envase(s) de {{ item.cantidad}} {{item.presentacion.term }}(s)  {{ item.dosisDiaria.dosis? '| ' + item.dosisDiaria.dosis : '| ' }} {{ item.dosisDiaria.intervalo? ' cada ' + item.dosisDiaria.intervalo.nombre: '' }}  {{ item.dosisDiaria.dias? ' durante ' + item.dosisDiaria.dias + ' día(s)':'' }} 
+                        "></plex-label>
+            <plex-button type="danger" size="sm" (click)="borrarMedicamento(item)" icon="delete"></plex-button>
+        </plex-item>
+    </plex-list>
+</ng-container>
