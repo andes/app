@@ -3,7 +3,6 @@ import { Plex } from '@andes/plex';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { EstadosAgenda } from './../../enums';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
-import { environment } from './../../../../../environments/environment';
 import { SmsService } from './../../../../services/turnos/sms.service';
 import { TurnoService } from './../../../../services/turnos/turno.service';
 import { Auth } from '@andes/auth';
@@ -144,20 +143,13 @@ export class SuspenderAgendaComponent implements OnInit {
         this.returnSuspenderAgenda.emit(null);
     }
 
-
     notificar() {
-        // Se envían notificaciones sólo en Producción
-        if (environment.production === true) {
-            for (let x = 0; x < this.seleccionadosSMS.length; x++) {
-                if (this.seleccionadosSMS[x].avisoSuspension !== 'enviado') {
-                    this.seleccionadosSMS[x].smsEnviado = 'pendiente';
-                    this.send(this.seleccionadosSMS[x]);
-                }
+        for (let x = 0; x < this.seleccionadosSMS.length; x++) {
+            if (this.seleccionadosSMS[x].avisoSuspension !== 'enviado') {
+                this.seleccionadosSMS[x].smsEnviado = 'pendiente';
+                this.send(this.seleccionadosSMS[x]);
             }
-        } else {
-            this.plex.toast('info', 'INFO: Notificación no enviada (activa sólo en Producción)');
         }
-
     }
 
     send(turno: any) {
@@ -168,7 +160,6 @@ export class SuspenderAgendaComponent implements OnInit {
             evento: 'notificaciones:turno:suspender',
             dto: turno
         };
-
         let idBloque;
         this.agenda.bloques.forEach(element => {
             const indice = element.turnos.findIndex(t => {

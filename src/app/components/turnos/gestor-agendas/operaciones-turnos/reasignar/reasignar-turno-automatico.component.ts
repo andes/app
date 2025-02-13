@@ -5,7 +5,6 @@ import * as moment from 'moment';
 import { AgendaService } from '../../../../../services/turnos/agenda.service';
 import { SmsService } from '../../../../../services/turnos/sms.service';
 import { TurnoService } from '../../../../../services/turnos/turno.service';
-import { environment } from './../../../../../../environments/environment';
 import { IAgenda } from './../../../../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../../../../interfaces/turnos/ITurno';
 
@@ -217,52 +216,12 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
 
                 this.serviceTurno.put(reasignacion).subscribe(resultado2 => {
                     this.plex.toast('success', 'El turno se reasignó correctamente');
-                    // Se envían SMS sólo en Producción
                     this.actualizar();
-                    if (environment.production === true) {
-                        const dia = moment(turnoReasignado.horaInicio).format('DD/MM/YYYY');
-                        const horario = moment(turnoReasignado.horaInicio).format('HH:mm');
-                        const mensaje = 'Le informamos que su turno fue reasignado al ' + dia + ' a las ' + horario + '.';
-                        this.enviarSMS(turnoReasignado.paciente, mensaje);
-                    } else {
-                        this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
-                    }
                 });
 
             });
         });
 
-    }
-
-    enviarSMS(paciente: any, mensaje) {
-        if (!paciente.telefono) {
-            return;
-        }
-        const smsParams = {
-            telefono: paciente.telefono,
-            mensaje: mensaje,
-        };
-        this.smsService.enviarSms(smsParams).subscribe(
-            sms => {
-                this.resultado = sms;
-
-                // "if 0 errores"
-                if (this.resultado === '0') {
-                    if (paciente.alias) {
-                        this.plex.toast('info', 'Se notificó al paciente ' + paciente.alias + ' ' + paciente.apellido);
-                    } else {
-                        this.plex.toast('info', 'Se notificó al paciente ' + paciente.nombre + ' ' + paciente.apellido);
-                    }
-                } else {
-                    this.plex.toast('danger', 'ERROR: Notificación no enviada');
-                }
-            },
-            err => {
-                if (err) {
-                    this.plex.toast('danger', 'Error de servicio');
-
-                }
-            });
     }
 
     ocultarAgendaCandidata(idAgenda, indice) {
