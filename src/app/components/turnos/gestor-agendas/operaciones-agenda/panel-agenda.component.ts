@@ -8,6 +8,7 @@ import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisi
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { Router } from '@angular/router';
 import { InstitucionService } from '../../../../services/turnos/institucion.service';
+import { forkJoin, map } from 'rxjs';
 
 @Component({
     selector: 'panel-agenda',
@@ -40,7 +41,7 @@ export class PanelAgendaComponent implements OnInit {
     // Usados en tag <panel-agenda> en gestor-agendas.html
     @Output() actualizarEstadoEmit = new EventEmitter<boolean>();
     @Output() showVistaTurnosEmit = new EventEmitter<Boolean>();
-    @Output() profesionalExistente = new EventEmitter<Boolean>();
+    @Output() agendasSolapadas = new EventEmitter<Boolean>();
 
     showEditarAgendaPanel: Boolean = true;
     public showMapa = false;
@@ -215,7 +216,7 @@ export class PanelAgendaComponent implements OnInit {
     }
 
     selectEspacio($data) {
-        this.validarSolapamientos('espacioFisico');
+        this.validarSolapamientos();
         if (this.alertas.length === 0) {
             this.editaAgendaPanel.espacioFisico = $data;
             this.guardarAgenda(this.editaAgendaPanel);
@@ -225,70 +226,55 @@ export class PanelAgendaComponent implements OnInit {
     /**
      * Valida que no se solapen Profesionales y/o Espacios físicos
      */
-    validarSolapamientos(tipo) {
-        this.alertas = [];
-        // Inicio y Fin de Agenda
+    validarSolapamientos() {
+        const req: any = [];
+        const paramModel = {
+            rango: true,
+            desde: this.editaAgendaPanel.horaInicio,
+            hasta: this.editaAgendaPanel.horaFin,
+            estados: ['planificacion', 'disponible', 'publicada', 'pausada']
+        };
 
-        if (tipo === 'profesionales') {
-            // Loop profesionales
-            this.profesionalExistente.emit(true);
-            if (this.editaAgendaPanel.profesionales) {
-                this.editaAgendaPanel.profesionales.forEach((profesional) => {
-                    const params = {
-                        idProfesional: profesional.id,
-                        rango: true,
-                        desde: this.editaAgendaPanel.horaInicio,
-                        hasta: this.editaAgendaPanel.horaFin,
-                        estados: ['planificacion', 'disponible', 'publicada', 'pausada']
-                    };
-                    this.serviceAgenda.get(params).subscribe(agendas => {
-                        // Hay problemas de solapamiento?
-                        const agendasConSolapamiento = agendas.filter(agenda => {
-                            return agenda.id !== this.editaAgendaPanel.id || !this.editaAgendaPanel.id; // Ignorar agenda actual
-                        });
-
-                        // Si encontramos una agenda que coincida con la búsqueda...
-                        if (agendasConSolapamiento.length > 0) {
-                            this.alertas = [... this.alertas, 'El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario'];
-                        }
-                        if (this.alertas.length > 0) {
-                            this.profesionalExistente.emit(true);
-                        } else {
-                            this.profesionalExistente.emit(false);
-                        }
-                    });
-                });
-            } else {
-                this.profesionalExistente.emit(false);
-            }
-        } else if (tipo === 'espacioFisico') {
-            // Loop Espacios Físicos
-            if (this.editaAgendaPanel.espacioFisico) {
-                const params = {
-                    espacioFisico: this.editaAgendaPanel.espacioFisico._id,
-                    rango: true,
-                    desde: this.editaAgendaPanel.horaInicio,
-                    hasta: this.editaAgendaPanel.horaFin,
-                    estados: ['planificacion', 'disponible', 'publicada', 'pausada']
-                };
-                this.serviceAgenda.get(params).subscribe(agendas => {
-                    // Hay problemas de solapamiento?
-                    const agendasConSolapamiento = agendas.filter(agenda => {
-                        return agenda.id !== this.editaAgendaPanel.id || !this.editaAgendaPanel.id; // Ignorar agenda actual
-                    });
-
-                    // Si encontramos una agenda que coincida con la búsqueda...
-                    if (agendasConSolapamiento.length > 0) {
-                        this.alertas = [... this.alertas, 'El ' + this.editaAgendaPanel.espacioFisico.nombre + ' está asignado a otra agenda en ese horario'];
-                    }
-                    if (this.alertas.length > 0) {
-                        this.profesionalExistente.emit(true);
-                    } else {
-                        this.profesionalExistente.emit(false);
-                    }
-                });
-            }
+        this.editaAgendaPanel.profesionales?.map((profesional) => {
+            req.push(this.serviceAgenda.get({ ...paramModel, idProfesional: profesional.id }));
+        });
+        if (this.editaAgendaPanel.espacioFisico) {
+            req.push(this.serviceAgenda.get({
+                ...paramModel, espacioFisico: this.editaAgendaPanel.espacioFisico._id
+            }));
         }
+        if (!req.length) {
+            this.alertas = [];
+            this.agendasSolapadas.emit(false);
+        }
+        forkJoin(req).pipe(
+            map((agendas: any[2]) => {
+                agendas = agendas.flat();
+                const agendasConSolapamiento = agendas?.filter(agenda => {
+                    return agenda.id !== this.editaAgendaPanel.id || !this.editaAgendaPanel.id; // Ignorar agenda actual
+                });
+                this.alertas = [];
+                if (!agendasConSolapamiento.length) {
+                    this.agendasSolapadas.emit(false);
+                    return;
+                }
+                // Si encontramos una agenda que coincida con la búsqueda...
+                const equipoSalud = this.editaAgendaPanel.profesionales;
+                const profesionalesSolapados = equipoSalud?.filter(prof => agendasConSolapamiento.some(ag => ag.profesionales.find(profSolap => profSolap.id === prof.id)));
+                const espacioFisico = this.espacioFisicoPropio ? this.editaAgendaPanel.espacioFisico : null;
+                const solapamientoEFisico = !!espacioFisico && agendasConSolapamiento.some(ag => ag.espacioFisico?.id === espacioFisico.id);
+
+                if (profesionalesSolapados?.length) {
+                    profesionalesSolapados.map(p => {
+                        this.alertas = [... this.alertas, 'El profesional ' + p.nombre + ' ' + p.apellido + ' está asignado a otra agenda en ese horario'];
+                    });
+                }
+                if (solapamientoEFisico) {
+                    this.alertas = [... this.alertas, 'El ' + this.editaAgendaPanel.espacioFisico.nombre + ' está asignado a otra agenda en ese horario'];
+                }
+                this.agendasSolapadas.emit(!!this.alertas.length);
+            })
+        ).subscribe();
     }
 
     filtrarEspacioFisico() {
