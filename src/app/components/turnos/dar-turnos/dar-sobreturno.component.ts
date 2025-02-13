@@ -9,6 +9,7 @@ import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { ObraSocialService } from './../../../services/obraSocial.service';
+import { TurnoService } from './../../../services/turnos/turno.service';
 
 @Component({
     selector: 'dar-sobreturno',
@@ -37,6 +38,8 @@ export class DarSobreturnoComponent implements OnChanges {
         prepaga: ''
     };
     public disableGuardar = true;
+    turnosFuturos = [];
+    modalTurnosRepetidos = false;
 
     @ViewChild('modalSobreturno', { static: true }) modal: PlexModalComponent;
     @Output() volver = new EventEmitter();
@@ -46,6 +49,7 @@ export class DarSobreturnoComponent implements OnChanges {
     constructor(
         private plex: Plex,
         private serviceAgenda: AgendaService,
+        public serviceTurno: TurnoService,
         private auth: Auth,
         private servicePaciente: PacienteService,
         private serviceCarpetaPaciente: CarpetaPacienteService,
@@ -59,6 +63,7 @@ export class DarSobreturnoComponent implements OnChanges {
 
             if (this.agenda.tipoPrestaciones?.length === 1) {
                 this.tipoPrestacion = this.agenda.tipoPrestaciones[0];
+                this.buscarTurnosFuturos();
             }
             if (agenda.link) {
                 this.turno_link = agenda.link;
@@ -123,101 +128,138 @@ export class DarSobreturnoComponent implements OnChanges {
         this.changeCarpeta = true;
     }
 
-    guardar($event) {
-        if ($event.formValid) {
-            this.disableGuardar = false;
-            const indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
+    buscarTurnosFuturos() {
+        if (this.tipoPrestacion) {
+            this.serviceTurno.getHistorial({ pacienteId: this.idPaciente }).subscribe(turnos => {
+                // Filtrar los turnos que cumplen con la condición
+                const fechaHoy = moment();
+                this.turnosFuturos = turnos
+                    .filter(turno => {
+                        const fechaTurno = moment(turno.horaInicio);
+                        const cumpleCondiciones =
+                            turno.tipoPrestacion?._id === this.tipoPrestacion['_id'] &&
+                            turno.estado === 'asignado' &&
+                            fechaTurno.isAfter(fechaHoy);
 
-            if (indiceCarpeta > -1) {
-                this.paciente.carpetaEfectores[indiceCarpeta] = this.carpetaEfector;
-            } else {
-                this.paciente.carpetaEfectores.push(this.carpetaEfector);
-            }
-
-            let osPaciente: any;
-
-            if (this.modelo.obraSocial === 'SUMAR') {
-                osPaciente = {
-                    codigoPuco: null,
-                    financiador: 'SUMAR',
-                    nombre: null
-                };
-            } else {
-                this.modelo.prepaga ? osPaciente = this.modelo.prepaga :
-                    osPaciente = this.modelo.obraSocial;
-            }
-
-            const pacienteSave: IPacienteBasico = {
-                id: this.paciente.id,
-                documento: this.paciente.documento,
-                alias: this.paciente.alias,
-                numeroIdentificacion: this.paciente.numeroIdentificacion,
-                genero: this.paciente.genero,
-                apellido: this.paciente.apellido,
-                nombre: this.paciente.nombre,
-                fechaNacimiento: this.paciente.fechaNacimiento,
-                sexo: this.paciente.sexo,
-                telefono: this.telefono,
-                carpetaEfectores: this.paciente.carpetaEfectores,
-                obraSocial: osPaciente
-            };
-
-            // Si cambió el teléfono lo actualizo en el MPI
-            // Pero si borra, no actualiza en MPI.
-            if (this.cambioTelefono && this.telefono) {
-                const nuevoCel = {
-                    'tipo': 'celular',
-                    'valor': this.telefono,
-                    'ranking': 1,
-                    'activo': true,
-                    'ultimaActualizacion': moment().toDate()
-                };
-                let flagTelefono = false;
-                // Si tiene un celular en ranking 1 y activo cargado, se reemplaza el nro
-                // sino, se genera un nuevo contacto
-                if (this.paciente.contacto.length) {
-                    this.paciente.contacto.forEach((contacto, index) => {
-                        if (contacto.tipo === 'celular') {
-                            contacto.valor = this.telefono;
-                            flagTelefono = true;
-                        }
-                    });
-                    if (!flagTelefono) {
-                        this.paciente.contacto.push(nuevoCel);
-                    }
-                } else {
-                    this.paciente.contacto = [nuevoCel];
-                }
-                const cambios = {
-                    'op': 'updateContactos',
-                    'contacto': this.paciente.contacto
-                };
-                this.servicePaciente.patch(pacienteSave.id, cambios).subscribe();
-            }
-
-            const patch = {
-                'op': 'agregarSobreturno',
-                'sobreturno': {
-                    horaInicio: this.combinarFechas(this.agenda.horaInicio, this.horaTurno),
-                    link: this.turno_link,
-                    estado: 'asignado',
-                    tipoPrestacion: this.tipoPrestacion,
-                    paciente: pacienteSave,
-                    nota: this.nota
-                }
-            };
-            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
-                if (this.changeCarpeta) {
-                    this.actualizarCarpetaPaciente();
-                }
-
-                this.sobreturno = resultado.sobreturnos.slice(-1)[0];
-                this.plex.toast('success', 'El sobreturno se asignó correctamente.');
-                this.volver.emit();
+                        return cumpleCondiciones;
+                    })
+                    .map(turno => (
+                        {
+                            horaInicio: turno.horaInicio,
+                            organizacion: turno.organizacion.nombre,
+                            tipoPrestacion: turno.tipoPrestacion.term,
+                        }));
             });
+        }
+    }
+
+    modalClose() {
+        this.modalTurnosRepetidos = false;
+    }
+
+    verTurnosFuturos($event) {
+        if ($event.formValid) {
+            if (this.turnosFuturos.length > 0) {
+                this.modalTurnosRepetidos = true;
+            } else {
+                this.guardar();
+            }
         } else {
             this.plex.info('warning', 'Debe completar los datos requeridos');
         }
+    }
+
+    guardar() {
+        this.disableGuardar = false;
+        const indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
+
+        if (indiceCarpeta > -1) {
+            this.paciente.carpetaEfectores[indiceCarpeta] = this.carpetaEfector;
+        } else {
+            this.paciente.carpetaEfectores.push(this.carpetaEfector);
+        }
+
+        let osPaciente: any;
+
+        if (this.modelo.obraSocial === 'SUMAR') {
+            osPaciente = {
+                codigoPuco: null,
+                financiador: 'SUMAR',
+                nombre: null
+            };
+        } else {
+            this.modelo.prepaga ? osPaciente = this.modelo.prepaga :
+                osPaciente = this.modelo.obraSocial;
+        }
+
+        const pacienteSave: IPacienteBasico = {
+            id: this.paciente.id,
+            documento: this.paciente.documento,
+            alias: this.paciente.alias,
+            numeroIdentificacion: this.paciente.numeroIdentificacion,
+            genero: this.paciente.genero,
+            apellido: this.paciente.apellido,
+            nombre: this.paciente.nombre,
+            fechaNacimiento: this.paciente.fechaNacimiento,
+            sexo: this.paciente.sexo,
+            telefono: this.telefono,
+            carpetaEfectores: this.paciente.carpetaEfectores,
+            obraSocial: osPaciente
+        };
+
+        // Si cambió el teléfono lo actualizo en el MPI
+        // Pero si borra, no actualiza en MPI.
+        if (this.cambioTelefono && this.telefono) {
+            const nuevoCel = {
+                'tipo': 'celular',
+                'valor': this.telefono,
+                'ranking': 1,
+                'activo': true,
+                'ultimaActualizacion': moment().toDate()
+            };
+            let flagTelefono = false;
+            // Si tiene un celular en ranking 1 y activo cargado, se reemplaza el nro
+            // sino, se genera un nuevo contacto
+            if (this.paciente.contacto.length) {
+                this.paciente.contacto.forEach((contacto, index) => {
+                    if (contacto.tipo === 'celular') {
+                        contacto.valor = this.telefono;
+                        flagTelefono = true;
+                    }
+                });
+                if (!flagTelefono) {
+                    this.paciente.contacto.push(nuevoCel);
+                }
+            } else {
+                this.paciente.contacto = [nuevoCel];
+            }
+            const cambios = {
+                'op': 'updateContactos',
+                'contacto': this.paciente.contacto
+            };
+            this.servicePaciente.patch(pacienteSave.id, cambios).subscribe();
+        }
+
+        const patch = {
+            'op': 'agregarSobreturno',
+            'sobreturno': {
+                horaInicio: this.combinarFechas(this.agenda.horaInicio, this.horaTurno),
+                link: this.turno_link,
+                estado: 'asignado',
+                tipoPrestacion: this.tipoPrestacion,
+                paciente: pacienteSave,
+                nota: this.nota
+            }
+        };
+        this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+            if (this.changeCarpeta) {
+                this.actualizarCarpetaPaciente();
+            }
+
+            this.sobreturno = resultado.sobreturnos.slice(-1)[0];
+            this.plex.toast('success', 'El sobreturno se asignó correctamente.');
+            this.volver.emit();
+        });
     }
 
     combinarFechas(fecha1, fecha2) {

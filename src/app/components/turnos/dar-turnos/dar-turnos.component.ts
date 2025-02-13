@@ -183,6 +183,8 @@ export class DarTurnosComponent implements OnInit {
     showTab = 0;
     equipoSalud;
     prestacionesAlternativa;
+    turnosFuturos = [];
+    modalTurnosRepetidos = false;
 
     // Muestra sólo las agendas a las que se puede asignar el turno (oculta las "con/sin alternativa")
     mostrarNoDisponibles = false;
@@ -748,15 +750,18 @@ export class DarTurnosComponent implements OnInit {
             }
             this.habilitarTurnoDoble();
             this.nota = this.turno.nota;
+            this.buscarTurnosFuturos();
         } else {
             this.plex.info('warning', 'Debe seleccionar un paciente');
         }
     }
 
     seleccionarBusqueda(indice: number) {
+
         this.opciones.tipoPrestacion = this.cacheBusquedas[indice]?.tipoPrestacion;
         this.opciones.profesional = this.cacheBusquedas[indice]?.profesional;
         this.filtrar();
+
     }
 
     seleccionarAlternativa(indice: number) {
@@ -952,6 +957,39 @@ export class DarTurnosComponent implements OnInit {
     /**
      * DAR TURNO
      */
+    buscarTurnosFuturos() {
+        if (this.turnoTipoPrestacion) {
+            this.serviceTurno.getHistorial({ pacienteId: this.paciente.id }).subscribe(turnos => {
+                // Filtrar los turnos que cumplen con la condición
+                const fechaHoy = moment();
+                this.turnosFuturos = turnos
+                    .filter(turno => {
+                        const fechaTurno = moment(turno.horaInicio);
+                        const cumpleCondiciones =
+                            turno.tipoPrestacion?._id === this.turnoTipoPrestacion['_id'] &&
+                            turno.estado === 'asignado' &&
+                            fechaTurno.isAfter(fechaHoy);
+
+                        return cumpleCondiciones;
+                    })
+                    .map(turno => (
+                        {
+                            horaInicio: turno.horaInicio,
+                            organizacion: turno.organizacion.nombre,
+                            tipoPrestacion: turno.tipoPrestacion.term,
+                        }));
+            });
+        }
+    }
+
+    verTurnosFuturos() {
+        if (this.turnosFuturos.length > 0) {
+            this.modalTurnosRepetidos = true;
+        } else {
+            this.darTurno();
+        }
+    }
+
     darTurno() {
         if (this.turnoTipoPrestacion) {
             this.turnoTipoPrestacion['_id'] = this.turnoTipoPrestacion.id;
@@ -992,7 +1030,10 @@ export class DarTurnosComponent implements OnInit {
         } else {
             this.plex.info('warning', '', 'Seleccione un tipo de prestación');
         }
+    }
 
+    modalClose() {
+        this.modalTurnosRepetidos = false;
     }
 
     public setFinanciador(financiador) {
