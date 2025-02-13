@@ -3,7 +3,7 @@ import { Plex } from '@andes/plex';
 import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin, map } from 'rxjs';
 import { BiQueriesComponent } from 'src/app/modules/visualizacion-informacion/components/bi-queries/bi-queries.component';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { QueriesService } from 'src/app/services/query.service';
@@ -432,12 +432,36 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showAgregarNotaAgenda = false;
     }
 
-    clonar() {
+    clonar(agenda) {
         if (this.lastRequestFecha) {
             this.lastRequestFecha.unsubscribe();
         }
-        this.showGestorAgendas = false;
-        this.showClonar = true;
+
+        let prestaciones = '';
+
+        const observables$ = agenda.tipoPrestaciones.map(prestacion =>
+            this.conceptoTurneablesService.search({ ids: prestacion._id })
+        );
+
+        forkJoin(observables$).subscribe((resultados: any) => {
+            const result = resultados.flat();
+            result.forEach(concepto => {
+                if (concepto.ambito && !concepto.ambito.includes('ambulatorio')) {
+                    prestaciones += concepto.term + ', ';
+                }
+            });
+
+            if (prestaciones === '') {
+                this.showGestorAgendas = false;
+                this.showClonar = true;
+            } else {
+                prestaciones = prestaciones.slice(0, -2);
+                this.plex.info(
+                    'warning',
+                    `Una o más prestaciones (<b>${prestaciones}</b>) no están habilitadas para crear agendas.`
+                );
+            }
+        });
     }
 
     // vuelve al gestor luego de alguna operación y refresca la agenda modificada.
