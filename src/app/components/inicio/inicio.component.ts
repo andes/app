@@ -39,25 +39,33 @@ export class InicioComponent implements AfterViewInit {
             setDimension('profesional', this.auth.profesional);
         }
         window.setTimeout(() => {
-
             this.loading = true;
-
             this.appComponent.getModulos().subscribe(
                 registros => {
                     registros.forEach((modulo: IModulo) => {
                         let tienePermiso = false;
                         if (modulo.activo) {
-                            modulo.permisos.forEach((permiso) => {
+                            modulo.permisos.forEach((permisoEpidemio) => {
                                 if (!tienePermiso) {
-                                    if (permiso === 'epidemiologia:?' && this.auth.profesional) {
+                                    if (permisoEpidemio === 'epidemiologia:?' && this.auth.profesional) {
+                                        const permisosUsuario = this.auth.getPermissions('epidemiologia:?');
+                                        const moduloEpidemio = modulo;
+                                        if (permisosUsuario.length === 0) {
+                                            // Eliminamos todos los submódulos de epidemiología.
+                                            moduloEpidemio.submodulos.splice(1);
+                                        } else if (!permisosUsuario.includes('seguimiento')) {
+                                            const index = moduloEpidemio.submodulos.findIndex(x => x.nombre.includes('Seguimiento'));
+                                            // Eliminamos el submodulo 'seguimiento'
+                                            moduloEpidemio.submodulos.splice(index, 1);
+                                        }
                                         modulo.principal = true;
-                                        this.modulos.push(modulo);
+                                        this.modulos.push(moduloEpidemio);
                                         if (!modulo.submodulos.length) {
                                             modulo.nombreSubmodulo = `Punto Inicio<br><b>${modulo.nombre}</b>`;
                                         }
                                     } else {
                                         // El usuario tiene permiso?
-                                        if (this.auth.getPermissions(permiso).length > 0) {
+                                        if (this.auth.getPermissions(permisoEpidemio).length > 0) {
                                             tienePermiso = true;
                                             if (modulo.submodulos && modulo.submodulos.length > 0) {
                                                 // Es Módulo
