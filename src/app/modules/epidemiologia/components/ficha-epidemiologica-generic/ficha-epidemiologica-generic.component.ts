@@ -6,11 +6,10 @@ import { Plex } from '@andes/plex';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
 import { FormPresetResourcesService } from 'src/app/modules/forms-builder/services/preset.resources.service';
 import { SECCION_CONTACTOS_ESTRECHOS, SECCION_OPERACIONES, SECCION_USUARIO } from '../../constantes';
-import { Observable, from } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
-
-
+import { DocumentosService } from 'src/app/services/documentos.service';
 @Component({
     selector: 'app-ficha-epidemiologica-generic',
     templateUrl: './ficha-epidemiologica-generic.component.html'
@@ -21,6 +20,8 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
     @Input() form: any;
     @Input() fichaPaciente: any;
     @Input() editFicha: boolean;
+    @Input() accesoHuds: boolean;
+    @Input() hideVolver: boolean;
     @ViewChild('form', { static: false }) ngForm: NgForm;
     @Output() volver = new EventEmitter<any>();
 
@@ -81,13 +82,15 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
     public contactoCorrecto = false;
     public patronDocumento = /^[1-9]{1}[0-9]{4,7}$/;
     public patronContactoNumerico = /^[0-9]{3,4}[0-9]{6}$/;
+    public loading = true;
     constructor(
         private formsService: FormsService,
         private plex: Plex,
         private formsEpidemiologiaService: FormsEpidemiologiaService,
         private formPresetResourceService: FormPresetResourcesService,
         private auth: Auth,
-        private organizacionService: OrganizacionService
+        private organizacionService: OrganizacionService,
+        private servicioDocumentos: DocumentosService
     ) { }
 
     ngOnInit(): void { }
@@ -153,6 +156,7 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
                     }
                 });
             }
+            this.loading = false;
         });
     }
 
@@ -342,5 +346,13 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
             };
             this.zonaSanitaria = res.zonaSanitaria;
         });
+    }
+
+    descargar() {
+        const data = `${this.fichaPaciente.type.name} - ${this.fichaPaciente.paciente.nombre}_${this.fichaPaciente.paciente.apellido}`;
+        this.servicioDocumentos.descargarFicha({
+            ficha: this.fichaPaciente,
+            usuario: this.auth.usuario.nombreCompleto
+        }, data).subscribe();
     }
 }
