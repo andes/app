@@ -39,9 +39,7 @@ export class InicioComponent implements AfterViewInit {
             setDimension('profesional', this.auth.profesional);
         }
         window.setTimeout(() => {
-
             this.loading = true;
-
             this.appComponent.getModulos().subscribe(
                 registros => {
                     registros.forEach((modulo: IModulo) => {
@@ -50,8 +48,18 @@ export class InicioComponent implements AfterViewInit {
                             modulo.permisos.forEach((permiso) => {
                                 if (!tienePermiso) {
                                     if (permiso === 'epidemiologia:?' && this.auth.profesional) {
+                                        const permisos = this.auth.getPermissions('epidemiologia:?');
+                                        const moduloEpidemio = modulo;
+                                        if (permisos.length === 0) {
+                                            // Elimina los submodulos 'seguimiento' y 'buscador fichas'
+                                            moduloEpidemio.submodulos.splice(1, 2);
+                                        } else if (!permisos.includes('seguimiento')) {
+                                            const index = moduloEpidemio.submodulos.findIndex(x => x.nombre.includes('Seguimiento'));
+                                            // Eliminamos el submodulo 'seguimiento'
+                                            moduloEpidemio.submodulos.splice(index, 1);
+                                        }
                                         modulo.principal = true;
-                                        this.modulos.push(modulo);
+                                        this.modulos.push(moduloEpidemio);
                                         if (!modulo.submodulos.length) {
                                             modulo.nombreSubmodulo = `Punto Inicio<br><b>${modulo.nombre}</b>`;
                                         }
