@@ -2,7 +2,7 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 import * as moment from 'moment';
-import { EMPTY, Subscription, catchError, forkJoin, map, of, switchMap } from 'rxjs';
+import { EMPTY, Subscription, forkJoin, map, switchMap } from 'rxjs';
 import { InstitucionService } from '../../../../services/turnos/institucion.service';
 import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
@@ -795,10 +795,6 @@ export class PlanificarAgendaComponent implements OnInit {
         );
 
         forkJoin(observables$).pipe(
-            catchError(() => {
-                this.plex.toast('danger', 'Error al obtener prestaciones');
-                return EMPTY;
-            }),
             map((resultados: any) => resultados.flat()),
             map((prestaciones) => ({
                 prestaciones: prestaciones.filter(p => !p.ambito.includes('ambulatorio')),
@@ -826,7 +822,8 @@ export class PlanificarAgendaComponent implements OnInit {
                 this.manejarExito(resp.resultado, clonar);
             },
             error: () => {
-                this.plex.toast('danger', 'ERROR: La agenda no se pudo guardar.');
+                this.plex.info('danger', 'Ocurrió un error guardando la agenda, inténtelo nuevamente.', 'Error inesperado');
+                this.hideGuardar = false;
             }
         });
     }
