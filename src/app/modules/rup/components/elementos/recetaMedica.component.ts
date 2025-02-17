@@ -48,6 +48,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         { id: '3meses', nombre: '3 meses' },
         { id: '6meses', nombre: '6 meses' }
     ];
+    grupoRecetas: { conceptId: string; recetas: any }[];
+    busquedaRecetas: { conceptId: string; recetas: any }[];
 
     ngOnInit() {
         if (!this.registro.valor) {
@@ -136,7 +138,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         if (this.unidades && this.ingresoCantidadManual) {
             this.plex.confirm('La cantidad recetada no se encuentra en ninguna presentación comercial ¿Desea continuar?', 'Atención').then(confirmacion => {
                 if (confirmacion) {
-                    this.agregarMedicamento();
+                    this.checkDuplicado();
                 } else {
                     this.deshacerCantidadManual();
                 }
@@ -150,9 +152,24 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
             if (this.unidades.length && this.ingresoCantidadManual) {
                 this.showModalCantidadManual();
             } else {
-                this.agregarMedicamento();
+                this.checkDuplicado();
             }
         }
+    }
+    checkDuplicado() {
+        const options = { pacienteId: this.paciente.id };
+        this.recetasService.getRecetas(options).subscribe((data) => {
+            const duplicado = data.some(receta =>
+                this.medicamento.generico.conceptId === receta.medicamento.concepto.conceptId &&
+                receta.estadoActual.tipo === 'vigente' &&
+                (receta.estadoDispensaActual.tipo === 'sin-dispensa' || receta.estadoDispensaActual.tipo === 'dispensa-parcial')
+            );
+            if (!duplicado) {
+                return this.agregarMedicamento();
+            } else {
+                this.plex.info('danger', 'El medicamento que desea cargar se encuentra en otra receta vigente');
+            }
+        });
     }
 
     agregarMedicamento() {
