@@ -200,7 +200,7 @@ export class CamaDetalleComponent implements OnInit, AfterViewChecked, OnDestroy
             if ($event.accion === 'nuevo-registro') {
                 this.onNuevoRegistrio();
             }
-            if ($event.accion === 'nuevo-egreso') {
+            if ($event.accion === 'nuevo-egreso' || $event.accion === 'volver') {
                 this.cancelar();
             }
         }
