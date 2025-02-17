@@ -1,5 +1,5 @@
-import { Injectable, ComponentFactoryResolver, ApplicationRef, Injector, EmbeddedViewRef } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { Injectable, ComponentFactoryResolver, ApplicationRef, Injector, EmbeddedViewRef, ChangeDetectorRef } from '@angular/core';
+import { Observable, of, throwError } from 'rxjs';
 import { ModalMotivoAccesoHudsComponent } from './modal-motivo-acceso-huds.component';
 import { Auth } from '@andes/auth';
 import { HUDSService } from '../../services/huds.service';
@@ -41,6 +41,7 @@ export class ModalMotivoAccesoHudsService {
                 sub.unsubscribe();
                 this.appRef.detachView(componentRef.hostView);
                 componentRef.destroy();
+                observer.complete();
             };
         });
     }
@@ -58,7 +59,21 @@ export class ModalMotivoAccesoHudsService {
         };
         return this.hudsService.generateHudsToken(paramsToken).pipe(
             tap((hudsToken) => {
-                window.sessionStorage.setItem('huds-token', hudsToken.token);
+                const newElement = {
+                    usuario: this.auth.usuario.id,
+                    paciente: paciente.id,
+                    organizacion: this.auth.organizacion.id,
+                    token: hudsToken.token,
+                    motivo: motivo
+                };
+                const hudsTokenArray = JSON.parse(window.sessionStorage.getItem('huds-token') || '[]');
+                const index = hudsTokenArray.findIndex((element: any) => element.usuario === newElement.usuario && element.paciente === newElement.paciente && element.organizacion === newElement.organizacion);
+                if (index !== -1) {
+                    hudsTokenArray[index] = newElement;
+                } else {
+                    hudsTokenArray.push(newElement);
+                }
+                window.sessionStorage.setItem('huds-token', JSON.stringify(hudsTokenArray));
             }),
             map(hudsToken => {
                 return { paciente, token: hudsToken.token, motivo };
@@ -82,5 +97,35 @@ export class ModalMotivoAccesoHudsService {
             })
         );
     }
+    getAccessoHUDSArray(paciente: IPaciente): Observable<any> {
+        const newElement = {
+            usuario: this.auth.usuario.id,
+            paciente: paciente.id,
+            organizacion: this.auth.organizacion.id
+        };
+        const hudsTokenArray = JSON.parse(window.sessionStorage.getItem('huds-token') || '[]');
+        const index = hudsTokenArray.findIndex((element: any) => element.usuario === newElement.usuario && element.paciente === newElement.paciente && element.organizacion === newElement.organizacion);
 
+        if (index === -1) {
+            return this.getAccessoHUDS(paciente);
+        }
+
+        const params = {
+            token: hudsTokenArray[index].token
+        };
+        return this.hudsService.getTiempoRestante({ params }).pipe(
+            map(data => {
+                return data;
+            }),
+            switchMap(tiempoRestante => {
+                if (tiempoRestante > 0) {
+                    return of({ paciente, token: hudsTokenArray[index].token, motivo: hudsTokenArray[index].motivo });
+                } else {
+                    hudsTokenArray.splice(index, 1);
+                    window.sessionStorage.setItem('huds-token', JSON.stringify(hudsTokenArray));
+                    return this.getAccessoHUDS(paciente);
+                }
+            })
+        );
+    }
 }
