@@ -22,6 +22,7 @@ $registro: #8bc43f; // elemento de registro
 $vacuna: #11910D;
 $dominiosNac: #11312D;
 $informacion: #00A8E0;
+$recetas: #7b2ff7;
 // definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer 
 // la interpolacion del string a una variable directamente
 
@@ -50,7 +51,8 @@ $rup_colors: (
     blue: $blue,
     todos: $todos,
     informacion: $informacion,
-    otro: $otro
+    otro: $otro,
+    recetas: $recetas
 );
 
 //TODO: hay que unificar los badges de distintas pantallas: tamaño, colores, bordes, espacios...    

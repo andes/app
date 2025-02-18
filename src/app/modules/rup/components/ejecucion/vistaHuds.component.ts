@@ -20,10 +20,9 @@ import * as moment from 'moment';
     encapsulation: ViewEncapsulation.None
 })
 export class VistaHudsComponent implements OnInit, OnDestroy {
-
-
     @Output() cambiarPaciente = new EventEmitter<boolean>();
-    paciente: IPaciente = null;
+
+    public paciente: IPaciente = null;
     public activeIndexPrestacion = 0;
     public activeIndexResumen = 0;
     public internacione$: Observable<any[]>;
@@ -94,10 +93,10 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         if (!this.paciente) {
             this.route.params.subscribe(params => {
                 const id = params['id'];
-                // Carga la información completa del paciente
+
                 this.servicioPaciente.getById(id).subscribe(paciente => {
                     this.paciente = paciente;
-                    // carga todas las internaciones del paciente
+
                     const filtros = {
                         fechaIngresoDesde: moment('2016-01-01').toDate(),
                         idPaciente: id
@@ -110,7 +109,6 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
             this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
             return true;
         }
-
     }
 
     ngOnDestroy() {
