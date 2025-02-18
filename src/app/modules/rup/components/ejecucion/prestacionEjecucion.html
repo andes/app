@@ -3,7 +3,7 @@
     <plex-layout-main *ngIf="prestacion">
         <form #form="ngForm" class="h-100">
             <div class="w-100 h-100">
-                <plex-tabs [activeIndex]="activeIndex" (close)="onCloseTab($event)" (change)="activeIndex = $event">
+                <plex-tabs [activeIndex]="activeIndex" (close)="onCloseTab($event)" (change)="onChangeTab($event)">
 
                     <plex-button *ngIf="hasPacs" type="info" (click)="onPacs()" size="sm">
                         VER IMAGEN
