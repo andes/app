@@ -294,6 +294,12 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             this.activeIndex = 0;
         }
     }
+    public onChangeTab(event: any) {
+        if (event.type === 'change' && event.target && event.target.id && event.target.id.includes('selectized')) {
+            return;
+        }
+        this.activeIndex = event;
+    }
 
     buscar() {
         this.buscadorService.setBuscado(this.search);
