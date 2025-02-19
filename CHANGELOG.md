@@ -1,3 +1,10 @@
+## [5.157.1](https://github.com/andes/app/compare/v5.157.0...v5.157.1) (2025-02-19)
+
+
+### Bug Fixes
+
+* **HUDS-140:** Eliminar el registro de acceso a la HUDS cuando no corresponde ([#3145](https://github.com/andes/app/issues/3145)) ([f6270d4](https://github.com/andes/app/commit/f6270d4ef332ac6c221fa7c51bf64554f249c3d7))
+
 # [5.157.0](https://github.com/andes/app/compare/v5.156.0...v5.157.0) (2025-02-12)
 
 
