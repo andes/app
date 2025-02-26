@@ -295,7 +295,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         }
     }
     public onChangeTab(event: any) {
-        if (event.type === 'change' && event.target && event.target.id && event.target.id.includes('selectized')) {
+        if (event.type === 'change' && event?.target?.id?.includes('selectized')) { // fix para que no se cierre el tab al abrir el select pero no seleccionar un item
             return;
         }
         this.activeIndex = event;
