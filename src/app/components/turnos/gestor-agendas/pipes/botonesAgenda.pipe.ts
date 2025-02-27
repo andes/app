@@ -78,7 +78,7 @@ export class BotonesAgendaPipe implements PipeTransform {
 
     // Comprueba que haya algún turno con paciente, en estado suspendido
     hayTurnosSuspendidos(agenda) {
-        return !agenda.dinamica && agenda.bloques.some(bloque => bloque.turnos?.some(turno => turno.estado === 'suspendido' && turno.paciente?.id));
+        return !agenda.dinamica && agenda.bloques.some(bloque => bloque.turnos?.some(turno => turno.estado === 'suspendido' && turno.paciente?.id && !turno.reasignado?.siguiente));
     }
 
     puedeCargaMasiva(agenda) {

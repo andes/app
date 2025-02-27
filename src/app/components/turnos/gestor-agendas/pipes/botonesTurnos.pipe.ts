@@ -35,10 +35,10 @@ export class BotonesTurnosPipe implements PipeTransform {
             botones.sacarAsistencia = puedeRegistrarAsistencia && this.agendaNoCerrada(agenda) && this.tienenAsistencia(turnos) && this.tienenPacientes(turnos) && !this.tienenDiagnostico(turnos);
             botones.nota = this.agendaNoCerrada(agenda);
             // Suspender turno: El turno no tiene asistencia ==> el estado pasa a "suspendido"
-            botones.suspender = puedeSuspenderTurno && this.agendaNoCerrada(agenda) && this.agendaNoSuspendida(agenda) && this.noTienenAsistencia(turnos) && this.ningunoConEstado('suspendido', turnos) && this.ningunoConEstado('turnoDoble', turnos) && !this.tienenDiagnostico(turnos);
+            botones.suspender = puedeSuspenderTurno && this.agendaNoCerrada(agenda) && this.agendaNoSuspendida(agenda) && this.noTienenAsistencia(turnos) && this.ningunoConEstado('suspendido', turnos) && this.ningunoConEstado('turnoDoble', turnos) && !this.tienenDiagnostico(turnos) && this.noTieneSuspendidos(turnos);
             // Enviar SMS
             botones.sms = this.agendaNoSuspendida(agenda) && this.todosConEstado('asignado', turnos) && this.todosConEstado('suspendido', turnos) && this.noTienenAsistencia(turnos) && (!this.hayTurnosTarde(agenda, turnos));
-            botones.cambiarDisponible = !this.tienenPacientes(turnos) && this.todosConEstado('suspendido', turnos);
+            botones.cambiarDisponible = this.pasarADisponible(turnos);
         }
         if (agenda && turnos.length === 1) {
             // Liberar turno: está "asignado" ==> el estado pasa a "disponible" y se elimina el paciente
@@ -62,6 +62,10 @@ export class BotonesTurnosPipe implements PipeTransform {
         return turnos.filter((turno) => {
             return (turno.paciente && turno.paciente.id);
         }).length === turnos.length;
+    }
+
+    pasarADisponible(turnos) {
+        return turnos.every(turno => turno.estado === 'suspendido' && !turno.paciente);
     }
 
     agendaNoSuspendida(agenda) {
@@ -164,5 +168,9 @@ export class BotonesTurnosPipe implements PipeTransform {
                 return moment(turno.horaInicio).format() < moment().format();
             }).length;
         }
+    }
+
+    noTieneSuspendidos(turnos) {
+        return !turnos.some(turno => turno.estado === 'suspendido');
     }
 }
