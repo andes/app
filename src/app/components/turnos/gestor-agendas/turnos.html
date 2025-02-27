@@ -38,16 +38,15 @@
                                     (saveAgregarNotaTurno)="saveAgregarNotaTurno()">
                 </agregar-nota-turno>
             </plex-help>
-            <plex-help *ngIf="botones.suspender && turnosSeleccionados?.length" class="mr-1" btnType="danger"
-                       icon="stop" tooltip="Suspender turnos" tooltipPosition="left">
+            <plex-help *ngIf="puedeSuspender(botones)" class="mr-1" btnType="danger" icon="stop"
+                       tooltip="Suspender turnos" tooltipPosition="left">
                 <suspender-turno [agenda]="agenda" [accion]="'suspenderTurno'"
                                  [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="saveSuspenderTurno()"
                                  (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)">
                 </suspender-turno>
             </plex-help>
-            <plex-button *ngIf="botones.cambiarDisponible  && turnosSeleccionados?.length" class="mr-1" type="warning"
-                         size="sm" icon="undo" tooltip="Cambiar a disponible" tooltipPosition="top"
-                         (click)="cambiarADisponible()">
+            <plex-button *ngIf="pasarAdisponible(botones)" class="mr-1" type="warning" size="sm" icon="undo"
+                         tooltip="Cambiar a disponible" tooltipPosition="top" (click)="cambiarADisponible()">
             </plex-button>
         </ng-container>
         <plex-help *ngIf="!agenda.dinamica" type="help" icon="cog">

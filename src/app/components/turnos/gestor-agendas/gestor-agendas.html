@@ -160,7 +160,7 @@
                                  icon="account-plus" type="info" ariaLabel="Agregar Sobreturno" tooltip="Sobreturno"
                                  tooltipPosition="top" (click)="agregarSobreturno($event)">
                     </plex-button>
-                    <plex-button class="ml-1" size="sm" *ngIf="botones.reasignar"
+                    <plex-button class="ml-1" size="sm" *ngIf="puedeReasignar(botones, agenda)"
                                  [disabled]="agendasSeleccionadas[0]?.id !== agenda.id || agendasSeleccionadas?.length>1"
                                  icon="sync-alert" type="info" ariaLabel="Reasignar Turnos" tooltip="Reasignar"
                                  tooltipPosition="top" (click)="reasignarTurnos()">
