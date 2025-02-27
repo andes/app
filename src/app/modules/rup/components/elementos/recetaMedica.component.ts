@@ -40,7 +40,6 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     public ingresoCantidadManual = false;
     public valorCantidadManual = null;
     public loading = false;
-    public hayMedicamentos = false;
     public opcionesTipoReceta = [
         { id: 'duplicado', label: 'Duplicado' },
         { id: 'triplicado', label: 'Triplicado' }
