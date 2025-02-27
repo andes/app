@@ -1,7 +1,6 @@
 .formEditar {
     margin-right: 0;
     display: inline-block;
-    width: 85%;
 }
 
 .select-container {
@@ -11,4 +10,10 @@
 
 .select-container plex-select {
     margin-right: 10px;
+}
+
+.lista-vacia {
+    background-color: rgba(0, 39, 56, 0.1) !important;
+    margin-top: 1rem;
+    padding: 1rem 0 1rem 0;
 }

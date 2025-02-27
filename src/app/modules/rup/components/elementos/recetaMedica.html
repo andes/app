@@ -1,10 +1,8 @@
 <ng-container *ngIf="!soloValores">
     <form class="mt-1" #formMedicamento="ngForm">
         <plex-select [(ngModel)]="medicamento.diagnostico" hintType="info" label="Diagnóstico" [data]="registros"
-                     name="diagnostico" multiline="true" [required]="true" labelField="term"
-                     idField="conceptId" hint="Se listaran los conceptos registrados en esta consulta" hintType="info"
-                     hintIcon="eye">
-
+                     name="diagnostico" multiline="true" [required]="true" labelField="term" idField="conceptId"
+                     hint="Se listaran los conceptos registrados en esta consulta" hintType="info" hintIcon="eye">
         </plex-select>
 
         <plex-grid cols="2">
@@ -13,21 +11,25 @@
                          (change)="loadPresentaciones()" required="true">
             </plex-select>
 
-            <div>
-                <plex-select class="formEditar" name="unidades" *ngIf="unidades.length > 0 && !comprimidosEditados"
-                             [(ngModel)]="medicamento.cantidad" [data]="unidades" placeholder="Seleccione una opción"
-                             label="Cantidad" labelField="valor" required="true">
+            <div grow="full">
+                <plex-select *ngIf="!medicamento.generico || unidades.length || loading" class="formEditar w-100"
+                             name="unidades" [(ngModel)]="medicamento.cantidad" [data]="unidades"
+                             placeholder="Seleccione una opción" label="Cantidad" labelField="valor" required="true"
+                             [disabled]="!unidades?.length || ingresoCantidadManual" (change)="onChange($event)">
                 </plex-select>
-                <plex-int class="formEditar" name="comprimidos" *ngIf="unidades.length == 0 || comprimidosEditados"
-                          label="Cantidad" [(ngModel)]="medicamento.cantidad" required="true" min="1" max="90">
-                </plex-int>
-                <plex-button class="d-inline-flex" name="editar" type="warning" icon="pencil" tooltip="Editar cantidad"
-                             size="md" (click)="editarComprimidos()">
+                <ng-container *ngIf="medicamento?.generico && !unidades.length && !loading || ingresoCantidadManual">
+                    <plex-int class="formEditar" [ngClass]="{ 'w-100': !unidades.length }" name="comprimidos"
+                              label="Cantidad" [(ngModel)]="valorCantidadManual" required="true" min="1" max="90">
+                    </plex-int>
+                </ng-container>
+                <plex-button *ngIf="ingresoCantidadManual && unidades.length" class="ml-1" name="deshacer"
+                             type="warning" icon="undo" tooltip="Deshacer edición manual" size="md"
+                             (click)="deshacerCantidadManual()">
                 </plex-button>
             </div>
         </plex-grid>
-        <plex-grid cols="2">
 
+        <plex-grid cols="2">
             <plex-int name="envases" label="Cantidad de envases" [(ngModel)]="medicamento.cantEnvases" required="true"
                       min="1" max="90">
             </plex-int>
@@ -72,13 +74,20 @@
                 </div>
             </div>
         </plex-wrapper>
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-center">
             <plex-button name="botonAgregar" type="info" [disabled]="!formMedicamento.valid"
-                         (click)="agregarMedicamento($event)" [validateForm]="formMedicamento">
+                         (click)="preAgregarMedicamento($event)" [validateForm]="formMedicamento">
                 Agregar
             </plex-button>
         </div>
     </form>
+
+    <div *ngIf="!registro.valor.medicamentos.length" class="lista-vacia">
+        <plex-label icon="pildoras" type="default" size="md" direction="column" titulo='Aún no hay medicamentos
+                agregados' subtitulo=''>
+        </plex-label>
+    </div>
+
     <plex-list size="md" *ngIf="registro.valor.medicamentos" class="mt-3">
         <plex-item *ngFor="let item of registro.valor.medicamentos">
             <plex-icon size="md" *ngIf="true" name="pildoras" class="icon icon--border--producto mr-2">
