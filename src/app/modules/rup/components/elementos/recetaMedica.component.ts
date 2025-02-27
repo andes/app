@@ -40,6 +40,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     public ingresoCantidadManual = false;
     public valorCantidadManual = null;
     public loading = false;
+    public hayMedicamentos = false;
     public opcionesTipoReceta = [
         { id: 'duplicado', label: 'Duplicado' },
         { id: 'triplicado', label: 'Triplicado' }
@@ -201,5 +202,9 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
             return nombre.substring(0, 20) + '...';
         }
         return nombre;
+    }
+
+    public onValidate() {
+        return this.registro.valor.medicamentos.length > 0 ? true : false;
     }
 }

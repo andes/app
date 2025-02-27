@@ -80,6 +80,10 @@
                 Agregar
             </plex-button>
         </div>
+        <plex-wrapper>
+            <plex-label *ngIf="!registro.valor.medicamentos.length" type="danger">* No hay medicamentos
+                cargados</plex-label>
+        </plex-wrapper>
     </form>
     <plex-list size="md" *ngIf="registro.valor.medicamentos" class="mt-3">
         <plex-item *ngFor="let item of registro.valor.medicamentos">
