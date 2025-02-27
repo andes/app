@@ -294,6 +294,12 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             this.activeIndex = 0;
         }
     }
+    public onChangeTab(event: any) {
+        if (event.type === 'change' && event?.target?.id?.includes('selectized')) { // fix para que no se cierre el tab al abrir el select pero no seleccionar un item
+            return;
+        }
+        this.activeIndex = event;
+    }
 
     buscar() {
         this.buscadorService.setBuscado(this.search);
