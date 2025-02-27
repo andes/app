@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { AfterContentInit, Component, EventEmitter, Input, Optional, Output, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, Component, EventEmitter, Input, Optional, Output, ViewEncapsulation, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { LaboratorioService } from 'projects/portal/src/app/services/laboratorio.service';
 import { Observable, forkJoin, lastValueFrom } from 'rxjs';
@@ -24,7 +24,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
     styleUrls: ['hudsBusqueda.scss', 'buscador.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class HudsBusquedaComponent implements AfterContentInit {
+export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     laboratoriosFS: any;
     laboratorios: any = [];
     vacunas: any = [];
@@ -32,7 +32,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
     searchTerm: string;
     hallazgosCronicosAux: any[];
     hallazgosNoActivosAux: any;
-    filtroActual: any = 'trastorno';
+    filtroActual;
     filtroTrastornos = true;
 
     solicitudesMezcladas = [];
@@ -147,6 +147,12 @@ export class HudsBusquedaComponent implements AfterContentInit {
         { key: 'vacunas', titulo: 'vacunas', icono: 'vacuna' },
     ];
 
+    public permisosCompletos;
+    public permisosParciales;
+    public permisosLab;
+    public permisosVac;
+    public permisosRec;
+
     constructor(
         public servicioPrestacion: PrestacionesService,
         public plex: Plex,
@@ -179,8 +185,21 @@ export class HudsBusquedaComponent implements AfterContentInit {
         }, 1000 * 30);
     }
 
+    ngOnInit() {
+        this.permisosCompletos = this.auth.check('huds:visualizacionHuds');
+        this.permisosParciales = this.auth.check('huds:visualizacionParcialHuds:*');
+        this.permisosLab = this.auth.check('huds:visualizacionParcialHuds:laboratorio');
+        this.permisosVac = this.auth.check('huds:visualizacionParcialHuds:vacuna');
+        this.permisosRec = this.auth.check('huds:visualizacionParcialHuds:receta');
+
+        this.filtroActual = this.permisosCompletos ? 'trastorno' :
+            (this.permisosParciales || this.permisosLab) ? 'laboratorios' :
+                this.permisosVac ? 'vacunas' :
+                    'recetas';
+    }
+
     getTitulo(filtroactual) {
-        return this.filtros.find(filtro => filtro.key === filtroactual).titulo;
+        return this.filtros.find(filtro => filtro.key === filtroactual)?.titulo;
     }
 
     dragStart(e) {
@@ -560,6 +579,19 @@ export class HudsBusquedaComponent implements AfterContentInit {
         if (key === 'planes') {
             this.setAmbitoOrigen('ambulatorio');
         }
+    }
+
+    mostrarItem(item) {
+        if (this.permisosCompletos) {
+            return true;
+        } else if (item.key === 'laboratorios' && (this.permisosLab || this.permisosParciales)) {
+            return true;
+        } else if (item.key === 'vacunas' && (this.permisosVac || this.permisosParciales)) {
+            return true;
+        } else if (item.key === 'recetas' && (this.permisosRec || this.permisosParciales)) {
+            return true;
+        }
+        return false;
     }
 
     filtrarTrastornos() {
