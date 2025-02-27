@@ -1,5 +1,5 @@
 import { Unsubscribe } from '@andes/shared';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { forkJoin, Observable } from 'rxjs';
 import { RupElement } from '.';
@@ -37,7 +37,9 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     public unidades = [];
     public genericos = [];
     public registros = [];
-    public comprimidosEditados = false;
+    public ingresoCantidadManual = false;
+    public valorCantidadManual = null;
+    public loading = false;
     public opcionesTipoReceta = [
         { id: 'duplicado', label: 'Duplicado' },
         { id: 'triplicado', label: 'Triplicado' }
@@ -64,7 +66,6 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
 
     @Unsubscribe()
     loadMedicamentoGenerico(event) {
-        this.comprimidosEditados = false;
         const input = event.query;
         if (input && input.length > 2) {
             const query: any = {
@@ -83,24 +84,12 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
             .map(reg => reg.concepto);
     }
 
-    editarComprimidos() {
-        if (!this.comprimidosEditados) {
-            this.plex.confirm('La cantidad recetada no se encuentra en ninguna presentación comercial ¿Desea continuar?', 'Atención').then(confirmacion => {
-                if (confirmacion) {
-                    this.medicamento.cantidad = 0;
-                    this.comprimidosEditados = true;
-                }
-            });
-        } else {
-            this.comprimidosEditados = false;
-        }
-    }
-
     loadPresentaciones() {
+        this.deshacerCantidadManual();
+        this.loading = true;
         this.medicamento.cantidad = null;
         this.medicamento.presentacion = null;
         this.medicamento.cantEnvases = null;
-        this.unidades = [];
         if (this.medicamento.generico) {
             const queryPresentacion: any = {
                 expression: `${this.medicamento.generico.conceptId}.763032000`,
@@ -110,46 +99,88 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
                 expression: `(^331101000221109: 774160008 =<${this.medicamento.generico.conceptId}).774161007`,
                 search: ''
             };
-            forkJoin(
-                [
-                    this.snomedService.get(queryPresentacion),
-                    this.snomedService.get(queryUnidades)]
+            forkJoin([
+                this.snomedService.get(queryPresentacion),
+                this.snomedService.get(queryUnidades)]
             ).subscribe(([resultado, presentaciones]) => {
                 this.medicamento.presentacion = resultado[0];
                 this.unidades = presentaciones.map(elto => {
                     return { id: elto.term, valor: elto.term };
                 });
+                if (this.unidades.length) {
+                    this.unidades.unshift({ id: 'otro', valor: 'Otro' });
+                } else {
+                    this.ingresoCantidadManual = true;
+                }
+                this.loading = false;
+            });
+        } else {
+            this.unidades = [];
+            this.ingresoCantidadManual = false;
+        }
+    }
+
+    onChange($event) {
+        if ($event?.value?.id === 'otro') {
+            this.ingresoCantidadManual = true;
+        }
+    }
+
+    deshacerCantidadManual() {
+        this.medicamento.cantidad = null;
+        this.ingresoCantidadManual = false;
+        this.valorCantidadManual = null;
+    }
+
+    showModalCantidadManual() {
+        if (this.unidades && this.ingresoCantidadManual) {
+            this.plex.confirm('La cantidad recetada no se encuentra en ninguna presentación comercial ¿Desea continuar?', 'Atención').then(confirmacion => {
+                if (confirmacion) {
+                    this.agregarMedicamento();
+                } else {
+                    this.deshacerCantidadManual();
+                }
             });
         }
     }
 
-    agregarMedicamento(form) {
+    preAgregarMedicamento(form) {
         if (form.formValid) {
-            if (this.medicamento.cantidad?.valor) {
-                this.medicamento.cantidad = Number(this.medicamento.cantidad.valor);
+            // si se ingresó una cantidad manualmente y no se seleccionó ninguna presentación comercial
+            if (this.unidades.length && this.ingresoCantidadManual) {
+                this.showModalCantidadManual();
+            } else {
+                this.agregarMedicamento();
             }
-            this.registro.valor.medicamentos.push(this.medicamento);
-            this.unidades = [];
-            this.medicamento = {
-                generico: null,
-                presentacion: null,
-                cantidad: null,
-                cantEnvases: null,
-                diagnostico: null,
-                tipoReceta: null,
-                tratamientoProlongado: false,
-                tiempoTratamiento: null,
-                dosisDiaria: {
-                    frecuencia: null,
-                    dias: null,
-                    notaMedica: null
-                }
-            };
-            this.formMedicamento.reset();
-            this.formMedicamento.form.markAsPristine();
-            this.formMedicamento.form.markAsUntouched();
-
         }
+    }
+
+    agregarMedicamento() {
+        if (this.medicamento.cantidad?.valor && this.medicamento.cantidad?.valor !== 'Otro') {
+            this.medicamento.cantidad = Number(this.medicamento.cantidad.valor);
+        } else if (this.ingresoCantidadManual && this.valorCantidadManual) {
+            this.medicamento.cantidad = this.valorCantidadManual;
+        }
+        this.registro.valor.medicamentos.push(this.medicamento);
+        this.unidades = [];
+        this.medicamento = {
+            generico: null,
+            presentacion: null,
+            cantidad: null,
+            cantEnvases: null,
+            diagnostico: null,
+            tipoReceta: { id: 'simple', label: 'Simple' },
+            tratamientoProlongado: false,
+            tiempoTratamiento: null,
+            dosisDiaria: {
+                frecuencia: null,
+                dias: null,
+                notaMedica: null
+            }
+        };
+        this.formMedicamento.reset();
+        this.formMedicamento.form.markAsPristine();
+        this.formMedicamento.form.markAsUntouched();
     }
 
     borrarMedicamento(medicamento) {
