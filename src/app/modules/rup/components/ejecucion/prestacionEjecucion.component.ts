@@ -5,7 +5,6 @@ import { Component, OnDestroy, OnInit, QueryList, ViewChildren, ViewEncapsulatio
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, Subject } from 'rxjs';
 import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { SnomedService } from 'src/app/apps/mitos/services/snomed.service';
 import { ConstantesService } from 'src/app/services/constantes.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar.service';
@@ -22,6 +21,7 @@ import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.inte
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { RecetaService } from 'projects/portal/src/app/services/receta.service';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -114,7 +114,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         public huds: HUDSService,
         public ps: PlantillasService,
         public ejecucionService: RupEjecucionService,
-        public constantesService: ConstantesService
+        public constantesService: ConstantesService,
+        public recetaService: RecetaService
     ) { }
 
     /**

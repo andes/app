@@ -1,9 +1,10 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { AfterContentInit, Component, EventEmitter, Input, Optional, Output, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, Component, EventEmitter, Input, OnInit, Optional, Output, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
 import { LaboratorioService } from 'projects/portal/src/app/services/laboratorio.service';
-import { Observable, forkJoin, lastValueFrom } from 'rxjs';
+import { RecetaService } from 'projects/portal/src/app/services/receta.service';
+import { Observable, forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { InternacionResumenHTTP } from 'src/app/apps/rup/mapa-camas/services/resumen-internacion.http';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
@@ -11,6 +12,7 @@ import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { SECCION_CLASIFICACION } from 'src/app/modules/epidemiologia/constantes';
 import { FormsEpidemiologiaService } from 'src/app/modules/epidemiologia/services/ficha-epidemiologia.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import { ProfesionalService } from 'src/app/services/profesional.service';
 import { gtag } from '../../../../shared/services/analytics.service';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { getSemanticClass } from '../../pipes/semantic-class.pipes';
@@ -24,7 +26,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
     styleUrls: ['hudsBusqueda.scss', 'buscador.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class HudsBusquedaComponent implements AfterContentInit {
+export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     laboratoriosFS: any;
     laboratorios: any = [];
     vacunas: any = [];
@@ -42,7 +44,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
     public cdas = [];
 
     @Input() paciente: IPaciente;
-
+    @Input() vistaHuds = false;
     @Input() _dragScope: String;
     @Input() _dragOverClass: String = 'drag-over-border';
 
@@ -123,13 +125,19 @@ export class HudsBusquedaComponent implements AfterContentInit {
         producto: []
     };
 
+    public profesional;
+    public profesionalValido;
     public filtroRegistrosTrastornos;
-
     public txtABuscar;
-
     public efectorRestringido = this.auth.check('huds:soloEfectorActual');
     public indiceInternaciones;
     public otrasPrestaciones;
+    public filtroRecetas;
+    public searchRecetas;
+    public busquedaRecetas;
+    public motivosSuspension;
+    public motivoSuspensionSelector;
+    public seleccionRecetas = [];
 
     /**
      * Ids correspondientes a Prescripción de Medicamentos y Seguimiento Hídrico respectivamente
@@ -142,10 +150,25 @@ export class HudsBusquedaComponent implements AfterContentInit {
         { key: 'hallazgo', titulo: 'hallazgos', icono: 'hallazgo' },
         { key: 'trastorno', titulo: 'trastornos', icono: 'trastorno' },
         { key: 'procedimiento', titulo: 'procedimientos', icono: 'termometro' },
+        { key: 'recetas', titulo: 'recetas', icono: 'listado-receta' },
         { key: 'producto', titulo: 'productos', icono: 'pildoras' },
         { key: 'laboratorios', titulo: 'laboratorios', icono: 'recipiente' },
         { key: 'vacunas', titulo: 'vacunas', icono: 'vacuna' },
     ];
+
+    public estadoReceta = {
+        vigente: 'success',
+        finalizada: 'success',
+        suspendida: 'danger',
+        vencida: 'danger',
+        rechazada: 'danger'
+    } as { [key: string]: string };
+
+    public estadoDispensa = {
+        'sin-dispensa': 'info',
+        'dispensada': 'success',
+        'dispensa-parcial': 'warning'
+    } as { [key: string]: string };
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -157,6 +180,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
         @Optional() private ejecucionService: RupEjecucionService,
         private pacienteService: PacienteService,
         private laboratorioService: LaboratorioService,
+        private recetasService: RecetaService,
+        private profesionalService: ProfesionalService,
     ) {
     }
 
@@ -177,6 +202,11 @@ export class HudsBusquedaComponent implements AfterContentInit {
         setTimeout(() => {
             this.buscarCDAPacientes(token);
         }, 1000 * 30);
+    }
+
+    ngOnInit() {
+        this.groupRecetas();
+        this.getProfesional();
     }
 
     getTitulo(filtroactual) {
@@ -286,6 +316,11 @@ export class HudsBusquedaComponent implements AfterContentInit {
                 break;
             case 'laboratorio':
                 gtag('huds-open', tipo, 'laboratorio', index);
+                break;
+            case 'receta':
+                gtag('huds-open', tipo, 'receta', index);
+                registro.tipo = 'receta';
+                registro.index = index;
                 break;
         }
 
@@ -551,6 +586,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
                 return this.vacunas.length;
             case 'solicitudes':
                 return this.solicitudesMezcladas.length;
+            case 'recetas':
+                return this.busquedaRecetas?.length;
         }
     }
 
@@ -717,7 +754,124 @@ export class HudsBusquedaComponent implements AfterContentInit {
         }
     }
 
+    filtrarRecetas() {
+        const searchTerm = this.searchRecetas?.toLowerCase() || '';
+
+        if (!searchTerm && !this.filtroRecetas) {
+            this.groupRecetas();
+            return;
+        }
+
+        let filteredRecetas = this.busquedaRecetas;
+
+        if (searchTerm) {
+            filteredRecetas = filteredRecetas.filter(group => {
+                return group.recetas[0].medicamento.concepto.term.toLowerCase().includes(searchTerm);
+            });
+        }
+
+        if (this.filtroRecetas) {
+            filteredRecetas = filteredRecetas.reduce((acc, receta) => {
+                const vigenteRecetas = receta.recetas.filter(r => r.estadoActual.tipo === 'vigente');
+                if (vigenteRecetas.length > 0) {
+                    acc.push({
+                        conceptId: receta.conceptId,
+                        recetas: vigenteRecetas
+                    });
+                }
+                return acc;
+            }, []);
+        }
+
+        this.busquedaRecetas = filteredRecetas;
+    }
+
     hasRegistrosTotales(filtro: string) {
         return !!this.registrosTotalesCopia[filtro]?.length;
+    }
+
+    async groupRecetas() {
+        const options = { pacienteId: this.paciente.id };
+
+        this.recetasService.getMotivosSuspension().subscribe((motivos) => {
+            this.motivosSuspension = motivos.map(m => ({ id: m.id, nombre: m.label }));
+        });
+
+        this.recetasService.getRecetas(options).subscribe((data) => {
+            const grupoRecetas = data.reduce((acc, receta) => {
+                const conceptId = receta.medicamento.concepto.conceptId;
+                if (!acc[conceptId]) {
+                    acc[conceptId] = [];
+                }
+                acc[conceptId].push(receta);
+                return acc;
+            }, {});
+
+            this.busquedaRecetas = Object.keys(grupoRecetas).map(key => ({
+                conceptId: key,
+                recetas: this.sortRecetas(grupoRecetas[key])
+            }));
+        });
+    }
+
+    sortRecetas(recetas) {
+        return recetas.sort((a, b) => {
+            const dateA = a.updatedAt ? moment(a.updatedAt) : moment(a.createdAt);
+            const dateB = b.updatedAt ? moment(b.updatedAt) : moment(b.createdAt);
+            return dateB.diff(dateA);
+        });
+    }
+
+    resetSeleccionRecetas() {
+        this.groupRecetas();
+        this.seleccionRecetas = [];
+    }
+
+    openRecetaTab(group) {
+        this.emitTabs(group, 'receta', 0);
+    }
+
+    esRecetaSeleccionable(receta) {
+        const estadosPermitidos = ['vigente'];
+        const dispensasPermitidas = ['sin-dispensa', 'dispensa-parcial'];
+
+        const estadoValido = estadosPermitidos.includes(receta.estadoActual?.tipo);
+        const dispensaValida = dispensasPermitidas.includes(receta.estadoDispensaActual?.tipo);
+
+        return estadoValido && dispensaValida && this.profesionalValido;
+    }
+
+    getProfesional() {
+        const profesionalId = this.auth.profesional;
+
+        this.profesionalService.get({
+            id: profesionalId
+        }).subscribe((profesional) => {
+            // Los ids de los roles permitidos son los de las profesiones: Médico, Odontólogo y Obstetra.
+            const rolesPermitidos = ['5b97b8c27669f0926701de3d', '5b97b8c27669f0926701de40', '5b97b8c27669f0926701de3f'];
+
+            this.profesional = profesional[0];
+            this.profesionalValido = rolesPermitidos.some(rol =>
+                this.profesional.formacionGrado?.some((formacion: { profesion: { _id: string } }) => formacion.profesion._id === rol)
+            );
+        });
+    }
+
+    seleccionarReceta(event, recetas, index) {
+        const isSelected = event.value;
+
+        if (isSelected) {
+            const recetaSeleccionada = recetas
+                .filter(receta => receta.estadoActual.tipo === 'vigente')
+                .sort((a, b) => moment(b.fechaRegistro).diff(moment(a.fechaRegistro)))[0];
+
+            this.seleccionRecetas[index] = recetaSeleccionada;
+        } else {
+            this.seleccionRecetas[index] = null;
+        }
+
+        if (this.seleccionRecetas.every(receta => receta === null)) {
+            this.seleccionRecetas = [];
+        }
     }
 }

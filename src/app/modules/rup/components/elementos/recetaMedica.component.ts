@@ -1,9 +1,9 @@
-import { Component, Output, Input, EventEmitter, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { RUPComponent } from '../core/rup.component';
-import { RupElement } from '.';
-import { forkJoin, Observable } from 'rxjs';
 import { Unsubscribe } from '@andes/shared';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { forkJoin, Observable } from 'rxjs';
+import { RupElement } from '.';
+import { RUPComponent } from '../core/rup.component';
 @Component({
     selector: 'rup-recetaMedica',
     templateUrl: 'recetaMedica.html',
@@ -13,7 +13,6 @@ import { NgForm } from '@angular/forms';
 
 @RupElement('RecetaMedicaComponent')
 export class RecetaMedicaComponent extends RUPComponent implements OnInit {
-
     @ViewChild('formMedicamento') formMedicamento: NgForm;
     intervalos$: Observable<any>;
     public medicamento: any = {
@@ -22,7 +21,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         cantidad: null,
         cantEnvases: null,
         diagnostico: null,
-        tipoReceta: { id: 'simple', label: 'Simple' },
+        tipoReceta: null,
         tratamientoProlongado: false,
         tiempoTratamiento: null,
         dosisDiaria: {
@@ -58,6 +57,9 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         this.registros = this.prestacion.ejecucion.registros.filter(reg => reg.id !== this.registro.id).map(reg => reg.concepto);
         this.intervalos$ = this.constantesService.search({ source: 'plan-indicaciones:frecuencia' });
 
+        this.ejecucionService?.hasActualizacion().subscribe(async (estado) => {
+            this.loadRegistros();
+        });
     }
 
     @Unsubscribe()
@@ -134,7 +136,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
                 cantidad: null,
                 cantEnvases: null,
                 diagnostico: null,
-                tipoReceta: { id: 'simple', label: 'Simple' },
+                tipoReceta: null,
                 tratamientoProlongado: false,
                 tiempoTratamiento: null,
                 dosisDiaria: {

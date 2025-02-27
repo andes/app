@@ -122,11 +122,15 @@
                         <vista-ips [registro]="registro.data"></vista-ips>
                     </plex-tab>
 
+                    <plex-tab *ngIf="registro.tipo === 'receta'" color="receta" class="tab-receta" [allowClose]="true"
+                              [label]="recetaService.getLabel(registro.data.recetas)">
+                        <vista-receta [registro]="registro.data" [paciente]="paciente"></vista-receta>
+                    </plex-tab>
                 </ng-container>
             </plex-tabs>
         </div>
     </plex-layout-main>
     <plex-layout-sidebar>
-        <rup-hudsBusqueda #huds [paciente]="paciente" [emitirConceptos]="false"></rup-hudsBusqueda>
+        <rup-hudsBusqueda #huds [vistaHuds]="true" [paciente]="paciente" [emitirConceptos]="false"></rup-hudsBusqueda>
     </plex-layout-sidebar>
 </plex-layout>
