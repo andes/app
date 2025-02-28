@@ -1,11 +1,12 @@
-import { Component, Output, Input, EventEmitter, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
 import { RupElement } from '.';
 import { Observable } from 'rxjs';
 import { NgForm } from '@angular/forms';
 @Component({
     selector: 'rup-renovacionRecetaMedica',
-    templateUrl: 'renovacionRecetaMedica.html'
+    templateUrl: 'renovacionRecetaMedica.html',
+    styleUrls: ['recetaMedica.scss']
 })
 
 
@@ -17,8 +18,15 @@ export class RenovacionRecetaMedicaComponent extends RUPComponent implements OnI
 
 
     public recetasFiltradas = [];
-    public medicamentoCargados = [];
+    public medicamentoCargados;
     public medicamentoSeleccionado: any = {
+        conceptId: null,
+        fsn: null,
+        semanticTag: null,
+        term: null
+    };
+
+    public medicamentoEliminado: any = {
         id: null,
         nombre: null
     };
@@ -31,8 +39,13 @@ export class RenovacionRecetaMedicaComponent extends RUPComponent implements OnI
         if (!this.registro.valor.medicamentos) {
             this.registro.valor.medicamentos = [];
         }
+        this.medicamentoCargados = this.registro.valor.medicamentos;
         this.intervalos$ = this.constantesService.search({ source: 'plan-indicaciones:frecuencia' });
         this.buscarHistorialReceta();
+    }
+
+    getMedicamentos() {
+        return this.medicamentoCargados; // Genera una nueva referencia del array
     }
 
     buscarHistorialReceta() {
@@ -44,7 +57,8 @@ export class RenovacionRecetaMedicaComponent extends RUPComponent implements OnI
                     const fechaCreacion = moment(prestacion.createdAt);
                     return fechaCreacion.isAfter(fechaLimite) &&
                         prestacion.ejecucion?.registros?.some(registro =>
-                            registro.concepto?.conceptId === '16076005'
+                            registro.concepto?.conceptId === '16076005' ||
+                            registro.concepto?.conceptId === '103742009'
                         );
                 })
                 .map(prestacion =>
@@ -58,22 +72,28 @@ export class RenovacionRecetaMedicaComponent extends RUPComponent implements OnI
                     item.medicamentos.map(med => ({ ...med, fecha: item.fecha }))
                 ), []);
 
-            // Mapa para almacenar el medicamento con la fecha más reciente
-            const medicamentosUnicos = new Map<string, any>();
 
-            this.recetasFiltradas.forEach(medicamento => {
+            const medicamentosUnicos2 = [];
+            this.recetasFiltradas = this.recetasFiltradas.filter(medicamento => {
                 const id = medicamento.generico?.conceptId;
-                if (id) {
-                    if (!medicamentosUnicos.has(id) || medicamentosUnicos.get(id).fecha.isBefore(medicamento.fecha)) {
-                        medicamentosUnicos.set(id, medicamento);
-                    }
-                }
-            });
-            this.medicamentoCargados = Array.from(medicamentosUnicos.values()).map(medicamento => ({
-                id: medicamento.generico?.conceptId,
-                nombre: medicamento.generico?.term || 'Desconocido'
-            }));
+                if (!id) { return false; }
+                const encuentraMedicamento = medicamentosUnicos2.findIndex(med => {
+                    return ((med.generico.conceptId === id && med.fecha.isBefore(medicamento.fecha)));
+                });
 
+                if (encuentraMedicamento !== -1) {
+                    medicamentosUnicos2[encuentraMedicamento] = medicamento;
+                    return false;
+                } else {
+                    medicamentosUnicos2.push(medicamento);
+                    return true;
+                }
+
+            });
+            this.medicamentoCargados = Array.from(medicamentosUnicos2.values()).map(medicamento => ({
+                id: medicamento.generico?.conceptId,
+                nombre: medicamento.generico?.term
+            }));
         });
     }
 
@@ -81,18 +101,27 @@ export class RenovacionRecetaMedicaComponent extends RUPComponent implements OnI
         const index = this.medicamentoCargados.findIndex(med =>
             med.id === this.medicamentoSeleccionado.id
         );
+
         if (index !== -1) {
+            // console.log(index, ' elim : ', this.medicamentoSeleccionado);
             const medSeleccionado = this.recetasFiltradas[index];
-            this.medicamentoCargados.splice(index, 1);
-            this.recetasFiltradas.splice(index, 1);
+            this.medicamentoEliminado = this.recetasFiltradas[index];
             this.registro.valor.medicamentos.push(medSeleccionado);
-            this.medicamentoCargados = [...this.medicamentoCargados];
 
             this.medicamentoSeleccionado = {
                 id: null,
                 nombre: null
             };
+            this.plex.toast('success', 'Medicamento agregado exitosamente');
         }
+    }
+
+    deshabilitarAgregar() {
+
+        const medicamentoInexistente = this.registro.valor.medicamentos.findIndex(med =>
+            med.generico.conceptId === this.medicamentoSeleccionado?.id
+        );
+        return (this.medicamentoCargados?.length < 1 || !this.medicamentoSeleccionado.id || medicamentoInexistente !== -1);
     }
 
     borrarMedicamento(medicamento) {
@@ -101,15 +130,13 @@ export class RenovacionRecetaMedicaComponent extends RUPComponent implements OnI
                 const index = this.registro.valor.medicamentos.indexOf(medicamento);
 
                 if (index !== -1) {
-                    const medicamentoEliminar = this.registro.valor.medicamentos[index];
                     this.registro.valor.medicamentos.splice(index, 1);
-                    this.recetasFiltradas.push(medicamentoEliminar);
-                    this.medicamentoCargados.push({
-                        id: medicamentoEliminar.generico.conceptId,
-                        nombre: medicamentoEliminar.generico.term
-                    });
 
-                    this.medicamentoCargados = [...this.medicamentoCargados];
+                    this.medicamentoSeleccionado = {
+                        id: null,
+                        nombre: null
+                    };
+                    this.plex.toast('success', 'Medicamento eliminado exitosamente');
                 }
             }
         });
