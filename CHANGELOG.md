@@ -1,3 +1,10 @@
+# [5.158.0](https://github.com/andes/app/compare/v5.157.1...v5.158.0) (2025-03-05)
+
+
+### Features
+
+* **HUDS:** implementa vista de recetas ([#3133](https://github.com/andes/app/issues/3133)) ([88b32b1](https://github.com/andes/app/commit/88b32b124831df759791388f7172a1acb3bc035b))
+
 ## [5.157.1](https://github.com/andes/app/compare/v5.157.0...v5.157.1) (2025-02-19)
 
 
