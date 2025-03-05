@@ -84,7 +84,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     loadRegistros() {
         this.registros = [
             ...this.prestacion.ejecucion.registros
-                .filter(reg => reg.id !== this.registro.id)
+                .filter(reg => reg.id !== this.registro.id && (reg.concepto.semanticTag === 'procedimiento'
+                    || reg.concepto.semanticTag === 'hallazgo' || reg.concepto.semanticTag === 'trastorno'))
                 .map(reg => reg.concepto),
             ...this.recetasConFiltros
         ];
@@ -170,23 +171,6 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
                 const esActivo = trastorno.evoluciones[trastorno.evoluciones.length - 1].estado === 'activo';
                 if (fechaCreacion?.isAfter(fechaLimite) && esActivo) {
                     this.recetasConFiltros.push(trastorno.concepto);
-                }
-            });
-        });
-
-        this.prestacionesService.getByPacienteHallazgo(this.paciente.id).subscribe((hallazgos) => {
-            hallazgos.forEach(hallazgo => {
-                const fechaCreacion = hallazgo.fechaEjecucion ? moment(hallazgo.fechaEjecucion) : null;
-                if (fechaCreacion?.isAfter(fechaLimite)) {
-                    this.recetasConFiltros.push(hallazgo.concepto);
-                }
-            });
-        });
-        this.prestacionesService.getByPacienteProcedimiento(this.paciente.id).subscribe((procedimientos) => {
-            procedimientos.forEach(procedimiento => {
-                const fechaCreacion = procedimiento.fechaEjecucion ? moment(procedimiento.fechaEjecucion) : null;
-                if (fechaCreacion?.isAfter(fechaLimite)) {
-                    this.recetasConFiltros.push(procedimiento.concepto);
                 }
             });
         });

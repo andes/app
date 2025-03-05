@@ -101,7 +101,8 @@
             </plex-badge>
             <plex-badge *ngIf="item.tipoReceta?.nombre" type="info">{{item.tipoReceta?.nombre}}
             </plex-badge>
-            <plex-button type="danger" size="sm" (click)="borrarMedicamento(item)" icon="delete"></plex-button>
+            <plex-button type="danger" size="sm" (click)="borrarMedicamento(item)" icon="delete"
+                         tooltip="eliminar"></plex-button>
         </plex-item>
     </plex-list>
 </ng-container>
