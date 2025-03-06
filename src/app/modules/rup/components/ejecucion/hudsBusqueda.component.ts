@@ -193,6 +193,31 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     ) {
     }
 
+    public mostrarRenovacion = false;
+    public mostrarSuspension = false;
+
+    abrirRenovacion() {
+        this.mostrarRenovacion = true;
+    }
+
+    cerrarRenovacion() {
+        this.mostrarRenovacion = false;
+    }
+
+    cerrarSuspension() {
+        this.mostrarSuspension = false;
+    }
+
+    abrirSuspension() {
+        this.mostrarSuspension = true;
+    }
+
+    resetEstado() {
+        this.mostrarRenovacion = false;
+        this.mostrarSuspension = false;
+        this.seleccionRecetas = [];
+    }
+
     /**
      * buscamos y listamos las prestaciones o hallazgos del paciente
      *
@@ -857,16 +882,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         this.emitTabs(group, 'receta', 0);
     }
 
-    esRecetaSeleccionable(receta) {
-        const estadosPermitidos = ['vigente'];
-        const dispensasPermitidas = ['sin-dispensa', 'dispensa-parcial'];
-
-        const estadoValido = estadosPermitidos.includes(receta.estadoActual?.tipo);
-        const dispensaValida = dispensasPermitidas.includes(receta.estadoDispensaActual?.tipo);
-
-        return estadoValido && dispensaValida && this.profesionalValido;
-    }
-
     getProfesional() {
         const profesionalId = this.auth.profesional;
 
@@ -890,11 +905,32 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
             .sort((a, b) => moment(b.fechaRegistro).diff(moment(a.fechaRegistro)))[0];
 
         if (isSelected) {
-            this.seleccionRecetas[index] = true;
-            this.seleccionSuspender.push(recetaSeleccionada);
+            this.seleccionRecetas[index] = recetas[0];
         } else {
             this.seleccionRecetas[index] = null;
             this.seleccionSuspender = this.seleccionSuspender.filter(r => r.id !== recetaSeleccionada.id);
         }
+    }
+
+    esRecetaRenovable(receta) {
+        const fechaLimite = moment().subtract(6, 'months');
+        const fechaRegistroValida = moment(receta.fechaRegistro).isAfter(fechaLimite);
+        const estadoValido = receta.estadoActual?.tipo !== 'vigente' || receta.estadoDispensaActual?.tipo === 'dispensada';
+
+        return fechaRegistroValida && estadoValido;
+    }
+
+    esRecetaSuspendible(receta) {
+        const estadosPermitidos = ['vigente'];
+        const dispensasPermitidas = ['sin-dispensa', 'dispensa-parcial'];
+
+        const estadoValido = estadosPermitidos.includes(receta.estadoActual?.tipo);
+        const dispensaValida = dispensasPermitidas.includes(receta.estadoDispensaActual?.tipo);
+
+        return estadoValido && dispensaValida && this.profesionalValido;
+    }
+
+    esRecetSeleccionable(receta) {
+        return (this.mostrarRenovacion && !this.esRecetaRenovable(receta)) || (this.mostrarSuspension && !this.esRecetaSuspendible(receta));
     }
 }

@@ -1,7 +1,7 @@
-import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import * as moment from 'moment';
+import { forkJoin, Observable } from 'rxjs';
 import { IProfesional } from 'src/app/interfaces/IProfesional';
 
 @Injectable({
@@ -12,8 +12,7 @@ export class RecetaService {
     private url = '/modules/recetas';
 
     constructor(
-        private server: Server,
-        private auth: Auth
+        private server: Server
     ) { }
 
 
@@ -27,6 +26,21 @@ export class RecetaService {
 
     suspender(recetas: string[], profesional: IProfesional, motivo: string, observacion: string) {
         return this.server.patch(`${this.url}`, { op: 'suspender', recetas, motivo, observacion, profesional });
+    }
+
+    renovar(recetas: any[], profesional: IProfesional, organizacion: any): Observable<any[]> {
+        const requests = recetas.map(receta => this.server.post(`${this.url}`, {
+            idPrestacion: receta.idPrestacion,
+            idRegistro: receta.idRegistro,
+            idRecetaOriginal: receta,
+            medicamento: receta.medicamento,
+            paciente: receta.paciente,
+            diagnostico: receta.diagnostico,
+            profesional,
+            organizacion
+        }));
+
+        return forkJoin(requests);
     }
 
     getUltimaReceta(recetas) {

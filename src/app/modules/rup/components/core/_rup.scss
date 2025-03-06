@@ -17,6 +17,7 @@ $rotate: -90deg;
     margin-bottom: 10px;
     transition: 200ms all;
     -webkit-transition: 200ms all;
+    overflow-x: hidden;
 
     &.mini {
         margin-bottom: 2px;

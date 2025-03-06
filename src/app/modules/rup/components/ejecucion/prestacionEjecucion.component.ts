@@ -516,7 +516,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         }
 
         const esAsociado = this.prestacion.ejecucion.registros.some(r =>
-            r.valor?.medicamentos?.length && r.valor.medicamentos.some(m => m.diagnostico.conceptId === registro.concepto.conceptId)
+            r.valor?.medicamentos?.length && r.valor.medicamentos.some(m => m.diagnostico?.conceptId === registro.concepto?.conceptId)
         );
 
         return !esAsociado;
