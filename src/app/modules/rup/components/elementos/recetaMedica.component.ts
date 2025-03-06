@@ -178,6 +178,12 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     }
 
     agregarMedicamento() {
+        const existeMedicamento = this.registro.valor.medicamentos.some(med => med.generico?.conceptId === this.medicamento.generico?.conceptId);
+        if (existeMedicamento) {
+            this.plex.info('warning', 'El medicamento ya se encuentra en la receta.', 'Atención');
+            return;
+        }
+
         if (this.medicamento.cantidad?.valor && this.medicamento.cantidad?.valor !== 'Otro') {
             this.medicamento.cantidad = Number(this.medicamento.cantidad.valor);
         } else if (this.ingresoCantidadManual && this.valorCantidadManual) {
