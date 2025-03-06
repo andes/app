@@ -29,6 +29,10 @@ export class RecetaService {
         return this.server.patch(`${this.url}`, { op: 'suspender', recetas, motivo, observacion, profesional });
     }
 
+    renovar(recetas: string[], profesional: IProfesional) {
+        return this.server.patch(`${this.url}`, { op: 'renovar', recetas, profesional });
+    }
+
     getUltimaReceta(recetas) {
         return recetas?.reduce((mostRecent, receta) => {
             const recetaDate = moment(receta.fechaRegistro);
