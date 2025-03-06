@@ -182,28 +182,30 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
             }
         }
     }
+
     checkDuplicado() {
         const options = { pacienteId: this.paciente.id };
+
         this.recetasService.getRecetas(options).subscribe((data) => {
             const duplicado = data.find(receta =>
                 this.medicamento.generico.conceptId === receta.medicamento.concepto.conceptId &&
                 (receta.estadoActual.tipo === 'vigente' || receta.estadoActual.tipo === 'pendiente') &&
                 (receta.estadoDispensaActual.tipo === 'sin-dispensa' || receta.estadoDispensaActual.tipo === 'dispensa-parcial')
             );
+
             const cargadoActual = this.registro.valor.medicamentos.find(medicamentoCargado =>
                 this.medicamento.generico.conceptId === medicamentoCargado.generico.conceptId
             );
 
             if (!duplicado && !cargadoActual) {
                 return this.agregarMedicamento();
-            } else {
-                if (duplicado) {
-                    const fechaRegistro = new Date(duplicado.fechaRegistro).toLocaleString();
-                    this.plex.info('danger', `El medicamento "<b>${duplicado.medicamento.concepto.term}</b>" se encuentra vigente en otra receta.<br><small>Fecha de registro: ${fechaRegistro}</small>`);
-                } else {
-                    this.plex.info('danger', `El medicamento "<b>${this.medicamento.generico.term}</b>" se encuentra cargado en la receta actual.`);
-                }
             }
+
+            const message = duplicado
+                ? `El medicamento "<b>${duplicado.medicamento.concepto.term}</b>" se encuentra vigente en otra receta.<br><small>Fecha de registro: ${new Date(duplicado.fechaRegistro).toLocaleString()}</small>`
+                : `El medicamento "<b>${this.medicamento.generico.term}</b>" se encuentra cargado en la receta actual.`;
+
+            this.plex.info('danger', message);
         });
     }
 
@@ -223,6 +225,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     }
 
     agregarMedicamento() {
+        this.checkDuplicado();
+
         if (this.medicamento.cantidad?.valor && this.medicamento.cantidad?.valor !== 'Otro') {
             this.medicamento.cantidad = Number(this.medicamento.cantidad.valor);
         } else if (this.ingresoCantidadManual && this.valorCantidadManual) {
