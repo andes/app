@@ -14,11 +14,11 @@
 
 <form #formulario="ngForm">
     <plex-grid type="full" cols="2" class="mt-0">
-        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" [min]="min" [max]="hasta"
-                       [debounce]="600" (change)="onChangeFecha()">
+        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" [debounce]="600" [min]="min"
+                       (change)="onChangeFecha()">
         </plex-datetime>
-        <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" [min]="desde" [max]="max"
-                       [debounce]="600" (change)="onChangeFecha()">
+        <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" [debounce]="600" [max]="max"
+                       (change)="onChangeFecha()">
         </plex-datetime>
         <plex-select label="Prestación" name="tipoPrestacion" [(ngModel)]="tipoPrestacion" idField="conceptId"
                      labelField="term" [data]="prestacionesList$ | async" (change)="onChangeTipoPrestacion()" span="2">
@@ -47,7 +47,7 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
+    <tbody *ngIf="permisoHuds$ | async">
         <tr registro-huds-item [prestacion]="prestacion" (accion)="onItemAccion(prestacion, $event)"
             *ngFor="let prestacion of historialFiltrado$ | async">
         </tr>

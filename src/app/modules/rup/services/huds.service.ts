@@ -130,6 +130,10 @@ export class HUDSService {
 
     }
 
+    getTiempoRestante(params: any): Observable<any> {
+        return this.server.get(this.hudsUrl + '/timeLeft', params);
+    }
+
     getAccesos(params: any): Observable<any> {
         return this.server.get(this.hudsUrl, { params: params });
     }
