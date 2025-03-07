@@ -407,6 +407,59 @@ export class DarTurnosComponent implements OnInit {
         }
     }
 
+
+    /*  Filtra las agendas a mostrar en el calendario segun se acceda desde el listado de pacientes
+        o el de solicitudes.
+    */
+    filtrarSegunOrigen(): IAgenda[] {
+        let arrAgendas: IAgenda[] = [];
+        this.agendas.forEach(agenda => {
+
+            const delDia = agenda.horaInicio >= moment().startOf('day').toDate() && agenda.horaInicio <= moment().endOf('day').toDate();
+            // por estados
+            const publicada = agenda.estado === 'publicada';
+            const disponible = agenda.estado === 'disponible';
+            const esGestion = this.tipoTurno === 'gestion';
+            // por tipo
+            const dinamicaDelDiaConCupoDisponible = agenda.dinamica && delDia && ((agenda as any).cupo > 0 || agenda.cupo === -1) && !esGestion;
+            const delDiaConTurnosDisponibles = (agenda.turnosRestantesDelDia + agenda.turnosRestantesProgramados) > 0 && delDia;
+            const programadaConTurnosDisponibles = agenda.turnosRestantesProgramados > 0 && !delDia;
+            const autocitadoConTurnosDisponibles = this.autocitado && agenda.turnosRestantesProfesional > 0;
+            const llaveConTurnosDisponibles = !this.autocitado && agenda.turnosRestantesGestion > 0;
+            // condiciones
+            const accesoDirectoConTurnosDisponibles = (!esGestion || this.desdeDemanda) && ((delDiaConTurnosDisponibles && this.hayTurnosEnHorario(agenda)) || programadaConTurnosDisponibles);
+            const gestionConTurnosDisponibles = esGestion && (autocitadoConTurnosDisponibles || llaveConTurnosDisponibles);
+            const agendaDinamicaOconLlave = (publicada && accesoDirectoConTurnosDisponibles) ||
+                ((publicada || disponible) && (gestionConTurnosDisponibles || dinamicaDelDiaConCupoDisponible || agenda.condicionLlave));
+
+            if (this.solicitudPrestacion?.id && this.router.url.includes('citas/punto-inicio')) { // citas, dando turno desde el listado de solicitudes
+                // Verificamos si existen agendas con llave y limpiamos el array (por si existen agendas programadas y del dia).
+                if (agendaDinamicaOconLlave) {
+                    if (arrAgendas.length && (arrAgendas[arrAgendas.length - 1].turnosRestantesDelDia > 0 || arrAgendas[arrAgendas.length - 1].turnosRestantesProgramados > 0)) {
+                        arrAgendas = [];
+                    }
+                    arrAgendas.push(agenda);
+                    // Verificamos si existen agendas con turnos programados y limpiamos el array (por si existen agendas programadas)
+                } else if (programadaConTurnosDisponibles) {
+                    if (arrAgendas.length && arrAgendas[arrAgendas.length - 1].turnosRestantesDelDia > 0) {
+                        arrAgendas = [];
+                    }
+                    arrAgendas.push(agenda);
+                } else if (delDiaConTurnosDisponibles) {
+                    arrAgendas.push(agenda);
+                }
+            } else { // citas, desde listado de pacientes
+                const cond = (publicada && accesoDirectoConTurnosDisponibles) ||
+                    ((publicada || disponible) && (gestionConTurnosDisponibles || dinamicaDelDiaConCupoDisponible || agenda.condicionLlave));
+                if (cond) {
+                    arrAgendas.push(agenda);
+                }
+            }
+        });
+        return arrAgendas;
+    }
+
+
     actualizar() {
         if (this._solicitudPrestacion && !this.tipoPrestacionesPermitidas) {
             this.opciones.tipoPrestacion = this._solicitudPrestacion.solicitud.tipoPrestacion;
@@ -470,26 +523,8 @@ export class DarTurnosComponent implements OnInit {
 
                 // Por defecto no se muestran las agendas que no tienen turnos disponibles
                 if (!this.mostrarNoDisponibles) {
-                    this.agendas = this.agendas.filter(agenda => {
-                        const delDia = agenda.horaInicio >= moment().startOf('day').toDate() && agenda.horaInicio <= moment().endOf('day').toDate();
-                        // por estados
-                        const publicada = agenda.estado === 'publicada';
-                        const disponible = agenda.estado === 'disponible';
-                        const esGestion = this.tipoTurno === 'gestion';
-                        // por tipo
-                        const dinamicaDelDiaConCupoDisponible = agenda.dinamica && delDia && ((agenda as any).cupo > 0 || agenda.cupo === -1) && !esGestion;
-                        const delDiaConTurnosDisponibles = (agenda.turnosRestantesDelDia + agenda.turnosRestantesProgramados) > 0 && delDia;
-                        const programadaConTurnosDisponibles = agenda.turnosRestantesProgramados > 0 && !delDia;
-                        const autocitadoConTurnosDisponibles = this.autocitado && agenda.turnosRestantesProfesional > 0;
-                        const llaveConTurnosDisponibles = !this.autocitado && agenda.turnosRestantesGestion > 0;
-                        // condiciones
-                        const accesoDirectoConTurnosDisponibles = (!esGestion || this.desdeDemanda) && ((delDiaConTurnosDisponibles && this.hayTurnosEnHorario(agenda)) || programadaConTurnosDisponibles);
-                        const gestionConTurnosDisponibles = esGestion && (autocitadoConTurnosDisponibles || llaveConTurnosDisponibles);
-
-                        const cond = (publicada && accesoDirectoConTurnosDisponibles) ||
-                            ((publicada || disponible) && (gestionConTurnosDisponibles || dinamicaDelDiaConCupoDisponible || agenda.condicionLlave));
-                        return cond;
-                    });
+                    // filtramos agendas a mostrar segun el origen de la dación de turno
+                    this.agendas = this.filtrarSegunOrigen();
                 }
                 // Ordena las Agendas por fecha/hora de inicio
                 this.agendas = this.agendas.sort((a, b) => {
