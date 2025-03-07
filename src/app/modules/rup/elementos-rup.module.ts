@@ -42,6 +42,7 @@ import { OdontogramaRefsetComponent } from './components/elementos/OdontogramaRe
 import { PesoComponent } from './components/elementos/peso.component';
 import { ProcedimientoDeEnfermeriaComponent } from './components/elementos/procedimientoDeEnfermeria.component';
 import { RecetaMedicaComponent } from './components/elementos/recetaMedica.component';
+import { RenovacionRecetaMedicaComponent } from './components/elementos/renovacionRecetaMedica.component';
 import { RegistrarMedicamentoDefaultComponent } from './components/elementos/registrarMedicamentoDefault.component';
 import { ResumenHistoriaClinicaComponent } from './components/elementos/resumenHistoriaClinica.component';
 import { ChecklistComponent } from './components/elementos/rupers/check-list/checklist.component';
@@ -88,6 +89,7 @@ const RUPComponentsArray = [
     ObservacionesComponent,
     PesoComponent,
     RecetaMedicaComponent,
+    RenovacionRecetaMedicaComponent,
     RegistrarMedicamentoDefaultComponent,
     SaturacionOxigenoComponent,
     GraficoLinealComponent,
