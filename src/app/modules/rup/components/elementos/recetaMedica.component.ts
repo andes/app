@@ -36,6 +36,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     public diagnosticos = [];
     public unidades = [];
     public genericos = [];
+    public recetasConFiltros = [];
+    public medicamentoCargados = [];
     public registros = [];
     public ingresoCantidadManual = false;
     public valorCantidadManual = null;
@@ -58,6 +60,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         }
         this.registros = this.prestacion.ejecucion.registros.filter(reg => reg.id !== this.registro.id).map(reg => reg.concepto);
         this.intervalos$ = this.constantesService.search({ source: 'plan-indicaciones:frecuencia' });
+        this.buscarDiagnosticosConTrastornos();
 
         this.ejecucionService?.hasActualizacion().subscribe(async (estado) => {
             this.loadRegistros();
@@ -79,9 +82,13 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     }
 
     loadRegistros() {
-        this.registros = this.prestacion.ejecucion.registros
-            .filter(reg => reg.id !== this.registro.id)
-            .map(reg => reg.concepto);
+        this.registros = [
+            ...this.prestacion.ejecucion.registros
+                .filter(reg => reg.id !== this.registro.id && (reg.concepto.semanticTag === 'procedimiento'
+                    || reg.concepto.semanticTag === 'hallazgo' || reg.concepto.semanticTag === 'trastorno'))
+                .map(reg => reg.concepto),
+            ...this.recetasConFiltros
+        ];
     }
 
     loadPresentaciones() {
@@ -153,6 +160,21 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
                 this.agregarMedicamento();
             }
         }
+    }
+
+    buscarDiagnosticosConTrastornos() {
+        const fechaLimite = moment().subtract(6, 'months');
+        this.prestacionesService.getByPacienteTrastorno(this.paciente.id).subscribe((trastornos) => {
+
+            trastornos.forEach(trastorno => {
+                const fechaCreacion = trastorno.fechaEjecucion ? moment(trastorno.fechaEjecucion) : null;
+                const esActivo = trastorno.evoluciones[trastorno.evoluciones.length - 1].estado === 'activo';
+                if (fechaCreacion?.isAfter(fechaLimite) && esActivo) {
+                    this.recetasConFiltros.push(trastorno.concepto);
+                }
+            });
+        });
+
     }
 
     agregarMedicamento() {
