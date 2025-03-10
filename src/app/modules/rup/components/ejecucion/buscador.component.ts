@@ -12,6 +12,7 @@ import { RupEjecucionService } from '../../services/ejecucion.service';
 import { FrecuentesProfesionalService } from '../../services/frecuentesProfesional.service';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ISnomedSearchResult } from './../../interfaces/snomedSearchResult.interface';
+import { ProfesionalService } from 'src/app/services/profesional.service';
 
 
 @Component({
@@ -73,7 +74,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
         private buscadorService: SnomedBuscarService,
         public renderer: Renderer2,
         private ejecucionService: RupEjecucionService,
-        private plex: Plex
+        private plex: Plex,
+        public profesionalService: ProfesionalService
     ) {
     }
 
@@ -361,7 +363,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
             if (this.semanticTags) {
                 this.results[busquedaActual]['todos'] = [];
-                this.filtroActual =this.semanticTags[0] as any;
+                this.filtroActual = this.semanticTags[0] as any;
             }
         }
     }
@@ -414,6 +416,55 @@ export class BuscadorComponent implements OnInit, OnChanges {
      *
      * @param {any} concepto Concepto SNOMED
      */
+    public verificarProfesional(concepto, index) {
+        let permiso = false;
+        if (concepto.conceptId === '33633005' && !concepto.esSolicitud) {// receta y !solicitud
+            if (this.auth.profesional) {
+                this.profesionalService.getByID(this.auth.profesional).subscribe(profesional => {
+                    if (profesional) {
+                        const codigosPermitidos = [1, 2, 23]; // [medico, odontologo, obstetra]
+                        let motivoRechazo = null;
+                        permiso = (profesional?.formacionGrado?.find(item => {
+                            const profesionHabilitada = codigosPermitidos.includes(item.profesion?.codigo);
+                            const estadoMatricula = this.verificarEstadoMatricula(item);
+                            if (profesionHabilitada) {
+                                motivoRechazo = estadoMatricula.value;
+                            }
+                            return profesionHabilitada && estadoMatricula.key;
+                        })) !== undefined;
+                        if (permiso) {
+                            this.seleccionarConcepto(concepto, index);
+                        } else {
+                            this.plex.info('warning', motivoRechazo ? `Su matrícula se encuentra ${motivoRechazo} para emitir una Receta` : 'Sin profesión habilitada para emitir una Receta');
+                        }
+                    }
+                });
+            }
+        } else {
+            this.seleccionarConcepto(concepto, index);
+        }
+    }
+
+    verificarEstadoMatricula(formacionGrado) {
+        const estado = {
+            value: 'vigente',
+            key: false
+        };
+        if (formacionGrado.matriculacion) {
+            if (!formacionGrado.matriculado && new Date < formacionGrado.matriculacion[formacionGrado.matriculacion.length - 1].fin) {
+                estado.value = 'suspendida';
+            } else {
+                if (new Date > formacionGrado.matriculacion[formacionGrado.matriculacion.length - 1].fin) {
+                    estado.value = 'vencida';
+                } else {
+                    estado.key = true;
+                }
+            }
+        } else {
+            estado.value = 'inhabilitada';
+        }
+        return estado;
+    }
 
     public seleccionarConcepto(concepto, index) {
         gtag('add-concept', this.busquedaActual, this.search, index);
