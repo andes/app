@@ -1,12 +1,17 @@
 <div *ngIf="showSelector && !editable">
-    <plex-radio *ngIf="obraSocial" [(ngModel)]="obraSocial" name="obraSocial" (change)="seleccionarObraSocial($event)"
-                label="Seleccione una Obra Social" [data]="selectorObrasSociales">
+    <plex-radio *ngIf="financiadorSeleccionado" [(ngModel)]="financiadorSeleccionado" name="financiadorSeleccionado"
+                (change)="seleccionarFinanciador($event)" label="Seleccione una Obra Social"
+                [data]="datosFinanciadores">
     </plex-radio>
-    <plex-select class="w-100" *ngIf="showListado || !obraSocial" [(ngModel)]="financiador" name="financiador"
-                 [data]="opcionesFinanciadores"
-                 label="{{ selectorObrasSociales ? 'Seleccione una opción' :  'Seleccione una Obra Social'}}"
+    <plex-select class="w-100" *ngIf="showListado || !financiadorSeleccionado" [(ngModel)]="otroFinanciadorSeleccionado"
+                 name="financiador" [data]="opcionesFinanciadores"
+                 label="Seleccione una opción"
                  idField="nombre" labelField="nombre" (change)="seleccionarOtro($event)">
     </plex-select>
+    <plex-text *ngIf="busquedaFinanciador && !busquedaFinanciador.codigoPuco" [(ngModel)]="numeroAfiliado"
+               name="numeroAfiliado" [required]="false" placeholder="Ingrese el número de afiliado"
+               label="Ingrese el número de afiliado" (change)="setNumeroAfiliado($event)">
+    </plex-text>
 </div>
 
 <div class="editable" *ngIf="!showSelector && editable">
@@ -29,6 +34,10 @@
                 <plex-label size="sm" icon="check" titulo="{{ financiador.nombre }}"
                             subtitulo="Fecha actualización: {{ financiador.fechaDeActualizacion | fecha }}">
                 </plex-label>
+                <plex-label *ngIf="financiador.numeroAfiliado" icon="clipboard-account" size="sm"
+                            titulo="Número de afiliado" subtitulo="{{ financiador.numeroAfiliado }}"
+                            (change)="setNumeroAfiliado($event)">
+                </plex-label>
                 <plex-button icon="delete" type="danger" size="sm" (click)="eliminarFinanciador(i)">
                 </plex-button>
             </plex-item>
@@ -39,13 +48,16 @@
     </div>
     <div class="selector-wrapper">
         <div class="selector">
-            <plex-select [(ngModel)]="financiadorSeleccionado" [data]="opcionesFinanciadores"
-                         label="Agregar Financiador" idField="id" labelField="nombre"
-                         [disabled]="!opcionesFinanciadores.length">
+            <plex-select [(ngModel)]="itemListaFinanciador" [data]="opcionesFinanciadores" label="Agregar Financiador"
+                         idField="id" labelField="nombre" [disabled]="!opcionesFinanciadores.length">
             </plex-select>
+            <plex-text *ngIf="itemListaFinanciador && !itemListaFinanciador?.codigoPuco" [(ngModel)]="numeroAfiliado"
+                       name="numeroAfiliado" [required]="false" placeholder="Ingrese el número de afiliado"
+                       (change)="setNumeroAfiliado($event)">
+            </plex-text>
         </div>
         <plex-button icon="plus" type="info" tooltip="Agregar financiador" titlePosition="left" size="md"
-                     [disabled]="!opcionesFinanciadores.length" (click)="agregarFinanciador(financiadorSeleccionado)">
+                     [disabled]="!opcionesFinanciadores.length" (click)="agregarFinanciador(itemListaFinanciador)">
         </plex-button>
     </div>
 </div>

@@ -11,23 +11,28 @@ import { ObraSocialService } from 'src/app/services/obraSocial.service';
 })
 
 export class SeleccionarFinanciadorComponent implements OnChanges {
-    public obrasSociales: IObraSocial[] = [];
-    public selectorObrasSociales = [];
-    public obraSocial;
+    public financiadoresPaciente: IObraSocial[] = [];
+    public datosFinanciadores = [];
+    public financiadorSeleccionado;
+    public otroFinanciadorSeleccionado;
     public showSelector = false;
     public showListado = false;
-    public financiador;
     public financiadorBase = {
         nombre: undefined,
         financiador: undefined,
         prepaga: false,
         codigoPuco: undefined,
+        numeroAfiliado: undefined
     };
 
     public obrasSocialesPUCO: any[] = [];
     public financiadoresANDES: any[] = [];
     public opcionesFinanciadores: any[] = [];
-    public financiadorSeleccionado: any;
+    public itemListaFinanciador: any;
+    public numeroAfiliado: string;
+
+    private timeout: any;
+    private busquedaFinanciador;
 
     @Input() paciente;
     @Input() editable = false;
@@ -55,12 +60,13 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
     private resetComponentState() {
         this.showSelector = false;
         this.showListado = false;
-        this.financiador = undefined;
+        this.otroFinanciadorSeleccionado = undefined;
     }
 
     private cargarDatosModoEditable() {
-        this.cargarObrasSocialesPUCO();
-        this.cargarFinanciadoresANDES();
+        this.financiadoresANDES = this.cargarFinanciadoresPorOrigen('ANDES');
+        this.obrasSocialesPUCO = this.cargarFinanciadoresPorOrigen('PUCO');
+
         this.cargarOpcionesFinanciadores();
     }
 
@@ -80,41 +86,35 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
         if (!paciente) {
             return;
         } else {
-            this.obrasSociales = paciente.financiador;
-        }
-
-        if (this.obrasSociales?.length) {
-            const { codigoPuco, financiador, nombre, origen } = this.obrasSociales[0];
-
-            this.selectorObrasSociales = this.obrasSociales.map((os: IObraSocial) => ({ id: os.nombre || os.financiador, label: os.nombre || os.financiador }));
-            this.obraSocial = nombre || financiador;
-            this.setFinanciador.emit({ ...this.financiadorBase, codigoPuco, financiador, nombre, origen });
-
-            this.selectorObrasSociales.push({ 'id': 'otras', 'label': 'Otras' });
-        } else {
-            this.obraSocial = undefined;
-            this.setFinanciador.emit(undefined);
+            this.financiadoresPaciente = paciente.financiador;
         }
 
         this.showSelector = true;
+
+        if (this.financiadoresPaciente?.length) {
+            const { financiador, nombre } = this.financiadoresPaciente[0];
+
+            this.busquedaFinanciador = this.financiadoresPaciente[0];
+            this.financiadorSeleccionado = nombre || financiador;
+            this.datosFinanciadores = [
+                ...this.financiadoresPaciente.map((os: IObraSocial) => ({ id: os.nombre || os.financiador, label: os.nombre || os.financiador })),
+                { id: 'otras', label: 'Otras' }
+            ];
+        } else {
+            this.financiadorSeleccionado = undefined;
+        }
+
+        this.guardarFinanciador();
     }
 
 
     private actualizarPaciente() {
-        const nuevosFinanciadores = this.financiadoresANDES.map(financiador => ({ ...financiador, origen: 'ANDES' }));
-
-        this.paciente.financiador = nuevosFinanciadores;
+        this.paciente.financiador = this.financiadoresANDES.map(financiador => ({ ...financiador, origen: 'ANDES' }));
     }
 
-    private cargarObrasSocialesPUCO() {
-        this.obrasSocialesPUCO = this.paciente.financiador.filter(
-            (financiador: any) => financiador.origen === 'PUCO'
-        );
-    }
-
-    private cargarFinanciadoresANDES() {
-        this.financiadoresANDES = this.paciente.financiador.filter(
-            (financiador: any) => financiador.origen === 'ANDES'
+    private cargarFinanciadoresPorOrigen(origen: string) {
+        return this.paciente.financiador.filter(
+            (financiador: any) => financiador.origen === origen
         );
     }
 
@@ -123,7 +123,7 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
             const financiadoresExistentes = [
                 ...this.obrasSocialesPUCO.map((f) => f.nombre),
                 ...this.financiadoresANDES.map((f) => f.nombre),
-                ...this.obrasSociales.map((f) => f.nombre)
+                ...this.financiadoresPaciente.map((f) => f.nombre)
             ];
 
             this.opcionesFinanciadores = financiadores.filter(
@@ -132,34 +132,57 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
         });
     }
 
-    public seleccionarObraSocial(event) {
+    public seleccionarFinanciador(event) {
         this.showListado = false;
 
         if (event.value === 'otras') {
             this.showListado = true;
+            this.busquedaFinanciador = undefined;
         } else {
-            const foundObraSocial = this.obrasSociales.find(os => os.nombre === event.value || os.financiador === event.value);
-            this.obraSocial = event.value;
+            const nombre = event.value;
 
-            this.setFinanciador.emit({ ...this.financiadorBase, ...foundObraSocial, prepaga: false });
+            this.busquedaFinanciador = this.financiadoresPaciente.find(os => os.nombre === nombre || os.financiador === nombre);
+            this.numeroAfiliado = this.busquedaFinanciador.numeroAfiliado;
+
+            this.guardarFinanciador();
         }
     }
 
+    public guardarFinanciador() {
+        if (this.busquedaFinanciador) {
+            this.busquedaFinanciador.numeroAfiliado = this.numeroAfiliado;
+        }
+
+        const existeFinanciador = this.paciente.financiador?.some(
+            (financiador: any) => financiador.nombre === this.busquedaFinanciador.nombre
+        );
+
+        if (!existeFinanciador) {
+            this.paciente.financiador?.push(this.busquedaFinanciador);
+            this.actualizarPaciente();
+        }
+
+        this.setFinanciador.emit(this.busquedaFinanciador);
+    }
+
     public seleccionarOtro(event) {
+        this.numeroAfiliado = undefined;
+
         if (event.value) {
             const { prepaga, nombre, financiador, codigoPuco } = event.value;
-
-            this.setFinanciador.emit({ ...this.financiadorBase, prepaga: prepaga || false, nombre, financiador, codigoPuco, origen: 'ANDES' });
-        } else {
-            this.setFinanciador.emit(undefined);
+            this.busquedaFinanciador = { prepaga: prepaga || false, nombre, financiador, codigoPuco, origen: 'ANDES' };
         }
+
+        this.guardarFinanciador();
     }
 
     public agregarFinanciador(financiador: any) {
         if (financiador) {
-            this.financiadoresANDES.push({ ...financiador, fechaDeActualizacion: new Date() });
+            this.financiadoresANDES.push({ ...financiador, numeroAfiliado: this.numeroAfiliado, fechaDeActualizacion: new Date() });
+            this.itemListaFinanciador = null;
+            this.numeroAfiliado = null;
+
             this.cargarOpcionesFinanciadores();
-            this.financiadorSeleccionado = null;
             this.actualizarPaciente();
         }
     }
@@ -168,5 +191,15 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
         this.financiadoresANDES.splice(index, 1);
         this.cargarOpcionesFinanciadores();
         this.actualizarPaciente();
+    }
+
+    public setNumeroAfiliado({ value }) {
+        clearTimeout(this.timeout);
+
+        this.timeout = setTimeout(() => {
+            this.numeroAfiliado = value.length ? value : undefined;
+
+            if (!this.editable) { this.guardarFinanciador(); }
+        }, 500);
     }
 }

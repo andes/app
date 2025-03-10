@@ -1034,7 +1034,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     public setFinanciador(financiador) {
-        this.financiador = { ...financiador, numeroAfiliado: this.numeroAfiliado };
+        this.financiador = financiador;
     }
 
     private guardarTurno(agd: IAgenda) {
