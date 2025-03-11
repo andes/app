@@ -262,18 +262,23 @@ export class FormNuevaSolicitudComponent implements OnInit {
             estados: [
                 'auditoria',
                 'pendiente',
-                'ejecucion'
+                'asignada'
             ],
             idPaciente: this.paciente.id,
             prestacionDestino: this.modelo.solicitud.tipoPrestacion.conceptId
         };
         this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
             if (resultado.length) {
-                this.plex.confirm(`El paciente ya tiene una solicitud en curso para ${this.modelo.solicitud.tipoPrestacion.term}. ¿Desea continuar?`, 'Paciente con solicitud en curso').then(confirmar => {
-                    if (confirmar) {
-                        this.postSolicitud();
-                    }
-                });
+                const existeSolicitud = resultado.find(registro => registro.inicio === 'top');
+                if (existeSolicitud) {
+                    this.plex.confirm(`El paciente ya tiene una solicitud en curso para ${this.modelo.solicitud.tipoPrestacion.term}. ¿Desea continuar?`, 'Paciente con solicitud en curso').then(confirmar => {
+                        if (confirmar) {
+                            this.postSolicitud();
+                        }
+                    });
+                } else {
+                    this.postSolicitud();
+                }
             } else {
                 this.postSolicitud();
             }

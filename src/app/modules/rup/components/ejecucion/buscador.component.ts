@@ -474,7 +474,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
                 estados: [
                     'auditoria',
                     'pendiente',
-                    'ejecucion'
+                    'asignada'
                 ],
                 idPaciente: this.ejecucionService.paciente.id,
                 prestacionDestino: concepto.conceptId
@@ -495,6 +495,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
                     this.agregarConcepto(concepto);
                 }
             });
+        } else {
+            this.agregarConcepto(concepto);
         }
     }
 
