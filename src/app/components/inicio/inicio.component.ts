@@ -45,43 +45,24 @@ export class InicioComponent implements AfterViewInit {
                     registros.forEach((modulo: IModulo) => {
                         let tienePermiso = false;
                         if (modulo.activo) {
-                            modulo.permisos.forEach((permisoEpidemio) => {
+                            modulo.permisos.forEach((permiso) => {
                                 if (!tienePermiso) {
-                                    if (permisoEpidemio === 'epidemiologia:?' && this.auth.profesional) {
-                                        const permisosUsuario = this.auth.getPermissions('epidemiologia:?');
-                                        const moduloEpidemio = modulo;
-                                        if (permisosUsuario.length === 0) {
-                                            // Eliminamos todos los submódulos de epidemiología.
-                                            moduloEpidemio.submodulos.splice(1);
-                                        } else if (!permisosUsuario.includes('seguimiento')) {
-                                            const index = moduloEpidemio.submodulos.findIndex(x => x.nombre.includes('Seguimiento'));
-                                            // Eliminamos el submodulo 'seguimiento'
-                                            moduloEpidemio.submodulos.splice(index, 1);
-                                        }
-                                        modulo.principal = true;
-                                        this.modulos.push(moduloEpidemio);
-                                        if (!modulo.submodulos.length) {
-                                            modulo.nombreSubmodulo = `Punto Inicio<br><b>${modulo.nombre}</b>`;
+                                    if (permiso === 'epidemiologia:?' && this.auth.profesional) {
+                                        const submodulosPermitidos = modulo.submodulos.filter(x => x.permisos.some(y => this.auth.getPermissions(y).length > 0));
+                                        if (!submodulosPermitidos.length) {
+                                            // Eliminamos todos los submódulos de epidemiología excepto el principal
+                                            modulo.submodulos.splice(1);
+                                            modulo.principal = true;
+                                            this.modulos.push(modulo);
+                                        } else {
+                                            tienePermiso = true;
+                                            this.generarModulos(modulo);
                                         }
                                     } else {
                                         // El usuario tiene permiso?
-                                        if (this.auth.getPermissions(permisoEpidemio).length > 0) {
+                                        if (this.auth.getPermissions(permiso).length > 0) {
                                             tienePermiso = true;
-                                            if (modulo.submodulos && modulo.submodulos.length > 0) {
-                                                // Es Módulo
-                                                modulo.principal = true;
-                                                this.modulos.push(modulo);
-
-                                                // Se generan Submódulos
-                                                (modulo.submodulos as any) = modulo.submodulos.filter(x => x.permisos.some(y => this.auth.getPermissions(y).length > 0));
-
-                                                if (!modulo.submodulos.length) {
-                                                    modulo.nombreSubmodulo = `Punto Inicio<br><b>${modulo.nombre}</b>`;
-                                                }
-                                            } else {
-                                                // Es Sección
-                                                this.modulos.push(modulo);
-                                            }
+                                            this.generarModulos(modulo);
                                         }
                                     }
                                 }
@@ -133,10 +114,28 @@ export class InicioComponent implements AfterViewInit {
                     // Se quitan módulos sin submódulos
                     this.modulos = this.modulos.filter(x => x.principal);
 
-                }, (err) => {
                 }
             );
         });
+    }
+
+    // genera los modulos y submodulos que puede ver el usuario en base a sus permisos
+    generarModulos(modulo) {
+        if (modulo.submodulos && modulo.submodulos.length > 0) {
+            // Es Módulo
+            modulo.principal = true;
+            this.modulos.push(modulo);
+
+            // Se generan Submódulos
+            (modulo.submodulos as any) = modulo.submodulos.filter(x => x.permisos.some(y => this.auth.getPermissions(y).length > 0));
+
+            if (!modulo.submodulos.length) {
+                modulo.nombreSubmodulo = `Punto Inicio<br><b>${modulo.nombre}</b>`;
+            }
+        } else {
+            // Es Sección
+            this.modulos.push(modulo);
+        }
     }
 
     redirect(caja, e: Event) {
