@@ -1,3 +1,12 @@
+# [5.159.0](https://github.com/andes/app/compare/v5.158.0...v5.159.0) (2025-03-12)
+
+
+### Features
+
+* **IN-619:** Modificar carga de OS en alta de internacion capa estadistica ([#3107](https://github.com/andes/app/issues/3107)) ([85e7b97](https://github.com/andes/app/commit/85e7b9708f3ec7b2d1968d3e787d52e391bb4232))
+* **MPI:** implementa seleccion editable de obras sociales ([#3125](https://github.com/andes/app/issues/3125)) ([a2a672f](https://github.com/andes/app/commit/a2a672f5d3008d3d9ad78b5b80b79c12215e4322))
+* **PLEX:** actualiza a versión 8.0.5 ([#3088](https://github.com/andes/app/issues/3088)) ([e7e00bd](https://github.com/andes/app/commit/e7e00bd5b1cef86d1271fee54484a84c3c875452))
+
 # [5.158.0](https://github.com/andes/app/compare/v5.157.1...v5.158.0) (2025-03-05)
 
 
