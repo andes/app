@@ -24,10 +24,8 @@ export class SuspenderMedicacionComponent {
     public observacion: string;
 
     public suspenderMedicacion() {
-        const filtroRecetas = this.seleccionRecetas.filter(receta => receta);
-        const medicamento = filtroRecetas[0]?.medicamento.concepto.term;
-
-        this.plex.confirm(`¿Está seguro que desea suspender ${filtroRecetas.length > 1 ? `las (${filtroRecetas.length}) medicaciones seleccionadas` : `<br><b>"${medicamento}"</b>`}?`, 'Atención').then(confirmacion => {
+        const medicamento = this.seleccionRecetas[0]?.medicamento.concepto.term;
+        this.plex.confirm(`¿Está seguro que desea suspender ${this.seleccionRecetas.length > 1 ? `las (${this.seleccionRecetas.length}) medicaciones seleccionadas` : `<br><b>"${medicamento}"</b>`}?`, 'Atención').then(confirmacion => {
             if (confirmacion) {
                 const recetaIds = this.seleccionRecetas.map(receta => receta.id);
                 this.recetasService.suspender(recetaIds, this.profesional, this.motivoSelector.nombre, this.observacion).subscribe({

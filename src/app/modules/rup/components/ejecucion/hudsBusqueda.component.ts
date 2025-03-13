@@ -138,7 +138,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     public motivosSuspension;
     public motivoSuspensionSelector;
     public seleccionRecetas = [];
-
+    public seleccionSuspender = [];
     /**
      * Ids correspondientes a Prescripción de Medicamentos y Seguimiento Hídrico respectivamente
      */
@@ -825,6 +825,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     resetSeleccionRecetas() {
         this.groupRecetas();
         this.seleccionRecetas = [];
+        this.seleccionSuspender = [];
     }
 
     openRecetaTab(group) {
@@ -867,11 +868,12 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
 
             this.seleccionRecetas[index] = recetaSeleccionada;
         } else {
-            this.seleccionRecetas[index] = null;
+            delete this.seleccionRecetas[index];
         }
 
         if (this.seleccionRecetas.every(receta => receta === null)) {
             this.seleccionRecetas = [];
         }
+        this.seleccionSuspender = this.seleccionRecetas.filter(r => r);
     }
 }
