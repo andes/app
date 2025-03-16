@@ -39,7 +39,8 @@
                            label="Tratamiento prolongado">
                 </plex-bool>
                 <plex-select *ngIf="medicamento.tratamientoProlongado" [(ngModel)]="medicamento.tiempoTratamiento"
-                             name="tiempoTratamiento" [data]="tiemposTratamiento" required="true">
+                             name="tiempoTratamiento" [data]="tiemposTratamiento"
+                             [required]="medicamento.tratamientoProlongado">
                 </plex-select>
             </plex-grid>
         </plex-grid>
