@@ -860,20 +860,16 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
 
     seleccionarReceta(event, recetas, index) {
         const isSelected = event.value;
+        const recetaSeleccionada = recetas
+            .filter(receta => receta.estadoActual.tipo === 'vigente')
+            .sort((a, b) => moment(b.fechaRegistro).diff(moment(a.fechaRegistro)))[0];
 
         if (isSelected) {
-            const recetaSeleccionada = recetas
-                .filter(receta => receta.estadoActual.tipo === 'vigente')
-                .sort((a, b) => moment(b.fechaRegistro).diff(moment(a.fechaRegistro)))[0];
-
-            this.seleccionRecetas[index] = recetaSeleccionada;
+            this.seleccionRecetas[index] = true;
+            this.seleccionSuspender.push(recetaSeleccionada);
         } else {
-            delete this.seleccionRecetas[index];
+            this.seleccionRecetas[index] = null;
+            this.seleccionSuspender = this.seleccionSuspender.filter(r => r.id !== recetaSeleccionada.id);
         }
-
-        if (this.seleccionRecetas.every(receta => receta === null)) {
-            this.seleccionRecetas = [];
-        }
-        this.seleccionSuspender = this.seleccionRecetas.filter(r => r);
     }
 }
