@@ -127,7 +127,6 @@ export class HUDSService {
     */
     generateHudsToken(paramsToken) {
         return this.server.post(this.hudsUrl + '/token', paramsToken);
-
     }
 
     getTiempoRestante(params: any): Observable<any> {

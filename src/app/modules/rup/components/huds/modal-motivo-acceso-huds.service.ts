@@ -1,4 +1,4 @@
-import { Injectable, ComponentFactoryResolver, ApplicationRef, Injector, EmbeddedViewRef, ChangeDetectorRef } from '@angular/core';
+import { Injectable, ComponentFactoryResolver, ApplicationRef, Injector, EmbeddedViewRef } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { ModalMotivoAccesoHudsComponent } from './modal-motivo-acceso-huds.component';
 import { Auth } from '@andes/auth';
@@ -16,9 +16,7 @@ export class ModalMotivoAccesoHudsService {
         private injector: Injector,
         private auth: Auth,
         private hudsService: HUDSService,
-    ) {
-
-    }
+    ) { }
 
     private askForReason(): Observable<IMotivoAcceso> {
         return new Observable((observer) => {
@@ -46,7 +44,7 @@ export class ModalMotivoAccesoHudsService {
         });
     }
 
-    private hudsToken(paciente, motivo: string, turno?: string, prestacion?: string, detalle?: string) {
+    private askForNewToken(paciente, motivo: string, turno?: string, prestacion?: string, detalle?: string) {
         const paramsToken = {
             usuario: this.auth.usuario,
             organizacion: this.auth.organizacion,
@@ -64,14 +62,17 @@ export class ModalMotivoAccesoHudsService {
                     paciente: paciente.id,
                     organizacion: this.auth.organizacion.id,
                     token: hudsToken.token,
-                    motivo: motivo
+                    motivo
                 };
-                const hudsTokenArray = JSON.parse(window.sessionStorage.getItem('huds-token') || '[]');
-                const index = hudsTokenArray.findIndex((element: any) => element.usuario === newElement.usuario && element.paciente === newElement.paciente && element.organizacion === newElement.organizacion);
-                if (index !== -1) {
-                    hudsTokenArray[index] = newElement;
-                } else {
+
+                let hudsTokenArray: any = window.sessionStorage.getItem('huds-token') || '[]';
+
+                // TODO! Cuando se extienda el uso del token de esta manera en el resto de la app, READAPTAR ESTE BLOQUE DE CODIGO!!
+                if (hudsTokenArray[0] === '[') {
+                    hudsTokenArray = JSON.parse(hudsTokenArray);
                     hudsTokenArray.push(newElement);
+                } else {
+                    hudsTokenArray = [newElement];
                 }
                 window.sessionStorage.setItem('huds-token', JSON.stringify(hudsTokenArray));
             }),
@@ -81,7 +82,8 @@ export class ModalMotivoAccesoHudsService {
         );
     }
 
-    getAccessoHUDS(paciente: IPaciente) {
+    /** Obtiene listado de motivos de la BD y muestra modal para seleccionar motivo de acceso a HUDS */
+    showMotivos(paciente: IPaciente) {
         return this.askForReason().pipe(
             switchMap(motivoAcceso => {
                 let textoMotivo = '';
@@ -93,37 +95,44 @@ export class ModalMotivoAccesoHudsService {
                     textoMotivo = motivoAcceso.motivo ? motivoAcceso.motivo : '';
                     descripcionAcceso = motivoAcceso.textoObservacion ? motivoAcceso.textoObservacion : null;
                 }
-                return this.hudsToken(paciente, textoMotivo, null, null, descripcionAcceso);
+                return this.askForNewToken(paciente, textoMotivo, null, null, descripcionAcceso);
             })
         );
     }
-    getAccessoHUDSArray(paciente: IPaciente): Observable<any> {
+
+    /** Recupera de la memoria de sesión un token de acceso a HUDS o solicita uno nuevo */
+    getAccessoHUDS(paciente: IPaciente): Observable<any> {
         const newElement = {
             usuario: this.auth.usuario.id,
             paciente: paciente.id,
             organizacion: this.auth.organizacion.id
         };
-        const hudsTokenArray = JSON.parse(window.sessionStorage.getItem('huds-token') || '[]');
-        const index = hudsTokenArray.findIndex((element: any) => element.usuario === newElement.usuario && element.paciente === newElement.paciente && element.organizacion === newElement.organizacion);
+
+        let hudsTokenArray: any = window.sessionStorage.getItem('huds-token') || '[]';
+        let index = -1;
+
+        // TODO! Cuando se extienda el uso del token de esta manera en el resto de la app, BORRAR ESTE IF y dejar solo su contenido!!
+        if (hudsTokenArray[0] === '[') {
+            hudsTokenArray = JSON.parse(hudsTokenArray);
+            index = hudsTokenArray.findIndex((element: typeof newElement) => element.usuario === newElement.usuario && element.paciente === newElement.paciente && element.organizacion === newElement.organizacion);
+        }
 
         if (index === -1) {
-            return this.getAccessoHUDS(paciente);
+            return this.showMotivos(paciente);
         }
 
         const params = {
             token: hudsTokenArray[index].token
         };
         return this.hudsService.getTiempoRestante({ params }).pipe(
-            map(data => {
-                return data;
-            }),
             switchMap(tiempoRestante => {
                 if (tiempoRestante > 0) {
-                    return of({ paciente, token: hudsTokenArray[index].token, motivo: hudsTokenArray[index].motivo });
+                    return of(hudsTokenArray[index]);
+                    // return of({ paciente, token: hudsTokenArray[index].token, motivo: hudsTokenArray[index].motivo });
                 } else {
                     hudsTokenArray.splice(index, 1);
                     window.sessionStorage.setItem('huds-token', JSON.stringify(hudsTokenArray));
-                    return this.getAccessoHUDS(paciente);
+                    return this.showMotivos(paciente);
                 }
             })
         );

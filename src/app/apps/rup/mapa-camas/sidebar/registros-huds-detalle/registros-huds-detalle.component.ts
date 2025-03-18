@@ -13,6 +13,7 @@ import { PrestacionesService } from '../../../../../modules/rup/services/prestac
 import { IMAQEstado } from '../../interfaces/IMaquinaEstados';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-item.component';
+import { ISnapshot } from '../../interfaces/ISnapshot';
 
 @Component({
     selector: 'app-registros-huds-detalle',
@@ -20,33 +21,35 @@ import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-ite
 })
 export class RegistrosHudsDetalleComponent implements OnInit {
     @ViewChild('formulario', { static: true }) formulario: NgForm;
-    permisoHuds$ = new BehaviorSubject<boolean>(false);
+    public permisoHuds$ = new BehaviorSubject<boolean>(false);
+    public refreshFecha$ = new BehaviorSubject(null);
+    public tipoPrestacion$ = new BehaviorSubject(null);
+    public id$ = new BehaviorSubject(null);
+
     public historial$: Observable<any>;
     public historialFiltrado$: Observable<any>;
+    public estadoCama$: Observable<IMAQEstado>;
+    public accionesEstado$: Observable<any>;
+    public prestacionesList$: Observable<any>;
+    public cama$: Observable<ISnapshot> = this.mapaCamasService.selectedCama;
+    public token$: Observable<any>;
+
     public desde: Date;
     public hasta: Date;
+    public min: Date;
+    public max: Date;
     public tipoPrestacion;
     public inProgress = true;
     public prestacionesEliminadas = [];
     public idOrganizacion = this.auth.organizacion.id;
-    private admisionHospitalariaConceptId = '32485007';
-    public refreshFecha$ = new BehaviorSubject(null);
-    public tipoPrestacion$ = new BehaviorSubject(null);
-    public id$ = new BehaviorSubject(null);
-    public cama$ = this.mapaCamasService.selectedCama;
-    public estadoCama$: Observable<IMAQEstado>;
-    public accionesEstado$: Observable<any>;
-    public prestacionesList$: Observable<any>;
-    public min: Date;
-    public max: Date;
     public paciente;
+    public esProfesional = this.auth.profesional;
+    public puedeVerHuds = false;
+    public permitir: boolean;
+    private admisionHospitalariaConceptId = '32485007';
 
     @Output() accion = new EventEmitter();
 
-    public esProfesional = this.auth.profesional;
-    public puedeVerHuds = false;
-    permitir: boolean;
-    token$: Observable<any>;
 
     constructor(
         private mapaCamasService: MapaCamasService,
@@ -72,50 +75,49 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             switchMap(([cama, prestacion, resumen]) => {
                 this.permisoHuds$.next(false);
                 this.paciente = cama.paciente || prestacion.paciente || resumen.paciente;
-                return this.motivoAccesoService.getAccessoHUDSArray(this.paciente as IPaciente);
+                return this.motivoAccesoService.getAccessoHUDS(this.paciente as IPaciente);
             })
         );
 
         this.token$.subscribe({
             next: token => {
                 this.permisoHuds$.next(true);
-                this.paciente = token.paciente;
             },
-            error: error => {
+            error: (error) => {
                 this.permitir = false;
                 this.permisoHuds$.next(false);
                 this.accion.emit({ accion: 'volver' });
 
             }
         });
+
         this.historial$ = combineLatest([
             this.cama$,
             this.mapaCamasService.historialInternacion$,
             this.mapaCamasService.selectedPrestacion,
             this.mapaCamasService.resumenInternacion$,
             this.refreshFecha$,
-            // acceso$
         ]).pipe(
-            switchMap(([cama, movimientos, prestacion, resumen, acceso]) => {
+            switchMap(([cama, movimientos, prestacion, resumen, refresh]) => {
+                let min;
+                let max;
                 if (prestacion?.id) { // listado
-                    this.min = prestacion.ejecucion.fecha;
-                    this.max = prestacion.ejecucion.registros[1]?.valor.InformeEgreso.fechaEgreso || new Date();
+                    min = prestacion.ejecucion.fecha;
+                    max = prestacion.ejecucion.registros[1]?.valor.InformeEgreso.fechaEgreso || new Date();
                 } else if (resumen?.id) { // listado
-                    this.min = resumen.fechaIngreso;
-                    this.max = resumen.fechaEgreso || new Date();
+                    min = resumen.fechaIngreso;
+                    max = resumen.fechaEgreso || new Date();
                 } else { // mapa de camas
-                    this.min = movimientos.find(m => m.extras && m.extras.ingreso).fecha;
-                    this.max = movimientos.find(m => m.extras && m.extras.egreso)?.fecha || new Date();
+                    min = movimientos.find(m => m.extras && m.extras.ingreso).fecha;
+                    max = movimientos.find(m => m.extras && m.extras.egreso)?.fecha || new Date();
                 }
+                this.min = moment(min).startOf('day').toDate();
+                this.max = moment(max).endOf('day').toDate();
                 if (this.mapaCamasService.capa === 'estadistica') {
                     estaPrestacionId = cama.idInternacion || prestacion.id;
                 } else {
                     estaPrestacionId = cama.idInternacion || resumen.id;
                 }
-                return of(this.paciente);
-            }),
-
-            switchMap((paciente) => {
                 return this.getHUDS(this.paciente);
             }),
             map(prestaciones => {
@@ -128,6 +130,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             }),
             cache()
         );
+
         this.historialFiltrado$ = combineLatest([
             this.historial$,
             this.tipoPrestacion$,
@@ -198,7 +201,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         this.router.navigate(['/huds/paciente/' + this.paciente.id]);
     }
 
-    getHUDS(paciente) {
+    getHUDS(paciente): Observable<any> {
         if (this.permitir) {
             return this.prestacionService.getByPaciente(paciente.id, true, this.desde, this.hasta).pipe(
                 map((prestaciones) => {
@@ -213,8 +216,10 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                     }));
                 })
             );
-        } else { return []; }
+        }
+        return of([]);
     }
+
     onNuevoRegistrio() {
         this.accion.emit({ accion: 'nuevo-registro' });
     }

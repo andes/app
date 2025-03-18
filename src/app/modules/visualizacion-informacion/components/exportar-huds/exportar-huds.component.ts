@@ -82,7 +82,7 @@ export class ExportarHudsComponent implements OnInit {
                 this.plex.info('warning', 'No tiene permiso para ingresar a este paciente.', 'Atención');
             } else {
                 this.pacienteSelected = paciente;
-                this.motivoAccesoService.getAccessoHUDS(this.pacienteSelected).subscribe((motivo) => {
+                this.motivoAccesoService.showMotivos(this.pacienteSelected).subscribe((motivo) => {
                     if (motivo) {
                         this.modalAccepted = true;
                         this.showLabel = false;
