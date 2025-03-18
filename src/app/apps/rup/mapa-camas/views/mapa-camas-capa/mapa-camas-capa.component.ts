@@ -245,7 +245,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     }
 
     verDetalle(cama: ISnapshot, selectedCama: ISnapshot) {
-        if (!selectedCama.id || cama !== selectedCama) {
+        if (!selectedCama?.id || cama !== selectedCama) {
             this.mapaCamasService.select(cama);
             this.accion = 'verDetalle';
         } else {

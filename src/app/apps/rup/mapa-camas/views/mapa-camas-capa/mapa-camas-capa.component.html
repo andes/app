@@ -25,8 +25,8 @@
                         </ng-container>
 
                         <ng-container *ngIf="fecha$ | async as fecha">
-                            <plex-badge size="sm" type="info" style="margin-right: -2px;">{{ fecha | date: 'dd/MM/yyyy
-                                HH:mm' }}
+                            <plex-badge size="sm" type="info" style="margin-right: -2px;">
+                                {{ fecha | date: 'dd/MM/yyyy HH:mm' }}
                                 <plex-datetime type="datetime" [(ngModel)]="fechaSelector" name="fechaSelector" required
                                                size="sm" (change)="setFecha(fechaSelector)" [btnOnly]="true">
                                 </plex-datetime>
@@ -48,8 +48,8 @@
                                         <span *ngIf="!isValidDate" class="danger">Debe ingresar una fecha
                                             válida</span>
                                     </div>
-                                    <plex-button [disabled]="!isValidDate" class="check" size="md" type="success" icon="check"
-                                                 (click)="setFecha(fechaInput)" #dateCheck>
+                                    <plex-button [disabled]="!isValidDate" class="check" size="md" type="success"
+                                                 icon="check" (click)="setFecha(fechaInput)" #dateCheck>
                                     </plex-button>
                                 </div>
 
