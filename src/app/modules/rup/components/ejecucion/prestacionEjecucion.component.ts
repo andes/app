@@ -295,15 +295,13 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                 prestacionDestino: concepto.conceptId
             };
             this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
-                if (resultado.length) {
-                    const existeSolicitud = resultado.find(registro => registro.inicio === 'top');
-                    if (existeSolicitud) {
-                        this.plex.confirm(`El paciente ya tiene una solicitud en curso para ${concepto.term}. ¿Desea continuar?`, 'Paciente con solicitud en curso').then(confirmar => {
-                            if (confirmar) {
-                                this.ejecucionService.agregarConcepto(concepto, true);
-                            }
-                        });
-                    }
+                const existeSolicitud = resultado?.some(registro => registro.inicio === 'top');
+                if (existeSolicitud) {
+                    this.plex.confirm(`El paciente ya tiene una solicitud en curso para ${concepto.term}. ¿Desea continuar?`, 'Paciente con solicitud en curso').then(confirmar => {
+                        if (confirmar) {
+                            this.ejecucionService.agregarConcepto(concepto, true);
+                        }
+                    });
                 } else {
                     this.ejecucionService.agregarConcepto(concepto, true);
                 }
