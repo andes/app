@@ -1,3 +1,10 @@
+# [5.160.0](https://github.com/andes/app/compare/v5.159.0...v5.160.0) (2025-03-19)
+
+
+### Features
+
+* **PLEX:** actualiza a version 8.0.12 ([#3158](https://github.com/andes/app/issues/3158)) ([1d8db3c](https://github.com/andes/app/commit/1d8db3c8358b9bf710572ed22b32098c4f76516b))
+
 # [5.159.0](https://github.com/andes/app/compare/v5.158.0...v5.159.0) (2025-03-12)
 
 
