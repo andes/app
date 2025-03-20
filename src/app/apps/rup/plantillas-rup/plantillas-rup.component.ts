@@ -9,6 +9,7 @@ import { take } from 'rxjs/operators';
 import { PrestacionesService } from '../../../../app/modules/rup/services/prestaciones.service';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
+import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 @Component({
     selector: 'app-plantillas-rup',
     templateUrl: './plantillas-rup.component.html',
@@ -57,6 +58,7 @@ export class PlantillasRUPComponent implements OnInit {
         private sp: PlantillasService,
         private snomedService: SnomedService,
         public servicioPrestacion: PrestacionesService,
+        private elementoRupService: ElementosRUPService,
         private router: Router,
         private auth: Auth
     ) { }
@@ -147,17 +149,27 @@ export class PlantillasRUPComponent implements OnInit {
     cargarPlantillas(procedimiento) {
 
         this.procedimiento = procedimiento;
+        const elementoRUP = this.elementoRupService.buscarElemento(this.procedimiento);
+
+        if (elementoRUP?.params?.habilitarPlantilla === false) {// null o true no ingresa
+            this.addItems = [
+                {
+                    label: 'Enlace externo',
+                    handler: ($event: Event) => {
+                        $event.stopPropagation();
+                        this.agregarPlantilla(this.procedimiento, true);
+                    }
+                }
+            ];
+        }
         this.subject.next([]);
         this.sp.get(procedimiento.conceptId, procedimiento.esSolicitud, true).subscribe(plantillas => {
-
             if (plantillas) {
                 plantillas.forEach(x => {
                     if (x.id) {
                         this.addElementToObservableArray(x);
                     }
                 });
-            } else {
-                // this.addElementToObservableArray({});
             }
         });
     }
