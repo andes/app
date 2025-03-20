@@ -1,7 +1,7 @@
 <div class="solicitud-wrapper">
     <div class="info-solicitud mt-4">
         <div class="registros">
-                <plex-icon name="listado-receta" class="icon-info" size="xl"></plex-icon>
+            <plex-icon name="listado-receta" class="icon-info" size="xl"></plex-icon>
             <div class="info-registro">
                 <div class="vista-badges">
                     <plex-badge *ngIf="recetaPrincipal.estadoActual" size="sm"
@@ -17,9 +17,10 @@
                 <p *ngIf="recetaPrincipal.medicamento.dosisDiaria.dosis"><small>{{
                         recetaPrincipal.medicamento.dosisDiaria.dias ? recetaPrincipal.medicamento.dosisDiaria.dias
                         + ' día(s)' : '' }} {{
-                        recetaPrincipal.medicamento.dosisDiaria.intervalo.dosis }} {{
+                        recetaPrincipal.medicamento.dosisDiaria.dosis }} {{
                         recetaPrincipal.medicamento.presentacion }} cada {{
-                        recetaPrincipal.medicamento.dosisDiaria.intervalo.nombre }}</small></p>
+                        recetaPrincipal.medicamento.dosisDiaria.intervalo.nombre }}</small>
+                </p>
             </div>
         </div>
         <div class="data">
