@@ -170,8 +170,6 @@ export class PlantillasRUPComponent implements OnInit {
                         this.addElementToObservableArray(x);
                     }
                 });
-            } else {
-                // this.addElementToObservableArray({});
             }
         });
     }
