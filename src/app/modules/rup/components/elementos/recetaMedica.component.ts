@@ -51,6 +51,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         { id: '6meses', nombre: '6 meses' }
     ];
 
+
     ngOnInit() {
         if (!this.registro.valor) {
             this.registro.valor = {};
@@ -143,7 +144,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         if (this.unidades && this.ingresoCantidadManual) {
             this.plex.confirm('La cantidad recetada no se encuentra en ninguna presentación comercial ¿Desea continuar?', 'Atención').then(confirmacion => {
                 if (confirmacion) {
-                    this.agregarMedicamento();
+                    this.checkDuplicado();
                 } else {
                     this.deshacerCantidadManual();
                 }
@@ -157,9 +158,33 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
             if (this.unidades.length && this.ingresoCantidadManual) {
                 this.showModalCantidadManual();
             } else {
-                this.agregarMedicamento();
+                this.checkDuplicado();
             }
         }
+    }
+    checkDuplicado() {
+        const options = { pacienteId: this.paciente.id };
+        this.recetasService.getRecetas(options).subscribe((data) => {
+            const duplicado = data.find(receta =>
+                this.medicamento.generico.conceptId === receta.medicamento.concepto.conceptId &&
+                receta.estadoActual.tipo === 'vigente' &&
+                (receta.estadoDispensaActual.tipo === 'sin-dispensa' || receta.estadoDispensaActual.tipo === 'dispensa-parcial')
+            );
+            const cargadoActual = this.registro.valor.medicamentos.find(medicamentoCargado =>
+                this.medicamento.generico.conceptId === medicamentoCargado.generico.conceptId
+            );
+
+            if (!duplicado && !cargadoActual) {
+                return this.agregarMedicamento();
+            } else {
+                if (duplicado) {
+                    const fechaRegistro = new Date(duplicado.fechaRegistro).toLocaleString();
+                    this.plex.info('danger', `El medicamento "<b>${duplicado.medicamento.concepto.term}</b>" se encuentra vigente en otra receta.<br><small>Fecha de registro: ${fechaRegistro}</small>`);
+                } else {
+                    this.plex.info('danger', `El medicamento "<b>${this.medicamento.generico.term}</b>" se encuentra cargado en la receta actual.`);
+                }
+            }
+        });
     }
 
     buscarDiagnosticosConTrastornos() {
