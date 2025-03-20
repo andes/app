@@ -346,7 +346,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     }
 
     verHuds(pacienteId) {
-        this.motivoAccesoService.getAccessoHUDS(this.paciente).subscribe(motivo => {
+        this.motivoAccesoService.showMotivos(this.paciente).subscribe(motivo => {
             if (motivo) {
                 this.router.navigate(['/huds/paciente/', pacienteId]);
             }

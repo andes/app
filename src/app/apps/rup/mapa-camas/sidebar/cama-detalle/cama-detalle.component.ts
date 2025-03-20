@@ -200,7 +200,7 @@ export class CamaDetalleComponent implements OnInit, AfterViewChecked, OnDestroy
             if ($event.accion === 'nuevo-registro') {
                 this.onNuevoRegistrio();
             }
-            if ($event.accion === 'nuevo-egreso') {
+            if ($event.accion === 'nuevo-egreso' || $event.accion === 'volver') {
                 this.cancelar();
             }
         }
@@ -285,7 +285,7 @@ export class CamaDetalleComponent implements OnInit, AfterViewChecked, OnDestroy
     }
 
     onVerResumen(cama: ISnapshot) {
-        this.motivoAccesoService.getAccessoHUDS(cama.paciente as IPaciente).subscribe(() => {
+        this.motivoAccesoService.showMotivos(cama.paciente as IPaciente).subscribe(() => {
             const capa = this.mapaCamasService.capa;
             const ambito = this.mapaCamasService.ambito;
             this.router.navigate([`/mapa-camas/${ambito}/${capa}/resumen/${cama.idInternacion}`]);

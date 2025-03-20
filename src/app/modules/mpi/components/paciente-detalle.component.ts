@@ -232,7 +232,7 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     }
 
     showMotivoAcceso() {
-        this.motivoAccesoService.getAccessoHUDS(this.paciente).subscribe(motivo => {
+        this.motivoAccesoService.showMotivos(this.paciente).subscribe(motivo => {
             if (motivo) {
                 this.router.navigate(['/huds/paciente/', this.paciente.id]);
             }
@@ -242,7 +242,6 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     editar() {
         if (this.puedeEditar && this.auth.check('mpi:paciente')) {
             this.pacienteCache.setPaciente(this.paciente);
-            // localStorage.setItem('idPrestacion', this.prestacion.id);
             if ((this.paciente.numeroIdentificacion || this.paciente.tipoIdentificacion) && !this.paciente.documento) {
                 this.router.navigate(['apps/mpi/paciente/extranjero/huds']); // abre formulario paciente extranjero
             } else {
