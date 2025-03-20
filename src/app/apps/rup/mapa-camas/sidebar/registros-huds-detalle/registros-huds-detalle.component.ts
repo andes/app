@@ -4,7 +4,7 @@ import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/cor
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, combineLatest, of } from 'rxjs';
-import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
+import { catchError, concatMap, map, switchMap, take } from 'rxjs/operators';
 import { HUDSService } from 'src/app/modules/rup/services/huds.service';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { ModalMotivoAccesoHudsService } from '../../../../../modules/rup/components/huds/modal-motivo-acceso-huds.service';
@@ -72,6 +72,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             this.mapaCamasService.resumenInternacion$,
             this.mapaCamasService.historialInternacion$,
         ]).pipe(
+            take(1),
             switchMap(([cama, prestacion, resumen]) => {
                 this.permisoHuds$.next(false);
                 this.paciente = cama.paciente || prestacion.paciente || resumen.paciente;
