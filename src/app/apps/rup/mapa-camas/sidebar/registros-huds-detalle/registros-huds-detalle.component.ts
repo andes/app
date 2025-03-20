@@ -45,14 +45,13 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     public paciente;
     public esProfesional = this.auth.profesional;
     public puedeVerHuds = false;
-    public permitir: boolean;
     private admisionHospitalariaConceptId = '32485007';
 
     @Output() accion = new EventEmitter();
 
 
     constructor(
-        private mapaCamasService: MapaCamasService,
+        public mapaCamasService: MapaCamasService,
         private prestacionService: PrestacionesService,
         private auth: Auth,
         private router: Router,
@@ -65,40 +64,52 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         let estaPrestacionId; // id de prestacion correspondiente a la internacion actual
         this.desde = moment().subtract(3, 'days').toDate();
         this.hasta = moment().toDate();
-        this.permitir = true;
+
         this.token$ = combineLatest([
             this.cama$,
             this.mapaCamasService.selectedPrestacion,
             this.mapaCamasService.resumenInternacion$,
-            this.mapaCamasService.historialInternacion$,
         ]).pipe(
+            map(([cama, prestacion, resumen]) => {
+                if (cama?.paciente && cama.paciente === this.paciente
+                    || prestacion?.paciente && prestacion.paciente === this.paciente ||
+                    resumen?.paciente && resumen.paciente === this.paciente) {
+                    return null;
+                }
+                this.inProgress = true;
+                return [cama, prestacion, resumen];
+            }),
+            notNull(),
             switchMap(([cama, prestacion, resumen]) => {
-                this.permisoHuds$.next(false);
                 this.paciente = cama.paciente || prestacion.paciente || resumen.paciente;
                 return this.motivoAccesoService.getAccessoHUDS(this.paciente as IPaciente);
-            })
+            }),
         );
 
         this.token$.subscribe({
             next: token => {
-                this.permisoHuds$.next(true);
+                if (token) {
+                    this.permisoHuds$.next(true);
+                }
             },
             error: (error) => {
-                this.permitir = false;
                 this.permisoHuds$.next(false);
                 this.accion.emit({ accion: 'volver' });
-
             }
         });
 
         this.historial$ = combineLatest([
             this.cama$,
-            this.mapaCamasService.historialInternacion$,
             this.mapaCamasService.selectedPrestacion,
             this.mapaCamasService.resumenInternacion$,
-            this.refreshFecha$,
+            this.mapaCamasService.historialInternacion$,
+            this.permisoHuds$,
+            this.refreshFecha$
         ]).pipe(
-            switchMap(([cama, movimientos, prestacion, resumen, refresh]) => {
+            switchMap(([cama, prestacion, resumen, movimientos, permisoHuds, refresh]) => {
+                if (!permisoHuds) {
+                    return of(null);
+                }
                 let min;
                 let max;
                 if (prestacion?.id) { // listado
@@ -113,6 +124,13 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                 }
                 this.min = moment(min).startOf('day').toDate();
                 this.max = moment(max).endOf('day').toDate();
+
+                if (this.desde < this.min) {
+                    this.desde = this.min;
+                }
+                if (this.hasta > this.max) {
+                    this.hasta = this.max;
+                }
                 if (this.mapaCamasService.capa === 'estadistica') {
                     estaPrestacionId = cama.idInternacion || prestacion.id;
                 } else {
@@ -120,12 +138,16 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                 }
                 return this.getHUDS(this.paciente);
             }),
+            notNull(),
             map(prestaciones => {
+                this.inProgress = false;
                 // descarta la propia prestación de la internación actual
                 return prestaciones.filter(p => p.cda_id ? true : this.validadaCreadasPorMi(p) && p.id !== estaPrestacionId);
             }),
             catchError((e) => {
-                this.accion.emit(null);
+                this.inProgress = false;
+                this.permisoHuds$.next(false);
+                this.accion.emit({ accion: 'volver' });
                 return [];
             }),
             cache()
@@ -140,7 +162,6 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                 if (idPrestacion) {
                     this.prestacionesEliminadas.push(idPrestacion);
                 }
-                this.inProgress = false;
                 return prestaciones.filter((registro) => {
                     const fecha = moment(registro.ejecucion?.fecha || registro.fecha);
                     const conceptId = registro.solicitud?.tipoPrestacion.conceptId || registro.prestacion.snomed.conceptId;
@@ -202,22 +223,34 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     }
 
     getHUDS(paciente): Observable<any> {
-        if (this.permitir) {
-            return this.prestacionService.getByPaciente(paciente.id, true, this.desde, this.hasta).pipe(
-                map((prestaciones) => {
-                    return prestaciones.sort((a, b) => {
-                        return b.solicitud.fecha.getTime() - a.solicitud.fecha.getTime();
-                    });
-                }),
-                concatMap((prestaciones) => {
-                    const token = this.huds.getHudsToken();
-                    return this.prestacionService.getCDAByPaciente(paciente.id, token).pipe(map((results) => {
-                        return [...results, ...prestaciones];
-                    }));
-                })
-            );
-        }
-        return of([]);
+        return this.prestacionService.getByPaciente(paciente.id, true, this.desde, this.hasta).pipe(
+            map((prestaciones) => {
+                return prestaciones.sort((a, b) => {
+                    return b.solicitud.fecha.getTime() - a.solicitud.fecha.getTime();
+                });
+            }),
+            concatMap((prestaciones) => {
+                // TODO! Cuando se extienda el uso del token de esta manera en el resto de la app, Refactorear este codigo ya que esta replicado varias veces!!
+                const newElement = {
+                    usuario: this.auth.usuario.id,
+                    paciente: paciente.id,
+                    organizacion: this.auth.organizacion.id
+                };
+                let hudsTokenArray: any = this.huds.getHudsToken() || '[]';
+                let index = -1;
+
+                if (hudsTokenArray[0] === '[') {
+                    hudsTokenArray = JSON.parse(hudsTokenArray);
+                    index = hudsTokenArray.findIndex((element: typeof newElement) => element.usuario === newElement.usuario && element.paciente === newElement.paciente && element.organizacion === newElement.organizacion);
+                }
+                if (index === -1) {
+                    return of([]);
+                }
+                return this.prestacionService.getCDAByPaciente(paciente.id, hudsTokenArray[index].token).pipe(map((results) => {
+                    return [...results, ...prestaciones];
+                }));
+            })
+        );
     }
 
     onNuevoRegistrio() {

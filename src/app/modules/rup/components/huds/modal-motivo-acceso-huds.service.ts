@@ -128,7 +128,6 @@ export class ModalMotivoAccesoHudsService {
             switchMap(tiempoRestante => {
                 if (tiempoRestante > 0) {
                     return of(hudsTokenArray[index]);
-                    // return of({ paciente, token: hudsTokenArray[index].token, motivo: hudsTokenArray[index].motivo });
                 } else {
                     hudsTokenArray.splice(index, 1);
                     window.sessionStorage.setItem('huds-token', JSON.stringify(hudsTokenArray));
