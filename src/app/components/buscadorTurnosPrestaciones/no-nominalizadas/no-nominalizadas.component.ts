@@ -157,7 +157,7 @@ export class NoNominalizadasComponent implements OnInit, OnDestroy {
 
     getObraSocial(paciente) {
         if (paciente.documento) {
-            this.obraSocialService.getObrasSociales(paciente.documento).subscribe(resultado => {
+            this.obraSocialService.getObrasSociales({ documento: paciente.documento, sexo: paciente.sexo }).subscribe(resultado => {
                 if (resultado.length) {
                     const obraSocialPaciente = resultado.map((os: any) => ({
                         'id': os.financiador,

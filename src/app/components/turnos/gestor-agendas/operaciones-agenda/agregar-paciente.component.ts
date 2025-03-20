@@ -141,7 +141,7 @@ export class AgregarPacienteComponent implements OnInit {
         if (!paciente || !paciente.documento) {
             return;
         }
-        this.obraSocialService.getObrasSociales(paciente.documento).subscribe(resultado => {
+        this.obraSocialService.getObrasSociales({ documento: paciente.documento, sexo: paciente.sexo }).subscribe(resultado => {
             if (resultado.length) {
                 this.obraSocialPaciente = resultado.map((os: any) => {
                     let osPaciente;
