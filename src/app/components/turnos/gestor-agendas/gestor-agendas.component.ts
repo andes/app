@@ -1080,5 +1080,18 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     habilitarProfesional() {
         this.router.navigate(['citas/prestaciones_habilitadas']);
     }
+
+    puedeReasignar(botones, agenda) {
+
+        const bloque = agenda.bloques.some(b => {
+            const turno = b.turnos.some(t => {
+                if (t.paciente && t.estado === 'suspendido' && !t.reasignado?.siguiente) {
+                    return true;
+                }
+            });
+            return turno;
+        });
+        return botones.reasignar && bloque;
+    }
 }
 
