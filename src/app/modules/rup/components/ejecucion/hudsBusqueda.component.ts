@@ -138,7 +138,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     public motivosSuspension;
     public motivoSuspensionSelector;
     public seleccionRecetas = [];
-
+    public seleccionSuspender = [];
     /**
      * Ids correspondientes a Prescripción de Medicamentos y Seguimiento Hídrico respectivamente
      */
@@ -825,6 +825,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     resetSeleccionRecetas() {
         this.groupRecetas();
         this.seleccionRecetas = [];
+        this.seleccionSuspender = [];
     }
 
     openRecetaTab(group) {
@@ -859,19 +860,16 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
 
     seleccionarReceta(event, recetas, index) {
         const isSelected = event.value;
+        const recetaSeleccionada = recetas
+            .filter(receta => receta.estadoActual.tipo === 'vigente')
+            .sort((a, b) => moment(b.fechaRegistro).diff(moment(a.fechaRegistro)))[0];
 
         if (isSelected) {
-            const recetaSeleccionada = recetas
-                .filter(receta => receta.estadoActual.tipo === 'vigente')
-                .sort((a, b) => moment(b.fechaRegistro).diff(moment(a.fechaRegistro)))[0];
-
-            this.seleccionRecetas[index] = recetaSeleccionada;
+            this.seleccionRecetas[index] = true;
+            this.seleccionSuspender.push(recetaSeleccionada);
         } else {
             this.seleccionRecetas[index] = null;
-        }
-
-        if (this.seleccionRecetas.every(receta => receta === null)) {
-            this.seleccionRecetas = [];
+            this.seleccionSuspender = this.seleccionSuspender.filter(r => r.id !== recetaSeleccionada.id);
         }
     }
 }
