@@ -185,6 +185,31 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     ) {
     }
 
+    public mostrarRenovacion = false;
+    public mostrarSuspension = false;
+
+    abrirRenovacion() {
+        this.mostrarRenovacion = true;
+    }
+
+    cerrarRenovacion() {
+        this.mostrarRenovacion = false;
+    }
+
+    cerrarSuspension() {
+        this.mostrarSuspension = false;
+    }
+
+    abrirSuspension() {
+        this.mostrarSuspension = true;
+    }
+
+    resetEstado() {
+        this.mostrarRenovacion = false;
+        this.mostrarSuspension = false;
+        this.seleccionRecetas = [];
+    }
+
     /**
      * buscamos y listamos las prestaciones o hallazgos del paciente
      *
@@ -831,16 +856,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         this.emitTabs(group, 'receta', 0);
     }
 
-    esRecetaSeleccionable(receta) {
-        const estadosPermitidos = ['vigente'];
-        const dispensasPermitidas = ['sin-dispensa', 'dispensa-parcial'];
-
-        const estadoValido = estadosPermitidos.includes(receta.estadoActual?.tipo);
-        const dispensaValida = dispensasPermitidas.includes(receta.estadoDispensaActual?.tipo);
-
-        return estadoValido && dispensaValida && this.profesionalValido;
-    }
-
     getProfesional() {
         const profesionalId = this.auth.profesional;
 
@@ -861,11 +876,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         const isSelected = event.value;
 
         if (isSelected) {
-            const recetaSeleccionada = recetas
-                .filter(receta => receta.estadoActual.tipo === 'vigente')
-                .sort((a, b) => moment(b.fechaRegistro).diff(moment(a.fechaRegistro)))[0];
-
-            this.seleccionRecetas[index] = recetaSeleccionada;
+            this.seleccionRecetas[index] = recetas[0];
         } else {
             this.seleccionRecetas[index] = null;
         }
@@ -873,5 +884,23 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         if (this.seleccionRecetas.every(receta => receta === null)) {
             this.seleccionRecetas = [];
         }
+    }
+
+    esRecetaRenovable(receta) {
+        const fechaLimite = moment().subtract(6, 'months');
+        const fechaRegistroValida = moment(receta.fechaRegistro).isAfter(fechaLimite);
+        const estadoValido = receta.estadoActual?.tipo !== 'vigente' || receta.estadoDispensaActual?.tipo === 'dispensada';
+
+        return fechaRegistroValida && estadoValido;
+    }
+
+    esRecetaSuspendible(receta) {
+        const estadosPermitidos = ['vigente'];
+        const dispensasPermitidas = ['sin-dispensa', 'dispensa-parcial'];
+
+        const estadoValido = estadosPermitidos.includes(receta.estadoActual?.tipo);
+        const dispensaValida = dispensasPermitidas.includes(receta.estadoDispensaActual?.tipo);
+
+        return estadoValido && dispensaValida && this.profesionalValido;
     }
 }
