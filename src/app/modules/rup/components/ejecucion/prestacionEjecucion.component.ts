@@ -3,6 +3,7 @@ import { Plex } from '@andes/plex';
 import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { RecetaService } from 'projects/portal/src/app/services/receta.service';
 import { of, Subject } from 'rxjs';
 import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { ConstantesService } from 'src/app/services/constantes.service';
@@ -21,7 +22,6 @@ import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.inte
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { RecetaService } from 'projects/portal/src/app/services/receta.service';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -100,6 +100,10 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     public hasPacs = false;
 
     public conceptosAsociados;
+
+    private validacionRota = false;
+
+    public alerta;
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -246,6 +250,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                             }
                         }
 
+                        this.validacionRota = this.ejecucionService.checkValidacionRota();
                         this.ejecucionService.actualizar('inicializar');
                     }, (err) => {
                         if (err) {
@@ -503,6 +508,10 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         this.scopeEliminar = scope;
         this.indexEliminar = index;
         this.confirmarEliminar = true;
+    }
+
+    puedeEliminar(registro) {
+        return !(registro.concepto?.conceptId === '33633005' && this.esSoloValores(registro));
     }
 
     cargarNuevoRegistro(snomedConcept, esSolicitud: boolean, valor = null, relaciones, idEvolucion) {
@@ -940,5 +949,18 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     prestacionVisible(registro) {
         return registro.data.class === 'plan' || registro.data.class === 'regimen' ||
             registro.data.class === 'elementoderegistro' || registro.data.class === 'producto';
+    }
+
+    esSoloValores(registro: any): boolean {
+        if (registro?.concepto) {
+            const valido = this.ejecucionService.validarConcepto(registro.concepto);
+            if (!valido) {
+                this.alerta = 'Ya tiene una receta registrada en esta prestación, si necesita cambiar una medicación prescripta puede suspender desde la HUDS y registrar una nueva.';
+            }
+
+            return !valido;
+        }
+
+        return true;
     }
 }
