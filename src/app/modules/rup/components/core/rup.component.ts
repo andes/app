@@ -42,7 +42,6 @@ import { RecetaService } from 'projects/portal/src/app/services/receta.service';
 export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
     @ViewChildren(RUPComponent) rupElements: QueryList<RUPComponent>;
     @ViewChild('form', { static: false }) formulario: any;
-    public rupInstance: any;
 
     // Propiedades
     @Input() elementoRUP: IElementoRUP;
@@ -55,9 +54,10 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
     @Input() style: any;
     @Input() habilitado: any;
     @Input() public conceptosAsociados: any = [];
+    @Input() public alerta: string = null;
 
     public mensaje: any = {};
-
+    public rupInstance: any;
     private rulesEngine: Engine;
     private rulesEvent = new Subject<{ type: string; params: any }>();
     private rulesEvent$ = this.rulesEvent.asObservable();
@@ -103,6 +103,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
         componentReference.instance['soloValores'] = this.soloValores;
         componentReference.instance['vistaHUDS'] = this.vistaHUDS;
         componentReference.instance['paciente'] = this.paciente;
+        componentReference.instance['alerta'] = this.alerta;
         componentReference.instance['params'] = this.params;
         componentReference.instance['style'] = this.style;
         componentReference.instance['habilitado'] = this.habilitado;
