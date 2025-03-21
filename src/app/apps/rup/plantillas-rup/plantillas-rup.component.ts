@@ -266,4 +266,8 @@ export class PlantillasRUPComponent implements OnInit {
         this.procedimiento = null;
         this.subject.next([]);
     }
+
+    canDeletePlantilla(): boolean {
+        return this.procedimiento?.conceptId !== '33633005';
+    }
 }
