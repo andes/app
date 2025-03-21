@@ -3,6 +3,7 @@ import { Plex } from '@andes/plex';
 import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { RecetaService } from 'projects/portal/src/app/services/receta.service';
 import { of, Subject } from 'rxjs';
 import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { ConstantesService } from 'src/app/services/constantes.service';
@@ -21,7 +22,6 @@ import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.inte
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { RecetaService } from 'projects/portal/src/app/services/receta.service';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -100,6 +100,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     public hasPacs = false;
 
     public conceptosAsociados;
+
+    private validacionRota = false;
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -245,6 +247,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                                 }
                             }
                         }
+
+                        this.validacionRota = this.checkValidacionRota();
 
                         this.ejecucionService.actualizar('inicializar');
                     }, (err) => {
@@ -942,5 +946,40 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     prestacionVisible(registro) {
         return registro.data.class === 'plan' || registro.data.class === 'regimen' ||
             registro.data.class === 'elementoderegistro' || registro.data.class === 'producto';
+    }
+
+    /**
+     * Verifica si la validación fue rota (es decir, si hay un estado "ejecucion" después de un estado "validada").
+     * @returns {boolean}
+     */
+    checkValidacionRota(): boolean {
+        if (!this.prestacion?.estados || this.prestacion.estados.length < 2) {
+            return false;
+        }
+
+        let validadaEncontrada = false;
+
+        for (const estado of this.prestacion.estados) {
+            if (estado.tipo === 'validada') {
+                validadaEncontrada = true;
+            } else if (validadaEncontrada && estado.tipo === 'ejecucion') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Verifica si la prestación tiene el último estado con la operación "romperValidacion"
+     * y si existe un registro con el concepto "33633005".
+     * @returns {boolean}
+     */
+    esSoloValores(registro: any): boolean {
+        if (this.validacionRota) {
+            return registro?.concepto?.conceptId === '33633005';
+        }
+
+        return false;
     }
 }
