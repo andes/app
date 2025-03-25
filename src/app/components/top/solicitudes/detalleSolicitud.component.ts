@@ -1,12 +1,13 @@
-import { Input, Component, SimpleChanges, OnChanges } from '@angular/core';
+import { Input, Component, SimpleChanges, OnChanges, OnDestroy } from '@angular/core';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
 @Component({
     selector: 'detalle-solicitud',
     templateUrl: './detalleSolicitud.html',
     styleUrls: ['adjuntarDocumento.scss'],
 })
-export class DetalleSolicitudComponent implements OnChanges {
+export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
 
 
     @Input() prestacionSeleccionada: any;
@@ -14,6 +15,8 @@ export class DetalleSolicitudComponent implements OnChanges {
     @Input() turnoSeleccionado: any;
 
     @Input() tipoSolicitud: string;
+
+    public internacion = null;
 
 
     public items = [
@@ -24,7 +27,8 @@ export class DetalleSolicitudComponent implements OnChanges {
     public verIndicaciones = false;
 
     constructor(
-        public adjuntosService: AdjuntosService
+        public adjuntosService: AdjuntosService,
+        private pacienteService: PacienteService
     ) { }
 
     fotos: any[] = [];
@@ -43,6 +47,17 @@ export class DetalleSolicitudComponent implements OnChanges {
                 });
             });
         }
+        this.pacienteService.getEstadoInternacion(this.prestacionSeleccionada.paciente.id).subscribe(resp => {
+
+            resp.forEach(prestacion => {
+                prestacion.ejecucion.registros.forEach(registro => {
+
+                    if (registro.valor?.informeIngreso || registro.valor?.InformeEgreso) {
+                        this.internacion = registro.valor;
+                    }
+                });
+            });
+        });
     }
 
     cambiarOpcion(opcion) {
@@ -53,4 +68,7 @@ export class DetalleSolicitudComponent implements OnChanges {
         this.verIndicaciones = !this.verIndicaciones;
     }
 
+    ngOnDestroy() {
+        this.internacion = null;
+    }
 }

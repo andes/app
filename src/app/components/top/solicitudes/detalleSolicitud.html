@@ -44,6 +44,9 @@
                     titulo="Usuario que responde"
                     subtitulo="{{prestacionSeleccionada.estadoActual.createdBy | nombre}}">
         </plex-label>
+        <plex-badge *ngIf="internacion" type="warning">
+            {{internacion.InformeEgreso ? internacion.InformeEgreso.tipoEgreso.nombre : 'internado'}}
+        </plex-badge>
     </plex-grid>
     <plex-title size="sm" titulo="Datos de creación"></plex-title>
     <plex-grid cols="3" size="md" direction="row">

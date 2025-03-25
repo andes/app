@@ -44,6 +44,10 @@ export class PacienteService {
         }));
     }
 
+    getEstadoInternacion(id: String, options?: any) {
+        return this.server.get(`${this.pacienteV2}/estadoActual/${id}/`, options);
+    }
+
     match(params: any): Observable<IPacienteMatch[]> {
         return this.server.post(`${this.pacienteV2}/match`, params);
     }
