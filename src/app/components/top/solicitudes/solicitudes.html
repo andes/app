@@ -349,8 +349,8 @@
                 <!-- Sin estos row-col los plex-help no toman la dimensión ni posición correcta -->
                 <div class="col-12">
                     <detalle-solicitud [tipoSolicitud]="tipoSolicitud" [prestacionSeleccionada]="prestacionSeleccionada"
-                                       [turnoSeleccionado]="turnoSeleccionado">
-
+                                       [turnoSeleccionado]="turnoSeleccionado"
+                                       (internacionPaciente)="verInternacionPaciente($event)">
                         <ng-container *ngIf="prestacionSeleccionada | botonesSolicitud as botones">
                             <ng-container *ngIf="tipoSolicitud === 'entrada'">
                                 <!-- INICIAR PRESTACION -->

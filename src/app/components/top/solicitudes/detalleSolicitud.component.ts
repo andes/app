@@ -1,4 +1,4 @@
-import { Input, Component, SimpleChanges, OnChanges, OnDestroy } from '@angular/core';
+import { Input, Component, SimpleChanges, OnChanges, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
@@ -16,8 +16,10 @@ export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
 
     @Input() tipoSolicitud: string;
 
-    public internacion = null;
+    @Output() internacionPaciente: EventEmitter<any> = new EventEmitter<any>();
 
+    public internacion = null;
+    public organizacionInternacion;
 
     public items = [
         { key: 'solicitud', label: 'SOLICITUD' },
@@ -51,12 +53,13 @@ export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
 
             resp.forEach(prestacion => {
                 prestacion.ejecucion.registros.forEach(registro => {
-
                     if (registro.valor?.informeIngreso || registro.valor?.InformeEgreso) {
                         this.internacion = registro.valor;
+                        this.organizacionInternacion = prestacion.solicitud.organizacion.nombre;
                     }
                 });
             });
+            this.internacionPaciente.emit(this.internacion);
         });
     }
 
