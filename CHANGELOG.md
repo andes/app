@@ -1,3 +1,10 @@
+## [5.160.1](https://github.com/andes/app/compare/v5.160.0...v5.160.1) (2025-03-26)
+
+
+### Bug Fixes
+
+* **RUP:** carga de solicitudes (cards) ([#3160](https://github.com/andes/app/issues/3160)) ([90a3773](https://github.com/andes/app/commit/90a37731ee35592bce4f63ff07c36989ac085499))
+
 # [5.160.0](https://github.com/andes/app/compare/v5.159.0...v5.160.0) (2025-03-19)
 
 
