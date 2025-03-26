@@ -156,7 +156,7 @@ export class PrestacionesService {
      * Método getByPaciente. Busca todas las prestaciones de un paciente
      * @param {String} idPaciente
      */
-    getByPaciente(idPaciente: any, recargarCache: boolean = false): Observable<any[]> {
+    getByPaciente(idPaciente: any, recargarCache: boolean = false, desde = null, hasta = null): Observable<any[]> {
         const copiaCacheAnterior = Object.assign({}, this.cachePrimeraBusqueda);
         this.cachePrimeraBusqueda[idPaciente] = {
             idPaciente,
@@ -181,6 +181,12 @@ export class PrestacionesService {
             if (this.restriccion) {
                 opt.params['efectorRestringido'] = this.auth.organizacion.id;
             };
+            if (desde) {
+                opt.params['fechaDesde'] = desde;
+            }
+            if (hasta) {
+                opt.params['fechaHasta'] = hasta;
+            }
             this.cache[idPaciente] = this.server.get(this.prestacionesUrl, opt).pipe(
                 map(prestaciones => {
                     prestaciones.forEach(p => populateRelaciones(p));

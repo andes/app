@@ -105,7 +105,7 @@ export class FichaEpidemiologicaComponent implements OnInit, OnDestroy {
     }
 
     ruteo(id) {
-        this.motivoAccesoService.getAccessoHUDS(this.pacienteSelected).subscribe(motivo => {
+        this.motivoAccesoService.showMotivos(this.pacienteSelected).subscribe(motivo => {
             if (motivo) {
                 this.router.navigate(['/huds/paciente/', id]);
             }
