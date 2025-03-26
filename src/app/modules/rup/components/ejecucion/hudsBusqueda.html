@@ -66,49 +66,60 @@
                                    [ngModel]="seleccionRecetas[iReceta]" name="seleccionada" type="checkbox"
                                    (change)="seleccionarReceta($event, grupo.recetas, iReceta)">
                         </plex-bool>
-                        <div class="rup-card mini recetas" [ngClass]="{'active': huds.isOpen(grupo, 'receta')}"
-                             (click)="emitTabs(grupo, 'receta', iReceta)">
-                            <div class="rup-header">
-                                <div class="rup-border rup-border-recetas"
-                                     [ngClass]="{'active': huds.isOpen(grupo, 'receta')}">
-                                    <div class="row p-0 m-0 border-secondary border-left-0">
-                                        <div class="col-9 p-0 m-0">
-                                            <div class="row m-0 p-0">
-                                                <div class="col-2 icon-rup drag-handle">
-                                                    <i class="adi adi-listado-receta"></i>
-                                                </div>
-                                                <div class="col p-0 pl-2 float-left">
-                                                    <div class="row p-0 m-0 titulo">
-                                                        {{ grupo.recetas[0].medicamento.concepto.term }}</div>
-                                                    <div class="row p-0 m-0">
-                                                        <div class="col-10 p-0 m-0">
-                                                            <div class="sugerido">
-                                                                <small>Fecha de Registro:
-                                                                    {{ grupo.recetas[0].fechaRegistro | date:'short' }}
-                                                                </small>
-                                                                <br>
-                                                                <small>Profesional: {{
-                                                                    grupo.recetas[0].profesional.nombre }} {{
-                                                                    grupo.recetas[0].profesional.apellido }}
-                                                                </small>
+                        <div>
+                            <div class="row vista-badges" *ngIf="grupo.recetas[0].medicamento.tratamientoProlongado">
+                                <span class="pl-2 pr-2 mr-3 upTag" [ngClass]="{'active': huds.isOpen(grupo, 'receta')}">
+                                    Tratamiento prolongado: {{grupo.recetas[0].medicamento?.ordenTratamiento + 1
+                                    }} de {{grupo.recetas[0].medicamento.tiempoTratamiento?.id}}</span>
+                            </div>
+                            <div class="rup-card mini recetas" [ngClass]="{'active': huds.isOpen(grupo, 'receta')}"
+                                 (click)="emitTabs(grupo, 'receta', iReceta)">
+
+                                <div class="rup-header">
+                                    <div class="rup-border rup-border-recetas"
+                                         [ngClass]="{'active': huds.isOpen(grupo, 'receta')}">
+                                        <div class="row p-0 m-0 border-secondary border-left-0">
+                                            <div class="col-9 p-0 m-0">
+                                                <div class="row m-0 p-0">
+                                                    <div class="col-2 icon-rup drag-handle">
+                                                        <i class="adi adi-listado-receta"></i>
+                                                    </div>
+                                                    <div class="col p-0 pl-2 float-left">
+                                                        <div class="row p-0 m-0 titulo">
+                                                            {{ grupo.recetas[0].medicamento.concepto.term }}</div>
+                                                        <div class="row p-0 m-0">
+                                                            <div class="col-10 p-0 m-0">
+                                                                <div class="sugerido">
+                                                                    <small>Fecha de Registro:
+                                                                        {{ grupo.recetas[0].fechaRegistro | date:'short'
+                                                                        }}
+                                                                    </small>
+                                                                    <br>
+                                                                    <small>Profesional: {{
+                                                                        grupo.recetas[0].profesional.nombre }} {{
+                                                                        grupo.recetas[0].profesional.apellido }}
+                                                                    </small>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-3 p-0 m-0">
-                                            <div class="p-0 pt-1 pr-1 float-right">
-                                                <div class="vista-badges">
-                                                    <plex-badge *ngIf="grupo.recetas[0].estadoActual" size="sm"
-                                                                [type]="estadoReceta[grupo.recetas[0].estadoActual.tipo]">
-                                                        {{ grupo.recetas[0].estadoActual.tipo.replace('-', ' ') }}
-                                                    </plex-badge>
-                                                    <plex-badge *ngIf="grupo.recetas[0].estadoDispensaActual" size="sm"
-                                                                [type]="estadoDispensa[grupo.recetas[0].estadoDispensaActual.tipo]">
-                                                        {{ grupo.recetas[0].estadoDispensaActual.tipo.replace('-', ' ')
-                                                        }}
-                                                    </plex-badge>
+                                            <div class="col-3 p-0 m-0">
+                                                <div class="p-0 pt-1 pr-1 float-right">
+                                                    <div class="vista-badges">
+                                                        <plex-badge *ngIf="grupo.recetas[0].estadoActual" size="sm"
+                                                                    [type]="estadoReceta[grupo.recetas[0].estadoActual.tipo]">
+                                                            {{ grupo.recetas[0].estadoActual.tipo.replace('-', ' ') }}
+                                                        </plex-badge>
+                                                        <plex-badge *ngIf="grupo.recetas[0].estadoDispensaActual"
+                                                                    size="sm"
+                                                                    [type]="estadoDispensa[grupo.recetas[0].estadoDispensaActual.tipo]">
+                                                            {{ grupo.recetas[0].estadoDispensaActual.tipo.replace('-', '
+                                                            ')
+                                                            }}
+                                                        </plex-badge>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

@@ -41,8 +41,9 @@
         <div class="data" *ngIf="recetaPrincipal.medicamento.tratamientoProlongado">
             <div>
                 <b>Tratamiento Prolongado</b>
-                <p class="texto-detalle">{{recetaPrincipal.medicamento.tiempoTratamiento.nombre}} - orden: {{
-                    recetaPrincipal.medicamento.ordenTratamiento + 1 }}</p>
+                <p class="texto-detalle">{{recetaPrincipal.medicamento?.tiempoTratamiento?.nombre}} - orden: {{
+                    recetaPrincipal.medicamento?.ordenTratamiento + 1 }} de
+                    {{recetaPrincipal.medicamento?.tiempoTratamiento?.id}}</p>
             </div>
         </div>
     </div>
