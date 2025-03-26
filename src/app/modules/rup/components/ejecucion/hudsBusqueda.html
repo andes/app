@@ -21,9 +21,11 @@
     </div>
     <div class="menu-titulo">
         <h6 class="titulo-filtro {{filtroActual}}">{{ getTitulo(filtroActual) | uppercase }}</h6>
-        
-        <suspender-medicacion *ngIf="filtroActual==='recetas' && seleccionRecetas.length > 0" [seleccionRecetas]="seleccionRecetas" [motivoSelector]="motivoSuspensionSelector"
-                             [motivosSuspension]="motivosSuspension" [profesional]="profesional" (reset)="resetSeleccionRecetas()"></suspender-medicacion>
+
+        <suspender-medicacion *ngIf="filtroActual==='recetas' && seleccionRecetas.length > 0"
+                              [seleccionRecetas]="seleccionSuspender" [motivoSelector]="motivoSuspensionSelector"
+                              [motivosSuspension]="motivosSuspension" [profesional]="profesional"
+                              (reset)="resetSeleccionRecetas()"></suspender-medicacion>
     </div>
     <div class="grow" *ngIf="filtroActual === 'planes'">
         <plex-options class="filtros-ambitos" (activated)='setAmbitoOrigen($event)' [items]="filtrosAmbitos">
