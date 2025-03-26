@@ -13,6 +13,9 @@
                 Registrar
                 ficha
             </plex-button>
+            <plex-button *ngIf="accesoHuds && !loading" type="info" size="sm" icon="download" tooltip="Descargar PDF"
+                         tooltipPosition="left" (click)="descargar()">
+            </plex-button>
         </plex-title>
         <section class="my-3">
             <form #form="ngForm">
