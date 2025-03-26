@@ -314,12 +314,12 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         if (turno && turno.diagnostico && turno.diagnostico.codificaciones && !turno.diagnostico.codificaciones.length) {
             sinAuditorias = true; // El turno no tiene codificaciones asociadas
         }
-        const esAuditado = turno && turno.paciente && turno.asistencia && (turno.asistencia === 'noAsistio' || turno.asistencia === 'sinDatos' || !sinAuditorias || turno.tipoPrestacion.auditable === false);
+        const esAuditado = turno && turno.paciente && turno.asistencia && (turno.asistencia === 'noAsistio' || turno.asistencia === 'sinDatos' || !sinAuditorias || turno.tipoPrestacion?.auditable === false);
         return esAuditado;
     }
 
     asistenciaVerificada(turno) {
-        return turno?.asistencia && turno?.asistencia === 'asistio' && !turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo && !turno?.diagnostico?.codificaciones[0]?.codificacionProfesional?.snomed?.term && turno.tipoPrestacion.auditable === true;
+        return turno?.asistencia && turno?.asistencia === 'asistio' && !turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo && !turno?.diagnostico?.codificaciones[0]?.codificacionProfesional?.snomed?.term && turno.tipoPrestacion?.auditable === true;
     }
 
     cancelar() {
