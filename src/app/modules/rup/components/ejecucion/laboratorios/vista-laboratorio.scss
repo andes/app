@@ -8,9 +8,20 @@ $lightblue: #d6f7ff;
     margin-top: 10px;
     width: 100%;
     display: flex;
-    gap: 5%;
     font-size: smaller;
+    box-sizing: border-box;
+}
 
+.info-basica>div:first-child {
+    flex: 0 0 20%;
+    max-width: 20%;
+    box-sizing: border-box;
+}
+
+.info-basica>div:last-child {
+    flex: 0 0 80%;
+    max-width: 80%;
+    box-sizing: border-box;
 }
 
 .info-basica .datos {
