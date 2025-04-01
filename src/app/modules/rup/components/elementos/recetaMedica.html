@@ -36,7 +36,7 @@
 
             <plex-grid cols="2" class="grid-tratamiento">
                 <plex-bool [(ngModel)]="medicamento.tratamientoProlongado" name="tratamientoProlongado" type="slide"
-                           label="Tratamiento prolongado">
+                           label="Tratamiento prolongado" [readonly]="medicamento.tipoReceta === 'triplicado'">
                 </plex-bool>
                 <plex-select *ngIf="medicamento.tratamientoProlongado" [(ngModel)]="medicamento.tiempoTratamiento"
                              name="tiempoTratamiento" [data]="tiemposTratamiento" required="true">
@@ -46,8 +46,23 @@
 
         <div class="mt-2">
             <plex-title name="tipoReceta" titulo="Tipo de receta" size="sm"></plex-title>
-            <plex-radio class="m-2" [(ngModel)]="medicamento.tipoReceta" [data]="opcionesTipoReceta" name="tipoReceta">
+            <plex-radio class="m-2" [(ngModel)]="medicamento.tipoReceta" [data]="opcionesTipoReceta" name="tipoReceta"
+                        (change)="onTipoRecetaChange()">
             </plex-radio>
+        </div>
+
+        <div class="mb-2" *ngIf="medicamento.tipoReceta === 'triplicado'">
+            <plex-label size="lg" icon="alert-outline" titulo="Atención" type="warning"
+                        subtitulo="Recuerde que sigue siendo obligatoria la entrega del formulario triplicado en papel">
+            </plex-label>
+            <plex-grid cols="2">
+                <plex-text [(ngModel)]="medicamento.serie" name="serie" label="Serie" [required]="true"
+                           [pattern]="'^[A-Za-z]$'" placeholder="Ingrese una letra">
+                </plex-text>
+                <plex-int [(ngModel)]="medicamento.numero" name="numero" label="Número" [required]="true"
+                          placeholder="Ingrese un número">
+                </plex-int>
+            </plex-grid>
         </div>
 
         <plex-title titulo="Indicaciones diarias" size="sm">
@@ -57,7 +72,6 @@
             </plex-button>
         </plex-title>
         <plex-wrapper>
-
             <div [hidden]="collapse" class="w-100">
                 <div class="d-flex">
                     <plex-text name="dosis" label="Dosis" [(ngModel)]="medicamento.dosisDiaria.dosis"
@@ -74,6 +88,7 @@
                                required="false" min="1" max="90">
                     </plex-text>
                 </div>
+
             </div>
         </plex-wrapper>
         <div class="d-flex justify-content-center">
