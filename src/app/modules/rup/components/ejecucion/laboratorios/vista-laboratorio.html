@@ -2,7 +2,7 @@
     <div justify class="w-100">
         <div class="info-basica">
             <div class="d-flex flex-column">
-                <div style="display: flex; gap: 4px;">
+                <div class="badge-protocolo">
                     <plex-badge type="info">
                         Protocolo {{protocolo.data.numero}}
                     </plex-badge>
@@ -33,7 +33,7 @@
     </div>
     <div class="w-100 mt-2">
         <plex-title titulo="Resultados" size="md">
-            <plex-button [disabled]="!areasLaboratorio" type="info" size="sm" icon="download mdi-18px"
+            <plex-button [disabled]="areasLaboratorio.length === 0" type="info" size="sm" icon="download mdi-18px"
                          tooltip="Descargar" (click)="descargarLab()"></plex-button>
         </plex-title>
 
