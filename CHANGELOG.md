@@ -1,3 +1,10 @@
+## [5.160.2](https://github.com/andes/app/compare/v5.160.1...v5.160.2) (2025-04-02)
+
+
+### Bug Fixes
+
+* **CIT:** evita que se rompa pantalla de auditoria ([#3166](https://github.com/andes/app/issues/3166)) ([121c70e](https://github.com/andes/app/commit/121c70e9a4f5ad8c9e185c59153ce59bb194b446))
+
 ## [5.160.1](https://github.com/andes/app/compare/v5.160.0...v5.160.1) (2025-03-26)
 
 
