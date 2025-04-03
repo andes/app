@@ -167,7 +167,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         this.recetasService.getRecetas(options).subscribe((data) => {
             const duplicado = data.find(receta =>
                 this.medicamento.generico.conceptId === receta.medicamento.concepto.conceptId &&
-                receta.estadoActual.tipo === 'vigente' &&
+                (receta.estadoActual.tipo === 'vigente' || receta.estadoActual.tipo === 'pendiente') &&
                 (receta.estadoDispensaActual.tipo === 'sin-dispensa' || receta.estadoDispensaActual.tipo === 'dispensa-parcial')
             );
             const cargadoActual = this.registro.valor.medicamentos.find(medicamentoCargado =>
