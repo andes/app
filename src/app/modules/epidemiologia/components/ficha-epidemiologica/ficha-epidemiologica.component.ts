@@ -31,6 +31,7 @@ export class FichaEpidemiologicaComponent implements OnInit, OnDestroy {
     public puedeVer: boolean;
     public editFicha = false;
     public botonRup = false;
+    public accesoPorHuds = false;
 
     public columns = [
         {
@@ -108,6 +109,7 @@ export class FichaEpidemiologicaComponent implements OnInit, OnDestroy {
         this.motivoAccesoService.showMotivos(this.pacienteSelected).subscribe(motivo => {
             if (motivo) {
                 this.router.navigate(['/huds/paciente/', id]);
+                this.accesoPorHuds = true;
             }
         });
     }
