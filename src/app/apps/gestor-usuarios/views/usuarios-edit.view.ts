@@ -124,10 +124,25 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
                 };
             })
         };
-        this.usuariosHttp.updateOrganizacion(this.userId, this.organizacionId, body).subscribe(() => {
-            this.plex.toast('success', 'Permisos grabados exitosamente!');
-            this.location.back();
-        });
+
+        if (
+            body.permisos.includes('huds:visualizacionHuds') &&
+            (body.permisos.some(p => p.startsWith('huds:visualizacionParcialHuds:')) ||
+                body.permisos.includes('huds:visualizacionParcialHuds:*'))
+        ) {
+            this.plex.info('warning',
+                '<div style="text-align: left;">' +
+                'No se pueden tener activadas las siguientes opciones dentro del <b>Modulo HUDS</b>:<br><br>' +
+                '- <b>Ver HUDS completa</b> junto con <b>Visualización parcial de la HUDS.</b><br><br>' +
+                '- <b>Ver HUDS completa</b> junto con algunas opciones de <b>Visualización parcial de la HUDS.</b>' +
+                '</div>'
+                , 'Atención');
+        } else {
+            this.usuariosHttp.updateOrganizacion(this.userId, this.organizacionId, body).subscribe(() => {
+                this.plex.toast('success', 'Permisos grabados exitosamente!');
+                this.location.back();
+            });
+        }
     }
 
     borrar() {
