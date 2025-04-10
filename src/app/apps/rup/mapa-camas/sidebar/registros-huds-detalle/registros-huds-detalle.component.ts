@@ -125,11 +125,12 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                 this.min = moment(min).startOf('day').toDate();
                 this.max = moment(max).endOf('day').toDate();
 
+                if (this.hasta > this.max) { // paciente ya egresado
+                    this.hasta = this.max;
+                    this.desde = moment(this.hasta).subtract(3, 'days').toDate();
+                }
                 if (this.desde < this.min) {
                     this.desde = this.min;
-                }
-                if (this.hasta > this.max) {
-                    this.hasta = this.max;
                 }
                 if (this.mapaCamasService.capa === 'estadistica') {
                     estaPrestacionId = cama.idInternacion || prestacion.id;
