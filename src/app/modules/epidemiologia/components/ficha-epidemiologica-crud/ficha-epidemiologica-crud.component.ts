@@ -20,7 +20,7 @@ import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.s
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { SECCION_CLASIFICACION, SECCION_CONTACTOS_ESTRECHOS, SECCION_MPI, SECCION_OPERACIONES, SECCION_USUARIO } from '../../constantes';
 import { PacientesVacunasService } from 'src/app/services/pacientes-vacunas.service';
-
+import { DocumentosService } from 'src/app/services/documentos.service';
 
 @Component({
     selector: 'app-ficha-epidemiologica-crud',
@@ -34,6 +34,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     @Input() fichaName: string;
     @Input() form: any;
     @Input() volverBuscador: boolean;
+    @Input() accesoHuds: boolean;
     @Output() volver = new EventEmitter<any>();
     @ViewChild('form', { static: false }) ngForm: NgForm;
 
@@ -175,6 +176,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     public showFichaParcial = false;
     public patronPCR = '([A-Za-z])*([0-9]+$)+';
     private clasificacionOriginal;
+    public loading = true;
 
     constructor(
         private formsService: FormsService,
@@ -192,7 +194,8 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         private vacunasService: VacunasService,
         private prestacionesService: PrestacionesService,
         private elementoRupService: ElementosRUPService,
-        private pacientesVacunasService: PacientesVacunasService
+        private pacientesVacunasService: PacientesVacunasService,
+        private servicioDocumentos: DocumentosService
     ) { }
 
     ngOnChanges(): void {
@@ -243,6 +246,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                                     this.secciones[buscado].fields[key[0]] = field[key[0]];
                                 });
                             }
+                            this.loading = false;
                         }
                     } else {
                         if (sec.name === SECCION_OPERACIONES) {
@@ -726,5 +730,13 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     condicionLamp(field, seccion) {
         return field.key === 'lamp' && this.checkConfirmados(seccion.fields['segundaclasificacion']) !== 'confirmado'
             && seccion.fields['antigeno']?.id !== 'confirmado' && seccion.fields['ifi']?.id !== 'confirmado' && seccion.fields['segundaclasificacion']?.id !== 'pcr';
+    }
+
+    descargar() {
+        const data = `${this.fichaPaciente.type.name} - ${this.fichaPaciente.paciente.nombre}_${this.fichaPaciente.paciente.apellido}`;
+        this.servicioDocumentos.descargarFicha({
+            ficha: this.fichaPaciente,
+            usuario: this.auth.usuario.nombreCompleto
+        }, data).subscribe();
     }
 }

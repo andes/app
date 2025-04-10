@@ -17,11 +17,13 @@
     <ng-template #elseFicha>
         <app-ficha-epidemiologica-crud *ngIf="showFicha === 'covid19'" [paciente]="pacienteSelected"
                                        [fichaPaciente]="fichaPaciente$ | async" [editFicha]="editFicha"
-                                       [fichaName]="showFicha" [form]="selectedForm" (volver)="volver()">
+                                       [fichaName]="showFicha" [form]="selectedForm" [accesoHuds]="false"
+                                       (volver)="volver()">
         </app-ficha-epidemiologica-crud>
         <app-ficha-epidemiologica-generic *ngIf="showFicha !== 'covid19'" [fichaName]="showFicha"
                                           [fichaPaciente]="fichaPaciente$ | async" [paciente]="pacienteSelected"
-                                          [form]="selectedForm" (volver)="volver()" [editFicha]="editFicha">
+                                          [form]="selectedForm" (volver)="volver()" [editFicha]="editFicha"
+                                          [accesoHuds]="false">
         </app-ficha-epidemiologica-generic>
     </ng-template>
     <plex-layout-sidebar [type]="'invert'">

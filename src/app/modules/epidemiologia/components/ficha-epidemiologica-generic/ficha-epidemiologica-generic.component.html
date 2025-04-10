@@ -1,12 +1,15 @@
 <plex-layout>
     <plex-layout-main>
         <plex-title titulo="Ficha {{fichaName}}" main>
-            <plex-button type="danger" (click)="toBack()">Volver
+            <plex-button *ngIf="!accesoHuds" type="danger" (click)="toBack()">Volver
             </plex-button>
             <plex-button *ngIf="editFicha" position="right" type="success" [autodisabled]="true"
                          (click)="registrarFicha()">
                 Registrar
                 ficha
+            </plex-button>
+            <plex-button *ngIf="accesoHuds && !loading" type="info" size="sm" icon="download" tooltip="Descargar PDF"
+                         tooltipPosition="left" (click)="descargar()">
             </plex-button>
         </plex-title>
         <plex-wrapper *ngIf="descripcion">
@@ -95,7 +98,8 @@
                                     </td>
                                     <td *plTableCol="'telefono'">
                                         <plex-phone name="telefono" [(ngModel)]="contacto.telefono"
-                                                    [readonly]="!editFicha" required="true" [pattern]="patronContactoNumerico">
+                                                    [readonly]="!editFicha" required="true"
+                                                    [pattern]="patronContactoNumerico">
                                         </plex-phone>
                                     </td>
                                     <td *plTableCol="'domicilio'">

@@ -24,6 +24,12 @@ export class DocumentosService {
         );
     }
 
+    descargarFicha(params, nombreArchivo: string): Observable<any> {
+        return this.download('fichaEpidemiologia/pdf', params).pipe(
+            saveAs(nombreArchivo, 'pdf')
+        );
+    }
+
     enviarInformeRUP(datos): Observable<any> {
         return this.server.post('/modules/descargas/send/pdf', datos);
     }
