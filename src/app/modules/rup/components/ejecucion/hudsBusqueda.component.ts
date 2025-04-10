@@ -848,12 +848,12 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         this.profesionalService.get({
             id: profesionalId
         }).subscribe((profesional) => {
-            // Los ids de los roles permitidos son los de las profesiones: Médico, Odontólogo y Obstetra.
-            const rolesPermitidos = ['5b97b8c27669f0926701de3d', '5b97b8c27669f0926701de40', '5b97b8c27669f0926701de3f'];
+            // Los codigos de los roles permitidos son los de las profesiones: Médico, Odontólogo y Obstetra respentivamente.
+            const rolesPermitidos = [1, 2, 23];
 
             this.profesional = profesional[0];
-            this.profesionalValido = rolesPermitidos.some(rol =>
-                this.profesional.formacionGrado?.some((formacion: { profesion: { _id: string } }) => formacion.profesion._id === rol)
+            this.profesionalValido = rolesPermitidos.some(codigo =>
+                this.profesional.formacionGrado?.some((formacion: { profesion: { codigo: number } }) => formacion.profesion.codigo === codigo)
             );
         });
     }
