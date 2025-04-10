@@ -1,12 +1,12 @@
-<plex-button *ngIf="!seleccionRecetas.length" type="success" icon="check" size="sm" tooltip="Suspender"
+<plex-button *ngIf="!seleccionRecetas.length" type="success" icon="check" size="sm" tooltip="Renovar"
              tooltipPosition="left" disabled="true">
 </plex-button>
 
-<plex-help *ngIf="seleccionRecetas.length" size="sm" class="ml-2" btnType="success" icon="check" tooltip="Suspender"
+<plex-help *ngIf="seleccionRecetas.length" size="sm" class="ml-2" btnType="success" icon="check" tooltip="Renovar"
            tooltipPosition="left">
-    <plex-title titulo="Suspender Medicamento" size="sm">
+    <plex-title titulo="Renovar Medicamento" size="sm">
         <plex-button type="success" icon="check" size="sm" tooltip="Confirmar" tooltipPosition="left"
-                     [disabled]="!formSuspension.valid" (click)="suspenderMedicacion()">
+                     (click)="renovarMedicacion()">
         </plex-button>
     </plex-title>
 
@@ -26,12 +26,4 @@
     </table>
     <plex-label *ngIf="!seleccionRecetas?.length" titulo="No hay recetas seleccionadas">
     </plex-label>
-    <form #formSuspension="ngForm">
-        <plex-select label="Motivo de suspensión" name="motivo" [(ngModel)]="motivoSelector" [data]="motivosSuspension"
-                     required>
-        </plex-select>
-        <plex-text label="Observación" name="observacion" [(ngModel)]="observacion"
-                   placeholder="Ingrese una observación" [required]="motivoSelector?.nombre === 'Otro'">
-        </plex-text>
-    </form>
 </plex-help>
