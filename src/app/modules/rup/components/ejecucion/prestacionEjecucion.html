@@ -351,8 +351,8 @@
                                   (_onDragEnd)="arrastrandoConcepto(false)" (selected)="onSelectConcepto($event)">
                     </rup-buscador>
                 </plex-tab>
-                <plex-tab *ngIf="tieneAccesoHUDS" label="Historia de Salud" (click)="panelIndex = 1">
-                    <rup-hudsBusqueda [paciente]="prestacion?.paciente" [_dragScope]="'registros-rup'"
+                <plex-tab *ngIf="paciente && tieneAccesoHUDS" label="Historia de Salud" (click)="panelIndex = 1">
+                    <rup-hudsBusqueda [paciente]="paciente" [_dragScope]="'registros-rup'"
                                       (_onDragStart)="arrastrandoConcepto(true)"
                                       (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
                 </plex-tab>
