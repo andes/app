@@ -141,7 +141,7 @@
 
                                             <plex-button *ngIf="!existe(registro.concepto);" size="sm" type="danger"
                                                          icon="delete"
-                                                         (click)="confirmarEliminarRegistro(registro, 'card')">
+                                                         (click)="confirmarEliminarRegistro(registro, 'card')" [disabled]="!puedeEliminar(registro)">
                                             </plex-button>
                                         </div>
                                     </div>
@@ -166,9 +166,10 @@
                                             <!-- RUP Loader -->
                                             <rup [elementoRUP]="elementosRUPService.elementoRegistro(registro)"
                                                  [prestacion]="prestacion" [paciente]="paciente" [registro]="registro"
-                                                 [soloValores]="false" (ejecutarAccion)="recibirAccion($event, 'tab')"
+                                                 [soloValores]="esSoloValores(registro)"
+                                                 (ejecutarAccion)="recibirAccion($event, 'tab')"
                                                  [params]="elementosRUPService.getParams(registro)"
-                                                 [conceptosAsociados]="conceptosAsociados">
+                                                 [conceptosAsociados]="conceptosAsociados" [alerta]="alerta">
                                             </rup>
                                         </div>
                                     </div>
@@ -306,7 +307,8 @@
                             </app-ficha-epidemiologica-crud>
                         </plex-tab>
 
-                        <plex-tab *ngIf="registro.tipo === 'receta'" color="receta" class="tab-receta" [allowClose]="true" [label]="recetaService.getLabel(registro.data.recetas)">
+                        <plex-tab *ngIf="registro.tipo === 'receta'" color="receta" class="tab-receta"
+                                  [allowClose]="true" [label]="recetaService.getLabel(registro.data.recetas)">
                             <vista-receta [registro]="registro.data" [paciente]="paciente"></vista-receta>
                         </plex-tab>
                     </ng-container>

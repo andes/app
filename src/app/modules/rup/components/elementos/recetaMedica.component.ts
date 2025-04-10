@@ -63,7 +63,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         this.intervalos$ = this.constantesService.search({ source: 'plan-indicaciones:frecuencia' });
         this.buscarDiagnosticosConTrastornos();
 
-        this.ejecucionService?.hasActualizacion().subscribe(async (estado) => {
+        this.ejecucionService?.hasActualizacion().subscribe(async () => {
             this.loadRegistros();
         });
     }
