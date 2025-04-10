@@ -433,9 +433,12 @@ export class BuscadorComponent implements OnInit, OnChanges {
                             return profesionHabilitada && estadoMatricula.key;
                         })) !== undefined;
                         if (permiso) {
+                            if (motivoRechazo === 'vencida') {
+                                this.plex.info('warning', 'Usted tiene su matricula vencida. Próximamente no podrá registrar prescripciones.');
+                            }
                             this.seleccionarConcepto(concepto, index);
                         } else {
-                            this.plex.info('warning', motivoRechazo ? `Su matrícula se encuentra ${motivoRechazo} para emitir una Receta` : 'Sin profesión habilitada para emitir una Receta');
+                            this.plex.info('warning', motivoRechazo ? `Su matrícula se encuentra ${motivoRechazo} para emitir una prescripción` : 'Sin profesión habilitada para emitir una prescripción');
                         }
                     }
                 });
@@ -450,19 +453,26 @@ export class BuscadorComponent implements OnInit, OnChanges {
             value: 'vigente',
             key: false
         };
-        if (formacionGrado.matriculacion) {
-            if (!formacionGrado.matriculado && new Date < formacionGrado.matriculacion[formacionGrado.matriculacion.length - 1].fin) {
-                estado.value = 'suspendida';
-            } else {
-                if (new Date > formacionGrado.matriculacion[formacionGrado.matriculacion.length - 1].fin) {
-                    estado.value = 'vencida';
-                } else {
-                    estado.key = true;
-                }
-            }
-        } else {
-            estado.value = 'inhabilitada';
+        if (!formacionGrado.matriculado) {
+            estado.value = 'suspendida';
+            return estado;
         }
+
+        if (!formacionGrado.matriculacion) {
+            estado.value = 'inhabilitada';
+            return estado;
+        }
+
+        const ultimaMatricula = formacionGrado.matriculacion[formacionGrado.matriculacion.length - 1];
+        const fechaActual = new Date();
+
+        if (fechaActual > ultimaMatricula.fin) {
+            estado.value = 'vencida';
+            estado.key = true; // temporalmente se admiten matriculas vencidas (RUP-475)
+            return estado;
+        }
+
+        estado.key = true;
         return estado;
     }
 
