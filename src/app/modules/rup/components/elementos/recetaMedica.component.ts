@@ -50,6 +50,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         { id: '3meses', nombre: '3 meses' },
         { id: '6meses', nombre: '6 meses' }
     ];
+    public requiereDosis = false;
+    public requiereIntervalo = false;
 
 
     ngOnInit() {
@@ -132,6 +134,12 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         if ($event?.value?.id === 'otro') {
             this.ingresoCantidadManual = true;
         }
+    }
+
+    changeDosisIntervalo() {
+
+        this.requiereDosis = !!this.medicamento?.dosisDiaria?.intervalo;
+        this.requiereIntervalo = !!this.medicamento?.dosisDiaria?.dosis;
     }
 
     deshacerCantidadManual() {
