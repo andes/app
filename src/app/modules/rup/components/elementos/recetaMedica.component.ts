@@ -50,6 +50,9 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         { id: '3meses', nombre: '3 meses' },
         { id: '6meses', nombre: '6 meses' }
     ];
+    public eclMedicamentos;
+    public eclPresentaciones;
+    public eclUnidades;
 
 
     ngOnInit() {
@@ -61,6 +64,11 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         }
         this.registros = this.prestacion.ejecucion.registros.filter(reg => reg.id !== this.registro.id).map(reg => reg.concepto);
         this.intervalos$ = this.constantesService.search({ source: 'plan-indicaciones:frecuencia' });
+        this.eclqueriesServicies.search({ key: '^receta' }).subscribe(query => {
+            this.eclMedicamentos = query.find(q => q.key === 'receta:genericos');
+            this.eclPresentaciones = query.find(q => q.key === 'receta:presentacionescomerciales');
+            this.eclUnidades = query.find(q => q.key === 'receta:unidadespresentacionescomerciales');
+        });
         this.buscarDiagnosticosConTrastornos();
 
         this.ejecucionService?.hasActualizacion().subscribe(async (estado) => {
@@ -71,9 +79,9 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     @Unsubscribe()
     loadMedicamentoGenerico(event) {
         const input = event.query;
-        if (input && input.length > 2) {
+        if (input && input.length > 2 && this.eclMedicamentos) {
             const query: any = {
-                expression: '<763158003:732943007=*,[0..0] 774159003=*, 763032000=*',
+                expression: this.eclMedicamentos.valor,
                 search: input
             };
             this.snomedService.get(query).subscribe(event.callback);
@@ -98,13 +106,13 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         this.medicamento.cantidad = null;
         this.medicamento.presentacion = null;
         this.medicamento.cantEnvases = null;
-        if (this.medicamento.generico) {
+        if (this.medicamento.generico && this.eclPresentaciones && this.eclUnidades) {
             const queryPresentacion: any = {
-                expression: `${this.medicamento.generico.conceptId}.763032000`,
+                expression: this.eclPresentaciones.valor.replace('#MG#', this.medicamento.generico.conceptId),
                 search: ''
             };
             const queryUnidades: any = {
-                expression: `(^331101000221109: 774160008 =<${this.medicamento.generico.conceptId}).774161007`,
+                expression: this.eclUnidades.valor.replace('#MG#', this.medicamento.generico.conceptId),
                 search: ''
             };
             forkJoin([
