@@ -24,6 +24,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         tipoReceta: null,
         tratamientoProlongado: false,
         tiempoTratamiento: null,
+        serie: null,
+        numero: null,
         dosisDiaria: {
             dosis: null,
             frecuencia: null,
@@ -227,6 +229,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
             tipoReceta: { id: 'simple', label: 'Simple' },
             tratamientoProlongado: false,
             tiempoTratamiento: null,
+            serie: null,
+            numero: null,
             dosisDiaria: {
                 frecuencia: null,
                 dias: null,
@@ -260,5 +264,12 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
 
     public onValidate() {
         return this.registro.valor.medicamentos.length > 0 ? true : false;
+    }
+
+    onTipoRecetaChange() {
+        if (this.medicamento.tipoReceta === 'triplicado') {
+            this.medicamento.tratamientoProlongado = false;
+            this.medicamento.tiempoTratamiento = null;
+        }
     }
 }
