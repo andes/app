@@ -1,3 +1,17 @@
+# [5.161.0](https://github.com/andes/app/compare/v5.160.2...v5.161.0) (2025-04-16)
+
+
+### Bug Fixes
+
+* **HUDS:** modifica recuperacion de paciente ([#3164](https://github.com/andes/app/issues/3164)) ([2c2ba12](https://github.com/andes/app/commit/2c2ba12cb311ce639dd0c6cfb0aba6815753f00f))
+* **IN:** fecha desde-hasta en listado internacion ([#3171](https://github.com/andes/app/issues/3171)) ([6d8bc79](https://github.com/andes/app/commit/6d8bc79ac8d82afa283e5726d7467c948e9ed6c1))
+
+
+### Features
+
+* **EP-246:** Generar PDF de ficha epidemiologica ([#3144](https://github.com/andes/app/issues/3144)) ([e4c70b6](https://github.com/andes/app/commit/e4c70b6725d8d4fec26d03a523bb7553e1ab12eb))
+* **RUP:** modifica permisos de profesion en receta ([#3172](https://github.com/andes/app/issues/3172)) ([0744706](https://github.com/andes/app/commit/0744706c7d1884ceb24593abcaccf9dabea53f9b))
+
 ## [5.160.2](https://github.com/andes/app/compare/v5.160.1...v5.160.2) (2025-04-02)
 
 
