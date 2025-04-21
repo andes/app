@@ -6,19 +6,20 @@
 </td>
 <td>
     <small>
-        {{ prestacion.solicitud?.tipoPrestacion.term || prestacion.prestacion.snomed.term }}
+        {{ (prestacion.solicitud?.tipoPrestacion.term || prestacion.prestacion?.snomed.term) ||
+        (prestacion.idProtocolo ? 'Laboratorio ' + prestacion.idProtocolo : '') }}
     </small>
 </td>
 <td>
     <small>
-        {{ prestacion.solicitud?.profesional || prestacion.profesional | nombre }}
+        {{ (prestacion.solicitud?.profesional || prestacion.profesional | nombre) || prestacion.medicoSolicitante }}
     </small>
 </td>
 <td>
     <div class="d-flex flex-rows align-items-center">
-        <plex-button size="sm" icon="eye" type="info" (click)="emit('ver', $event)" tooltip="Ver" titlePosition="left"
-                     *ngIf="!esEjecucion"></plex-button>
-
+        <plex-button size="sm" icon="eye" type="info"
+                     (click)="prestacion.idProtocolo ? emit('verProtocolo', $event) : emit('ver', $event)" tooltip="Ver"
+                     titlePosition="left" *ngIf="!esEjecucion"></plex-button>
         <plex-dropdown *ngIf="!esEjecucion && esMiPrestacion && esProfesional" right="true" size="sm"
                        icon="dots-vertical" [items]="items">
         </plex-dropdown>

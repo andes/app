@@ -241,6 +241,9 @@
             <vista-prestacion *ngIf="mainView.id" [idPrestacion]="mainView.id">
                 <plex-button type="danger" size="sm" icon="close" (click)="mapaCamasService.resetView()"></plex-button>
             </vista-prestacion>
+            <vista-laboratorio *ngIf="mainView.idProtocolo" [protocolo]="mainView">
+                <plex-button type="danger" size="sm" icon="close" (click)="mapaCamasService.resetView()"></plex-button>
+            </vista-laboratorio>
         </ng-container>
     </plex-layout-main>
 
