@@ -47,10 +47,11 @@
             <th></th>
         </tr>
     </thead>
-    <tbody *ngIf="!inProgress && (permisoHuds$ | async)">
+    <tbody *ngIf="!inProgress && (permisoHuds$ | async) && (prestacionesUnidas$ | async)?.length">
         <tr registro-huds-item [prestacion]="prestacion" (accion)="onItemAccion(prestacion, $event)"
-            *ngFor="let prestacion of historialFiltrado$ | async">
+            *ngFor="let prestacion of prestacionesUnidas$ | async">
         </tr>
+
     </tbody>
 </table>
 
@@ -59,7 +60,7 @@
 </div>
 
 
-<div *ngIf="!inProgress && (permisoHuds$ | async) && !(historialFiltrado$ | async)?.length" justify="center">
+<div *ngIf="!inProgress && (permisoHuds$ | async) && !(prestacionesUnidas$ | async)?.length " justify="center">
     <plex-label class="mt-2" direction="column" size="md" icon=""
                 titulo="No existen registros entre las fechas seleccionadas" icon="calendario-rango-bold">
     </plex-label>
