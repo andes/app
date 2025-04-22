@@ -241,8 +241,67 @@
             <vista-prestacion *ngIf="mainView.id" [idPrestacion]="mainView.id">
                 <plex-button type="danger" size="sm" icon="close" (click)="mapaCamasService.resetView()"></plex-button>
             </vista-prestacion>
-            <vista-laboratorio *ngIf="mainView.idProtocolo" [protocolo]="mainView">
-                <plex-button type="danger" size="sm" icon="close" (click)="mapaCamasService.resetView()"></plex-button>
+
+            <vista-laboratorio *ngIf="mainView.tipo === 'laboratorio'" [protocolo]="mainView">
+                <plex-title size="sm" titulo="Detalle laboratorio">
+                    <plex-button type="danger" size="sm" icon="close"
+                                 (click)="mapaCamasService.resetView()"></plex-button>
+                </plex-title>
+
+                <div justify class="w-100">
+                    <div class="info-basica">
+                        <div class="d-flex flex-column">
+                            <plex-badge type="info">
+                                Protocolo {{mainView.data.numero}}
+                            </plex-badge>
+                            <b class="mt-1">{{mainView.data.fecha | fecha}}</b>
+                        </div>
+                        <plex-grid type="full" cols="4" size="sm">
+                            <div class="datos"><span>Medico solicitante</span><b>{{mainView.data.medicoSolicitante}}</b>
+                            </div>
+                            <div class="datos"><span>Origen</span><b>{{mainView.data.origen}}</b></div>
+                            <div class="datos"><span>Efector
+                                    Solicitante</span><b>{{mainView.data.efectorSolicitante}}</b></div>
+                            <div class="datos"><span>Laboratorio</span><b>{{mainView.data.Laboratorio ||
+                                    mainView.data.laboratorio}}</b></div>
+                        </plex-grid>
+                    </div>
+                </div>
+                <div class="w-100 mt-2">
+                    <plex-title titulo="Resultados" size="md">
+                        <plex-button [disabled]="areasLaboratorio.length === 0" type="info" size="sm"
+                                     icon="download mdi-18px" tooltip="Descargar"
+                                     (click)="descargarLab()"></plex-button>
+                    </plex-title>
+
+                    <ng-container *ngIf="areasLaboratorio?.length">
+                        <ng-container *ngFor="let area of areasLaboratorio">
+                            <div class="titulo-grupo">{{area.area}}</div>
+                            <ng-container *ngFor="let unGrupo of area.grupos">
+                                <span *ngIf="unGrupo.items.length > 1"><b>{{unGrupo.grupo}}</b></span>
+                                <ng-container>
+                                    <table class="table table-striped table-hover">
+                                        <tbody>
+                                            <tr *ngFor="let unItem of unGrupo.items">
+                                                <td *ngIf="!unItem.esTitulo"><b>{{unItem.nombre}}</b></td>
+                                                <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.resultado}}
+                                                    {{unItem.unidadMedida}}</td>
+                                                <td *ngIf="!unItem.esTitulo" class="text-center">
+                                                    {{unItem.valorReferencia}}{{
+                                                    unItem.metodo ? '/' + unItem.metodo : '' }}</td>
+                                                <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.firma}}</td>
+                                                <td class="esTitulo" *ngIf="unItem.esTitulo" colspan="5">
+                                                    <b>{{unItem.nombre}}</b>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </ng-container>
+
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </div>
             </vista-laboratorio>
         </ng-container>
     </plex-layout-main>

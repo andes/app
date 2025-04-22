@@ -201,21 +201,19 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         this.prestacionesList$ = this.historial$.pipe(
             map(prestaciones => prestaciones = arrayToSet(prestaciones, 'conceptId', (item) => item.solicitud ? item.solicitud.tipoPrestacion : item.prestacion.snomed))
         );
-        const fecNac = moment(this.paciente.fechaNacimiento).format('yyyyMMDD');
-        const fechaHta = moment().format('yyyyMMDD');
+        const fechaNacimiento = moment(this.paciente.fechaNacimiento).format('yyyyMMDD');
+        const fechaHasta = moment().format('yyyyMMDD');
         this.laboratorioService.getProtocolos({
-            estado: 'validado', dni: this.paciente.documento, fecNac,
-            apellido: this.paciente.apellido, fechaDde: '20200101', fechaHta: '20250404'
+            estado: 'validado', dni: this.paciente.documento, fecNac: fechaNacimiento,
+            apellido: this.paciente.apellido, fechaDde: '20200101', fechaHta: fechaHasta
         }).subscribe(laboratorios => {
-            this.laboratoriosSubject$.next(laboratorios[0]?.Data || []); // Actualiza el BehaviorSubject
-
+            this.laboratoriosSubject$.next(laboratorios[0]?.Data || []);
         });
 
         this.prestacionesUnidas$ = combineLatest([this.historialFiltrado$, this.laboratorios$]).pipe(
             map(([historial, laboratorios]) => {
-                // console.log(historial, laboratorios, ' paciente');
                 return [...historial, ...laboratorios];
-            }) // Une ambos arrays
+            })
         );
 
     }
