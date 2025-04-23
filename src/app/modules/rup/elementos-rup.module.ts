@@ -75,6 +75,7 @@ import { SemanticClassPipe } from './pipes/semantic-class.pipes';
 import { SemanticIconPipe } from './pipes/semantic-icon.pipes';
 import { RUPSoloValorPipe } from './pipes/elemento-rup-valor.pipes';
 import { DirectiveLibModule } from '../../directives/directives.module';
+import { PrescripcionDispositivoComponent } from './components/elementos/prescripcionDispositivo.component';
 
 const RUPComponentsArray = [
     RUPComponent,
@@ -130,7 +131,8 @@ const RUPComponentsArray = [
     ChecklistComponent,
     VacunasComponent,
     SolicitudPrescripcionMedicamentoComponent,
-    SolicitudPrescripcionMedicamentoInternacionComponent
+    SolicitudPrescripcionMedicamentoInternacionComponent,
+    PrescripcionDispositivoComponent
 ];
 
 @NgModule({
