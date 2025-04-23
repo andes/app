@@ -51,14 +51,10 @@ export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
         }
         this.pacienteService.getEstadoInternacion(this.prestacionSeleccionada.paciente.id).subscribe(resp => {
 
-            resp.forEach(prestacion => {
-                prestacion.ejecucion.registros.forEach(registro => {
-                    if (registro.valor?.informeIngreso || registro.valor?.InformeEgreso) {
-                        this.internacion = registro.valor;
-                        this.organizacionInternacion = prestacion.solicitud.organizacion.nombre;
-                    }
-                });
-            });
+            if (resp) {
+                this.internacion = resp.estado;
+                this.organizacionInternacion = resp.organizacion ? resp.organizacion : 'Sin organización';
+            }
             this.internacionPaciente.emit(this.internacion);
         });
     }

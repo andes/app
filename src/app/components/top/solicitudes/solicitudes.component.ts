@@ -827,7 +827,7 @@ export class SolicitudesComponent implements OnInit {
     }
 
     onDarTurno() {
-        if (this.internacionPaciente) {
+        if (this.internacionPaciente.informeIngreso) {
             this.plex.confirm('Este paciente se encuentra actualmente internado, ¿desea continuar?', 'Atención').then(confirmar => {
                 if (confirmar) {
                     this.pacienteService.getById(this.prestacionSeleccionada.paciente.id).subscribe(paciente => {
@@ -845,6 +845,22 @@ export class SolicitudesComponent implements OnInit {
                             this.showDarTurnos = true;
                         }
                     });
+                }
+            });
+        } else {
+            this.pacienteService.getById(this.prestacionSeleccionada.paciente.id).subscribe(paciente => {
+
+                this.pacienteService.checkFallecido(paciente);
+            });
+            this.servicioPrestacion.getById(this.prestacionSeleccionada._id).subscribe(prestacion => {
+                if (prestacion.solicitud.turno) {
+                    this.plex.info('warning', 'La solicitud ya tiene un turno asignado.');
+                    this.cargarSolicitudes();
+                } else {
+
+                    this.solicitudTurno = this.prestacionSeleccionada;
+                    this.pacienteSeleccionado = this.prestacionSeleccionada.paciente;
+                    this.showDarTurnos = true;
                 }
             });
         }

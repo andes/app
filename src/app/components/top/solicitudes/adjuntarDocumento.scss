@@ -137,13 +137,20 @@ a.adjunto {
     -webkit-animation-iteration-count: infinite;
 }
 
+.internacion-estado {
+    display: flex;
+    flex-direction: column;
+}
+
 @-moz-keyframes parpadeo {
     0% {
         opacity: 1.0;
     }
+
     50% {
         opacity: 0.0;
     }
+
     100% {
         opacity: 1.0;
     }
@@ -153,9 +160,11 @@ a.adjunto {
     0% {
         opacity: 1.0;
     }
+
     50% {
         opacity: 0.0;
     }
+
     100% {
         opacity: 1.0;
     }
@@ -165,9 +174,11 @@ a.adjunto {
     0% {
         opacity: 1.0;
     }
+
     50% {
         opacity: 0.0;
     }
+
     100% {
         opacity: 1.0;
     }
