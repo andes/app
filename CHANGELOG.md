@@ -1,3 +1,11 @@
+## [5.161.1](https://github.com/andes/app/compare/v5.161.0...v5.161.1) (2025-04-23)
+
+
+### Bug Fixes
+
+* **RUP:** Agrega consulta  por base a queries para receta ([#3157](https://github.com/andes/app/issues/3157)) ([79e6ee5](https://github.com/andes/app/commit/79e6ee5420a6e06aefa0b42e39b7175fc96c73d2))
+* **TOP:** control en historial por turno cancelado desde mobile ([#3174](https://github.com/andes/app/issues/3174)) ([51dace7](https://github.com/andes/app/commit/51dace74a773ed3214ada26ded57b8c0f3033d2d))
+
 # [5.161.0](https://github.com/andes/app/compare/v5.160.2...v5.161.0) (2025-04-16)
 
 
