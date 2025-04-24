@@ -239,7 +239,9 @@ export class DemandaInsatisfechaComponent implements OnInit {
         this.formLlamados?.form.markAsPristine();
     }
 
-    public guardarLlamado(id) {
+    public guardarLlamado(demanda) {
+        const id = demanda._id;
+
         this.formLlamados.control.markAllAsTouched();
 
         if (this.formLlamados.form.valid) {
