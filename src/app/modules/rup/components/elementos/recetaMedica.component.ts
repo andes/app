@@ -52,7 +52,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     ];
     public eclMedicamentos;
     public eclPresentaciones;
-    public eclUnidades;
+    public eclMedicamentosComerciales;
+    public eclUnidadesFiltro;
 
 
     ngOnInit() {
@@ -67,7 +68,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         this.eclqueriesServicies.search({ key: '^receta' }).subscribe(query => {
             this.eclMedicamentos = query.find(q => q.key === 'receta:genericos');
             this.eclPresentaciones = query.find(q => q.key === 'receta:presentacionescomerciales');
-            this.eclUnidades = query.find(q => q.key === 'receta:unidadespresentacionescomerciales');
+            this.eclMedicamentosComerciales = query.find(q => q.key === 'receta:medicamentoscomercialesporgenerico');
+            this.eclUnidadesFiltro = query.find(q => q.key === 'receta:filtroUnidades');
         });
         this.buscarDiagnosticosConTrastornos();
 
@@ -106,22 +108,22 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         this.medicamento.cantidad = null;
         this.medicamento.presentacion = null;
         this.medicamento.cantEnvases = null;
-        if (this.medicamento.generico && this.eclPresentaciones && this.eclUnidades) {
+        if (this.medicamento.generico && this.eclPresentaciones && this.eclMedicamentosComerciales) {
             const queryPresentacion: any = {
                 expression: this.eclPresentaciones.valor.replace('#MG#', this.medicamento.generico.conceptId),
                 search: ''
             };
             const queryUnidades: any = {
-                expression: this.eclUnidades.valor.replace('#MG#', this.medicamento.generico.conceptId),
-                search: ''
-            };
+                expression: this.eclMedicamentosComerciales.valor.replace('#MG#', this.medicamento.generico.conceptId),
+                type: this.eclUnidadesFiltro.valor };
+
             forkJoin([
                 this.snomedService.get(queryPresentacion),
-                this.snomedService.get(queryUnidades)]
+                this.snomedService.getByRelationships(queryUnidades)]
             ).subscribe(([resultado, presentaciones]) => {
-                this.medicamento.presentacion = resultado[0];
+                this.medicamento.presentacion = resultado ? resultado[0] : null;
                 this.unidades = presentaciones.map(elto => {
-                    return { id: elto.term, valor: elto.term };
+                    return { id: elto, valor: elto };
                 });
                 if (this.unidades.length) {
                     this.unidades.unshift({ id: 'otro', valor: 'Otro' });

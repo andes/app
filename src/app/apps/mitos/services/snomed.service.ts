@@ -27,4 +27,8 @@ export class SnomedService {
         return this.server.get(`${this.snomedURL}/concepts/${conceptId}`);
     }
 
+    getByRelationships(params: any): Observable<any[]> {
+        return this.server.get(`${this.snomedURL}/relationships`, { params: params, showError: true });
+    }
+
 }
