@@ -1,6 +1,11 @@
 <ng-container *ngIf="!soloValores">
     <form class="mt-1" #formDispositivo="ngForm">
 
+        <plex-select [(ngModel)]="dispositivo.diagnostico" hintType="info" label="Diagnóstico" [data]="registros"
+                     name="diagnostico" multiline="true" [required]="true" labelField="term" idField="conceptId"
+                     hint="Se listaran los conceptos registrados en esta consulta" hintType="info" hintIcon="eye">
+        </plex-select>
+
         <plex-grid cols="2">
             <plex-select [(ngModel)]="dispositivo.generico" name="generico" (getData)="loadDispositivo($event)"
                          placeholder="Dispositivo genérico" label="Dispositivo" idField="conceptId" labelField="term"
@@ -10,23 +15,9 @@
             <plex-int class="formEditar" [ngClass]="{ 'w-100': !unidades.length }" name="comprimidos" label="Cantidad"
                       [(ngModel)]="dispositivo.cantidad" required="true" min="1" max="90">
             </plex-int>
-            <!--<div grow="full">
-                 <plex-select *ngIf="!dispositivo.generico || unidades.length || loading" class="formEditar w-100"
-                             name="unidades" [(ngModel)]="dispositivo.cantidad" [data]="unidades"
-                             placeholder="Seleccione una opción" label="Cantidad" labelField="valor" required="true">
-                </plex-select> 
-                
-                <plex-button *ngIf="ingresoCantidadManual && unidades.length" class="ml-1" name="deshacer"
-                             type="warning" icon="undo" tooltip="Deshacer edición manual" size="md"
-                             (click)="deshacerCantidadManual()">
-                </plex-button> 
-            </div>-->
         </plex-grid>
 
         <plex-grid cols="2">
-            <!-- <plex-int name="envases" label="Cantidad de envases" [(ngModel)]="dispositivo.cantEnvases" required="true"
-                      min="1" max="90">
-            </plex-int> -->
             <plex-grid cols="2" style="margin-top: 2rem;grid-gap: 0;">
                 <plex-bool [(ngModel)]="dispositivo.tratamientoProlongado" name="tratamientoProlongado" type="slide"
                            label="Tratamiento prolongado">
@@ -58,14 +49,13 @@
             <plex-icon size="md" *ngIf="true" name="cruz-hospital" class="icon icon--border--producto mr-2">
             </plex-icon>
             <plex-label [tituloBold]="true" titulo="{{ item.generico.term | capitalizeFirst }}"
-                        subtitulo="cantidad: {{ item.cantidad}}"></plex-label>
-            <!-- <plex-badge *ngIf="item.diagnostico" size="sm" type="warning" hintType="warning"> -->
-            <!-- {{ truncateDiagnostico(item.diagnostico.term) }} -->
-            <!-- </plex-badge> -->
+                        subtitulo="cantidad: {{ item.cantidad}}">
+            </plex-label>
+            <plex-badge *ngIf="item.diagnostico" size="sm" type="warning" hintType="warning">
+                {{ item.diagnostico.term | truncate }}
+            </plex-badge>
             <plex-badge *ngIf="item.tratamientoProlongado" type="info">Tratamiento prolongado
             </plex-badge>
-            <!-- <plex-badge *ngIf="item.tipoReceta?.nombre" type="info">{{item.tipoReceta?.nombre}}
-            </plex-badge> -->
             <plex-button type="danger" size="sm" (click)="borrar(item)" icon="delete" tooltip="eliminar"></plex-button>
         </plex-item>
     </plex-list>
@@ -75,14 +65,13 @@
     <plex-list size="md" *ngIf="registro.valor.dispositivos" [selectable]="false">
         <plex-item *ngFor="let item of registro.valor.dispositivos">
             <plex-label [tituloBold]="true" titulo="{{ item.generico.term | capitalizeFirst }}"
-                        subtitulo="cantidad: {{ item.cantidad}}"></plex-label>
-            <!-- <plex-badge *ngIf="item.diagnostico" size="sm" type="warning" hintType="warning"> -->
-            <!-- {{ truncateDiagnostico(item.diagnostico.term) }} -->
-            <!-- </plex-badge> -->
+                        subtitulo="cantidad: {{ item.cantidad}}">
+            </plex-label>
+            <plex-badge *ngIf="item.diagnostico" size="sm" type="warning" hintType="warning">
+                {{ item.diagnostico.term | truncate }}
+            </plex-badge>
             <plex-badge *ngIf="item.tratamientoProlongado" type="info">Tratamiento prolongado
             </plex-badge>
-            <!-- <plex-badge *ngIf="item.tipoReceta?.nombre" type="info">{{item.tipoReceta?.nombre}}
-            </plex-badge> -->
         </plex-item>
     </plex-list>
 </div>
