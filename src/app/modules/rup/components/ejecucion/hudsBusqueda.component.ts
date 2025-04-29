@@ -3,7 +3,7 @@ import { Plex } from '@andes/plex';
 import { AfterContentInit, Component, EventEmitter, Input, OnInit, Optional, Output, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
 import { LaboratorioService } from 'projects/portal/src/app/services/laboratorio.service';
-import { RecetaService } from 'projects/portal/src/app/services/receta.service';
+import { RecetaService } from 'src/app/modules/rup/services/receta.service';
 import { Observable, forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { InternacionResumenHTTP } from 'src/app/apps/rup/mapa-camas/services/resumen-internacion.http';
