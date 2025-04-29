@@ -15,8 +15,8 @@ export class PrescripcionDispositivoComponent extends RUPComponent implements On
     @ViewChild('formDispositivo') formDispositivo: NgForm;
 
     public dispositivo: any = {
+        diagnostico: null,
         generico: null,
-        // presentacion: null,
         cantidad: null,
         tratamientoProlongado: false,
         tiempoTratamiento: null
@@ -26,6 +26,9 @@ export class PrescripcionDispositivoComponent extends RUPComponent implements On
     public genericos = [];
     public registros = [];
     public loading = false;
+    public diagnosticos = [];
+    public recetasConFiltros = [];
+    private eclDispositivos;
 
     public tiemposTratamiento = [
         { id: '3meses', nombre: '3 meses' },
@@ -41,11 +44,15 @@ export class PrescripcionDispositivoComponent extends RUPComponent implements On
             this.registro.valor.dispositivos = [];
         }
         this.registros = this.prestacion.ejecucion.registros.filter(reg => reg.id !== this.registro.id).map(reg => reg.concepto);
-        // this.buscarDiagnosticosConTrastornos();
+        this.buscarDiagnosticosConTrastornos();
 
-        // this.ejecucionService?.hasActualizacion().subscribe(async (estado) => {
-        //     this.loadRegistros();
-        // });
+        this.ejecucionService?.hasActualizacion().subscribe(async (estado) => {
+            this.loadRegistros();
+        });
+
+        this.eclqueriesServicies.search({ key: '^receta' }).subscribe(query => {
+            this.eclDispositivos = query.filter(q => q.key === 'receta:dispositivos');
+        });
     }
 
     @Unsubscribe()
@@ -53,7 +60,7 @@ export class PrescripcionDispositivoComponent extends RUPComponent implements On
         const input = event.query;
         if (input && input.length > 2) {
             const query: any = {
-                expression: '<272181003',
+                expression: this.eclDispositivos.valor,
                 search: input
             };
             this.snomedService.get(query).subscribe(event.callback);
@@ -68,53 +75,22 @@ export class PrescripcionDispositivoComponent extends RUPComponent implements On
                 .filter(reg => reg.id !== this.registro.id && (reg.concepto.semanticTag === 'procedimiento'
                     || reg.concepto.semanticTag === 'hallazgo' || reg.concepto.semanticTag === 'trastorno'))
                 .map(reg => reg.concepto),
-            // ...this.recetasConFiltros
+            ...this.recetasConFiltros
         ];
     }
 
-    // loadPresentaciones() {
-    //     // this.deshacerCantidadManual();
-    //     this.loading = true;
-    //     this.dispositivo.cantidad = null;
-    //     this.dispositivo.presentacion = null;
-    //     if (this.dispositivo.generico) {
-    //         const queryPresentacion: any = {
-    //             expression: `${this.dispositivo.generico.conceptId}.763032000`,
-    //             search: ''
-    //         };
-    //         // const queryUnidades: any = {
-    //         //     expression: `(^331101000221109: 774160008 =<${this.insumo.generico.conceptId}).774161007`,
-    //         //     search: ''
-    //         // };
-    //         // forkJoin([
-    //         //     this.snomedService.get(queryPresentacion),
-    //         //     this.snomedService.get(queryUnidades)]
-    //         // )
-    //         this.snomedService.get(queryPresentacion).subscribe((presentaciones) => {
-    //             // this.dispositivo.presentacion = presentaciones;
-    //             // this.unidades = presentaciones.map(elto => {
-    //             //     return { id: elto.term, valor: elto.term };
-    //             // });
-    //             // if (this.unidades.length) {
-    //             //     this.unidades.unshift({ id: 'otro', valor: 'Otro' });
-    //             // } else {
-    //             //     this.ingresoCantidadManual = true;
-    //             // }
-    //             this.loading = false;
-    //         });
-    //     }
-    //     // else {
-    //     //     this.unidades = [];
-    //     //     this.ingresoCantidadManual = false;
-    //     // }
-    // }
+    buscarDiagnosticosConTrastornos() {
+        this.recetaService.buscarDiagnosticosConTrastornos(this.paciente).subscribe(diagnosticos => {
+            this.recetasConFiltros = diagnosticos;
+        });
+    }
 
     agregarDispositivo() {
         this.registro.valor.dispositivos.push(this.dispositivo);
         this.unidades = [];
         this.dispositivo = {
+            diagnostico: null,
             generico: null,
-            // presentacion: null,
             cantidad: null,
             tratamientoProlongado: false,
             tiempoTratamiento: null
