@@ -19,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { DocumentoPipe } from './pipes/documento.pipe';
 import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 import { CapitalizeFirstPipe } from './pipes/capitalizeFirst.pipe';
+import { TruncatePipe } from './pipes/truncate.pipe';
 
 @NgModule({
     imports: [
@@ -42,7 +43,8 @@ import { CapitalizeFirstPipe } from './pipes/capitalizeFirst.pipe';
         UploadFileComponent,
         NotasComponent,
         PacienteRestringidoPipe,
-        CapitalizeFirstPipe
+        CapitalizeFirstPipe,
+        TruncatePipe
     ],
     exports: [
         FechaPipe,
@@ -60,7 +62,8 @@ import { CapitalizeFirstPipe } from './pipes/capitalizeFirst.pipe';
         UploadFileComponent,
         NotasComponent,
         PacienteRestringidoPipe,
-        CapitalizeFirstPipe
+        CapitalizeFirstPipe,
+        TruncatePipe
     ],
     providers: [
         PacienteRestringidoPipe
