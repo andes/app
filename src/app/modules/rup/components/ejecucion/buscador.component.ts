@@ -434,7 +434,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
                         })) !== undefined;
                         if (permiso) {
                             if (motivoRechazo === 'vencida') {
-                                this.plex.info('warning', 'Usted tiene su matricula vencida. Próximamente no podrá registrar prescripciones.');
+                                this.plex.info('warning', 'Usted tiene su matrícula vencida. Próximamente no podrá registrar prescripciones.');
                             }
                             this.seleccionarConcepto(concepto, index);
                         } else {
