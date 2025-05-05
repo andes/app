@@ -47,6 +47,7 @@ export class RelacionesPacientesComponent implements OnInit {
     searchClear = true; // true si el campo de búsqueda se encuentra vacío
 
     public nombrePattern: string;
+    public esConviviente = false;
 
     constructor(
         private parentescoService: ParentescoService,
@@ -97,6 +98,7 @@ export class RelacionesPacientesComponent implements OnInit {
 
     seleccionarRelacionEntrante(data: any) {
         if (data.referencia) {
+            this.esConviviente = data.relacion.esConviviente;
             // creamos una copia del objeto relacion para no editarla directamente
             this.relacionEntrante = [Object.assign({}, data)];
         } else if (data.id) {
@@ -108,6 +110,7 @@ export class RelacionesPacientesComponent implements OnInit {
     addRelacion(unaRelacion) {
         // Es una relacion existente?
         if (unaRelacion.referencia) {
+            unaRelacion.relacion.esConviviente !== undefined ? unaRelacion.relacion.esConviviente = this.esConviviente : unaRelacion.relacion['esConviviente'] = this.esConviviente;
             // Se la agrega al array de relaciones nuevas/editadas
             let index = this.relacionesEdit.findIndex(rel => rel.referencia === unaRelacion.referencia);
             index >= 0 ? this.relacionesEdit[index] = unaRelacion : this.relacionesEdit.push(unaRelacion);
@@ -137,6 +140,7 @@ export class RelacionesPacientesComponent implements OnInit {
             nuevaRelacion.apellido = unaRelacion.apellido;
             nuevaRelacion.nombre = unaRelacion.nombre;
             nuevaRelacion.relacion = unaRelacion.relacion;
+            nuevaRelacion.relacion['esConviviente'] = this.esConviviente;
             if (unaRelacion.documento) {
                 nuevaRelacion.documento = unaRelacion.documento;
             }
