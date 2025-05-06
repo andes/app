@@ -44,6 +44,14 @@
                     titulo="Usuario que responde"
                     subtitulo="{{prestacionSeleccionada.estadoActual.createdBy | nombre}}">
         </plex-label>
+        <ng-container *ngIf="internacion">
+            <div class="internacion-estado">
+                <plex-label titulo="Estado de Internación"></plex-label>
+                <plex-badge type="warning" tooltip="{{organizacionInternacion}}" tooltipPosition="top">
+                    {{internacion}}
+                </plex-badge>
+            </div>
+        </ng-container>
     </plex-grid>
     <plex-title size="sm" titulo="Datos de creación"></plex-title>
     <plex-grid cols="3" size="md" direction="row">

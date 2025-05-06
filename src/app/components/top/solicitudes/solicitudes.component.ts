@@ -63,6 +63,8 @@ export class SolicitudesComponent implements OnInit {
     public showNuevaSolicitud = false;
     public prestacionesDestino = [];
     public asignadas = false;
+    public internacionPaciente;
+    public modalInternacion = false;
 
     public selectEstados = [
         { id: 'auditoria', nombre: 'AUDITORIA' },
@@ -825,21 +827,48 @@ export class SolicitudesComponent implements OnInit {
     }
 
     onDarTurno() {
-        this.pacienteService.getById(this.prestacionSeleccionada.paciente.id).subscribe(paciente => {
-            // Si se seleccionó por error un paciente fallecido
-            this.pacienteService.checkFallecido(paciente);
-        });
-        this.servicioPrestacion.getById(this.prestacionSeleccionada._id).subscribe(prestacion => {
-            if (prestacion.solicitud.turno) {
-                this.plex.info('warning', 'La solicitud ya tiene un turno asignado.');
-                this.cargarSolicitudes();
-            } else {
-                // Pasar filtros al calendario
-                this.solicitudTurno = this.prestacionSeleccionada;
-                this.pacienteSeleccionado = this.prestacionSeleccionada.paciente;
-                this.showDarTurnos = true;
-            }
-        });
+        if (this.internacionPaciente.informeIngreso) {
+            this.plex.confirm('Este paciente se encuentra actualmente internado, ¿desea continuar?', 'Atención').then(confirmar => {
+                if (confirmar) {
+                    this.pacienteService.getById(this.prestacionSeleccionada.paciente.id).subscribe(paciente => {
+                        // Si se seleccionó por error un paciente fallecido
+                        this.pacienteService.checkFallecido(paciente);
+                    });
+                    this.servicioPrestacion.getById(this.prestacionSeleccionada._id).subscribe(prestacion => {
+                        if (prestacion.solicitud.turno) {
+                            this.plex.info('warning', 'La solicitud ya tiene un turno asignado.');
+                            this.cargarSolicitudes();
+                        } else {
+                            // Pasar filtros al calendario
+                            this.solicitudTurno = this.prestacionSeleccionada;
+                            this.pacienteSeleccionado = this.prestacionSeleccionada.paciente;
+                            this.showDarTurnos = true;
+                        }
+                    });
+                }
+            });
+        } else {
+            this.pacienteService.getById(this.prestacionSeleccionada.paciente.id).subscribe(paciente => {
+
+                this.pacienteService.checkFallecido(paciente);
+            });
+            this.servicioPrestacion.getById(this.prestacionSeleccionada._id).subscribe(prestacion => {
+                if (prestacion.solicitud.turno) {
+                    this.plex.info('warning', 'La solicitud ya tiene un turno asignado.');
+                    this.cargarSolicitudes();
+                } else {
+
+                    this.solicitudTurno = this.prestacionSeleccionada;
+                    this.pacienteSeleccionado = this.prestacionSeleccionada.paciente;
+                    this.showDarTurnos = true;
+                }
+            });
+        }
+
+    }
+
+    verInternacionPaciente(internacion) {
+        this.internacionPaciente = internacion;
     }
 
     volverDarTurno() {

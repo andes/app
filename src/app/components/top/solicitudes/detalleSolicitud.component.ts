@@ -1,12 +1,13 @@
-import { Input, Component, SimpleChanges, OnChanges } from '@angular/core';
+import { Input, Component, SimpleChanges, OnChanges, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
 @Component({
     selector: 'detalle-solicitud',
     templateUrl: './detalleSolicitud.html',
     styleUrls: ['adjuntarDocumento.scss'],
 })
-export class DetalleSolicitudComponent implements OnChanges {
+export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
 
 
     @Input() prestacionSeleccionada: any;
@@ -15,6 +16,10 @@ export class DetalleSolicitudComponent implements OnChanges {
 
     @Input() tipoSolicitud: string;
 
+    @Output() internacionPaciente: EventEmitter<any> = new EventEmitter<any>();
+
+    public internacion = null;
+    public organizacionInternacion;
 
     public items = [
         { key: 'solicitud', label: 'SOLICITUD' },
@@ -24,7 +29,8 @@ export class DetalleSolicitudComponent implements OnChanges {
     public verIndicaciones = false;
 
     constructor(
-        public adjuntosService: AdjuntosService
+        public adjuntosService: AdjuntosService,
+        private pacienteService: PacienteService
     ) { }
 
     fotos: any[] = [];
@@ -43,6 +49,14 @@ export class DetalleSolicitudComponent implements OnChanges {
                 });
             });
         }
+        this.pacienteService.getEstadoInternacion(this.prestacionSeleccionada.paciente.id).subscribe(resp => {
+
+            if (resp) {
+                this.internacion = resp.estado;
+                this.organizacionInternacion = resp.organizacion ? resp.organizacion : 'Sin organización';
+            }
+            this.internacionPaciente.emit(this.internacion);
+        });
     }
 
     cambiarOpcion(opcion) {
@@ -53,4 +67,7 @@ export class DetalleSolicitudComponent implements OnChanges {
         this.verIndicaciones = !this.verIndicaciones;
     }
 
+    ngOnDestroy() {
+        this.internacion = null;
+    }
 }
