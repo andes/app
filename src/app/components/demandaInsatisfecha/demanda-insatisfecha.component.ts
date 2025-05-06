@@ -176,7 +176,7 @@ export class DemandaInsatisfechaComponent implements OnInit {
     public seleccionarDemanda(item) {
         this.itemSelected = item;
         this.listaDemandas = item.demandas.slice(0, this.max);
-        this.listaHistorial = null;
+        this.listaHistorial = [];
         this.tabIndex = 0;
         this.listaLlamados = !this.itemSelected.llamados ? [] : [...this.itemSelected.llamados];
     }
@@ -239,7 +239,9 @@ export class DemandaInsatisfechaComponent implements OnInit {
         this.formLlamados?.form.markAsPristine();
     }
 
-    public guardarLlamado(id) {
+    public guardarLlamado(demanda) {
+        const id = demanda._id;
+
         this.formLlamados.control.markAllAsTouched();
 
         if (this.formLlamados.form.valid) {
@@ -280,7 +282,7 @@ export class DemandaInsatisfechaComponent implements OnInit {
             };
         };
 
-        this.listaEsperaService.patch(this.itemSelected.id, 'estado', data).subscribe({
+        this.listaEsperaService.patch(this.itemSelected._id, 'estado', data).subscribe({
             next: (item) => {
                 this.plex.toast('success', 'Demanda cerrada exitosamente');
                 this.eliminarItem(item.id);
