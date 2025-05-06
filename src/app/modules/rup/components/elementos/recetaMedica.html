@@ -34,7 +34,7 @@
                       min="1" max="90">
             </plex-int>
 
-            <plex-grid cols="2" style="margin-top: 2rem;grid-gap: 0;">
+            <plex-grid cols="2" class="grid-tratamiento">
                 <plex-bool [(ngModel)]="medicamento.tratamientoProlongado" name="tratamientoProlongado" type="slide"
                            label="Tratamiento prolongado">
                 </plex-bool>
@@ -60,12 +60,14 @@
 
             <div [hidden]="collapse" class="w-100">
                 <div class="d-flex">
-                    <plex-text name="dosis" label="Dosis" [(ngModel)]="medicamento.dosisDiaria.dosis" required="false">
+                    <plex-text name="dosis" label="Dosis" [(ngModel)]="medicamento.dosisDiaria.dosis"
+                               [required]="requiereDosis" (change)="changeDosisIntervalo()">
                     </plex-text>
-                    <plex-select name="Frecuencia" label="Intervalo" [(ngModel)]="medicamento.dosisDiaria.intervalo"
-                                 required="false" [data]="intervalos$ | async">
+                    <plex-select name="frecuencia" label="Intervalo" [(ngModel)]="medicamento.dosisDiaria.intervalo"
+                                 [required]="requiereIntervalo" [data]="intervalos$ | async"
+                                 (change)="changeDosisIntervalo()">
                     </plex-select>
-                    <plex-int name="Duracion" label="Duración (días)" [(ngModel)]="medicamento.dosisDiaria.dias"
+                    <plex-int name=" duracion" label="Duración (días)" [(ngModel)]="medicamento.dosisDiaria.dias"
                               required="false" min="1" max="90">
                     </plex-int>
                     <plex-text name="notaMedica" label="Notas médicas" [(ngModel)]="medicamento.dosisDiaria.notaMedica"
