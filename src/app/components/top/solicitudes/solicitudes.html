@@ -391,7 +391,6 @@
                                 <!-- DAR TURNO -->
                                 <plex-button class="mr-1" size="sm" *ngIf="botones.darTurno" icon="calendar-plus"
                                              type="success" (click)="$event.stopPropagation(); onDarTurno()"
-                                             [disabled]="internacionPaciente?.InformeEgreso?.tipoEgreso?.nombre === 'Defunción' "
                                              title="Dar Turno">
                                 </plex-button>
 
