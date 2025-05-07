@@ -85,6 +85,29 @@ export class RupEjecucionService {
         this.sugeridos.next(conceptos);
     }
 
+    public validarConcepto(concepto: ISnomedConcept): boolean {
+        const registros = this.getPrestacionRegistro();
+        const conceptoExistente = registros.find(registro => registro.concepto.conceptId === concepto.conceptId);
+
+        if (!conceptoExistente) {
+            return true;
+        }
+
+        const validacionRota = this.checkValidacionRota();
+
+        if (validacionRota) {
+            if (conceptoExistente) {
+                return false;
+            }
+        }
+
+        if (validacionRota && concepto.conceptId === '33633005') {
+            return false;
+        }
+
+        return true;
+    }
+
     agregarConcepto(concepto: ISnomedConcept, esSolicitud = false, seccion: ISnomedConcept | boolean = null, valor: any = null, extras: any = {}) {
         if (typeof seccion === 'boolean') {
             seccion = seccion && this.seccion.getValue();
@@ -176,6 +199,27 @@ export class RupEjecucionService {
         }
     }
 
+    /**
+     * Verifica si la validación fue rota (es decir, si hay un estado "ejecucion" después de un estado "validada").
+     * @returns {boolean}
+     */
+    checkValidacionRota(): boolean {
+        if (!this.prestacion?.estados || this.prestacion.estados.length < 2) {
+            return false;
+        }
+
+        let validadaEncontrada = false;
+
+        for (const estado of this.prestacion.estados) {
+            if (estado.tipo === 'validada') {
+                validadaEncontrada = true;
+            } else if (validadaEncontrada && estado.tipo === 'ejecucion') {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
 
 export interface EmitConcepto {

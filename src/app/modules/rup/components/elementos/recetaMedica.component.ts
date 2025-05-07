@@ -77,7 +77,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         });
         this.buscarDiagnosticosConTrastornos();
 
-        this.ejecucionService?.hasActualizacion().subscribe(async (estado) => {
+        this.ejecucionService?.hasActualizacion().subscribe(async () => {
             this.loadRegistros();
         });
     }

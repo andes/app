@@ -21,7 +21,6 @@ import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.inte
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { RecetaService } from 'projects/portal/src/app/services/receta.service';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -101,6 +100,10 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     public conceptosAsociados;
 
+    public alerta = 'Este registro no puede modificarse, si necesita cambiar una medicación prescripta puede suspender desde la HUDS y registrar una nueva.';
+
+    private soloValores = ['33633005'];
+
     constructor(
         public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -114,8 +117,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         public huds: HUDSService,
         public ps: PlantillasService,
         public ejecucionService: RupEjecucionService,
-        public constantesService: ConstantesService,
-        public recetaService: RecetaService
+        public constantesService: ConstantesService
     ) { }
 
     /**
@@ -503,6 +505,18 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         this.scopeEliminar = scope;
         this.indexEliminar = index;
         this.confirmarEliminar = true;
+    }
+
+    puedeEliminar(registro) {
+        if (this.esSoloValores(registro)) {
+            return false;
+        }
+
+        const esAsociado = this.prestacion.ejecucion.registros.some(r =>
+            r.valor?.medicamentos?.length && r.valor.medicamentos.some(m => m.diagnostico.conceptId === registro.concepto.conceptId)
+        );
+
+        return !esAsociado;
     }
 
     cargarNuevoRegistro(snomedConcept, esSolicitud: boolean, valor = null, relaciones, idEvolucion) {
@@ -940,5 +954,22 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     prestacionVisible(registro) {
         return registro.data.class === 'plan' || registro.data.class === 'regimen' ||
             registro.data.class === 'elementoderegistro' || registro.data.class === 'producto';
+    }
+
+    esSoloValores(registro: any): boolean {
+        if (this.soloValores.includes(registro.concepto?.conceptId)) {
+            // Verificar si el registro ya existe en la prestación con medicamentos cargados
+            const registroExistente = registro.valor?.medicamentos?.length > 0;
+
+            if (!registroExistente) {
+                return false;
+            }
+
+            const valido = this.ejecucionService.validarConcepto(registro.concepto);
+
+            return !valido;
+        }
+
+        return false;
     }
 }

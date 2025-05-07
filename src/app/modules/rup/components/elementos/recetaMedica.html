@@ -124,6 +124,7 @@
     </plex-list>
 </ng-container>
 <div *ngIf="soloValores">
+    <div *ngIf="soloValores && alerta" class="alerta">{{alerta}}</div>
     <plex-list size="md" *ngIf="registro.valor.medicamentos">
         <plex-item *ngFor="let item of registro.valor.medicamentos">
             <plex-label [tituloBold]="true" titulo="{{ item.generico.term  }}" subtitulo=" {{ item.cantEnvases}} envase(s) de {{ item.cantidad}} {{item.presentacion.term }}(s)  {{ item.dosisDiaria.dosis? '| ' + item.dosisDiaria.dosis : '| ' }}  {{ item.dosisDiaria.intervalo? ' cada ' + item.dosisDiaria.intervalo.nombre: '' }}  {{ item.dosisDiaria.dias ? ' durante ' + item.dosisDiaria.dias + ' día(s)':'' }} 
