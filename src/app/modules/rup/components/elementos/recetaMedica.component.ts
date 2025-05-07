@@ -183,7 +183,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         }
     }
     checkDuplicado() {
-        const options = { pacienteId: this.paciente.id };
+        const estadoDispensa = ['sin-dispensa', 'dispensa-parcial'].toString();
+        const options = { pacienteId: this.paciente.id, estadoDispensa };
         this.recetasService.getRecetas(options).subscribe((data) => {
             const duplicado = data.find(receta =>
                 this.medicamento.generico.conceptId === receta.medicamento.concepto.conceptId &&
