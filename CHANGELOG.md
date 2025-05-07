@@ -1,3 +1,17 @@
+# [5.162.0](https://github.com/andes/app/compare/v5.161.1...v5.162.0) (2025-05-07)
+
+
+### Bug Fixes
+
+* **RUP:** cambia la forma de acceder a las cantidades de presentaciones comerciales ([#3178](https://github.com/andes/app/issues/3178)) ([3164fdc](https://github.com/andes/app/commit/3164fdc06f46cbc45f70bab7838c0064ab854da4))
+* **RUP:** campos dosis e intervalo requeridos ([#3173](https://github.com/andes/app/issues/3173)) ([f86b90c](https://github.com/andes/app/commit/f86b90c1751e6eea45cde3e823530b8fd7701d23))
+
+
+### Features
+
+* **CIT:** agrega numero de afiliado ([#3156](https://github.com/andes/app/issues/3156)) ([590b522](https://github.com/andes/app/commit/590b522c503edc7f755124fc4fec261111844a85))
+* **RUP:** implementa datos para tratamiento prolongado ([#3170](https://github.com/andes/app/issues/3170)) ([ce86978](https://github.com/andes/app/commit/ce86978de4f30f1c7f6819d09a98e17c6dab1d81))
+
 ## [5.161.1](https://github.com/andes/app/compare/v5.161.0...v5.161.1) (2025-04-23)
 
 
