@@ -99,7 +99,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     loadRegistros() {
         this.registros = [
             ...this.prestacion.ejecucion.registros
-                .filter(reg => reg.id !== this.registro.id && (reg.concepto.semanticTag === 'procedimiento'
+                .filter(reg => reg.concepto.conceptId !== this.registro.concepto.conceptId && (reg.concepto.semanticTag === 'procedimiento'
                     || reg.concepto.semanticTag === 'hallazgo' || reg.concepto.semanticTag === 'trastorno'))
                 .map(reg => reg.concepto),
             ...this.recetasConFiltros
