@@ -819,7 +819,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     }
 
     async groupRecetas() {
-        const options = { pacienteId: this.paciente.id };
+        const estadoDispensa = ['sin-dispensa', 'dispensada', 'dispensa-parcial'].toString();
+        const options = { pacienteId: this.paciente.id, estadoDispensa };
 
         this.recetasService.getMotivosSuspension().subscribe((motivos) => {
             this.motivosSuspension = motivos.map(m => ({ id: m.id, nombre: m.label }));
