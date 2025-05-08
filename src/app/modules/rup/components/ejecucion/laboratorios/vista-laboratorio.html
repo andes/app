@@ -2,23 +2,38 @@
     <div justify class="w-100">
         <div class="info-basica">
             <div class="d-flex flex-column">
-                <plex-badge type="info">
-                    Protocolo {{protocolo.data.numero}}
-                </plex-badge>
+                <div class="badge-protocolo">
+                    <plex-badge type="info">
+                        Protocolo {{protocolo.data.numero}}
+                    </plex-badge>
+                    <plex-badge *ngIf="protocolo.data?.estado === 'EnProceso'" type="info">
+                        En Proceso
+                    </plex-badge>
+                </div>
                 <b class="mt-1">{{protocolo.data.fecha | fecha}}</b>
             </div>
-            <plex-grid type="full" cols="4" size="sm">
-                <div class="datos"><span>Medico solicitante</span><b>{{protocolo.data.medicoSolicitante}}</b></div>
-                <div class="datos"><span>Origen</span><b>{{protocolo.data.origen}}</b></div>
-                <div class="datos"><span>Efector Solicitante</span><b>{{protocolo.data.efectorSolicitante}}</b></div>
-                <div class="datos"><span>Laboratorio</span><b>{{protocolo.data.Laboratorio ||
-                        protocolo.data.laboratorio}}</b></div>
-            </plex-grid>
+            <div>
+                <plex-grid type="full" cols="3" size="sm">
+                    <div class="datos"><span>Médico solicitante</span><b>{{protocolo.data.medicoSolicitante}}</b></div>
+                    <div class="datos"><span>Origen</span><b>{{protocolo.data.origen}}</b></div>
+                    <div class="datos"><span>Efector Solicitante</span><b>{{protocolo.data.efectorSolicitante}}</b>
+                    </div>
+                </plex-grid>
+                <plex-grid type="auto" cols="3" size="sm">
+                    <div class="datos"><span>Laboratorio</span><b>{{protocolo.data.Laboratorio ||
+                            protocolo.data.laboratorio}}</b></div>
+                    <div class="datos"><span>Tipo Muestra:
+                        </span><b *ngIf="protocolo.data.tipoMuestra">{{protocolo.data.tipoMuestra}}</b></div>
+                    <div class="datos"><span>Prácticas solicitadas:
+                        </span><b
+                           *ngIf="protocolo.data.practicasSolicitadas">{{protocolo.data.practicasSolicitadas}}</b></div>
+                </plex-grid>
+            </div>
         </div>
     </div>
     <div class="w-100 mt-2">
         <plex-title titulo="Resultados" size="md">
-            <plex-button [disabled]="!areasLaboratorio" type="info" size="sm" icon="download mdi-18px"
+            <plex-button [disabled]="areasLaboratorio.length === 0" type="info" size="sm" icon="download mdi-18px"
                          tooltip="Descargar" (click)="descargarLab()"></plex-button>
         </plex-title>
 
