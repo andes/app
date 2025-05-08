@@ -43,7 +43,15 @@ export class HudsBusquedaPacienteComponent implements OnInit {
             name: 'BUSCAR PACIENTE'
         }]);
 
-        if (!this.auth.check('huds:visualizacionHuds')) {
+        const permisos = [
+            'huds:visualizacionHuds',
+            'huds:visualizacionParcialHuds:*',
+            'huds:visualizacionParcialHuds:laboratorio',
+            'huds:visualizacionParcialHuds:vacuna',
+            'huds:visualizacionParcialHuds:receta'
+        ];
+
+        if (!permisos.some(permiso => this.auth.check(permiso))) {
             this.router.navigate(['inicio']);
         }
     }
