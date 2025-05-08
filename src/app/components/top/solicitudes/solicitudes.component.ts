@@ -827,7 +827,7 @@ export class SolicitudesComponent implements OnInit {
     }
 
     onDarTurno() {
-        if (this.internacionPaciente.informeIngreso) {
+        if (this.internacionPaciente?.informeIngreso) {
             this.plex.confirm('Este paciente se encuentra actualmente internado, ¿desea continuar?', 'Atención').then(confirmar => {
                 if (confirmar) {
                     this.pacienteService.getById(this.prestacionSeleccionada.paciente.id).subscribe(paciente => {
