@@ -50,12 +50,14 @@
 
         <plex-badge type="danger" *ngIf="unaRel.fechaFallecimiento"> Fallecido
         </plex-badge>
-
         <plex-button label="" type="success" size="sm" icon="plus" tooltip="Agregar" [disabled]="!unaRel.relacion"
                      (click)="addRelacion(unaRel)">
         </plex-button>
 
         <plex-button type="danger" size="sm" icon="close" tooltip="Borrar" (click)="relacionEntrante=[]">
         </plex-button>
+        <div style="align-items: center;">
+            <plex-bool type="slide" name="conviviente" [(ngModel)]="esConviviente" label="Es conviviente"></plex-bool>
+        </div>
     </plex-item>
 </plex-list>

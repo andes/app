@@ -5,6 +5,7 @@ export interface IPacienteRelacion {
         id: string;
         nombre: string;
         opuesto: string;
+        esConviviente?: boolean;
     };
     referencia: string;
     nombre: string;
