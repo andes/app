@@ -487,7 +487,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         const fechaHta = moment().format('yyyyMMDD');
         let dni = this.paciente.documento || null;
         if (!dni) {
-            const tutorProgenitor = this.paciente.relaciones.find(rel => rel.relacion.nombre === 'progenitor/a') || this.paciente.relaciones.find(rel => rel.relacion.nombre === 'tutor');
+            const tutorProgenitor = this.paciente.relaciones?.find(rel => rel.relacion.nombre === 'progenitor/a') || this.paciente.relaciones?.find(rel => rel.relacion.nombre === 'tutor');
             dni = tutorProgenitor?.documento || tutorProgenitor?.numeroIdentificacion || null;
             if (!dni) {
                 return;

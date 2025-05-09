@@ -2,7 +2,7 @@ import { Auth } from '@andes/auth';
 import { arrayToSet, cache, notNull } from '@andes/shared';
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, combineLatest, of } from 'rxjs';
 import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
 import { HUDSService } from 'src/app/modules/rup/services/huds.service';
@@ -15,6 +15,7 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-item.component';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { LaboratorioService } from 'projects/portal/src/app/services/laboratorio.service';
+import { PacienteCacheService } from 'src/app/core/mpi/services/pacienteCache.service';
 
 @Component({
     selector: 'app-registros-huds-detalle',
@@ -61,7 +62,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         private motivoAccesoService: ModalMotivoAccesoHudsService,
         private huds: HUDSService,
         private laboratorioService: LaboratorioService,
-        private activeRoute: ActivatedRoute
+        private pacienteCacheService: PacienteCacheService
     ) { }
 
     ngOnInit() {
@@ -203,8 +204,11 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         );
         const fechaNacimiento = moment(this.paciente.fechaNacimiento).format('yyyyMMDD');
         const fechaHasta = moment().format('yyyyMMDD');
+
+        const pacienteCache = this.pacienteCacheService.getPacienteValor();
+        const dniPaciente = pacienteCache.id === this.paciente.id ? pacienteCache.documento : this.paciente.documento;
         this.laboratorioService.getProtocolos({
-            estado: 'validado', dni: this.paciente.documento, fecNac: fechaNacimiento,
+            estado: 'validado', dni: dniPaciente, fecNac: fechaNacimiento,
             apellido: this.paciente.apellido, fechaDde: '20200101', fechaHta: fechaHasta
         }).subscribe(laboratorios => {
             this.laboratoriosSubject$.next(laboratorios[0]?.Data || []);
