@@ -2,9 +2,10 @@ import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 import { IPaciente } from '../interfaces/IPaciente';
+import { PacienteCacheService } from './pacienteCache.service';
 
 @Injectable()
 export class PacienteService {
@@ -16,7 +17,8 @@ export class PacienteService {
 
     constructor(
         private server: Server,
-        private plex: Plex
+        private plex: Plex,
+        private pacienteCacheService: PacienteCacheService
     ) { }
 
     /**
@@ -24,7 +26,9 @@ export class PacienteService {
      * @param {String} id Busca por Id
      */
     getById(id: String, options?: any): Observable<IPaciente> {
-        return this.server.get(`${this.pacienteV2}/${id}`, options);
+        return this.server.get(`${this.pacienteV2}/${id}`, options).pipe(
+            tap((paciente: IPaciente) => this.pacienteCacheService.setPaciente(paciente))
+        );
     }
 
     /**
