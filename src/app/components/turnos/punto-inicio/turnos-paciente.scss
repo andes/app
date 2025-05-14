@@ -10,3 +10,14 @@
 .blue-border {
     border-color: #5bc0de;
 }
+
+.contenedor-turnos-vacio {
+    display: flex;
+    justify-content: center;
+}
+
+.label-turnos-vacio {
+    display: flex;
+    flex-direction: column;
+    margin-top: 4em;
+}
