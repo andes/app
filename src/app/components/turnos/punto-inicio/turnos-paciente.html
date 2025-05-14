@@ -1,10 +1,11 @@
 <div>
+    <plex-title titulo="Listado de turnos" size="sm"></plex-title>
     <div *ngIf="!showLiberarTurno && !showMotivoConsulta">
-        <!-- El paciente no tiene turnos -->
-        <h5 *ngIf="!turnosPaciente || turnosPaciente?.length === 0">
-            No hay turnos registrados.
-        </h5>
-
+        <div class="contenedor-turnos-vacio" *ngIf="!turnosPaciente || turnosPaciente?.length === 0" justify="center">
+            <plex-label class="label-turnos-vacio" icon="turno-bold" type="info" size="lg" direction="column"
+                        titulo="El paciente no presenta turnos asignados.">
+            </plex-label>
+        </div>
         <!-- El paciente tiene turnos -->
         <fieldset>
             <ul class="list-group">
