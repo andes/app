@@ -1,3 +1,19 @@
+# [5.163.0](https://github.com/andes/app/compare/v5.162.0...v5.163.0) (2025-05-14)
+
+
+### Bug Fixes
+
+* **receta:** actualiza get de recetas ([#3183](https://github.com/andes/app/issues/3183)) ([cd496e5](https://github.com/andes/app/commit/cd496e5dc0423912d35946017592cd2e873a18e5))
+* **RUP:** quita prescripcion como diagnostico ([#3182](https://github.com/andes/app/issues/3182)) ([0c5b098](https://github.com/andes/app/commit/0c5b098d338f7fa723982dbb7510a933ef42d79d))
+* **TOP:** dar turno ([#3184](https://github.com/andes/app/issues/3184)) ([335db8e](https://github.com/andes/app/commit/335db8e44bd00a9fc694237d46bef57c9c43334a))
+
+
+### Features
+
+* **HUDS-127:** Habilitacion parcial de la HUDS ([#3148](https://github.com/andes/app/issues/3148)) ([9e3cf4e](https://github.com/andes/app/commit/9e3cf4ea44bb75af10847ba8d65a59c4bcdd078e))
+* **MPI-443:** Convivientes ([#3180](https://github.com/andes/app/issues/3180)) ([06e2920](https://github.com/andes/app/commit/06e2920d463fb5d6bf57059bc80e4bbd5e9510d9))
+* **RUP:** bloquea edicion de recetas ([#3165](https://github.com/andes/app/issues/3165)) ([e02a9a9](https://github.com/andes/app/commit/e02a9a90ddd60d361f5445570818c7ce0056561c))
+
 # [5.162.0](https://github.com/andes/app/compare/v5.161.1...v5.162.0) (2025-05-07)
 
 
