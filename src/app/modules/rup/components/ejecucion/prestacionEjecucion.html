@@ -307,6 +307,11 @@
                             </app-ficha-epidemiologica-crud>
                         </plex-tab>
 
+                        <plex-tab *ngIf="registro.tipo === 'laboratorio'" [allowClose]="true"
+                              label="Informe de Laboratorio">
+                        <vista-laboratorio [protocolo]="registro"></vista-laboratorio>
+                    </plex-tab>
+
                         <plex-tab *ngIf="registro.tipo === 'receta'" color="receta" class="tab-receta"
                                   [allowClose]="true" [label]="recetaService.getLabel(registro.data.recetas)">
                             <vista-receta [registro]="registro.data" [paciente]="paciente"></vista-receta>
