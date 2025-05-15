@@ -215,8 +215,11 @@
                      label="Validar {{prestacion.solicitud.tipoPrestacion.term}}" (click)="validar()" type="success"
                      position="right">
         </plex-button>
-        <plex-button position="right" label="Romper Validación de {{prestacion?.solicitud?.tipoPrestacion?.term}}"
-                     (click)="romperValidacion()" type="danger" *ngIf="prestacion && puedeRomperValidacion">
+        <plex-button *ngIf="prestacion && puedeRomperValidacion" [disabled]="estaVencida()" position="right"
+                     label="Romper Validación de {{prestacion?.solicitud?.tipoPrestacion?.term}}"
+                     (click)="romperValidacion()" type="danger"
+                     [tooltip]="estaVencida() ? 'El tiempo para romper validación ha vencido' : null"
+                     tooltipPosition="top">
         </plex-button>
     </plex-layout-footer>
 </plex-layout>

@@ -18,7 +18,7 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
-
+import { ConstantesService } from 'src/app/services/constantes.service';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -87,6 +87,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     public hasPacs: boolean;
     public noNominalizada = true;
     public puedeRomperValidacion = false;
+    public tiempoValidacion;
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -102,7 +103,8 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         public servicioReglas: ReglaService,
         public huds: HUDSService,
         public organizacionService: OrganizacionService,
-        private conceptosTurneablesService: ConceptosTurneablesService
+        private conceptosTurneablesService: ConceptosTurneablesService,
+        private constantesService: ConstantesService,
     ) {
     }
 
@@ -115,6 +117,9 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.constantesService.search({ source: 'prestacion:validacion' }).subscribe(constante => {
+            this.tiempoValidacion = constante[0].key || 30; // días
+        });
         // consultamos desde que pagina se ingreso para poder volver a la misma
         this.btnVolver = 'Volver';
         this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
@@ -586,5 +591,10 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         return this.elementoRUP.requiereDiagnosticoPrincipal && this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado';
     }
 
+    estaVencida() {
+        const prestacionValidada = this.prestacion.estados.find(estado => estado.tipo === 'validada');
+        const diasDiferencia = moment().diff(moment(prestacionValidada.createdAt), 'days');
+        return diasDiferencia > this.tiempoValidacion;
+    }
 }
 
