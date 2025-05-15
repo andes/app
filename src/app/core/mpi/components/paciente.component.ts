@@ -506,6 +506,7 @@ export class PacienteComponent implements OnInit {
                         return elem;
                     }
                 });
+                relacionOpuesta['esConviviente'] = rel.relacion.esConviviente ? rel.relacion.esConviviente : false;
                 const dto = {
                     id: null,
                     activo: unPacienteSave.activo,
