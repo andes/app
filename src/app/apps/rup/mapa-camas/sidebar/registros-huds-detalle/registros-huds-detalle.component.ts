@@ -2,7 +2,7 @@ import { Auth } from '@andes/auth';
 import { arrayToSet, cache, notNull } from '@andes/shared';
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { BehaviorSubject, Observable, combineLatest, of } from 'rxjs';
 import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
 import { HUDSService } from 'src/app/modules/rup/services/huds.service';
@@ -14,6 +14,7 @@ import { IMAQEstado } from '../../interfaces/IMaquinaEstados';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-item.component';
 import { ISnapshot } from '../../interfaces/ISnapshot';
+import { LaboratorioService } from 'projects/portal/src/app/services/laboratorio.service';
 
 @Component({
     selector: 'app-registros-huds-detalle',
@@ -27,7 +28,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     public id$ = new BehaviorSubject(null);
 
     public historial$: Observable<any>;
-    public historialFiltrado$: Observable<any>;
+    public historialFiltrado$: Observable<any> = of([]);;
     public estadoCama$: Observable<IMAQEstado>;
     public accionesEstado$: Observable<any>;
     public prestacionesList$: Observable<any>;
@@ -48,7 +49,9 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     private admisionHospitalariaConceptId = '32485007';
 
     @Output() accion = new EventEmitter();
-
+    private laboratoriosSubject$ = new BehaviorSubject<any[]>([]);
+    public laboratorios$ = this.laboratoriosSubject$.asObservable();
+    public prestacionesUnidas$: Observable<any[]>;
 
     constructor(
         public mapaCamasService: MapaCamasService,
@@ -56,7 +59,9 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         private auth: Auth,
         private router: Router,
         private motivoAccesoService: ModalMotivoAccesoHudsService,
-        private huds: HUDSService
+        private huds: HUDSService,
+        private laboratorioService: LaboratorioService,
+        private activeRoute: ActivatedRoute
     ) { }
 
     ngOnInit() {
@@ -196,6 +201,21 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         this.prestacionesList$ = this.historial$.pipe(
             map(prestaciones => prestaciones = arrayToSet(prestaciones, 'conceptId', (item) => item.solicitud ? item.solicitud.tipoPrestacion : item.prestacion.snomed))
         );
+        const fechaNacimiento = moment(this.paciente.fechaNacimiento).format('yyyyMMDD');
+        const fechaHasta = moment().format('yyyyMMDD');
+        this.laboratorioService.getProtocolos({
+            estado: 'validado', dni: this.paciente.documento, fecNac: fechaNacimiento,
+            apellido: this.paciente.apellido, fechaDde: '20200101', fechaHta: fechaHasta
+        }).subscribe(laboratorios => {
+            this.laboratoriosSubject$.next(laboratorios[0]?.Data || []);
+        });
+
+        this.prestacionesUnidas$ = combineLatest([this.historialFiltrado$, this.laboratorios$]).pipe(
+            map(([historial, laboratorios]) => {
+                return [...historial, ...laboratorios];
+            })
+        );
+
     }
 
     validadaCreadasPorMi(prestacion) {
@@ -286,6 +306,9 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             case 'anular-validacion':
                 this.prestacionService.invalidarPrestacion(prestacion).subscribe();
                 this.id$.next(prestacion.id);
+                break;
+            case 'verProtocolo':
+                this.onViewRegistro(prestacion);
                 break;
         }
     }

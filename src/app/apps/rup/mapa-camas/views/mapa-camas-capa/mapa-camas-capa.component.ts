@@ -14,6 +14,8 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamaListadoColumns } from '../../interfaces/mapa-camas.internface';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
+import { LaboratorioService } from 'projects/portal/src/app/services/laboratorio.service';
+import { DocumentosService } from 'src/app/services/documentos.service';
 
 @Component({
     selector: 'app-mapa-camas-capa',
@@ -44,7 +46,20 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     organizacionv2; // true si la organizacion usa capas unificadas
     estado$: Observable<IMaquinaEstados>;
 
-    mainView$ = this.mapaCamasService.mainView;
+    mainView$ = this.mapaCamasService.mainView.pipe(
+        map(view => {
+            if (view.idProtocolo) {
+                this.buscarArea(view);
+                return {
+                    data: view,
+                    tipo: 'laboratorio'
+                };
+            }
+            return view;
+        })
+    );
+    public areasLaboratorio = [];
+    registro;
 
     public columns: MapaCamaListadoColumns = {
         fechaMovimiento: false,
@@ -83,7 +98,9 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         public permisosMapaCamasService: PermisosMapaCamasService,
         public elementoRUPService: ElementosRUPService,
         public ws: WebSocketService,
-        public organizacionService: OrganizacionService
+        public organizacionService: OrganizacionService,
+        private laboratorioService: LaboratorioService,
+        private servicioDocumentos: DocumentosService
 
     ) { }
 
@@ -97,6 +114,14 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         const ambito = this.route.snapshot.paramMap.get('ambito');
         this.mapaCamasService.setAmbito(ambito);
         this.permisosMapaCamasService.setAmbito(ambito);
+        this.mainView$.subscribe(mainView => {
+            this.registro = {
+                data: mainView,
+                tipo: 'laboratorio'
+            };
+        });
+
+
         this.plex.updateTitle([{
             route: '/inicio',
             name: 'Andes'
@@ -162,6 +187,16 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
         this.fechaSelector = moment();
         this.fechaInput = moment().format('DD/MM/YYYY HH:mm');
+    }
+    buscarArea(viewProtocolo) {
+        this.laboratorioService.getByProtocolo(viewProtocolo.idProtocolo).subscribe((resultados) => {
+
+            if (resultados && Array.isArray(resultados) && resultados.length > 0) {
+                this.areasLaboratorio = resultados;
+            } else {
+                this.areasLaboratorio = [];
+            }
+        });
     }
 
     getSnapshot(fecha = null) {
@@ -311,5 +346,12 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
             this.fechaInput = this.fechaSelector.format('DD/MM/YYYY HH:mm');
             this.isValidDate = true;
         }
+    }
+
+    descargarLab() {
+        this.servicioDocumentos.descargarLaboratorio({
+            protocolo: this.registro,
+            usuario: this.auth.usuario.nombreCompleto
+        }, 'Laboratorio').subscribe();
     }
 }

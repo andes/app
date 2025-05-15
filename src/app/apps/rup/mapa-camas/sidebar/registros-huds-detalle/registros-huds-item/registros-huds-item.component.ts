@@ -4,7 +4,7 @@ import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { Plex } from '@andes/plex';
 
-export type RegistroHUDSItemAccion = 'ver' | 'continuar' | 'romper-validacion' | 'anular-validacion' | 'cda';
+export type RegistroHUDSItemAccion = 'ver' | 'verProtocolo' | 'continuar' | 'romper-validacion' | 'anular-validacion' | 'cda';
 
 
 @Component({
