@@ -1,6 +1,6 @@
 <div *ngIf="!showCargarSolicitud">
     <plex-title main titulo="Solicitudes">
-         <plex-dropdown #drop *ngIf="puedeCrearSolicitud" type="success" [right]="true" [items]="itemsDropdown" size="md"
+        <plex-dropdown #drop *ngIf="puedeCrearSolicitud" type="success" [right]="true" [items]="itemsDropdown" size="md"
                        label="Nueva Solicitud">
         </plex-dropdown>
     </plex-title>
@@ -54,7 +54,7 @@
 
                             </td>
                             <td>
-                                <plex-button *ngIf="puedeDarTurno(prestacion)" type="info" size="sm"
+                                <plex-button *ngIf="puedeDarTurno(prestacion)" type="success" size="sm"
                                              icon="calendar-plus" tooltip="Dar turno" tooltipPosition="left"
                                              (click)="darTurno(prestacion)">
                                 </plex-button>
