@@ -35,8 +35,8 @@ export class ObraSocialService {
         );
     }
 
-    getObrasSociales(documento: string, showError = true): Observable<IObraSocial[]> {
-        return this.server.get(`${this.url}/obraSocial/${documento}`, null);
+    getObrasSociales(opciones: any, showError = true): Observable<IObraSocial[]> {
+        return this.server.get(this.url + '/obraSocialPaciente', { params: opciones });
     }
 
     getSumar(opciones: any): Observable<IObraSocial[]> {

@@ -93,7 +93,7 @@ export class RupAsignarTurnoComponent implements OnInit {
                 this.pacienteActivo = paciente;
                 this.obraSocialPaciente = null;
                 if (paciente.id && paciente.documento) {
-                    this.obraSocialService.getObrasSociales(paciente.documento).subscribe(
+                    this.obraSocialService.getObrasSociales({ documento: paciente.documento, sexo: paciente.sexo }).subscribe(
                         (resultado: IObraSocial[]) => {
                             if (resultado.length > 0) {
                                 this.obraSocialPaciente = resultado[0];
