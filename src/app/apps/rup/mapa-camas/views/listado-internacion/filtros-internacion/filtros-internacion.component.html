@@ -1,28 +1,30 @@
 <plex-wrapper>
-    <plex-text (change)="filtrar()" [(ngModel)]="filtros.paciente" label="paciente">
+    <plex-text [(ngModel)]="filtros.paciente" label="paciente">
     </plex-text>
-    <plex-datetime type="date" (change)="filtrarFecha()" [(ngModel)]="filtros.fechaIngresoDesde"
-                   name="fechaIngresoDesde" label="Ingreso desde" [max]="filtros.fechaIngresoHasta" [debounce]="600" >
+    <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoDesde"
+                   name="fechaIngresoDesde" label="Ingreso desde" [max]="filtros.fechaIngresoHasta" [debounce]="600">
     </plex-datetime>
     <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoHasta" name='fechaIngresoHasta' label="Ingreso hasta"
-                   (change)="filtrarFecha()"  [debounce]="600" >
+                   [debounce]="600">
     </plex-datetime>
-    <plex-datetime type="date" (change)="filtrarFecha()" [(ngModel)]="filtros.fechaEgresoDesde" name="fechaIngresoDesde"
+    <plex-datetime type="date" [(ngModel)]="filtros.fechaEgresoDesde" name="fechaIngresoDesde"
                    label="Egreso desde" [max]="filtros.fechaEgresoHasta" [debounce]="600">
     </plex-datetime>
     <plex-datetime type="date" [(ngModel)]="filtros.fechaEgresoHasta" name='fechaEgresoHasta' label="Egreso hasta"
-                   (change)="filtrarFecha()" [min]="filtros.fechaEgresoDesde" [debounce]="600">
+                   [min]="filtros.fechaEgresoDesde" [debounce]="600">
     </plex-datetime>
     <div collapse>
-        <plex-select name="obraSocial" label="Obra Social" [(ngModel)]="filtros.obraSocial" (change)="filtrar()"
+        <plex-select name="obraSocial" label="Obra Social" [(ngModel)]="filtros.obraSocial"
                      [data]="obraSociales$ | async" idField="_id">
         </plex-select>
         <plex-select name="unidadOrganizativa" label="Unidad Organizativa" [(ngModel)]="filtros.unidadOrganizativa"
-                     idField="conceptId" labelField="term" (change)="filtrar()" [data]="unidadesOrganizativas$ | async">
+                     idField="conceptId" labelField="term" [data]="unidadesOrganizativas$ | async">
         </plex-select>
-        <plex-select [(ngModel)]="filtros.estado" [data]='estadosInternacion' label="Estado" (change)="filtrar()">
+        <plex-select [(ngModel)]="filtros.estado" [data]='estadosInternacion' label="Estado">
         </plex-select>
     </div>
+    <plex-button class="mr-3" type="success" label="Buscar" (click)="filtrar()">
+    </plex-button>
     <plex-button *ngIf="permisosMapaCamasService.descargarListado" type="warning" icon="download mdi-14px"
                  title="Descargar Csv" titlePosition="top" (click)="reporteInternaciones()"
                  [disabled]="requestInProgress">
