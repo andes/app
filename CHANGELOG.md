@@ -1,3 +1,17 @@
+# [5.164.0](https://github.com/andes/app/compare/v5.163.0...v5.164.0) (2025-05-21)
+
+
+### Bug Fixes
+
+* **IN:** visualizacion de registros en pacientes sin dni ([#3189](https://github.com/andes/app/issues/3189)) ([739b2cb](https://github.com/andes/app/commit/739b2cb69f1929c94c45874cbf248923b822ead2))
+* **RUP:** Corrige visualizacion del detalle de protocolo del SIL2 ([#3188](https://github.com/andes/app/issues/3188)) ([9d73d2a](https://github.com/andes/app/commit/9d73d2a1e6c83c3e250d9a498756902cb0c13c34))
+
+
+### Features
+
+* **MPI-445:** Obra Social PUCO ([#3161](https://github.com/andes/app/issues/3161)) ([24cf19d](https://github.com/andes/app/commit/24cf19d35ba677bbd4864c75d2fbed3f59dcb720))
+* **MPI-448:** Convivientes - completar circuito en relacion ([#3185](https://github.com/andes/app/issues/3185)) ([8fc6eee](https://github.com/andes/app/commit/8fc6eee70c315aab3f5dc94c0087f86237a2592d))
+
 # [5.163.0](https://github.com/andes/app/compare/v5.162.0...v5.163.0) (2025-05-14)
 
 
