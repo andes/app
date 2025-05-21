@@ -81,6 +81,11 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
      * @memberof RUPComponent
      */
     private loadComponent() {
+        // console.log('RUP', this.registro, 'params', this.params);
+        // console.log(this.elementosRUPService.elementoRegistro(this.registro));
+        // console.log(this.registro?.concepto.term);
+        // console.log(this.elementosRUPService.buscarElemento(this.registro.concepto, this.registro.esSolicitud));
+
 
         if (this.registro && !this.registro?.privacy) {
             setTimeout(() => {
@@ -111,7 +116,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
         componentReference.instance['conceptosAsociados'] = this.conceptosAsociados || [];
 
         // Event bubbling
-        componentReference.instance['change'].subscribe(value => {
+        componentReference.instance['change'].subscribe(() => {
             this.emitChange(false);
         });
 
@@ -126,6 +131,9 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
         componentReference.instance['createEngine']();
 
         this.rupInstance = componentReference.instance;
+
+        // Si el componente tiene un formulario, lo valida automaticamente
+        this.validateForm();
     }
 
     // Constructor
@@ -165,6 +173,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
     }
 
     ngOnInit() {
+        // console.log(this.registro);
         this.loadComponent();
     }
 

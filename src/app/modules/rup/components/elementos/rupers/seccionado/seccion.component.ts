@@ -35,7 +35,7 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy,
     // utilizamos confirmarDesvincular para mostrar el boton de confirmacion de desvinculado
     public confirmarDesvincular: any[] = [];
 
-    public confirmarEliminar: Boolean = false;
+    // public confirmarEliminar: Boolean = false;
     public indexEliminar: any;
 
     // el concepto que seleccionamos para eliminar lo guradamos aca.
@@ -328,50 +328,50 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy,
          * @memberof PrestacionEjecucionComponent
          */
     eliminarRegistro() {
-        if (this.confirmarEliminar) {
-            const registros = this.registro.registros;
-            const _registro = registros[this.indexEliminar];
+        // if (this.confirmarEliminar) {
+        const registros = this.registro.registros;
+        const _registro = registros[this.indexEliminar];
 
-            // Quitamos toda la vinculación que puedan tener con el registro
-            registros.forEach(registro => {
-                if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+        // Quitamos toda la vinculación que puedan tener con el registro
+        registros.forEach(registro => {
+            if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
 
-                    // relacionadoCon está populado, y debe comprobarse el id
-                    if (registro.relacionadoCon[0].id === _registro.id) {
-                        registro.relacionadoCon = [];
-                    }
+                // relacionadoCon está populado, y debe comprobarse el id
+                if (registro.relacionadoCon[0].id === _registro.id) {
+                    registro.relacionadoCon = [];
                 }
-            });
+            }
+        });
 
-            // eliminamos el registro del array
-            registros.splice(this.indexEliminar, 1);
+        // eliminamos el registro del array
+        registros.splice(this.indexEliminar, 1);
 
-            // this.errores[this.indexEliminar] = null;
-            this.indexEliminar = null;
-            this.confirmarEliminar = false;
-            this.scopeEliminar = '';
-        }
+        // this.errores[this.indexEliminar] = null;
+        this.indexEliminar = null;
+        // this.confirmarEliminar = false;
+        this.scopeEliminar = '';
+        // }
     }
 
-    /**
-     * Mostramos dialogo de confirmacion en la interfaz
-     * para confirmar el borrado del registro
-     * @param {any} snomedConcept
-     * @param {any} scope
-     * @memberof PrestacionEjecucionComponent
-     */
-    confirmarEliminarRegistro(registroEliminar, scope) {
-        let index;
-        if (registroEliminar.dragData) {
-            this.conceptoAEliminar = registroEliminar.dragData.concepto;
-            index = this.registro.registros.findIndex(r => (registroEliminar.dragData.id === r.id));
-        } else {
-            index = this.registro.registros.findIndex(r => (registroEliminar.id === r.id));
-        }
-        this.scopeEliminar = scope;
-        this.indexEliminar = index;
-        this.confirmarEliminar = true;
-    }
+    // /**
+    //  * Mostramos dialogo de confirmacion en la interfaz
+    //  * para confirmar el borrado del registro
+    //  * @param {any} snomedConcept
+    //  * @param {any} scope
+    //  * @memberof PrestacionEjecucionComponent
+    //  */
+    // confirmarEliminarRegistro(registroEliminar, scope) {
+    //     let index;
+    //     if (registroEliminar.dragData) {
+    //         this.conceptoAEliminar = registroEliminar.dragData.concepto;
+    //         index = this.registro.registros.findIndex(r => (registroEliminar.dragData.id === r.id));
+    //     } else {
+    //         index = this.registro.registros.findIndex(r => (registroEliminar.id === r.id));
+    //     }
+    //     this.scopeEliminar = scope;
+    //     this.indexEliminar = index;
+    //     this.confirmarEliminar = true;
+    // }
 
     cambiaValorCollapse(indice) {
         if (this.itemsRegistros[indice]) {

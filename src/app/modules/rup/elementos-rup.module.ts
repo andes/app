@@ -75,6 +75,7 @@ import { SemanticClassPipe } from './pipes/semantic-class.pipes';
 import { SemanticIconPipe } from './pipes/semantic-icon.pipes';
 import { RUPSoloValorPipe } from './pipes/elemento-rup-valor.pipes';
 import { DirectiveLibModule } from '../../directives/directives.module';
+import { RegistroCardComponent } from './components/elementos/rupers/seccionado/registro-card.component';
 
 const RUPComponentsArray = [
     RUPComponent,
@@ -125,6 +126,7 @@ const RUPComponentsArray = [
     SelectBaseComponent,
     SeccionadoComponent,
     SeccionComponent,
+    RegistroCardComponent,
     InternacionEgresoComponent,
     InternacionIngresoComponent,
     ChecklistComponent,
