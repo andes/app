@@ -149,11 +149,12 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         { key: 'solicitudes', titulo: 'solicitudes', icono: 'mano-corazon' },
         { key: 'hallazgo', titulo: 'hallazgos', icono: 'hallazgo' },
         { key: 'trastorno', titulo: 'trastornos', icono: 'trastorno' },
+        { key: 'registros', titulo: 'elemento de registro ', icono: 'documento-lapiz' },
         { key: 'procedimiento', titulo: 'procedimientos', icono: 'termometro' },
         { key: 'recetas', titulo: 'recetas', icono: 'listado-receta' },
         { key: 'producto', titulo: 'productos', icono: 'pildoras' },
         { key: 'laboratorios', titulo: 'laboratorios', icono: 'recipiente' },
-        { key: 'vacunas', titulo: 'vacunas', icono: 'vacuna' },
+        { key: 'vacunas', titulo: 'vacunas', icono: 'vacuna' }
     ];
 
     public estadoReceta = {

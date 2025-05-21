@@ -34,73 +34,141 @@
     }
 }
 
-.menu-buscador {
-    .container-filtros {
-        padding: 2px 0;
-        margin: 5px 0;
+.contenedor-filtros {
+    display: flex;
+    overflow: auto;
+
+    .btn-container[prev],
+    .btn-container[next] {
+        background: none;
+        height: inherit;
+
+        plex-button button {
+            padding: 0;
+            cursor: pointer;
+            height: 50px;
+            width: 40px;
+            background: white;
+            color: #00a8e0;
+            border: none !important;
+
+            plex-icon i.md {
+                font-size: 30px !important;
+            }
+
+            &:focus,
+            &:active {
+                box-shadow: none;
+            }
+        }
     }
 
-    .filtros {
-        align-items: center;
-        height: 40px;
+    section {
+        height: 100px;
+        padding-left: 40px;
+        margin: 0;
+        overflow: hidden;
     }
 
-    .botones-filtros {
-        list-style: none;
-        margin: 0 1px 0 0;
-        padding: 0;
+    plex-grid {
         display: flex;
+        margin: 0;
+    }
 
-        li {
-            width: 16.5%;
-            height: 60px;
-            position: relative;
+    .plex-dots-wrapper {
+        display: none !important;
+    }
 
-            button {
-                // text-overflow: ellipsis;
-                white-space: normal;
-                /* width: 99%; */
-                /* height: 1.5rem; */
-                font-size: 0.525rem;
-                /* position: absolute; */
-                text-align: center;
-                padding: 0px 5px;
-                display: block;
-                border-width: 2px;
-                min-height: 60px;
+    .card-filtro {
+        cursor: pointer;
 
-                i {
-                    font-size: 1.75rem;
-                    display: block;
-                }
+        .icon-wrapper {
+            padding: 5px;
+            border: 2px solid #000;
+            border-radius: 100px;
+            width: 50px;
+            height: 50px;
+            align-self: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-                &[disabled] {
-                    cursor: not-allowed;
-                    filter: alpha(opacity=65);
-                    -webkit-box-shadow: none;
-                    box-shadow: none;
-                    opacity: 0.65;
-                }
-
-                // fix a mano para el boton btn-otro para que entre el texto en los filtros
-                &.btn-otro {
-                    padding-top: 0;
-                    padding-bottom: 0;
-
-                    i {
-                        font-size: 2rem;
-                    }
-                }
+            .icon i {
+                font-size: 25px;
             }
 
             .contador {
-                display: inline-block;
-                top: 0;
-                right: 0;
+                width: 25px;
+                line-height: 25px;
+                border-radius: 25px;
+                text-align: center;
+                color: white;
                 position: absolute;
-                text-align: left;
-                padding: 3px;
-                font-size: 0.7rem;
+                left: calc(50% + 15px);
+                top: 20px;
+            }
+        }
+
+        @mixin card-estilo($color) {
+            .icon-wrapper {
+                border-color: $color;
+
+                .icon i {
+                    color: $color;
+                }
+
+                .contador {
+                    background-color: $color;
+                }
+            }
+
+            .titulo {
+                color: $color;
+                text-align: center;
+                text-transform: uppercase;
+                font-size: 11px;
+            }
+        }
+
+        .todos {
+            @include card-estilo($todos);
+        }
+
+        .planes {
+            @include card-estilo($solicitud);
+        }
+
+        .hallazgos {
+            @include card-estilo($hallazgo);
+        }
+
+        .trastornos {
+            @include card-estilo($trastorno);
+        }
+
+        .procedimientos {
+            @include card-estilo($procedimiento);
+        }
+
+        .productos {
+            @include card-estilo($producto);
+        }
+
+        .registros {
+            @include card-estilo($registro);
+        }
+
+        .card {
+            border: none;
+            padding: 0;
+
+            .card-content {
+                min-width: 80px;
+                width: max-content;
+                display: flex;
+                margin: 0 2px;
+                justify-content: center;
+                flex-direction: column;
             }
         }
     }
