@@ -41,8 +41,18 @@ export class BuscadorComponent implements OnInit, OnChanges {
         procedimientos: ['procedimiento', 'entidad observable', 'régimen/tratamiento'],
         planes: ['procedimiento', 'régimen/tratamiento'],
         productos: ['producto', 'objeto físico', 'medicamento clínico', 'fármaco de uso clínico'],
-        otros: ['elemento de registro']
+        registros: ['elemento de registro']
     };
+
+    public filtrosSonmed = [
+        { key: 'todos', titulo: 'todos', icono: 'semantics' },
+        { key: 'hallazgos', titulo: 'hallazgos', icono: 'hallazgo' },
+        { key: 'trastornos', titulo: 'trastornos', icono: 'trastorno' },
+        { key: 'registros', titulo: 'elemento de registros', icono: 'documento-lapiz' },
+        { key: 'procedimientos', titulo: 'procedimientos', icono: 'termometro' },
+        { key: 'planes', titulo: 'solicitudes', icono: 'mano-corazon' },
+        { key: 'productos', titulo: 'insumos', icono: 'pildoras' },
+    ];
 
     public filtroActual: 'hallazgos' | 'trastornos' | 'procedimientos' | 'planes' | 'productos' | 'todos' = 'todos';
     public busquedaActual: 'misFrecuentes' | 'sugeridos' | 'buscadorBasico' | 'frecuentesTP' = 'misFrecuentes';
@@ -347,8 +357,19 @@ export class BuscadorComponent implements OnInit, OnChanges {
                 this.results[busquedaActual]['todos'] = this.results[busquedaActual]['todos'] ? this.results[busquedaActual]['todos'].filter(x => !this.esElementoRegistro(x)) : [];
                 this.results[busquedaActual]['procedimientos'] = this.results[busquedaActual]['procedimientos'] ? this.results[busquedaActual]['procedimientos'].filter(x => !this.esSolicitud(x)) : [];
                 this.results[busquedaActual]['todos'] = this.results[busquedaActual]['todos'] ? this.results[busquedaActual]['todos'].filter(x => !this.esSolicitud(x)) : [];
+                if (this.results[busquedaActual]['registros']) {
+                    const registrosCopia = JSON.parse(JSON.stringify(this.results[busquedaActual]['registros']));
+                    const registros = [];
+                    registrosCopia.forEach(unRegistro => {
+                        unRegistro.esSolicitud = true;
+                        registros.push(unRegistro);
+                    });
+                    // agregamos los registros
+                    this.results[busquedaActual]['todos'] = [...this.results[busquedaActual]['todos'], ...registros];
 
+                }
             }
+
             if (this.results[busquedaActual]['planes']) {
                 const planesCopia = JSON.parse(JSON.stringify(this.results[busquedaActual]['planes']));
                 const planes = [];
