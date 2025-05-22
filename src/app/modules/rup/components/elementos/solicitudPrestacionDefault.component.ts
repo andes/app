@@ -15,6 +15,7 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
     public organizaciones: any[] = [];
     public conceptoAsociado = null;
     public asociados: any[] = [];
+    public conceptosEcl: any[] = [];
 
     @ViewChild('selector') selector: ElementRef;
 
@@ -89,8 +90,17 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
     }
 
     actualizarRelaciones(registros, estado: string) {
-        const conceptos = this.elementosRUPService.cacheDiagnosticosSolicitudes.map(concepto => concepto.conceptId);
-        this.asociados = registros?.filter((registro) => conceptos.includes(registro.concepto.conceptId)) || [];
+        this.eclqueriesServicies.search({ key: 'conceptos-asociadosm' }).subscribe(query => {
+
+            this.conceptosEcl = query;
+
+            // Crear una expresión regular a partir de la consulta, manejando separadores `|` o `OR`
+            const regex = new RegExp(`\\b(${this.conceptosEcl[0].valor.replace(/ OR /g, '|').replace(/\s*\|\s*/g, '|')})\\b`);
+            this.asociados = registros?.filter((registro) =>
+                regex.test(registro.concepto.conceptId)
+            ) || [];
+        });
+
         this.conceptoAsociado = this.asociados.find(elem => elem.concepto.conceptId === this.registro.valor.solicitudPrestacion['conceptoAsociado']?.conceptId);
 
         if (estado === 'eliminar' && this.conceptoAsociado) {
