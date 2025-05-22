@@ -196,6 +196,7 @@ import { ProcedimientosQuirurgicosService } from './services/procedimientosQuiru
 import { ProfeService } from './services/profe.service';
 import { ProfesionalService } from './services/profesional.service';
 import { FarmaciaService } from './services/farmacia.service';
+import { HistorialTurnosService } from './services/turnos/historial-turnos.service';
 import { ProvinciaService } from './services/provincia.service';
 import { QueriesService } from './services/query.service';
 import { SectoresService } from './services/sectores.service';
@@ -439,7 +440,8 @@ registerLocaleData(localeEs, 'es');
             multi: true,
         },
         NgxImageCompressService,
-        FarmaciaService
+        FarmaciaService,
+        HistorialTurnosService,
     ]
 })
 
