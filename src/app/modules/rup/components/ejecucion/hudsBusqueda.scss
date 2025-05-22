@@ -136,6 +136,10 @@
             @include card-estilo($dominiosNac);
         }
 
+        .registros {
+            @include card-estilo($registro);
+        }
+
         .card {
             border: none;
             padding: 0;
