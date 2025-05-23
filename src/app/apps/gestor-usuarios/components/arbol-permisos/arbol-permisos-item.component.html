@@ -7,7 +7,7 @@
             </span>
 
             <span>
-
+                <!-- colapsables -->
                 <plex-bool *ngIf="!item.avoidAll" (change)="expand($event)" [(ngModel)]="allModule" type="slide">
                 </plex-bool>
 
@@ -15,7 +15,6 @@
                             tooltipPosition="left">
                     <plex-icon name="asterisk"></plex-icon>
                 </plex-badge>
-
             </span>
         </div>
         <ng-container *ngIf="!allModule">
@@ -27,10 +26,12 @@
         </ng-container>
     </plex-panel>
 </plex-accordion>
+
 <div *ngIf="item.type" [hidden]="isHidden">
-
-    <plex-bool [(ngModel)]="state" *ngIf="item.type === 'boolean'" [label]="item.title" type="slide"></plex-bool>
-
+    <!-- items hoja -->
+    <plex-bool [(ngModel)]="state" *ngIf="item.type === 'boolean'" [label]="item.title" type="slide"
+               (change)="checkIncompatibles($event)">
+    </plex-bool>
     <div *ngIf="item.type !== 'boolean'">
         <h5>
             {{item.title}}
