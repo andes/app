@@ -1,3 +1,10 @@
+# [5.165.0](https://github.com/andes/app/compare/v5.164.0...v5.165.0) (2025-05-28)
+
+
+### Features
+
+* **IN:** modifica filtros y agrega boton de busqueda ([#3190](https://github.com/andes/app/issues/3190)) ([34dcbdd](https://github.com/andes/app/commit/34dcbdd84a6700146d63e0bfebb742677efe23be))
+
 # [5.164.0](https://github.com/andes/app/compare/v5.163.0...v5.164.0) (2025-05-21)
 
 
