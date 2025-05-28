@@ -529,10 +529,15 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         });
     }
 
-    invalidarPrestacion(prestacion) {
+    invalidarPrestacion(prestacion, tipo) {
+        const data = {
+            idAgenda: this.agendaSeleccionada.id,
+            idTurno: prestacion.solicitud.turno,
+            tipoTurno: tipo
+        };
         this.plex.confirm('¿Está seguro que desea invalidar esta prestación?').then(confirmacion => {
             if (confirmacion) {
-                this.servicioPrestacion.invalidarPrestacion(prestacion).subscribe(() => this.actualizar());
+                this.servicioPrestacion.invalidarPrestacion(prestacion, data).subscribe(() => this.actualizar());
             }
         });
     }
