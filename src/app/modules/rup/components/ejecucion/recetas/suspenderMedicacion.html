@@ -1,4 +1,5 @@
-<plex-help size="sm" class="ml-2" btnType="danger" icon="stop" tooltip="Suspender" tooltipPosition="left" *ngIf="seleccionRecetas?.length > 0">
+<plex-help size="sm" class="ml-2" btnType="danger" icon="stop" tooltip="Suspender" tooltipPosition="left"
+           *ngIf="seleccionRecetas?.length > 0">
     <plex-title titulo="Suspender Medicamento" size="sm">
         <plex-button type="success" icon="check" size="sm" tooltip="Confirmar" tooltipPosition="left"
                      [disabled]="!formSuspension.valid" (click)="suspenderMedicacion()">
@@ -28,8 +29,8 @@
         <plex-select label="Motivo de suspensión" name="motivo" [(ngModel)]="motivoSelector" [data]="motivosSuspension"
                      required>
         </plex-select>
-        <plex-text label="Observación" name="observacion" [(ngModel)]="observacion" placeholder="Ingrese una observación"
-                   [required]="motivoSelector?.nombre === 'Otro'">
+        <plex-text label="Observación" name="observacion" [(ngModel)]="observacion"
+                   placeholder="Ingrese una observación" [required]="motivoSelector?.nombre === 'Otro'">
         </plex-text>
     </form>
 </plex-help>

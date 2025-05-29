@@ -29,6 +29,10 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     public internacione$: Observable<any[]>;
     public registros = [];
     public flagSeguimiento = false;
+    public permisoHudsCompleta: boolean;
+    public permisoLaboratorios: boolean;
+    public permisoVacunas: boolean;
+    public permisoRecetas: boolean;
 
     constructor(
         public elementosRUPService: ElementosRUPService,
@@ -57,17 +61,13 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
             name: 'Historia Única De Salud'
         }]);
 
-        const permisos = [
-            'huds:visualizacionHuds',
-            'huds:visualizacionParcialHuds:*',
-            'huds:visualizacionParcialHuds:laboratorio',
-            'huds:visualizacionParcialHuds:vacuna',
-            'huds:visualizacionParcialHuds:receta'
-        ];
-
-        if (!permisos.some(permiso => this.auth.check(permiso))) {
+        if (!this.auth.getPermissions('huds:?')?.length) {
             this.redirect('inicio');
         }
+        this.permisoHudsCompleta = this.auth.check('huds:visualizacionHuds');
+        this.permisoLaboratorios = this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:laboratorio');
+        this.permisoVacunas = this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:vacuna');
+        this.permisoRecetas = this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:receta');
 
         // cargar las internaciones y armar un filtro en api .
         this.huds.registrosHUDS.subscribe((datos) => {
