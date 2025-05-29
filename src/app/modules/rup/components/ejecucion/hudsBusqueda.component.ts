@@ -222,7 +222,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
      * @memberof PrestacionEjecucionComponent
      */
     ngAfterContentInit() {
-        if (this.paciente) {
+        if (this.paciente && this.permisosCompletos) {
             this.listarInternaciones();
             this.listarPrestaciones();
             this.listarConceptos();
