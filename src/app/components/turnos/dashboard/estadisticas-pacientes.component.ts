@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as moment from 'moment';
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { Auth } from '@andes/auth';
@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { HistorialTurnosService } from '../../../services/turnos/historial-turnos.service';
+import { cache } from '@andes/shared';
 
 @Component({
     selector: 'estadisticas-pacientes',
@@ -25,23 +26,24 @@ export class EstadisticasPacientesComponent implements OnInit {
     public fechaDesde;
     public fechaHasta;
     public prestacion;
+    public turnosPaciente = [];
     public columns = [
         {
             key: 'fecha',
             label: 'Fecha',
-            sorteable: true,
+            sorteable: false,
             sort: (a: any, b: any) => a.horaInicio.getTime() - b.horaInicio.getTime()
         },
         {
             key: 'prestacion',
             label: 'Prestación',
-            sorteable: true,
+            sorteable: false,
             sort: (a: any, b: any) => a.tipoPrestacion.term.localeCompare(b.tipoPrestacion.term)
         },
         {
             key: 'profesional',
             label: 'Profesional',
-            sorteable: true,
+            sorteable: false,
             sort: (a: any, b: any) => {
                 const aProfesionales = a.profesionales?.map((p: any) => `${p.apellido} ${p.nombre}`).join(', ') || '';
                 const bProfesionales = b.profesionales?.map((p: any) => `${p.apellido} ${p.nombre}`).join(', ') || '';
@@ -52,7 +54,7 @@ export class EstadisticasPacientesComponent implements OnInit {
         {
             key: 'obraSocial',
             label: 'Obra Social',
-            sorteable: true,
+            sorteable: false,
             sort: (a: any, b: any) => {
                 const aObraSocial = a.paciente.obraSocial?.nombre || a.paciente.obraSocial?.financiador || '';
                 const bObraSocial = b.paciente.obraSocial?.nombre || b.paciente.obraSocial?.financiador || '';
@@ -62,13 +64,13 @@ export class EstadisticasPacientesComponent implements OnInit {
         {
             key: 'organizacion',
             label: 'Organización',
-            sorteable: true,
+            sorteable: false,
             sort: (a: any, b: any) => a.organizacion.nombre.localeCompare(b.organizacion.nombre)
         },
         {
             key: 'estado',
             label: 'Estado',
-            sorteable: true,
+            sorteable: false,
             sort: (a: any, b: any) => {
                 const aEstado = a.asistencia || a.estado;
                 const bEstado = b.asistencia || b.estado;
@@ -126,6 +128,14 @@ export class EstadisticasPacientesComponent implements OnInit {
                 return resp;
             })
         );
+
+        this.historial$ = this.serviceTurno.getHistorial({ pacienteId: this.paciente.id }).pipe(
+            map(turnos => this.sortByHoraInicio(turnos)),
+            cache()
+        );
+
+        this.turnosPaciente$ = this.historial$.pipe(
+            map(turnos => turnos.filter(t => moment(t.horaInicio).isSameOrAfter(new Date(), 'day') && t.estado !== 'liberado')));
     }
 
     filtrar() {
