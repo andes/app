@@ -8,14 +8,24 @@
             </header>
 
             <ng-container *ngIf="mainView === 'principal'">
-                <app-filtros-internacion></app-filtros-internacion>
-                <div *ngIf="listadoInternacionService.missingFilters$ | async" justify="center" class="mt-5">
+                <app-filtros-internacion (buscando)="buscando($event)"></app-filtros-internacion>
+
+                <div *ngIf="estaBuscando" justify="center" class="mt-5 d-flex flex-column">
+                    <plex-loader type="ball-pulse"></plex-loader>
+                    <plex-label class="flex-column" type="info" size="xl" direction="column" titulo="Buscando..."
+                                subtitulo="Por favor espere mientras se cargan los resultados">
+                    </plex-label>
+                </div>
+
+                <div *ngIf="!estaBuscando && listadoInternacionService.missingFilters$ | async" justify="center"
+                     class="mt-5">
                     <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
                                 titulo="No hay resultados"
                                 subtitulo="Debe ingresar un rango válido de fechas de ingreso o egreso">
                     </plex-label>
                 </div>
-                <ng-container *ngIf="!(listadoInternacionService.missingFilters$ | async)">
+
+                <ng-container *ngIf="!estaBuscando && !(listadoInternacionService.missingFilters$ | async)">
                     <div *ngIf="!(listaInternacion$ | async)?.length" justify="center" class="mt-5">
                         <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
                                     titulo="No hay resultados"

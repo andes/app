@@ -30,6 +30,7 @@ export class InternacionListadoComponent implements OnInit {
     public puedeValidar = false;
     public puedeRomper = false;
     public editando = false;
+    public estaBuscando = false;
     public columns = [
         { // prioriza nombre autopercibido en caso de tener
             key: 'apellido-nombre',
@@ -316,5 +317,9 @@ export class InternacionListadoComponent implements OnInit {
                 });
             }
         });
+    }
+
+    buscando(valor) {
+        this.estaBuscando = valor;
     }
 }
