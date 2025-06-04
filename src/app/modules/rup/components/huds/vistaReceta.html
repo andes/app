@@ -19,7 +19,7 @@
                         + ' día(s)' : '' }} {{
                         recetaPrincipal.medicamento.dosisDiaria.dosis }} {{
                         recetaPrincipal.medicamento.presentacion }} cada {{
-                        recetaPrincipal.medicamento.dosisDiaria.intervalo.nombre }}</small>
+                        recetaPrincipal.medicamento.dosisDiaria.intervalo?.nombre }}</small>
                 </p>
             </div>
         </div>
@@ -49,22 +49,33 @@
         </div>
     </div>
 
-    <div class="mt-4 mb-3" *ngIf="recetaPrincipal.estadoDispensaActual.tipo === 'dispensada'">
+    <div class="mt-4 mb-3" *ngIf="recetaPrincipal.estadosDispensa.length > 0">
         <plex-title titulo="Detalle dispensa" size="sm"></plex-title>
     </div>
 
-    <div class="info-solicitud dispensada mt-4" *ngIf="recetaPrincipal.estadoDispensaActual.tipo === 'dispensada'">
-        <div class="data">
-            <div>
-                <b>Fecha</b>
-                <p class="texto-detalle">{{recetaPrincipal.estadoDispensaActual.fecha | date:'dd/MM/yyyy HH:mm'}}</p>
-            </div>
-            <div>
-                <b>Sistema</b>
-                <p class="texto-detalle">{{recetaPrincipal.estadoDispensaActual.sistema || "- Sin especificar -"}}</p>
-            </div>
+    <div class="info-solicitud dispensada mt-4" *ngIf="recetaPrincipal.estadosDispensa.length > 0">
+        <div class="data fila-dispensa">
+            <div><b>Fecha</b></div>
+            <div><b>Sistema</b></div>
+            <div><b>Organización</b></div>
+            <div><b></b></div>
         </div>
+
+        <ng-container *ngFor="let estadoDispensa of recetaPrincipal.estadosDispensa">
+            <div class="fila-dispensa">
+                <div class="detalle-dispensa">{{ estadoDispensa.fecha | date: 'dd/MM/yyyy HH:mm' }}</div>
+                <div class="detalle-dispensa">{{ estadoDispensa.sistema || "Sin especificar" }}</div>
+                <div class="detalle-dispensa">{{ estadoDispensa.organizacion?.nombre || "Sin especificar" }}</div>
+                <div class="detalle-dispensa">
+                    <plex-badge *ngIf="estadoDispensa.tipo === 'dispensa-parcial'" size="sm" [type]="'warning'">
+                        dispensa duplicada
+                    </plex-badge>
+                </div>
+            </div>
+        </ng-container>
+
     </div>
+
 
     <div class="mt-4 mb-3" *ngIf="recetaPrincipal.estadoActual.tipo === 'suspendida'">
         <plex-title titulo="Motivo de suspensión" size="sm"></plex-title>
