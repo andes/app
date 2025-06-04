@@ -7,13 +7,7 @@ import { RUPComponent } from '../../../core/rup.component';
 @Component({
     selector: 'rup-prescripcion-medicamentos-internacion',
     templateUrl: 'prescripcion-medicamento-internacion.component.html',
-    styles: [`
-        .aclaraciones {
-            background-color: #003a52;
-            padding: 0.8rem 0.8rem 0.1rem 0.8rem;
-            font-size: 0.8rem;
-        }
-    `]
+    styleUrls: ['prescripcion-medicamento-internacion.scss']
 })
 @RupElement('SolicitudPrescripcionMedicamentoInternacionComponent')
 export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPComponent implements OnInit, AfterViewInit {
@@ -29,6 +23,8 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
     fechaMin;
     fechaMax;
 
+    public eclMedicamentos;
+
     ngAfterViewInit() {
         setTimeout(() => {
             this.afterInit = true;
@@ -36,6 +32,10 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
     }
 
     ngOnInit() {
+        this.eclqueriesServicies.search({ key: '^receta' }).subscribe(query => {
+            this.eclMedicamentos = query.find(q => q.key === 'receta:genericos');
+        });
+
         this.fechaMin = moment().startOf('day').toDate();
         this.fechaMax = moment().endOf('day').toDate();
         this.frecuencias$ = this.constantesService.search({ source: 'plan-indicaciones:frecuencia' });
@@ -74,8 +74,8 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
 
     valuesChange() {
         const nombre = this.registro.valor.sustancias.map(item => {
-            return `${item.ingrediente?.term || ''} ${item.dosisValor || ''}${item.dosisUnidad?.term || ''}`;
-        }).join(' y ');
+            return `${item.ingrediente?.term || ''}`;
+        }).join(' ');
         this.registro.valor.nombre = nombre;
     }
 
@@ -100,7 +100,7 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
         const input = event.query;
         if (input && input.length > 3) {
             const query: any = {
-                expression: '<410942007 OR 387307005',
+                expression: this.eclMedicamentos.valor,
                 search: input
             };
             this.snomedService.get(query).subscribe(event.callback);
