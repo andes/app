@@ -107,13 +107,12 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit, AfterCo
     }
 
     onSave() {
+
         if (!this.prescripcion.rupInstance.validateForm(true)) {
             this.plex.toast('warning', 'Revise que todos los campos requeridos contengan datos válidos.', 'Acción denegada', 5000);
             return;
         }
-        this.registro.valor.sustancias?.forEach(s => {
-            s.dosis = `${s.dosisValor}${s.dosisUnidad?.term}`;
-        });
+
         const nombre = this.registro.valor?.nombre || this.registro.concepto.term;
         const indicacion = {
             idInternacion: this.idInternacion,
