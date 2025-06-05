@@ -87,7 +87,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     public hasPacs: boolean;
     public noNominalizada = true;
     public puedeRomperValidacion = false;
-    public tiempoValidacion;
+    public tiempoLimiteRomperValidacion;
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -118,7 +118,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.constantesService.search({ source: 'prestacion:validacion' }).subscribe(constante => {
-            this.tiempoValidacion = constante[0].key || 30; // días
+            this.tiempoLimiteRomperValidacion = constante[0].key || 30; // días
         });
         // consultamos desde que pagina se ingreso para poder volver a la misma
         this.btnVolver = 'Volver';
@@ -592,9 +592,9 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     }
 
     estaVencida() {
-        const prestacionValidada = this.prestacion.estados.find(estado => estado.tipo === 'validada');
+        const prestacionValidada = this.prestacion.estados.find(estado => estado.tipo === 'validada'); // primer validación
         const diasDiferencia = moment().diff(moment(prestacionValidada.createdAt), 'days');
-        return diasDiferencia > this.tiempoValidacion;
+        return diasDiferencia > Number(this.tiempoLimiteRomperValidacion);
     }
 }
 
