@@ -23,7 +23,7 @@
     <div class="menu-titulo">
         <h6 class="titulo-filtro {{filtroActual}}">{{ getTitulo(filtroActual) | uppercase }}</h6>
         <suspender-medicacion *ngIf="filtroActual==='recetas' && seleccionRecetas.length > 0"
-                              [seleccionRecetas]="seleccionRecetas" [motivoSelector]="motivoSuspensionSelector"
+                              [seleccionRecetas]="seleccionSuspender" [motivoSelector]="motivoSuspensionSelector"
                               [motivosSuspension]="motivosSuspension" [profesional]="profesional"
                               (reset)="resetSeleccionRecetas()"></suspender-medicacion>
     </div>
