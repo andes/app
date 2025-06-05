@@ -497,24 +497,13 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
 
     // Trae los cdas registrados para el paciente
     buscarCDAPacientes(token) {
-        const { estado, fechaNacimiento, apellido } = this.paciente;
-        const fecNac = moment(fechaNacimiento).format('yyyyMMDD');
         const fechaHta = moment().format('yyyyMMDD');
-        let dni = this.paciente.documento || null;
-        if (!dni) {
-            const tutorProgenitor = this.paciente.relaciones.find(rel => rel.relacion.nombre === 'progenitor/a') || this.paciente.relaciones.find(rel => rel.relacion.nombre === 'tutor');
-            dni = tutorProgenitor?.documento || tutorProgenitor?.numeroIdentificacion || null;
-            if (!dni) {
-                return;
-            }
-        }
         forkJoin({
-            protocolos: this.laboratorioService.getProtocolos({ estado, dni, fecNac, apellido, fechaDde: '20200101', fechaHta }),
+            protocolos: this.laboratorioService.getProtocolos({ pacienteId: this.paciente.id, fechaDde: '20200101', fechaHta }),
             cdaByPaciente: this.servicioPrestacion.getCDAByPaciente(this.paciente.id, token)
         }).subscribe({
             next: (resultados) => {
                 const protocolos = resultados.protocolos || [];
-
                 this.servicioPrestacion.getCDAByPaciente(this.paciente.id, token).subscribe(registros => {
                     this.cdas = registros.map(cda => {
                         cda.id = cda.cda_id;
