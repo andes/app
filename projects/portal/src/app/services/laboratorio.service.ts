@@ -28,9 +28,9 @@ export class LaboratorioService {
         );
     }
 
-    getProtocolos({ estado, dni, fecNac, apellido, fechaDde, fechaHta }) {
-        if (dni) {
-            return this.server.get(`/modules/rup/protocolosLab?estado=${estado}&dni=${dni}&fecNac=${fecNac}&apellido=${apellido}&fechaDde=${fechaDde}&fechaHta=${fechaHta}`);
+    getProtocolos({ pacienteId, fechaDde, fechaHta }) {
+        if (pacienteId) {
+            return this.server.get(`/modules/rup/protocolosLab?pacienteId=${pacienteId}&fechaDde=${fechaDde}&fechaHta=${fechaHta}`);
         }
         return;
     }
