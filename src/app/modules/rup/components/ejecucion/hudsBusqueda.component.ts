@@ -516,12 +516,11 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
             return;
         }
         forkJoin({
-            protocolos: this.laboratorioService.getProtocolos({ estado, dni, fecNac, apellido, fechaDde: '20200101', fechaHta }),
+            protocolos: this.laboratorioService.getProtocolos({ pacienteId: this.paciente.id, fechaDde: '20200101', fechaHta }),
             cdaByPaciente: this.servicioPrestacion.getCDAByPaciente(this.paciente.id, token)
         }).subscribe({
             next: (resultados) => {
                 const protocolos = resultados.protocolos || [];
-
                 this.servicioPrestacion.getCDAByPaciente(this.paciente.id, token).subscribe(registros => {
                     this.cdas = registros.map(cda => {
                         cda.id = cda.cda_id;
