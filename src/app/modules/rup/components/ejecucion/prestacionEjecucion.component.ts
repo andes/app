@@ -21,6 +21,8 @@ import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.inte
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { RecetaService } from 'projects/portal/src/app/services/receta.service';
+
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -117,7 +119,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         public huds: HUDSService,
         public ps: PlantillasService,
         public ejecucionService: RupEjecucionService,
-        public constantesService: ConstantesService
+        public constantesService: ConstantesService,
+        public recetaService: RecetaService
     ) { }
 
     /**
