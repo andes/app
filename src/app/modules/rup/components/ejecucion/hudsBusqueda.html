@@ -351,6 +351,67 @@
             </div>
         </ng-container>
 
+        <!-- Vista: ELEMENTOS DE REGISTROS -->
+        <ng-container *ngIf="filtroActual === 'registro'">
+            <ul *ngIf="hasRegistrosTotales(filtroActual)" class="hover listado list-unstyled" cdkDropList>
+                <ng-container *ngFor="let registro of registrosTotales.registro; let iConcepto = index">
+                    <li>
+                        <div class="rup-card mini elementoderegistro"
+                             [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
+                             (click)="emitTabs(registro, 'concepto', iConcepto)">
+                            <div class="rup-header">
+                                <div class="rup-border rup-border-elementoderegistro"
+                                     [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-registro': registro.esSolicitud}">
+                                    <div class="row p-0 m-0 border-secondary border-left-0">
+                                        <div class="col-10 p-0 m-0">
+                                            <div class="row m-0 p-0">
+                                                <div class="col-2 icon-rup drag-handle">
+                                                    <i class='adi adi-documento-lapiz'></i>
+                                                </div>
+                                                <div class="col p-0 pl-2 float-left">
+                                                    {{ registro.concepto.term }}
+                                                    <div class="row p-0 m-0">
+                                                        <div class="col-10 p-0 m-0">
+                                                            <div class="sugerido">
+                                                                <small>Prestación:
+                                                                    {{ registro.tipoPrestacion }}
+                                                                </small>
+                                                                <br>
+                                                                <small>Creada:
+                                                                    {{ registro.fechaEjecucion | fecha }}
+                                                                </small>
+                                                                <br>
+                                                                <small>Profesional: {{
+                                                                    registro.evoluciones[0].profesional}}
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-2 p-0 m-0">
+                                            <div class="p-0 pt-1 pr-1 float-right">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ng-container>
+            </ul>
+            <div *ngIf="!registrosTotales.registro.length">
+                <hr class="mt-0">
+                <div class="item-lista-vacia">
+                    <plex-label size="sm" justify="center" icon="adi adi-documento-lapiz"
+                                titulo="No hay elementos de registros cargados">
+                    </plex-label>
+                </div>
+            </div>
+        </ng-container>
+
         <!-- Vista: PROCEDIMIENTOS -->
         <ng-container *ngIf="filtroActual === 'procedimiento'">
             <ul *ngIf="hasRegistrosTotales(filtroActual)" class="hover listado list-unstyled">

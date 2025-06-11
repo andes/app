@@ -115,14 +115,16 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         procedimiento: [],
         hallazgo: [],
         trastorno: [],
-        producto: []
+        producto: [],
+        registro: []
     };
 
     public registrosTotalesCopia = {
         procedimiento: [],
         hallazgo: [],
         trastorno: [],
-        producto: []
+        producto: [],
+        registro: []
     };
 
     public profesional;
@@ -149,11 +151,12 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         { key: 'solicitudes', titulo: 'solicitudes', icono: 'mano-corazon' },
         { key: 'hallazgo', titulo: 'hallazgos', icono: 'hallazgo' },
         { key: 'trastorno', titulo: 'trastornos', icono: 'trastorno' },
+        { key: 'registro', titulo: 'elemento de registro ', icono: 'documento-lapiz' },
         { key: 'procedimiento', titulo: 'procedimientos', icono: 'termometro' },
         { key: 'recetas', titulo: 'recetas', icono: 'listado-receta' },
         { key: 'producto', titulo: 'productos', icono: 'pildoras' },
         { key: 'laboratorios', titulo: 'laboratorios', icono: 'recipiente' },
-        { key: 'vacunas', titulo: 'vacunas', icono: 'vacuna' },
+        { key: 'vacunas', titulo: 'vacunas', icono: 'vacuna' }
     ];
 
     public estadoReceta = {
@@ -469,7 +472,10 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
                 });
             });
 
-
+            this.servicioPrestacion.getByPacienteElementoRegistros(this.paciente.id).subscribe((registro) => {
+                this.registrosTotales.registro = registro;
+                this.registrosTotalesCopia.registro = registro;
+            });
         });
     }
 
@@ -604,6 +610,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
                 return this.solicitudesMezcladas.length;
             case 'recetas':
                 return this.busquedaRecetas?.length;
+            case 'registro':
+                return this.registrosTotalesCopia.registro.length;
         }
     }
 

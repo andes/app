@@ -136,6 +136,10 @@
             @include card-estilo($dominiosNac);
         }
 
+        .registro {
+            @include card-estilo($registro);
+        }
+
         .card {
             border: none;
             padding: 0;
@@ -284,6 +288,10 @@
 
     &.dominios {
         color: $dominiosNac
+    }
+
+    &.registro {
+        color: $registro
     }
 }
 
