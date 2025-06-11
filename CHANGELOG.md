@@ -1,3 +1,12 @@
+## [5.165.1](https://github.com/andes/app/compare/v5.165.0...v5.165.1) (2025-06-11)
+
+
+### Bug Fixes
+
+* **LABO:** corrige busqueda de laboratorios SIL2 temporales con dni ([#3202](https://github.com/andes/app/issues/3202)) ([d4f8348](https://github.com/andes/app/commit/d4f8348fcd1b5b20f7e35e874110a10f7866f196))
+* **receta:** error check de medicamento al suspender ([#3200](https://github.com/andes/app/issues/3200)) ([624deb7](https://github.com/andes/app/commit/624deb7aaa2b6f6463f3a73a877c214201023849))
+* **RUP:** Agrega servicio de recetas en la ejecucion de rup ([#3203](https://github.com/andes/app/issues/3203)) ([dee510c](https://github.com/andes/app/commit/dee510c46ca47b36bcd267d1c217a6cbd7428225))
+
 # [5.165.0](https://github.com/andes/app/compare/v5.164.0...v5.165.0) (2025-05-28)
 
 
