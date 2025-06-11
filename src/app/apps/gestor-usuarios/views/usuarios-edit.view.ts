@@ -9,6 +9,7 @@ import { PerfilesHttp } from '../services/perfiles.http';
 import { PermisosService } from '../services/permisos.service';
 import { ArbolPermisosComponent } from '../components/arbol-permisos/arbol-permisos.component';
 import { Plex } from '@andes/plex';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'gestor-usarios-usuarios-edit',
@@ -54,6 +55,7 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
         public plex: Plex,
         private route: ActivatedRoute,
         public usuariosHttp: UsuariosHttp,
+        private auth: Auth,
         private organizacionService: OrganizacionService,
         public perfilesHttp: PerfilesHttp,
         public permisosService: PermisosService
