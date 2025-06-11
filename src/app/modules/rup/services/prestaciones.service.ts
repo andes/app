@@ -667,12 +667,17 @@ export class PrestacionesService {
 
     }
 
-    invalidarPrestacion(prestacion): Observable<any> {
+    invalidarPrestacion(prestacion, agendaTurno = null): Observable<any> {
         let data;
         if (prestacion.solicitud.turno) {
             data = { op: 'desasociarTurno' };
         } else {
             data = { op: 'estadoPush', estado: { tipo: 'anulada' } };
+        }
+        if (agendaTurno) {
+            data['idAgenda'] = agendaTurno.idAgenda;
+            data['idTurno'] = agendaTurno.idTurno;
+            data['tipoTurno'] = agendaTurno.tipoTurno;
         }
         return this.patch(prestacion.id, data);
     }
