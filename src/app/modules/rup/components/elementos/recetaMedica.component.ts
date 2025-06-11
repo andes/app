@@ -211,11 +211,11 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     buscarDiagnosticosConTrastornos() {
         const fechaLimite = moment().subtract(6, 'months');
         this.prestacionesService.getByPacienteTrastorno(this.paciente.id).subscribe((trastornos) => {
-
             trastornos.forEach(trastorno => {
-                const fechaCreacion = trastorno.fechaEjecucion ? moment(trastorno.fechaEjecucion) : null;
-                const esActivo = trastorno.evoluciones[trastorno.evoluciones.length - 1].estado === 'activo';
-                if (fechaCreacion?.isAfter(fechaLimite) && esActivo) {
+                // las evoluciones de los trastornos estan ordenadas por fecha de carga, la primera es la mas reciente
+                const ultimaEvolucion = trastorno.evoluciones?.length ? moment(trastorno.evoluciones[0].fechaCarga) : null;
+                const esActivo = trastorno.evoluciones?.length && trastorno.evoluciones[0].estado === 'activo';
+                if (ultimaEvolucion?.isAfter(fechaLimite) && esActivo) {
                     this.recetasConFiltros.push(trastorno.concepto);
                 }
             });
