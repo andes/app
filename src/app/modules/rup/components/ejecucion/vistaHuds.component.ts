@@ -107,11 +107,13 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                 this.servicioPaciente.getById(id).subscribe(paciente => {
                     this.paciente = paciente;
 
-                    const filtros = {
-                        fechaIngresoDesde: moment('2016-01-01').toDate(),
-                        idPaciente: id
-                    };
-                    this.internacione$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros);
+                    if (this.permisoHudsCompleta) {
+                        const filtros = {
+                            fechaIngresoDesde: moment('2016-01-01').toDate(),
+                            idPaciente: id
+                        };
+                        this.internacione$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros);
+                    }
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                 });
             });
