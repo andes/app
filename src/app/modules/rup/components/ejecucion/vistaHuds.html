@@ -122,8 +122,9 @@
                         <vista-laboratorio [protocolo]="registro"></vista-laboratorio>
                     </plex-tab>
 
-                    <plex-tab *ngIf="registro.tipo === 'cda' && this.permisoVacunas" [allowClose]="true"
-                              [label]="registro.data.prestacion.snomed.term" [class]="registro.data.class">
+                    <plex-tab *ngIf="registro.tipo === 'cda' && (this.permisoVacunas || this.permisoLaboratorios)"
+                              [allowClose]="true" [label]="registro.data.prestacion?.snomed.term"
+                              [class]="registro.data.class">
                         <vista-cda [registro]="registro"></vista-cda>
                     </plex-tab>
 
