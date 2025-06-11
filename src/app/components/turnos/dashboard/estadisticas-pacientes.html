@@ -19,45 +19,73 @@
     </plex-tab>
     <plex-tab icon="history" label="Historial" *ngIf="!(paciente | pacienteRestringido)">
         <fieldset *plTab>
-            <ul class="list-group">
-                <li *ngFor="let turno of ultimosTurnos$ | async; let i=index" class="list-group-item"
-                    [appHover]="'active'">
-                    <div class="list-group-item-text">
-                        <div>
-                            <plex-badge *ngIf="turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'"
-                                        type="danger">NO ASISTIÓ</plex-badge>
-                            <plex-badge *ngIf="turno.estado === 'fuera-agenda'" type="warning">
-                                FUERA DE AGENDA</plex-badge>
-                            <plex-badge *ngIf="turno.asistencia !== 'noAsistio' && (turno.estado === 'asignado' || turno.estado === 'turnoDoble')"
-                                        type="success">
-                                ASIGNADO</plex-badge>
-                            <plex-badge *ngIf="turno.estado === 'liberado' || turno.estado === 'suspendido' "
-                                        type="danger">
-                                {{turno.estado | uppercase}}</plex-badge>
+            <plex-title size="sm" titulo="Historial de turnos"></plex-title>
+            <plex-wrapper>
+                <plex-datetime grow="1" type="date" [(ngModel)]="fechaDesde" name="fechaDesde" [debounce]="600"
+                               label="Fecha desde" class="fechas" (change)="filtrar()" [max]="fechaHasta">
+                </plex-datetime>
+                <plex-datetime grow="1" type="date" [(ngModel)]="fechaHasta" name="fechaHasta" [debounce]="600"
+                               label="Fecha hasta" class="fechas" (change)="filtrar()" [min]="fechaDesde">
+                </plex-datetime>
+                <plex-select [(ngModel)]="estadoTurno" name="estadoTurno" label="Estado" [data]="estados"
+                             (change)="filtrar()"></plex-select>
+                <plex-select label="Prestación" name="prestacion" [(ngModel)]="prestacion" labelField="term"
+                             tmPrestaciones="rup:tipoPrestacion:?" [preload]="true" (change)="filtrar()">
+                </plex-select>
+            </plex-wrapper>
 
-                            | {{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}}
-                        </div>
+            <ng-container *ngIf="(ultimosTurnos$ | async) as ultimosTurnos">
+                <div class="contenedor-turnos-vacio" *ngIf="!ultimosTurnos?.length" justify="center">
+                    <plex-label class="label-turnos-vacio" icon="turno-bold" type="info" size="lg" direction="column"
+                                titulo="No se han encontrado turnos registrados para el paciente.">
+                    </plex-label>
+                </div>
+                <ng-container *ngIf="ultimosTurnos?.length">
+                    <plex-table [columns]="columns" #table="plTable" (scroll)="onScroll()" [height]="580"
+                                [headOpacity]="10">
+                        <plex-table-columns>
+                        </plex-table-columns>
 
-                        <div *ngIf="turno.estado === 'liberado'">Por {{turno.updatedBy.nombreCompleto}} el
-                            {{turno.updatedAt
-                            | fecha}} a las {{turno.updatedAt | date: 'HH:mm'}}</div>
-
-                        <div *ngIf="turno.tipoPrestacion?.term">{{turno.tipoPrestacion.term}}</div>
-                        <div *ngFor="let profesional of turno.profesionales">
-                            {{profesional | nombre}}
-                        </div>
-                        <div *ngIf="turno.paciente.obraSocial">
-                            Obra Social: {{turno.paciente.obraSocial.nombre}}
-                        </div>
-                        <div *ngIf="!turno.paciente.obraSocial">
-                            Sin obra social
-                        </div>
-                        <div>
-                            <em class="small">{{turno.organizacion.nombre}}</em>
-                        </div>
-                    </div>
-                </li>
-            </ul>
+                        <tr *ngFor="let turno of ultimosTurnos">
+                            <td *plTableCol="'fecha'">{{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}}</td>
+                            <td *plTableCol="'prestacion'">{{turno.tipoPrestacion?.term}}</td>
+                            <td *plTableCol="'profesional'">
+                                <ng-container *ngFor="let profesional of turno.profesionales">
+                                    {{profesional | nombre}}
+                                </ng-container>
+                            </td>
+                            <td *plTableCol="'obraSocial'">
+                                <ng-container *ngIf="turno.paciente.obraSocial">
+                                    {{turno.paciente.obraSocial.nombre || turno.paciente.obraSocial.financiador}}
+                                </ng-container>
+                                <ng-container *ngIf="!turno.paciente.obraSocial">
+                                    Sin obra social
+                                </ng-container>
+                            </td>
+                            <td *plTableCol="'organizacion'">
+                                <div>
+                                    <em class="small">{{turno.organizacion.nombre}}</em>
+                                </div>
+                            </td>
+                            <td *plTableCol="'estado'">
+                                <plex-badge *ngIf="turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'"
+                                            type="danger">NO ASISTIÓ</plex-badge>
+                                <plex-badge *ngIf="turno.estado === 'fuera-agenda'" type="warning">
+                                    FUERA DE AGENDA</plex-badge>
+                                <plex-badge *ngIf="turno.asistencia !== 'noAsistio' && (turno.estado === 'asignado' || turno.estado === 'turnoDoble')"
+                                            type="success">
+                                    ASIGNADO</plex-badge>
+                                <plex-badge *ngIf="turno.estado === 'liberado' || turno.estado === 'suspendido'"
+                                            type="danger"
+                                            [hint]="turno.estado === 'liberado' ? motivoLiberado(turno) : (turno.reasignado) ? 'Reasignado' : null"
+                                            hintType="danger" detach="top">
+                                    {{ turno.estado | uppercase }}
+                                </plex-badge>
+                            </td>
+                        </tr>
+                    </plex-table>
+                </ng-container>
+            </ng-container>
         </fieldset>
     </plex-tab>
     <plex-tab icon="folder-account" label="Carpetas">
