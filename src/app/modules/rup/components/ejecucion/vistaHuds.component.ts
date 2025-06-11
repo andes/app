@@ -33,6 +33,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     public permisoLaboratorios: boolean;
     public permisoVacunas: boolean;
     public permisoRecetas: boolean;
+    private fechaDesdeInternacion = moment('2016-01-01').toDate();
 
     constructor(
         public elementosRUPService: ElementosRUPService,
@@ -65,9 +66,9 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
             this.redirect('inicio');
         }
         this.permisoHudsCompleta = this.auth.check('huds:visualizacionHuds');
-        this.permisoLaboratorios = this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:laboratorio');
-        this.permisoVacunas = this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:vacuna');
-        this.permisoRecetas = this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:receta');
+        this.permisoLaboratorios = this.permisoHudsCompleta || this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:laboratorio');
+        this.permisoVacunas = this.permisoHudsCompleta || this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:vacuna');
+        this.permisoRecetas = this.permisoHudsCompleta || this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:receta');
 
         // cargar las internaciones y armar un filtro en api .
         this.huds.registrosHUDS.subscribe((datos) => {
@@ -107,11 +108,13 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                 this.servicioPaciente.getById(id).subscribe(paciente => {
                     this.paciente = paciente;
 
-                    const filtros = {
-                        fechaIngresoDesde: moment('2016-01-01').toDate(),
-                        idPaciente: id
-                    };
-                    this.internacione$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros);
+                    if (this.permisoHudsCompleta) {
+                        const filtros = {
+                            fechaIngresoDesde: this.fechaDesdeInternacion,
+                            idPaciente: id
+                        };
+                        this.internacione$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros);
+                    }
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                 });
             });
