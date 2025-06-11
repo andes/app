@@ -228,12 +228,15 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             this.listarConceptos();
             this.listarDerivaciones();
         }
-        this.token = this.huds.getHudsToken();
         // Cuando se inicia una prestación debemos volver a consultar si hay CDA nuevos al ratito.
         // [TODO] Ser notificado via websockets
         setTimeout(() => {
-            this.buscarCDAPacientes(this.token);
+            this.refreshCdas();
         }, 1000 * 30);
+    }
+
+    private refreshCdas() {
+        this.buscarCDAPacientes(this.huds.getHudsToken());
     }
 
     ngOnInit() {
@@ -248,13 +251,16 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
         this.filtroActual = this.permisosCompletos ? 'trastorno' :
             (this.permisosParciales || this.permisosLab) ? 'laboratorios' :
-                (this.permisosVac) ? 'vacunas' :
+                (this.permisosVac) ? '' :
                     (this.permisosGuardia) ? 'guardias' :
                         'recetas';
         this.pacienteSelected = this.paciente;
 
         if (this.filtroActual === 'recetas') {
             this.showFiltros = true;
+        }
+        if (this.filtroActual !== 'trastorno') {
+            this.refreshCdas();
         }
     }
 
@@ -279,7 +285,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     }
 
     dragStart(e) {
-        this._onDragStart.emit(e);
     }
 
     dragEnd(e) {

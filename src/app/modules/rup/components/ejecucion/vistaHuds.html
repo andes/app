@@ -136,7 +136,7 @@
                         <vista-solicitud-top [registro]="registro.data"></vista-solicitud-top>
                     </plex-tab>
 
-                    <plex-tab *ngIf="registro.tipo === 'cda' && this.permisoVacunas && !esGuardia(registro)"
+                    <plex-tab *ngIf="registro.tipo === 'cda' && (this.permisoVacunas || this.permisoLaboratorios) && !esGuardia(registro)"
                               [allowClose]="true" [label]="registro.data.prestacion.snomed.term"
                               [class]="registro.data.class">
                         <vista-cda [registro]="registro"></vista-cda>
