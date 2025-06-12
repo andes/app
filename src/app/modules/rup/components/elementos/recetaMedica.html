@@ -46,9 +46,12 @@
 
         <div class="mt-2">
             <plex-title name="tipoReceta" titulo="Tipo de receta" size="sm"></plex-title>
-            <plex-radio class="m-2" [(ngModel)]="medicamento.tipoReceta" [data]="opcionesTipoReceta" name="tipoReceta"
-                        (change)="onTipoRecetaChange()">
-            </plex-radio>
+            <plex-bool [(ngModel)]="esDuplicado" name="Duplicado" type="slide" label="Duplicado"
+                       (change)="onTipoRecetaChange('duplicado')">
+            </plex-bool>
+            <plex-bool [(ngModel)]="esTriplicado" name="triplicado" type="slide" label="Triplicado"
+                       (change)="onTipoRecetaChange('triplicado')">
+            </plex-bool>
         </div>
 
         <div class="mb-2" *ngIf="medicamento.tipoReceta === 'triplicado'">
