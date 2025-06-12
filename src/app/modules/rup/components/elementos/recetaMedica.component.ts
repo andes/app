@@ -44,10 +44,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     public ingresoCantidadManual = false;
     public valorCantidadManual = null;
     public loading = false;
-    public opcionesTipoReceta = [
-        { id: 'duplicado', label: 'Duplicado' },
-        { id: 'triplicado', label: 'Triplicado' }
-    ];
+    public esDuplicado = false;
+    public esTriplicado = false;
     public tiemposTratamiento = [
         { id: '3meses', nombre: '3 meses' },
         { id: '6meses', nombre: '6 meses' }
@@ -277,8 +275,13 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         return this.registro.valor.medicamentos.length > 0 ? true : false;
     }
 
-    onTipoRecetaChange() {
-        if (this.medicamento.tipoReceta === 'triplicado') {
+    onTipoRecetaChange(tipo: string) {
+        this.medicamento.tipoReceta = this.esDuplicado || this.esTriplicado ? tipo : 'simple';
+        if (tipo === 'duplicado') {
+            this.esTriplicado = false;
+        }
+        if (tipo === 'triplicado') {
+            this.esDuplicado = false;
             this.medicamento.tratamientoProlongado = false;
             this.medicamento.tiempoTratamiento = null;
         }
