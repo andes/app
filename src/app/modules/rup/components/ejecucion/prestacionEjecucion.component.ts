@@ -515,9 +515,11 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        const esAsociado = this.prestacion.ejecucion.registros.some(r =>
-            r.valor?.medicamentos?.length && r.valor.medicamentos.some(m => m.diagnostico.conceptId === registro.concepto.conceptId)
-        );
+        const esAsociado = this.prestacion.ejecucion.registros.some(r => {
+            const medicamentoAsociado = r.valor?.medicamentos?.length && r.valor.medicamentos.some(m => m.diagnostico.conceptId === registro.concepto.conceptId);
+            const dispositivoAsociado = r.valor?.dispositivos?.length && r.valor.dispositivos.some(d => d.diagnostico.conceptId === registro.concepto.conceptId);
+            return medicamentoAsociado || dispositivoAsociado;
+        });
 
         return !esAsociado;
     }
