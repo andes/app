@@ -94,11 +94,12 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
 
             this.conceptosEcl = query;
 
-            // Crear una expresión regular a partir de la consulta, manejando separadores `|` o `OR`
-            const regex = new RegExp(`\\b(${this.conceptosEcl[0].valor.replace(/ OR /g, '|').replace(/\s*\|\s*/g, '|')})\\b`);
-            this.asociados = registros?.filter((registro) =>
-                regex.test(registro.concepto.conceptId)
-            ) || [];
+            const conceptosArray = this.conceptosEcl[0].valor.split(' OR ');
+
+            this.asociados = registros?.filter((registro) => {
+                const isMatch = conceptosArray.includes(registro.concepto.conceptId);
+                return isMatch;
+            }) || [];
         });
 
         this.conceptoAsociado = this.asociados.find(elem => elem.concepto.conceptId === this.registro.valor.solicitudPrestacion['conceptoAsociado']?.conceptId);
