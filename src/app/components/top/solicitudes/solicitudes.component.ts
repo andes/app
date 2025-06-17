@@ -78,6 +78,7 @@ export class SolicitudesComponent implements OnInit {
         { id: 'vencida', nombre: 'VENCIDA' }
     ];
 
+    public prioridad;
     public prioridades = [
         { id: 'prioritario', nombre: 'PRIORITARIO' },
     ];
@@ -371,8 +372,9 @@ export class SolicitudesComponent implements OnInit {
                 op: 'citar',
                 estado: {
                     tipo: 'pendiente',
-                    observaciones: this.observacionesCitar
-                }
+                    observaciones: this.observacionesCitar,
+                    prioridad: this.prioridad?.id || null
+                },
             };
             this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(() => {
                 this.cargarSolicitudes();

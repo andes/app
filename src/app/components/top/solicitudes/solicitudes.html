@@ -407,6 +407,9 @@
                                         <plex-text label="Observaciones" multiline="true" name="obsCitar"
                                                    [(ngModel)]="observacionesCitar" [required]="true">
                                         </plex-text>
+                                        <plex-select [(ngModel)]="prioridad" [data]="prioridades" name="prioridad"
+                                                     label="Prioridad" ngModelOptions="{standalone: true}">
+                                        </plex-select>
                                     </form>
                                 </plex-help>
 
