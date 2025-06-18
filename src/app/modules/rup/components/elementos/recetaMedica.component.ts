@@ -10,7 +10,6 @@ import { RUPComponent } from '../core/rup.component';
     styleUrls: ['recetaMedica.scss'],
 })
 
-
 @RupElement('RecetaMedicaComponent')
 export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     @ViewChild('formMedicamento') formMedicamento: NgForm;
@@ -209,18 +208,9 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     }
 
     buscarDiagnosticosConTrastornos() {
-        const fechaLimite = moment().subtract(6, 'months');
-        this.prestacionesService.getByPacienteTrastorno(this.paciente.id).subscribe((trastornos) => {
-
-            trastornos.forEach(trastorno => {
-                const fechaCreacion = trastorno.fechaEjecucion ? moment(trastorno.fechaEjecucion) : null;
-                const esActivo = trastorno.evoluciones[trastorno.evoluciones.length - 1].estado === 'activo';
-                if (fechaCreacion?.isAfter(fechaLimite) && esActivo) {
-                    this.recetasConFiltros.push(trastorno.concepto);
-                }
-            });
+        this.recetaService.buscarDiagnosticosConTrastornos(this.paciente).subscribe(diagnosticos => {
+            this.recetasConFiltros = diagnosticos;
         });
-
     }
 
     agregarMedicamento() {

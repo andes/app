@@ -112,7 +112,7 @@
             <plex-label [tituloBold]="true" titulo="{{ item.generico.term  }}" subtitulo=" {{ item.cantEnvases}} envase(s) de {{ item.cantidad}} {{item.presentacion.term }}(s)  {{ item.dosisDiaria.dosis? '| ' + item.dosisDiaria.dosis : '| ' }} {{ item.dosisDiaria.intervalo? ' cada ' + item.dosisDiaria.intervalo.nombre: '' }}  {{ item.dosisDiaria.dias? ' durante ' + item.dosisDiaria.dias + ' día(s)':'' }} 
                         "></plex-label>
             <plex-badge *ngIf="item.diagnostico" size="sm" type="warning" hintType="warning">
-                {{ truncateDiagnostico(item.diagnostico.term) }}
+                {{ item.diagnostico.term | truncate }}
             </plex-badge>
             <plex-badge *ngIf="item.tratamientoProlongado" type="info">Tratamiento prolongado
             </plex-badge>
@@ -130,7 +130,7 @@
             <plex-label [tituloBold]="true" titulo="{{ item.generico.term  }}" subtitulo=" {{ item.cantEnvases}} envase(s) de {{ item.cantidad}} {{item.presentacion.term }}(s)  {{ item.dosisDiaria.dosis? '| ' + item.dosisDiaria.dosis : '| ' }}  {{ item.dosisDiaria.intervalo? ' cada ' + item.dosisDiaria.intervalo.nombre: '' }}  {{ item.dosisDiaria.dias ? ' durante ' + item.dosisDiaria.dias + ' día(s)':'' }} 
                                     "></plex-label>
             <plex-badge *ngIf="item.diagnostico" size="sm" type="warning" hintType="warning">
-                {{ truncateDiagnostico(item.diagnostico.term) }}
+                {{ item.diagnostico.term | truncate }}
             </plex-badge>
             <plex-badge *ngIf="item.tratamientoProlongado" type="info">Tratamiento prolongado
             </plex-badge>
