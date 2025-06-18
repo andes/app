@@ -1,6 +1,6 @@
 <div *ngIf="!showCargarSolicitud">
     <plex-title main titulo="Solicitudes">
-         <plex-dropdown #drop *ngIf="puedeCrearSolicitud" type="success" [right]="true" [items]="itemsDropdown" size="md"
+        <plex-dropdown #drop *ngIf="puedeCrearSolicitud" type="success" [right]="true" [items]="itemsDropdown" size="md"
                        label="Nueva Solicitud">
         </plex-dropdown>
     </plex-title>
@@ -12,7 +12,7 @@
                 <table class="table table-striped  table-sm">
                     <thead>
                         <tr>
-                            <th>Fecha</th>
+                            <th class="w-25">Fecha</th>
                             <th>Prestación</th>
                             <th>Equipo de Salud/Organización</th>
                             <th></th>
@@ -21,7 +21,9 @@
                     <tbody>
                         <tr *ngFor="let prestacion of solicitudesPrestaciones">
                             <td>
-                                {{ prestacion.solicitud.fecha | fecha }}
+                                <plex-label [tituloBold]="true" titulo="Registrada: {{prestacion.createdAt | fecha}}"
+                                            subtitulo="Solicitud: {{prestacion.solicitud.fecha | fecha}}">
+                                </plex-label>
                             </td>
                             <td>
                                 {{ prestacion.solicitud.tipoPrestacion.term }}
