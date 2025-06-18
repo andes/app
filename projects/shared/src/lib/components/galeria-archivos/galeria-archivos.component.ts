@@ -11,6 +11,7 @@ export interface FileObject {
     isImage?: boolean;
     isDocument?: boolean;
     isVideo?: boolean;
+    size?: number;
 }
 
 export const IMAGENES_EXT = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
@@ -54,7 +55,7 @@ export class GaleriaArchivosComponent {
                 ...file,
                 isImage: this.verificarImagen(file.ext),
                 isDocument: this.verificarDocumento(file.ext),
-                isVideo: this.verificarVideo(file.ext)
+                isVideo: this.verificarVideo(file.ext),
             };
         });
     }
