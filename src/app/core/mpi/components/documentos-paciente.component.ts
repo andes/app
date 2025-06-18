@@ -57,14 +57,11 @@ export class DocumentosPacienteComponent implements OnInit {
     }
 
     checkValid() {
-        console.log('checkValid', this.documento, this.archivos);
         if (!this.documento.tipo) {
-            console.log('invalido tipo');
             this.invalid = true;
             return;
         }
         if (this.archivos.length === 0) {
-            console.log('invalido archivos');
             this.invalid = true;
             return;
         }
@@ -73,11 +70,9 @@ export class DocumentosPacienteComponent implements OnInit {
         const maxSize = 2 * 1024 * 1024;
         const archivoGrande = this.archivos.some(archivo => archivo.size && archivo.size > maxSize);
         if (archivoGrande) {
-            console.log('invalido tamaño');
             this.invalid = true;
             return;
         }
-        console.log('valido', this.documento, this.archivos);
         this.invalid = false;
     }
 
