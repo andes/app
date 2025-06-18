@@ -1,12 +1,18 @@
-<plex-title titulo="Documentos del paciente" size="sm">
-    <plex-button *ngIf="!showAdd" type="success" icon="plus" size="md" (click)="showFormulario()"
-                 tooltip="Agregar documento"></plex-button>
-    <plex-button *ngIf="showAdd" type="success" icon="check" size="md" (click)="addDocumentos()"
-                 tooltip="Agregar documento" [disabled]="invalid"></plex-button>
-    <plex-button *ngIf="showAdd" type="danger" icon="close" size="md" (click)="cancelar()" tooltip="Cancelar">
-    </plex-button>
-</plex-title>
-<ng-container *ngIf="showAdd ">
+<div class="mt-2">
+    <plex-title titulo="Documentos del paciente" size="sm">
+        <plex-button *ngIf="!showAdd" class="mb-2" type="success" icon="plus" size="md" (click)="showFormulario()"
+                     tooltip="Agregar documento"></plex-button>
+        <plex-button *ngIf="showAdd" class="mb-2" type="success" icon="check" size="md" (click)="addDocumentos()"
+                     [tooltip]="tamanoExcedido ? 'Uno o más archivos exceden el tamaño máximo permitido' : 'Confirmar'"
+                     [disabled]="invalid">
+        </plex-button>
+        <plex-button *ngIf="showAdd" class="mb-2" type="danger" icon="close" size="md" (click)="cancelar()"
+                     tooltip="Cancelar">
+        </plex-button>
+    </plex-title>
+</div>
+<span>Se puede adjuntar archivos de hasta {{maxSize/1024/1024}}MB</span>
+<ng-container *ngIf="showAdd">
     <div class="grow">
         <plex-select [(ngModel)]="documento.tipo" placeholder="seleccione tipo" labelField="label"
                      [data]="tipoDocumentos" (change)="onTipoChange()">

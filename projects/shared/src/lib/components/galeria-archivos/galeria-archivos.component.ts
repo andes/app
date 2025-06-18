@@ -44,6 +44,7 @@ export class GaleriaArchivosComponent {
 
     @Input() modulo = '';
     @Input() file: FileObject;
+    @Input() maxSize = 2 * 1024 * 1024; // 2 MB por defecto
     @Input()
     set files(value: FileObject[]) {
         if (!value) {
@@ -86,6 +87,10 @@ export class GaleriaArchivosComponent {
             }
         });
 
+    }
+
+    excedeTamano(archivo) {
+        return archivo.size > this.maxSize;
     }
 
     verificarImagen(extension: string) {

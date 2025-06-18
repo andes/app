@@ -20,7 +20,10 @@
         <plex-button *ngIf="archivo.isImage" type="info" size="sm" icon="eye" (click)="open(i)">
         </plex-button>
         <plex-button *ngIf="!readonly && modulo !== 'rup'" type="danger" size="sm" icon="delete"
-                     (click)="onRemove(archivo)"></plex-button>
+                     (click)="onRemove(archivo)">
+        </plex-button>
+        <span justify="center" [ngClass]="{'danger' : excedeTamano(archivo) }">{{ (archivo.size | fileSize) || ''
+            }}</span>
     </plex-card>
     <plex-card size="md" *ngIf="loading">
         <plex-loader type="ball-pulse"></plex-loader>
