@@ -1,3 +1,10 @@
+## [5.165.2](https://github.com/andes/app/compare/v5.165.1...v5.165.2) (2025-06-18)
+
+
+### Bug Fixes
+
+* **CIT-375:** Gestor de Agendas-Botón de suspender agenda ([#3193](https://github.com/andes/app/issues/3193)) ([6570836](https://github.com/andes/app/commit/6570836833abfbb85809feb95af8ae1e793fdffb))
+
 ## [5.165.1](https://github.com/andes/app/compare/v5.165.0...v5.165.1) (2025-06-11)
 
 
