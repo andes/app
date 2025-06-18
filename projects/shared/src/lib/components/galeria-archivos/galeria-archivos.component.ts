@@ -11,6 +11,7 @@ export interface FileObject {
     isImage?: boolean;
     isDocument?: boolean;
     isVideo?: boolean;
+    size?: number;
 }
 
 export const IMAGENES_EXT = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
@@ -43,6 +44,7 @@ export class GaleriaArchivosComponent {
 
     @Input() modulo = '';
     @Input() file: FileObject;
+    @Input() maxSize = 2 * 1024 * 1024; // 2 MB por defecto
     @Input()
     set files(value: FileObject[]) {
         if (!value) {
@@ -54,7 +56,7 @@ export class GaleriaArchivosComponent {
                 ...file,
                 isImage: this.verificarImagen(file.ext),
                 isDocument: this.verificarDocumento(file.ext),
-                isVideo: this.verificarVideo(file.ext)
+                isVideo: this.verificarVideo(file.ext),
             };
         });
     }
@@ -85,6 +87,10 @@ export class GaleriaArchivosComponent {
             }
         });
 
+    }
+
+    excedeTamano(archivo) {
+        return archivo.size > this.maxSize;
     }
 
     verificarImagen(extension: string) {

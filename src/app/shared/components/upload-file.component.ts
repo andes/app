@@ -70,6 +70,16 @@ export class UploadFileComponent implements OnInit {
         const selectedFile = $event.target.files;
         this.currentFileUpload = selectedFile.item(0);
 
+        const originalName = this.currentFileUpload.name;
+        const normalizedName = originalName.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        if (normalizedName !== originalName) {
+            this.currentFileUpload = new File(
+                [this.currentFileUpload],
+                normalizedName,
+                { type: this.currentFileUpload.type }
+            );
+        }
+
         if (this.extensiones) {
             const ext = this.getExtension(this.currentFileUpload.name);
             if (!this.extensiones.find(i => i === ext.toLowerCase())) {
@@ -78,7 +88,6 @@ export class UploadFileComponent implements OnInit {
                 this.plex.toast('danger', 'Tipo de archivo incorrecto');
                 return;
             }
-
         }
         this.portFile(this.currentFileUpload).subscribe(event => {
             if (event.type === HttpEventType.UploadProgress) {
@@ -93,6 +102,8 @@ export class UploadFileComponent implements OnInit {
                 const body = JSON.parse(event.body as string);
                 body.ext = this.getExtension(this.currentFileUpload.name);
                 if (status >= 200 && status < 300) {
+                    body.ext = this.getExtension(this.currentFileUpload.name);
+                    body.size = this.currentFileUpload.size;
                     this.onUpload.emit({ status, body });
                 }
             }
