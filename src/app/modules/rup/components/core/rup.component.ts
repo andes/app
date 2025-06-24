@@ -32,7 +32,7 @@ import { IElementoRUP, IElementoRUPRequeridos } from './../../interfaces/element
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { RecetaService } from 'projects/portal/src/app/services/receta.service';
+import { RecetaService } from 'src/app/modules/rup/services/receta.service';
 import { ECLQueriesService } from './../../../../services/eclqueries.service';
 
 @Component({
@@ -160,7 +160,8 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
         public constantesService: ConstantesService,
         public recetasService: RecetaService,
         @Optional() public ejecucionService: RupEjecucionService,
-        public eclqueriesServicies: ECLQueriesService
+        public eclqueriesServicies: ECLQueriesService,
+        public recetaService: RecetaService
     ) {
     }
 

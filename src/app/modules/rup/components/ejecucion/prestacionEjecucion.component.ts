@@ -21,7 +21,7 @@ import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.inte
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { RecetaService } from 'projects/portal/src/app/services/receta.service';
+import { RecetaService } from 'src/app/modules/rup/services/receta.service';
 
 
 @Component({
@@ -515,9 +515,11 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        const esAsociado = this.prestacion.ejecucion.registros.some(r =>
-            r.valor?.medicamentos?.length && r.valor.medicamentos.some(m => m.diagnostico.conceptId === registro.concepto.conceptId)
-        );
+        const esAsociado = this.prestacion.ejecucion.registros.some(r => {
+            const medicamentoAsociado = r.valor?.medicamentos?.length && r.valor.medicamentos.some(m => m.diagnostico.conceptId === registro.concepto.conceptId);
+            const dispositivoAsociado = r.valor?.dispositivos?.length && r.valor.dispositivos.some(d => d.diagnostico.conceptId === registro.concepto.conceptId);
+            return medicamentoAsociado || dispositivoAsociado;
+        });
 
         return !esAsociado;
     }
