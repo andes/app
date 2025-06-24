@@ -36,7 +36,8 @@ export class DocumentosPacienteComponent implements OnInit {
 
     showAdd = false;
     invalid = true;
-
+    maxSize = 2 * 1024 * 1024;
+    tamanoExcedido = false;
 
     constructor(
         private driveService: DriveService
@@ -57,6 +58,12 @@ export class DocumentosPacienteComponent implements OnInit {
     }
 
     checkValid() {
+        // Menor que 2MB
+        this.tamanoExcedido = this.archivos.some(archivo => archivo.size && archivo.size > this.maxSize);
+        if (this.tamanoExcedido) {
+            this.invalid = true;
+            return;
+        }
         if (!this.documento.tipo) {
             this.invalid = true;
             return;
@@ -98,7 +105,8 @@ export class DocumentosPacienteComponent implements OnInit {
         if (status === 200) {
             this.archivos.push({
                 ext: body.ext,
-                id: body.id
+                id: body.id,
+                size: body.size
             });
             this.archivos = [...this.archivos];
             this.checkValid();
