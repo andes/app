@@ -44,10 +44,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     public ingresoCantidadManual = false;
     public valorCantidadManual = null;
     public loading = false;
-    public opcionesTipoReceta = [
-        { id: 'duplicado', label: 'Duplicado' },
-        { id: 'triplicado', label: 'Triplicado' }
-    ];
+    public esDuplicado = false;
+    public esTriplicado = false;
     public tiemposTratamiento = [
         { id: '3meses', nombre: '3 meses' },
         { id: '6meses', nombre: '6 meses' }
@@ -211,11 +209,11 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     buscarDiagnosticosConTrastornos() {
         const fechaLimite = moment().subtract(6, 'months');
         this.prestacionesService.getByPacienteTrastorno(this.paciente.id).subscribe((trastornos) => {
-
             trastornos.forEach(trastorno => {
-                const fechaCreacion = trastorno.fechaEjecucion ? moment(trastorno.fechaEjecucion) : null;
-                const esActivo = trastorno.evoluciones[trastorno.evoluciones.length - 1].estado === 'activo';
-                if (fechaCreacion?.isAfter(fechaLimite) && esActivo) {
+                // las evoluciones de los trastornos estan ordenadas por fecha de carga, la primera es la mas reciente
+                const ultimaEvolucion = trastorno.evoluciones?.length ? moment(trastorno.evoluciones[0].fechaCarga) : null;
+                const esActivo = trastorno.evoluciones?.length && trastorno.evoluciones[0].estado === 'activo';
+                if (ultimaEvolucion?.isAfter(fechaLimite) && esActivo) {
                     this.recetasConFiltros.push(trastorno.concepto);
                 }
             });
@@ -277,8 +275,13 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         return this.registro.valor.medicamentos.length > 0 ? true : false;
     }
 
-    onTipoRecetaChange() {
-        if (this.medicamento.tipoReceta === 'triplicado') {
+    onTipoRecetaChange(tipo: string) {
+        this.medicamento.tipoReceta = this.esDuplicado || this.esTriplicado ? tipo : 'simple';
+        if (tipo === 'duplicado') {
+            this.esTriplicado = false;
+        }
+        if (tipo === 'triplicado') {
+            this.esDuplicado = false;
             this.medicamento.tratamientoProlongado = false;
             this.medicamento.tiempoTratamiento = null;
         }
