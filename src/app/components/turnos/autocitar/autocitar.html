@@ -20,7 +20,11 @@
         </plex-label>
     </div>
     <div *ngIf="agendaSeleccionada">
-        <plex-title titulo="Grilla Horaria" size="sm"></plex-title>
+        <plex-title titulo="Grilla Horaria" size="sm">
+            <plex-bool *ngIf="permitirTurnoDoble" class="mr-2 text-secondary" label="Turno doble" name="turnoDoble"
+                       [(ngModel)]="turnoDoble">
+            </plex-bool>
+        </plex-title>
         <div *ngFor="let bloque of agendaSeleccionada.bloques; let indiceBloque = index">
             <plex-grid type="full" size="sm">
                 <plex-card type="dark" mode="filled" size="xs"
