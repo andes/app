@@ -67,7 +67,6 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         if (!this.registro.valor.medicamentos) {
             this.registro.valor.medicamentos = [];
         }
-        this.registros = this.prestacion.ejecucion.registros.filter(reg => reg.id !== this.registro.id).map(reg => reg.concepto);
         this.intervalos$ = this.constantesService.search({ source: 'plan-indicaciones:frecuencia' });
         this.eclqueriesServicies.search({ key: '^receta' }).subscribe(query => {
             this.eclMedicamentos = query.find(q => q.key === 'receta:genericos');
@@ -75,10 +74,11 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
             this.eclMedicamentosComerciales = query.find(q => q.key === 'receta:medicamentoscomercialesporgenerico');
             this.eclUnidadesFiltro = query.find(q => q.key === 'receta:filtroUnidades');
         });
-        this.buscarDiagnosticosConTrastornos();
 
         this.ejecucionService?.hasActualizacion().subscribe(async () => {
-            this.loadRegistros();
+            this.buscarDiagnosticosConTrastornos().subscribe(() => {
+                this.loadRegistros();
+            });
         });
     }
 
@@ -99,7 +99,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     loadRegistros() {
         this.registros = [
             ...this.prestacion.ejecucion.registros
-                .filter(reg => reg.concepto.conceptId !== this.registro.concepto.conceptId && (reg.concepto.semanticTag === 'procedimiento'
+                .filter(reg => !reg.hasSections && reg.concepto.conceptId !== this.registro.concepto.conceptId && (reg.concepto.semanticTag === 'procedimiento'
                     || reg.concepto.semanticTag === 'hallazgo' || reg.concepto.semanticTag === 'trastorno'))
                 .map(reg => reg.concepto),
             ...this.recetasConFiltros
@@ -208,19 +208,25 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         });
     }
 
-    buscarDiagnosticosConTrastornos() {
+    buscarDiagnosticosConTrastornos(): Observable<any> {
+        this.recetasConFiltros = [];
         const fechaLimite = moment().subtract(6, 'months');
-        this.prestacionesService.getByPacienteTrastorno(this.paciente.id).subscribe((trastornos) => {
 
-            trastornos.forEach(trastorno => {
-                const fechaCreacion = trastorno.fechaEjecucion ? moment(trastorno.fechaEjecucion) : null;
-                const esActivo = trastorno.evoluciones[trastorno.evoluciones.length - 1].estado === 'activo';
-                if (fechaCreacion?.isAfter(fechaLimite) && esActivo) {
-                    this.recetasConFiltros.push(trastorno.concepto);
-                }
+        return new Observable(observer => {
+            this.prestacionesService.getByPacienteTrastorno(this.paciente.id).subscribe((trastornos) => {
+                trastornos.forEach(trastorno => {
+                    const fechaCreacion = trastorno.fechaEjecucion ? moment(trastorno.fechaEjecucion) : null;
+                    const esActivo = trastorno.evoluciones[trastorno.evoluciones.length - 1].estado === 'activo';
+                    if (fechaCreacion?.isAfter(fechaLimite) && esActivo) {
+                        this.recetasConFiltros.push(trastorno.concepto);
+                    }
+                });
+                observer.next(this.recetasConFiltros);
+                observer.complete();
+            }, error => {
+                observer.error(error);
             });
         });
-
     }
 
     agregarMedicamento() {
