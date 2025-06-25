@@ -1,3 +1,10 @@
+# [5.166.0](https://github.com/andes/app/compare/v5.165.2...v5.166.0) (2025-06-25)
+
+
+### Features
+
+* **IN-633:** modificar carga de medicamento ([#3199](https://github.com/andes/app/issues/3199)) ([e2f8d7d](https://github.com/andes/app/commit/e2f8d7dc96d5a02269f1b22b7e4b0342a10343a9))
+
 ## [5.165.2](https://github.com/andes/app/compare/v5.165.1...v5.165.2) (2025-06-18)
 
 
