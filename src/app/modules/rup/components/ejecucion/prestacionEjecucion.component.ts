@@ -104,7 +104,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     public alerta = 'Este registro no puede modificarse, si necesita cambiar una medicación prescripta puede suspender desde la HUDS y registrar una nueva.';
 
-    private soloValores = ['33633005'];
+    private soloValores = ['33633005']; // prescripción de medicamento
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -132,7 +132,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
      * @memberof PrestacionEjecucionComponent
      */
     ngOnInit() {
-        this.tieneAccesoHUDS = this.auth.check('huds:visualizacionHuds');
+        this.tieneAccesoHUDS = this.auth.check('huds:visualizacionHuds') || !!this.auth.getPermissions('huds:visualizacionParcialHuds:?').length;
         this.buscadorService.search('');
         // consultamos desde que pagina se ingreso para poder volver a la misma
         this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
@@ -185,7 +185,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
                         this.hasPacs = this.prestacion.metadata?.findIndex(item => item.key === 'pacs-uid') >= 0;
 
-                        // this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
                         // Si la prestación está validada, navega a la página de validación
                         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
                             this.router.navigate(['/rup/validacion/', this.prestacion.id]);
@@ -201,7 +200,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                                     this.ejecucionService.paciente = paciente; this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                                 });
                             }
-                            // cambio: this.prestacionSolicitud = prestacion.solicitud;
                             // Trae el elementoRUP que implementa esta Prestación
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
                             this.prestacion.elementoRUP = this.elementoRUP.id;
