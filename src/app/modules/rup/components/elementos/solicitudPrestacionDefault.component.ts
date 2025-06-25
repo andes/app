@@ -15,6 +15,7 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
     public organizaciones: any[] = [];
     public conceptoAsociado = null;
     public asociados: any[] = [];
+    public conceptosEcl: any[] = [];
 
     @ViewChild('selector') selector: ElementRef;
 
@@ -89,8 +90,18 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
     }
 
     actualizarRelaciones(registros, estado: string) {
-        const conceptos = this.elementosRUPService.cacheDiagnosticosSolicitudes.map(concepto => concepto.conceptId);
-        this.asociados = registros?.filter((registro) => conceptos.includes(registro.concepto.conceptId)) || [];
+        this.eclqueriesServicies.search({ key: 'conceptos-asociadosm' }).subscribe(query => {
+
+            this.conceptosEcl = query;
+
+            const conceptosArray = this.conceptosEcl[0].valor.split(' OR ');
+
+            this.asociados = registros?.filter((registro) => {
+                const isMatch = conceptosArray.includes(registro.concepto.conceptId);
+                return isMatch;
+            }) || [];
+        });
+
         this.conceptoAsociado = this.asociados.find(elem => elem.concepto.conceptId === this.registro.valor.solicitudPrestacion['conceptoAsociado']?.conceptId);
 
         if (estado === 'eliminar' && this.conceptoAsociado) {
