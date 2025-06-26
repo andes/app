@@ -202,17 +202,12 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         this.prestacionesList$ = this.historial$.pipe(
             map(prestaciones => prestaciones = arrayToSet(prestaciones, 'conceptId', (item) => item.solicitud ? item.solicitud.tipoPrestacion : item.prestacion.snomed))
         );
-        const fechaHasta = moment().format('yyyyMMDD');
-        const pacienteCache = this.pacienteCacheService.getPacienteValor();
-        const dniPaciente = pacienteCache.id === this.paciente.id ? pacienteCache.documento : this.paciente.documento;
-        const pacienteId = pacienteCache.id === this.paciente.id ? pacienteCache.id : this.paciente.id;
-        // 'dniPaciente' salvaguarda los casos de bebes que obtuvieron su dni luego de la internación. Para poder obtener los laboratorios
-        if (dniPaciente?.length) {
-            this.laboratorioService.getProtocolos({ pacienteId, fechaDde: '20200101', fechaHta: fechaHasta })
-                .subscribe(laboratorios => {
-                    this.laboratoriosSubject$.next(laboratorios[0]?.Data || []);
-                });
-        }
+
+        const fechaDesde = moment('01/01/2020').format('yyyyMMDD');
+        this.laboratorioService.getProtocolos(this.paciente.id, fechaDesde)
+            .subscribe(laboratorios => {
+                this.laboratoriosSubject$.next(laboratorios[0]?.Data || []);
+            });
 
         this.prestacionesUnidas$ = combineLatest([this.historialFiltrado$, this.laboratorios$]).pipe(
             map(([historial, laboratorios]) => {
