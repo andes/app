@@ -845,7 +845,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
                 return acc;
             }, {});
 
-            this.busquedaRecetas = Object.keys(grupoRecetas).map(key => ({
+            this.busquedaRecetas = Object.keys(grupoRecetas).reverse().map(key => ({
                 conceptId: key,
                 recetas: this.sortRecetas(grupoRecetas[key])
             }));
