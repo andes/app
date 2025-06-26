@@ -12,6 +12,9 @@
                                 [type]="estadoDispensa[recetaPrincipal.estadoDispensaActual.tipo]">
                         {{ recetaPrincipal.estadoDispensaActual.tipo.replace('-', ' ') }}
                     </plex-badge>
+                    <plex-badge *ngIf="recetaPrincipal.medicamento" size="sm" type="default">
+                        {{ recetaPrincipal.medicamento.tipoReceta }}
+                    </plex-badge>
                 </div>
                 <div case="capitalize"><b>{{ recetaPrincipal.medicamento.concepto.term }}</b></div>
                 <p *ngIf="recetaPrincipal.medicamento.dosisDiaria.dosis"><small>{{
@@ -38,6 +41,17 @@
                 <p class="texto-detalle">{{recetaPrincipal.diagnostico.term || recetaPrincipal.diagnostico.descripcion}}
                 </p>
             </div>
+            <ng-container *ngIf="recetaPrincipal.medicamento.tipoReceta === 'triplicado'">
+                <div>
+                    <b>Serie</b>
+                    <p class="texto-detalle">{{recetaPrincipal.medicamento.serie}}</p>
+                </div>
+                <div>
+                    <b>Número</b>
+                    <p class="texto-detalle">{{recetaPrincipal.medicamento.numero}}</p>
+                </div>
+            </ng-container>
+
         </div>
         <div class="data" *ngIf="recetaPrincipal.medicamento.tratamientoProlongado">
             <div>
