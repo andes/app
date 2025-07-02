@@ -91,16 +91,21 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
 
     actualizarRelaciones(registros, estado: string) {
         this.eclqueriesServicies.search({ key: 'conceptos-asociadosm' }).subscribe(query => {
-
             this.conceptosEcl = query;
-
-            const conceptosArray = this.conceptosEcl[0].valor.split(' OR ');
-
-            this.asociados = registros?.filter((registro) => {
-                const isMatch = conceptosArray.includes(registro.concepto.conceptId);
-                return isMatch;
-            }) || [];
         });
+
+        if (this.conceptosEcl?.length > 0) {
+            const query: any = {
+                expression: this.conceptosEcl[0].valor,
+                search: ''
+            };
+            this.snomedService.get(query).subscribe((resultado) => {
+                this.asociados = registros?.filter((registro) => {
+                    const isMatch = resultado.some((item) => item.conceptId === registro.concepto.conceptId);
+                    return isMatch;
+                }) || [];
+            });
+        }
 
         this.conceptoAsociado = this.asociados.find(elem => elem.concepto.conceptId === this.registro.valor.solicitudPrestacion['conceptoAsociado']?.conceptId);
 
