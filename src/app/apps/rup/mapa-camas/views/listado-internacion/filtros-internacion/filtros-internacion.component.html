@@ -1,32 +1,35 @@
-<plex-wrapper>
-    <plex-text [(ngModel)]="filtros.paciente" label="paciente">
-    </plex-text>
-    <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoDesde"
-                   name="fechaIngresoDesde" label="Ingreso desde" [max]="filtros.fechaIngresoHasta" [debounce]="600">
-    </plex-datetime>
-    <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoHasta" name='fechaIngresoHasta' label="Ingreso hasta"
-                   [debounce]="600">
-    </plex-datetime>
-    <plex-datetime type="date" [(ngModel)]="filtros.fechaEgresoDesde" name="fechaIngresoDesde"
-                   label="Egreso desde" [max]="filtros.fechaEgresoHasta" [debounce]="600">
-    </plex-datetime>
-    <plex-datetime type="date" [(ngModel)]="filtros.fechaEgresoHasta" name='fechaEgresoHasta' label="Egreso hasta"
-                   [min]="filtros.fechaEgresoDesde" [debounce]="600">
-    </plex-datetime>
-    <div collapse>
-        <plex-select name="obraSocial" label="Obra Social" [(ngModel)]="filtros.obraSocial"
-                     [data]="obraSociales$ | async" idField="_id">
-        </plex-select>
-        <plex-select name="unidadOrganizativa" label="Unidad Organizativa" [(ngModel)]="filtros.unidadOrganizativa"
-                     idField="conceptId" labelField="term" [data]="unidadesOrganizativas$ | async">
-        </plex-select>
-        <plex-select [(ngModel)]="filtros.estado" [data]='estadosInternacion' label="Estado">
-        </plex-select>
-    </div>
-    <plex-button class="mr-3" type="success" label="Buscar" (click)="filtrar()">
-    </plex-button>
-    <plex-button *ngIf="permisosMapaCamasService.descargarListado" type="warning" icon="download mdi-14px"
-                 title="Descargar Csv" titlePosition="top" (click)="reporteInternaciones()"
-                 [disabled]="requestInProgress">
-    </plex-button>
-</plex-wrapper>
+<form #formFiltros="ngForm">
+    <plex-wrapper>
+        <plex-text name="paciente" [(ngModel)]="filtros.paciente" label="paciente"></plex-text>
+        <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoDesde" name="fechaIngresoDesde"
+                       label="Ingreso desde" [max]="filtros.fechaIngresoHasta" [debounce]="600" required>
+        </plex-datetime>
+        <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoHasta" name='fechaIngresoHasta'
+                       label="Ingreso hasta" [debounce]="600" [max]="fechaHoy" [min]="filtros.fechaIngresoDesde" required>
+        </plex-datetime>
+        <plex-datetime type="date" [(ngModel)]="filtros.fechaEgresoDesde" name="fechaEgresoDesde" label="Egreso desde"
+                       [max]="filtros.fechaEgresoHasta" [debounce]="600" [min]="filtros.fechaIngresoDesde" [max]="filtros.fechaEgresoHasta">
+        </plex-datetime>
+        <plex-datetime type="date" [(ngModel)]="filtros.fechaEgresoHasta" name='fechaEgresoHasta' label="Egreso hasta"
+                       [min]="filtros.fechaEgresoDesde" [debounce]="600" [max]="fechaHoy" [min]="filtros.fechaIngresoDesde">
+        </plex-datetime>
+        <div collapse>
+            <plex-select name="obraSocial" label="Obra Social" [(ngModel)]="filtros.obraSocial"
+                         [data]="obraSociales$ | async" idField="_id">
+            </plex-select>
+            <plex-select name="unidadOrganizativa" label="Unidad Organizativa" [(ngModel)]="filtros.unidadOrganizativa"
+                         idField="conceptId" labelField="term" [data]="unidadesOrganizativas$ | async">
+            </plex-select>
+            <plex-select name="estado" [(ngModel)]="filtros.estado" [data]='estadosInternacion' label="Estado">
+            </plex-select>
+        </div>
+        <div style="align-items: flex-start; margin-top: 36px;">
+            <plex-button name="buscar" class="mr-3" type="success" label="Buscar" (click)="filtrar()">
+            </plex-button>
+            <plex-button *ngIf="permisosMapaCamasService.descargarListado" type="warning" icon="download mdi-14px"
+                         title="Descargar Csv" titlePosition="top" (click)="reporteInternaciones()"
+                         [disabled]="requestInProgress">
+            </plex-button>
+        </div>
+    </plex-wrapper>
+</form>
