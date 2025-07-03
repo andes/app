@@ -189,7 +189,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         this.fechaInput = moment().format('DD/MM/YYYY HH:mm');
     }
     buscarArea(viewProtocolo) {
-        this.laboratorioService.getByProtocolo(viewProtocolo.idProtocolo).subscribe((resultados) => {
+        this.laboratorioService.getProtocoloById(viewProtocolo.idProtocolo).subscribe((resultados) => {
 
             if (resultados && Array.isArray(resultados) && resultados.length > 0) {
                 this.areasLaboratorio = resultados;

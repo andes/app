@@ -28,7 +28,7 @@ export class VistaLaboratorioComponent implements OnInit {
 
     ngOnInit(): void {
         const id = this.protocolo.data.idProtocolo;
-        this.laboratorioService.getByProtocolo(id).subscribe((resultados) => {
+        this.laboratorioService.getProtocoloById(id).subscribe((resultados) => {
             if (resultados && Array.isArray(resultados) && resultados.length > 0) {
                 this.areasLaboratorio = resultados;
             } else {

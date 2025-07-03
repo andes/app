@@ -28,14 +28,16 @@ export class LaboratorioService {
         );
     }
 
-    getProtocolos({ estado, dni, fecNac, apellido, fechaDde, fechaHta }) {
-        if (dni) {
-            return this.server.get(`/modules/rup/protocolosLab?estado=${estado}&dni=${dni}&fecNac=${fecNac}&apellido=${apellido}&fechaDde=${fechaDde}&fechaHta=${fechaHta}`);
-        }
-        return;
+    getProtocolos(pacienteId: String, fechaDesde?: Date, fechaHasta?: Date): Observable<any[]> {
+        const params = {
+            pacienteId,
+            fechaDesde,
+            fechaHasta
+        };
+        return this.server.get('/modules/rup/protocolosLab', { params });
     }
 
-    getByProtocolo(id: number) {
+    getProtocoloById(id: String): Observable<any> {
         return this.server.get(`/modules/rup/protocolosLab/${id}`);
     }
 
