@@ -1,3 +1,10 @@
+# [5.167.0](https://github.com/andes/app/compare/v5.166.0...v5.167.0) (2025-07-09)
+
+
+### Features
+
+* **IN:** modifica filtros de listado de internaciones ([#3197](https://github.com/andes/app/issues/3197)) ([2faef61](https://github.com/andes/app/commit/2faef61a2ab144b9cb9d4e89b4957c9fd9e0d7c9))
+
 # [5.166.0](https://github.com/andes/app/compare/v5.165.2...v5.166.0) (2025-06-25)
 
 
