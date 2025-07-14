@@ -361,7 +361,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
                     const registrosCopia = JSON.parse(JSON.stringify(this.results[busquedaActual]['registros']));
                     const registros = [];
                     registrosCopia.forEach(unRegistro => {
-                        unRegistro.esSolicitud = true;
                         registros.push(unRegistro);
                     });
                     // agregamos los registros
