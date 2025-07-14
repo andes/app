@@ -45,6 +45,7 @@ export class CamaMainComponent implements OnInit {
     };
     public infoCama = {};
     public capas$: Observable<string[]>;
+    public capasMedicaEstadistica$: Observable<string[]>;
 
     constructor(
         public auth: Auth,
@@ -65,11 +66,16 @@ export class CamaMainComponent implements OnInit {
         // carga capas activas del efector
         this.capas$ = this.maquinaEstadosHTTP.getAll(this.auth.organizacion.id, this.ambito).pipe(
             map(estados => estados.map(estado => estado.capa)
-                .filter(capa => capa !== 'enfermeria' && capa !== 'estadistica-v2' && capa !== 'interconsultores')
-            )
+                .filter(capa => capa !== 'enfermeria' && capa !== 'estadistica-v2' && capa !== 'interconsultores'))
         );
+
+        this.capasMedicaEstadistica$ = this.maquinaEstadosHTTP.getAll(this.auth.organizacion.id, this.ambito).pipe(
+            map(estados => estados.map(estado => estado.capa)
+                .filter(capa => capa === 'medica' || capa === 'estadistica'))
+        );
+
         // verifica si la cama se encuentra disponible en todas las capas del efector
-        this.verificarBaja$ = this.capas$.pipe(
+        this.verificarBaja$ = this.capasMedicaEstadistica$.pipe(
             map(capas => {
                 let contador = 0;
                 capas.map(capa => {
