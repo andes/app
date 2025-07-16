@@ -331,6 +331,28 @@
     }
 }
 
+.upTag {
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid $recetas;
+    color: $recetas;
+    font-size: 80%;
+
+}
+
+.upTag.active {
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid $recetas;
+    background-color: $recetas;
+    color: white;
+    font-size: 80%;
+
+}
+.total {
+    width: 100% !important;
+}
+
 .item-lista-vacia {
     margin-top: 10%
 }

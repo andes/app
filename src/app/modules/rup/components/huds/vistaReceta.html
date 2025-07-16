@@ -38,6 +38,14 @@
                 <p class="texto-detalle">{{recetaPrincipal.diagnostico.term}}</p>
             </div>
         </div>
+        <div class="data" *ngIf="recetaPrincipal.medicamento.tratamientoProlongado">
+            <div>
+                <b>Tratamiento Prolongado</b>
+                <p class="texto-detalle">{{recetaPrincipal.medicamento?.tiempoTratamiento?.nombre}} - orden: {{
+                    recetaPrincipal.medicamento?.ordenTratamiento + 1 }} de
+                    {{recetaPrincipal.medicamento?.tiempoTratamiento?.id}}</p>
+            </div>
+        </div>
     </div>
 
     <div class="mt-4 mb-3" *ngIf="recetaPrincipal.estadoDispensaActual.tipo === 'dispensada'">
