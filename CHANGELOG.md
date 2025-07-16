@@ -1,3 +1,10 @@
+## [5.167.1](https://github.com/andes/app/compare/v5.167.0...v5.167.1) (2025-07-16)
+
+
+### Bug Fixes
+
+* **IN:** inactivacion de camas en capas medica y estadistica ([#3209](https://github.com/andes/app/issues/3209)) ([7c8bcf0](https://github.com/andes/app/commit/7c8bcf0c57200690d55ff83e82449d71add8423c))
+
 # [5.167.0](https://github.com/andes/app/compare/v5.166.0...v5.167.0) (2025-07-09)
 
 
