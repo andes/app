@@ -47,8 +47,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     public esDuplicado = false;
     public esTriplicado = false;
     public tiemposTratamiento = [
-        { id: '3meses', nombre: '3 meses' },
-        { id: '6meses', nombre: '6 meses' }
+        { id: '3', nombre: '3 meses' },
+        { id: '6', nombre: '6 meses' }
     ];
     public eclMedicamentos;
     public eclPresentaciones;

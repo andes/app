@@ -823,7 +823,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         });
 
         this.recetasService.getRecetas(options).subscribe((data) => {
-            const grupoRecetas = data.reduce((acc, receta) => {
+            const grupoRecetas = data.filter(r => r.estadoActual.tipo !== 'pendiente').reduce((acc, receta) => {
                 const conceptId = receta.medicamento.concepto.conceptId;
                 if (!acc[conceptId]) {
                     acc[conceptId] = [];
