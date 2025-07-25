@@ -1,2 +1,18 @@
+# Ignorar configuración propia
+angular.json
+karma.conf.js
+tsconfig*.json
+package*.json
+webpack.config.js
+
+# Ignorar archivos de build y dependencias
+dist/
+node_modules/
+coverage/
+
+# Ignorar entornos específicos
 projects/portal/
 src/environments/
+tmp/
+temp/
+*.log
