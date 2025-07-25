@@ -1,0 +1,16 @@
+.is-invalid {
+    border: 1px solid red;
+}
+
+.fechas-container {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 8px;
+    grid-column: span 2;
+}

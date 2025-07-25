@@ -1,17 +1,24 @@
 <form #formFiltros="ngForm">
     <plex-wrapper>
         <plex-text name="paciente" [(ngModel)]="filtros.paciente" label="paciente"></plex-text>
-        <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoDesde" name="fechaIngresoDesde"
-                       label="Ingreso desde" [max]="filtros.fechaIngresoHasta" [debounce]="600" required>
-        </plex-datetime>
-        <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoHasta" name='fechaIngresoHasta'
-                       label="Ingreso hasta" [debounce]="600" [max]="fechaHoy" [min]="filtros.fechaIngresoDesde" required>
-        </plex-datetime>
+        <div class="fechas-container">
+            <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoDesde" name="fechaIngresoDesde"
+                           label="Ingreso desde" [max]="filtros.fechaIngresoHasta" [debounce]="600"
+                           [required]="isRequired('fechaIngresoDesde')">
+            </plex-datetime>
+
+            <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoHasta" name="fechaIngresoHasta"
+                           label="Ingreso hasta" [debounce]="600" [max]="fechaHoy" [min]="filtros.fechaIngresoDesde"
+                           [required]="isRequired('fechaIngresoHasta')">
+            </plex-datetime>
+        </div>
         <plex-datetime type="date" [(ngModel)]="filtros.fechaEgresoDesde" name="fechaEgresoDesde" label="Egreso desde"
-                       [max]="filtros.fechaEgresoHasta" [debounce]="600" [min]="filtros.fechaIngresoDesde" [max]="filtros.fechaEgresoHasta">
+                       [max]="filtros.fechaEgresoHasta" [debounce]="600" [min]="filtros.fechaIngresoDesde"
+                       [max]="filtros.fechaEgresoHasta">
         </plex-datetime>
         <plex-datetime type="date" [(ngModel)]="filtros.fechaEgresoHasta" name='fechaEgresoHasta' label="Egreso hasta"
-                       [min]="filtros.fechaEgresoDesde" [debounce]="600" [max]="fechaHoy" [min]="filtros.fechaIngresoDesde">
+                       [min]="filtros.fechaEgresoDesde" [debounce]="600" [max]="fechaHoy"
+                       [min]="filtros.fechaIngresoDesde">
         </plex-datetime>
         <div collapse>
             <plex-select name="obraSocial" label="Obra Social" [(ngModel)]="filtros.obraSocial"
