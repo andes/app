@@ -1,55 +1,60 @@
 {
-  "compilerOptions": {
-    "declaration": false,
-    "downlevelIteration": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "lib": [
-      "es6",
-      "dom"
-    ],
-    "baseUrl": ".",
-    "module": "es2020",
-    "moduleResolution": "node",
-    "outDir": "../dist/out-tsc",
-    "target": "ES2022",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "paths": {
-      "@andes/auth": [
-        "projects/auth/src/public-api.ts"
-      ],
-      "@andes/shared": [
-        "projects/shared/src/public-api.ts"
-      ],
-      "@andes/form-builder": [
-        "projects/form-builder/src/public-api.ts"
-      ]
+    "compilerOptions": {
+        "declaration": false,
+        "downlevelIteration": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "lib": [
+            "es2022",
+            "dom"
+        ],
+        "module": "esnext",
+        "moduleResolution": "node",
+        "outDir": "../dist/out-tsc",
+        "target": "ES2022",
+        "forceConsistentCasingInFileNames": true,
+        "strict": false,
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "baseUrl": "./",
+        "paths": {
+            "src/*": [
+                "src/*"
+            ],
+            "@andes/auth": [
+                "projects/auth/src/public-api.ts"
+            ],
+            "@andes/shared": [
+                "projects/shared/src/public-api.ts"
+            ],
+            "@andes/form-builder": [
+                "projects/form-builder/src/public-api.ts"
+            ]
+        },
+        "useDefineForClassFields": false
     },
-    "useDefineForClassFields": false
-  },
-  "files": [
-    "src/main.ts",
-    "src/polyfills.ts"
-  ],
-  "include": [
-    "./**/*.ts",
-    "./karma.conf.js",
-    "./webpack.config.js",
-    ".eslintrc.js",
-    "node_modules/ng2-slugify/**/*.ts",
-    "node_modules/@andes/plex/**/*.ts"
-  ],
-  "exclude": [
-    "projects/portal/**/*.ts", // hasta retomar proyecto
-    "node_modules/@andes/plex/**/*.spec.ts",
-    "node_modules/@schematics/**/*.ts",
-    "node_modules/karma/**/*.ts",
-    "**/environments/*.ts"
-  ],
-  "angularCompilerOptions": {
-    "fullTemplateTypeCheck": false,
-    "strictInjectionParameters": true
-  }
+    "files": [
+        "src/main.ts",
+        "src/polyfills.ts"
+    ],
+    "include": [
+        "./**/*.ts",
+        "./karma.conf.js",
+        "./webpack.config.js",
+        ".eslintrc.js",
+        "node_modules/ng2-slugify/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules/@andes/plex/**/*.spec.ts",
+        "node_modules/@schematics/**/*.ts",
+        "node_modules/karma/**/*.ts",
+        "**/environments/*.ts"
+    ],
+    "angularCompilerOptions": {
+        "fullTemplateTypeCheck": false,
+        "strictInjectionParameters": false,
+        "strictTemplates": false
+    }
 }
