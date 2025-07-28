@@ -54,28 +54,29 @@
     </div>
 
     <div class="info-solicitud dispensada mt-4" *ngIf="recetaPrincipal.estadosDispensa.length > 0">
-        <div class="data fila-dispensa">
+        <div class="fila-dispensa grid-dispensa">
             <div><b>Fecha</b></div>
             <div><b>Sistema</b></div>
             <div><b>Organización</b></div>
+            <div><b>Tipo</b></div>
             <div><b></b></div>
         </div>
 
-        <ng-container *ngFor="let estadoDispensa of recetaPrincipal.estadosDispensa">
-            <div class="fila-dispensa">
+        <ng-container *ngFor="let estadoDispensa of listadoDispensas; let i = index">
+            <div class="fila-dispensa grid-dispensa" [ngClass]="{'primer-dispensa': i === 0}">
                 <div class="detalle-dispensa">{{ estadoDispensa.fecha | date: 'dd/MM/yyyy HH:mm' }}</div>
-                <div class="detalle-dispensa">{{ estadoDispensa.sistema || "Sin especificar" }}</div>
-                <div class="detalle-dispensa">{{ estadoDispensa.organizacion?.nombre || "Sin especificar" }}</div>
+                <div class="detalle-dispensa">{{ estadoDispensa.sistema }}</div>
+                <div class="detalle-dispensa">{{ estadoDispensa.organizacion }}</div>
+                <div class="detalle-dispensa">{{ estadoDispensa.tipo === 'sin-dispensa' ? 'creado' :
+                    estadoDispensa.tipo}}</div>
                 <div class="detalle-dispensa">
-                    <plex-badge *ngIf="estadoDispensa.tipo === 'dispensa-parcial'" size="sm" [type]="'warning'">
+                    <plex-badge *ngIf="estadoDispensa.dispensaDuplicada" size="sm" [type]="'warning'">
                         dispensa duplicada
                     </plex-badge>
                 </div>
             </div>
         </ng-container>
-
     </div>
-
 
     <div class="mt-4 mb-3" *ngIf="recetaPrincipal.estadoActual.tipo === 'suspendida'">
         <plex-title titulo="Motivo de suspensión" size="sm"></plex-title>
