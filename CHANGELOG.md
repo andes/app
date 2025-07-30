@@ -1,3 +1,10 @@
+# [5.168.0](https://github.com/andes/app/compare/v5.167.1...v5.168.0) (2025-07-30)
+
+
+### Features
+
+* **HUDS:** Visualizar grupo de recetas con tratamiento prolongado ([#3212](https://github.com/andes/app/issues/3212)) ([344fcf1](https://github.com/andes/app/commit/344fcf1b56e8e2b16e853e7c946b6ea2bcdf4a7d))
+
 ## [5.167.1](https://github.com/andes/app/compare/v5.167.0...v5.167.1) (2025-07-16)
 
 
