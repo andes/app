@@ -1,6 +1,6 @@
 import { ZonaSanitariaService } from './../../../../services/zonaSanitaria.service';
 import { GrupoPoblacionalService } from './../../../../services/grupo-poblacional.service';
-import { Component, Input, ViewChildren, QueryList, OnChanges, AfterViewInit, ViewChild, OnInit, Inject, Optional, InjectionToken } from '@angular/core';
+import { Component, Input, ViewChildren, QueryList, OnChanges, ViewChild, OnInit } from '@angular/core';
 import { PlexPanelComponent } from '@andes/plex/src/lib/accordion/panel.component';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { Auth } from '@andes/auth';
@@ -8,6 +8,7 @@ import { Plex } from '@andes/plex';
 import { QueriesService } from 'src/app/services/query.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { ServicioIntermedioService } from 'src/app/modules/rup/services/servicio-intermedio.service';
+import { ArbolPermisosComponent } from './arbol-permisos.component';
 const shiroTrie = require('shiro-trie');
 
 @Component({
@@ -18,6 +19,7 @@ const shiroTrie = require('shiro-trie');
 export class ArbolPermisosItemComponent implements OnInit, OnChanges {
 
     private shiro = shiroTrie.new();
+    private permisosIncompatibles = [['huds:visualizacionHuds', 'huds:visualizacionParcialHuds:*']];
     public state = false;
     public all = false;
     public seleccionados = [];
@@ -43,7 +45,8 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges {
         private servicioIntermedio: ServicioIntermedioService,
         private zonaSanitariaService: ZonaSanitariaService,
         private auth: Auth,
-        public plex: Plex
+        public plex: Plex,
+        private arbolPermisos: ArbolPermisosComponent
     ) { }
 
     get isHidden() {
@@ -69,6 +72,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges {
     }
     expand($event) {
         if ($event) {
+            this.checkIncompatibles($event);
             if (this.allModule) {
                 this.accordions.active = false;
             } else {
@@ -125,6 +129,66 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges {
                 this.plex.info('danger', 'Solo se permite pegar prestaciones válidas');
             }
         }
+    }
+
+    /**
+     * Se ejecuta al activar un checkbox o un colapsable para verificar si se debe desactivar otro checkbox correspondiente a un permiso incompatible.
+     * Dos permisos son incompatibles cuando no deberían estar activados al mismo tiempo.
+     */
+    checkIncompatibles($event) {
+        if ($event?.value === undefined) { // Se accionó un colapsable
+            return;
+        }
+        if ($event.value) {
+            const permisoActual = this.parentPermission + ':' + this.item.key;
+            let permisoIncompatible;
+            this.permisosIncompatibles.find(par => {
+                // buscamos si el permiso que se acaba de activar es incompatible con alguno de los permisos que ya están activos
+                // (se eliminan los comodines al final de los permisos para poder comparar)
+                const p1 = par[0].replace(':*', '');
+                const p2 = par[1].replace(':*', '');
+                if (permisoActual.includes(p1)) {
+                    permisoIncompatible = par[1];
+                } else if (permisoActual.includes(p2)) {
+                    permisoIncompatible = par[0];
+                }
+                return !!permisoIncompatible;
+            });
+            if (permisoIncompatible) {
+                // si existen permisos incompatibles con el que se acaba de activar, se desactiva el que estaba previamente activo
+                const child = this.findChild(permisoIncompatible);
+                child.state = false;
+                child.allModule = false;
+                child.childsComponents?.forEach(c => c.state = false);
+            }
+        }
+    }
+
+    private findChildRec(childComponent: ArbolPermisosItemComponent, permission: string): ArbolPermisosItemComponent {
+        const splitedPermission = permission.split(':');
+        const searchedKey = splitedPermission.shift();
+        if (childComponent.item?.key === searchedKey) {
+            return childComponent;
+        }
+        if (childComponent.childsComponents.length) {
+            const childFound = childComponent.childsComponents.find(c => c.item.key === searchedKey);
+            if (childFound && (!splitedPermission.length || splitedPermission[0] === '*')) {
+                return childFound;
+            }
+            return this.findChildRec(childFound, splitedPermission.join(':'));
+        }
+    }
+
+    /**
+     * Busca un hijo en el árbol de permisos a partir de un permiso.
+     * @param permission El permiso a buscar.
+     * @returns El componente hijo que contiene el permiso buscado.
+     */
+    private findChild(permission: string): ArbolPermisosItemComponent {
+        const splitedPermission = permission.split(':');
+        const parentModuleStr = splitedPermission.shift();
+        const parentModule = this.arbolPermisos.childsComponents.find(c => c.item.key === parentModuleStr);
+        return this.findChildRec(parentModule, splitedPermission.join(':'));
     }
 
     refresh() {
