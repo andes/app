@@ -19,6 +19,7 @@ import { InfoAgendaComponent } from './gestor-agendas/info-agenda.component';
 import { SeleccionarFinanciadorComponent } from './dar-turnos/seleccionar-financiador.component';
 import { PrestacionesHabilitadasComponent } from './gestor-agendas/prestaciones-habilitadas/prestaciones-habilitadas.component';
 import { DemandaInsatisfechaComponent } from '../demandaInsatisfecha/demanda-insatisfecha.component';
+import { AgregarSobreturnoComponent } from './gestor-agendas/operaciones-agenda/sobreturno.component';
 
 @NgModule({
     imports: [
@@ -43,7 +44,8 @@ import { DemandaInsatisfechaComponent } from '../demandaInsatisfecha/demanda-ins
         InfoAgendaComponent,
         SeleccionarFinanciadorComponent,
         PrestacionesHabilitadasComponent,
-        DemandaInsatisfechaComponent
+        DemandaInsatisfechaComponent,
+        AgregarSobreturnoComponent
     ],
     exports: [
         DarTurnosComponent,
@@ -56,7 +58,8 @@ import { DemandaInsatisfechaComponent } from '../demandaInsatisfecha/demanda-ins
         BotonesTurnosPipe,
         InfoAgendaComponent,
         SeleccionarFinanciadorComponent,
-        PrestacionesHabilitadasComponent
+        PrestacionesHabilitadasComponent,
+        AgregarSobreturnoComponent
     ],
 })
 export class CITASLibModule {
