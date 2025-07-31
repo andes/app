@@ -64,6 +64,8 @@
                 </plex-wrapper>
 
 
+
+
                 <!-- DATOS DEL PROGENITOR PARA EL BEBE-->
                 <span class="mt-4">
                     <plex-title size="sm" titulo="Datos de Progenitor/a o tutor/a"></plex-title>
@@ -217,6 +219,35 @@
                 </plex-wrapper>
             </ng-container>
         </form>
+
+  <plex-bool
+    name="fallecido"
+    type="slide"
+    label="Paciente fallecido"
+    [(ngModel)]="pacienteFallecido">
+</plex-bool>
+                
+
+<div *ngIf="pacienteFallecido && !paciente.fechaFallecimiento">
+    <plex-title titulo="Fecha de defunción" size="sm" class="mt-2"></plex-title>
+    <plex-grid type="auto" size="md" cols="2">
+        <plex-datetime label="Fecha de defunción"
+                       [(ngModel)]="fechaFallecimientoTemporal"
+                       name="fechaFallecimientoTemporal"
+                       [required]="pacienteFallecido"
+                       type="date">
+        </plex-datetime>
+
+    
+ </plex-grid>
+    <plex-button type="success" label="Guardar fecha de defunción" 
+                 (click)="guardarFallecimiento()" 
+                 [disabled]="!fechaFallecimientoTemporal">
+    </plex-button>
+</div>
+     
+
+
 
         <!-- Reporte de error en datos -->
         <ng-container *ngIf="validado">
