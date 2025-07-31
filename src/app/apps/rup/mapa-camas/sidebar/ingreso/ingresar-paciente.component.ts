@@ -85,6 +85,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         motivo: null,
         organizacionOrigen: null,
         profesional: null,
+        financiador: null,
+
         PaseAunidadOrganizativa: null
     };
     public poseeMovimientos: Boolean;
@@ -149,6 +151,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         const pacienteID$ = this.handlerPacienteID();
         this.inProgress = true;
 
+
         this.registrosIngresoResumen$ = combineLatest([
             this.mapaCamasService.capa2,
             this.mapaCamasService.fecha2,
@@ -169,6 +172,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 if (capa === 'estadistica-v2' && this.view === 'listado-internacion') {
                     return this.mapaCamasService.resumenInternacion$;
                 }
+
 
                 return of(null);
             }),
@@ -304,6 +308,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         });
     }
 
+
+
     changeTipoObraSocial() {
         this.selectedOS = false;
         if (this.informeIngreso.asociado?.id === 'Plan de salud privado o Mutual') {
@@ -397,6 +403,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         });
         return flagValid;
     }
+
 
     guardar(valid) {
         if (valid.formValid && this.validarRUP()) {
