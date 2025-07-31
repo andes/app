@@ -10,7 +10,7 @@ import * as enumerados from '../../../utils/enumerados';
 import { IPaciente } from '../interfaces/IPaciente';
 import { PacienteService } from '../services/paciente.service';
 import { ConstantesService } from 'src/app/services/constantes.service';
-
+import { Auth } from 'projects/auth/src/lib/auth.service';
 @Component({
     selector: 'datos-basicos',
     templateUrl: 'datos-basicos.html',
@@ -24,6 +24,8 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     @ViewChild('formBasico', { static: false }) formBasico: NgForm;
     @ViewChild('formExtranjero', { static: false }) formExtranjero: NgForm;
     @ViewChild('formGenero', { static: false }) formGenero: NgForm;
+    profesionalActual: any;
+
 
     formChangesSubscription: Subscription;
 
@@ -71,12 +73,19 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
         foto: null,
         fotoId: null
     };
+    pacienteFallecido: any;
+    fechaFallecimientoTemporal: Date = null;
+    fallecimientoManual: { registradoPor: { id: string; nombre: string; apellido: string; documento: string; }; registradoEn: Date; };
+
+    
 
     constructor(
         private plex: Plex,
         private pacienteService: PacienteService,
         private parentescoService: ParentescoService,
-        private constantesService: ConstantesService
+        private constantesService: ConstantesService,
+        private auth: Auth  
+
     ) {
         this.nombrePattern = pacienteService.nombreRegEx.source;
     }
@@ -93,6 +102,13 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
         if (!changes.paciente.currentValue.notaError?.length) {
             this.paciente.reportarError = false;
         }
+
+       
+
+         // Si el paciente ya tiene fecha de fallecimiento, el slide queda activado y deshabilitado
+    this.pacienteFallecido = !!this.paciente.fechaFallecimiento;
+
+   
     }
 
     ngAfterViewInit() {
@@ -111,6 +127,9 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
             this.noPoseeDNI = true;
             this.paciente.documento = '';
         }
+   
+
+        this.profesionalActual = this.auth.usuario;
         this.sexos = enumerados.getObjSexos();
         this.tipoIdentificacion = enumerados.getObjTipoIdentificacion();
 
@@ -348,4 +367,28 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
         }
         this.changes.emit({ pacienteError: this.pacienteEditado });
     }
+
+
+guardarFallecimiento() {
+    if (this.fechaFallecimientoTemporal) {
+        const cambios = {
+            fallecimientoManual: {
+                fecha: this.fechaFallecimientoTemporal,
+                registradoPor: {
+                    id: this.profesionalActual.id,
+                    nombre: this.profesionalActual.nombre,
+                    apellido: this.profesionalActual.apellido,
+                    documento: this.profesionalActual.documento
+                },
+                registradoEn: new Date()
+            }
+        };
+
+        this.pacienteService.patch(this.paciente.id, cambios).subscribe(() => {
+            this.plex.toast('success', 'Fecha de fallecimiento registrada correctamente');
+        }, err => {
+            this.plex.toast('danger', 'Error al guardar fallecimiento', err?.message || '');
+        });
+    }
+}
 }
