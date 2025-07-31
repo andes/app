@@ -8,8 +8,6 @@ import { ICreatedBy } from 'src/app/interfaces/ICreatedBy';
 
 export interface IPaciente {
     fallecimientoManual: any;
-    
-
     id: string;
     documento: string;
     cuil: string;
