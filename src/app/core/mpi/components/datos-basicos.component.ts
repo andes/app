@@ -75,16 +75,14 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     };
     pacienteFallecido: any;
     fechaFallecimientoTemporal: Date = null;
-    fallecimientoManual: { registradoPor: { id: string; nombre: string; apellido: string; documento: string; }; registradoEn: Date; };
-
-    
+    fallecimientoManual: { registradoPor: { id: string; nombre: string; apellido: string; documento: string } ; registradoEn: Date};
 
     constructor(
         private plex: Plex,
         private pacienteService: PacienteService,
         private parentescoService: ParentescoService,
         private constantesService: ConstantesService,
-        private auth: Auth  
+        private auth: Auth
 
     ) {
         this.nombrePattern = pacienteService.nombreRegEx.source;
@@ -103,12 +101,9 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
             this.paciente.reportarError = false;
         }
 
-       
+        // Si el paciente ya tiene fecha de fallecimiento, el slide queda activado y deshabilitado
+        this.pacienteFallecido = !!this.paciente.fechaFallecimiento;
 
-         // Si el paciente ya tiene fecha de fallecimiento, el slide queda activado y deshabilitado
-    this.pacienteFallecido = !!this.paciente.fechaFallecimiento;
-
-   
     }
 
     ngAfterViewInit() {
@@ -127,7 +122,7 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
             this.noPoseeDNI = true;
             this.paciente.documento = '';
         }
-   
+
 
         this.profesionalActual = this.auth.usuario;
         this.sexos = enumerados.getObjSexos();
@@ -369,26 +364,26 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     }
 
 
-guardarFallecimiento() {
-    if (this.fechaFallecimientoTemporal) {
-        const cambios = {
-            fallecimientoManual: {
-                fecha: this.fechaFallecimientoTemporal,
-                registradoPor: {
-                    id: this.profesionalActual.id,
-                    nombre: this.profesionalActual.nombre,
-                    apellido: this.profesionalActual.apellido,
-                    documento: this.profesionalActual.documento
-                },
-                registradoEn: new Date()
-            }
-        };
+    guardarFallecimiento() {
+        if (this.fechaFallecimientoTemporal) {
+            const cambios = {
+                fallecimientoManual: {
+                    fecha: this.fechaFallecimientoTemporal,
+                    registradoPor: {
+                        id: this.profesionalActual.id,
+                        nombre: this.profesionalActual.nombre,
+                        apellido: this.profesionalActual.apellido,
+                        documento: this.profesionalActual.documento
+                    },
+                    registradoEn: new Date()
+                }
+            };
 
-        this.pacienteService.patch(this.paciente.id, cambios).subscribe(() => {
-            this.plex.toast('success', 'Fecha de fallecimiento registrada correctamente');
-        }, err => {
-            this.plex.toast('danger', 'Error al guardar fallecimiento', err?.message || '');
-        });
+            this.pacienteService.patch(this.paciente.id, cambios).subscribe(() => {
+                this.plex.toast('success', 'Fecha de fallecimiento registrada correctamente');
+            }, err => {
+                this.plex.toast('danger', 'Error al guardar fallecimiento', err?.message || '');
+            });
+        }
     }
-}
 }
