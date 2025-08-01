@@ -75,8 +75,11 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     };
     pacienteFallecido: any;
     fechaFallecimientoTemporal: Date = null;
-    fallecimientoManual: { registradoPor: { id: string; nombre: string; apellido: string; documento: string } ; registradoEn: Date};
-
+    fallecimientoManual: {
+        fecha?: Date;
+        registradoPor: { id: string; nombre: string; apellido: string; documento: string };
+        registradoEn: Date;
+    };
     constructor(
         private plex: Plex,
         private pacienteService: PacienteService,
@@ -94,6 +97,9 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
 
             if (!changes.paciente.previousValue?.id) {
                 this.pacienteExtranjero = Object.assign({}, this.paciente);
+            }
+            if (changes.paciente && changes.paciente.currentValue.fallecimientoManual?.fecha) {
+                this.fechaFallecimientoTemporal = new Date(changes.paciente.currentValue.fallecimientoManual.fecha);
             }
         }
 
@@ -122,7 +128,6 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
             this.noPoseeDNI = true;
             this.paciente.documento = '';
         }
-
 
         this.profesionalActual = this.auth.usuario;
         this.sexos = enumerados.getObjSexos();
