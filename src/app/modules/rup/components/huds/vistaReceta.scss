@@ -66,6 +66,38 @@
         font-size: 80%;
         line-height: normal;
     }
+
+    .dispensada {
+        width: 80%;
+        margin: 0;
+    }
+
+    .fila-dispensa {
+        display: flex;
+        column-gap: 10%;
+        align-items: center;
+    }
+
+    .fila-dispensa>div {
+        flex: 1;
+    }
+
+    .grid-dispensa {
+        display: grid;
+        grid-template-columns: 1fr 2fr 2fr 2fr 1fr;
+        gap: 16px;
+        align-items: center;
+    }
+
+    .detalle-dispensa {
+        margin-right: 1;
+    }
+}
+
+.primer-dispensa {
+    background-color: #f0f8ff;
+    font-weight: bold;
+    border: 1px solid #ccc;
 }
 
 .historial-recetas {
