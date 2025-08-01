@@ -14,7 +14,7 @@
             Sin DNI
         </plex-badge>
        <plex-badge 
-  *ngIf="paciente.fechaFallecimiento && !paciente.fallecimientoManual" 
+  *ngIf="paciente.fechaFallecimiento" 
   type="danger" 
   icon="help">
   Fallecido: {{ paciente.fechaFallecimiento | fecha }}

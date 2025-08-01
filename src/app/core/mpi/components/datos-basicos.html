@@ -237,13 +237,13 @@
                        [required]="pacienteFallecido"
                        type="date">
         </plex-datetime>
-
-    
- </plex-grid>
-    <plex-button type="success" label="Guardar fecha de defunción" 
+    <plex-button type="success" icon="check" class="align-self-end" 
                  (click)="guardarFallecimiento()" 
                  [disabled]="!fechaFallecimientoTemporal">
     </plex-button>
+ </plex-grid>
+
+    
 </div>
      
 
