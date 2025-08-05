@@ -136,7 +136,7 @@ export const opcionesCondicionAlNacer = [
 
 export const opcionesTerminacion = [
     { id: 'Vaginal', label: 'Vaginal' },
-    { id: 'Cesária', label: 'Cesária' }
+    { id: 'Cesária', label: 'Cesárea' }
 ];
 
 export const opcionesSexo = [
