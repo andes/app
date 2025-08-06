@@ -10,6 +10,7 @@ import { DocumentosService } from '../../../../../../services/documentos.service
 import * as enumerados from '../../../../../../utils/enumerados';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
 import { ListadoInternacionService } from '../listado-internacion.service';
+import { MapaCamasService } from '../../../services/mapa-camas.service';
 
 @Component({
     selector: 'app-filtros-internacion',
@@ -47,6 +48,7 @@ export class FiltrosInternacionComponent implements OnInit {
 
     public unidadesOrganizativas$: Observable<any[]>;
     public obraSociales$: Observable<any[]>;
+    public mostrarAvisoAutocompletado = false;
 
     constructor(
         private auth: Auth,
@@ -55,7 +57,8 @@ export class FiltrosInternacionComponent implements OnInit {
         private servicioDocumentos: DocumentosService,
         private organizacionService: OrganizacionService,
         public permisosMapaCamasService: PermisosMapaCamasService,
-        public obraSocialService: ObraSocialService
+        public obraSocialService: ObraSocialService,
+        public mapaCamasService: MapaCamasService
     ) { }
 
     ngOnInit() {
@@ -189,6 +192,39 @@ export class FiltrosInternacionComponent implements OnInit {
     }
 
     filtrarFecha() {
+        const ingresoCorrecto = this.filtros.fechaIngresoDesde || this.filtros.fechaIngresoHasta;
+        const egresoCorrecto = this.filtros.fechaEgresoDesde || this.filtros.fechaEgresoHasta;
+
+        const algunaFechaVacia = !this.filtros.fechaIngresoDesde || !this.filtros.fechaIngresoHasta || !this.filtros.fechaEgresoDesde || !this.filtros.fechaEgresoHasta;
+
+        if (algunaFechaVacia) {
+            this.mostrarAvisoAutocompletado = true;
+        }
+
+        if ((ingresoCorrecto) || (egresoCorrecto)) {
+            if (!this.filtros.fechaIngresoDesde || !this.filtros.fechaIngresoHasta) {
+
+                if (this.filtros.fechaIngresoDesde) {
+                    const fechaActual = moment().toDate();
+                    const posibleFechaHasta = moment(this.filtros.fechaIngresoDesde).add(3, 'month').toDate();
+                    this.filtros.fechaIngresoHasta = posibleFechaHasta > fechaActual ? fechaActual : posibleFechaHasta;
+                }
+                this.filtros.fechaIngresoHasta = this.filtros.fechaIngresoHasta || moment().toDate(); // Si falta, asigna la fecha actual
+                this.filtros.fechaIngresoDesde = this.filtros.fechaIngresoDesde || moment(this.filtros.fechaIngresoHasta).subtract(3, 'months').toDate(); // Si falta, asigna 3 meses antes
+
+            }
+            if (!this.filtros.fechaEgresoDesde || !this.filtros.fechaEgresoHasta) {
+
+                if (this.filtros.fechaEgresoDesde) {
+                    const fechaActual = moment().toDate();
+                    const posibleFechaHasta = moment(this.filtros.fechaEgresoDesde).add(3, 'month').toDate();
+                    this.filtros.fechaEgresoHasta = posibleFechaHasta > fechaActual ? fechaActual : posibleFechaHasta;
+                }
+                this.filtros.fechaEgresoHasta = this.filtros.fechaEgresoHasta || moment().toDate(); // Si falta, asigna la fecha actual
+                this.filtros.fechaEgresoDesde = this.filtros.fechaEgresoDesde || moment(this.filtros.fechaEgresoHasta).subtract(3, 'months').toDate(); // Si falta, asigna 3 meses antes
+            }
+        }
+
         this.listadoInternacionService.fechaIngresoDesde.next(this.filtros.fechaIngresoDesde);
         this.listadoInternacionService.fechaIngresoHasta.next(this.filtros.fechaIngresoHasta);
         this.listadoInternacionService.fechaEgresoDesde.next(this.filtros.fechaEgresoDesde);
@@ -219,19 +255,22 @@ export class FiltrosInternacionComponent implements OnInit {
         );
     }
     isValidFechas(): boolean {
-        return !!this.filtros.fechaIngresoDesde || !!this.filtros.fechaIngresoHasta;
+        const ingresoCorrecto = this.filtros.fechaIngresoDesde || this.filtros.fechaIngresoHasta;
+        const egresoCorrecto = this.filtros.fechaEgresoDesde || this.filtros.fechaEgresoHasta;
+
+        return ingresoCorrecto || egresoCorrecto;
     }
 
     validarFechas(): void {
-        this.required$.next(!this.isValidFechas());
+        this.required$.next(this.isValidFechas());
     }
 
     isRequired(campo: string): boolean {
-        if (campo === 'fechaIngresoDesde') {
-            return !this.filtros.fechaIngresoHasta;
-        }
-        if (campo === 'fechaIngresoHasta') {
-            return !this.filtros.fechaIngresoDesde;
+        const ingresoCorrecto = this.filtros.fechaIngresoDesde || this.filtros.fechaIngresoHasta;
+        const egresoCorrecto = this.filtros.fechaEgresoDesde || this.filtros.fechaEgresoHasta;
+
+        if (ingresoCorrecto || egresoCorrecto) {
+            return false;
         }
         return true;
     }

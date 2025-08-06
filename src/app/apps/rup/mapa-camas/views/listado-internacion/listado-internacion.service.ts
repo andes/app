@@ -21,6 +21,7 @@ export class ListadoInternacionService {
     public refresh = new BehaviorSubject<any>(null);
     public missingFilters$: Observable<boolean>;
     public fechasIngreso$: Observable<boolean>;
+    public fechasEgreso$: Observable<boolean>;
 
     constructor(
         private mapaHTTP: MapaCamasHTTP,
@@ -29,33 +30,18 @@ export class ListadoInternacionService {
             this.fechaIngresoDesde,
             this.fechaIngresoHasta,
             this.fechaEgresoDesde,
-            this.fechaEgresoHasta,
-            this.refresh
+            this.fechaEgresoHasta
         ]).pipe(
             auditTime(1),
-            switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta, refresh]) => {
-                if ((fechaIngresoDesde || fechaIngresoHasta) || (fechaEgresoDesde && fechaEgresoHasta)) {
+            switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta]) => {
+                const filtros = {
+                    fechaIngresoDesde,
+                    fechaIngresoHasta,
+                    fechaEgresoDesde,
+                    fechaEgresoHasta,
+                };
+                return this.mapaHTTP.getPrestacionesInternacion(filtros);
 
-                    if (fechaIngresoDesde && !fechaIngresoHasta) {
-                        fechaIngresoHasta = moment().toDate();
-                        this.setFechaHasta(fechaIngresoHasta);
-                    }
-
-                    if (!fechaIngresoDesde && fechaIngresoHasta) {
-                        fechaIngresoDesde = moment(fechaIngresoHasta).subtract(3, 'months').toDate();
-                        this.fechaIngresoDesde.next(fechaIngresoDesde);
-                    }
-                    const filtros = {
-                        fechaIngresoDesde,
-                        fechaIngresoHasta,
-                        fechaEgresoDesde,
-                        fechaEgresoHasta,
-                    };
-
-                    return this.mapaHTTP.getPrestacionesInternacion(filtros);
-                }
-
-                return of([]);
             }),
             cache()
         );
@@ -89,10 +75,13 @@ export class ListadoInternacionService {
 
         this.fechasIngreso$ = combineLatest([
             this.fechaIngresoDesde,
-            this.fechaIngresoHasta
+            this.fechaIngresoHasta,
+            this.fechaEgresoDesde,
+            this.fechaEgresoHasta
         ]).pipe(
-            map(([fechaIngresoDesde, fechaIngresoHasta]) => {
-                return !fechaIngresoDesde && !fechaIngresoHasta;
+            map(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta]) => {
+                const algunaFechaCorrecta = !!fechaIngresoDesde || !!fechaIngresoHasta || !!fechaEgresoDesde || !!fechaEgresoHasta;
+                return algunaFechaCorrecta;
             })
         );
     }
