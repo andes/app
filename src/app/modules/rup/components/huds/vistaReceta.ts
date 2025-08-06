@@ -47,6 +47,38 @@ export class VistaRecetaComponent implements OnInit {
         }
     ];
 
+    public columnsDetalleDispensa = [
+        {
+            key: 'fecha',
+            label: 'Fecha',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'sistema',
+            label: 'Sistema',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'organizacion',
+            label: 'Organización',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'tipo',
+            label: 'Tipo',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'estado',
+            label: '',
+            sorteable: false,
+            opcional: false
+        }
+    ];
     public estadoReceta = {
         vigente: 'success',
         finalizada: 'success',
