@@ -91,11 +91,11 @@
                             </div>
                         </div>
                         <div class="actions" style="display: flex; gap: 5px">
-                            <plex-badge *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length === 1"
+                            <plex-badge *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length === 1 && elemento?.relacionadoCon[0]?.concepto"
                                         size="sm" type="info">
                                 <b> Relacionado con: </b>
-                                {{ elemento.relacionadoCon[0].concepto?.term[0].toUpperCase() +
-                                elemento.relacionadoCon[0].concepto?.term.slice(1)}}
+                                {{ elemento.relacionadoCon[0]?.concepto?.term[0].toUpperCase() +
+                                elemento.relacionadoCon[0]?.concepto?.term.slice(1)}}
                             </plex-badge>
                             <plex-badge size="sm" type="info" *ngIf="elemento.esDiagnosticoPrincipal">
                                 Procedimiento / diagnóstico principal
