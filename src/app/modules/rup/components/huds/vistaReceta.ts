@@ -47,6 +47,38 @@ export class VistaRecetaComponent implements OnInit {
         }
     ];
 
+    public columnsDetalleDispensa = [
+        {
+            key: 'fecha',
+            label: 'Fecha',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'sistema',
+            label: 'Sistema',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'organizacion',
+            label: 'Organización',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'tipo',
+            label: 'Tipo',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'estado',
+            label: '',
+            sorteable: false,
+            opcional: false
+        }
+    ];
     public estadoReceta = {
         vigente: 'success',
         finalizada: 'success',
@@ -84,45 +116,45 @@ export class VistaRecetaComponent implements OnInit {
         }
 
         let dispensaDuplicada = false;
-        this.listadoDispensas = this.recetaPrincipal.estadosDispensa.map(dispensa => {
-            let organizacionNombre = '';
-            const dispensaCoincidente = this.recetaPrincipal.estados.find(estado => {
-                if (estado.createdBy.organizacion?.nombre) {
-                    organizacionNombre = estado.createdBy.organizacion.nombre;
-                } else if (estado.createdBy.organizacion?.id) {
-                    this.organizacionesService.getById(estado.createdBy.organizacion.id).subscribe(org => {
+        this.listadoDispensas = this.recetaPrincipal.estadosDispensa
+            .filter(dispensa => dispensa.tipo !== 'sin-dispensa') // Filtrar los que no son 'sin-dispensa'
+            .map(dispensa => {
+                let organizacionNombre = '';
+                const idDispensa = dispensa.idDispensaApp;
+                const dispensaCoincidente = this.recetaPrincipal.dispensa.find(dispensaPrimaria => {
+                    if (dispensaPrimaria.idDispensaApp === idDispensa) {
+                        organizacionNombre = dispensaPrimaria.organizacion?.nombre;
+                        return moment(dispensaPrimaria.fecha).isSame(moment(dispensa.fecha), 'day'); // Compara solo el día
+                    }
+                    return null;
+                });
 
-                        organizacionNombre = organizacionNombre = (org.nombre?.toString() || 'Sin especificar');;
-                    });
+                const esDuplicada = dispensaDuplicada;
+                if (dispensa.tipo === 'dispensada') {
+                    if (!dispensaDuplicada) {
+                        dispensaDuplicada = true;
+                    }
                 }
-                return moment(estado.createdAt).isSame(moment(dispensa.fecha), 'day'); // Compara solo el día
-            }
-            );
-            const esDuplicada = dispensaDuplicada;
-            if (dispensa.tipo === 'dispensada') {
-                if (!dispensaDuplicada) {
-                    dispensaDuplicada = true;
-                }
-            }
 
-            if (dispensaCoincidente) {
-                return {
-                    fecha: dispensaCoincidente.createdAt,
-                    tipo: dispensa.tipo,
-                    organizacion: organizacionNombre || 'Sin especificar',
-                    sistema: dispensa.sistema || 'Sin especificar',
-                    dispensaDuplicada: esDuplicada
-                };
-            } else {
-                return {
-                    fecha: dispensa.fecha,
-                    tipo: dispensa.tipo,
-                    organizacion: organizacionNombre || 'Sin especificar',
-                    sistema: dispensa.sistema || 'Sin especificar',
-                    dispensaDuplicada: esDuplicada
-                };
-            }
-        });
+                if (dispensaCoincidente) {
+                    return {
+                        fecha: dispensaCoincidente.fecha,
+                        tipo: dispensa.tipo,
+                        organizacion: organizacionNombre || 'Sin especificar',
+                        sistema: dispensa.sistema || 'Sin especificar',
+                        dispensaDuplicada: esDuplicada
+                    };
+                } else {
+                    return {
+                        fecha: dispensa.fecha,
+                        tipo: dispensa.tipo,
+                        organizacion: organizacionNombre || 'Sin especificar',
+                        sistema: dispensa.sistema || 'Sin especificar',
+                        dispensaDuplicada: esDuplicada
+                    };
+                }
+            });
+
         return this.listadoDispensas;
     }
 
