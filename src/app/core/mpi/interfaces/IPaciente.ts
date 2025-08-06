@@ -7,6 +7,7 @@ import { IObraSocial } from '../../../../../src/app/interfaces/IObraSocial';
 import { ICreatedBy } from 'src/app/interfaces/ICreatedBy';
 
 export interface IPaciente {
+    fallecimientoManual: any;
     id: string;
     documento: string;
     cuil: string;
@@ -32,6 +33,7 @@ export interface IPaciente {
     foto: string;
     createdBy: ICreatedBy;
     relaciones: [IPacienteRelacion];
+
     financiador: [{
         codigoPuco: Number;
         nombre: string;
