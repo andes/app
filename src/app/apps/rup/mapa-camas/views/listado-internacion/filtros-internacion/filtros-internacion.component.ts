@@ -47,6 +47,7 @@ export class FiltrosInternacionComponent implements OnInit {
 
     public unidadesOrganizativas$: Observable<any[]>;
     public obraSociales$: Observable<any[]>;
+    public mostrarAvisoAutocompletado = false;
 
     constructor(
         private auth: Auth,
@@ -189,6 +190,35 @@ export class FiltrosInternacionComponent implements OnInit {
     }
 
     filtrarFecha() {
+        const ingresoCorrecto = this.filtros.fechaIngresoDesde || this.filtros.fechaIngresoHasta;
+        const egresoCorrecto = this.filtros.fechaEgresoDesde || this.filtros.fechaEgresoHasta;
+
+        const algunaFechaVacia = !this.filtros.fechaIngresoDesde || !this.filtros.fechaIngresoHasta || !this.filtros.fechaEgresoDesde || !this.filtros.fechaEgresoHasta;
+
+        if (algunaFechaVacia) {
+            this.mostrarAvisoAutocompletado = true;
+        }
+
+        if ((ingresoCorrecto) || (egresoCorrecto)) {
+            if (!this.filtros.fechaIngresoDesde || !this.filtros.fechaIngresoHasta) {
+
+                if (this.filtros.fechaIngresoDesde) {
+                    this.filtros.fechaIngresoHasta = moment(this.filtros.fechaIngresoDesde).add(3, 'month').toDate();
+                }
+                this.filtros.fechaIngresoHasta = this.filtros.fechaIngresoHasta || moment().toDate(); // Si falta, asigna la fecha actual
+                this.filtros.fechaIngresoDesde = this.filtros.fechaIngresoDesde || moment(this.filtros.fechaIngresoHasta).subtract(3, 'months').toDate(); // Si falta, asigna 3 meses antes
+
+            }
+            if (!this.filtros.fechaEgresoDesde || !this.filtros.fechaEgresoHasta) {
+
+                if (this.filtros.fechaEgresoDesde) {
+                    this.filtros.fechaEgresoHasta = moment(this.filtros.fechaEgresoDesde).add(3, 'month').toDate();
+                }
+                this.filtros.fechaEgresoHasta = this.filtros.fechaEgresoHasta || moment().toDate(); // Si falta, asigna la fecha actual
+                this.filtros.fechaEgresoDesde = this.filtros.fechaEgresoDesde || moment(this.filtros.fechaEgresoHasta).subtract(3, 'months').toDate(); // Si falta, asigna 3 meses antes
+            }
+        }
+
         this.listadoInternacionService.fechaIngresoDesde.next(this.filtros.fechaIngresoDesde);
         this.listadoInternacionService.fechaIngresoHasta.next(this.filtros.fechaIngresoHasta);
         this.listadoInternacionService.fechaEgresoDesde.next(this.filtros.fechaEgresoDesde);
@@ -219,19 +249,22 @@ export class FiltrosInternacionComponent implements OnInit {
         );
     }
     isValidFechas(): boolean {
-        return !!this.filtros.fechaIngresoDesde || !!this.filtros.fechaIngresoHasta;
+        const ingresoCorrecto = this.filtros.fechaIngresoDesde || this.filtros.fechaIngresoHasta;
+        const egresoCorrecto = this.filtros.fechaEgresoDesde || this.filtros.fechaEgresoHasta;
+
+        return ingresoCorrecto || egresoCorrecto;
     }
 
     validarFechas(): void {
-        this.required$.next(!this.isValidFechas());
+        this.required$.next(this.isValidFechas());
     }
 
     isRequired(campo: string): boolean {
-        if (campo === 'fechaIngresoDesde') {
-            return !this.filtros.fechaIngresoHasta;
-        }
-        if (campo === 'fechaIngresoHasta') {
-            return !this.filtros.fechaIngresoDesde;
+        const ingresoCorrecto = this.filtros.fechaIngresoDesde || this.filtros.fechaIngresoHasta;
+        const egresoCorrecto = this.filtros.fechaEgresoDesde || this.filtros.fechaEgresoHasta;
+
+        if (ingresoCorrecto || egresoCorrecto) {
+            return false;
         }
         return true;
     }
