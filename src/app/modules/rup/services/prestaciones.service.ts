@@ -297,9 +297,12 @@ export class PrestacionesService {
                                 evolucion: registro.valor && registro.valor.evolucion ? registro.valor.evolucion : '',
                                 idRegistroOrigen: registro.valor && registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : null,
                                 informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
-                                relacionadoCon: (registro.relacionadoCon ? registro.relacionadoCon : []).map(r => {
-                                    r.fechaCarga = prestacion.ejecucion.fecha; return r;
-                                }),
+                                relacionadoCon: (registro.relacionadoCon ? registro.relacionadoCon : [])
+                                    .filter(r => r.id)
+                                    .map(r => {
+                                        r.fechaCarga = prestacion.ejecucion.fecha; return r;
+
+                                    }),
                                 valor: registro.valor
                             }],
                             registros: [registro],
@@ -320,9 +323,11 @@ export class PrestacionesService {
                             evolucion: registro.valor && registro.valor.evolucion ? registro.valor.evolucion : '',
                             idRegistroOrigen: registro.valor && registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : ultimaEvolucion.idRegistroOrigen,
                             informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
-                            relacionadoCon: (registro.relacionadoCon ? registro.relacionadoCon : []).map(r => {
-                                r.fechaCarga = prestacion.ejecucion.fecha; return r;
-                            }),
+                            relacionadoCon: (registro.relacionadoCon ? registro.relacionadoCon : [])
+                                .filter(r => r.id)
+                                .map(r => {
+                                    r.fechaCarga = prestacion.ejecucion.fecha; return r;
+                                }),
                             valor: registro.valor
                         };
                         registroEncontrado.prestaciones.push(registro.idPrestacion);
