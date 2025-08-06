@@ -14,7 +14,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let receta of seleccionRecetas" [style.display]="receta ? 'table-row' : 'none'">
-                <td>{{ receta?.medicamento.concepto.term }}</td>
+                <td>{{ receta?.medicamento.concepto?.term }}</td>
                 <td>{{ receta?.profesional.nombre }} {{ receta?.profesional.apellido }}
             </tr>
         </tbody>
@@ -25,8 +25,8 @@
         <plex-select label="Motivo de suspensión" name="motivo" [(ngModel)]="motivoSelector" [data]="motivosSuspension"
                      required>
         </plex-select>
-        <plex-text label="Observación" name="observacion" [(ngModel)]="observacion" placeholder="Ingrese una observación"
-                   [required]="motivoSelector?.nombre === 'Otro'">
+        <plex-text label="Observación" name="observacion" [(ngModel)]="observacion"
+                   placeholder="Ingrese una observación" [required]="motivoSelector?.nombre === 'Otro'">
         </plex-text>
     </form>
 </plex-help>
