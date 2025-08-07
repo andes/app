@@ -32,6 +32,7 @@ export interface IPaciente {
     foto: string;
     createdBy: ICreatedBy;
     relaciones: [IPacienteRelacion];
+
     financiador: [{
         codigoPuco: Number;
         nombre: string;

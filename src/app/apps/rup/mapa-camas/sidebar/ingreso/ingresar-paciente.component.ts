@@ -85,6 +85,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         motivo: null,
         organizacionOrigen: null,
         profesional: null,
+        financiador: null,
+
         PaseAunidadOrganizativa: null
     };
     public poseeMovimientos: Boolean;
@@ -141,7 +143,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             map(([snap, prestacion]) => snap.paciente ? snap.paciente.id : prestacion?.paciente.id)
         ) as Observable<string>;
     }
-
     ngOnInit() {
         this.view = this.mapaCamasService.view.getValue();
         this.fechaHasta = this.listadoInternacionService.fechaIngresoHasta.getValue();
@@ -169,7 +170,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 if (capa === 'estadistica-v2' && this.view === 'listado-internacion') {
                     return this.mapaCamasService.resumenInternacion$;
                 }
-
                 return of(null);
             }),
             map(resumen => resumen?.registros.filter(r => r.tipo === 'valoracion-inicial')),
@@ -196,20 +196,19 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             this.resumen = resumen;
             // Puede suceder, por error, que el ingreso impacte pero no se cree el movimiento correspondiente
             this.poseeMovimientos = !!(cama?.id); // si tiene cama, entonces registra al menos un movimiento
-
             if (paciente && paciente.financiador && paciente.financiador.length > 0) {
                 const os = paciente.financiador[0];
                 this.backupObraSocial = os;
             }
 
             if (this.prestacion) {
-                // capa estadistica o estadistica-v2 con ingreso cargado
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
                 if (this.origenExterno) {
                     this.check = typeof this.informeIngreso.organizacionOrigen === 'string';
                 }
                 this.fechaIngresoOriginal = new Date(this.informeIngreso.fechaIngreso);
                 this.paciente.obraSocial = this.prestacion.paciente.obraSocial;
+                this.changeTipoObraSocial();
             } else {
                 // capa medica/enfermeria, ingreso en estadistica o carga de prestacion en estadistica-v2
                 if (paciente.id) {
@@ -281,7 +280,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 return camasDisponibles;
             })
         );
-
         this.obraSocialService.getListado({}).subscribe(listado => this.selectorFinanciadores = listado.filter(financiador => this.obrasSociales.every(os => os.nombre !== financiador.nombre)));
     }
 
@@ -303,18 +301,22 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             }
         });
     }
-
     changeTipoObraSocial() {
         this.selectedOS = false;
-        if (this.informeIngreso.asociado?.id === 'Plan de salud privado o Mutual') {
+        const asociadoId = typeof this.informeIngreso.asociado === 'string'
+            ? this.informeIngreso.asociado
+            : this.informeIngreso.asociado?.id;
+
+        if (asociadoId === 'Plan de salud privado o Mutual') {
             this.selectedOS = true;
         }
-        this.esPrepaga = this.informeIngreso.asociado?.id === 'Plan de salud privado o Mutual';
-        if (this.esPrepaga || !this.informeIngreso.asociado) {
+        this.esPrepaga = asociadoId === 'Plan de salud privado o Mutual';
+
+        if (this.esPrepaga || !asociadoId) {
             this.paciente.obraSocial = null;
-        } else if (this.informeIngreso.asociado?.id === 'Ninguno') {
+        } else if (asociadoId === 'Ninguno') {
             this.paciente.obraSocial = 'Ninguno';
-        } else if (this.informeIngreso.asociado?.id === 'Sin Datos') {
+        } else if (asociadoId === 'Sin Datos') {
             this.paciente.obraSocial = 'Sin Datos';
         } else {
             this.paciente.obraSocial = this.backupObraSocial;
@@ -397,6 +399,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         });
         return flagValid;
     }
+
 
     guardar(valid) {
         if (valid.formValid && this.validarRUP()) {
@@ -859,4 +862,11 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public setFinanciador(financiador) {
         this.financiador = financiador;
     }
+    onAsociadoChange(asociado) {
+        this.informeIngreso.asociado = asociado;
+        this.changeTipoObraSocial();
+    }
+
 }
+
+
