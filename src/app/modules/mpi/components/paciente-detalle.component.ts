@@ -232,7 +232,7 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
         }
 
         if (this.paciente.financiador && this.paciente.financiador.length > 0 && this.paciente.financiador[0] && this.paciente.financiador[0].nombre) {
-            this.obraSocial = this.paciente.financiador[0] as any; // Cast might be needed depending on IObraSocial
+            this.obraSocial = this.paciente.financiador[0] as any;
             this.obraSocialCacheService.setFinanciadorPacienteCache(this.obraSocial);
             return;
         } else {
