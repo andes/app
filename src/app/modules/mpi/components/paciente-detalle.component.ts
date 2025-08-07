@@ -206,20 +206,6 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
         }
     }
 
-    // ngOnChanges() {
-    //     if (this.reload) {
-    //         this.pacienteService.getById(this.paciente.id).subscribe(result => {
-    //             this.paciente = result;
-    //             this.loadObraSocial();
-    //             this.doRelaciones();
-    //         });
-    //     } else {
-    //         this.loadObraSocial();
-    //         this.doRelaciones();
-    //     }
-    //     this.notasDestacadas = (this.paciente?.notas) ? this.paciente.notas.filter(nota => (nota && nota.destacada)) : [];
-    // }
-
     /**
      * Retorna true/false si se deben visualizar datos del familiar/tutor
      * caso de bebés que aún no poseen dni (pacientes menores a 5 años)

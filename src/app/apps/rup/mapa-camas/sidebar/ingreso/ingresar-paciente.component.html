@@ -2,7 +2,7 @@
     <form #formIngreso="ngForm">
         <plex-title justify titulo="INGRESO" size="md" class="title-fixed">
             <plex-button title="guardar" icon="check" type="success" size="sm" class="mr-1" [validateForm]="formIngreso"
-                         (click)="guardar($event)" [disabled]="formIngreso.invalid || disableButton || inProgress">
+                (click)="guardar($event)" [disabled]="formIngreso.invalid || disableButton || inProgress">
             </plex-button>
 
             <ng-content></ng-content>
@@ -10,14 +10,14 @@
         <paciente-detalle [paciente]="paciente" orientacion="horizontal"></paciente-detalle>
         <ng-container *ngIf="capa === 'estadistica' || capa === 'estadistica-v2'">
             <carpeta-paciente [pacienteSeleccionado]="paciente" [emitOnNew]="true"
-                              (guardarCarpetaEmit)="afterComponenteCarpeta($event)">
+                (guardarCarpetaEmit)="afterComponenteCarpeta($event)">
             </carpeta-paciente>
         </ng-container>
         <plex-title size="sm" justify titulo="DATOS DE INTERNACIÓN">
             <ng-container
-                          *ngIf="prestacion?.id && !cama?.esCensable && (capa === 'estadistica' || capa === 'estadistica-v2')">
+                *ngIf="prestacion?.id && !cama?.esCensable && (capa === 'estadistica' || capa === 'estadistica-v2')">
                 <plex-button *ngIf="!esInternacionCensable" type="warning" label="Convertir en censable" size="sm"
-                             (click)="togglePrestacionCensable()">
+                    (click)="togglePrestacionCensable()">
                 </plex-button>
                 <plex-badge *ngIf="esInternacionCensable" type="info" size="sm">
                     <plex-button tooltip="Deshacer" size="sm" icon="undo" (click)="togglePrestacionCensable()">
@@ -26,9 +26,9 @@
             </ng-container>
 
             <ng-container
-                          *ngIf="prestacion?.id && cama?.esCensable && (capa === 'estadistica' || capa === 'estadistica-v2')">
+                *ngIf="prestacion?.id && cama?.esCensable && (capa === 'estadistica' || capa === 'estadistica-v2')">
                 <plex-button *ngIf="!esInternacionNoCensable" type="warning" label="Convertir en no censable" size="sm"
-                             (click)="togglePrestacionNoCensable()">
+                    (click)="togglePrestacionNoCensable()">
                 </plex-button>
                 <plex-badge *ngIf="esInternacionNoCensable" type="info" size="sm">
                     No Censable
@@ -39,43 +39,42 @@
         </plex-title>
         <plex-wrapper>
             <plex-datetime label="Fecha y hora de ingreso" [(ngModel)]="informeIngreso.fechaIngreso"
-                           name=" fechaIngreso" [max]="mapaCamasService.fechaActual$ | async" required [debounce]="600"
-                           (change)="setFecha()" grow="full" (typing)="onType()">
+                name=" fechaIngreso" [max]="mapaCamasService.fechaActual$ | async" required [debounce]="600"
+                (change)="setFecha()" grow="full" (typing)="onType()">
             </plex-datetime>
             <ng-container *ngIf="camas$ | async as camas">
                 <plex-select *ngIf="!prestacion || !poseeMovimientos" [required]="true" [readonly]="selectReadonly()"
-                             [(ngModel)]="cama" name="cama" [data]="camas" placeholder="Elija cama" label="Cama"
-                             idField="id" labelField="nombre + '(' + sectorName + ')'" (change)="selectCama(cama)"
-                             grow="full">
+                    [(ngModel)]="cama" name="cama" [data]="camas" placeholder="Elija cama" label="Cama" idField="id"
+                    labelField="nombre + '(' + sectorName + ')'" (change)="selectCama(cama)" grow="full">
                 </plex-select>
             </ng-container>
             <plex-text *ngIf="prestacion && cama && poseeMovimientos" [required]="true" [disabled]="true" label="Cama"
-                       name="cama" [(ngModel)]="cama.nombre">
+                name="cama" [(ngModel)]="cama.nombre">
             </plex-text>
 
             <ng-container *ngIf="capa === 'estadistica' || capa === 'estadistica-v2'">
                 <plex-select grow="2" [required]="true" [(ngModel)]="informeIngreso.origen" name="origen"
-                             [data]="origenHospitalizacion" placeholder="Seleccione..." label="Origen hospitalización"
-                             idField="nombre" labelField="nombre" (change)="changeOrigenHospitalizacion($event)">
+                    [data]="origenHospitalizacion" placeholder="Seleccione..." label="Origen hospitalización"
+                    idField="nombre" labelField="nombre" (change)="changeOrigenHospitalizacion($event)">
                 </plex-select>
 
                 <plex-select grow="2" label="Profesional" [(ngModel)]="informeIngreso.profesional" name="profesional"
-                             (getData)="loadProfesionales($event)" [required]="true" labelField="apellido+' '+nombre">
+                    (getData)="loadProfesionales($event)" [required]="true" labelField="apellido+' '+nombre">
                 </plex-select>
 
                 <ng-container *ngIf="origenExterno">
                     <plex-bool class="pb-1" [(ngModel)]="check" type="slide" label="Otro" name="check"
-                               (change)="onchange($event)">
+                        (change)="onchange($event)">
                     </plex-bool>
                     <ng-container *ngIf="!check">
                         <plex-select grow="full" [(ngModel)]="informeIngreso.organizacionOrigen" name="organizacion"
-                                     (getData)="loadOrganizacion($event)" label="Organización origen"
-                                     placeholder="Seleccione la organización" labelField="nombre" [required]="true">
+                            (getData)="loadOrganizacion($event)" label="Organización origen"
+                            placeholder="Seleccione la organización" labelField="nombre" [required]="true">
                         </plex-select>
                     </ng-container>
                     <ng-container *ngIf="check">
                         <plex-text grow="full" label="Otra" name="otraOrganizacion"
-                                   [(ngModel)]="informeIngreso.organizacionOrigen" [required]="true">
+                            [(ngModel)]="informeIngreso.organizacionOrigen" [required]="true">
                         </plex-text>
                     </ng-container>
                 </ng-container>
@@ -84,8 +83,8 @@
                 </plex-text>
 
                 <plex-select grow="full" name="especialidad" [required]="true" [snomedExpression]="expr.Especialidades"
-                             [preload]="false" [(ngModel)]="informeIngreso.especialidades" [multiple]="true"
-                             label="Especialidad/es">
+                    [preload]="false" [(ngModel)]="informeIngreso.especialidades" [multiple]="true"
+                    label="Especialidad/es">
                 </plex-select>
             </ng-container>
         </plex-wrapper>
@@ -106,42 +105,38 @@
         </ng-container>
         <ng-container *ngIf="capa === 'estadistica' || capa === 'estadistica-v2'">
             <plex-title size="sm" justify titulo="Cobertura Social"></plex-title>
-            <plex-select [(ngModel)]="informeIngreso.asociado" name="asociado" [data]="pacienteAsociado"
-                         placeholder="Seleccione... " label="Cobertura" idField="nombre" labelField="nombre"
-                         (change)="changeTipoObraSocial()">
-            </plex-select>
-          
-         <plex-select class="w-100"
-             *ngIf="selectedOS || informeIngreso.financiador"
-             [(ngModel)]="informeIngreso.financiador"
-             name="financiador"
-             [data]="selectorFinanciadores"
-             label="Financiador"
-             idField="nombre"
-             labelField="nombre"
-             [required]="true">
-</plex-select>
 
-      
+            <plex-select [ngModel]="informeIngreso.asociado" (ngModelChange)="onAsociadoChange($event)" name="asociado"
+                [data]="pacienteAsociado" placeholder="Seleccione..." label="Cobertura" idField="id"
+                labelField="nombre">
+            </plex-select>
+
+            <div
+                *ngIf="(informeIngreso?.asociado?.id === 'Plan de salud privado o Mutual') || (informeIngreso?.asociado === 'Plan de salud privado o Mutual')">
+                <plex-select [(ngModel)]="informeIngreso.financiador" name="financiador" [data]="selectorFinanciadores"
+                    label="Financiador" idField="nombre" labelField="nombre" [required]="true">
+                </plex-select>
+            </div>
+
             <br>
 
             <plex-title size="sm" justify titulo="DATOS ESTADISTICOS"></plex-title>
             <plex-wrapper>
                 <ng-container *ngIf="situacionesLaborales">
                     <plex-select label=" Situación laboral " [(ngModel)]="informeIngreso.situacionLaboral"
-                                 name="situacionLaboral" [data]="situacionesLaborales" placeholder="Seleccione... "
-                                 labelField="nombre">
+                        name="situacionLaboral" [data]="situacionesLaborales" placeholder="Seleccione... "
+                        labelField="nombre">
                     </plex-select>
                 </ng-container>
                 <ng-container>
                     <plex-select label="Ocupación habitual " [(ngModel)]="informeIngreso.ocupacionHabitual"
-                                 name="ocupacionHabitual" (getData)="getOcupaciones($event)"
-                                 placeholder="Seleccione... " labelField="'(' + codigo + ') ' + nombre">
+                        name="ocupacionHabitual" (getData)="getOcupaciones($event)" placeholder="Seleccione... "
+                        labelField="'(' + codigo + ') ' + nombre">
                     </plex-select>
                 </ng-container>
                 <plex-select [(ngModel)]="informeIngreso.nivelInstruccion" name="nivelInstruccion"
-                             [data]="nivelesInstruccion" placeholder="Seleccione..." label="Nivel instrucción"
-                             idField="nombre" labelField="nombre">
+                    [data]="nivelesInstruccion" placeholder="Seleccione..." label="Nivel instrucción" idField="nombre"
+                    labelField="nombre">
                 </plex-select>
             </plex-wrapper>
         </ng-container>
@@ -150,8 +145,8 @@
 <ng-container *ngIf="prestacionFake">
     <ng-container *ngFor="let registro of prestacionFake.ejecucion.registros">
         <rup [elementoRUP]="elementosRUPService.elementoRegistro(registro)" [prestacion]="prestacionFake"
-             [paciente]="paciente" [registro]="registro" [soloValores]="false"
-             [params]="elementosRUPService.getParams(registro)">
+            [paciente]="paciente" [registro]="registro" [soloValores]="false"
+            [params]="elementosRUPService.getParams(registro)">
         </rup>
     </ng-container>
 </ng-container>
