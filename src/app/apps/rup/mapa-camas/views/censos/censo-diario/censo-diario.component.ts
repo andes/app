@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnInit } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';

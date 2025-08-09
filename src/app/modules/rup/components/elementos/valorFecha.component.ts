@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
 import { RupElement } from '.';
@@ -10,14 +11,14 @@ import { RupElement } from '.';
 export class ValorFechaComponent extends RUPComponent implements OnInit {
     get DateFormat() {
         switch (this.params.type) {
-            case 'date':
-                return (this.registro.valor) ? moment(this.registro.valor).format('DD/MM/YYYY') : 'Sin fecha';
-            case 'datetime':
-                return (this.registro.valor) ? moment(this.registro.valor).format('DD/MM/YYYY HH:mm') : 'Sin fecha';
-            case 'time':
-                return (this.registro.valor) ? moment(this.registro.valor).format('HH:mm') : 'Sin hora';
-            default:
-                break;
+        case 'date':
+            return (this.registro.valor) ? moment(this.registro.valor).format('DD/MM/YYYY') : 'Sin fecha';
+        case 'datetime':
+            return (this.registro.valor) ? moment(this.registro.valor).format('DD/MM/YYYY HH:mm') : 'Sin fecha';
+        case 'time':
+            return (this.registro.valor) ? moment(this.registro.valor).format('HH:mm') : 'Sin hora';
+        default:
+            break;
         }
     }
     ngOnInit() {

@@ -1,5 +1,5 @@
+import moment from 'moment';
 import { Injectable } from '@angular/core';
-import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { switchMap, map } from 'rxjs/operators';

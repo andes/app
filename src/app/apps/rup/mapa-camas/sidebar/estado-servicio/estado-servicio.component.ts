@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable, Subscription, from } from 'rxjs';

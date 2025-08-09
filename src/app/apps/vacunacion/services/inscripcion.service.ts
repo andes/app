@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { ResourceBaseHttp, Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, EMPTY, Observable } from 'rxjs';
@@ -14,7 +15,7 @@ export class InscripcionService extends ResourceBaseHttp {
     public localidadSelected = new BehaviorSubject<ILocalidad>(null);
     public fechaDesde = new BehaviorSubject<Date>(null);
     public fechaHasta = new BehaviorSubject<Date>(null);
-    public tieneCertificado = new BehaviorSubject<Boolean>(null);
+    public tieneCertificado = new BehaviorSubject<boolean>(null);
     public inscriptosFiltrados$: Observable<any[]>;
     public lastResults = new BehaviorSubject<any[]>(null);
     private limit = 15;

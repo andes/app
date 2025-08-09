@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, HostBinding } from '@angular/core';
+import moment from 'moment';
+import { Component, Input, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { ResumenPacienteDinamicoService } from '../../../services/resumenPaciente-dinamico.service';
@@ -20,10 +21,10 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
     public registro = null;
 
     constructor(private servicioResumenPaciente: ResumenPacienteDinamicoService,
-                private servicioVacunas: VacunasService,
-                private prestacionesService: PrestacionesService,
-                public elementosRUPService: ElementosRUPService,
-                private plex: Plex) { }
+        private servicioVacunas: VacunasService,
+        private prestacionesService: PrestacionesService,
+        public elementosRUPService: ElementosRUPService,
+        private plex: Plex) { }
 
     ngOnInit() {
         this.loadPrestaciones();

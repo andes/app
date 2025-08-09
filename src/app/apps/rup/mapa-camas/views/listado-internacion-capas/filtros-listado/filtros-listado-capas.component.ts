@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnInit } from '@angular/core';
 import * as enumerados from '../../../../../../utils/enumerados';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';

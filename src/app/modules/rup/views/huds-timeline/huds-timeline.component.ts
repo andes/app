@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Plex } from '@andes/plex';
 import { IPlexTableColumns } from '@andes/plex/src/lib/table/table.interfaces';
 import { Location } from '@angular/common';

@@ -6,12 +6,12 @@ import { enumToArray } from '../../../utils/enums';
 import { EstadosCarpetas } from './../enums';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import * as moment from 'moment';
+import moment from 'moment';
 
 
 @Component({
     selector: 'app-listar-prestamos',
-    templateUrl: './listar-prestamos.component.html',
+    templateUrl: 'listar-prestamos.component.html',
     styleUrls: ['../prestamos-hc.scss']
 })
 
@@ -25,13 +25,13 @@ export class ListarPrestamosComponent implements OnInit {
     public estadosCarpeta = enumToArray(EstadosCarpetas);
     public carpetaSeleccionada: any;
     public carpetasSeleccionadas = [];
-    public marcarTodas: Boolean = false;
+    public marcarTodas = false;
 
     public filters: any = {
         organizacion: this.auth.organizacion.id
     };
 
-    public verDevolver: Boolean = false;
+    public verDevolver = false;
     public mostrarMasOpciones = false;
     public sortDescending = false;
     public _listarCarpetas;
@@ -43,7 +43,7 @@ export class ListarPrestamosComponent implements OnInit {
 
     @Output() carpetaDevueltaEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() devolverCarpetaEmit: EventEmitter<any> = new EventEmitter<any>();
-    @Output() recargarSolicitudesEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+    @Output() recargarSolicitudesEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     constructor(
         public plex: Plex,

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import * as moment from 'moment';
+import moment from 'moment';
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { Auth } from '@andes/auth';
 import { Observable } from 'rxjs';
@@ -20,7 +20,7 @@ export class EstadisticasPacientesComponent implements OnInit {
     ultimosTurnos$: Observable<any[]>;
     permisos = [];
 
-    @Input() showTab: Number = 0;
+    @Input() showTab = 0;
     @Input() paciente: IPaciente;
     @Input() demandaInsatisfecha = false;
     @Output() demandaCerrada = new EventEmitter<any>();

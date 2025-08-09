@@ -1,7 +1,7 @@
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CalendarioDia } from './calendario-dia.class';
-import * as moment from 'moment';
+import moment from 'moment';
 
 @Component({
     selector: 'app-calendario',
@@ -23,7 +23,7 @@ export class CalendarioComponent implements OnInit {
     @Input() _solicitudPrestacion: any;
     @Input() tipoTurno: string;
 
-    @Input('agenda')
+    @Input()
     set agenda(value: IAgenda) {
         this._agenda = value;
         if (value) {
@@ -34,7 +34,7 @@ export class CalendarioComponent implements OnInit {
         return this._agenda;
     }
 
-    @Input('agendas')
+    @Input()
     set agendas(value: Array<IAgenda>) {
         this._agendas = value;
         this.actualizar();

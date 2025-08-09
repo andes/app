@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -46,7 +47,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     paciente: any;
     public obraSocial: any;
     public prestaciones: any;
-    public puedeEmitirComprobante: Boolean;
+    public puedeEmitirComprobante: boolean;
     public estado;
     public turnosYprestaciones = [];
     public sinOS = false;
@@ -61,7 +62,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public prestacionIniciada;
 
     public financiador;
-    public loader: Boolean = false;
+    public loader = false;
     public modelo: any = {
         obraSocial: '',
         prepaga: ''
@@ -79,7 +80,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         ambito: false
     };
 
-    public sortBy: String;
+    public sortBy: string;
     public sortOrder = 'desc';
 
     public state$: Observable<any>;
@@ -185,23 +186,23 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             map(([accion, items]) => {
                 const selected = this.selectPrestaciones$.getValue();
                 switch (accion.type) {
-                    case 'select-all':
-                        const valor = accion.value;
-                        if (valor) {
-                            const seleccionados = items.reduce((acc, current) => ({ ...acc, [current.key]: true }), {});
-                            this.selectPrestaciones$.next(seleccionados);
-                        } else {
-                            this.selectPrestaciones$.next({});
-                        }
-                        break;
+                case 'select-all':
+                    const valor = accion.value;
+                    if (valor) {
+                        const seleccionados = items.reduce((acc, current) => ({ ...acc, [current.key]: true }), {});
+                        this.selectPrestaciones$.next(seleccionados);
+                    } else {
+                        this.selectPrestaciones$.next({});
+                    }
+                    break;
 
-                    case 'select':
-                        const { key, value } = accion;
-                        this.selectPrestaciones$.next({
-                            ...selected,
-                            [key]: value
-                        });
-                        break;
+                case 'select':
+                    const { key, value } = accion;
+                    this.selectPrestaciones$.next({
+                        ...selected,
+                        [key]: value
+                    });
+                    break;
                 }
             }),
         ).subscribe();

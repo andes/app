@@ -3,6 +3,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AgendaService } from 'src/app/services/turnos/agenda.service';
 import { TurnoService } from '../../services/turno.service';
+import moment from 'moment'
 
 @Component({
     selector: 'pdp-dar-turno',
@@ -30,19 +31,19 @@ export class DarTurnoComponent implements OnInit {
 
     ngOnInit(): void {
         this.turnosServicePortal.getTurnos().subscribe(turnos => {
-            this.turnosActuales =turnos.filter(t => moment(t.horaInicio) > moment());
+            this.turnosActuales = turnos.filter(t => moment(t.horaInicio) > moment());
             navigator.geolocation.getCurrentPosition(position => {
                 this.latitude = position.coords.latitude;
                 this.longitude = position.coords.longitude;
                 this.getAgendasDisponibles({ lat: this.latitude, lng: this.longitude });
             },
-            (error) => {
-                this.plex.info('warning', 'Para obtener los turnos disponibles debe activar su ubicación', 'Atención');
-                const currentUrl = this.router.url;
-                this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-                    this.router.navigate([currentUrl]);
+                (error) => {
+                    this.plex.info('warning', 'Para obtener los turnos disponibles debe activar su ubicación', 'Atención');
+                    const currentUrl = this.router.url;
+                    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                        this.router.navigate([currentUrl]);
+                    });
                 });
-            });
         });
         this.turnosServicePortal.turnoDadoSubject.subscribe(turno => {
             if (turno) {

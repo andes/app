@@ -2,7 +2,7 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import * as moment from 'moment';
+import moment from 'moment';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
@@ -29,7 +29,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
 
     private start: any;
     private end: any;
-    private unit: String = '15';
+    private unit = '15';
 
     private _start: any;
     private _end: any;
@@ -222,25 +222,25 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
         this._end = moment(this.end);
         let temp;
         switch (this.unit) {
-            case 'day':
-                this._start.startOf('day');
-                this._end.endOf('day');
-                temp = this._start.clone();
-                while (temp < this._end) {
-                    headers.push({ date: temp, hora: this._start.format('DD'), colspan: 1 });
-                    temp = temp.add(1, 'days');
-                }
-                break;
-            default:
-                this._start.startOf('hour');
-                this._end.endOf('hour');
-                temp = this._start.clone();
-                while (temp < this._end) {
-                    headers.push({ date: temp, hora: temp.format('HH:mm'), colspan: 60 / this._unit });
-                    temp = temp.add(1, 'hour');
-                    // temp = temp.add(unit, 'minutes');
-                }
-                break;
+        case 'day':
+            this._start.startOf('day');
+            this._end.endOf('day');
+            temp = this._start.clone();
+            while (temp < this._end) {
+                headers.push({ date: temp, hora: this._start.format('DD'), colspan: 1 });
+                temp = temp.add(1, 'days');
+            }
+            break;
+        default:
+            this._start.startOf('hour');
+            this._end.endOf('hour');
+            temp = this._start.clone();
+            while (temp < this._end) {
+                headers.push({ date: temp, hora: temp.format('HH:mm'), colspan: 60 / this._unit });
+                temp = temp.add(1, 'hour');
+                // temp = temp.add(unit, 'minutes');
+            }
+            break;
         }
 
 
@@ -251,15 +251,15 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
 
     calcFrame(start, end) {
         switch (this.unit) {
-            case 'day':
-                return 1;
-            case 'hour':
-                const _start = start.startOf('hour');
-                const _end = end.endOf('hour');
-                return _end.diff(_start, 'hours');
-            default:
-                const unit = parseInt(this.unit.toString(), 10);
-                return (end.diff(start) / 60000) / unit;
+        case 'day':
+            return 1;
+        case 'hour':
+            const _start = start.startOf('hour');
+            const _end = end.endOf('hour');
+            return _end.diff(_start, 'hours');
+        default:
+            const unit = parseInt(this.unit.toString(), 10);
+            return (end.diff(start) / 60000) / unit;
         }
     }
 

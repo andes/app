@@ -1,4 +1,4 @@
-
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Component, Input, OnInit } from '@angular/core';
 import { PlanIndicacionesServices } from 'src/app/apps/rup/mapa-camas/services/plan-indicaciones.service';

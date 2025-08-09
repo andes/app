@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
 import { RupElement } from '.';
@@ -98,14 +99,14 @@ export class UltimaFechaComponent extends RUPComponent implements OnInit {
     }
     get DateFormat() {
         switch (this.params.type) {
-            case 'date':
-                return moment(this.registro.valor).format('DD/MM/YYYY');
-            case 'datetime':
-                return moment(this.registro.valor).format('DD/MM/YYYY hh:mm');
-            case 'time':
-                return moment(this.registro.valor).format('hh:mm');
-            default:
-                break;
+        case 'date':
+            return moment(this.registro.valor).format('DD/MM/YYYY');
+        case 'datetime':
+            return moment(this.registro.valor).format('DD/MM/YYYY hh:mm');
+        case 'time':
+            return moment(this.registro.valor).format('hh:mm');
+        default:
+            break;
         }
     }
 }

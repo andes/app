@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import * as moment from 'moment';
+import moment from 'moment';
 
 @Component({
     selector: 'shared-popover-audit',
@@ -12,7 +12,7 @@ export class PopoverAuditComponent implements OnInit {
     @Input()
     showUpdate: boolean;
     private _datos: any;
-    @Input('data')
+    @Input()
     set data(value: any) {
         this._datos = value;
     }

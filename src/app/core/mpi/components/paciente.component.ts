@@ -2,7 +2,7 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as moment from 'moment';
+import moment from 'moment';
 import { EMPTY, Subscription } from 'rxjs';
 import { filter, first, map, mergeMap } from 'rxjs/operators';
 import { IUbicacion } from 'src/app/interfaces/IUbicacion';
@@ -403,7 +403,7 @@ export class PacienteComponent implements OnInit {
         if (pacienteExtranjero) {
             const { nombre, apellido, fechaNacimiento, tipoIdentificacion, numeroIdentificacion, sexo, genero } = pacienteExtranjero;
             return { ...pacienteModel, nombre, apellido, fechaNacimiento, tipoIdentificacion, numeroIdentificacion, sexo, genero };
-        } else { return pacienteModel; };
+        } else { return pacienteModel; }
     }
 
     save(ignoreSuggestions = false) {
@@ -456,26 +456,26 @@ export class PacienteComponent implements OnInit {
 
     private redirect(resultadoSave?: any) {
         switch (this.origen) {
-            case 'puntoInicio':
-                if (resultadoSave) {
-                    this._router.navigate(['citas/punto-inicio/' + resultadoSave.id]);
-                } else {
-                    this._router.navigate(['citas/punto-inicio/']);
-                }
-                break;
-            case 'mpi':
-                this._router.navigate(['apps/mpi/busqueda']);
-                break;
-            case 'sobreturno':
-                this._router.navigate(['citas/gestor_agendas']);
-                break;
-            case 'huds':
-                const id = this.paciente.id;
-                this._router.navigate(['huds/paciente', id]);
-                break;
-            default:
-                this._router.navigate(['apps/mpi/busqueda']);
-                break;
+        case 'puntoInicio':
+            if (resultadoSave) {
+                this._router.navigate(['citas/punto-inicio/' + resultadoSave.id]);
+            } else {
+                this._router.navigate(['citas/punto-inicio/']);
+            }
+            break;
+        case 'mpi':
+            this._router.navigate(['apps/mpi/busqueda']);
+            break;
+        case 'sobreturno':
+            this._router.navigate(['citas/gestor_agendas']);
+            break;
+        case 'huds':
+            const id = this.paciente.id;
+            this._router.navigate(['huds/paciente', id]);
+            break;
+        default:
+            this._router.navigate(['apps/mpi/busqueda']);
+            break;
         }
     }
 

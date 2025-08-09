@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable, of } from 'rxjs';

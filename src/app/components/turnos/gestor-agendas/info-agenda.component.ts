@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { IAgenda } from '../../../interfaces/turnos/IAgenda';
-import * as moment from 'moment';
+import moment from 'moment';
 @Component({
     selector: 'info-agenda',
     templateUrl: 'info-agenda.html',
@@ -8,7 +8,7 @@ import * as moment from 'moment';
 })
 export class InfoAgendaComponent {
     @Output() volver = new EventEmitter();
-    @Input('agenda')
+    @Input()
     set agenda(value: any) {
         this.hoy = new Date();
         this._agenda = value;

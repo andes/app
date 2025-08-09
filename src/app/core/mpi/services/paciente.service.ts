@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
@@ -23,7 +24,7 @@ export class PacienteService {
      * Metodo getById. Trae un objeto paciente por su Id.
      * @param {String} id Busca por Id
      */
-    getById(id: String, options?: any): Observable<IPaciente> {
+    getById(id: string, options?: any): Observable<IPaciente> {
         return this.server.get(`${this.pacienteV2}/${id}`, options);
     }
 
@@ -61,7 +62,7 @@ export class PacienteService {
      * Metodo patch. Modifica solo algunos campos del paciente.
      * @param {any} cambios Recibe any
      */
-    patch(id: String, cambios: any): Observable<IPaciente> {
+    patch(id: string, cambios: any): Observable<IPaciente> {
         return this.server.patch(`${this.pacienteV2}/${id}`, cambios);
     }
 

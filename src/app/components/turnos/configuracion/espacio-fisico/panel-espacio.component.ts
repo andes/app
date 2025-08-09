@@ -1,9 +1,8 @@
-import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
 import { Plex } from '@andes/plex';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
-import * as moment from 'moment';
+import moment from 'moment';
 
 @Component({
     selector: 'app-panel-espacio',
@@ -24,13 +23,13 @@ export class PanelEspacioComponent implements OnInit {
     private espacioSeleccionados: any[];
     public agenda: any;
     public agendaSel: any = null;
-    private ancho: String = '';
+    private ancho = '';
     public agendasModificar: any[] = [];
     constructor(private serviceAgenda: AgendaService, private serviceEspacio: EspacioFisicoService, public plex: Plex) { }
 
     ngOnInit() {
         this.colores = ['#FF9999', '#FFCC99', '#FFFF99', '#CCFF99', '#99FF99', '#99FFFF', '#99CCFF', '#9999FF', '#CC99FF',
-                        '#FF99FF', '#FF99CC', '#E0E0E0', '#CCCC00'];
+            '#FF99FF', '#FF99CC', '#E0E0E0', '#CCCC00'];
         this.loadEspacios();
         this.espacioSeleccionados = [];
     }

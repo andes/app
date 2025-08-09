@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
@@ -37,7 +38,7 @@ export class PeriodosCensablesComponent implements OnInit {
 
             const primerRegistro = prestacion?.ejecucion?.registros[0];
 
-            if (!!primerRegistro?.esCensable) {
+            if (primerRegistro?.esCensable) {
                 this.periodos = this.prestacion?.periodosCensables;
             }
         });
@@ -65,7 +66,7 @@ export class PeriodosCensablesComponent implements OnInit {
         if (this.periodos.find((periodo) => moment(periodo.desde)?.isSame(desde, 'day') && moment(periodo.hasta)?.isSame(hasta, 'day'))) {
             this.error = 'El periodo ingresado ya existe';
             return true;
-        };
+        }
 
         return false;
     }
@@ -105,7 +106,7 @@ export class PeriodosCensablesComponent implements OnInit {
     private guardarPrestacion() {
         const registros = this.prestacion.ejecucion.registros;
 
-        if (!!this.periodos?.length) {
+        if (this.periodos?.length) {
             registros[0].esCensable = true;
         } else {
             delete registros[0].esCensable;

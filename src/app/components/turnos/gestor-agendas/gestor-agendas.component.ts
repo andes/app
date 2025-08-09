@@ -2,7 +2,7 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import * as moment from 'moment';
+import moment from 'moment';
 import { Subscription } from 'rxjs';
 import { BiQueriesComponent } from 'src/app/modules/visualizacion-informacion/components/bi-queries/bi-queries.component';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
@@ -93,8 +93,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public btnCrearAgendas = false;
     public permisos: any;
     public prestacionesPermisos = [];
-    public puedeCrearAgenda: Boolean;
-    public puedeRevisarAgendas: Boolean;
+    public puedeCrearAgenda: boolean;
+    public puedeRevisarAgendas: boolean;
     private scrollEnd = false;
     public enableQueries = false;
     queries = [];
@@ -683,41 +683,41 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     actualizarEstado(estado) {
 
         switch (estado) {
-            case 'publicada':
-                const existeAgendaDelPasado = this.agendasSeleccionadas.some(agenda => moment(agenda.horaInicio).isBefore(moment().startOf('day')));
-                let mensaje = '';
-                if (this.agendasSeleccionadas.length > 1 && existeAgendaDelPasado) {
-                    mensaje = 'Una o varias agendas pasarán a estado Auditada. ¿Desea publicar de todas formas?';
-                } else if (this.agendasSeleccionadas.length === 1 && existeAgendaDelPasado) {
-                    mensaje = 'La agenda seleccionada pasará a estado Auditada. ¿Desea publicar de todas formas?';
-                } else if (this.agendasSeleccionadas.length > 1) {
-                    mensaje = '¿Publicar las siguientes agendas?';
+        case 'publicada':
+            const existeAgendaDelPasado = this.agendasSeleccionadas.some(agenda => moment(agenda.horaInicio).isBefore(moment().startOf('day')));
+            let mensaje = '';
+            if (this.agendasSeleccionadas.length > 1 && existeAgendaDelPasado) {
+                mensaje = 'Una o varias agendas pasarán a estado Auditada. ¿Desea publicar de todas formas?';
+            } else if (this.agendasSeleccionadas.length === 1 && existeAgendaDelPasado) {
+                mensaje = 'La agenda seleccionada pasará a estado Auditada. ¿Desea publicar de todas formas?';
+            } else if (this.agendasSeleccionadas.length > 1) {
+                mensaje = '¿Publicar las siguientes agendas?';
+            } else {
+                mensaje = '¿Publicar agenda?';
+            }
+            this.plex.confirm(mensaje).then((confirmado) => {
+                if (!confirmado) {
+                    return false;
                 } else {
-                    mensaje = '¿Publicar agenda?';
+                    this.confirmarEstado(estado);
                 }
-                this.plex.confirm(mensaje).then((confirmado) => {
-                    if (!confirmado) {
-                        return false;
-                    } else {
-                        this.confirmarEstado(estado);
-                    }
-                });
-                break;
-            case 'suspendida':
-                this.actualizarGestor(estado);
-                break;
-            case 'borrada':
-                this.plex.confirm('¿Borrar Agenda?').then((confirmado) => {
-                    if (!confirmado) {
-                        return false;
-                    } else {
-                        this.confirmarEstado(estado);
-                    }
-                });
-                break;
-            default:
-                this.confirmarEstado(estado);
-                break;
+            });
+            break;
+        case 'suspendida':
+            this.actualizarGestor(estado);
+            break;
+        case 'borrada':
+            this.plex.confirm('¿Borrar Agenda?').then((confirmado) => {
+                if (!confirmado) {
+                    return false;
+                } else {
+                    this.confirmarEstado(estado);
+                }
+            });
+            break;
+        default:
+            this.confirmarEstado(estado);
+            break;
 
         }
     }

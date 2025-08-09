@@ -4,7 +4,7 @@ import { OrganizacionService } from '../../../../../../services/organizacion.ser
 import { Auth } from '@andes/auth';
 import { tap } from 'rxjs/operators';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
-import * as moment from 'moment';
+import moment from 'moment';
 import { Plex } from '@andes/plex';
 
 @Component({

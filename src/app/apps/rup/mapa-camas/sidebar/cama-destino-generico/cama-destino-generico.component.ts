@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Plex } from '@andes/plex';
@@ -20,7 +21,7 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
     public selectedCama;
     public destino;
     public titulo: string;
-    public disableGuardar$: Observable<Boolean> = of(true);
+    public disableGuardar$: Observable<boolean> = of(true);
     public inProgress = true;
     public mensaje = '';
 

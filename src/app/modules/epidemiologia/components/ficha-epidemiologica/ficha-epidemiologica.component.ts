@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';

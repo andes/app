@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ILocalidad } from 'src/app/interfaces/ILocalidad';
@@ -39,7 +40,7 @@ export class MonitoreoInscriptosComponent implements OnInit {
     public dacionTurno = false;
     public fechaProximoLlamado;
     public hoy = moment().startOf('day').add(1, 'days').toDate();
-    public desasignarInsc: Boolean;
+    public desasignarInsc: boolean;
     public inscriptosSinturno = [];
     public showDarTurnos = false;
     public solicitudTurno: any;

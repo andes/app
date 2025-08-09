@@ -3,7 +3,7 @@ import { enumToArray } from '../../../utils/enums';
 import { EstadosCarpetas } from './../enums';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import * as moment from 'moment';
+import moment from 'moment';
 
 // Servicios
 import { PrestamosService } from './../../../services/prestamosHC/prestamos-hc.service';
@@ -42,17 +42,17 @@ export class ListarSolicitudesComponent implements OnInit {
     public estado: any = this.estadosCarpeta[0];
     public carpetaSeleccionada: any;
     public carpetasSeleccionadas = [];
-    public marcarTodas: Boolean = false;
+    public marcarTodas = false;
     public changeCarpeta = false;
 
     public filters: any = {
         organizacion: this.auth.organizacion.id
     };
 
-    public verPrestar: Boolean = false;
-    public verDevolver: Boolean = false;
-    public verSolicitudManual: Boolean = false;
-    public verNuevaCarpeta: Boolean = false;
+    public verPrestar = false;
+    public verDevolver = false;
+    public verSolicitudManual = false;
+    public verNuevaCarpeta = false;
     public mostrarMasOpciones = false;
     public sortDescending = false;
     public _listarCarpetas;
@@ -67,7 +67,7 @@ export class ListarSolicitudesComponent implements OnInit {
 
     // @Output() showPrestarEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() carpetaPrestadaEmit: EventEmitter<any> = new EventEmitter<any>();
-    @Output() recargarPrestamosEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+    @Output() recargarPrestamosEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() imprimirSolicitudesEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() mostrarSolicitudManualEventEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Output() prestarCarpetaEmitter: EventEmitter<any> = new EventEmitter<any>();
@@ -82,7 +82,7 @@ export class ListarSolicitudesComponent implements OnInit {
     esEscaneado = false;
     carpetaEfector: any;
     mostrarMsjMultiCarpeta = false;
-    puedeAdjutarHUDS: Boolean;
+    puedeAdjutarHUDS: boolean;
     loading = false;
 
     constructor(

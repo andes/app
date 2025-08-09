@@ -1,10 +1,8 @@
 import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
 import { Component, Input, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
-import * as moment from 'moment';
 
 
 
@@ -17,7 +15,7 @@ import * as moment from 'moment';
 
 export class CantidadConsultaXPrestacionComponent implements OnInit {
     private _diagnosticos;
-    @Input('diagnosticos') // recibe un array de parametros
+    @Input() // recibe un array de parametros
     set diagnosticos(value: any) {
         this._diagnosticos = value;
     }

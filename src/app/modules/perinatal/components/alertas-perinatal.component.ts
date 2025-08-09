@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { CarnetPerinatalService } from './../services/carnet-perinatal.service';
 import { Component, OnInit } from '@angular/core';

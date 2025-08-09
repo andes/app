@@ -1,7 +1,7 @@
 
 import { RUPComponent } from './../core/rup.component';
-import { Component, OnInit, EventEmitter } from '@angular/core';
-import * as moment from 'moment';
+import { Component, OnInit } from '@angular/core';
+import moment from 'moment';
 import { RupElement } from '.';
 
 @Component({
@@ -11,10 +11,10 @@ import { RupElement } from '.';
 @RupElement('EvolucionProblemaDefaultComponent')
 export class EvolucionProblemaDefaultComponent extends RUPComponent implements OnInit {
     public fechaInicio: Date;
-    public estado: String;
-    public esCronico: Boolean = false;
-    public esEnmienda: Boolean = false;
-    public evolucion: String;
+    public estado: string;
+    public esCronico = false;
+    public esEnmienda = false;
+    public evolucion: string;
     public hallazgoHudsCompleto: any;
     public evolucionActual;
     public indice = 0;
@@ -108,18 +108,18 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
 
         if (this.inicioEstimadoTiempo !== null) {
             switch (true) {
-                case (this.inicioEstimadoTiempo.id === 'anios'):
-                    fechaCalc = moment().subtract('years', this.inicioEstimadoUnidad).toDate();
-                    break;
-                case (this.inicioEstimadoTiempo.id === 'mes'):
-                    fechaCalc = moment().subtract('months', this.inicioEstimadoUnidad).toDate();
-                    break;
-                case (this.inicioEstimadoTiempo.id === 'semanas'):
-                    fechaCalc = moment().subtract('week', this.inicioEstimadoUnidad).toDate();
-                    break;
-                case (this.inicioEstimadoTiempo.id === 'dias'):
-                    fechaCalc = moment().subtract('days', this.inicioEstimadoUnidad).toDate();
-                    break;
+            case (this.inicioEstimadoTiempo.id === 'anios'):
+                fechaCalc = moment().subtract('years', this.inicioEstimadoUnidad).toDate();
+                break;
+            case (this.inicioEstimadoTiempo.id === 'mes'):
+                fechaCalc = moment().subtract('months', this.inicioEstimadoUnidad).toDate();
+                break;
+            case (this.inicioEstimadoTiempo.id === 'semanas'):
+                fechaCalc = moment().subtract('week', this.inicioEstimadoUnidad).toDate();
+                break;
+            case (this.inicioEstimadoTiempo.id === 'dias'):
+                fechaCalc = moment().subtract('days', this.inicioEstimadoUnidad).toDate();
+                break;
             }
         }
 

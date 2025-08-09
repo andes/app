@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
@@ -35,8 +36,8 @@ export class CambiarCamaComponent implements OnInit {
     public historial$: Observable<any[]>;
     public movimientoEgreso$: Observable<ISnapshot>;
     public fechaMin$: Observable<Date>;
-    public hayMovimientosAt$: Observable<Boolean>;
-    public camaDesocupada$: Observable<Boolean>;
+    public hayMovimientosAt$: Observable<boolean>;
+    public camaDesocupada$: Observable<boolean>;
     public fecha: Date;
     public inProgress = true;
 

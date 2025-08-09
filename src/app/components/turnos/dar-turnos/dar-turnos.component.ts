@@ -2,7 +2,7 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import * as moment from 'moment';
+import moment from 'moment';
 import { switchMap } from 'rxjs';
 import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
 import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
@@ -43,7 +43,7 @@ export class DarTurnosComponent implements OnInit {
     nroCarpetaOriginal: string;
     public lenNota = 140;
     public nota = '';
-    public link: String = '';
+    public link = '';
     public changeCarpeta = false;
     public financiador;
     hideDarTurno: boolean;
@@ -54,7 +54,7 @@ export class DarTurnosComponent implements OnInit {
 
     tipoPrestacionesPermitidas: ITipoPrestacion[];
 
-    @Input('pacienteSeleccionado')
+    @Input()
     set pacienteSeleccionado(value: any) {
         this._pacienteSeleccionado = value;
         this.actualizarDatosPaciente(this._pacienteSeleccionado);
@@ -65,12 +65,12 @@ export class DarTurnosComponent implements OnInit {
 
     private tipoTurno = 'programado';
 
-    @Input('demandaInsatisfecha')
+    @Input()
     set demandaInsatisfecha(value: any) {
         this.desdeDemanda = value;
     }
 
-    @Input('solicitudPrestacion')
+    @Input()
     set solicitudPrestacion(value: any) {
         this._solicitudPrestacion = value;
         if (this._solicitudPrestacion) {
@@ -106,7 +106,7 @@ export class DarTurnosComponent implements OnInit {
         return this._solicitudPrestacion;
     }
 
-    @Input('solicitudVacunacion')
+    @Input()
     set solicitudVacunacion(value: any) {
         this._solicitudVacunacion = value;
         this.organizacion = value.organizacion;
@@ -286,7 +286,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     // Funcion que devuelve el indice correspondiente a un bloque dentro del array "this.agenda.bloques".
-    findIndex(bloque: IBloque): Number {
+    findIndex(bloque: IBloque): number {
         return this.agenda.bloques.findIndex(b => b.id === bloque.id);
     }
 
@@ -1275,9 +1275,9 @@ export class DarTurnosComponent implements OnInit {
                         this.plex.clearNavbar();
                     }
                 }
-            };
+            }
         });
-    };
+    }
 
     // resetea variables para la pantalla 'buscar paciente'
     resetBuscarPaciente() {

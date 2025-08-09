@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
@@ -213,22 +214,22 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                                 this.organizaciones$ = this.auth.organizaciones();
                                 sec.fields.map(field => {
                                     switch (Object.keys(field)[0]) {
-                                        case 'responsable':
-                                            this.secciones[buscado].fields[Object.keys(field)[0]] = this.auth.usuario.nombreCompleto;
-                                            break;
-                                        case 'organizacion':
-                                            this.secciones[buscado].fields[Object.keys(field)[0]] = { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre };
-                                            this.setOrganizacion(this.secciones[buscado], this.auth.organizacion.id);
-                                            break;
-                                        case 'fechanotificacion':
-                                            this.secciones[buscado].fields['fechanotificacion'] = Object.values(field)[0];
-                                            break;
-                                        case 'funcionusuario':
-                                            this.secciones[buscado].fields['funcionusuario'] = Object.values(field)[0];
-                                            break;
-                                        case 'email':
-                                            this.secciones[buscado].fields['email'] = Object.values(field)[0];
-                                            break;
+                                    case 'responsable':
+                                        this.secciones[buscado].fields[Object.keys(field)[0]] = this.auth.usuario.nombreCompleto;
+                                        break;
+                                    case 'organizacion':
+                                        this.secciones[buscado].fields[Object.keys(field)[0]] = { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre };
+                                        this.setOrganizacion(this.secciones[buscado], this.auth.organizacion.id);
+                                        break;
+                                    case 'fechanotificacion':
+                                        this.secciones[buscado].fields['fechanotificacion'] = Object.values(field)[0];
+                                        break;
+                                    case 'funcionusuario':
+                                        this.secciones[buscado].fields['funcionusuario'] = Object.values(field)[0];
+                                        break;
+                                    case 'email':
+                                        this.secciones[buscado].fields['email'] = Object.values(field)[0];
+                                        break;
                                     }
                                 });
                             } else {
@@ -388,37 +389,37 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         this.organizaciones$ = this.auth.organizaciones();
         this.secciones.map(seccion => {
             switch (seccion.id) {
-                case 'usuario':
-                    seccion.fields['responsable'] = this.auth.usuario.nombreCompleto;
-                    seccion.fields['organizacion'] = { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre };
-                    seccion.fields['fechanotificacion'] = new Date();
-                    this.setOrganizacion(seccion, this.auth.organizacion.id);
-                    break;
-                case 'clasificacionFinal':
-                    seccion.fields['fechamuestra'] = new Date();
-                    break;
-                case 'informacionClinica':
-                    seccion.fields['establecimientoconsulta'] = {
-                        id: this.auth.organizacion.id,
-                        nombre: this.auth.organizacion.nombre
-                    };
-                    seccion.fields['fechaprimerconsulta'] = new Date();
-                    break;
-                case 'mpi':
-                    this.paises$.pipe(
-                        map(paises => {
-                            seccion.fields['nacionalidad'] = paises.find(pais => pais.nombre === 'Argentina');
-                        })).subscribe();
-                    if (this.paciente.direccion) {
-                        seccion.fields['direccioncaso'] = this.paciente.direccion[0].valor ? this.paciente.direccion[0].valor : '';
-                        seccion.fields['lugarresidencia'] = this.paciente.direccion[0].ubicacion.provincia ? this.paciente.direccion[0].ubicacion.provincia : '';
-                        seccion.fields['localidadresidencia'] = this.paciente.direccion[0].ubicacion.localidad ? this.paciente.direccion[0].ubicacion.localidad : '';
-                        this.setLocalidades({ provincia: this.paciente.direccion[0].ubicacion.provincia?.id });
-                    }
-                    break;
-                case 'antecedentesEpidemiologicos':
-                    this.setEstadoVacunacion(seccion.fields);
-                    break;
+            case 'usuario':
+                seccion.fields['responsable'] = this.auth.usuario.nombreCompleto;
+                seccion.fields['organizacion'] = { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre };
+                seccion.fields['fechanotificacion'] = new Date();
+                this.setOrganizacion(seccion, this.auth.organizacion.id);
+                break;
+            case 'clasificacionFinal':
+                seccion.fields['fechamuestra'] = new Date();
+                break;
+            case 'informacionClinica':
+                seccion.fields['establecimientoconsulta'] = {
+                    id: this.auth.organizacion.id,
+                    nombre: this.auth.organizacion.nombre
+                };
+                seccion.fields['fechaprimerconsulta'] = new Date();
+                break;
+            case 'mpi':
+                this.paises$.pipe(
+                    map(paises => {
+                        seccion.fields['nacionalidad'] = paises.find(pais => pais.nombre === 'Argentina');
+                    })).subscribe();
+                if (this.paciente.direccion) {
+                    seccion.fields['direccioncaso'] = this.paciente.direccion[0].valor ? this.paciente.direccion[0].valor : '';
+                    seccion.fields['lugarresidencia'] = this.paciente.direccion[0].ubicacion.provincia ? this.paciente.direccion[0].ubicacion.provincia : '';
+                    seccion.fields['localidadresidencia'] = this.paciente.direccion[0].ubicacion.localidad ? this.paciente.direccion[0].ubicacion.localidad : '';
+                    this.setLocalidades({ provincia: this.paciente.direccion[0].ubicacion.provincia?.id });
+                }
+                break;
+            case 'antecedentesEpidemiologicos':
+                this.setEstadoVacunacion(seccion.fields);
+                break;
             }
         });
     }
@@ -447,20 +448,20 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                 }
                 if (!this.asintomatico) {
                     switch (clasificaciones[key]) {
-                        case 'confirmado':
-                            seccion.fields['clasificacionfinal'] = 'Confirmado';
-                            break;
-                        case 'descartado':
-                            seccion.fields['clasificacionfinal'] = 'Descartado';
-                            break;
-                        case 'muestra':
-                            seccion.fields['clasificacionfinal'] = (clasificaciones.antigeno === 'confirmado' || clasificaciones.ifi === 'confirmado') ? 'Confirmado' : 'Sospechoso';
-                            break;
-                        default:
-                            if (!clasificaciones.antigeno && !clasificaciones.ifi && !clasificaciones.pcr && !clasificaciones.lamp) {
-                                seccion.fields['clasificacionfinal'] = '';
-                            }
-                            break;
+                    case 'confirmado':
+                        seccion.fields['clasificacionfinal'] = 'Confirmado';
+                        break;
+                    case 'descartado':
+                        seccion.fields['clasificacionfinal'] = 'Descartado';
+                        break;
+                    case 'muestra':
+                        seccion.fields['clasificacionfinal'] = (clasificaciones.antigeno === 'confirmado' || clasificaciones.ifi === 'confirmado') ? 'Confirmado' : 'Sospechoso';
+                        break;
+                    default:
+                        if (!clasificaciones.antigeno && !clasificaciones.ifi && !clasificaciones.pcr && !clasificaciones.lamp) {
+                            seccion.fields['clasificacionfinal'] = '';
+                        }
+                        break;
                     }
                 }
             }

@@ -1,6 +1,6 @@
 import { OrganizacionService } from './../../../../services/organizacion.service';
 import { ZonaSanitariaService } from './../../../../services/zonaSanitaria.service';
-import * as moment from 'moment';
+import moment from 'moment';
 import { Component, HostBinding, EventEmitter, Output, SimpleChanges, SimpleChange, OnChanges, OnInit } from '@angular/core';
 import { ProfesionalService } from '../../../../services/profesional.service';
 import { Auth } from '@andes/auth';

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { arrayToSet, cache, notNull } from '@andes/shared';
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
@@ -214,21 +215,21 @@ export class RegistrosHudsDetalleComponent implements OnInit {
 
     onItemAccion(prestacion: IPrestacion, accion: RegistroHUDSItemAccion) {
         switch (accion) {
-            case 'ver':
-                this.onViewRegistro(prestacion);
-                break;
-            case 'continuar':
+        case 'ver':
+            this.onViewRegistro(prestacion);
+            break;
+        case 'continuar':
+            this.ejecutar(prestacion);
+            break;
+        case 'romper-validacion':
+            this.prestacionService.romperValidacion(prestacion).subscribe(() => {
                 this.ejecutar(prestacion);
-                break;
-            case 'romper-validacion':
-                this.prestacionService.romperValidacion(prestacion).subscribe(() => {
-                    this.ejecutar(prestacion);
-                });
-                break;
-            case 'anular-validacion':
-                this.prestacionService.invalidarPrestacion(prestacion).subscribe();
-                this.id$.next(prestacion.id);
-                break;
+            });
+            break;
+        case 'anular-validacion':
+            this.prestacionService.invalidarPrestacion(prestacion).subscribe();
+            this.id$.next(prestacion.id);
+            break;
         }
     }
 

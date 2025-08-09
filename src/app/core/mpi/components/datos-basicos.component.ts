@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Plex } from '@andes/plex';
 import { AfterViewInit, AfterViewChecked, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
@@ -164,14 +165,14 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     }
     mapeoGenero() {
         switch ((this.paciente.sexo as any)?.id) {
-            case 'masculino':
-                this.generos.subscribe(g => this.paciente.genero = g.find(g2 => g2.id === 'varón'));
-                break;
-            case 'femenino':
-                this.generos.subscribe(g => this.paciente.genero = g.find(g2 => g2.id === 'mujer'));
-                break;
-            default:
-                this.paciente.genero = null;
+        case 'masculino':
+            this.generos.subscribe(g => this.paciente.genero = g.find(g2 => g2.id === 'varón'));
+            break;
+        case 'femenino':
+            this.generos.subscribe(g => this.paciente.genero = g.find(g2 => g2.id === 'mujer'));
+            break;
+        default:
+            this.paciente.genero = null;
         }
         this.requiereGenero = this.tipoPaciente === 'extranjero'
             ? ((this.pacienteExtranjero.sexo as any)?.id === 'otro')

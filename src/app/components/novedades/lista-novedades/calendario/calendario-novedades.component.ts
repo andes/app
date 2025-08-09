@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, EventEmitter, Input, LOCALE_ID, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 
 @Component({

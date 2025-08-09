@@ -2,8 +2,7 @@ import { distinctUntilChanged, map, scan, filter, publishReplay, refCount, tap }
 import { pipe, OperatorFunction } from 'rxjs';
 import { saveAs as saveAsFileSaver } from 'file-saver';
 import { Slug } from 'ng2-slugify';
-import * as moment_ from 'moment';
-const moment = moment_;
+import moment from 'moment';
 
 
 

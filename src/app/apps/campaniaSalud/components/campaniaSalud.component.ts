@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { ICampaniaSalud } from '../interfaces/ICampaniaSalud';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
-import * as moment from 'moment';
+import moment from 'moment';
 @Component({
     selector: 'campaniaSalud',
     templateUrl: 'campaniaSalud.html'

@@ -1,3 +1,4 @@
+import moment from 'moment';
 /**
  * NO MIRAR ESTA PANTALLA - TODAVÏA NO SE ESTA USANDO
  */

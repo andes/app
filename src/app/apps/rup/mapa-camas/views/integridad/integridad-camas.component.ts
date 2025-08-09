@@ -6,7 +6,7 @@ import { Observable, Subject } from 'rxjs';
 import { IntegridadService } from './integridad.service';
 import { IInconsistencia } from '../../interfaces/IInconsistencia';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import * as moment from 'moment';
+import moment from 'moment';
 
 @Component({
     selector: 'app-integridad-camas',

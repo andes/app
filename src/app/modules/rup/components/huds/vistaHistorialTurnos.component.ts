@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, Input, OnInit } from '@angular/core';
 import { TurnoService } from 'src/app/services/turnos/turno.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';

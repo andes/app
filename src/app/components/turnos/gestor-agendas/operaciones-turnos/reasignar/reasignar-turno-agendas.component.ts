@@ -1,4 +1,3 @@
-import { environment } from './../../../../../../environments/environment';
 import { Component, Input, EventEmitter, Output, OnInit, ViewChild } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -8,7 +7,7 @@ import { AgendaService } from '../../../../../services/turnos/agenda.service';
 import { TurnoService } from '../../../../../services/turnos/turno.service';
 import { SmsService } from './../../../../../services/turnos/sms.service';
 import { NgForm } from '@angular/forms';
-import * as moment from 'moment';
+import moment from 'moment';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { map } from 'rxjs/operators';
 import { IAgenda } from './../../../../../interfaces/turnos/IAgenda';
@@ -41,7 +40,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     }
 
     private _agendaDestino;
-    @Input('agendaDestino')
+    @Input()
     set agendaDestino(value: any) {
         this._agendaDestino = value;
     }
@@ -50,13 +49,13 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     }
 
     private _turnoAReasignar;
-    @Input('turnoAReasignar')
+    @Input()
     set turnoAReasignar(value: any) {
         if (value?._id === this._turnoAReasignar?._id) {
             this._turnoAReasignar = null;
         } else {
             this._turnoAReasignar = value;
-            this.seleccionarAgenda(null);
+            this.seleccionarAgenda();
         }
         this.showHorarios = false;
     }
@@ -65,7 +64,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     }
 
     private _datosAgenda;
-    @Input('datosAgenda') // IDs de agenda y bloque del turno origen
+    @Input() // IDs de agenda y bloque del turno origen
     set datosAgenda(value: any) {
         this._datosAgenda = value;
     }
@@ -91,7 +90,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     public autorizado: any;
     public countBloques = [];
 
-    private reasignado = false;
+    reasignado = false;
 
     constructor(
         public plex: Plex,
@@ -195,7 +194,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
                         this.prestacionesService.patch(solicitud.id, params);
                     }
-                };
+                }
                 this.turnoReasignadoEmit.emit({
                     turno: turnoReasignado,
                     bloque: { id: this.datosAgenda.idBloque }
@@ -314,7 +313,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         }
     }
 
-    seleccionarAgenda(agenda) {
+    seleccionarAgenda(agenda = null) {
         if (!agenda || agenda?._id === this.agendaSeleccionada?._id) {
             this.agendaSeleccionada = null;
             this.agendasEnTabla = this.agendasSimilares;

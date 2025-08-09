@@ -3,7 +3,7 @@ import { Plex } from '@andes/plex';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 import { Component, EventEmitter, HostBinding, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import * as moment from 'moment';
+import moment from 'moment';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 type Estado = 'noSeleccionado' | 'seleccionado';
@@ -16,7 +16,7 @@ type Estado = 'noSeleccionado' | 'seleccionado';
 export class ClonarAgendaComponent implements OnInit {
     primerDiaMes: moment.Moment;
     ultimoDiaMes: moment.Moment;
-    @Input('agenda')
+    @Input()
     set agenda(value: any) {
         this._agenda = value;
     }

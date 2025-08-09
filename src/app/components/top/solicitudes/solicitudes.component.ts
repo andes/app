@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
@@ -89,7 +90,7 @@ export class SolicitudesComponent implements OnInit {
     public accesoHudsPrestacion = null;
     public accesoHudsPaciente = null;
     public accesoHudsTurno = null;
-    public motivoRespuesta: String;
+    public motivoRespuesta: string;
     public observacionesCitar;
     public observacionesAnular;
     public observacionesIniciarPrestacion;
@@ -878,23 +879,23 @@ export class SolicitudesComponent implements OnInit {
 
     showModal(modal: string) {
         switch (modal) {
-            case 'iniciar':
-                this.modalIniciar.showed = true;
-                break;
-            case 'devolver': this.modalDevolver.showed = true;
-                break;
+        case 'iniciar':
+            this.modalIniciar.showed = true;
+            break;
+        case 'devolver': this.modalDevolver.showed = true;
+            break;
         }
     }
 
     hideModal(modal: string) {
         switch (modal) {
-            case 'iniciar':
-                this.modalIniciar.showed = false;
-                break;
-            case 'devolver':
-                this.modalDevolver.showed = false;
-                this.motivoRespuesta = '';
-                break;
+        case 'iniciar':
+            this.modalIniciar.showed = false;
+            break;
+        case 'devolver':
+            this.modalDevolver.showed = false;
+            this.motivoRespuesta = '';
+            break;
         }
     }
 

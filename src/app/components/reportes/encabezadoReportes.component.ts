@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
-import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, HostBinding } from '@angular/core';
 import { Auth } from '@andes/auth';
-import * as moment from 'moment';
+import moment from 'moment';
 import { AgendaService } from '../../services/turnos/agenda.service';
 import { ZonaSanitariaService } from '../../../../src/app/services/zonaSanitaria.service';
 import { Observable } from 'rxjs';

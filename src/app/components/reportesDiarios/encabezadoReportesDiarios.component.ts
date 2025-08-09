@@ -1,6 +1,6 @@
+import moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
-import { OrganizacionService } from '../../services/organizacion.service';
 import { AgendaService } from '../../services/turnos/agenda.service';
 import { getObjMeses } from '../../../app/utils/enumerados';
 import { ProfesionalService } from '../../services/profesional.service';
@@ -266,7 +266,7 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
                 title: this.parametros['tipoReportes'],
                 table: document.getElementById(this.parametros['tipoReportes']),
             }],
-            `reportesDiarios_${this.prestacion.nombre}_${dateStr}`);
+                `reportesDiarios_${this.prestacion.nombre}_${dateStr}`);
         }
     }
 

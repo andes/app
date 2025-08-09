@@ -1,3 +1,4 @@
+import moment from 'moment';
 
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -262,7 +263,7 @@ export class DemandaInsatisfechaComponent implements OnInit {
                 id: datosTurno.idTurno,
                 idAgenda: datosTurno.idAgenda,
             };
-        };
+        }
         this.listaEsperaService.patch(this.itemSelected.id, 'estado', data).subscribe(() => {
             this.plex.toast('success', 'Demanda cerrada exitosamente');
             this.actualizarFiltros({ value: '' }, '');

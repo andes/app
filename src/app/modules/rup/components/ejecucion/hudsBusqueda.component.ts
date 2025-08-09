@@ -1,7 +1,7 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { AfterContentInit, Component, EventEmitter, Input, Optional, Output, ViewEncapsulation } from '@angular/core';
-import * as moment from 'moment';
+import moment from 'moment';
 import { LaboratorioService } from 'projects/portal/src/app/services/laboratorio.service';
 import { Observable, forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -43,8 +43,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
     @Input() paciente: any;
 
-    @Input() _dragScope: String;
-    @Input() _dragOverClass: String = 'drag-over-border';
+    @Input() _dragScope: string;
+    @Input() _dragOverClass = 'drag-over-border';
 
     /**
     * Variable por parámetro para mostrar o no todo lo relacionado a emitir conceptos
@@ -225,68 +225,68 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
     emitTabs(registro, tipo, index: number) {
         switch (tipo) {
-            case 'concepto':
-                gtag('huds-open', tipo, registro.concepto.term, index);
-                registro.class = getSemanticClass(registro.concepto, false);
-                if (registro.esSolicitud) {
-                    registro.tipo = 'solicitud';
-                    registro.class = 'plan';
-                }
-                break;
-            case 'rup-group':
-                registro = registro.data;
-                registro.class = 'plan';
-                break;
-            case 'rup':
-                gtag('huds-open', tipo, registro.prestacion.term, index);
-                registro = registro.data;
-                if (registro.ejecucion.registros) {
-                    registro.ejecucion.registros.forEach(reg => {
-                        if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
-                            if (typeof reg.relacionadoCon[0] === 'string') {
-                                reg.relacionadoCon = reg.relacionadoCon.map((idRegistroRel) => {
-                                    return registro.ejecucion.registros.find(r => r.id === idRegistroRel || r.concepto.conceptId === idRegistroRel);
-                                });
-                            }
-                        }
-                    });
-                }
-                break;
-            case 'cda':
-                gtag('huds-open', tipo, registro.prestacion.term, index);
-                registro = registro.data;
-                registro.class = 'plan';
-                break;
-            case 'solicitud':
-                gtag('huds-open', tipo, registro.solicitud.registros[0].concepto.term, index);
+        case 'concepto':
+            gtag('huds-open', tipo, registro.concepto.term, index);
+            registro.class = getSemanticClass(registro.concepto, false);
+            if (registro.esSolicitud) {
                 registro.tipo = 'solicitud';
                 registro.class = 'plan';
-                break;
-            case 'ficha-epidemiologica':
-                gtag('huds-open', tipo, registro.prestacion.term, index);
-                registro = registro.data;
-                registro.tipo = 'ficha-epidemiologica';
-                registro.class = 'plan';
-                break;
-            case 'dominio':
-                gtag('huds-open', tipo, registro.name, index);
-                const params = {
-                    custodian: registro.identifier.value,
-                    id: this.paciente.id
-                };
-                registro.tipo = tipo;
-                registro.class = 'plan';
-                registro.params = params;
-                break;
-            case 'internacion':
-                gtag('huds-open', 'rup', 'internacion', index);
-                registro.id = registro.id;
-                registro.tipo = 'internacion';
-                registro.index = index;
-                break;
-            case 'laboratorio':
-                gtag('huds-open', tipo, 'laboratorio', index);
-                break;
+            }
+            break;
+        case 'rup-group':
+            registro = registro.data;
+            registro.class = 'plan';
+            break;
+        case 'rup':
+            gtag('huds-open', tipo, registro.prestacion.term, index);
+            registro = registro.data;
+            if (registro.ejecucion.registros) {
+                registro.ejecucion.registros.forEach(reg => {
+                    if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
+                        if (typeof reg.relacionadoCon[0] === 'string') {
+                            reg.relacionadoCon = reg.relacionadoCon.map((idRegistroRel) => {
+                                return registro.ejecucion.registros.find(r => r.id === idRegistroRel || r.concepto.conceptId === idRegistroRel);
+                            });
+                        }
+                    }
+                });
+            }
+            break;
+        case 'cda':
+            gtag('huds-open', tipo, registro.prestacion.term, index);
+            registro = registro.data;
+            registro.class = 'plan';
+            break;
+        case 'solicitud':
+            gtag('huds-open', tipo, registro.solicitud.registros[0].concepto.term, index);
+            registro.tipo = 'solicitud';
+            registro.class = 'plan';
+            break;
+        case 'ficha-epidemiologica':
+            gtag('huds-open', tipo, registro.prestacion.term, index);
+            registro = registro.data;
+            registro.tipo = 'ficha-epidemiologica';
+            registro.class = 'plan';
+            break;
+        case 'dominio':
+            gtag('huds-open', tipo, registro.name, index);
+            const params = {
+                custodian: registro.identifier.value,
+                id: this.paciente.id
+            };
+            registro.tipo = tipo;
+            registro.class = 'plan';
+            registro.params = params;
+            break;
+        case 'internacion':
+            gtag('huds-open', 'rup', 'internacion', index);
+            registro.id = registro.id;
+            registro.tipo = 'internacion';
+            registro.index = index;
+            break;
+        case 'laboratorio':
+            gtag('huds-open', tipo, 'laboratorio', index);
+            break;
         }
 
         this.huds.toogle(registro, tipo);
@@ -526,24 +526,24 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
     getCantidadResultados(type: any) {
         switch (type) {
-            case 'todos':
-                return this.todos.length;
-            case 'hallazgo':
-                return this.registrosTotalesCopia.hallazgo.length;
-            case 'trastorno':
-                return this.registrosTotalesCopia.trastorno.length;
-            case 'procedimiento':
-                return this.registrosTotalesCopia.procedimiento.length;
-            case 'planes':
-                return this.prestacionesCopia.length;
-            case 'producto':
-                return this.registrosTotalesCopia.producto.length;
-            case 'laboratorios':
-                return this.laboratorios.length;
-            case 'vacunas':
-                return this.vacunas.length;
-            case 'solicitudes':
-                return this.solicitudesMezcladas.length;
+        case 'todos':
+            return this.todos.length;
+        case 'hallazgo':
+            return this.registrosTotalesCopia.hallazgo.length;
+        case 'trastorno':
+            return this.registrosTotalesCopia.trastorno.length;
+        case 'procedimiento':
+            return this.registrosTotalesCopia.procedimiento.length;
+        case 'planes':
+            return this.prestacionesCopia.length;
+        case 'producto':
+            return this.registrosTotalesCopia.producto.length;
+        case 'laboratorios':
+            return this.laboratorios.length;
+        case 'vacunas':
+            return this.vacunas.length;
+        case 'solicitudes':
+            return this.solicitudesMezcladas.length;
         }
     }
 
