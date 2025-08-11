@@ -14,8 +14,7 @@
             </carpeta-paciente>
         </ng-container>
         <plex-title size="sm" justify titulo="DATOS DE INTERNACIÓN">
-            <ng-container
-                *ngIf="prestacion?.id && !cama?.esCensable && (capa === 'estadistica' || capa === 'estadistica-v2')">
+            <ng-container *ngIf="isCamaNoCensable()">
                 <plex-button *ngIf="!esInternacionCensable" type="warning" label="Convertir en censable" size="sm"
                     (click)="togglePrestacionCensable()">
                 </plex-button>
@@ -25,8 +24,7 @@
                 </plex-badge>
             </ng-container>
 
-            <ng-container
-                *ngIf="prestacion?.id && cama?.esCensable && (capa === 'estadistica' || capa === 'estadistica-v2')">
+            <ng-container *ngIf="isCamaCensable()">
                 <plex-button *ngIf="!esInternacionNoCensable" type="warning" label="Convertir en no censable" size="sm"
                     (click)="togglePrestacionNoCensable()">
                 </plex-button>
