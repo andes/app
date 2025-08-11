@@ -17,7 +17,7 @@ import { ElementosRUPModule } from './elementos-rup.module';
 @NgModule({
     imports: [
         CommonModule,
-        PlexModule,
+        PlexModule.forRoot({ networkLoading: true }),
         FormsModule,
         RouterModule,
         HttpClientModule,

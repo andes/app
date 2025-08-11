@@ -1,7 +1,6 @@
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { environment } from '../../environments/environment';
 
 import { ISiisa } from '../interfaces/ISiisa';
 
@@ -11,20 +10,20 @@ export class SIISAService {
 
     constructor(private server: Server) { }
 
-    getEspecialidades(id: String): Observable<ISiisa> {
+    getEspecialidades(id: string): Observable<ISiisa> {
         // TODO: buscar Por id
         return this.server.get(this.siisaUrl + '/especialidad', null);
     }
 
-    getModalidadesCertificacionEspecialidades(id: String): Observable<ISiisa> {
+    getModalidadesCertificacionEspecialidades(id: string): Observable<ISiisa> {
         return this.server.get(this.siisaUrl + '/modalidadesCertificacion', null);
     }
 
-    getEntidadesFormadoras(id: String): Observable<ISiisa> {
+    getEntidadesFormadoras(id: string): Observable<ISiisa> {
         return this.server.get(this.siisaUrl + '/entidadesFormadoras', null);
     }
 
-    getEstablecimientosCertificadores(id: String): Observable<ISiisa> {
+    getEstablecimientosCertificadores(id: string): Observable<ISiisa> {
         return this.server.get(this.siisaUrl + '/establecimientosCertificadores', null);
     }
     getProfesiones(): Observable<ISiisa[]> {

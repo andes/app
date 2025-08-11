@@ -30,12 +30,12 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy,
 
 
     // Variable para mostrar el div dropable en el momento que se hace el drag
-    public isDraggingConcepto: Boolean = true;
+    public isDraggingConcepto = true;
 
     // utilizamos confirmarDesvincular para mostrar el boton de confirmacion de desvinculado
     public confirmarDesvincular: any[] = [];
 
-    public confirmarEliminar: Boolean = false;
+    public confirmarEliminar = false;
     public indexEliminar: any;
 
     // el concepto que seleccionamos para eliminar lo guradamos aca.

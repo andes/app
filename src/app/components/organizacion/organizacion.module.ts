@@ -14,6 +14,7 @@ import { OrganizacionCreateUpdateComponent } from './organizacion-create-update.
 import { MitosModule } from '../../apps/mitos';
 import { ConfiguracionInternacionComponent } from './configuracion-internacion.component';
 import { MaquinaEstadosHTTP } from 'src/app/apps/rup/mapa-camas/services/maquina-estados.http';
+import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 
 @NgModule({
     imports: [
@@ -30,7 +31,8 @@ import { MaquinaEstadosHTTP } from 'src/app/apps/rup/mapa-camas/services/maquina
             { path: ':id/ofertas_prestacionales', component: OrganizacionOfertaPrestacionalComponent, },
             { path: ':id/configuracion', component: OrganizacionCreateEmailComponent },
             { path: ':id/configuracion_internacion', component: ConfiguracionInternacionComponent }
-        ])
+        ]),
+        MPILibModule
     ],
     declarations: [
         OrganizacionComponent,

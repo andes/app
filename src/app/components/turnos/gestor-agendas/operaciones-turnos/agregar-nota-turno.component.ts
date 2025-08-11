@@ -16,7 +16,7 @@ export class AgregarNotaTurnoComponent implements OnInit {
 
     private _turnosSeleccionados: Array<any>;
 
-    @Input('turnosSeleccionados')
+    @Input()
     set turnosSeleccionados(value: any) {
         this._turnosSeleccionados = value;
     }

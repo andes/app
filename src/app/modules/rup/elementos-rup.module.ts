@@ -7,7 +7,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgDragDropModule } from 'ng-drag-drop';
-import { ChartsModule } from 'ng2-charts';
+import { NgChartsModule } from 'ng2-charts';
 import { MitosModule } from '../../apps/mitos';
 import { RelacionRUPPipe } from '../../pipes/relacionRUP.pipe';
 import { MPILibModule } from '../mpi/mpi-lib.module';
@@ -134,12 +134,12 @@ const RUPComponentsArray = [
 @NgModule({
     imports: [
         CommonModule,
-        PlexModule,
+        PlexModule.forRoot({ networkLoading: true }),
         FormsModule,
         RouterModule,
         HttpClientModule,
         SharedModule,
-        ChartsModule,
+        NgChartsModule,
         NgDragDropModule,
         MPILibModule,
         MitosModule,

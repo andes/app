@@ -12,7 +12,7 @@ export class NotasComponent {
     public notaEditada: any = null;
     public showForm = false;
     public _notasPredefinidas: any[] = [];
-    @Input('nota')
+    @Input()
     set nota(value: any) {
         this._nota = value;
         this.notaEditada = value;
@@ -21,7 +21,7 @@ export class NotasComponent {
             this.setNotaPredefinida();
         }
     }
-    @Input('notasPredefinidas')
+    @Input()
     set notasPredefinidas(value: any) {
         this._notasPredefinidas = value;
         if (this._notasPredefinidas.length > 0) {

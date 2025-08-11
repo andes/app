@@ -6,56 +6,56 @@ import { IEspacioFisico } from './IEspacioFisico';
 // Recordar actualizar Schema!
 
 export interface IAgenda {
-    id: String;
-    _id: String;
+    id: string;
+    _id: string;
     tipoPrestaciones: ITipoPrestacion[];
     // profesionales: IProfesional[];
     profesionales: [{
-        id: String;
-        nombre: String;
-        apellido: String;
+        id: string;
+        nombre: string;
+        apellido: string;
     }];
     organizacion: {
-        id: String;
-        nombre: String;
+        id: string;
+        nombre: string;
     };
     espacioFisico: {
-        id: String;
-        nombre: String;
+        id: string;
+        nombre: string;
         servicio: {
-            id: String;
-            nombre: String;
+            id: string;
+            nombre: string;
         };
         sector: {
-            id: String;
-            nombre: String;
+            id: string;
+            nombre: string;
         };
     };
     otroEspacioFisico: IEspacioFisico;
     horaInicio: Date;
     horaFin: Date;
-    intercalar: Boolean;
+    intercalar: boolean;
     bloques: IBloque[];
-    estado: String;
-    prePausada: String;
+    estado: string;
+    prePausada: string;
     sobreturnos?: ITurno[];
     turnosDisponibles: number; // Virtual
     turnosRestantesDelDia: number; // Virtual
     turnosRestantesProgramados: number; // Virtual
     turnosRestantesGestion: number; // Virtual
     turnosRestantesProfesional: number; // Virtual
-    estadosAgendas: String[];
-    nota: String;
-    link: String;
-    nominalizada: Boolean;
-    dinamica: Boolean;
+    estadosAgendas: string[];
+    nota: string;
+    link: string;
+    nominalizada: boolean;
+    dinamica: boolean;
     multiprofesional: boolean;
-    cupo: Number;
+    cupo: number;
     avisos: [{
-        profenionalId: String;
-        estado: String;
+        profenionalId: string;
+        estado: string;
         fecha: Date;
     }];
-    enviarSms: String;
+    enviarSms: string;
     condicionLlave: boolean;
 }

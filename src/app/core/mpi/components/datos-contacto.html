@@ -8,7 +8,7 @@
                        type="slide" (change)="limpiarContacto()"></plex-bool>
         </plex-title>
 
-        <plex-grid type="full" cols="1" size="lg" responsive>
+        <plex-grid type="full" [cols]="1" size="lg" responsive>
             <div class="pr-1" grow="1">
                 <plex-wrapper *ngFor="let _unContacto of paciente.contacto; let i = index">
                     <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}"
@@ -101,7 +101,7 @@
             <ng-container *ngIf="paciente?.direccion?.length">
                 <plex-wrapper>
                     <div class="w-100">
-                        <plex-grid type="auto" size="sm" cols="2">
+                        <plex-grid type="auto" size="sm" [cols]="2">
                             <h6>
                                 <b hint="Domicilio declarado por el paciente como su domicilio actual"
                                    detach="both">Domicilio
@@ -141,7 +141,7 @@
                     </div>
                     <div class="w-100" *ngIf="paciente.direccion[1]">
                         <hr class="w-100">
-                        <plex-grid type="auto" size="sm" cols="2">
+                        <plex-grid type="auto" size="sm" [cols]="2">
                             <h6 class="mb-0">
                                 <b hint="Domicilio declarado en el documento de identidad del paciente "
                                    detach="both">Domicilio legal del paciente</b>

@@ -1,6 +1,6 @@
 export interface ITipoEstablecimiento {
-    nombre: String;
-    descripcion: String;
-    clasificacion: String;
-    idTipoEfector: Number;
+    nombre: string;
+    descripcion: string;
+    clasificacion: string;
+    idTipoEfector: number;
 }

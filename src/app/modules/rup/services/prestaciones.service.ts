@@ -756,7 +756,7 @@ export class PrestacionesService {
 
                     // En api el estado de la prestación cambia a ejecucion
                     this.patch(prestacion.id, cambioEstado).subscribe(() => {
-                        observer.next();
+                        observer.next(null);
                         observer.complete();
                     }, (err) => {
                         this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');

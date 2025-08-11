@@ -6,7 +6,7 @@
             <plex-title titulo="Datos principales" size="md">
                 <plex-button class="pr-1" label="Cancelar" type="danger" (click)="onCancel()">
                 </plex-button>
-                <plex-button class="pr-1" type="primary" label="Sincronizar con fuentes auténticas"
+                <plex-button class="pr-1" type="info" label="Sincronizar con fuentes auténticas"
                              (click)="sincronizarSisa()" [disabled]="!organizacionModel.codigo.sisa">
                 </plex-button>
                 <plex-button label="Guardar" type="success" [validateForm]="formulario" (click)="onSave($event)"
@@ -14,7 +14,7 @@
                 </plex-button>
             </plex-title>
 
-            <plex-grid class="pb-4" type="auto" cols="3">
+            <plex-grid class="pb-4" type="auto" [cols]="3">
                 <plex-text type="text" label="Nombre" name="nombre" [required]="true"
                            [(ngModel)]="organizacionModel.nombre" placeholder="Ingrese nombre..."
                            [autoFocus]="!seleccion?.id" [readonly]="!puedeEditarCompleto">
@@ -51,7 +51,7 @@
 
             <!-- DATOS DE DOMICILIO -->
             <plex-title titulo="Datos de domicilio" size="md"></plex-title>
-            <plex-grid class="pb-4" type="full" cols="2">
+            <plex-grid class="pb-4" type="full" [cols]="2">
                 <div>
                     <plex-text label="Detalle de Domicilio" name="valorDomicilio"
                                [(ngModel)]="organizacionModel.direccion.valor"
@@ -89,7 +89,7 @@
                 </plex-bool>
             </plex-title>
 
-            <plex-grid class="pb-4 align-items-end" type="auto" cols="3">
+            <plex-grid class="pb-4 align-items-end" type="auto" [cols]="3">
                 <ng-container *ngFor="let contacto of organizacionModel.contacto; let i = index">
                     <plex-select [(ngModel)]="contacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}"
                                  placeholder="Seleccione..." label="Tipo" [required]="!noPoseeContacto"
@@ -116,7 +116,7 @@
                         </plex-phone>
                     </ng-container>
 
-                    <plex-button *ngIf="i === 0" type="primary" icon="phone-plus" name="agregarContacto"
+                    <plex-button *ngIf="i === 0" type="info" icon="phone-plus" name="agregarContacto"
                                  (click)="addContacto()" [disabled]="noPoseeContacto">
                     </plex-button>
                     <plex-button *ngIf="i > 0" type="danger" icon="delete" (click)="removeContacto(i)">
@@ -131,13 +131,13 @@
                            label="No cargar ningún edificio" name="noPoseeEdificio" (change)="limpiarEdificio()"
                            [readonly]="!puedeEditarCompleto">
                 </plex-bool>
-                <plex-button class="pr-1" tooltip="Agregar edificio" type="primary" icon="home-plus"
-                             name="agregarEdificio" (click)="addEdificio()" [disabled]="noPoseeEdificio">
+                <plex-button class="pr-1" tooltip="Agregar edificio" type="info" icon="home-plus" name="agregarEdificio"
+                             (click)="addEdificio()" [disabled]="noPoseeEdificio">
                 </plex-button>
             </plex-title>
 
 
-            <plex-grid class="pb-4 align-items-end" type="auto" cols="4"
+            <plex-grid class="pb-4 align-items-end" type="auto" [cols]="4"
                        *ngFor="let edificio of organizacionModel.edificio; let i=index">
                 <ng-container *ngIf="organizacionModel.edificio">
                     <plex-text label="Descripción" name="descripcion2-{{i}}" [(ngModel)]="edificio.descripcion"
@@ -214,7 +214,7 @@
                     <plex-select class="pt-1" name="servicio" labelField="term" (getData)="loadListadoUO($event)"
                                  idField="conceptId" [(ngModel)]="servicio" placeholder="Seleccione...">
                     </plex-select>
-                    <plex-button class="pr-1 float-right" icon="plus" type="primary" (click)="addU0()">
+                    <plex-button class="pr-1 float-right" icon="plus" type="info" (click)="addU0()">
                     </plex-button>
                 </plex-wrapper>
                 <plex-list>

@@ -28,7 +28,7 @@ export const TOP_PROVIDERS = [
 @NgModule({
     imports: [
         CommonModule,
-        PlexModule,
+        PlexModule.forRoot({ networkLoading: true }),
         FormsModule,
         RouterModule,
         HttpClientModule,

@@ -1,5 +1,4 @@
 import { environment } from './../../../../../environments/environment';
-import * as moment from 'moment';
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
@@ -26,7 +25,7 @@ export class SuspenderTurnoComponent implements OnInit {
     @Output() cancelaSuspenderTurno = new EventEmitter<boolean>();
 
     turnos: any = [];
-    showSuspenderTurno: Boolean = true;
+    showSuspenderTurno = true;
     resultado: any;
 
     public reasignar: any = {};

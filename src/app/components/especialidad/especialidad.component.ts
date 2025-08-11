@@ -1,11 +1,9 @@
 
 import { debounceTime } from 'rxjs/operators';
-import { EspecialidadCreateUpdateComponent } from './especialidad-create-update.component';
 import { IEspecialidad } from './../../interfaces/IEspecialidad';
 import { EspecialidadService } from './../../services/especialidad.service';
-import { Observable } from 'rxjs';
-import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
@@ -29,11 +27,13 @@ export class EspecialidadComponent implements OnInit {
     value: any;
     tengoDatos = true;
 
-    constructor(private formBuilder: UntypedFormBuilder,
-                public plex: Plex,
-                private especialidadService: EspecialidadService,
-                private router: Router,
-                private auth: Auth, ) { }
+    constructor(
+        private formBuilder: UntypedFormBuilder,
+        public plex: Plex,
+        private especialidadService: EspecialidadService,
+        private router: Router,
+        private auth: Auth
+    ) { }
 
     ngOnInit() {
         // Crea el formulario reactivo

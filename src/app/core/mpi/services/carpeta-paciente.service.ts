@@ -14,7 +14,7 @@ export class CarpetaPacienteService {
         return this.server.get(`${this.carpetaUrl}/carpetasPacientes`, { params: params, showError: true });
     }
 
-    getByIdNroCarpeta(id: String): Observable<ICarpetaPaciente> {
+    getByIdNroCarpeta(id: string): Observable<ICarpetaPaciente> {
         return this.server.get(`${this.carpetaUrl}/carpetasPacientes${id}`, null);
     }
 

@@ -208,7 +208,7 @@
                     </plex-button>
                     <plex-button *ngIf="botones.quitarTurnoDoble && turnosSeleccionados[0]?.id === turno.id"
                                  ariaLabel="Quitar Turno doble" size="sm" type="default" icon="numeric-1-box-outline"
-                                 (click)="eventosTurno('quitarTurnoDoble', agenda)" tooltip="Quitar Turno doble"
+                                 (click)="eventosTurno('quitarTurnoDoble')" tooltip="Quitar Turno doble"
                                  tooltipPosition="top">
                     </plex-button>
                     <plex-help *ngIf="botones.editarCarpeta && turnosSeleccionados[0]?.id === turno.id" type="info"

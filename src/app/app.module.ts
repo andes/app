@@ -29,7 +29,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgDragDropModule } from 'ng-drag-drop';
 import { RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
 // Libs
-import { ChartsModule } from 'ng2-charts';
+import { NgChartsModule } from 'ng2-charts';
 import { NgxImageCompressService } from 'ngx-image-compress';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 /** Configuraciones de entorno */
@@ -91,49 +91,18 @@ import { ReporteC2Component } from './components/reportes/reporteC2.component';
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
 import { TOPLibModule } from './components/top/top.module';
 import { CITASLibModule } from './components/turnos/citas.module';
-import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
-import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
-import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
-import { FiltrosMapaEspacioFisicoComponent } from './components/turnos/configuracion/mapa-espacio-fisico/filtros-mapa-espacio-fisico.component';
 import { MapaEspacioFisicoVistaComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico-vista.component';
 import { MapaEspacioFisicoComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico.component';
-import { EstadisticasAgendasComponent } from './components/turnos/dashboard/estadisticas-agendas.component';
-import { EstadisticasPacientesComponent } from './components/turnos/dashboard/estadisticas-pacientes.component';
-import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
+
 import { AgregarPacienteComponent } from './components/turnos/gestor-agendas/operaciones-agenda/agregar-paciente.component';
 import { BuscadorCie10Component } from './components/turnos/gestor-agendas/operaciones-agenda/buscador-cie10.component';
-import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/clonar-agenda';
-import { ModalAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/modal-agenda.component';
-import { DetalleAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/detalle-agenda.component';
+
 import { ListarCarpetasComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-carpetas.component';
 import { ListarTurnosComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-turnos.component';
-import { AgregarNotaAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/nota-agenda.component';
-import { PanelAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/panel-agenda.component';
+
 import { PlanificarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/planificar-agenda.component';
-import { RevisionAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/revision-agenda.component';
-import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/operaciones-agenda/sobreturno.component';
 import { SuspenderAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/suspender-agenda.component';
-import { AgregarNotaTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/agregar-nota-turno.component';
-import { LiberarTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/liberar-turno.component';
-import { ReasignarTurnoAgendasComponent } from './components/turnos/gestor-agendas/operaciones-turnos/reasignar/reasignar-turno-agendas.component';
-import { ReasignarTurnoAutomaticoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/reasignar/reasignar-turno-automatico.component';
-import { ReasignarTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/reasignar/reasignar-turno.component';
-import { SuspenderTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/suspender-turno.component';
-import { RevisionFueraAgendaComponent } from './components/turnos/gestor-agendas/revision/fuera-agenda.component';
-// ... Turnos
-import { TurnosComponent } from './components/turnos/gestor-agendas/turnos.component';
-import { ActivarAppComponent } from './components/turnos/punto-inicio/activar-app.component';
-import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/puntoInicio-turnos.component';
-import { ListaSolicitudTurnoVentanillaComponent } from './components/turnos/punto-inicio/solicitud-turno-ventanilla/lista-solicitud-turno-ventanilla.component';
-import { SolicitudTurnoVentanillaComponent } from './components/turnos/punto-inicio/solicitud-turno-ventanilla/solicitud-turno-ventanilla.component';
-import { TurnosPacienteComponent } from './components/turnos/punto-inicio/turnos-paciente.component';
-import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
-import { DatosBasicosComponent } from './core/mpi/components/datos-basicos.component';
-import { DatosContactoComponent } from './core/mpi/components/datos-contacto.component';
-import { DocumentosPacienteComponent } from './core/mpi/components/documentos-paciente.component';
-import { NotaComponent } from './core/mpi/components/notas-paciente.component';
-import { PacienteComponent } from './core/mpi/components/paciente.component';
-import { RelacionesPacientesComponent } from './core/mpi/components/relaciones-pacientes.component';
+
 import { CarpetaPacienteService } from './core/mpi/services/carpeta-paciente.service';
 import { GeoreferenciaService } from './core/mpi/services/georeferencia.service';
 import { HistorialBusquedaService } from './core/mpi/services/historialBusqueda.service';
@@ -236,7 +205,7 @@ registerLocaleData(localeEs, 'es');
         HttpClientModule,
         AuthModule,
         TurneroProvidersModule,
-        ChartsModule,
+        NgChartsModule,
         MitosModule.forRoot(),
         NgDragDropModule.forRoot(),
         routing,
@@ -261,38 +230,38 @@ registerLocaleData(localeEs, 'es');
         ProfesionalComponent, ProfesionalCreateUpdateComponent, FirmaProfesionalComponent,
         ProfesionalCreateUpdateComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
-        PlanificarAgendaComponent,
-        BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
-        GestorAgendasComponent, TurnosComponent, ClonarAgendaComponent, ModalAgendaComponent,
-        RevisionAgendaComponent, AgregarSobreturnoComponent, RevisionFueraAgendaComponent,
-        LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
-        PanelAgendaComponent,
+
+
+        BuscadorCie10Component,
         AgregarPacienteComponent,
-        ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
+
         PermisosComponent,
-        PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
-        TurnosPacienteComponent,
-        SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent,
-        ActivarAppComponent,
+
+        // ActivarAppComponent,
         ReporteC2Component,
         CantidadConsultaXPrestacionComponent,
         EncabezadoReportesComponent,
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         MapaEspacioFisicoVistaComponent,
-        DetalleAgendaComponent,
+
         HeaderPacienteComponent,
         PuntoInicioInternacionComponent,
         ValidarCertificadoComponent,
-        demandaInsatisfechaComponent,
+        // demandaInsatisfechaComponent,
         FarmaciaComponent,
         FarmaciaCreateUpdateComponent,
+
         // Solicitudes
         PrestamosHcComponent,
         ListarSolicitudesComponent,
         ListarPrestamosComponent,
         PrestarHcComponent,
         DevolverHcComponent,
+        HistorialCarpetasComponent,
+        SolicitudManualComponent,
+
+
         NovedadesComponent,
         ListaNovedadesComponent,
         HeaderNovedadesComponent,
@@ -300,19 +269,8 @@ registerLocaleData(localeEs, 'es');
         FiltroNovedadesComponent,
         CalendarioNovedadesComponent,
         DetalleNovedadComponent,
-        HistorialCarpetasComponent,
         ImprimirSolicitudesComponent,
-        SolicitudManualComponent,
         PucoComponent,
-        // MPI
-        NotaComponent,
-        RelacionesPacientesComponent,
-        BusquedaMpiComponent,
-        PacienteComponent,
-        DatosBasicosComponent,
-        DatosContactoComponent,
-        DocumentosPacienteComponent,
-        // form Terapeutico
         FormTerapeuticoComponent,
         ArbolItemComponent,
         FormTerapeuticoDetallePageComponent,

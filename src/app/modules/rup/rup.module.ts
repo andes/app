@@ -7,7 +7,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgDragDropModule } from 'ng-drag-drop';
-import { ChartsModule } from 'ng2-charts';
+import { NgChartsModule } from 'ng2-charts';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 import { PlantillasRUPComponent } from '../../apps/rup/plantillas-rup/plantillas-rup.component';
@@ -46,7 +46,7 @@ export const RUP_COMPONENTS = [
 @NgModule({
     imports: [
         CommonModule,
-        PlexModule,
+        PlexModule.forRoot({ networkLoading: true }),
         FormsModule,
         RouterModule,
         HttpClientModule,
@@ -59,7 +59,7 @@ export const RUP_COMPONENTS = [
         CITASLibModule,
         NgDragDropModule,
         ScrollingModule,
-        ChartsModule,
+        NgChartsModule,
         InfiniteScrollModule,
         HUDSLibModule,
         EpidemiologiaModule,

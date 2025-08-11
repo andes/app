@@ -16,7 +16,7 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 })
 
 export class SuspenderAgendaComponent implements OnInit {
-    resultado: String;
+    resultado: string;
     seleccionadosSMS = [];
     todosSeleccionados = false;
 

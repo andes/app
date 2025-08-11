@@ -65,11 +65,11 @@ export class OrganizacionService {
      * Metodo getById. Trae el objeto organizacion por su Id.
      * @param {String} id Busca por Id
      */
-    getById(id: String): Observable<IOrganizacion> {
+    getById(id: string): Observable<IOrganizacion> {
         return this.server.get(this.organizacionUrl + '/' + id, null);
     }
 
-    getGeoreferencia(id: String): Observable<any> {
+    getGeoreferencia(id: string): Observable<any> {
         return this.server.get(this.organizacionUrl + '/georef/' + id, null);
     }
 
@@ -77,7 +77,7 @@ export class OrganizacionService {
      * retorna true si la organización usa capas unificadas en el módulo internación
      * @param id String
      */
-    usaCapasUnificadas(id: String): Observable<boolean> {
+    usaCapasUnificadas(id: string): Observable<boolean> {
         return this.getById(id).pipe(
             map(org => org.usaEstadisticaV2 === true),
             cache()
@@ -120,11 +120,11 @@ export class OrganizacionService {
     }
 
     @Cache({ key: true })
-    configuracion(id: String) {
+    configuracion(id: string) {
         return this.server.get(`${this.organizacionUrl}/${id}/configuracion`);
     }
 
-    unidadesOrganizativas(id: String) {
+    unidadesOrganizativas(id: string) {
         return this.server.get(`${this.organizacionUrl}/${id}/unidadesOrganizativas`);
     }
 

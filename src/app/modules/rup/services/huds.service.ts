@@ -7,7 +7,7 @@ import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface
 // Este alias me permite en el futuro cambiar el tipo en todos lados
 type Registro = any;
 interface ElementoHUDS {
-    tipo: String;
+    tipo: string;
     data: Registro;
 }
 
@@ -73,37 +73,37 @@ export class HUDSService {
 
             if (this._registrosHUDS[i].tipo === tipo) {
                 switch (tipo) {
-                    case 'concepto':
-                        if (registro.idRegistro === _registro.idRegistro) {
-                            return i;
-                        }
-                        break;
-                    case 'rup-group':
-                        if (registro[0].id === _registro[0].id) {
-                            return i;
-                        }
-                        break;
-                    case 'rup':
-                    case 'cda':
-                    case 'dominio':
-                    case 'solicitud':
-                    case 'ficha-epidemiologica':
-                        if (registro.id === _registro.id || registro.data?.id === _registro.id) {
-                            return i;
-                        }
-                        break;
-                    case 'internacion':
-                        if (registro.id === _registro.id && registro.index === _registro.index) {
-                            return i;
-                        }
-                        break;
+                case 'concepto':
+                    if (registro.idRegistro === _registro.idRegistro) {
+                        return i;
+                    }
+                    break;
+                case 'rup-group':
+                    if (registro[0].id === _registro[0].id) {
+                        return i;
+                    }
+                    break;
+                case 'rup':
+                case 'cda':
+                case 'dominio':
+                case 'solicitud':
+                case 'ficha-epidemiologica':
+                    if (registro.id === _registro.id || registro.data?.id === _registro.id) {
+                        return i;
+                    }
+                    break;
+                case 'internacion':
+                    if (registro.id === _registro.id && registro.index === _registro.index) {
+                        return i;
+                    }
+                    break;
 
-                    case 'laboratorio':
-                        if ((registro.idProtocolo && registro.idProtocolo === _registro.idProtocolo) ||
+                case 'laboratorio':
+                    if ((registro.idProtocolo && registro.idProtocolo === _registro.idProtocolo) ||
                             (!registro.idProtocolo && registro.data?.id === _registro.data?.id)) {
-                            return i;
-                        }
-                        break;
+                        return i;
+                    }
+                    break;
                 }
             }
         }

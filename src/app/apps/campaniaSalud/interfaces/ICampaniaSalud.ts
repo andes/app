@@ -1,5 +1,5 @@
 export interface ICampaniaSalud {
-    id?: String;
+    id?: string;
     asunto: string;
     cuerpo: string;
     link: string;
@@ -7,8 +7,8 @@ export interface ICampaniaSalud {
     target?: {
         sexo?: string;
         grupoEtario?: {
-            desde?: Number;
-            hasta?: Number;
+            desde?: number;
+            hasta?: number;
         };
     };
     /**
@@ -47,5 +47,5 @@ export interface ICampaniaSalud {
      * @type {String}
      * @memberof ICampaniaSalud
      */
-    textoAccion?: String;
+    textoAccion?: string;
 }

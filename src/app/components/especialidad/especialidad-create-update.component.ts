@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
-import { UntypedFormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { EspecialidadService } from './../../services/especialidad.service';
 import { IEspecialidad } from './../../interfaces/IEspecialidad';
 

@@ -28,7 +28,7 @@ import { DescargasPendientesComponent } from './components/exportar-huds/descarg
         CommonModule,
         FormsModule,
         HttpClientModule,
-        PlexModule,
+        PlexModule.forRoot({ networkLoading: true }),
         VisualizacioninfromacionRounting,
         MPILibModule,
         ReactiveFormsModule,

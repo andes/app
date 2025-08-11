@@ -12,7 +12,7 @@
                             (change)="onChange()" [required]="esRequerido"></plex-float>
 
                 <p *ngIf="mensaje?.texto">
-                    <plex-badge type="{{mensaje.type}}">
+                    <plex-badge [type]="mensaje.type">
                         {{mensaje.texto}}
                     </plex-badge>
                 </p>

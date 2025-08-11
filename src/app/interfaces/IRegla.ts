@@ -8,7 +8,7 @@ export interface IRegla {
             {
                 // prestacion: SnomedConcept,
                 auditable: {
-                    type: Boolean;
+                    type: boolean;
                     default: false;
                 };
             }
@@ -21,9 +21,9 @@ export interface IRegla {
         };
         prestacion: {
             id: string;
-            conceptId: String;
-            term: String;
-            fsn: String;
+            conceptId: string;
+            term: string;
+            fsn: string;
             // semanticTag: SemanticTag
         };
     };

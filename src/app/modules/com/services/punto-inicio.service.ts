@@ -41,31 +41,31 @@ export class PuntoInicioService {
             derivaciones = derivaciones.reverse();
         } else {
             switch (sortBy) {
-                case 'fecha':
-                    derivaciones = derivaciones.sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
-                    break;
-                case 'paciente':
-                    derivaciones = derivaciones.sort((a, b) => a.paciente.apellido.localeCompare((b.paciente.apellido as string)));
-                    break;
-                case 'origen':
-                    derivaciones = derivaciones.sort((a, b) => a.organizacionOrigen.nombre.localeCompare((b.organizacionOrigen.nombre as string)));
-                    break;
-                case 'destino':
-                    derivaciones = derivaciones.sort((a, b) => a.organizacionDestino.nombre.localeCompare((b.organizacionDestino.nombre as string)));
-                    break;
-                case 'prioridad':
-                    derivaciones = derivaciones.sort((a, b) => {
-                        let prioridadA = this.priorityOrder[a.prioridad];
-                        let prioridadB = this.priorityOrder[b.prioridad];
-                        if (!prioridadA) {
-                            prioridadA = 6;
-                        }
-                        if (!prioridadB) {
-                            prioridadB = 6;
-                        }
-                        return prioridadA - prioridadB;
-                    });
-                    break;
+            case 'fecha':
+                derivaciones = derivaciones.sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
+                break;
+            case 'paciente':
+                derivaciones = derivaciones.sort((a, b) => a.paciente.apellido.localeCompare((b.paciente.apellido as string)));
+                break;
+            case 'origen':
+                derivaciones = derivaciones.sort((a, b) => a.organizacionOrigen.nombre.localeCompare((b.organizacionOrigen.nombre as string)));
+                break;
+            case 'destino':
+                derivaciones = derivaciones.sort((a, b) => a.organizacionDestino.nombre.localeCompare((b.organizacionDestino.nombre as string)));
+                break;
+            case 'prioridad':
+                derivaciones = derivaciones.sort((a, b) => {
+                    let prioridadA = this.priorityOrder[a.prioridad];
+                    let prioridadB = this.priorityOrder[b.prioridad];
+                    if (!prioridadA) {
+                        prioridadA = 6;
+                    }
+                    if (!prioridadB) {
+                        prioridadB = 6;
+                    }
+                    return prioridadA - prioridadB;
+                });
+                break;
             }
         }
         return derivaciones;

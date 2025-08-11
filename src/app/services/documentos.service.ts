@@ -40,7 +40,7 @@ export class DocumentosService {
         );
     }
 
-    descargarHistorialDerivacion(derivacionId: String, nombreArchivo: string): Observable<any> {
+    descargarHistorialDerivacion(derivacionId: string, nombreArchivo: string): Observable<any> {
         return this.download('reporteDerivacion', { derivacionId, historial: true }).pipe(
             saveAs(nombreArchivo, 'pdf')
         );

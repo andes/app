@@ -18,24 +18,24 @@ export class RiesgoCardiovascularService extends FormulaBaseService {
         }
         let message = '';
         switch (value) {
-            case -1:
-                message = 'Completar todos los datos para visualizar el porcentaje de riesgo';
-                break;
-            case 1:
-                message = 'Riesgo bajo (<10%)';
-                break;
-            case 2:
-                message = 'Riesgo moderado (10% a <20%)';
-                break;
-            case 3:
-                message = 'Riesgo alto (20% a <30%)';
-                break;
-            case 4:
-                message = 'Riesgo muy alto (30% a <40%)';
-                break;
-            case 5:
-                message = 'Riesgo crítico (>40%)';
-                break;
+        case -1:
+            message = 'Completar todos los datos para visualizar el porcentaje de riesgo';
+            break;
+        case 1:
+            message = 'Riesgo bajo (<10%)';
+            break;
+        case 2:
+            message = 'Riesgo moderado (10% a <20%)';
+            break;
+        case 3:
+            message = 'Riesgo alto (20% a <30%)';
+            break;
+        case 4:
+            message = 'Riesgo muy alto (30% a <40%)';
+            break;
+        case 5:
+            message = 'Riesgo crítico (>40%)';
+            break;
         }
         return {
             value, message

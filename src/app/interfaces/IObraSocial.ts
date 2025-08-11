@@ -1,15 +1,15 @@
 export interface IObraSocial {
     id: string;
-    tipoDocumento: String;
-    dni: Number;
-    transmite: String;
-    nombre: String;
-    codigoFinanciador: Number;
-    financiador: String;
+    tipoDocumento: string;
+    dni: number;
+    transmite: string;
+    nombre: string;
+    codigoFinanciador: number;
+    financiador: string;
     version: Date;
-    numeroAfiliado: String;
-    prepaga?: Boolean;
-    codigoPuco?: Number;
-    idObraSocial?: Number;
-    origen?: String;
+    numeroAfiliado: string;
+    prepaga?: boolean;
+    codigoPuco?: number;
+    idObraSocial?: number;
+    origen?: string;
 }

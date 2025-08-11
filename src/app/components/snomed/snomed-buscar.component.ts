@@ -14,13 +14,13 @@ import { SnomedBuscarService } from './snomed-buscar.service';
 })
 
 export class SnomedBuscarComponent implements OnInit, OnDestroy {
-    @Input() tipoBusqueda: String;
-    @Input() autofocus: Boolean = true;
+    @Input() tipoBusqueda: string;
+    @Input() autofocus = true;
     expression: string = null;
 
     @Output() onSearch: EventEmitter<any> = new EventEmitter<any>();
 
-    public searchTerm: String = '';
+    public searchTerm = '';
     public loading = false;
     private _suscribe = null;
 
@@ -64,43 +64,43 @@ export class SnomedBuscarComponent implements OnInit, OnDestroy {
             let apiMethod;
 
             switch (this.tipoBusqueda) {
-                case 'problemas':
-                    apiMethod = this.SNOMED.get({
-                        search: search,
-                        semanticTag: ['hallazgo', 'trastorno', 'situación', 'evento']
-                    });
-                    break;
-                case 'procedimientos':
-                    apiMethod = this.SNOMED.get({
-                        search: search,
-                        semanticTag: ['procedimiento', 'entidad observable', 'régimen/tratamiento']
-                    });
-                    break;
-                case 'planes':
-                    apiMethod = this.SNOMED.get({
-                        search: search,
-                        semanticTag: ['procedimiento', 'régimen/tratamiento']
-                    });
-                    break;
-                case 'productos':
-                    apiMethod = this.SNOMED.get({
-                        search: search,
-                        semanticTag: ['producto', 'objeto físico', 'medicamento clínico', 'fármaco de uso clínico']
-                    });
-                    break;
-                case 'equipamientos':
-                    apiMethod = this.SNOMED.get({
-                        search: search,
-                        semanticTag: ['objeto físico']
-                    });
-                    break;
-                default:
-                    apiMethod = this.SNOMED.get({
-                        expression: this.expression || undefined,
-                        search: search,
-                        semanticTag: ['hallazgo', 'trastorno', 'procedimiento', 'entidad observable', 'producto', 'situación', 'régimen/tratamiento', 'elemento de registro', 'objeto físico', 'medicamento clínico', 'fármaco de uso clínico', 'evento']
-                    });
-                    break;
+            case 'problemas':
+                apiMethod = this.SNOMED.get({
+                    search: search,
+                    semanticTag: ['hallazgo', 'trastorno', 'situación', 'evento']
+                });
+                break;
+            case 'procedimientos':
+                apiMethod = this.SNOMED.get({
+                    search: search,
+                    semanticTag: ['procedimiento', 'entidad observable', 'régimen/tratamiento']
+                });
+                break;
+            case 'planes':
+                apiMethod = this.SNOMED.get({
+                    search: search,
+                    semanticTag: ['procedimiento', 'régimen/tratamiento']
+                });
+                break;
+            case 'productos':
+                apiMethod = this.SNOMED.get({
+                    search: search,
+                    semanticTag: ['producto', 'objeto físico', 'medicamento clínico', 'fármaco de uso clínico']
+                });
+                break;
+            case 'equipamientos':
+                apiMethod = this.SNOMED.get({
+                    search: search,
+                    semanticTag: ['objeto físico']
+                });
+                break;
+            default:
+                apiMethod = this.SNOMED.get({
+                    expression: this.expression || undefined,
+                    search: search,
+                    semanticTag: ['hallazgo', 'trastorno', 'procedimiento', 'entidad observable', 'producto', 'situación', 'régimen/tratamiento', 'elemento de registro', 'objeto físico', 'medicamento clínico', 'fármaco de uso clínico', 'evento']
+                });
+                break;
             }
 
             return apiMethod.subscribe(resultados => {

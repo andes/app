@@ -21,6 +21,15 @@ import { PacienteDetalleComponent } from './components/paciente-detalle.componen
 // Esta componente es parte de la parte SHARED de MPI, habría que moverla a este modulo.
 import { CarpetaPacienteComponent } from '../../components/carpeta-paciente/carpeta-paciente.component';
 import { PacientePanelComponent } from './components/paciente-panel.component';
+import { BusquedaMpiComponent } from 'src/app/core/mpi/components/busqueda-mpi.component';
+import { DatosBasicosComponent } from 'src/app/core/mpi/components/datos-basicos.component';
+import { DatosContactoComponent } from 'src/app/core/mpi/components/datos-contacto.component';
+import { DocumentosPacienteComponent } from 'src/app/core/mpi/components/documentos-paciente.component';
+import { NotaComponent } from 'src/app/core/mpi/components/notas-paciente.component';
+import { PacienteComponent } from 'src/app/core/mpi/components/paciente.component';
+import { RelacionesPacientesComponent } from 'src/app/core/mpi/components/relaciones-pacientes.component';
+import { ActivarAppComponent } from 'src/app/components/turnos/punto-inicio/activar-app.component';
+import { GeorrefMapComponent } from 'src/app/core/mpi/components/georref-map.component';
 
 @NgModule({
     imports: [
@@ -40,7 +49,16 @@ import { PacientePanelComponent } from './components/paciente-panel.component';
         UpdateContactoDireccionComponent,
         PacienteDetalleComponent,
         CarpetaPacienteComponent,
-        FotoDirective
+        FotoDirective,
+        NotaComponent,
+        RelacionesPacientesComponent,
+        BusquedaMpiComponent,
+        PacienteComponent,
+        DatosBasicosComponent,
+        DatosContactoComponent,
+        DocumentosPacienteComponent,
+        ActivarAppComponent,
+        GeorrefMapComponent
     ],
     exports: [
         PacienteBuscarComponent,
@@ -51,7 +69,16 @@ import { PacientePanelComponent } from './components/paciente-panel.component';
         UpdateContactoDireccionComponent,
         PacienteDetalleComponent,
         CarpetaPacienteComponent,
-        FotoDirective
+        FotoDirective,
+        NotaComponent,
+        RelacionesPacientesComponent,
+        BusquedaMpiComponent,
+        PacienteComponent,
+        DatosBasicosComponent,
+        DatosContactoComponent,
+        DocumentosPacienteComponent,
+        ActivarAppComponent,
+        GeorrefMapComponent
     ]
 })
 export class MPILibModule {

@@ -6,7 +6,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgDragDropModule } from 'ng-drag-drop';
-import { ChartsModule } from 'ng2-charts';
+import { NgChartsModule } from 'ng2-charts';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { TOPLibModule } from 'src/app/components/top/top.module';
 import { DirectiveLibModule } from 'src/app/directives/directives.module';
@@ -39,14 +39,14 @@ import { VistaLaboratorioComponent } from './components/ejecucion/laboratorios/v
 @NgModule({
     imports: [
         CommonModule,
-        PlexModule,
+        PlexModule.forRoot({ networkLoading: true }),
         FormsModule,
         RouterModule,
         HttpClientModule,
         SharedModule,
         MPILibModule,
         ElementosRUPModule,
-        ChartsModule,
+        NgChartsModule,
         InfiniteScrollModule,
         TOPLibModule,
         NgDragDropModule,
