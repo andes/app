@@ -227,23 +227,22 @@
     [(ngModel)]="pacienteFallecido">
 </plex-bool>
                 
-
 <div *ngIf="pacienteFallecido && !paciente.fechaFallecimiento">
     <plex-title titulo="Fecha de defunción" size="sm" class="mt-2"></plex-title>
-    <plex-grid type="auto" size="md" cols="2">
+    <plex-grid type="auto" size="sm" cols="2" class="mt-1">
+        
         <plex-datetime label="Fecha de defunción"
                        [(ngModel)]="fechaFallecimientoTemporal"
                        name="fechaFallecimientoTemporal"
-                       [required]="pacienteFallecido"
+                       [required]="pacienteFallecido" [max]="hoy"
                        type="date">
         </plex-datetime>
     <plex-button type="success" icon="check" class="align-self-end" 
-                 (click)="guardarFallecimiento()" 
-                 [disabled]="!fechaFallecimientoTemporal">
+                 (click)="guardarFallecimiento()"  style="width: 50px;" 
+                 [disabled]="!fechaFallecimientoTemporal" tooltip="guardar" titlePosition="top">
     </plex-button>
  </plex-grid>
 
-    
 </div>
      
 
