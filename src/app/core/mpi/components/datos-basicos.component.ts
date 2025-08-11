@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Plex } from '@andes/plex';
 import { AfterViewInit, AfterViewChecked, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
@@ -107,9 +108,14 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
             this.paciente.reportarError = false;
         }
 
-        // Si el paciente ya tiene fecha de fallecimiento, el slide queda activado y deshabilitado
-        this.pacienteFallecido = !!this.paciente.fechaFallecimiento;
-
+        this.pacienteFallecido = !!(
+            this.paciente.fechaFallecimiento ||
+            (this.paciente.fallecimientoManual && (
+                (this.paciente.fallecimientoManual.fecha && this.paciente.fallecimientoManual.fecha.$date) ||
+                (typeof this.paciente.fallecimientoManual.fecha === 'string') ||
+                (this.paciente.fallecimientoManual.fecha instanceof Date)
+            ))
+        );
     }
 
     ngAfterViewInit() {
