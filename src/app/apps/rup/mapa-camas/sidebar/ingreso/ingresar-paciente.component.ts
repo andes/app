@@ -484,6 +484,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         ) as Observable<IResumenInternacion>;
     }
 
+    isCamaCensable(): boolean {
+        return !!this.prestacion?.id && !this.cama?.esCensable && (this.capa === 'estadistica' || this.capa === 'estadistica-v2');
+    }
+
     ingresoSimplificado(estado, paciente, idInternacion = null, nuevaPrestacion = null) {
         // si idInternacion === null es ingreso nuevo
         // si nuevaPrestacion !== null estadistica-v2 esta ingresando un paciente
