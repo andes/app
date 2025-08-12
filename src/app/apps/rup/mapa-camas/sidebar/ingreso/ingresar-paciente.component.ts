@@ -97,6 +97,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public selectorFinanciadores: IObraSocial[] = [];
     public obrasSociales: IObraSocial[] = [];
     public OSPrivada = false;
+    public esCensable = this.isCamaCensable();
+
 
     constructor(
         private plex: Plex,
