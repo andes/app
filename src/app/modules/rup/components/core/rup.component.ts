@@ -32,7 +32,7 @@ import { IElementoRUP, IElementoRUPRequeridos } from './../../interfaces/element
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { RecetaService } from 'projects/portal/src/app/services/receta.service';
+import { RecetaService } from '../../../../services/receta.service';
 import { ECLQueriesService } from './../../../../services/eclqueries.service';
 
 @Component({
