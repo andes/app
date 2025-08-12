@@ -30,6 +30,7 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
     public opcionesFinanciadores: any[] = [];
     public itemListaFinanciador: any;
     public numeroAfiliado: string;
+    public patronNumerico = '^[0-9]*$';
 
     private timeout: any;
     private busquedaFinanciador;
@@ -197,7 +198,7 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
         clearTimeout(this.timeout);
 
         this.timeout = setTimeout(() => {
-            this.numeroAfiliado = value.length ? value : undefined;
+            this.numeroAfiliado = value?.length ? value : undefined;
 
             if (!this.editable) { this.guardarFinanciador(); }
         }, 500);

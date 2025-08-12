@@ -4,13 +4,12 @@
                 [data]="datosFinanciadores">
     </plex-radio>
     <plex-select class="w-100" *ngIf="showListado || !financiadorSeleccionado" [(ngModel)]="otroFinanciadorSeleccionado"
-                 name="financiador" [data]="opcionesFinanciadores"
-                 label="Seleccione una opción"
-                 idField="nombre" labelField="nombre" (change)="seleccionarOtro($event)">
+                 name="financiador" [data]="opcionesFinanciadores" label="Seleccione una opción" idField="nombre"
+                 labelField="nombre" (change)="seleccionarOtro($event)">
     </plex-select>
-    <plex-text *ngIf="busquedaFinanciador" [(ngModel)]="numeroAfiliado"
-               name="numeroAfiliado" [required]="false" placeholder="Ingrese el número de afiliado"
-               label="Ingrese el número de afiliado" (change)="setNumeroAfiliado($event)">
+    <plex-text *ngIf="busquedaFinanciador" [(ngModel)]="numeroAfiliado" name="numeroAfiliado" [required]="false"
+               placeholder="Ingrese el número de afiliado" label="Ingrese el número de afiliado"
+               (change)="setNumeroAfiliado($event)">
     </plex-text>
 </div>
 
@@ -48,16 +47,21 @@
     </div>
     <div class="selector-wrapper">
         <div class="selector">
-            <plex-select [(ngModel)]="itemListaFinanciador" [data]="opcionesFinanciadores" label="Agregar Financiador"
-                         idField="id" labelField="nombre" [disabled]="!opcionesFinanciadores.length">
-            </plex-select>
-            <plex-text *ngIf="itemListaFinanciador && !itemListaFinanciador?.codigoPuco" [(ngModel)]="numeroAfiliado"
-                       name="numeroAfiliado" [required]="false" placeholder="Ingrese el número de afiliado"
-                       (change)="setNumeroAfiliado($event)">
-            </plex-text>
+            <plex-wrapper>
+                <plex-select [(ngModel)]="itemListaFinanciador" [data]="opcionesFinanciadores" label="Financiador"
+                             idField="id" labelField="nombre" [disabled]="!opcionesFinanciadores.length"
+                             placeholder="Seleccione financiador">
+                </plex-select>
+                <plex-text *ngIf="itemListaFinanciador" [(ngModel)]="numeroAfiliado" label="Número de afiliado"
+                           name="numeroAfiliado" [required]="false" [pattern]="patronNumerico"
+                           placeholder="Ingrese el número de afiliado" (change)="setNumeroAfiliado($event)">
+                </plex-text>
+
+                <plex-button icon="plus" type="info" tooltip="Agregar financiador" titlePosition="left" size="md"
+                             [disabled]="!itemListaFinanciador || (numeroAfiliado && !numeroAfiliado.match(patronNumerico))"
+                             (click)="agregarFinanciador(itemListaFinanciador)">
+                </plex-button>
+            </plex-wrapper>
         </div>
-        <plex-button icon="plus" type="info" tooltip="Agregar financiador" titlePosition="left" size="md"
-                     [disabled]="!opcionesFinanciadores.length" (click)="agregarFinanciador(itemListaFinanciador)">
-        </plex-button>
     </div>
 </div>
