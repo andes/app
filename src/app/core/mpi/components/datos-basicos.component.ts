@@ -44,8 +44,8 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     public disableRegistro = false;
     public nombrePattern: string;
     public patronDocumento = /^[1-9]{1}[0-9]{4,7}$/;
-    hoy = moment().endOf('day').toDate();
     public reportarError = false;
+    public hoy: Date = new Date();
 
     // para registro de bebes
     busquedaTutor: IPacienteMatch[] | IPaciente[] = [];
@@ -99,9 +99,6 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
             if (!changes.paciente.previousValue?.id) {
                 this.pacienteExtranjero = Object.assign({}, this.paciente);
             }
-            if (changes.paciente && changes.paciente.currentValue.fallecimientoManual?.fecha) {
-                this.fechaFallecimientoTemporal = new Date(changes.paciente.currentValue.fallecimientoManual.fecha);
-            }
         }
 
         if (!changes.paciente.currentValue.notaError?.length) {
@@ -134,6 +131,8 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
             this.noPoseeDNI = true;
             this.paciente.documento = '';
         }
+        this.hoy = new Date();
+        this.fechaFallecimientoTemporal = null;
 
         this.profesionalActual = this.auth.usuario;
         this.sexos = enumerados.getObjSexos();
@@ -377,6 +376,15 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
 
     guardarFallecimiento() {
         if (this.fechaFallecimientoTemporal) {
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0); // Solo fecha, sin hora
+
+            // Validación extra por seguridad
+            if (this.fechaFallecimientoTemporal > hoy) {
+                this.plex.toast('danger', 'No se puede registrar una fecha de fallecimiento futura');
+                return;
+            }
+
             const cambios = {
                 fallecimientoManual: {
                     fecha: this.fechaFallecimientoTemporal,
