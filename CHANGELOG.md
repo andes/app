@@ -1,3 +1,11 @@
+## [5.168.1](https://github.com/andes/app/compare/v5.168.0...v5.168.1) (2025-08-13)
+
+
+### Bug Fixes
+
+* **HUDS:** Filtra relaciones entre registros rotas ([#3219](https://github.com/andes/app/issues/3219)) ([3a423f6](https://github.com/andes/app/commit/3a423f6496dcc96f3cdb16ae3baafc45c62f9091))
+* **receta:** corrige error ortografia ([#3218](https://github.com/andes/app/issues/3218)) ([b7885a8](https://github.com/andes/app/commit/b7885a823416621c796d8978cf098ef7d8bed07f))
+
 # [5.168.0](https://github.com/andes/app/compare/v5.167.1...v5.168.0) (2025-07-30)
 
 
