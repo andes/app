@@ -359,7 +359,6 @@ export class TurnosComponent implements OnInit {
         };
         this.serviceAgenda.patch(this.agenda.id, patch).subscribe({
             next: resultado => {
-                this.saveLiberarTurno(this.agenda);
                 if (alertCount === 0) {
                     if (this.turnosSeleccionados.length === 1) {
                         this.plex.toast('success', 'El turno seleccionado fue cambiado a disponible.');
@@ -368,8 +367,7 @@ export class TurnosComponent implements OnInit {
                     }
                     alertCount++;
                 }
-
-                this.agenda = resultado;
+                this.saveLiberarTurno(this.agenda);
             },
             error: err => {
                 if (err) {
