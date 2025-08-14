@@ -283,6 +283,11 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             })
         );
         this.obraSocialService.getListado({}).subscribe(listado => this.selectorFinanciadores = listado.filter(financiador => this.obrasSociales.every(os => os.nombre !== financiador.nombre)));
+        if (this.informeIngreso.obraSocial) {
+            this.financiador = this.selectorFinanciadores.find(
+                f => f.codigoPuco === this.informeIngreso.obraSocial.codigoPuco
+            );
+        }
     }
 
     cargarUltimaInternacion(paciente: IPaciente) {
@@ -305,25 +310,29 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     }
     changeTipoObraSocial() {
         this.selectedOS = false;
+        this.esPrepaga = false;
+        this.financiador = null;
         const asociadoId = typeof this.informeIngreso.asociado === 'string'
             ? this.informeIngreso.asociado
             : this.informeIngreso.asociado?.id;
-
         if (asociadoId === 'Plan de salud privado o Mutual') {
             this.selectedOS = true;
-        }
-        this.esPrepaga = asociadoId === 'Plan de salud privado o Mutual';
+            this.esPrepaga = true;
+            if (this.informeIngreso.obraSocial) {
+                const financiadorParaSelect = this.selectorFinanciadores.find(
+                    f => f.nombre === this.informeIngreso.obraSocial.nombre
+                );
 
-        if (this.esPrepaga || !asociadoId) {
-            this.paciente.obraSocial = null;
-        } else if (asociadoId === 'Ninguno') {
-            this.paciente.obraSocial = 'Ninguno';
-        } else if (asociadoId === 'Sin Datos') {
-            this.paciente.obraSocial = 'Sin Datos';
-        } else {
-            this.paciente.obraSocial = this.backupObraSocial;
+                if (financiadorParaSelect) {
+                    this.financiador = financiadorParaSelect;
+                } else {
+                    this.financiador = this.informeIngreso.obraSocial;
+                }
+            }
         }
     }
+
+
 
     selectCama(cama) {
         this.mapaCamasService.select(cama);
@@ -448,7 +457,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             fechaNacimiento: this.paciente.fechaNacimiento,
             direccion: this.paciente.direccion,
             telefono: this.paciente.telefono,
-            obraSocial: this.paciente.obraSocial || this.financiador
+            obraSocial: this.paciente.obraSocial
         };
         if (this.capa === 'estadistica' || (this.capa === 'estadistica-v2' && !this.prestacion)) {
             this.ingresoExtendido(dtoPaciente);
@@ -873,6 +882,18 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         this.changeTipoObraSocial();
     }
 
+    onFinanciadorChange(financiadorSeleccionado) {
+        this.financiador = financiadorSeleccionado;
+        if (this.paciente.obraSocial) {
+            this.paciente.obraSocial.financiador = financiadorSeleccionado.financiador;
+            this.paciente.obraSocial.codigoPuco = financiadorSeleccionado.codigoPuco;
+            this.paciente.obraSocial.nombre = financiadorSeleccionado.nombre;
+        } else {
+            this.paciente.obraSocial = {
+                codigoPuco: financiadorSeleccionado.codigoPuco,
+                nombre: financiadorSeleccionado.nombre,
+                financiador: financiadorSeleccionado.financiador
+            };
+        }
+    }
 }
-
-
