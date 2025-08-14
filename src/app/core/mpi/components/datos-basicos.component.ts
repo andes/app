@@ -119,6 +119,8 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
                 (this.paciente.fallecimientoManual.fecha instanceof Date)
             ))
         );
+        this.fechaFallecimientoTemporal = this.paciente.fallecimientoManual?.fecha ? new Date(this.paciente.fallecimientoManual?.fecha) : null;
+
     }
 
     ngAfterViewInit() {
