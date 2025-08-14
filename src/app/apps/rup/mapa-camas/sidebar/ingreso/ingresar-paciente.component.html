@@ -1,7 +1,7 @@
 <ng-container *ngIf="paciente">
     <form #formIngreso="ngForm">
         <plex-title justify titulo="INGRESO" size="md" class="title-fixed">
-            <plex-button title="guardar" icon="check" type="success" size="sm" class="mr-1" [validateForm]="formIngreso"
+            <plex-button title="Guardar" icon="check" type="success" size="sm" class="mr-1" [validateForm]="formIngreso"
                 (click)="guardar($event)" [disabled]="formIngreso.invalid || disableButton || inProgress">
             </plex-button>
 
@@ -103,7 +103,6 @@
         </ng-container>
         <ng-container *ngIf="capa === 'estadistica' || capa === 'estadistica-v2'">
             <plex-title size="sm" justify titulo="Cobertura Social"></plex-title>
-
             <plex-select [ngModel]="informeIngreso.asociado" (ngModelChange)="onAsociadoChange($event)" name="asociado"
                 [data]="pacienteAsociado" placeholder="Seleccione..." label="Cobertura" idField="id"
                 labelField="nombre">
@@ -111,11 +110,11 @@
 
             <div
                 *ngIf="(informeIngreso?.asociado?.id === 'Plan de salud privado o Mutual') || (informeIngreso?.asociado === 'Plan de salud privado o Mutual')">
-                <plex-select [(ngModel)]="informeIngreso.financiador" name="financiador" [data]="selectorFinanciadores"
+                <plex-select class="w-100" *ngIf="selectedOS" [(ngModel)]="financiador"
+                    (ngModelChange)="onFinanciadorChange($event)" name="financiador" [data]="selectorFinanciadores"
                     label="Financiador" idField="nombre" labelField="nombre" [required]="true">
                 </plex-select>
             </div>
-
             <br>
 
             <plex-title size="sm" justify titulo="DATOS ESTADISTICOS"></plex-title>

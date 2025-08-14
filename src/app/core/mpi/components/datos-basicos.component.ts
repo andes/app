@@ -76,9 +76,7 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
         private plex: Plex,
         private pacienteService: PacienteService,
         private parentescoService: ParentescoService,
-        private constantesService: ConstantesService,
-
-
+        private constantesService: ConstantesService
     ) {
         this.nombrePattern = pacienteService.nombreRegEx.source;
     }
@@ -95,7 +93,6 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
         if (!changes.paciente.currentValue.notaError?.length) {
             this.paciente.reportarError = false;
         }
-
     }
 
     ngAfterViewInit() {
@@ -114,8 +111,6 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
             this.noPoseeDNI = true;
             this.paciente.documento = '';
         }
-
-
         this.sexos = enumerados.getObjSexos();
         this.tipoIdentificacion = enumerados.getObjTipoIdentificacion();
 

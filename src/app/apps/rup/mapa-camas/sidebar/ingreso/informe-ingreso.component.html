@@ -47,13 +47,16 @@
             </plex-title>
    <div class="row">
                 <div class="col-6">
-                    <plex-label titulo="Cobertura" [subtitulo]="informeIngreso.asociado">
+                     <plex-label titulo="Cobertura" [subtitulo]="informeIngreso.asociado">
                     </plex-label>
                 </div>
+    
+
+
                 <div *ngIf="informeIngreso.asociado === 'Plan de salud privado o Mutual'"
                      class="col-6">
-                    <plex-label *ngIf="informeIngreso.financiador" titulo="Obra social"
-                                [subtitulo]="informeIngreso.financiador.nombre">
+                    <plex-label *ngIf="informeIngreso.obraSocial" titulo="Obra social"
+                                [subtitulo]="informeIngreso.obraSocial.nombre">
                     </plex-label>
                 </div>
             </div>
