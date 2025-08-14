@@ -103,9 +103,9 @@
                     [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
-      <plex-label 
+      <plex-label  class="float-left mr-3"
   *ngIf="!paciente.fechaFallecimiento && paciente.fallecimientoManual?.fecha"
-    titulo="Paciente Fallecido"   hint="Fecha ingresada: {{ paciente.fallecimientoManual.updatedAt | fecha }}"
+    titulo="Paciente Fallecido"  hint="Fecha ingresada: {{ paciente.fallecimientoManual.registradoEn | fecha }} por {{ paciente.fallecimientoManual.registradoPor?.apellido }}, {{ paciente.fallecimientoManual.registradoPor?.nombre }}" detach="top"
     [subtitulo]="paciente.fallecimientoManual.fecha | fecha"
     [direction]="orientacion === 'vertical' ? 'column' : 'row'"> 
 </plex-label>

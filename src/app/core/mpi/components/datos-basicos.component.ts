@@ -104,7 +104,13 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
         if (!changes.paciente.currentValue.notaError?.length) {
             this.paciente.reportarError = false;
         }
-
+        if (changes.paciente && this.paciente?.fechaNacimiento) {
+            if ((this.paciente.fechaNacimiento as any)?.$date) {
+                this.paciente.fechaNacimiento = new Date((this.paciente.fechaNacimiento as any).$date);
+            } else if (typeof this.paciente.fechaNacimiento === 'string') {
+                this.paciente.fechaNacimiento = new Date(this.paciente.fechaNacimiento);
+            }
+        }
         this.pacienteFallecido = !!(
             this.paciente.fechaFallecimiento ||
             (this.paciente.fallecimientoManual && (
