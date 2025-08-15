@@ -9,6 +9,7 @@ import { TurnoService } from '../../../services/turnos/turno.service';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { IBloque } from './../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
+import { AgendaService } from 'src/app/services/turnos/agenda.service';
 
 @Component({
     selector: 'autocitar-turno',
@@ -35,7 +36,10 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
 
     // Avisa al componente padre que se canceló la acción de este componente
     @Output() cancelarEmitter: EventEmitter<any> = new EventEmitter<any>();
-
+    public permitirTurnoDoble = false;
+    public turnoDoble = false;
+    private indiceTurno: number;
+    private indiceBloque: number;
     public showListaAgendas: boolean;
     public agendaSeleccionada: IAgenda;
     public turnoSeleccionado: ITurno;
@@ -48,8 +52,9 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
 
     public bloqueAgenda: IBloque;
     turno: any;
+    siguienteTurnoIndex: number;
+    constructor(public router: Router, public auth: Auth, public plex: Plex, public servicioTurno: TurnoService, public serviceAgenda: AgendaService,
 
-    constructor(public router: Router, public auth: Auth, public plex: Plex, public servicioTurno: TurnoService,
     ) {
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
     }
@@ -74,6 +79,9 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
         this.bloqueAgenda = this.agendaSeleccionada.bloques[indiceBloque];
         this.turnoSeleccionado = this.agendaSeleccionada.bloques[indiceBloque].turnos[indiceTurno];
         this.obraSocialPaciente = null;
+        this.indiceTurno = indiceTurno;
+        this.indiceBloque = indiceBloque;
+        this.habilitarTurnoDoble();
 
         if (this.paciente && this.paciente.financiador && this.paciente.financiador.length > 0) {
             this.obraSocialPaciente = this.paciente.financiador[0];
@@ -131,6 +139,27 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
             if (confirmacion) {
                 this.plex.toast('success', 'El turno autocitado se guardo correctamente');
                 this.cancelarEmitter.emit(true);
+                let turnoSiguiente = null;
+                if (this.indiceBloque >= 0) {
+                    turnoSiguiente = bloque.turnos[this.indiceTurno + 1];
+                }
+                if (this.turnoDoble) {
+                    if (turnoSiguiente.estado === 'disponible') {
+                        const patch: any = {
+                            op: 'darTurnoDoble',
+                            turnos: [turnoSiguiente.id]
+                        };
+                        this.serviceAgenda.patch(this.agendaSeleccionada.id, patch).subscribe((agendaActualizada) => {
+                            if (agendaActualizada) {
+                                this.cancelarEmitter.emit(true);
+
+                                this.plex.toast('info', 'Se asignó un turno doble');
+                            }
+                        });
+                    }
+                } else {
+                    this.cancelarEmitter.emit(true);
+                }
             }
         });
     }
@@ -147,6 +176,27 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
                     return false;
                 } else {
                     return true;
+                }
+            }
+        }
+    }
+    habilitarTurnoDoble() {
+        this.permitirTurnoDoble = false;
+        if (this.bloqueAgenda && this.turnoSeleccionado) {
+            const cantidadTurnos = this.bloqueAgenda.cantidadTurnos;
+            if (cantidadTurnos) {
+                this.siguienteTurnoIndex = this.indiceTurno + 1;
+                if (this.siguienteTurnoIndex < cantidadTurnos) {
+                    const siguienteTurno = this.bloqueAgenda.turnos[this.siguienteTurnoIndex];
+                    if (siguienteTurno.estado === 'disponible') {
+                        if (this.bloqueAgenda.citarPorBloque) {
+                            if (String(this.turnoSeleccionado.horaInicio) === String(siguienteTurno.horaInicio)) {
+                                this.permitirTurnoDoble = true;
+                            }
+                        } else {
+                            this.permitirTurnoDoble = true;
+                        }
+                    }
                 }
             }
         }
