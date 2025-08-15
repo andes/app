@@ -37,8 +37,8 @@
                                     (saveAgregarNotaTurno)="saveAgregarNotaTurno()">
                 </agregar-nota-turno>
             </plex-help>
-            <plex-help *ngIf="botones.suspender && turnosSeleccionados?.length" class="mr-1" btnType="danger"
-                       icon="stop" tooltip="Suspender turnos" tooltipPosition="left">
+            <plex-help *ngIf="botones.suspender" class="mr-1" btnType="danger" icon="stop" tooltip="Suspender turnos"
+                       tooltipPosition="left">
                 <suspender-turno [agenda]="agenda" [accion]="'suspenderTurno'"
                                  [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="saveSuspenderTurno()"
                                  (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)">
