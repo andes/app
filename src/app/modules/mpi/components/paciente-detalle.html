@@ -13,8 +13,8 @@
                     hint="Recién Nacido, no se encuentra registrado en una fuente auténtica" icon="help">
             Sin DNI
         </plex-badge>
-        <plex-badge *ngIf="paciente.fechaFallecimiento" type="danger">
-            Fallecido: {{ paciente.fechaFallecimiento | fecha}}
+        <plex-badge *ngIf="paciente.fechaFallecimiento" type="danger" icon="help">
+            Fallecido: {{ paciente.fechaFallecimiento | fecha }}
         </plex-badge>
 
         <ng-content select="plex-badge" ngProjectAs="plex-badge"></ng-content>
@@ -94,7 +94,17 @@
                     [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
+
+
         <plex-label *ngIf="showTelefono" titulo="Contacto" [subtitulo]="contacto"
+                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
+        </plex-label>
+
+        <plex-label class="float-left mr-0 pr-0"
+                    *ngIf="!paciente.fechaFallecimiento && paciente.fallecimientoManual?.fecha"
+                    titulo="Paciente Fallecido"
+                    hint="Fecha ingresada: {{ paciente.fallecimientoManual.registradoEn | fecha }} por {{ paciente.fallecimientoManual.registradoPor?.apellido }}, {{ paciente.fallecimientoManual.registradoPor?.nombre }}"
+                    detach="top" [subtitulo]="paciente.fallecimientoManual.fecha | fecha"
                     [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 

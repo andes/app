@@ -31,6 +31,7 @@ import { IPais } from 'src/app/interfaces/IPais';
 export class DatosContactoComponent implements OnInit {
 
     @Input() paciente: IPaciente;
+    @Input() pacienteFallecido = false;
     @Output() mobileApp: EventEmitter<any> = new EventEmitter<any>();
     @ViewChild('form', { static: false }) ngForm: NgForm;
     @ViewChild('mapa', { static: false }) mapa: GeorrefMapComponent;
@@ -78,6 +79,7 @@ export class DatosContactoComponent implements OnInit {
     viveProvActual = false;
     provincias: IProvincia[] = [];
     localidades: ILocalidad[] = [];
+
     paisActual = null;
     provinciaActual = null;
     localidadActual = null;
@@ -115,6 +117,8 @@ export class DatosContactoComponent implements OnInit {
         this.paises$ = this.paisService.get({ nombre: 'Argentina' }).pipe(
             cache()
         );
+
+
         this.provincias$ = this.provinciaService.get({}).pipe(
             cache()
         );
@@ -392,10 +396,12 @@ export class DatosContactoComponent implements OnInit {
      */
     changePaisActualNacimiento() {
         if (this.nacioPaisActual) {
+
             this.loadProvincia();
             this.paciente.lugarNacimiento.pais = this.paisActual[0];
             this.paciente.lugarNacimiento.lugar = null;
         } else {
+
             this.paciente.lugarNacimiento.pais = null;
             this.paciente.lugarNacimiento.provincia = null;
             this.paciente.lugarNacimiento.localidad = null;
@@ -473,4 +479,7 @@ export class DatosContactoComponent implements OnInit {
     changeSituacion(event) {
         this.paciente.direccion[0].situacionCalle = event.value;
     }
+
+
+
 }
