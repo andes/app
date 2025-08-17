@@ -35,7 +35,8 @@
             </div>
             <div>
                 <b>Diagnóstico</b>
-                <p class="texto-detalle">{{recetaPrincipal.diagnostico.term}}</p>
+                <p class="texto-detalle">{{recetaPrincipal.diagnostico.term || recetaPrincipal.diagnostico.descripcion}}
+                </p>
             </div>
         </div>
         <div class="data" *ngIf="recetaPrincipal.medicamento.tratamientoProlongado">
@@ -116,7 +117,7 @@
                     {{ receta.profesional.nombre }} {{ receta.profesional.apellido }}
                 </td>
                 <td *plTableCol="'diagnostico'">
-                    {{ receta.diagnostico.term }}
+                    {{ receta.diagnostico.term || receta.diagnostico.descripcion }}
                 </td>
                 <td *plTableCol="'estado'">
                     <div class="vista-badges">
