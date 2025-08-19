@@ -352,37 +352,31 @@ export class TurnosComponent implements OnInit {
 
     pasarADisponible() {
         let alertCount = 0;
-        this.turnosSeleccionados.forEach((index) => {
 
-            const patch = {
-                'op': 'liberarTurno',
-                'turnos': this.turnosSeleccionados.map(resultado => resultado._id)
-            };
-            this.serviceAgenda.patch(this.agenda.id, patch).subscribe({
-                next: resultado => {
-                    this.saveLiberarTurno(this.agenda);
-                    if (alertCount === 0) {
-                        if (this.turnosSeleccionados.length === 1) {
-                            this.plex.toast('success', 'El turno seleccionado fue cambiado a disponible.');
-                        } else {
-                            this.plex.toast('success', 'Los turnos seleccionados fueron cambiados a disponible.');
-                        }
-                        alertCount++;
+        const patch = {
+            'op': 'liberarTurno',
+            'turnos': this.turnosSeleccionados.map(resultado => resultado._id)
+        };
+        this.serviceAgenda.patch(this.agenda.id, patch).subscribe({
+            next: resultado => {
+                if (alertCount === 0) {
+                    if (this.turnosSeleccionados.length === 1) {
+                        this.plex.toast('success', 'El turno seleccionado fue cambiado a disponible.');
+                    } else {
+                        this.plex.toast('success', 'Los turnos seleccionados fueron cambiados a disponible.');
                     }
-
-                    this.agenda = resultado;
-                    if (index === this.turnosSeleccionados.length - 1) {
-                        this.saveLiberarTurno(this.agenda);
-                    }
-                },
-                error: err => {
-                    if (err) {
-                        this.plex.info('warning', 'Turno en ejecución', 'Error');
-                        this.cancelaLiberarTurno();
-                    }
+                    alertCount++;
                 }
-            });
+                this.saveLiberarTurno(this.agenda);
+            },
+            error: err => {
+                if (err) {
+                    this.plex.info('warning', 'Turno en ejecución', 'Error');
+                    this.cancelaLiberarTurno();
+                }
+            }
         });
+
     }
 
     saveLiberarTurno(agenda: any) {
@@ -435,5 +429,13 @@ export class TurnosComponent implements OnInit {
 
     cerrarSidebarTurnos() {
         this.cerrarSidebar.emit();
+    }
+
+    pasarAdisponible(botones) {
+        if (this.turnosSeleccionados.length) {
+            const noDisponible = !this.turnosSeleccionados.some(turno => turno.estado === 'suspendido' && turno.paciente);
+            return noDisponible && botones.cambiarDisponible;
+        }
+        return false;
     }
 }
