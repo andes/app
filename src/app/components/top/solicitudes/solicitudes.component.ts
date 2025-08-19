@@ -78,6 +78,7 @@ export class SolicitudesComponent implements OnInit {
         { id: 'vencida', nombre: 'VENCIDA' }
     ];
 
+    public prioridad;
     public prioridades = [
         { id: 'prioritario', nombre: 'PRIORITARIO' },
     ];
@@ -364,16 +365,17 @@ export class SolicitudesComponent implements OnInit {
             this.observacionesAnular = '';
         }
     }
-
     citar() {
         if (this.prestacionSeleccionada.estados?.length) {
             const patch = {
-                op: 'citar',
+                op: 'estadoPush',
                 estado: {
                     tipo: 'pendiente',
                     observaciones: this.observacionesCitar
-                }
+                },
+                prioridad: this.prioridad?.id || null
             };
+
             this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(() => {
                 this.cargarSolicitudes();
             });
