@@ -365,17 +365,17 @@ export class SolicitudesComponent implements OnInit {
             this.observacionesAnular = '';
         }
     }
-
     citar() {
         if (this.prestacionSeleccionada.estados?.length) {
             const patch = {
-                op: 'citar',
+                op: 'estadoPush',
                 estado: {
                     tipo: 'pendiente',
-                    observaciones: this.observacionesCitar,
-                    prioridad: this.prioridad?.id || null
+                    observaciones: this.observacionesCitar
                 },
+                prioridad: this.prioridad?.id || null
             };
+
             this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(() => {
                 this.cargarSolicitudes();
             });
