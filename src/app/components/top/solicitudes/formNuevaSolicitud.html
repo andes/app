@@ -1,9 +1,9 @@
 <plex-title [size]="size? size : ''" main titulo="NUEVA SOLICITUD DE {{tipoSolicitud.toUpperCase()}}">
-    <plex-button [size]="size? size : ''" class="float-left mr-1" position="left" type="danger" label="Cancelar"
-                 (click)="cancelar()">
+    <plex-button size="sm" position="left" class="mr-1" type="success" icon="check" tooltip="Guardar"
+                 (click)="confirmGuardar($event)" [autodisabled]="true" [validateForm]="form">
     </plex-button>
-    <plex-button [size]="size? size : ''" position="right" class="float-right mr-1" type="success" label="Guardar"
-                 (click)="confirmGuardar($event)" [autodisabled]="true" [validateForm]="form"> </plex-button>
+    <plex-button size="sm" position="right" type="danger" icon="Cancelar" tooltip="Cerrar" (click)="cancelar()">
+    </plex-button>
 </plex-title>
 <form #form="ngForm">
     <!-- SOLICITUD ENTRADA -->
@@ -107,7 +107,7 @@
     </ng-container>
     <!-- /SOLICITUD SALIDA -->
     <!-- Adjuntar Archivos -->
-    <plex-title [size]="size? size : ''" titulo="Cargar adjuntos"></plex-title>
+    <plex-title titulo="Cargar adjuntos" size="md"></plex-title>
     <plex-wrapper>
         <upload-file label="Adjuntar archivo" (onUpload)="onUpload($event)" [extensiones]="extensions" [modulo]="'top'">
         </upload-file>
