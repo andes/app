@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Plex } from '@andes/plex';
 import { AfterViewInit, AfterViewChecked, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
@@ -10,7 +11,7 @@ import * as enumerados from '../../../utils/enumerados';
 import { IPaciente } from '../interfaces/IPaciente';
 import { PacienteService } from '../services/paciente.service';
 import { ConstantesService } from 'src/app/services/constantes.service';
-
+import { Auth } from 'projects/auth/src/lib/auth.service';
 @Component({
     selector: 'datos-basicos',
     templateUrl: 'datos-basicos.html',
@@ -24,6 +25,8 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     @ViewChild('formBasico', { static: false }) formBasico: NgForm;
     @ViewChild('formExtranjero', { static: false }) formExtranjero: NgForm;
     @ViewChild('formGenero', { static: false }) formGenero: NgForm;
+    profesionalActual: any;
+
 
     formChangesSubscription: Subscription;
 
@@ -41,8 +44,8 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     public disableRegistro = false;
     public nombrePattern: string;
     public patronDocumento = /^[1-9]{1}[0-9]{4,7}$/;
-    hoy = moment().endOf('day').toDate();
     public reportarError = false;
+    public hoy: Date = new Date();
 
     // para registro de bebes
     busquedaTutor: IPacienteMatch[] | IPaciente[] = [];
@@ -71,12 +74,20 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
         foto: null,
         fotoId: null
     };
-
+    pacienteFallecido: any;
+    fechaFallecimientoTemporal: Date = null;
+    fallecimientoManual: {
+        fecha?: Date;
+        registradoPor: { id: string; nombre: string; apellido: string; documento: string };
+        registradoEn: Date;
+    };
     constructor(
         private plex: Plex,
         private pacienteService: PacienteService,
         private parentescoService: ParentescoService,
-        private constantesService: ConstantesService
+        private constantesService: ConstantesService,
+        private auth: Auth
+
     ) {
         this.nombrePattern = pacienteService.nombreRegEx.source;
     }
@@ -93,6 +104,23 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
         if (!changes.paciente.currentValue.notaError?.length) {
             this.paciente.reportarError = false;
         }
+        if (changes.paciente && this.paciente?.fechaNacimiento) {
+            if ((this.paciente.fechaNacimiento as any)?.$date) {
+                this.paciente.fechaNacimiento = new Date((this.paciente.fechaNacimiento as any).$date);
+            } else if (typeof this.paciente.fechaNacimiento === 'string') {
+                this.paciente.fechaNacimiento = new Date(this.paciente.fechaNacimiento);
+            }
+        }
+        this.pacienteFallecido = !!(
+            this.paciente.fechaFallecimiento ||
+            (this.paciente.fallecimientoManual && (
+                (this.paciente.fallecimientoManual.fecha && this.paciente.fallecimientoManual.fecha.$date) ||
+                (typeof this.paciente.fallecimientoManual.fecha === 'string') ||
+                (this.paciente.fallecimientoManual.fecha instanceof Date)
+            ))
+        );
+        this.fechaFallecimientoTemporal = this.paciente.fallecimientoManual?.fecha ? new Date(this.paciente.fallecimientoManual?.fecha) : null;
+
     }
 
     ngAfterViewInit() {
@@ -111,6 +139,10 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
             this.noPoseeDNI = true;
             this.paciente.documento = '';
         }
+        this.hoy = new Date();
+        this.fechaFallecimientoTemporal = null;
+
+        this.profesionalActual = this.auth.usuario;
         this.sexos = enumerados.getObjSexos();
         this.tipoIdentificacion = enumerados.getObjTipoIdentificacion();
 
@@ -347,5 +379,38 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
             this.pacienteEditado.apellido = data.apellido;
         }
         this.changes.emit({ pacienteError: this.pacienteEditado });
+    }
+
+
+    guardarFallecimiento() {
+        if (this.fechaFallecimientoTemporal) {
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0); // Solo fecha, sin hora
+
+            // Validación extra por seguridad
+            if (this.fechaFallecimientoTemporal > hoy) {
+                this.plex.toast('danger', 'No se puede registrar una fecha de fallecimiento futura');
+                return;
+            }
+
+            const cambios = {
+                fallecimientoManual: {
+                    fecha: this.fechaFallecimientoTemporal,
+                    registradoPor: {
+                        id: this.profesionalActual.id,
+                        nombre: this.profesionalActual.nombre,
+                        apellido: this.profesionalActual.apellido,
+                        documento: this.profesionalActual.documento
+                    },
+                    registradoEn: new Date()
+                }
+            };
+
+            this.pacienteService.patch(this.paciente.id, cambios).subscribe(() => {
+                this.plex.toast('success', 'Fecha de fallecimiento registrada correctamente');
+            }, err => {
+                this.plex.toast('danger', 'Error al guardar fallecimiento', err?.message || '');
+            });
+        }
     }
 }

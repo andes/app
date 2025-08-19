@@ -46,7 +46,7 @@
 
         <plex-title titulo="Lugar de nacimiento" size="sm">
             <plex-bool class="mr-3" *ngIf="paisActual" [(ngModel)]="nacioPaisActual"
-                       label="¿País de {{paisActual[0].nombre}}?" name="nacioPaisActual"
+                       label="¿País de {{ paisActual?.[0]?.nombre || '' }}?" name="nacioPaisActual"
                        (change)="changePaisActualNacimiento()">
             </plex-bool>
             <plex-bool class="mr-3" *ngIf="nacioPaisActual && provinciaActual" [(ngModel)]="nacioProvActual"

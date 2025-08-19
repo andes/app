@@ -64,6 +64,8 @@
                 </plex-wrapper>
 
 
+
+
                 <!-- DATOS DEL PROGENITOR PARA EL BEBE-->
                 <span class="mt-4">
                     <plex-title size="sm" titulo="Datos de Progenitor/a o tutor/a"></plex-title>
@@ -217,10 +219,30 @@
                 </plex-wrapper>
             </ng-container>
         </form>
+        <ng-container *ngIf="(paciente?.id || pacienteFallecido) && !paciente?.fechaFallecimiento">
+            <plex-bool name="fallecido" type="slide" label="Paciente fallecido" [(ngModel)]="pacienteFallecido">
+            </plex-bool>
+
+            <div *ngIf="pacienteFallecido">
+                <plex-title titulo="Fecha de defunción" size="sm" class="mt-2"></plex-title>
+
+                <plex-grid type="auto" size="sm" cols="4" class="mt-2">
+                    <plex-datetime label="Fecha de defunción" [(ngModel)]="fechaFallecimientoTemporal"
+                                   name="fechaFallecimientoTemporal" [required]="pacienteFallecido" [max]="hoy"
+                                   [min]="paciente?.fechaNacimiento" type="date">
+                    </plex-datetime>
+                    <plex-button type="success" icon="check" class="align-self-end" style="width: 50px;"
+                                 (click)="guardarFallecimiento()"
+                                 [disabled]="!fechaFallecimientoTemporal || fechaFallecimientoTemporal > hoy"
+                                 tooltip="Guardar" titlePosition="top">
+                    </plex-button>
+                </plex-grid>
+            </div>
+        </ng-container>
 
         <!-- Reporte de error en datos -->
         <ng-container *ngIf="validado">
-            <plex-bool [(ngModel)]="reportarError" name="reportarError" type="slide"
+            <plex-bool [(ngModel)]="reportarError" name="reportarError" type="slide" class="mt-4"
                        label="Los datos validados con RENAPER tienen un error y quiero reportarlo"
                        (change)="registrarError()">
             </plex-bool>
