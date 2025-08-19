@@ -85,6 +85,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         motivo: null,
         organizacionOrigen: null,
         profesional: null,
+        financiador: null,
+
         PaseAunidadOrganizativa: null
     };
     public poseeMovimientos: Boolean;
@@ -95,6 +97,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public selectorFinanciadores: IObraSocial[] = [];
     public obrasSociales: IObraSocial[] = [];
     public OSPrivada = false;
+    public esCensable = this.isCamaCensable();
+
 
     constructor(
         private plex: Plex,
@@ -141,7 +145,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             map(([snap, prestacion]) => snap.paciente ? snap.paciente.id : prestacion?.paciente.id)
         ) as Observable<string>;
     }
-
     ngOnInit() {
         this.view = this.mapaCamasService.view.getValue();
         this.fechaHasta = this.listadoInternacionService.fechaIngresoHasta.getValue();
@@ -169,7 +172,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 if (capa === 'estadistica-v2' && this.view === 'listado-internacion') {
                     return this.mapaCamasService.resumenInternacion$;
                 }
-
                 return of(null);
             }),
             map(resumen => resumen?.registros.filter(r => r.tipo === 'valoracion-inicial')),
@@ -196,20 +198,19 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             this.resumen = resumen;
             // Puede suceder, por error, que el ingreso impacte pero no se cree el movimiento correspondiente
             this.poseeMovimientos = !!(cama?.id); // si tiene cama, entonces registra al menos un movimiento
-
             if (paciente && paciente.financiador && paciente.financiador.length > 0) {
                 const os = paciente.financiador[0];
                 this.backupObraSocial = os;
             }
 
             if (this.prestacion) {
-                // capa estadistica o estadistica-v2 con ingreso cargado
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
                 if (this.origenExterno) {
                     this.check = typeof this.informeIngreso.organizacionOrigen === 'string';
                 }
                 this.fechaIngresoOriginal = new Date(this.informeIngreso.fechaIngreso);
                 this.paciente.obraSocial = this.prestacion.paciente.obraSocial;
+                this.changeTipoObraSocial();
             } else {
                 // capa medica/enfermeria, ingreso en estadistica o carga de prestacion en estadistica-v2
                 if (paciente.id) {
@@ -281,8 +282,12 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 return camasDisponibles;
             })
         );
-
         this.obraSocialService.getListado({}).subscribe(listado => this.selectorFinanciadores = listado.filter(financiador => this.obrasSociales.every(os => os.nombre !== financiador.nombre)));
+        if (this.informeIngreso.obraSocial) {
+            this.financiador = this.selectorFinanciadores.find(
+                f => f.codigoPuco === this.informeIngreso.obraSocial.codigoPuco
+            );
+        }
     }
 
     cargarUltimaInternacion(paciente: IPaciente) {
@@ -303,23 +308,31 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             }
         });
     }
-
     changeTipoObraSocial() {
         this.selectedOS = false;
-        if (this.informeIngreso.asociado?.id === 'Plan de salud privado o Mutual') {
+        this.esPrepaga = false;
+        this.financiador = null;
+        const asociadoId = typeof this.informeIngreso.asociado === 'string'
+            ? this.informeIngreso.asociado
+            : this.informeIngreso.asociado?.id;
+        if (asociadoId === 'Plan de salud privado o Mutual') {
             this.selectedOS = true;
-        }
-        this.esPrepaga = this.informeIngreso.asociado?.id === 'Plan de salud privado o Mutual';
-        if (this.esPrepaga || !this.informeIngreso.asociado) {
-            this.paciente.obraSocial = null;
-        } else if (this.informeIngreso.asociado?.id === 'Ninguno') {
-            this.paciente.obraSocial = 'Ninguno';
-        } else if (this.informeIngreso.asociado?.id === 'Sin Datos') {
-            this.paciente.obraSocial = 'Sin Datos';
-        } else {
-            this.paciente.obraSocial = this.backupObraSocial;
+            this.esPrepaga = true;
+            if (this.informeIngreso.obraSocial) {
+                const financiadorParaSelect = this.selectorFinanciadores.find(
+                    f => f.nombre === this.informeIngreso.obraSocial.nombre
+                );
+
+                if (financiadorParaSelect) {
+                    this.financiador = financiadorParaSelect;
+                } else {
+                    this.financiador = this.informeIngreso.obraSocial;
+                }
+            }
         }
     }
+
+
 
     selectCama(cama) {
         this.mapaCamasService.select(cama);
@@ -398,6 +411,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         return flagValid;
     }
 
+
     guardar(valid) {
         if (valid.formValid && this.validarRUP()) {
             if (this.cama.sala) {
@@ -443,7 +457,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             fechaNacimiento: this.paciente.fechaNacimiento,
             direccion: this.paciente.direccion,
             telefono: this.paciente.telefono,
-            obraSocial: this.paciente.obraSocial || this.financiador
+            obraSocial: this.paciente.obraSocial
         };
         if (this.capa === 'estadistica' || (this.capa === 'estadistica-v2' && !this.prestacion)) {
             this.ingresoExtendido(dtoPaciente);
@@ -479,6 +493,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 });
             })
         ) as Observable<IResumenInternacion>;
+    }
+
+    isCamaCensable(): boolean {
+        return !!this.prestacion?.id && !this.cama?.esCensable && (this.capa === 'estadistica' || this.capa === 'estadistica-v2');
     }
 
     ingresoSimplificado(estado, paciente, idInternacion = null, nuevaPrestacion = null) {
@@ -858,5 +876,24 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     public setFinanciador(financiador) {
         this.financiador = financiador;
+    }
+    onAsociadoChange(asociado) {
+        this.informeIngreso.asociado = asociado;
+        this.changeTipoObraSocial();
+    }
+
+    onFinanciadorChange(financiadorSeleccionado) {
+        this.financiador = financiadorSeleccionado;
+        if (this.paciente.obraSocial) {
+            this.paciente.obraSocial.financiador = financiadorSeleccionado.financiador;
+            this.paciente.obraSocial.codigoPuco = financiadorSeleccionado.codigoPuco;
+            this.paciente.obraSocial.nombre = financiadorSeleccionado.nombre;
+        } else {
+            this.paciente.obraSocial = {
+                codigoPuco: financiadorSeleccionado.codigoPuco,
+                nombre: financiadorSeleccionado.nombre,
+                financiador: financiadorSeleccionado.financiador
+            };
+        }
     }
 }
