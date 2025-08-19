@@ -27,6 +27,7 @@
         }
 
         &:first-child {
+
             th,
             td {
                 border-top: none;
@@ -39,6 +40,12 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+}
+
+.table-col {
+    width: 33.33%;
+    text-align: left;
+    vertical-align: top;
 }
 
 .icono-circulo {

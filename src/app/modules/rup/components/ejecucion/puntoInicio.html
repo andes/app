@@ -250,7 +250,7 @@
                         <tbody>
                             <ng-container *ngFor="let turno of bloque.turnos; let i=index">
                                 <tr *ngIf="turno" class="hover">
-                                    <td class="align-bottom">
+                                    <td class="align-bottom  table-col">
                                         <div class="d-flex flex-column">
                                             <div class="badge-list">
                                                 <div *ngIf="turno?.prestaciones[0]?.estados">
@@ -268,7 +268,8 @@
                                                 <ng-container *ngIf="verificarTurno(turno)">
                                                     <plex-badge [type]="turno.asistencia === 'asistio' ? 'success' : (turno.asistencia === 'noAsistio' ? 'danger' : 'info')"
                                                                 class="mb-1">
-                                                        {{turno.asistencia === 'asistio' ? 'asistió': (turno.asistencia
+                                                        {{turno.asistencia === 'asistio' ? 'asistió':
+                                                        (turno.asistencia
                                                         === 'noAsistio' ? 'No asistió' : turno.asistencia)}}
                                                         <ng-container *ngIf="turno.horaAsistencia">
                                                             {{ turno.horaAsistencia | hora }} hs </ng-container>
@@ -292,21 +293,27 @@
                                             </ng-container>
                                         </div>
                                     </td>
-                                    <td class="align-bottom">
-                                        <small class="d-flex" *ngIf="turno.paciente?.id"><strong>{{ turno.paciente |
-                                                nombre
-                                                }}</strong>
-                                        </small>
-                                        <small>
-                                            <span *ngIf="turno.paciente?.id">
-                                                <span *ngIf="turno.paciente.documento !== ''">
-                                                    DNI {{turno.paciente.documento}}
-                                                </span>
-                                                <span *ngIf="turno.paciente.documento === ''">
-                                                    Sin documento (temporal)
-                                                </span>
-                                            </span>
-                                        </small>
+                                    <td class="align-bottom  table-col">
+                                        <div class="d-flex align-items-start">
+                                            <div>
+                                                <small class="d-flex" *ngIf="turno.paciente?.id">
+                                                    <strong>{{ turno.paciente | nombre }}</strong>
+                                                </small>
+                                                <small>
+                                                    <span *ngIf="turno.paciente?.id">
+                                                        <span>
+                                                            {{ (turno.paciente.documento | number) || 'Sin documento
+                                                            (temporal)' }}
+                                                        </span>
+                                                    </span>
+                                                </small>
+                                            </div>
+                                            <div *ngIf="turno?.nota" class="ml-2 mt-4">
+                                                <plex-help type="help" size="sm" icon="message" cardSize="half">
+                                                    {{ turno.nota }}
+                                                </plex-help>
+                                            </div>
+                                        </div>
                                         <br *ngIf="verTipoPrestacion(turno)">
                                         <small>
                                             <span class="text-muted" *ngIf="verTipoPrestacion(turno)">
@@ -318,9 +325,6 @@
                                               *ngIf="turno?.estado === 'turnoDoble'">
                                             Turno Doble
                                         </span>
-                                        <span *ngIf="turno?.nota">
-                                            <i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
-                                        </span>
 
                                         <div *ngIf="turno?.confirmatedAt">
                                             <br />
@@ -329,7 +333,7 @@
                                             </plex-badge>
                                         </div>
                                     </td>
-                                    <td class="text-right align-bottom">
+                                    <td class="text-right align-bottom  table-col">
                                         <ng-container
                                                       *ngIf="turno.tipoPrestacion && turno.paciente?.id && !(turno.paciente | pacienteRestringido)">
                                             <div class="button-list">
@@ -559,7 +563,6 @@
                                         </td>
                                     </tr>
                                 </ng-container>
-
                             </tbody>
                         </table>
                     </ng-container>
