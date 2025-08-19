@@ -60,7 +60,7 @@
         </plex-label>
 
         <plex-label *ngIf="showFechaNacimiento" titulo="Fecha de Nacimiento"
-                    subtitulo="{{ (paciente.fechaNacimiento | fecha) || 'Desconocida' }}"
+                    subtitulo="{{ (paciente.fechaNacimiento | fecha:(paciente.scan ? 'utc' : '')) || 'Desconocida' }}"
                     [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
