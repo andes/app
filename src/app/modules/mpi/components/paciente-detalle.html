@@ -17,13 +17,12 @@
             [hint]="'Dato validado por RENAPER'">
             Fallecido: {{ paciente.fechaFallecimiento | fecha }}
         </plex-badge>
-
+        
         <plex-badge *ngIf="!paciente.fechaFallecimiento && paciente.fallecimientoManual?.fecha" type="danger"
             hintIcon="informacion" [hint]="'Registrado por ' 
-    + (paciente.fallecimientoManual?.registradoPor?.apellido || '') + ', ' 
-    + (paciente.fallecimientoManual?.registradoPor?.nombre || '') 
-    + ' el ' 
-    + (paciente.fallecimientoManual?.registradoEn | date:'short')">
+        + (paciente.fallecimientoManual?.registradoPor | nombre) 
+        + ' el ' 
+        + (paciente.fallecimientoManual?.registradoEn | date:'short')">
             Fallecido: {{ paciente.fallecimientoManual?.fecha | fecha }}
         </plex-badge>
 
