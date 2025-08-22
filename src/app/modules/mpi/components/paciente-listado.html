@@ -31,7 +31,7 @@
 
             <plex-badge *ngIf="paciente.fechaFallecimiento || paciente.fallecimientoManual?.fecha" type="danger"
                 icon="help">
-                Fallecido: {{ paciente.fechaFallecimiento || paciente.fallecimientoManual?.fecha | fecha }}
+                Fallecido: {{ (paciente.fechaFallecimiento || paciente.fallecimientoManual?.fecha) | fecha }}
             </plex-badge>
 
             <plex-button *ngIf="showBtnRelaciones(paciente)" type="info" size="sm" icon="usuarios"
