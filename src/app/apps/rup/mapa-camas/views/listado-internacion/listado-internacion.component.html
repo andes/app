@@ -17,7 +17,7 @@
                     </plex-label>
                 </div>
 
-                <div *ngIf="!estaBuscando && listadoInternacionService.missingFilters$ | async" justify="center"
+                <div *ngIf="!estaBuscando && !(listadoInternacionService.fechasIngreso$ | async)" justify="center"
                      class="mt-5">
                     <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
                                 titulo="No hay resultados"
@@ -25,7 +25,7 @@
                     </plex-label>
                 </div>
 
-                <ng-container *ngIf="!estaBuscando && !(listadoInternacionService.missingFilters$ | async)">
+                <ng-container *ngIf="!estaBuscando && (listadoInternacionService.fechasIngreso$ | async) ">
                     <div *ngIf="!(listaInternacion$ | async)?.length" justify="center" class="mt-5">
                         <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
                                     titulo="No hay resultados"
