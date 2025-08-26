@@ -2,7 +2,7 @@ import moment from 'moment';
 
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PlexModalComponent } from '@andes/plex';
 import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
 import { IPaciente, IPacienteBasico } from '../../../core/mpi/interfaces/IPaciente';

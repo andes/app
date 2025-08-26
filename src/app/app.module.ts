@@ -16,7 +16,8 @@ de la siguiente manera:
 // Angular
 import { Auth, AuthModule } from '@andes/auth';
 // Global
-import { Plex, PlexModule } from '@andes/plex';
+import { PlexModule, Plex } from '@andes/plex';
+
 import { AuthContext, Server, ServerErrorHandler, SharedModule } from '@andes/shared';
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
@@ -26,12 +27,12 @@ import { ErrorHandler, LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HammerModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgDragDropModule } from 'ng-drag-drop';
 import { RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
 // Libs
 import { NgChartsModule } from 'ng2-charts';
 import { NgxImageCompressService } from 'ngx-image-compress';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { DndModule } from 'ngx-drag-drop';
 /** Configuraciones de entorno */
 import { environment } from '../environments/environment';
 // Locales
@@ -44,7 +45,7 @@ import { CampaniaVisualizacionComponent } from './apps/campaniaSalud/components/
 // Campañas Salud
 import { CampaniaSaludService } from './apps/campaniaSalud/services/campaniaSalud.service';
 import { GestorUsuariosProvidersModule } from './apps/gestor-usuarios/gestor-usuarios.providers';
-import { MitosModule } from './apps/mitos';
+import { MitosModule } from './apps/mitos/mitos.module';
 import { TurneroProvidersModule } from './apps/turnero/turnero.providers';
 import { TurnosPrestacionesService } from './components/buscadorTurnosPrestaciones/services/turnos-prestaciones.service';
 import { EspecialidadCreateUpdateComponent } from './components/especialidad/especialidad-create-update.component';
@@ -117,7 +118,6 @@ import { ValidarCertificadoService } from './modules/epidemiologia/services/vali
 import { MPILibModule } from './modules/mpi/mpi-lib.module';
 import { FormulaBaseService } from './modules/rup/components/formulas';
 import { RiesgoCardiovascularService } from './modules/rup/components/formulas/riesgoCardiovascular.service';
-import { demandaInsatisfechaComponent } from './components/turnos/dashboard/demandaInsatisfecha';
 
 // INTERNACION
 import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
@@ -207,7 +207,7 @@ registerLocaleData(localeEs, 'es');
         TurneroProvidersModule,
         NgChartsModule,
         MitosModule.forRoot(),
-        NgDragDropModule.forRoot(),
+        DndModule,
         routing,
         InfiniteScrollModule,
         GestorUsuariosProvidersModule,
@@ -230,29 +230,20 @@ registerLocaleData(localeEs, 'es');
         ProfesionalComponent, ProfesionalCreateUpdateComponent, FirmaProfesionalComponent,
         ProfesionalCreateUpdateComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
-
-
         BuscadorCie10Component,
         AgregarPacienteComponent,
-
         PermisosComponent,
-
-        // ActivarAppComponent,
         ReporteC2Component,
         CantidadConsultaXPrestacionComponent,
         EncabezadoReportesComponent,
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         MapaEspacioFisicoVistaComponent,
-
         HeaderPacienteComponent,
         PuntoInicioInternacionComponent,
         ValidarCertificadoComponent,
-        // demandaInsatisfechaComponent,
         FarmaciaComponent,
         FarmaciaCreateUpdateComponent,
-
-        // Solicitudes
         PrestamosHcComponent,
         ListarSolicitudesComponent,
         ListarPrestamosComponent,
@@ -260,8 +251,6 @@ registerLocaleData(localeEs, 'es');
         DevolverHcComponent,
         HistorialCarpetasComponent,
         SolicitudManualComponent,
-
-
         NovedadesComponent,
         ListaNovedadesComponent,
         HeaderNovedadesComponent,

@@ -15,7 +15,7 @@ import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { Plex } from '@andes/plex';
 import { HeaderPacienteComponent } from 'src/app/components/paciente/headerPaciente.component';
-import { IPlexTableColumns } from '@andes/plex/src/lib/table/table.interfaces';
+import { IPlexTableColumns } from '@andes/plex';
 import { Location } from '@angular/common';
 import { Auth } from '@andes/auth';
 

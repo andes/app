@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PlexModalComponent } from '@andes/plex';
 import { Component, EventEmitter, HostBinding, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import moment from 'moment';
@@ -239,11 +239,11 @@ export class ClonarAgendaComponent implements OnInit {
                         if (agenda.profesionales.map(elem => {
                             return elem.id;
                         }).some
-                        (v => {
-                            return this.agenda.profesionales.map(elem => {
-                                return elem.id;
-                            }).includes(v);
-                        })) {
+                            (v => {
+                                return this.agenda.profesionales.map(elem => {
+                                    return elem.id;
+                                }).includes(v);
+                            })) {
                             agenda.conflictoProfesional = 1;
                             dia.estado = 'conflicto';
 

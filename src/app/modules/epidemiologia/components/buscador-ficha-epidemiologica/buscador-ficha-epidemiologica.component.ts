@@ -13,7 +13,7 @@ import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
 import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
 import { SECCION_CLASIFICACION, SECCION_LABORATORIO, SECCION_OPERACIONES, TYPE_FICHA, FIELD_PRC } from '../../constantes';
-import { PlexWrapperComponent } from '@andes/plex/src/lib/wrapper/wrapper.component';
+import { PlexWrapperComponent } from '@andes/plex';
 
 @Component({
     selector: 'app-buscador-ficha-epidemiologica',

@@ -52,7 +52,7 @@ import { TOPLibModule } from '../top/top.module';
 @NgModule({
     imports: [
         CommonModule,
-        PlexModule.forRoot({ networkLoading: true }),
+        PlexModule,//.forRoot({ networkLoading: true }),
         FormsModule,
         RouterModule,
         HttpClientModule,

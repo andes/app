@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { Plex } from '@andes/plex';
-import { IPlexTableColumns } from '@andes/plex/src/lib/table/table.interfaces';
+import { IPlexTableColumns } from '@andes/plex';
 import { Location } from '@angular/common';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';

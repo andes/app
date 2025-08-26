@@ -87,11 +87,11 @@ import { RUPLibModule } from 'src/app/modules/rup/rup-lib.module';
     imports: [
         BrowserModule,
         AppRoutingModule,
-        PlexModule.forRoot({ networkLoading: true }),
+        PlexModule, //.forRoot({ networkLoading: true }),
         FormsModule,
         HttpClientModule,
         InfiniteScrollModule,
-        SharedModule.forRoot(environment.API),
+        SharedModule, //.forRoot(environment.API),
         ReactiveFormsModule,
         MPILibModule,
         BrowserAnimationsModule,

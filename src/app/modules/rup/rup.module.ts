@@ -6,7 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { NgDragDropModule } from 'ng-drag-drop';
+import { DndModule } from 'ngx-drag-drop';
 import { NgChartsModule } from 'ng2-charts';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
@@ -46,7 +46,7 @@ export const RUP_COMPONENTS = [
 @NgModule({
     imports: [
         CommonModule,
-        PlexModule.forRoot({ networkLoading: true }),
+        PlexModule, //.forRoot({ networkLoading: true }),
         FormsModule,
         RouterModule,
         HttpClientModule,
@@ -57,7 +57,7 @@ export const RUP_COMPONENTS = [
         TOPLibModule,
         DirectiveLibModule,
         CITASLibModule,
-        NgDragDropModule,
+        DndModule,
         ScrollingModule,
         NgChartsModule,
         InfiniteScrollModule,

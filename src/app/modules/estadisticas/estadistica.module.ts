@@ -28,7 +28,7 @@ import { DirectiveLibModule } from 'src/app/directives/directives.module';
 @NgModule({
     imports: [
         CommonModule,
-        PlexModule.forRoot({ networkLoading: true }),
+        PlexModule, //.forRoot({ networkLoading: true }),
         NgChartsModule,
         FormsModule,
         HttpClientModule,

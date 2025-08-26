@@ -8,7 +8,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HammerModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-import { NgDragDropModule } from 'ng-drag-drop';
+import { DndModule } from 'ngx-drag-drop';
 import { DirectiveLibModule } from 'src/app/directives/directives.module';
 import { OrganizacionLibModule } from '../../../components/organizacion/organizacion-lib.module';
 import { MPILibModule } from '../../../modules/mpi/mpi-lib.module';
@@ -145,7 +145,7 @@ export const INTERNACION_PROVIDERS = [
         MitosModule,
         OrganizacionLibModule,
         ElementosRUPModule,
-        NgDragDropModule,
+        DndModule,
         RUPLibModule,
         ScrollingModule,
         CdkTableModule,

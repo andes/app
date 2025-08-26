@@ -1,5 +1,5 @@
 import { Plex } from '@andes/plex';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PlexModalComponent } from '@andes/plex';
 import { cache, calcularEdad } from '@andes/shared';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import moment from 'moment';
@@ -156,30 +156,30 @@ export class InscripcionComponent implements OnInit {
         this.infoNrotramite = false;
         if (grupo) {
             switch (grupo.nombre) {
-            case 'discapacidad':
-                this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
-                this.fechaMaximaNacimiento = moment().subtract(12, 'years').toDate();
-                break;
-            case 'mayores60':
-                this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
-                this.fechaMaximaNacimiento = moment().subtract(60, 'years').toDate();
-                break;
-            case 'personal-salud':
-            case 'policia':
-                this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
-                this.fechaMaximaNacimiento = moment().subtract(18, 'years').toDate();
-                break;
-            case 'factores-riesgo':
-                this.fechaMinimaNacimiento = moment().subtract(60, 'years').toDate();
-                this.fechaMaximaNacimiento = moment().subtract(12, 'years').toDate();
-                break;
-            default:
-                const excepciones = grupo.excepciones.any[0].all;
-                if (excepciones) {
-                    this.fechaMinimaNacimiento = moment().subtract(excepciones[1].value, 'years').toDate();
-                    this.fechaMaximaNacimiento = moment().subtract(excepciones[0].value, 'years').toDate();
-                }
-                break;
+                case 'discapacidad':
+                    this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
+                    this.fechaMaximaNacimiento = moment().subtract(12, 'years').toDate();
+                    break;
+                case 'mayores60':
+                    this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
+                    this.fechaMaximaNacimiento = moment().subtract(60, 'years').toDate();
+                    break;
+                case 'personal-salud':
+                case 'policia':
+                    this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
+                    this.fechaMaximaNacimiento = moment().subtract(18, 'years').toDate();
+                    break;
+                case 'factores-riesgo':
+                    this.fechaMinimaNacimiento = moment().subtract(60, 'years').toDate();
+                    this.fechaMaximaNacimiento = moment().subtract(12, 'years').toDate();
+                    break;
+                default:
+                    const excepciones = grupo.excepciones.any[0].all;
+                    if (excepciones) {
+                        this.fechaMinimaNacimiento = moment().subtract(excepciones[1].value, 'years').toDate();
+                        this.fechaMaximaNacimiento = moment().subtract(excepciones[0].value, 'years').toDate();
+                    }
+                    break;
             }
         }
     }

@@ -26,8 +26,9 @@
 
         </div>
         <!-- Area droppable del elemento -->
-        <div [ngClass]="{'col-7': !soloValores, 'col-12': soloValores}" droppable [dropScope]="'registros-rup'"
-             [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)">
+        <div [ngClass]="{'col-7': !soloValores, 'col-12': soloValores}" dndDropzone [dndDropzone]="'registros-rup'"
+             (dndDrop)="onConceptoDrop($event)">
+
             <div *ngIf="soloValores && registro?.registros?.length === 0" class="add mt-4">
                 No hay registros vinculados
             </div>

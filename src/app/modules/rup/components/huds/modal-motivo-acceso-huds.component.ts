@@ -1,5 +1,5 @@
 import { Component, Output, ViewChild, Input, EventEmitter, OnInit } from '@angular/core';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PlexModalComponent } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { ProfesionalService } from 'src/app/services/profesional.service';
 import { DomSanitizer } from '@angular/platform-browser';

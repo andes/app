@@ -1,7 +1,7 @@
 import { ZonaSanitariaService } from './../../../../services/zonaSanitaria.service';
 import { GrupoPoblacionalService } from './../../../../services/grupo-poblacional.service';
-import { Component, Input, ViewChildren, QueryList, OnChanges, AfterViewInit, ViewChild, OnInit, Inject, Optional, InjectionToken } from '@angular/core';
-import { PlexPanelComponent } from '@andes/plex/src/lib/accordion/panel.component';
+import { Component, Input, ViewChildren, QueryList, OnChanges, ViewChild, OnInit } from '@angular/core';
+import { PlexPanelComponent } from '@andes/plex';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -144,59 +144,59 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges {
                         this.loading = true;
                         // [TODO] Buscar según el tipo
                         switch (this.item.type) {
-                        case 'prestacion':
-                            const srhPrest: any = { ids: items };
-                            if (this.item.subtype) {
-                                srhPrest.ambito = this.item.subtype;
-                            }
-                            this.conceptosTurneablesService.search(srhPrest).subscribe((data) => {
-                                this.loading = false;
-                                this.seleccionados = [...data];
-                                this.parseSelecionados();
-                            });
-                            break;
-                        case 'organizacion':
-                            this.organizacionService.get({ ids: items }).subscribe((data) => {
-                                this.loading = false;
-                                this.seleccionados = [...data];
-                                this.parseSelecionados();
-                            });
-                            break;
-                        case 'zona-sanitaria':
-                            this.zonaSanitariaService.search({ ids: items }).subscribe((data) => {
-                                this.loading = false;
-                                this.seleccionados = [...data];
-                                this.parseSelecionados();
-                            });
-                            break;
-                        case 'grupo-poblacional':
-                            this.grupoPoblacionalService.search({ ids: items }).subscribe((data) => {
-                                this.loading = false;
-                                this.seleccionados = [...data];
-                                this.parseSelecionados();
-                            });
-                            break;
-                        case 'queries':
-                            this.queryService.getAllQueries({ _id: items }).subscribe((data) => {
-                                this.loading = false;
-                                this.seleccionados = [...data];
-                                this.parseSelecionados();
-                            });
-                            break;
-                        case 'unidad-organizativa':
-                            this.organizacionService.unidadesOrganizativas(this.organizacion).subscribe((data) => {
-                                this.seleccionados = data.filter(u => items.includes(u.id));
-                                this.loading = false;
-                                this.parseSelecionados();
-                            });
-                            break;
-                        case 'servicio-intermedio':
-                            this.servicioIntermedio.search({ ids: items }).subscribe((data) => {
-                                this.seleccionados = data.filter(u => items.includes(u.id));
-                                this.loading = false;
-                                this.parseSelecionados();
-                            });
-                            break;
+                            case 'prestacion':
+                                const srhPrest: any = { ids: items };
+                                if (this.item.subtype) {
+                                    srhPrest.ambito = this.item.subtype;
+                                }
+                                this.conceptosTurneablesService.search(srhPrest).subscribe((data) => {
+                                    this.loading = false;
+                                    this.seleccionados = [...data];
+                                    this.parseSelecionados();
+                                });
+                                break;
+                            case 'organizacion':
+                                this.organizacionService.get({ ids: items }).subscribe((data) => {
+                                    this.loading = false;
+                                    this.seleccionados = [...data];
+                                    this.parseSelecionados();
+                                });
+                                break;
+                            case 'zona-sanitaria':
+                                this.zonaSanitariaService.search({ ids: items }).subscribe((data) => {
+                                    this.loading = false;
+                                    this.seleccionados = [...data];
+                                    this.parseSelecionados();
+                                });
+                                break;
+                            case 'grupo-poblacional':
+                                this.grupoPoblacionalService.search({ ids: items }).subscribe((data) => {
+                                    this.loading = false;
+                                    this.seleccionados = [...data];
+                                    this.parseSelecionados();
+                                });
+                                break;
+                            case 'queries':
+                                this.queryService.getAllQueries({ _id: items }).subscribe((data) => {
+                                    this.loading = false;
+                                    this.seleccionados = [...data];
+                                    this.parseSelecionados();
+                                });
+                                break;
+                            case 'unidad-organizativa':
+                                this.organizacionService.unidadesOrganizativas(this.organizacion).subscribe((data) => {
+                                    this.seleccionados = data.filter(u => items.includes(u.id));
+                                    this.loading = false;
+                                    this.parseSelecionados();
+                                });
+                                break;
+                            case 'servicio-intermedio':
+                                this.servicioIntermedio.search({ ids: items }).subscribe((data) => {
+                                    this.seleccionados = data.filter(u => items.includes(u.id));
+                                    this.loading = false;
+                                    this.parseSelecionados();
+                                });
+                                break;
                         }
                     }
                 } else {
@@ -220,50 +220,50 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges {
             return event.callback([...this.seleccionados]);
         }
         switch (type) {
-        case 'prestacion':
-            query.term = '^' + event.query;
-            if (subtype) {
-                query.ambito = subtype;
-            }
-            this.conceptosTurneablesService.search(query).subscribe((data) => {
-                data = [...data, ...this.seleccionados || []];
-                event.callback(data);
-            });
-            break;
-        case 'organizacion':
-            this.organizacionService.get({ nombre: event.query }).subscribe((data) => {
-                event.callback(data);
-            });
-            break;
-        case 'zona-sanitaria':
-            query.nombre = '^' + event.query;
-            this.zonaSanitariaService.search(query).subscribe((data) => {
-                event.callback(data);
-            });
-            break;
-        case 'queries':
-            this.queryService.getAllQueries({ desdeAndes: true }).subscribe((data) => {
-                event.callback(data);
-            });
-            break;
-        case 'grupo-poblacional':
-            this.grupoPoblacionalService.search().subscribe((data) => {
-                event.callback(data);
-            });
-            break;
-        case 'unidad-organizativa':
-            this.organizacionService.unidadesOrganizativas(this.auth.organizacion.id).subscribe((data) => {
-                event.callback(data);
+            case 'prestacion':
+                query.term = '^' + event.query;
+                if (subtype) {
+                    query.ambito = subtype;
+                }
+                this.conceptosTurneablesService.search(query).subscribe((data) => {
+                    data = [...data, ...this.seleccionados || []];
+                    event.callback(data);
+                });
+                break;
+            case 'organizacion':
+                this.organizacionService.get({ nombre: event.query }).subscribe((data) => {
+                    event.callback(data);
+                });
+                break;
+            case 'zona-sanitaria':
+                query.nombre = '^' + event.query;
+                this.zonaSanitariaService.search(query).subscribe((data) => {
+                    event.callback(data);
+                });
+                break;
+            case 'queries':
+                this.queryService.getAllQueries({ desdeAndes: true }).subscribe((data) => {
+                    event.callback(data);
+                });
+                break;
+            case 'grupo-poblacional':
+                this.grupoPoblacionalService.search().subscribe((data) => {
+                    event.callback(data);
+                });
+                break;
+            case 'unidad-organizativa':
+                this.organizacionService.unidadesOrganizativas(this.auth.organizacion.id).subscribe((data) => {
+                    event.callback(data);
 
-            });
-            break;
-        case 'servicio-intermedio':
-            query.term = '^' + event.query;
-            this.servicioIntermedio.search(query).subscribe((data) => {
-                data = [...data, ...this.seleccionados || []];
-                event.callback(data);
-            });
-            break;
+                });
+                break;
+            case 'servicio-intermedio':
+                query.term = '^' + event.query;
+                this.servicioIntermedio.search(query).subscribe((data) => {
+                    data = [...data, ...this.seleccionados || []];
+                    event.callback(data);
+                });
+                break;
         }
     }
 

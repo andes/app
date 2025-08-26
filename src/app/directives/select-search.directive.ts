@@ -1,5 +1,5 @@
 import { Input, ViewContainerRef, Directive, OnDestroy, AfterContentInit } from '@angular/core';
-import { PlexSelectComponent } from '@andes/plex/src/lib/select/select.component';
+import { PlexSelectComponent } from '@andes/plex';
 import { Subscription } from 'rxjs';
 import { SelectSearchService } from '../services/select-search.service';
 

@@ -1,6 +1,5 @@
 import { Auth } from '@andes/auth';
-import { Plex } from '@andes/plex';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { Plex, PlexModalComponent } from '@andes/plex';
 import { Component, EventEmitter, HostBinding, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
