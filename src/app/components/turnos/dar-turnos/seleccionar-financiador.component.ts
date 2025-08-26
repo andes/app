@@ -114,9 +114,9 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
     }
 
     private cargarFinanciadoresPorOrigen(origen: string) {
-        return this.paciente.financiador.filter(
-            (financiador: any) => financiador.origen === origen
-        );
+        return this.paciente?.financiador?.filter(
+            (financiador: any) => financiador?.origen === origen
+        ) ?? [];
     }
 
     private cargarOpcionesFinanciadores() {
