@@ -182,12 +182,19 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     ) { }
 
     ngOnInit() {
+
         this.hudsPermiso = this.auth.check('huds:visualizacionHuds');
         this.documentacionPermiso = this.auth.check('mpi:paciente:documentacion');
     }
 
+
     ngOnChanges() {
-        if (this.reload) {
+        const requiereReload = this.reload ||
+        !this.paciente?.financiador ||
+        !this.paciente?.direccion ||
+        !this.paciente?.contacto;
+
+        if (requiereReload && this.paciente?.id) {
             this.pacienteService.getById(this.paciente.id).subscribe(result => {
                 this.paciente = result;
                 this.loadObraSocial();
@@ -197,7 +204,6 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
             this.loadObraSocial();
             this.doRelaciones();
         }
-        this.notasDestacadas = (this.paciente?.notas) ? this.paciente.notas.filter(nota => (nota && nota.destacada)) : [];
     }
 
     /**
@@ -213,19 +219,24 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
             this.relaciones?.length && this.relaciones[0];
     }
 
+
     // TODO: Eliminar este metodo y utilizar el financiador que viene en el paciente (una vez que se agregue en el multimatch)
+
     loadObraSocial() {
-        this.obraSocial = null;
+
+
         if (!this.paciente || !this.paciente.documento) {
             this.obraSocialCacheService.setFinanciadorPacienteCache(null);
             this.obraSocial = null;
             return;
         }
+
         if (this.paciente.financiador && this.paciente.financiador.length > 0 && this.paciente.financiador[0] && this.paciente.financiador[0].nombre) {
             this.obraSocial = this.paciente.financiador[0] as any;
             this.obraSocialCacheService.setFinanciadorPacienteCache(this.obraSocial);
             return;
         } else {
+            this.obraSocial = null;
             this.obraSocialCacheService.setFinanciadorPacienteCache(null);
             return;
         }
