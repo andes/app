@@ -1,3 +1,10 @@
+## [5.168.2](https://github.com/andes/app/compare/v5.168.1...v5.168.2) (2025-08-27)
+
+
+### Bug Fixes
+
+* **receta:** amplia dato diagnostico con atributo descripcion ([#3222](https://github.com/andes/app/issues/3222)) ([ddbb5d0](https://github.com/andes/app/commit/ddbb5d03508a0f5f7912c6d0e29d3c88a76ce396))
+
 ## [5.168.1](https://github.com/andes/app/compare/v5.168.0...v5.168.1) (2025-08-13)
 
 
