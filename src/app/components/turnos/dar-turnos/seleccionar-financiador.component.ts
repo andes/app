@@ -33,7 +33,7 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
     public patronNumerico = '^[0-9]*$';
 
     private timeout: any;
-    private busquedaFinanciador;
+    public busquedaFinanciador;
 
     @Input() paciente;
     @Input() editable = false;
