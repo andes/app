@@ -33,7 +33,7 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
     public patronNumerico = '^[0-9]*$';
 
     private timeout: any;
-    private busquedaFinanciador;
+    public busquedaFinanciador;
 
     @Input() paciente;
     @Input() editable = false;
@@ -47,6 +47,7 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
 
 
     ngOnChanges(changes: SimpleChanges) {
+        this.numeroAfiliado = this.paciente?.financiador?.length ? this.paciente.financiador[0].numeroAfiliado : undefined;
         if (changes.paciente?.currentValue?.id) {
             this.resetComponentState();
 
