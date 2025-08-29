@@ -197,7 +197,7 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     mapeoGenero() {
         switch ((this.paciente.sexo as any)?.id) {
             case 'masculino':
-                this.generos.subscribe(g => this.paciente.genero = g.find(g2 => g2.id === 'varón'));
+                this.generos.subscribe(g => this.paciente.genero = g.find(g2 => g2.id === 'varon'));
                 break;
             case 'femenino':
                 this.generos.subscribe(g => this.paciente.genero = g.find(g2 => g2.id === 'mujer'));
