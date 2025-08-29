@@ -59,7 +59,7 @@
                    placeholder="Buscar recetas..." [autoFocus]="true">
         </plex-text>
         <div class="my-2">
-            <ul *ngIf="busquedaRecetas.length" class="hover listado list-unstyled">
+            <ul *ngIf="busquedaRecetas?.length" class="hover listado list-unstyled">
                 <ng-container *ngFor="let grupo of busquedaRecetas; let iReceta = index">
                     <li>
                         <plex-bool [readonly]="!esRecetaSeleccionable(grupo?.recetas[0])"
@@ -72,11 +72,12 @@
                                     Tratamiento prolongado: {{grupo.recetas[0].medicamento?.ordenTratamiento + 1
                                     }} de {{grupo.recetas[0].medicamento.tiempoTratamiento?.id}}</span>
                             </div>
-                            <div class="rup-card mini recetas total" [ngClass]="{'active': huds.isOpen(grupo, 'receta')}"
-                                (click)="emitTabs(grupo, 'receta', iReceta)">
+                            <div class="rup-card mini recetas total"
+                                 [ngClass]="{'active': huds.isOpen(grupo, 'receta')}"
+                                 (click)="emitTabs(grupo, 'receta', iReceta)">
                                 <div class="rup-header">
                                     <div class="rup-border rup-border-recetas"
-                                        [ngClass]="{'active': huds.isOpen(grupo, 'receta')}">
+                                         [ngClass]="{'active': huds.isOpen(grupo, 'receta')}">
                                         <div class="row p-0 m-0 border-secondary border-left-0">
                                             <div class="col-9 p-0 m-0">
                                                 <div class="row m-0 p-0">
@@ -90,7 +91,8 @@
                                                             <div class="col-10 p-0 m-0">
                                                                 <div class="sugerido">
                                                                     <small>Fecha de Registro:
-                                                                        {{ grupo.recetas[0].fechaRegistro | date:'short' }}
+                                                                        {{ grupo.recetas[0].fechaRegistro | date:'short'
+                                                                        }}
                                                                     </small>
                                                                     <br>
                                                                     <small>Profesional: {{
@@ -110,9 +112,11 @@
                                                                     [type]="estadoReceta[grupo.recetas[0].estadoActual.tipo]">
                                                             {{ grupo.recetas[0].estadoActual.tipo.replace('-', ' ') }}
                                                         </plex-badge>
-                                                        <plex-badge *ngIf="grupo.recetas[0].estadoDispensaActual" size="sm"
+                                                        <plex-badge *ngIf="grupo.recetas[0].estadoDispensaActual"
+                                                                    size="sm"
                                                                     [type]="estadoDispensa[grupo.recetas[0].estadoDispensaActual.tipo]">
-                                                            {{ grupo.recetas[0].estadoDispensaActual.tipo.replace('-', ' ')
+                                                            {{ grupo.recetas[0].estadoDispensaActual.tipo.replace('-', '
+                                                            ')
                                                             }}
                                                         </plex-badge>
                                                     </div>
@@ -128,7 +132,7 @@
             </ul>
         </div>
 
-        <div *ngIf="!busquedaRecetas.length">
+        <div *ngIf="!busquedaRecetas?.length">
             <hr class="mt-0">
             <div class="item-lista-vacia">
                 <plex-label size="sm" justify="center" icon="adi adi-listado-receta"
