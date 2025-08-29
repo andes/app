@@ -28,15 +28,16 @@ export class AppComponent {
     public foto: any;
     public tieneFoto = false;
     public usuario;
+
     private initStatusCheck() {
         if (environment.APIStatusCheck) {
             setTimeout(() => {
                 this.server.get('/core/status', { params: null, showError: false, showLoader: false }).pipe(
                     finalize(() => this.initStatusCheck()))
-                    .subscribe(
-                        (data) => this.plex.updateAppStatus(data),
-                        (err) => this.plex.updateAppStatus({ API: 'Error' })
-                    );
+                    .subscribe({
+                        next: (data) => this.plex.updateAppStatus(data),
+                        error: () => this.plex.updateAppStatus({ API: 'Error' })
+                    });
             }, 100000);
         } else {
             this.plex.updateAppStatus({ API: 'OK' });
@@ -62,7 +63,7 @@ export class AppComponent {
         }
     ];
 
-    private menuList = [];
+    public menuList = [];
     private modulos$: Observable<any[]>;
 
     // private loading = true;
@@ -147,6 +148,22 @@ export class AppComponent {
         }
     }
 
+    private orderItems(items) {
+        this.menuList = items.sort((a, b) => {
+            const aHasSubmodules = a.submodulos && a.submodulos.length > 0;
+            const bHasSubmodules = b.submodulos && b.submodulos.length > 0;
+
+            if (!aHasSubmodules && bHasSubmodules) {return -1;}
+            if (aHasSubmodules && !bHasSubmodules) {return 1;}
+
+            if (!a.orden && !b.orden) {return 0;}
+            if (!a.orden) {return 1;}
+            if (!b.orden) {return -1;}
+
+            return a.orden - b.orden;
+        });
+    }
+
     public checkPermissions() {
         const modulos = [];
         const modulosNovedades = [];
@@ -168,25 +185,53 @@ export class AppComponent {
 
         this.modulos$.subscribe(registros => {
             registros.forEach((modulo) => {
+                const menuOption = {
+                    id: modulo._id,
+                    label: modulo.nombre,
+                    icon: modulo.icono,
+                    prefix: 'adi',
+                    color: modulo.color,
+                    submodulos: []
+                };
+
                 modulo.permisos.forEach((permiso, index) => {
                     if (this.auth.getPermissions(permiso).length > 0) {
                         if (modulos.indexOf(modulo._id) === -1) {
-
                             modulosNovedades.push(modulo._id);
+
                             if (modulo.submodulos && modulo.submodulos.length > 0) {
+                                const submodulos = [];
+
                                 modulo.submodulos = modulo.submodulos.filter(x => this.auth.getPermissions(x.permisos[0]).length > 0);
                                 modulo.submodulos.forEach((submodulo, key) => {
-                                    modulos.push(submodulo._id);
-                                    const menuOptionSub = { id: key, label: `${modulo.nombre}: ${submodulo.nombre.replace(/<[^>]*>?/gm, ' ').replace('- ', '')}`, icon: `${submodulo.icono}`, route: submodulo.linkAcceso };
-                                    if (this.menuList.findIndex(x => x.label === menuOptionSub.label) === -1) {
-                                        this.menuList.push(menuOptionSub);
-                                    }
+                                    const subMenuOption = {
+                                        id: key,
+                                        label: submodulo.nombre.replace(/<[^>]*>?/gm, ' ').replace('- ', ''),
+                                        route: submodulo.linkAcceso,
+                                        prefix: 'adi'
+                                    };
+
+                                    submodulos.push(subMenuOption);
                                 });
+
+                                menuOption.submodulos = submodulos;
+
+                                if (this.menuList.findIndex(x => x.id === menuOption.id) === -1) {
+                                    this.menuList.push(menuOption);
+                                }
                             } else {
-                                modulos.push(modulo._id);
-                                const menuOption = { id: index, label: `${modulo.nombre}: ${modulo.subtitulo}`, icon: `${modulo.icono}`, route: modulo.linkAcceso };
-                                this.menuList.push(menuOption);
+                                const subMenuOption = {
+                                    id: index,
+                                    label: modulo.subtitulo,
+                                    route: modulo.linkAcceso,
+                                    icon: modulo.icono,
+                                    prefix: 'adi'
+                                };
+
+                                this.menuList.push(subMenuOption);
                             }
+
+                            this.orderItems(this.menuList);
                         }
                     }
                 });
