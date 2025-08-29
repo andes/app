@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { RupElement } from '.';
 import { RUPComponent } from './../core/rup.component';
+import { switchMap } from 'rxjs';
 
 @Component({
     selector: 'rup-solicitudPrestacionDefault',
@@ -15,6 +16,7 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
     public organizaciones: any[] = [];
     public conceptoAsociado = null;
     public asociados: any[] = [];
+    public conceptosEcl: any[] = [];
 
     @ViewChild('selector') selector: ElementRef;
 
@@ -89,8 +91,28 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
     }
 
     actualizarRelaciones(registros, estado: string) {
-        const conceptos = this.elementosRUPService.cacheDiagnosticosSolicitudes.map(concepto => concepto.conceptId);
-        this.asociados = registros?.filter((registro) => conceptos.includes(registro.concepto.conceptId)) || [];
+        this.eclqueriesServicies.search({ key: 'conceptos-asociadosm' }).pipe(
+            switchMap(query => {
+                this.conceptosEcl = query;
+
+                if (this.conceptosEcl?.length > 0) {
+                    const query: any = {
+                        expression: this.conceptosEcl[0].valor,
+                        search: ''
+                    };
+                    return this.snomedService.get(query); // Retorna el observable del segundo servicio
+                }
+
+                return []; // Retorna un observable vacío si no hay conceptos
+            })
+        ).subscribe((resultado) => {
+            this.asociados = registros?.filter((registro) => {
+                const isMatch = resultado.some((item) => item.conceptId === registro.concepto.conceptId);
+                return isMatch;
+            }) || [];
+        });
+
+
         this.conceptoAsociado = this.asociados.find(elem => elem.concepto.conceptId === this.registro.valor.solicitudPrestacion['conceptoAsociado']?.conceptId);
 
         if (estado === 'eliminar' && this.conceptoAsociado) {
