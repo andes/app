@@ -1,20 +1,29 @@
 <ng-container *ngIf="paciente">
     <plex-button *ngIf="hudsPermiso && accesoHuds" class="float-right mt-4 mr-1" right="true" type="info" size="sm"
-                 tooltip="Ver HUDS del paciente" tooltipPosition="left" icon="historial" (click)="showMotivoAcceso()">
+        tooltip="Ver HUDS del paciente" tooltipPosition="left" icon="historial" (click)="showMotivoAcceso()">
     </plex-button>
     <plex-detail [direction]="orientacion === 'vertical' ? 'column' : 'row'" [size]="size" [items]="datos"
-                 [justify]="justificado">
+        [justify]="justificado">
         <img [ngClass]="{'img-fallecido' : paciente?.fechaFallecimiento}" [mpiFotoPaciente]=" paciente" />
 
         <plex-badge *ngIf="paciente.estado" [type]="estadoBadgeType">
             {{ paciente.estado | uppercase }}
         </plex-badge>
         <plex-badge *ngIf="showDatosTutor()" type="warning"
-                    hint="Recién Nacido, no se encuentra registrado en una fuente auténtica" icon="help">
+            hint="Recién Nacido, no se encuentra registrado en una fuente auténtica" icon="help">
             Sin DNI
         </plex-badge>
-        <plex-badge *ngIf="paciente.fechaFallecimiento" type="danger" icon="help">
+        <plex-badge *ngIf="paciente.fechaFallecimiento" type="danger" hintIcon="informacion"
+            [hint]="'Dato validado por RENAPER'">
             Fallecido: {{ paciente.fechaFallecimiento | fecha }}
+        </plex-badge>
+        
+        <plex-badge *ngIf="!paciente.fechaFallecimiento && paciente.fallecimientoManual?.fecha" type="danger"
+            hintIcon="informacion" [hint]="'Registrado por ' 
+        + (paciente.fallecimientoManual?.registradoPor | nombre) 
+        + ' el ' 
+        + (paciente.fallecimientoManual?.registradoEn | date:'short')">
+            Fallecido: {{ paciente.fallecimientoManual?.fecha | fecha }}
         </plex-badge>
 
         <ng-content select="plex-badge" ngProjectAs="plex-badge"></ng-content>
@@ -28,7 +37,7 @@
                 {{ paciente.numeroIdentificacion }}
             </plex-copy>
             <plex-button *ngIf="puedeEditar" type="warning" icon="pencil" tooltip="Editar paciente" size="sm"
-                         (click)="editar()">
+                (click)="editar()">
             </plex-button>
             <ng-container *ngIf="!this.paciente.numeroIdentificacion && !this.paciente.documento">
 
@@ -37,14 +46,14 @@
                         {{relaciones[0].parentesco.toUpperCase()}}
                     </plex-label>
                     <plex-copy *ngIf="relaciones[0].documento || relaciones[0].numeroIdentificacion"
-                               [value]="relaciones[0].documento || relaciones[0].numeroIdentificacion">
+                        [value]="relaciones[0].documento || relaciones[0].numeroIdentificacion">
                         {{ (relaciones[0].documento | number) || relaciones[0].numeroIdentificacion}}
                     </plex-copy>
                     <span *ngIf="!relaciones[0].numeroIdentificacion && !relaciones[0].documento">: Sin DNI</span>
                 </div>
 
                 <plex-label *ngIf="showDatosTutor()" titulo="" subtitulo=""
-                            [direction]="orientacion === 'vertical' ? 'column' : 'row'">{{relaciones[0] | nombre}}
+                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">{{relaciones[0] | nombre}}
                 </plex-label>
 
                 <span *ngIf=" !showDatosTutor()">Sin DNI</span>
@@ -52,60 +61,51 @@
         </div>
 
         <plex-label *ngIf="showSexo" titulo="Sexo" subtitulo="{{ paciente.sexo | capitalizeFirst }}"
-                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
+            [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
         <plex-label *ngIf="showSexo" titulo="Identidad de género" subtitulo="{{ paciente.genero | capitalizeFirst }}"
-                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
+            [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
         <plex-label *ngIf="showFechaNacimiento" titulo="Fecha de Nacimiento"
-                    subtitulo="{{ (paciente.fechaNacimiento | fecha) || 'Desconocida' }}"
-                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
+            subtitulo="{{ (paciente.fechaNacimiento | fecha) || 'Desconocida' }}"
+            [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
         <plex-label *ngIf="showEdad" titulo="Edad" subtitulo="{{ (paciente | edad) || 'Desconocida' }}"
-                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
+            [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
         <plex-label *ngIf="showCuil" titulo="CUIL" subtitulo="{{ paciente.cuil || 'Sin cuil' }}"
-                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
+            [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
         <plex-label *ngIf="showFinanciador && obraSocial" [titulo]="financiadorLabel"
-                    subtitulo="{{ obraSocial.financiador}}" [direction]="orientacion === 'vertical' ? 'column' : 'row'">
+            subtitulo="{{ obraSocial.financiador}}" [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
         <plex-label *ngIf="!obraSocial" [titulo]="financiadorLabel" subtitulo="{{ 'Sin obra social' }}"
-                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
+            [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
         <plex-label *ngIf="showNumeroAfiliado && numeroAfiliado" titulo="Número de Afiliado"
-                    [subtitulo]="numeroAfiliado" [direction]="orientacion === 'vertical' ? 'column' : 'row'">
+            [subtitulo]="numeroAfiliado" [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
         <plex-label *ngIf="showLugarNacimiento" titulo="Lugar de Nacimiento"
-                    [subtitulo]="lugarNacimiento || 'No indica'"
-                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
+            [subtitulo]="lugarNacimiento || 'No indica'" [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
         <plex-label *ngIf="showDireccion" titulo="Dirección"
-                    [subtitulo]="(direccion | capitalizeFirst) || 'Sin dirección'"
-                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
+            [subtitulo]="(direccion | capitalizeFirst) || 'Sin dirección'"
+            [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
 
 
         <plex-label *ngIf="showTelefono" titulo="Contacto" [subtitulo]="contacto"
-                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
-        </plex-label>
-
-        <plex-label class="float-left mr-0 pr-0"
-                    *ngIf="!paciente.fechaFallecimiento && paciente.fallecimientoManual?.fecha"
-                    titulo="Paciente Fallecido"
-                    hint="Fecha ingresada: {{ paciente.fallecimientoManual.registradoEn | fecha }} por {{ paciente.fallecimientoManual.registradoPor?.apellido }}, {{ paciente.fallecimientoManual.registradoPor?.nombre }}"
-                    detach="top" [subtitulo]="paciente.fallecimientoManual.fecha | fecha"
-                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
+            [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
     </plex-detail>

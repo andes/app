@@ -6,7 +6,7 @@ const moment = moment_;
 // pure: false - Info: https://stackoverflow.com/questions/34456430/ngfor-doesnt-update-data-with-pipe-in-angular2
 export class EdadPipe implements PipeTransform {
     transform(value: any): any {
-        const fechaLimite = value?.fechaFallecimiento ? moment(value?.fechaFallecimiento) : moment();
+        const fechaLimite = value?.fechaFallecimiento ? moment(value?.fechaFallecimiento) : value?.fallecimientoManual?.fecha ? moment(value?.fallecimientoManual?.fecha) : moment();
         const fechaNac = moment(value?.fechaNacimiento, 'YYYY-MM-DD HH:mm:ss');
         const difDias = fechaLimite.diff(fechaNac, 'd'); // Diferencia en días
         const difAnios = Math.floor(difDias / 365.25);
