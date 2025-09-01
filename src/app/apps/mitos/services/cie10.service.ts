@@ -14,7 +14,7 @@ export class Cie10Service {
      * Metodo getById. Trae el objeto de Cie10 por su Id.
      * @param {String} id Busca por Id
      */
-    getById(id: String): Observable<any> {
+    getById(id: string): Observable<any> {
         return this.server.get(this.cie10URL + '/' + id, null);
     }
 

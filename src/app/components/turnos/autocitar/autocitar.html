@@ -24,7 +24,7 @@
         <div *ngFor="let bloque of agendaSeleccionada.bloques; let indiceBloque = index">
             <plex-grid type="full" size="sm">
                 <plex-card type="dark" mode="filled" size="xs"
-                           *ngFor="let turno of bloque.turnos; let indiceTurno = index" selectable="true"
+                           *ngFor="let turno of bloque.turnos; let indiceTurno = index" [selectable]="true"
                            [selected]="turno === turnoSeleccionado"
                            (click)="seleccionarTurno(indiceTurno, indiceBloque)"
                            [ngClass]="{'disabled' : turno.estado !== 'disponible'}">
@@ -53,7 +53,7 @@
     <main>
         <div>
             <plex-title size="md" titulo="Datos del turno"></plex-title>
-            <plex-grid type="auto" cols="2">
+            <plex-grid type="auto" [cols]="2">
                 <plex-label *ngIf="agendaSeleccionada && turnoSeleccionado" type="info" size="md"
                             titulo="{{ agendaSeleccionada.horaInicio | fecha }}" icon="calendario"
                             subtitulo="{{turnoSeleccionado.horaInicio | date: 'HH:mm'}}hs">

@@ -26,10 +26,10 @@ import { ErrorHandler, LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HammerModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgDragDropModule } from 'ng-drag-drop';
+import { DndModule } from 'ngx-drag-drop';
 import { RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
 // Libs
-import { ChartsModule } from 'ng2-charts';
+import { NgChartsModule } from 'ng2-charts';
 import { NgxImageCompressService } from 'ngx-image-compress';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 /** Configuraciones de entorno */
@@ -44,7 +44,7 @@ import { CampaniaVisualizacionComponent } from './apps/campaniaSalud/components/
 // Campañas Salud
 import { CampaniaSaludService } from './apps/campaniaSalud/services/campaniaSalud.service';
 import { GestorUsuariosProvidersModule } from './apps/gestor-usuarios/gestor-usuarios.providers';
-import { MitosModule } from './apps/mitos';
+import { MitosModule } from './apps/mitos/mitos.module';
 import { TurneroProvidersModule } from './apps/turnero/turnero.providers';
 import { TurnosPrestacionesService } from './components/buscadorTurnosPrestaciones/services/turnos-prestaciones.service';
 import { EspecialidadCreateUpdateComponent } from './components/especialidad/especialidad-create-update.component';
@@ -221,6 +221,7 @@ import { WebSocketService } from './services/websocket.service';
 import { AcronimoSvgComponent } from './styles/acronimo.svg';
 import { LogoSvgComponent } from './styles/logo.svg';
 import { PermisosComponent } from './utils/permisos/permisos.component';
+import { GeorrefMapComponent } from './core/mpi/components/georref-map.component';
 
 
 registerLocaleData(localeEs, 'es');
@@ -236,9 +237,9 @@ registerLocaleData(localeEs, 'es');
         HttpClientModule,
         AuthModule,
         TurneroProvidersModule,
-        ChartsModule,
-        MitosModule.forRoot(),
-        NgDragDropModule.forRoot(),
+        NgChartsModule,
+        MitosModule, //.forRoot(),
+        DndModule,
         routing,
         InfiniteScrollModule,
         GestorUsuariosProvidersModule,
@@ -312,6 +313,7 @@ registerLocaleData(localeEs, 'es');
         DatosBasicosComponent,
         DatosContactoComponent,
         DocumentosPacienteComponent,
+        GeorrefMapComponent,
         // form Terapeutico
         FormTerapeuticoComponent,
         ArbolItemComponent,

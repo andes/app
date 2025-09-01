@@ -46,7 +46,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     paciente: any;
     public obraSocial: any;
     public prestaciones: any;
-    public puedeEmitirComprobante: Boolean;
+    public puedeEmitirComprobante: boolean;
     public estado;
     public turnosYprestaciones = [];
     public sinOS = false;
@@ -61,7 +61,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public prestacionIniciada;
 
     public financiador;
-    public loader: Boolean = false;
+    public loader = false;
     public modelo: any = {
         obraSocial: '',
         prepaga: ''
@@ -79,7 +79,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         ambito: false
     };
 
-    public sortBy: String;
+    public sortBy: string;
     public sortOrder = 'desc';
 
     public state$: Observable<any>;
