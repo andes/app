@@ -18,7 +18,7 @@ import { TurnoService } from 'src/app/services/turnos/turno.service';
 
 export class TurnosComponent implements OnInit {
     // Parámetros
-    @Input('agenda')
+    @Input()
     set agenda(value: any) {
         this.hoy = new Date();
         this._agenda = value;
@@ -81,8 +81,8 @@ export class TurnosComponent implements OnInit {
     showSuspenderTurno = false;
     showAgregarNotaTurno = false;
     showCarpetaPaciente = false;
-    smsEnviado: Boolean = false;
-    smsLoader: Boolean = false;
+    smsEnviado = false;
+    smsLoader = false;
     turnos = [];
     turnosSeleccionados: any[] = [];
     turno: ITurno;

@@ -1,5 +1,5 @@
 import { Plex } from '@andes/plex';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PlexModalComponent } from '@andes/plex';
 import { cache, calcularEdad } from '@andes/shared';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import * as moment from 'moment';

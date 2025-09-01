@@ -53,7 +53,7 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
                     params.paciente = '^' + (paciente as string).toUpperCase();
                 }
                 if (fechaProximoControl) {
-                    params.fechaProximoControl = moment(fechaProximoControl).format('YYYY-MM-DD');;
+                    params.fechaProximoControl = moment(fechaProximoControl).format('YYYY-MM-DD');
                 }
                 if (fechaUltimoControl) {
                     params.fechaUltimoControl = moment(fechaUltimoControl).format('YYYY-MM-DD');

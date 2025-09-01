@@ -20,7 +20,7 @@ export class SectoresItemComponent implements OnInit {
     @Output() onSelect: EventEmitter<any> = new EventEmitter();
 
     @Input() root: ISectores;
-    @Input() actions: Boolean = true;
+    @Input() actions = true;
     @Input() selected: any;
     @Input() idOrganizacion: string;
     public hidden = false;

@@ -1,4 +1,4 @@
-<plex-layout *ngIf="!crearNuevoAcceso" [main]="12" resizable="true" [min]="4" [max]="5" [steps]="2">
+<plex-layout *ngIf="!crearNuevoAcceso" [main]="12" [resizable]="true" [min]="4" [max]="6" [steps]="2">
     <plex-layout-main>
         <plex-title titulo="Prestaciones Habilitadas" size="lg">
             <plex-button type="danger" label="Volver" (click)="volver()" class="mr-1"></plex-button>
@@ -25,12 +25,12 @@
         </plex-card>
 
         <form #formulario="ngForm">
-            <plex-grid size="md" type="full" cols="2">
+            <plex-grid size="md" type="full" [cols]="2">
                 <plex-select label="Tipo de Prestación" name="tipoPrestacion" [(ngModel)]="nuevoAcceso.tipoPrestacion"
                              labelField="term" tmPrestaciones="rup:tipoPrestacion:?" [preload]="true">
                 </plex-select>
                 <plex-select [(ngModel)]="nuevoAcceso.profesional" tmProfesionales name="profesional"
-                             label="Profesional" ngModelOptions="{standalone: true}">
+                             label="Profesional" [ngModelOptions]="{standalone: true}">
                 </plex-select>
 
                 <div class="d-flex" style="gap: 5px">

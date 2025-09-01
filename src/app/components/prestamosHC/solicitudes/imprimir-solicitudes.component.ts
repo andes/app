@@ -1,7 +1,6 @@
 import { Component, Input, EventEmitter, Output, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import * as moment from 'moment';
 
 @Component({
     selector: 'imprimir-solicitudes',
@@ -15,7 +14,7 @@ export class ImprimirSolicitudesComponent implements OnInit {
     public solicitudes;
     public idOrganizacion = this.auth.organizacion.id;
 
-    @Input('solicutudes')
+    @Input()
     set solicutudes(value: any) {
         this.solicitudes = value;
     }

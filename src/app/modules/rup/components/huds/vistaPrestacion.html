@@ -13,7 +13,7 @@
             </plex-button>
             <ng-content></ng-content>
         </plex-title>
-        <plex-grid *ngIf="prestacion.solicitud.ambitoOrigen === 'internacion'" responsive colsMd="3" colsLg="4"
+        <plex-grid *ngIf="prestacion.solicitud.ambitoOrigen === 'internacion'" responsive [colsMd]="3" colsLg="4"
                    type="full">
             <plex-label icon="paciente" size="md" case="capitalize" titulo="Nombre del paciente"
                         subtitulo="{{ prestacion.paciente | nombre }}">
@@ -25,7 +25,7 @@
                         subtitulo="{{ prestacion.estadoActual.createdBy.organizacion.nombre}}">
             </plex-label>
         </plex-grid>
-        <plex-grid *ngIf="prestacion.solicitud.ambitoOrigen === 'ambulatorio'" responsive colsMd="3" colsLg="4"
+        <plex-grid *ngIf="prestacion.solicitud.ambitoOrigen === 'ambulatorio'" responsive [colsMd]="3" colsLg="4"
                    type="full">
             <plex-label icon="reloj" size="md" case="capitalize" titulo="Fecha De Inicio Prestación"
                         subtitulo="{{ prestacion.ejecucion.fecha | date: 'EEE dd/MM/yyyy HH:mm' }}">
@@ -39,7 +39,7 @@
             <plex-label icon="medico" size="md" case="capitalize" titulo="Profesional que valida"
                         subtitulo="{{ prestacion.estadoActual.createdBy | nombre }}"></plex-label>
         </plex-grid>
-        <plex-grid *ngIf="mostrarMas" responsive colsMd="3" colsLg="4" type="full">
+        <plex-grid *ngIf="mostrarMas" responsive [colsMd]="3" colsLg="4" type="full">
             <plex-label icon="reloj" size="md" case="capitalize"
                         *ngIf="(getTimestamp(prestacion.ejecucion.fecha) - getTimestamp(prestacion.solicitud.fecha)) > 1000"
                         titulo="Fecha De Creación Solicitud"

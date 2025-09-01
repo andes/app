@@ -8,10 +8,6 @@ import { SelectExpressionDirective } from './directives/select-expression/select
 import { SelectSemanticDirective } from './directives/select-semantic/select-semantic.directive';
 import { Cie10Service } from './services/cie10.service';
 import { SnomedService } from './services/snomed.service';
-
-
-
-
 @NgModule({
     imports: [
         CommonModule,

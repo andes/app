@@ -1,10 +1,10 @@
 export interface IDerivacionHistorial {
-    estado: String;
+    estado: string;
     organizacionDestino: {
-        id: String;
-        nombre: String;
+        id: string;
+        nombre: string;
     };
-    observacion: String;
+    observacion: string;
     adjuntos: any;
-    eliminado: Boolean;
+    eliminado: boolean;
 }

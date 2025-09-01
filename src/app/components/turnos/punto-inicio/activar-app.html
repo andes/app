@@ -8,7 +8,7 @@
             <div span="2" justify="start">
                 <b class="pr-3">Activar App Mobile</b>
             </div>
-            <plex-text class="mr-1" span="2" email label="" name="email" debounce="900" [(ngModel)]="email"
+            <plex-text class="mr-1" span="2" email label="" name="email" [debounce]="900" [(ngModel)]="email"
                        placeholder="maria@gmail.com" [readonly]="(showCampoCelular && !celular) || emailReadonly"
                        (change)="checkEmail()">
             </plex-text>
@@ -21,7 +21,7 @@
         </plex-button>
 
         <!-- cuanta activada -->
-        <plex-button *ngIf="cuentaActivada" label="" type="success" name="activacionSuccess" title="" disabled="true">
+        <plex-button *ngIf="cuentaActivada" label="" type="success" name="activacionSuccess" title="" [disabled]="true">
             <plex-icon name="check" size="md" type="light"></plex-icon>
         </plex-button>
 

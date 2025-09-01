@@ -1,4 +1,4 @@
 export interface IZonaSanitaria {
     id: string;
-    nombre: String;
+    nombre: string;
 }

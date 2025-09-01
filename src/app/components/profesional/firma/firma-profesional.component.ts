@@ -14,7 +14,7 @@ import { IMAGENES_EXT } from '@andes/shared';
     styleUrls: ['firma-profesional.scss']
 })
 export class FirmaProfesionalComponent {
-    @Input('profesional')
+    @Input()
     set profesional(value: IProfesional) {
         if (value) {
             this._profesional = value;
@@ -28,8 +28,8 @@ export class FirmaProfesionalComponent {
     private _profesional = null;
     public binaryString = null;
     public urlFirma = null;
-    public base64textString: String = '';
-    public base64textStringAdmin: String = '';
+    public base64textString = '';
+    public base64textStringAdmin = '';
     public loading = false;
     public extensiones = IMAGENES_EXT;
     public disabledCargar = false;

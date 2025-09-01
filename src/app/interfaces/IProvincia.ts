@@ -1,8 +1,8 @@
 export interface IProvincia {
-    id: String;
-    nombre: String;
+    id: string;
+    nombre: string;
     pais: {
-        id: String;
-        nombre: String;
+        id: string;
+        nombre: string;
     };
 }

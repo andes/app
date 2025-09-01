@@ -13,7 +13,6 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { SectoresItemComponent } from './sectores-item/sectores-item.component';
-import { GeorrefMapComponent } from '../../core/mpi/components/georref-map.component';
 
 @NgModule({
     imports: [
@@ -24,12 +23,10 @@ import { GeorrefMapComponent } from '../../core/mpi/components/georref-map.compo
         SharedModule
     ],
     declarations: [
-        SectoresItemComponent,
-        GeorrefMapComponent // Lo mando acá hasta que venga shared como monorepo
+        SectoresItemComponent
     ],
     exports: [
-        SectoresItemComponent,
-        GeorrefMapComponent
+        SectoresItemComponent
     ]
 })
 export class OrganizacionLibModule {

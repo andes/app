@@ -143,7 +143,7 @@ export class PrestacionesService {
      * Método getById. Trae el objeto tipoPrestacion por su Id.
      * @param {String} id Busca por Id
      */
-    getById(id: String, options: any = {}): Observable<IPrestacion> {
+    getById(id: string, options: any = {}): Observable<IPrestacion> {
         if (typeof options.showError === 'undefined') {
             options.showError = true;
         }
@@ -524,7 +524,7 @@ export class PrestacionesService {
      * @returns {*} Prestacion
      * @memberof PrestacionesService
      */
-    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null, _profesional: any = null, registrosEjecucion = []): IPrestacion {
+    inicializarPrestacion(paciente: any, snomedConcept: any, momento: string = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null, _profesional: any = null, registrosEjecucion = []): IPrestacion {
         let pacientePrestacion: IPacienteBasico;
         if (!paciente) {
             pacientePrestacion = undefined;
@@ -648,7 +648,7 @@ export class PrestacionesService {
         return prestacion as IPrestacion;
     }
 
-    crearPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): Observable<any> {
+    crearPrestacion(paciente: any, snomedConcept: any, momento: string = 'solicitud', fecha: any = new Date(), turno: any = null): Observable<any> {
         const prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, 'ambulatorio', fecha, turno);
         return this.post(prestacion);
     }
@@ -771,7 +771,7 @@ export class PrestacionesService {
 
                     // En api el estado de la prestación cambia a ejecucion
                     this.patch(prestacion.id, cambioEstado).subscribe(() => {
-                        observer.next();
+                        observer.next(null);
                         observer.complete();
                     }, (err) => {
                         this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
@@ -65,7 +66,7 @@ export class PeriodosCensablesComponent implements OnInit {
         if (this.periodos.find((periodo) => moment(periodo.desde)?.isSame(desde, 'day') && moment(periodo.hasta)?.isSame(hasta, 'day'))) {
             this.error = 'El periodo ingresado ya existe';
             return true;
-        };
+        }
 
         return false;
     }
