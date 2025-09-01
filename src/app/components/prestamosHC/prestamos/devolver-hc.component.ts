@@ -11,7 +11,7 @@ import { Plex } from '@andes/plex';
 })
 
 export class DevolverHcComponent implements OnInit {
-    @Output() cancelDevolverEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+    @Output() cancelDevolverEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() carpetaDevueltaEmit: EventEmitter<any> = new EventEmitter<any>();
 
     devolverHC: any = {
@@ -32,7 +32,7 @@ export class DevolverHcComponent implements OnInit {
 
     }
 
-    @Input('devolver')
+    @Input()
     set devolver(value: any) {
         this.prestamo = value;
     }

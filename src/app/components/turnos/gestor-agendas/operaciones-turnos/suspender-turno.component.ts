@@ -26,7 +26,7 @@ export class SuspenderTurnoComponent implements OnInit {
     @Output() cancelaSuspenderTurno = new EventEmitter<boolean>();
 
     turnos: any = [];
-    showSuspenderTurno: Boolean = true;
+    showSuspenderTurno = true;
     resultado: any;
 
     public reasignar: any = {};

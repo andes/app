@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
+import { PlexHelpComponent } from '@andes/plex';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, Subject } from 'rxjs';
@@ -42,10 +42,10 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     public elementoRUP: IElementoRUP;
     public prestacionesValidadas = [];
     // Variable para mostrar el div dropable en el momento que se hace el drag
-    public isDraggingConcepto: Boolean = false;
+    public isDraggingConcepto = false;
 
     // Variable para mostrar el div dropable en el momento que se hace el drag
-    public isDraggingRegistro: Boolean = false;
+    public isDraggingRegistro = false;
 
     // Opciones del desplegable para vincular y desvincular
     public itemsRegistros = {};
@@ -53,7 +53,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     // utilizamos confirmarDesvincular para mostrar el boton de confirmacion de desvinculado
     public confirmarDesvincular: any[] = [];
 
-    public confirmarEliminar: Boolean = false;
+    public confirmarEliminar = false;
     public indexEliminar: any;
     public scopeEliminar: any;
 
@@ -85,7 +85,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     public scopePrivacy = [];
     public registrosHUDS = [];
-    public tieneAccesoHUDS: Boolean;
+    public tieneAccesoHUDS: boolean;
     // Seguimiento Paciente San Juan
     public flagSeguimiento = false;
 
@@ -598,7 +598,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
      *
      * @memberof PrestacionEjecucionComponent
      */
-    draggingRegistro(i, e, dragging: Boolean) {
+    draggingRegistro(i, e, dragging: boolean) {
         this.elementoOnDrag = e.concepto.conceptId;
         this.posicionOnDrag = i + 1;
         setTimeout(() => {

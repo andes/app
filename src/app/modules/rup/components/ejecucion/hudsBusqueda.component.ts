@@ -43,10 +43,10 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
 
     public cdas = [];
 
-    @Input() paciente: IPaciente;
-    @Input() vistaHuds = false;
-    @Input() _dragScope: String;
-    @Input() _dragOverClass: String = 'drag-over-border';
+    @Input() paciente: any;
+
+    @Input() _dragScope: string;
+    @Input() _dragOverClass = 'drag-over-border';
 
     /**
     * Variable por parámetro para mostrar o no todo lo relacionado a emitir conceptos
