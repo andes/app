@@ -33,12 +33,14 @@
                             }
                         ],
                         "styles": [
-                            "src/styles.scss",
-                            "./node_modules/ol/ol.css",
-                            "./node_modules/vis-timeline/styles/vis-timeline-graph2d.min.css"
-                        ],
-                        "scripts": [
-                            "node_modules/intro.js/intro.js"
+                            "node_modules/ol/ol.css",
+                            "node_modules/@mdi/font/css/materialdesignicons.min.css",
+                            "node_modules/bootstrap/dist/css/bootstrap.css",
+                            "node_modules/animate.css/animate.css",
+                            "node_modules/selectize/dist/css/selectize.css",
+                            "node_modules/sweetalert2/dist/sweetalert2.css",
+                            "node_modules/vis-timeline/styles/vis-timeline-graph2d.min.css",
+                            "src/styles.scss"
                         ]
                     },
                     "configurations": {

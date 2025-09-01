@@ -1,8 +1,7 @@
-import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter, HostBinding } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, HostBinding } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
-import * as moment from 'moment';
 import { FormTerapeuticoService } from './../../services/formTerapeutico/formTerapeutico.service';
 import { SnomedService } from '../../apps/mitos';
 
@@ -14,7 +13,7 @@ import { SnomedService } from '../../apps/mitos';
 export class AddformTerapeuticoComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @Input() indice: any;
-    @Input() deep: Number;
+    @Input() deep: number;
     public detalleMedicamento: any;
     public datosParaAgregar = {
         concepto: null,
@@ -32,9 +31,9 @@ export class AddformTerapeuticoComponent implements OnInit {
     @Output() objNuevoMedicamento = new EventEmitter();
 
     constructor(private router: Router,
-                private plex: Plex, public auth: Auth,
-                public servicioFormTerapeutico: FormTerapeuticoService,
-                private SNOMED: SnomedService
+        private plex: Plex, public auth: Auth,
+        public servicioFormTerapeutico: FormTerapeuticoService,
+        private SNOMED: SnomedService
     ) { }
 
 

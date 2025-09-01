@@ -1,19 +1,19 @@
 export interface IUbicacion {
     barrio: {
-        id: String;
-        nombre: String;
+        id: string;
+        nombre: string;
     };
     localidad: {
-        id: String;
-        nombre: String;
+        id: string;
+        nombre: string;
     };
     provincia: {
-        id: String;
-        nombre: String;
+        id: string;
+        nombre: string;
     };
     pais: {
-        id: String;
-        nombre: String;
+        id: string;
+        nombre: string;
     };
-    lugar?: String;
+    lugar?: string;
 }

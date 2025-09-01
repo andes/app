@@ -1,15 +1,15 @@
 export interface ISemaforo {
-    name: String;
+    name: string;
     options: [
         {
-            id: Number;
-            priority: Number;
-            label: String;
-            color: String;
+            id: number;
+            priority: number;
+            label: string;
+            color: string;
             itemRowStyle: {
-                border: String;
-                hover: String;
-                background: String;
+                border: string;
+                hover: string;
+                background: string;
             };
         }
     ];

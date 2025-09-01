@@ -10,7 +10,7 @@ import { Auth } from '@andes/auth';
 import { SemaforoService } from 'src/app/modules/semaforo-priorizacion/service/semaforo.service';
 import { estadosSeguimiento as estados } from '../../constantes';
 import { Plex } from '@andes/plex';
-import { PlexWrapperComponent } from '@andes/plex/src/lib/wrapper/wrapper.component';
+import { PlexWrapperComponent } from '@andes/plex';
 import { DocumentosService } from 'src/app/services/documentos.service';
 
 @Component({
@@ -75,12 +75,12 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
                 this.buscar();
             }
         },
-        {
-            'label': 'Fecha', handler: () => {
-                this.orden = 'fecha';
-                this.buscar();
-            }
-        });
+            {
+                'label': 'Fecha', handler: () => {
+                    this.orden = 'fecha';
+                    this.buscar();
+                }
+            });
     }
 
     volverInicio() {

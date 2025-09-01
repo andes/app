@@ -21,7 +21,7 @@ export class DetalleAgendaComponent implements OnInit {
     public estadosAgendaArray = enumToArray(enumerado.EstadosAgenda);
     private _agenda: any;
     // Parámetros
-    @Input('agenda')
+    @Input()
     set agenda(value: any) {
         this._agenda = value;
     }

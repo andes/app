@@ -1,8 +1,8 @@
 export interface ILocalidad {
-    id: String;
-    nombre: String;
+    id: string;
+    nombre: string;
     provincia: {
-        id: String;
-        nombre: String;
+        id: string;
+        nombre: string;
     };
 }

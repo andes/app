@@ -35,7 +35,7 @@ export interface IPaciente {
     relaciones: [IPacienteRelacion];
 
     financiador: [{
-        codigoPuco: Number;
+        codigoPuco: number;
         nombre: string;
         financiador: string;
         id: string;
@@ -49,9 +49,9 @@ export interface IPaciente {
     entidadesValidadoras?: [string];
     fechaUltimaValidacion?: Date;
     scan: string;
-    reportarError: Boolean;
-    nombreCorrectoReportado: String;
-    apellidoCorrectoReportado: String;
+    reportarError: boolean;
+    nombreCorrectoReportado: string;
+    apellidoCorrectoReportado: string;
     fechaNacimientoCorrectoReportado: Date;
     notaError: string;
     carpetaEfectores?: [{
@@ -64,7 +64,7 @@ export interface IPaciente {
     notas?: [{
         fecha: Date;
         nota: string;
-        destacada: Boolean;
+        destacada: boolean;
     }];
     _score?: number;
     vinculos: [string];

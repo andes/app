@@ -16,7 +16,7 @@ export class QueriesService {
     }
 
     // Devuelve el resultado de ejecutar la query enviada por parametro
-    getQuery(nombre: String, params) {
+    getQuery(nombre: string, params) {
         return this.server.get(`${this.biUrl}/queries/${nombre}/json`, { params });
     }
 
