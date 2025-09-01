@@ -81,7 +81,7 @@ export class ProfesionalService {
         return this.server.get(this.profesionalUrl, { params: params, showError: true });
     }
 
-    getByID(id: String): Observable<IProfesional> {
+    getByID(id: string): Observable<IProfesional> {
         return this.server.get(`${this.profesionalUrl}/${id}`);
     }
 

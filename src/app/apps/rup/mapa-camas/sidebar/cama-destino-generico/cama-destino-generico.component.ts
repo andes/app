@@ -20,7 +20,7 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
     public selectedCama;
     public destino;
     public titulo: string;
-    public disableGuardar$: Observable<Boolean> = of(true);
+    public disableGuardar$: Observable<boolean> = of(true);
     public inProgress = true;
     public mensaje = '';
 

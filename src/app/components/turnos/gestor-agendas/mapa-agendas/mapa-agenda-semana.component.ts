@@ -20,7 +20,7 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
     public semanaSeleccionada;
     @Output() diaDetalle = new EventEmitter<any>();
     calendario: any;
-    @Input('fecha')
+    @Input()
     set fecha(value: any) {
         this._fecha = value;
         this.cambiarSemana();

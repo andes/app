@@ -8,7 +8,7 @@ import * as moment from 'moment';
 })
 export class InfoAgendaComponent {
     @Output() volver = new EventEmitter();
-    @Input('agenda')
+    @Input()
     set agenda(value: any) {
         this.hoy = new Date();
         this._agenda = value;

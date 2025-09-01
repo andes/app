@@ -33,7 +33,7 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit, AfterCo
         'semanticTag': 'procedimiento'
     };
     @Input() indicacion = null;
-    @Input('seccion')
+    @Input()
     set seccion(value) {
         this._seccion = value;
         let concepto;

@@ -1,14 +1,16 @@
 <div class="row">
     <div class="col-3">
         <form>
-            <plex-radio [(ngModel)]="modelo.radio" [data]="opciones" name="evolucion" [required]="true" (change)="generarEtiquetasCurva()"></plex-radio>
+            <plex-radio [(ngModel)]="modelo.radio" [data]="opciones" name="evolucion" [required]="true"
+                        (change)="generarEtiquetasCurva()"></plex-radio>
         </form>
     </div>
     <div class="col-9">
         <div style="height: 50%; width:100%">
             <div style="display: block" *ngIf="mostrarChart">
-                <canvas baseChart height="300" [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
-                    [chartType]="barChartType"></canvas>
+                <canvas baseChart height="300" [datasets]="barChartData" [labels]="barChartLabels"
+                        [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType">
+                </canvas>
             </div>
         </div>
     </div>

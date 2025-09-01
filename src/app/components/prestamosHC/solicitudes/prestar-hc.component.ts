@@ -12,10 +12,10 @@ export class PrestarHcComponent implements OnInit {
     private _carpeta: any;
     prestamo: any;
 
-    @Output() cancelPrestarEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+    @Output() cancelPrestarEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() carpetaPrestadaEmit: EventEmitter<any> = new EventEmitter<any>();
 
-    @Input('prestar')
+    @Input()
     set prestar(value: any) {
         this.prestamo = value;
         const _prestarHC: any = {

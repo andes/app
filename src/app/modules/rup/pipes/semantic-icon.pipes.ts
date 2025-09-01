@@ -19,30 +19,30 @@ export function getCSSIcon(concepto: ISnomedConcept, esSolicitud: boolean = fals
         return 'adi-mano-corazon';
     } else {
         switch (concepto.semanticTag) {
-            case 'hallazgo':
-            case 'evento':
-            case 'situación':
-                return 'adi-lupa-ojo';
+        case 'hallazgo':
+        case 'evento':
+        case 'situación':
+            return 'adi-lupa-ojo';
 
-            case 'trastorno':
-                return 'adi-trastorno';
+        case 'trastorno':
+            return 'adi-trastorno';
 
-            case 'procedimiento':
-            case 'entidad observable':
-            case 'régimen/tratamiento':
-                return 'adi-termometro';
+        case 'procedimiento':
+        case 'entidad observable':
+        case 'régimen/tratamiento':
+            return 'adi-termometro';
 
-            case 'producto':
-            case 'objeto físico':
-            case 'medicamento clínico':
-            case 'fármaco de uso clínico':
-                return 'adi-pildoras';
+        case 'producto':
+        case 'objeto físico':
+        case 'medicamento clínico':
+        case 'fármaco de uso clínico':
+            return 'adi-pildoras';
 
-            case 'elemento de registro':
-                return 'adi-documento-lapiz';
-            default:
-                // No debería
-                return concepto.semanticTag;
+        case 'elemento de registro':
+            return 'adi-documento-lapiz';
+        default:
+            // No debería
+            return concepto.semanticTag;
         }
     }
 }

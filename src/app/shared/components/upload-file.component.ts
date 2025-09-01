@@ -5,13 +5,13 @@ import { Plex } from '@andes/plex';
 
 
 export interface IProgress {
-    loaded: Number;
-    total: Number;
+    loaded: number;
+    total: number;
 }
 
 export interface ICompleted {
-    status: Number;
-    body: Object | Array<Object>;
+    status: number;
+    body: object | Array<object>;
 }
 
 @Component({

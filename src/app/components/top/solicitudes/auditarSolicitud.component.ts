@@ -27,7 +27,7 @@ export class AuditarSolicitudComponent implements OnInit {
     @Output() returnAuditoria: EventEmitter<any> = new EventEmitter<any>();
     // Adjuntos
     fotos: any[] = [];
-    fileToken: String = null;
+    fileToken: string = null;
     showConfirmar = false;
     showPrioridad = false;
     prioridad;

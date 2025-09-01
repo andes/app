@@ -25,7 +25,7 @@ export class CamaDetalleComponent implements OnInit, AfterViewChecked, OnDestroy
     public cama$: Observable<ISnapshot>;
     public estadoCama$: Observable<IMAQEstado>;
     public relaciones$: Observable<IMAQRelacion[]>;
-    public organizacionV2$: Observable<Boolean>;
+    public organizacionV2$: Observable<boolean>;
     public accionesEstado$: Observable<any>;
     public paciente$: Observable<any>;
 
@@ -54,11 +54,11 @@ export class CamaDetalleComponent implements OnInit, AfterViewChecked, OnDestroy
     public tabIndex = 0;
     public editar = false;
     public pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
-    public nota: String;
+    public nota: string;
     public editNota = false;
     public fechaMin$: Observable<Date>;
     public relacionesPosibles;
-    public sinMovimientosAt$: Observable<Boolean>;
+    public sinMovimientosAt$: Observable<boolean>;
     public registraEgreso = true;
     public loadingDataEgreso = true;
 

@@ -16,7 +16,7 @@ import { ConstantesService } from './../../../../services/constantes.service';
 })
 
 export class SuspenderAgendaComponent implements OnInit {
-    resultado: String;
+    resultado: string;
     seleccionadosSMS = [];
     todosSeleccionados = false;
 

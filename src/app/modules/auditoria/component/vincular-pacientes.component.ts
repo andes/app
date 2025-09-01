@@ -5,7 +5,7 @@ import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { from } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PlexModalComponent } from '@andes/plex';
 import { HistorialBusquedaService } from 'src/app/core/mpi/services/historialBusqueda.service';
 
 

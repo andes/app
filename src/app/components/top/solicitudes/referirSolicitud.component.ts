@@ -23,7 +23,7 @@ export class ReferirSolicitudComponent implements OnInit {
     }
     @Output() returnReferir: EventEmitter<any> = new EventEmitter<any>();
     @Output() returnCitar: EventEmitter<any> = new EventEmitter<any>();
-    fileToken: String = null;
+    fileToken: string = null;
     showConfirmar = false;
     prioridad;
     profesional = null;
