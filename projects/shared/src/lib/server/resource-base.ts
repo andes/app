@@ -70,7 +70,7 @@ export abstract class ResourceBaseHttp<T = any> {
         return this.showError;
     }
 
-    public queryDateParams(desde: Date, hasta: Date, diaEntero: Boolean = true) {
+    public queryDateParams(desde: Date, hasta: Date, diaEntero: boolean = true) {
         let desdeF;
         let hastaF;
 

@@ -136,14 +136,14 @@ export class AppComponent {
 
     public ribbonType() {
         switch (environment.environmentName) {
-            case 'produccion':
-                return 'info';
-            case 'demo':
-                return 'success';
-            case 'testing':
-                return 'warning';
-            case 'development':
-                return 'info';
+        case 'produccion':
+            return 'info';
+        case 'demo':
+            return 'success';
+        case 'testing':
+            return 'warning';
+        case 'development':
+            return 'info';
         }
     }
 

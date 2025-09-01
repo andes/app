@@ -43,8 +43,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
     @Input() paciente: any;
 
-    @Input() _dragScope: String;
-    @Input() _dragOverClass: String = 'drag-over-border';
+    @Input() _dragScope: string;
+    @Input() _dragOverClass = 'drag-over-border';
 
     /**
     * Variable por parámetro para mostrar o no todo lo relacionado a emitir conceptos

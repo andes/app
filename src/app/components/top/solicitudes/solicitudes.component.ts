@@ -1,23 +1,19 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PlexModalComponent, PlexHelpComponent } from '@andes/plex';
 import { Unsubscribe } from '@andes/shared';
 import { Component, ElementRef, HostBinding, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, concatWith, map } from 'rxjs';
-import { concat, switchMap } from 'rxjs';
+import { switchMap } from 'rxjs';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { RouterService } from 'src/app/services/router.service';
 import { HUDSService } from '../../../modules/rup/services/huds.service';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
-import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
 import { Location } from '@angular/common';
-import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
-import { IPrestacion } from 'src/app/interfaces/turnos/IPrestacion';
 import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
-import { IMotivosHuds } from 'src/app/interfaces/IMotivosHuds';
 import { IMotivoAcceso } from 'src/app/modules/rup/interfaces/IMotivoAcceso';
 
 

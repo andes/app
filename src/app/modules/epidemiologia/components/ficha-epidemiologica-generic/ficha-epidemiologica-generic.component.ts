@@ -107,22 +107,22 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
                                 this.organizaciones$ = this.auth.organizaciones();
                                 sec.fields.map(field => {
                                     switch (Object.keys(field)[0]) {
-                                        case 'responsable':
-                                            this.secciones[buscado].fields[Object.keys(field)[0]] = this.auth.usuario.nombreCompleto;
-                                            break;
-                                        case 'organizacion':
-                                            this.secciones[buscado].fields[Object.keys(field)[0]] = { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre };
-                                            this.setOrganizacion(this.secciones[buscado], this.auth.organizacion.id);
-                                            break;
-                                        case 'fechanotificacion':
-                                            this.secciones[buscado].fields['fechanotificacion'] = Object.values(field)[0];
-                                            break;
-                                        case 'funcionusuario':
-                                            this.secciones[buscado].fields['funcionusuario'] = Object.values(field)[0];
-                                            break;
-                                        case 'email':
-                                            this.secciones[buscado].fields['email'] = Object.values(field)[0];
-                                            break;
+                                    case 'responsable':
+                                        this.secciones[buscado].fields[Object.keys(field)[0]] = this.auth.usuario.nombreCompleto;
+                                        break;
+                                    case 'organizacion':
+                                        this.secciones[buscado].fields[Object.keys(field)[0]] = { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre };
+                                        this.setOrganizacion(this.secciones[buscado], this.auth.organizacion.id);
+                                        break;
+                                    case 'fechanotificacion':
+                                        this.secciones[buscado].fields['fechanotificacion'] = Object.values(field)[0];
+                                        break;
+                                    case 'funcionusuario':
+                                        this.secciones[buscado].fields['funcionusuario'] = Object.values(field)[0];
+                                        break;
+                                    case 'email':
+                                        this.secciones[buscado].fields['email'] = Object.values(field)[0];
+                                        break;
                                     }
                                 });
                             } else {

@@ -64,7 +64,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public inProgress = false;
     public prepagas$: Observable<any[]>;
     private backupObraSocial;
-    public registrosIngresoResumen$: Observable<any>;;
+    public registrosIngresoResumen$: Observable<any>;
     public get origenExterno() {
         return this.informeIngreso && this.informeIngreso.origen && this.informeIngreso.origen.id === 'traslado';
     }
@@ -86,7 +86,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         profesional: null,
         PaseAunidadOrganizativa: null
     };
-    public poseeMovimientos: Boolean;
+    public poseeMovimientos: boolean;
     private subscription: Subscription;
     private subscription2: Subscription;
 

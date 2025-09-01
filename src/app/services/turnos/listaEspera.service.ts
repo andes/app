@@ -26,23 +26,23 @@ export class ListaEsperaService {
         return this.server.post(this.listaEsperaUrl, listaEspera);
     }
 
-    postXIdAgenda(id: String, cambios: any): Observable<IListaEspera> {
+    postXIdAgenda(id: string, cambios: any): Observable<IListaEspera> {
         return this.server.post(this.listaEsperaUrl + '/IdAgenda/' + id, cambios);
     }
 
-    getById(id: String): Observable<IListaEspera> {
+    getById(id: string): Observable<IListaEspera> {
         return this.server.get(this.listaEsperaUrl + '/' + id, null);
     }
 
-    put(id: String, cambios: any): Observable<IListaEspera> {
+    put(id: string, cambios: any): Observable<IListaEspera> {
         return this.server.put(this.listaEsperaUrl + '/' + id, cambios);
     }
 
-    patch(id: String, datoMod: String, cambios: any): Observable<IListaEspera> {
+    patch(id: string, datoMod: string, cambios: any): Observable<IListaEspera> {
         return this.server.patch(this.listaEsperaUrl + '/' + id + '/' + datoMod, cambios);
     }
 
-    save(paciente, tipoPrestacion, estado: String, profesional, organizacion, motivo: String, origen: String) {
+    save(paciente, tipoPrestacion, estado: string, profesional, organizacion, motivo: string, origen: string) {
         const datosProfesional = !profesional ? null : {
             id: profesional.id,
             nombre: profesional.nombre,
