@@ -4,7 +4,10 @@
         "downlevelIteration": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "esModuleInterop": true,
+        "esModuleInterop": false,
+        "allowSyntheticDefaultImports": true,
+        "skipLibCheck": true,
+        "allowUmdGlobalAccess": true,
         "lib": [
             "es2022",
             "dom"
@@ -50,7 +53,8 @@
         "node_modules/@andes/plex/**/*.spec.ts",
         "node_modules/@schematics/**/*.ts",
         "node_modules/karma/**/*.ts",
-        "**/environments/*.ts"
+        "**/environments/*.ts",
+        "projects/portal/**/*"
     ],
     "angularCompilerOptions": {
         "fullTemplateTypeCheck": false,
