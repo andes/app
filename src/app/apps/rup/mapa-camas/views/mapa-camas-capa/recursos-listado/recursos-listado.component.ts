@@ -19,7 +19,7 @@ export class RecursosListadoComponent implements OnInit {
     @Input() permisoIngreso: boolean;
     @Input() permisoBloqueo: boolean;
     estadoRelacion: any;
-    canEdit: Boolean;
+    canEdit: boolean;
     sectorActivo;
     constructor(
         public mapaCamasService: MapaCamasService,

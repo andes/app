@@ -12,7 +12,7 @@
         </plex-datetime>
         <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion"
                      label="Seleccione el tipo de prestación" labelField="term" tmPrestaciones="rup:tipoPrestacion:?"
-                     preload="true" [required]="true" (change)="seleccionarTipoPrestacion()" grow="2">
+                     [preload]="true" [required]="true" (change)="seleccionarTipoPrestacion()" grow="2">
         </plex-select>
     </plex-wrapper>
 </plex-title>
@@ -34,7 +34,8 @@
 
 <ng-container *ngIf="paciente?.id">
     <plex-title titulo="Datos del Paciente" size="sm"></plex-title>
-    <paciente-detalle [paciente]="paciente" size="md" reload="true" orientacion="horizontal" [fields]="pacienteFields">
+    <paciente-detalle [paciente]="paciente" size="md" [reload]="true" orientacion="horizontal"
+                      [fields]="pacienteFields">
     </paciente-detalle>
     <!-- Lista de Agendas para dar turnos autocitados -->
     <autocitar-turno *ngIf="opcion==='autocitar' && showAutocitar && paciente" class="autocitar-turno"

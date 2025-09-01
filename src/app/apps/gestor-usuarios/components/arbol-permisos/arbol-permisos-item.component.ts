@@ -1,7 +1,7 @@
 import { ZonaSanitariaService } from './../../../../services/zonaSanitaria.service';
 import { GrupoPoblacionalService } from './../../../../services/grupo-poblacional.service';
-import { Component, Input, ViewChildren, QueryList, OnChanges, AfterViewInit, ViewChild, OnInit, Inject, Optional, InjectionToken } from '@angular/core';
-import { PlexPanelComponent } from '@andes/plex/src/lib/accordion/panel.component';
+import { Component, Input, ViewChildren, QueryList, OnChanges, ViewChild, OnInit } from '@angular/core';
+import { PlexPanelComponent } from '@andes/plex';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -29,8 +29,8 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges {
     @Input() item: any;
 
     @Input() organizacion: string = null;
-    @Input() parentPermission: String = '';
-    @Input() userPermissions: String[] = [];
+    @Input() parentPermission = '';
+    @Input() userPermissions: string[] = [];
 
     @ViewChild('panel', { static: false }) accordions: PlexPanelComponent;
     @ViewChildren(ArbolPermisosItemComponent) childsComponents: QueryList<ArbolPermisosItemComponent>;
@@ -134,7 +134,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges {
                 this.state = this.shiro.check(this.makePermission() + ':?');
             } else {
                 const permisos = this.makePermission();
-                const items: String[] = this.shiro.permissions(permisos + ':?');
+                const items: string[] = this.shiro.permissions(permisos + ':?');
                 if (items.length > 0) {
                     if (items.indexOf('*') >= 0) {
                         this.all = true;
@@ -206,7 +206,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges {
             }
         } else {
             const permisos = this.makePermission();
-            const items: String[] = this.shiro.permissions(permisos + ':?');
+            const items: string[] = this.shiro.permissions(permisos + ':?');
             this.itemsCount = items.length;
             this.allModule = items.length > 0 && items.indexOf('*') >= 0;
         }
@@ -278,7 +278,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges {
         return this.parentPermission + (this.parentPermission.length ? ':' : '') + this.item.key;
     }
 
-    public generateString(): String[] {
+    public generateString(): string[] {
         let results = [];
         if (this.allModule) {
             return [this.makePermission() + ':*'];

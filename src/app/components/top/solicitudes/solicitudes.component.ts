@@ -1,7 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PlexModalComponent, PlexHelpComponent } from '@andes/plex';
 import { Unsubscribe } from '@andes/shared';
 import { Location } from '@angular/common';
 import { Component, ElementRef, HostBinding, Input, OnInit, ViewChild } from '@angular/core';
@@ -18,7 +17,6 @@ import { TurnoService } from '../../../services/turnos/turno.service';
 import { ConstantesService } from 'src/app/services/constantes.service';
 import { SnomedService } from 'src/app/apps/mitos';
 import { ECLQueriesService } from 'src/app/services/eclqueries.service';
-
 
 @Component({
     selector: 'solicitudes',

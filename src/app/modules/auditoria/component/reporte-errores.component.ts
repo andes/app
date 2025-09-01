@@ -22,8 +22,8 @@ export class ReporteErroresComponent implements OnInit {
     pacientesReportados = [];
     corregirPaciente: Number;
     showReporteError = false; // se muestra en el sidebar datos del error reportado
-    permisoEdicion: Boolean;
-    permisoVincular: Boolean;
+    permisoEdicion: boolean;
+    permisoVincular: boolean;
     pacienteSelected: IPaciente;
     reportes = [];
     pacientes = [];

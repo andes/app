@@ -19,11 +19,13 @@
                             </span>
                             <span *ngIf="solicitud.datosSolicitudManual">
                                 <span *ngIf="solicitud.datosSolicitudManual.profesional">
-                                    * PROFESIONAL | {{ solicitud.fecha | fecha }} | {{ solicitud.datosSolicitudManual.profesional | nombre
+                                    * PROFESIONAL | {{ solicitud.fecha | fecha }} | {{
+                                    solicitud.datosSolicitudManual.profesional | nombre
                                     }} -> {{ solicitud.numero }} | {{solicitud.paciente | nombre}}
                                 </span>
                                 <span *ngIf="!solicitud.datosSolicitudManual.profesional">
-                                    * ADMINISTRATIVO | {{ solicitud.fecha | fecha }} | {{ solicitud.datosSolicitudManual.responsable | nombre
+                                    * ADMINISTRATIVO | {{ solicitud.fecha | fecha }} | {{
+                                    solicitud.datosSolicitudManual.responsable | nombre
                                     }} -> {{ solicitud.numero }} | {{solicitud.paciente | nombre}}
                                 </span>
                             </span>
@@ -52,8 +54,8 @@
     <footer>
         <div class="row ">
             <div class="col text-left ">
-                <plex-button type="danger " label="Cancelar " (click)="cancelar() "></plex-button>
-                <plex-button type="success " label="Imprimir " (click)="imprimir() "></plex-button>
+                <plex-button type="danger" label="Cancelar " (click)="cancelar() "></plex-button>
+                <plex-button type="success" label="Imprimir " (click)="imprimir() "></plex-button>
             </div>
             <div class="col-1 text-right ">
             </div>

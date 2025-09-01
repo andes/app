@@ -1,4 +1,4 @@
-import { PlexSelectComponent } from '@andes/plex/src/lib/select/select.component';
+import { PlexSelectComponent } from '@andes/plex';
 import { Directive, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ServicioIntermedioService } from '../modules/rup/services/servicio-intermedio.service';

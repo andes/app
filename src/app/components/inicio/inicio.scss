@@ -195,7 +195,7 @@ main {
     width: 20vw;
     flex-direction: column;
 
-    &> {
+    &>* {
         cursor: pointer;
     }
 }

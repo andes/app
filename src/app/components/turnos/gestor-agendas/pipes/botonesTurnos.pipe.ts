@@ -100,7 +100,7 @@ export class BotonesTurnosPipe implements PipeTransform {
  * @returns {Boolean}
  * @memberof TurnosComponent
  */
-    tienenDiagnostico(turnos): Boolean {
+    tienenDiagnostico(turnos): boolean {
         return turnos.some(x => {
             return x.diagnostico.codificaciones.length > 0;
         });

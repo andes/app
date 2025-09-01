@@ -1,14 +1,14 @@
 
 export interface ICarpetaPaciente {
-    id: String;
-    documento: String;
+    id: string;
+    documento: string;
     carpetaEfectores: [{
         organizacion: {
-            id: String;
-            nombre: String;
+            id: string;
+            nombre: string;
         };
-        idPaciente: String;
-        nroCarpeta: String;
+        idPaciente: string;
+        nroCarpeta: string;
     }];
 
 }

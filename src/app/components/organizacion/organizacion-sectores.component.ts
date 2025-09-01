@@ -22,13 +22,13 @@ export class OrganizacionSectoresComponent implements OnInit {
     public disabledPanel = true;
     public editing = false;
 
-    public itemName: String;
+    public itemName: string;
     public tipoSector: ISnomedConcept;
     public unidadOrg: ISnomedConcept;
 
     public tiposSectores: ISnomedConcept[];
 
-    public idOrganizacion: String;
+    public idOrganizacion: string;
     public organizacion: IOrganizacion;
     public mapaSectores: any[];
     public selectedItem: any;
@@ -44,10 +44,10 @@ export class OrganizacionSectoresComponent implements OnInit {
         private auth: Auth
     ) { }
 
-    public unidadID: String = '2441000013103';
+    public unidadID = '2441000013103';
     public sectoresIniciales: any[] = [];
-    public ambienteHospitalarioQuery: String = '^2391000013102';
-    public unidadesOrganizativasQuery: String = '<<284548004';
+    public ambienteHospitalarioQuery = '^2391000013102';
+    public unidadesOrganizativasQuery = '<<284548004';
 
     ngOnInit() {
         this.route.params.subscribe(params => {

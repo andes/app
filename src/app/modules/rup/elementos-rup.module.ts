@@ -6,9 +6,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { NgDragDropModule } from 'ng-drag-drop';
-import { ChartsModule } from 'ng2-charts';
-import { MitosModule } from '../../apps/mitos';
+import { DndModule } from 'ngx-drag-drop';
+import { NgChartsModule } from 'ng2-charts';
+import { MitosModule } from '../../apps/mitos/mitos.module';
 import { RelacionRUPPipe } from '../../pipes/relacionRUP.pipe';
 import { MPILibModule } from '../mpi/mpi-lib.module';
 import { RUPComponent } from './components/core/rup.component';
@@ -141,8 +141,8 @@ const RUPComponentsArray = [
         RouterModule,
         HttpClientModule,
         SharedModule,
-        ChartsModule,
-        NgDragDropModule,
+        NgChartsModule,
+        DndModule,
         MPILibModule,
         MitosModule,
         FormBuilderModule,

@@ -31,8 +31,8 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     @ViewChild('options', { static: true }) plexOptions: PlexOptionsComponent;
 
     public mostrar;
-    public registraEgreso$: Observable<Boolean>;
-    public anular$: Observable<Boolean>;
+    public registraEgreso$: Observable<boolean>;
+    public anular$: Observable<boolean>;
     public capa;
     public inProgress;
 
@@ -123,7 +123,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
                         if (resumen?.ingreso) {
                             this.items[0] = { key: 'ingreso-dinamico', label: 'INGRESO' };
                             this.mostrar = 'ingreso-dinamico';
-                        };
+                        }
                     }
                     this.existeEgreso = !!resumen.fechaEgreso;
                     this.editarEgreso = !this.existeEgreso;
@@ -190,7 +190,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
             this.editarEgreso = !this.editarEgreso;
             this.editarEgreso ? this.accion.emit({ accion: 'editando' }) : this.accion.emit(null);
         } else {
-            this.editarIngresoIdInternacion = !!this.editarIngresoIdInternacion ? null : this.ingresoPacienteService.selectedPaciente.getValue();
+            this.editarIngresoIdInternacion = this.editarIngresoIdInternacion ? null : this.ingresoPacienteService.selectedPaciente.getValue();
             this.editarIngresoIdInternacion ? this.accion.emit({ accion: 'editando' }) : this.accion.emit(null);
         }
     }

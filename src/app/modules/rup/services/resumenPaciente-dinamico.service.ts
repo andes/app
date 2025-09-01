@@ -30,7 +30,7 @@ export class ResumenPacienteDinamicoService {
      * @param idPaciente : String.
      * Además se especifica la expresion de la consulta a filtrar y un arreglo con los conceptos buscados.
      */
-    get(idPaciente: String): Observable<any[]> {
+    get(idPaciente: string): Observable<any[]> {
         const params = { consultaPrincipal: this.consultaPrincipal, hudsToken: this.hudsService.getHudsToken(), conceptos: JSON.stringify(this.conceptosBuscados) };
         return this.server.get(this.resumenURL + '/resumenPaciente/' + idPaciente, { params: params, showError: true });
     }

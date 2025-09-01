@@ -4,7 +4,7 @@
         "downlevelIteration": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "esModuleInterop": false,
+        "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "skipLibCheck": true,
         "allowUmdGlobalAccess": true,
@@ -43,7 +43,6 @@
         "src/polyfills.ts"
     ],
     "include": [
-        "./**/*.ts",
         "./karma.conf.js",
         "./webpack.config.js",
         ".eslintrc.js",

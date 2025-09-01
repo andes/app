@@ -12,7 +12,7 @@ import { FiltrosSolicitudesComponent } from './components/top/filtrosSolicitudes
 
 // Module
 import { PlexModule } from '@andes/plex';
-import { ChartsModule } from 'ng2-charts';
+import { NgChartsModule } from 'ng2-charts';
 import { HttpClientModule } from '@angular/common/http';
 import { CitasComponent } from './components/citas/citas.component';
 import { EstadisticasRouting } from './estadisticas.routing';
@@ -29,7 +29,7 @@ import { DirectiveLibModule } from 'src/app/directives/directives.module';
     imports: [
         CommonModule,
         PlexModule,
-        ChartsModule,
+        NgChartsModule,
         FormsModule,
         HttpClientModule,
         EstadisticasRouting,

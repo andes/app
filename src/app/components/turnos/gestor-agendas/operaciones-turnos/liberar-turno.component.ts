@@ -24,7 +24,7 @@ export class LiberarTurnoComponent implements OnInit {
 
     turnos: any = [];
 
-    showLiberarTurno: Boolean = true;
+    showLiberarTurno = true;
 
     public reasignar: any = {};
 

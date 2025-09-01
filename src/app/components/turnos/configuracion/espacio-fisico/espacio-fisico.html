@@ -3,19 +3,23 @@
         <header>
             <div class="row">
                 <div class="col-md-3">
-                    <plex-text [(ngModel)]="filtros.nombre" label="Nombre" (change)="loadEspaciosFisicos(false)" placeholder="Filtrar por nombre">
+                    <plex-text [(ngModel)]="filtros.nombre" label="Nombre" (change)="loadEspaciosFisicos(false)"
+                               placeholder="Filtrar por nombre">
                     </plex-text>
                 </div>
                 <div class="col-md-3">
-                    <plex-text [(ngModel)]="filtros.edificio" label="Edificio" (change)="loadEspaciosFisicos(false)" placeholder="Filtrar por edificio">
+                    <plex-text [(ngModel)]="filtros.edificio" label="Edificio" (change)="loadEspaciosFisicos(false)"
+                               placeholder="Filtrar por edificio">
                     </plex-text>
                 </div>
                 <div class="col-md-3">
-                    <plex-text [(ngModel)]="filtros.servicio" label="Servicio" (change)="loadEspaciosFisicos(false)" placeholder="Filtrar por servicio">
+                    <plex-text [(ngModel)]="filtros.servicio" label="Servicio" (change)="loadEspaciosFisicos(false)"
+                               placeholder="Filtrar por servicio">
                     </plex-text>
                 </div>
                 <div class="col-md-3">
-                    <plex-text [(ngModel)]="filtros.sector" label="Sector" (change)="loadEspaciosFisicos(false)" placeholder="Filtrar por sector">
+                    <plex-text [(ngModel)]="filtros.sector" label="Sector" (change)="loadEspaciosFisicos(false)"
+                               placeholder="Filtrar por sector">
                     </plex-text>
                 </div>
             </div>
@@ -25,7 +29,8 @@
                 <!--Resultados-->
                 <plex-loader *ngIf="loader" type="ball-beat"></plex-loader>
                 <div *ngIf="!espaciosFisicos?.length && !loader" class="alert alert-default">
-                    <plex-icon name="emoticon-sad"></plex-icon> No hay resultados que coincidan con los filtros de búsqueda
+                    <plex-icon name="emoticon-sad"></plex-icon> No hay resultados que coincidan con los filtros de
+                    búsqueda
                 </div>
                 <table *ngIf="espaciosFisicos && espaciosFisicos.length > 0" class="table table-striped">
                     <thead>
@@ -49,10 +54,12 @@
                                 <plex-badge *ngIf="!espacioFisico.activo" type="danger">Inactivo</plex-badge>
                             </td>
                             <td>
-                                <plex-button type="success" (click)="editarEspacioFisico(espacioFisico)" icon="pencil"></plex-button>
+                                <plex-button type="success" (click)="editarEspacioFisico(espacioFisico)"
+                                             icon="pencil"></plex-button>
                             </td>
                             <td>
-                                <plex-button type="danger" (click)="eliminarEspacioFisico(espacioFisico)" icon="delete"></plex-button>
+                                <plex-button type="danger" (click)="eliminarEspacioFisico(espacioFisico)"
+                                             icon="delete"></plex-button>
                             </td>
                         </tr>
                     </tbody>
@@ -63,8 +70,10 @@
     <plex-layout-footer>
         <plex-button type="danger" position="left" label="Volver" title="Volver" (click)="routeMapa()">
         </plex-button>
-        <plex-button type="primary" position="right" label="Nuevo Espacio Físico" title="Nuevo Espacio Físico" (click)="showEditar = !showEditar">
+        <plex-button type="primary" position="right" label="Nuevo Espacio Físico" title="Nuevo Espacio Físico"
+                     (click)="showEditar = !showEditar">
         </plex-button>
     </plex-layout-footer>
 </plex-layout>
-<edit-espacio-fisico *ngIf="showEditar" [espacioFisicoHijo]="selectedEspacioFisico" (data)='onReturn($event)' (onReturn)="onCancel()"></edit-espacio-fisico>
+<edit-espacio-fisico *ngIf="showEditar" [espacioFisicoHijo]="selectedEspacioFisico" (data)='onReturn()'
+                     (onReturn)="onReturn()"></edit-espacio-fisico>

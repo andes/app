@@ -404,7 +404,7 @@ export class PacienteComponent implements OnInit {
         if (pacienteExtranjero) {
             const { nombre, apellido, fechaNacimiento, tipoIdentificacion, numeroIdentificacion, sexo, genero } = pacienteExtranjero;
             return { ...pacienteModel, nombre, apellido, fechaNacimiento, tipoIdentificacion, numeroIdentificacion, sexo, genero };
-        } else { return pacienteModel; };
+        } else { return pacienteModel; }
     }
 
     save(ignoreSuggestions = false) {

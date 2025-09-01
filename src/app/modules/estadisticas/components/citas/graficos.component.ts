@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChildren, ElementRef } from '@angular/core';
+import { Component, Input, ViewChildren } from '@angular/core';
 import { EstAgendasService } from '../../services/agenda.service';
 import { Plex } from '@andes/plex';
 
@@ -25,7 +25,7 @@ export class GraficosComponent {
     @Input() titulo = '';
     @Input() type = 'bar';
 
-    @Input('data')
+    @Input()
     set data(value: any) {
         this.limpiarData();
         // Es necesario cargar los datos dentro de un setTimout porque si no se saca del DOM
