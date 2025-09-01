@@ -17,7 +17,7 @@ import { map } from 'rxjs/operators';
 })
 export class ActivarAppComponent {
 
-    @Input('paciente')
+    @Input()
     set paciente(value: IPaciente) {
         if (value) {
             this._paciente = value;
@@ -36,8 +36,8 @@ export class ActivarAppComponent {
 
     private _paciente: IPaciente;
     public celular = null;
-    public email: String = null;
-    public message: String = '';
+    public email: string = null;
+    public message = '';
     public typeMessage = null;
     public showEditar = true;
     public disableEditar = true;

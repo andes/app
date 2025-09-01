@@ -1,5 +1,5 @@
 import { Component, Output, ViewChild, Input, EventEmitter } from '@angular/core';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PlexModalComponent } from '@andes/plex';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 @Component({

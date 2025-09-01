@@ -43,10 +43,10 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
 
     public cdas = [];
 
-    @Input() paciente: IPaciente;
-    @Input() vistaHuds = false;
-    @Input() _dragScope: String;
-    @Input() _dragOverClass: String = 'drag-over-border';
+    @Input() paciente: any;
+
+    @Input() _dragScope: string;
+    @Input() _dragOverClass = 'drag-over-border';
 
     /**
     * Variable por parámetro para mostrar o no todo lo relacionado a emitir conceptos
@@ -868,14 +868,14 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         const dispensasPermitidas = ['sin-dispensa', 'dispensa-parcial'];
         if (!receta.medicamento.tratamientoProlongado) {
             return (estadosPermitidos.includes(receta.estadoActual?.tipo)
-            && dispensasPermitidas.includes(receta.estadoDispensaActual?.tipo)) && this.profesionalValido;
+                && dispensasPermitidas.includes(receta.estadoDispensaActual?.tipo)) && this.profesionalValido;
         } else {
             const recetasMismoRegistro = this.busquedaRecetas?.flatMap(grupo =>
                 grupo.recetas.filter(r => r.idRegistro === receta.idRegistro && r.medicamento.concepto.conceptId === receta.medicamento.concepto.conceptId)
             ) || [];
             return recetasMismoRegistro.some(rec =>
                 (estadosPermitidos.includes(rec.estadoActual?.tipo)
-            && dispensasPermitidas.includes(rec.estadoDispensaActual?.tipo)) && this.profesionalValido);
+                    && dispensasPermitidas.includes(rec.estadoDispensaActual?.tipo)) && this.profesionalValido);
         }
     }
 

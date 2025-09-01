@@ -145,15 +145,15 @@ export class PuntoInicioInternacionComponent implements OnInit {
     ruteo(id, key) {
         this.servicioPrestacion.notificaRuta({ nombre: 'Punto inicio', ruta: 'internacion/inicio' });
         switch (key) {
-            case 'huds':
-                this.router.navigate(['huds/paciente/', id]);
-                break;
-            case 'epicrisis':
-                this.router.navigate(['rup/ejecucion', id]);
-                break;
-            default:
-                this.router.navigate([]);
-                break;
+        case 'huds':
+            this.router.navigate(['huds/paciente/', id]);
+            break;
+        case 'epicrisis':
+            this.router.navigate(['rup/ejecucion', id]);
+            break;
+        default:
+            this.router.navigate([]);
+            break;
         }
     }
 }
