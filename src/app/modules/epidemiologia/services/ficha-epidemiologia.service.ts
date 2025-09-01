@@ -47,39 +47,39 @@ export class FormsEpidemiologiaService extends ResourceBaseHttp {
         seccionClasificacion.fields.forEach(field => {
             const key = Object.keys(field)[0];
             switch (key) {
-                case 'clasificacionfinal':
-                    if (field.clasificacionfinal === 'Sospechoso') {
-                        conceptos.push(this.elementoRupService.getConceptosCovidSospechoso());
-                    }
-                    if (field.clasificacionfinal === 'Confirmado') {
-                        conceptos.push(this.elementoRupService.getConceptoCertificadoAislamiento());
-                    }
-                    break;
-                case 'segundaclasificacion':
-                    segundaClasificacionId = field.segundaclasificacion?.id;
-                    if (field.segundaclasificacion.id === 'autotest' ||
+            case 'clasificacionfinal':
+                if (field.clasificacionfinal === 'Sospechoso') {
+                    conceptos.push(this.elementoRupService.getConceptosCovidSospechoso());
+                }
+                if (field.clasificacionfinal === 'Confirmado') {
+                    conceptos.push(this.elementoRupService.getConceptoCertificadoAislamiento());
+                }
+                break;
+            case 'segundaclasificacion':
+                segundaClasificacionId = field.segundaclasificacion?.id;
+                if (field.segundaclasificacion.id === 'autotest' ||
                         field.segundaclasificacion.id === 'laboPcr'
                         || field.segundaclasificacion.id === 'laboAntigeno') {
-                        conceptos.push(this.elementoRupService.getConceptoEnfermedadCovid());
-                    }
-                    break;
-                case 'pcr':
-                    if (field.pcr.id === 'confirmado') {
-                        conceptos.push(this.elementoRupService.getConceptoConfirmadoPcr());
-                    };
-                    break;
-                case 'antigeno':
-                    if (field.antigeno.id === 'confirmado' && segundaClasificacionId !== 'ifi') {
-                        conceptos.push(this.elementoRupService.getConceptoConfirmadoTestRapido());
-                    } if (field.antigeno.id === 'muestra' && segundaClasificacionId !== 'ifi') {
-                        conceptos.push(this.elementoRupService.getConceptoDescartadoTestRapido());
-                    }
-                    break;
-                case 'lamp':
-                    if (field.lamp.id === 'confirmado') {
-                        conceptos.push(this.elementoRupService.getConceptoEnfermedadCovid());
-                    };
-                    break;
+                    conceptos.push(this.elementoRupService.getConceptoEnfermedadCovid());
+                }
+                break;
+            case 'pcr':
+                if (field.pcr.id === 'confirmado') {
+                    conceptos.push(this.elementoRupService.getConceptoConfirmadoPcr());
+                }
+                break;
+            case 'antigeno':
+                if (field.antigeno.id === 'confirmado' && segundaClasificacionId !== 'ifi') {
+                    conceptos.push(this.elementoRupService.getConceptoConfirmadoTestRapido());
+                } if (field.antigeno.id === 'muestra' && segundaClasificacionId !== 'ifi') {
+                    conceptos.push(this.elementoRupService.getConceptoDescartadoTestRapido());
+                }
+                break;
+            case 'lamp':
+                if (field.lamp.id === 'confirmado') {
+                    conceptos.push(this.elementoRupService.getConceptoEnfermedadCovid());
+                }
+                break;
             }
         });
         return conceptos;

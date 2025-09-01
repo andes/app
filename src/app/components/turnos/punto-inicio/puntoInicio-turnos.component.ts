@@ -158,35 +158,35 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.paciente = paciente;
 
         switch (operacion) {
-            case 'darTurno':
-                // Si se seleccionó por error un paciente fallecido
-                this.servicePaciente.checkFallecido(paciente);
-                this.solicitudPrestacion = null;
-                this.showDashboard = false;
-                this.showMostrarTurnosPaciente = false;
-                this.showIngresarSolicitud = false;
-                this.showDarTurnos = true;
-                this.updateTitle('Dar turno');
-                break;
-            case 'ingresarSolicitud':
-                this.showIngresarSolicitud = true;
-                this.showMostrarTurnosPaciente = false;
-                this.showMostrarEstadisticasPacientes = false;
-                break;
-            case 'operacionesTurno':
-                this.showMostrarEstadisticasAgendas = false;
-                this.showMostrarEstadisticasPacientes = false;
-                this.showIngresarSolicitud = false;
-                this.operacionTurnos = 'operacionesTurno';
-                this.showMostrarTurnosPaciente = true;
-                break;
-            case 'activarApp':
-                this.showMostrarEstadisticasAgendas = false;
-                this.showMostrarEstadisticasPacientes = false;
-                this.showMostrarTurnosPaciente = false;
-                this.showIngresarSolicitud = false;
-                this.showActivarApp = true;
-                break;
+        case 'darTurno':
+            // Si se seleccionó por error un paciente fallecido
+            this.servicePaciente.checkFallecido(paciente);
+            this.solicitudPrestacion = null;
+            this.showDashboard = false;
+            this.showMostrarTurnosPaciente = false;
+            this.showIngresarSolicitud = false;
+            this.showDarTurnos = true;
+            this.updateTitle('Dar turno');
+            break;
+        case 'ingresarSolicitud':
+            this.showIngresarSolicitud = true;
+            this.showMostrarTurnosPaciente = false;
+            this.showMostrarEstadisticasPacientes = false;
+            break;
+        case 'operacionesTurno':
+            this.showMostrarEstadisticasAgendas = false;
+            this.showMostrarEstadisticasPacientes = false;
+            this.showIngresarSolicitud = false;
+            this.operacionTurnos = 'operacionesTurno';
+            this.showMostrarTurnosPaciente = true;
+            break;
+        case 'activarApp':
+            this.showMostrarEstadisticasAgendas = false;
+            this.showMostrarEstadisticasPacientes = false;
+            this.showMostrarTurnosPaciente = false;
+            this.showIngresarSolicitud = false;
+            this.showActivarApp = true;
+            break;
         }
     }
 

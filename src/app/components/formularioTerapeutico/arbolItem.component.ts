@@ -15,7 +15,7 @@ export class ArbolItemComponent implements OnInit, OnChanges {
     @Output() borradoOutPut = new EventEmitter();
     @Input() indice: any;
     @Input() newMedicamento: any;
-    @Input() deep: Number;
+    @Input() deep: number;
     medicamentoSelect;
 
     constructor(public servicioFormTerapeutico: FormTerapeuticoService, private plex: Plex

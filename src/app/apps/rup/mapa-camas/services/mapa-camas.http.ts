@@ -66,7 +66,7 @@ export class MapaCamasHTTP {
         };
         if (organizacionID) {
             params['idInternacion'] = idInternacion;
-        };
+        }
         return this.server.get(`${this.url}/${capa}/${idInternacion}/historial`, { params });
     }
 

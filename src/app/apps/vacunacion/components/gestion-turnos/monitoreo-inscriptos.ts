@@ -39,7 +39,7 @@ export class MonitoreoInscriptosComponent implements OnInit {
     public dacionTurno = false;
     public fechaProximoLlamado;
     public hoy = moment().startOf('day').add(1, 'days').toDate();
-    public desasignarInsc: Boolean;
+    public desasignarInsc: boolean;
     public inscriptosSinturno = [];
     public showDarTurnos = false;
     public solicitudTurno: any;

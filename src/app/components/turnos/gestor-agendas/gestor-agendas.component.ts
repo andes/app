@@ -94,8 +94,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public btnCrearAgendas = false;
     public permisos: any;
     public prestacionesPermisos = [];
-    public puedeCrearAgenda: Boolean;
-    public puedeRevisarAgendas: Boolean;
+    public puedeCrearAgenda: boolean;
+    public puedeRevisarAgendas: boolean;
     public enableQueries = false;
     public collapse = false;
     public panelGeneral = true;

@@ -29,7 +29,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
 
     private start: any;
     private end: any;
-    private unit: String = '15';
+    private unit = '15';
 
     private _start: any;
     private _end: any;

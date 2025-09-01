@@ -9,7 +9,7 @@ export class GrupoPoblacionalService extends ResourceBaseHttp {
         super(server);
     }
 
-    cumpleExcepciones(grupo: String, params: any): Observable<any> {
+    cumpleExcepciones(grupo: string, params: any): Observable<any> {
         return this.server.get(`${this.url}/excepciones/${grupo}`, { params: params, showError: true });
     }
 }

@@ -1,14 +1,14 @@
 
 export interface IEspecialidad {
     id: string;
-    nombre: String;
-    descripcion: String;
-    disciplina: String;
-    complejidad: Number;
+    nombre: string;
+    descripcion: string;
+    disciplina: string;
+    complejidad: number;
     codigo: {
-        sisa: String;
+        sisa: string;
     };
-    activo: Boolean;
+    activo: boolean;
     fechaAlta: Date;
     fechaBaja: Date;
 }

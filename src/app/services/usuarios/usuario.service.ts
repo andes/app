@@ -23,11 +23,11 @@ export class UsuarioService {
         return this.server.get(this.usuarioUrl + '');
     }
 
-    getUser(id: String): Observable<any> {
+    getUser(id: string): Observable<any> {
         return this.server.get(this.usuarioUrl + '/ldap/' + id);
     }
 
-    getByDni(dni: Number): Observable<any> {
+    getByDni(dni: number): Observable<any> {
         return this.server.get(this.usuarioUrl + '/' + dni);
     }
     /**

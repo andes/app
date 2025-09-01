@@ -1,5 +1,5 @@
 export interface ISiisa {
-    nombre: String;
-    codigoSISA: Number;
-    activo: Boolean;
+    nombre: string;
+    codigoSISA: number;
+    activo: boolean;
 }
