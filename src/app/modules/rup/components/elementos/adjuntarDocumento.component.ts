@@ -25,7 +25,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     uploadValid = true;
 
     // fotos: { file?: any, ext: string, id?: any, descripcion?: ISnomedConcept, fecha?: Date }[] = [];
-    fileToken: String = null;
+    fileToken: string = null;
 
     public descendientesInformeClinico: ISnomedConcept[] = [];
     public hoy = moment().endOf('day').toDate();

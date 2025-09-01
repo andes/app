@@ -19,7 +19,7 @@ export class PlanillaC1Component implements OnInit {
     fecha = new Date();
 
     private _reporte;
-    @Input('reporte') // recibe un array
+    @Input() // recibe un array
 
     set reporte(value: any[]) {
         this._reporte = value;
@@ -31,7 +31,7 @@ export class PlanillaC1Component implements OnInit {
 
 
     private _parametros;
-    @Input('parametros') // recibe
+    @Input() // recibe
 
     public set parametros(value: any) {
         this._parametros = value;

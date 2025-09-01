@@ -7,7 +7,7 @@ import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface
 // Este alias me permite en el futuro cambiar el tipo en todos lados
 type Registro = any;
 interface ElementoHUDS {
-    tipo: String;
+    tipo: string;
     data: Registro;
 }
 

@@ -54,7 +54,7 @@ export class DarTurnosComponent implements OnInit {
 
     tipoPrestacionesPermitidas: ITipoPrestacion[];
 
-    @Input('pacienteSeleccionado')
+    @Input()
     set pacienteSeleccionado(value: any) {
         this._pacienteSeleccionado = value;
         this.actualizarDatosPaciente(this._pacienteSeleccionado);
@@ -65,7 +65,7 @@ export class DarTurnosComponent implements OnInit {
 
     private tipoTurno = 'programado';
 
-    @Input('demandaInsatisfecha')
+    @Input()
     set demandaInsatisfecha(value: any) {
         this.desdeDemanda = value;
     }
@@ -74,7 +74,7 @@ export class DarTurnosComponent implements OnInit {
         return this._paciente;
     }
 
-    @Input('solicitudPrestacion')
+    @Input()
     set solicitudPrestacion(value: any) {
         this._solicitudPrestacion = value;
         if (this._solicitudPrestacion) {
@@ -110,7 +110,7 @@ export class DarTurnosComponent implements OnInit {
         return this._solicitudPrestacion;
     }
 
-    @Input('solicitudVacunacion')
+    @Input()
     set solicitudVacunacion(value: any) {
         this._solicitudVacunacion = value;
         this.organizacion = value.organizacion;
@@ -309,7 +309,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     // Funcion que devuelve el indice correspondiente a un bloque dentro del array "this.agenda.bloques".
-    findIndex(bloque: IBloque): Number {
+    findIndex(bloque: IBloque): number {
         return this.agenda.bloques.findIndex(b => b.id === bloque.id);
     }
 
@@ -1267,9 +1267,9 @@ export class DarTurnosComponent implements OnInit {
                         this.plex.clearNavbar();
                     }
                 }
-            };
+            }
         });
-    };
+    }
 
     // resetea variables para la pantalla 'buscar paciente'
     resetBuscarPaciente() {

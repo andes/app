@@ -40,8 +40,8 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
     public historial$: Observable<any[]>;
     public movimientoEgreso$: Observable<ISnapshot>;
     public fechaMin$: Observable<Date>;
-    public hayMovimientosAt$: Observable<Boolean>;
-    public camaDesocupada$: Observable<Boolean>;
+    public hayMovimientosAt$: Observable<boolean>;
+    public camaDesocupada$: Observable<boolean>;
     public view$ = this.mapaCamasService.view;
 
     public camaSelectedSegunView$: Observable<ISnapshot> = this.mapaCamasService.camaSelectedSegunView$;

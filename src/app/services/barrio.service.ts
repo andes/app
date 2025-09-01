@@ -14,7 +14,7 @@ export class BarrioService {
         return this.server.get(this.barrioUrl, { params: params, showError: true });
     }
 
-    getXLocalidad(localidad: String): Observable<IBarrio[]> {
+    getXLocalidad(localidad: string): Observable<IBarrio[]> {
         return this.server.get(this.barrioUrl + '?localidad=' + localidad).pipe(
             cacheStorage({ key: 'barrios-' + localidad, ttl: 60 * 24 })
         );

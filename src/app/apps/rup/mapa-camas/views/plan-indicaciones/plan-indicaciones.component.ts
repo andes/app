@@ -39,7 +39,7 @@ export class PlanIndicacionesComponent implements OnInit {
     public indicaciones = [];
     public selectedIndicacion = {};
     public loading = false;
-    public suspenderIndicacion: Boolean;
+    public suspenderIndicacion: boolean;
     public showSecciones = {};
     public showMotivoRechazo = false; // interconsultores
     public indicacionAVerificar; // interconsultores

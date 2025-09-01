@@ -25,13 +25,13 @@ export class BuscadorCie10Component implements OnInit, OnDestroy {
     private timeoutHandle: number;
 
     // En caso de querer ocultar el input de busqueda y solo utilizar el valor de searchTerm
-    @Input() autofocus: Boolean = true;
+    @Input() autofocus = true;
 
     // termino a buscar
-    public searchTerm: String = '';
+    public searchTerm = '';
 
     // ocultar lista
-    public hideLista: Boolean = true;
+    public hideLista = true;
 
     // lista de resultados
     public resultados;

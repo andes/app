@@ -13,7 +13,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
 
     private _paciente: any;
 
-    @Input('paciente')
+    @Input()
     set paciente(value: any) {
         this._paciente = value;
     }

@@ -14,11 +14,11 @@ import { ITurno } from './../../../../../interfaces/turnos/ITurno';
 })
 
 export class ReasignarTurnoAutomaticoComponent implements OnInit {
-    resultado: String;
+    resultado: string;
 
     private _agendaAReasignar: any;
 
-    @Input('agendaAReasignar')
+    @Input()
     set agendaAReasignar(value: any) {
         this._agendaAReasignar = value;
         this.actualizar();

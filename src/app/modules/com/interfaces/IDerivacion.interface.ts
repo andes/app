@@ -2,37 +2,37 @@ import { IDerivacionHistorial } from './IDerivacionHistorial.interface';
 import { IObraSocial } from 'src/app/interfaces/IObraSocial';
 
 export interface IDerivacion {
-    id: String;
+    id: string;
     fecha: Date;
     organizacionOrigen: {
-        nombre: String;
-        id: String;
+        nombre: string;
+        id: string;
     };
     organizacionDestino: {
-        nombre: String;
-        direccion: String;
-        id: String;
+        nombre: string;
+        direccion: string;
+        id: string;
     };
     profesionalSolicitante: {
-        nombre: String;
-        apellido: String;
-        documento: Number;
-        id: String;
+        nombre: string;
+        apellido: string;
+        documento: number;
+        id: string;
     };
     paciente: {
-        id: String;
-        documento: String;
-        sexo: String;
-        genero: String;
-        nombre: String;
-        apellido: String;
+        id: string;
+        documento: string;
+        sexo: string;
+        genero: string;
+        nombre: string;
+        apellido: string;
         fechaNacimiento: Date;
         obraSocial: IObraSocial;
     };
-    estado: String;
-    detalle: String;
+    estado: string;
+    detalle: string;
     adjuntos: any;
     historial: [IDerivacionHistorial];
-    cancelada: Boolean;
-    prioridad: String;
+    cancelada: boolean;
+    prioridad: string;
 }

@@ -30,7 +30,7 @@ export class CamaMainComponent implements OnInit {
     public mapaSectores$: Observable<any[]>;
     public unidadesOrganizativas$: Observable<any[]>;
     public organizacion$: Observable<any>;
-    public verificarBaja$: Observable<Boolean>;
+    public verificarBaja$: Observable<boolean>;
     public cama: ISnapshot;
     public camaEditada = {
         nombre: null,

@@ -1,4 +1,4 @@
 export interface ITipoTraslado {
     id: string;
-    nombre: String;
+    nombre: string;
 }

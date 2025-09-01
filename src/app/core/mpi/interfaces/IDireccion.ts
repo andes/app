@@ -1,12 +1,12 @@
 import { IUbicacion } from '../../../interfaces/IUbicacion';
 
 export interface IDireccion {
-    valor: String;
-    codigoPostal: String;
+    valor: string;
+    codigoPostal: string;
     ubicacion: IUbicacion;
-    ranking: Number;
-    geoReferencia: [Number, Number];
+    ranking: number;
+    geoReferencia: [number, number];
     ultimaActualizacion: Date;
-    activo: Boolean;
+    activo: boolean;
     situacionCalle?: boolean;
 }

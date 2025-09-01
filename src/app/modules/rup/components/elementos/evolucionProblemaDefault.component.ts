@@ -1,6 +1,6 @@
 
 import { RUPComponent } from './../core/rup.component';
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { RupElement } from '.';
 
@@ -11,10 +11,10 @@ import { RupElement } from '.';
 @RupElement('EvolucionProblemaDefaultComponent')
 export class EvolucionProblemaDefaultComponent extends RUPComponent implements OnInit {
     public fechaInicio: Date;
-    public estado: String;
-    public esCronico: Boolean = false;
-    public esEnmienda: Boolean = false;
-    public evolucion: String;
+    public estado: string;
+    public esCronico = false;
+    public esEnmienda = false;
+    public evolucion: string;
     public hallazgoHudsCompleto: any;
     public evolucionActual;
     public indice = 0;

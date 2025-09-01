@@ -1,6 +1,6 @@
 <ng-container *ngIf="!soloValores && registro.valor">
     <form #form="ngForm">
-        <plex-grid cols="1">
+        <plex-grid [cols]="1">
             <plex-select [(ngModel)]="registro.valor.vacuna.vacunador" name="vacunador"
                          (getData)="loadProfesionales($event)" placeholder="Vacunador" label="Vacunador" idField="id"
                          labelField="nombreCompleto">
@@ -66,7 +66,7 @@
     </ng-container>
 </ng-container>
 <ng-container *ngIf="soloValores && registro.valor">
-    <plex-grid cols="1">
+    <plex-grid [cols]="1">
         <plex-label *ngIf="registro.valor.vacuna.vacunador" titulo="Vacunador"
                     [subtitulo]="registro.valor.vacuna.vacunador.nombreCompleto">
         </plex-label>

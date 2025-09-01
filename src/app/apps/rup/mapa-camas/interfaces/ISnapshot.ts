@@ -8,10 +8,10 @@ export interface ISnapshot {
 
     genero: ISnomedConcept;
     estado: string;
-    esCensable: Boolean;
+    esCensable: boolean;
     idInternacion: string;
-    esMovimiento: Boolean;
-    sugierePase?: Boolean;
+    esMovimiento: boolean;
+    sugierePase?: boolean;
     fecha: Date;
     fechaIngreso?: Date;
     fechaAtencion?: Date;
@@ -24,7 +24,7 @@ export interface ISnapshot {
     diaEstada?: number;
     sectores: ISectores[];
     jerarquiaSectores?: any[];
-    nombre: String;
+    nombre: string;
     tipoCama: ISnomedConcept;
     equipamiento: ISnomedConcept[];
     idCama: string;
@@ -69,8 +69,8 @@ export interface ISnapshot {
         nombreCompleto: string;
         nombre: string;
         apellido: string;
-        username: Number;
-        documento: Number;
+        username: number;
+        documento: number;
     };
     updatedAt?: Date;
     updatedBy?: {
@@ -78,8 +78,8 @@ export interface ISnapshot {
         nombreCompleto: string;
         nombre: string;
         apellido: string;
-        username: Number;
-        documento: Number;
+        username: number;
+        documento: number;
     };
 
 

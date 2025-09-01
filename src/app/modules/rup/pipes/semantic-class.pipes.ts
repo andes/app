@@ -17,10 +17,10 @@ export class SemanticClassPipe implements PipeTransform {
 export function getSemanticClass(concepto: ISnomedConcept, esSolicitud: boolean = false) {
     const semantic = getSemanticTag(concepto, esSolicitud);
     switch (concepto.semanticTag) {
-        case 'elemento de registro':
-            return 'elementoderegistro';
-        default:
-            return semantic;
+    case 'elemento de registro':
+        return 'elementoderegistro';
+    default:
+        return semantic;
     }
 }
 
@@ -30,30 +30,30 @@ export function getSemanticTag(concepto: ISnomedConcept, esSolicitud: boolean = 
         return 'solicitud';
     } else {
         switch (concepto.semanticTag) {
-            case 'hallazgo':
-            case 'evento':
-            case 'situación':
-                return 'hallazgo';
+        case 'hallazgo':
+        case 'evento':
+        case 'situación':
+            return 'hallazgo';
 
-            case 'trastorno':
-                return 'trastorno';
+        case 'trastorno':
+            return 'trastorno';
 
-            case 'procedimiento':
-            case 'entidad observable':
-            case 'régimen/tratamiento':
-                return 'procedimiento';
+        case 'procedimiento':
+        case 'entidad observable':
+        case 'régimen/tratamiento':
+            return 'procedimiento';
 
-            case 'producto':
-            case 'objeto físico':
-            case 'medicamento clínico':
-            case 'fármaco de uso clínico':
-                return 'producto';
+        case 'producto':
+        case 'objeto físico':
+        case 'medicamento clínico':
+        case 'fármaco de uso clínico':
+            return 'producto';
 
-            case 'elemento de registro':
-                return 'elemento de registro';
-            default:
-                // No debería
-                return concepto.semanticTag;
+        case 'elemento de registro':
+            return 'elemento de registro';
+        default:
+            // No debería
+            return concepto.semanticTag;
         }
     }
 }

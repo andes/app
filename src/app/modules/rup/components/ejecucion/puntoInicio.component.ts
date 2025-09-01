@@ -87,9 +87,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public prestacionNominalizada;
     public accesoHudsPaciente = null;
     public accesoHudsTurno = null;
-    public puedeDarSobreturno: Boolean;
-    public tieneAccesoHUDS: Boolean;
-    public matchPaciente: Boolean = true;
+    public puedeDarSobreturno: boolean;
+    public tieneAccesoHUDS: boolean;
+    public matchPaciente = true;
     public prestacionesValidacion = this.auth.getPermissions('rup:validacion:?');
     public permisoServicioIntermedio = this.auth.getPermissions('rup:servicio-intermedio:?');
     public showSidebar = false;
