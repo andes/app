@@ -11,7 +11,7 @@ export class PrestacionLegacyService {
         return this.server.get(this.prestacionLegacyUrl, { params: params, showError: true });
     }
 
-    getById(id: String): Observable<any> {
+    getById(id: string): Observable<any> {
         return this.server.get(this.prestacionLegacyUrl + '/' + id, null);
     }
 }

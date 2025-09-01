@@ -32,7 +32,7 @@
     "dependencies": {
         "@andes/icons": "^1.1.24",
         "@andes/match": "^1.1.12",
-        "@andes/plex": "^8.0.14",
+        "@andes/plex": "file:../plex/dist/andes-plex-8.0.67.tgz",
         "@angular/animations": "15.2.10",
         "@angular/cdk": "^15.2.9",
         "@angular/common": "15.2.10",
@@ -45,17 +45,25 @@
         "@angular/platform-server": "15.2.10",
         "@angular/router": "15.2.10",
         "@babel/runtime": "^7.28.2",
+        "@mdi/font": "^5.9.55",
         "@zxing/browser": "^0.1.3",
         "@zxing/library": "^0.20.0",
         "@zxing/ngx-scanner": "3.9.1",
+        "animate.css": "^3.7.0",
+        "awesome-phonenumber": "^1.6.0",
+        "bootstrap": "^4.0.0-alpha.6",
         "bowser": "^1.9.4",
         "bson": "^4.0.0-rc5",
         "chart.js": "^4.5.0",
         "core-js": "^3.29.0",
         "enhanced-resolve": "^4.1.0",
         "file-saver": "^2.0.2",
+        "hammerjs": "^2.0.8",
         "install": "^0.13.0",
+        "jquery": "^3.7.1",
         "json-rules-engine": "^5.0.4",
+        "loaders.css": "^0.1.2",
+        "moment": "^2.30.1",
         "ng-recaptcha": "^10.0.0",
         "ng2-charts": "4.1.1",
         "ng2-slugify": "^0.1.0",
@@ -63,13 +71,17 @@
         "ngx-image-compress": "^13.1.16",
         "ngx-infinite-scroll": "^15.0.0",
         "ngx-observe": "^7.0.0",
+        "ngx-simple-text-editor": "^1.4.0",
         "npm": "^11.5.2",
         "ol": "^5.3.3",
         "rxjs": "^7.0.0",
+        "selectize": "^0.12.4",
         "shiro-trie": "^0.4.9",
         "socket.io-client": "^2.3.0",
         "socketio-wildcard": "^2.0.0",
+        "sweetalert2": "^6.11.5",
         "tslib": "^2.0.0",
+        "url-parse": "^1.1.9",
         "vis-data": "^7.1.2",
         "vis-timeline": "^7.4.8",
         "vis-util": "^5.0.2",
@@ -89,7 +101,6 @@
         "@semantic-release/git": "^9.0.0",
         "@stylistic/eslint-plugin": "^5.2.3",
         "@types/estree": "^1.0.2",
-        "@types/google.maps": "^3.58.1",
         "@types/hammerjs": "^2.0.39",
         "@types/jasmine": "^2.8.9",
         "@types/node": "^20.19.9",
@@ -147,14 +158,16 @@
             "core-js": "^3.29.0",
             "enhanced-resolve": "^4.1.0",
             "file-saver": "^2.0.2",
+            "install": "^0.13.0",
             "json-rules-engine": "^5.0.4",
-            "ng-drag-drop": "^5.0.0",
             "ng-recaptcha": "^10.0.0",
             "ng2-charts": "4.1.1",
             "ng2-slugify": "^0.1.0",
+            "ngx-drag-drop": "^15.1.0",
             "ngx-image-compress": "^13.1.16",
-            "ngx-infinite-scroll": "^8.0.0",
+            "ngx-infinite-scroll": "^15.0.0",
             "ngx-observe": "^7.0.0",
+            "npm": "^11.5.2",
             "ol": "^5.3.3",
             "rxjs": "^7.0.0",
             "shiro-trie": "^0.4.9",
@@ -200,54 +213,146 @@
             "ng-recaptcha": {
                 "@angular/core": "15.2.10"
             },
-            "eslint": "^8.57.1"
-        },
-        "release": {
-            "branches": [
-                {
-                    "name": "master"
-                }
-            ],
-            "plugins": [
-                [
-                    "@semantic-release/commit-analyzer",
+            "repository": {
+                "type": "git",
+                "url": "git+https://github.com/andes/app.git"
+            },
+            "author": "Red TICs",
+            "license": "GPL-3.0",
+            "bugs": {
+                "url": "https://github.com/andes/app/issues"
+            },
+            "browser": {
+                "vm": false,
+                "selectn": false
+            },
+            "dependencies": {
+                "@andes/icons": "^1.1.24",
+                "@andes/match": "^1.1.12",
+                "@andes/plex": "^8.0.14",
+                "@angular/animations": "15.2.10",
+                "@angular/cdk": "^15.2.9",
+                "@angular/common": "15.2.10",
+                "@angular/compiler": "15.2.10",
+                "@angular/core": "15.2.10",
+                "@angular/forms": "15.2.10",
+                "@angular/material": "^15.2.9",
+                "@angular/platform-browser": "15.2.10",
+                "@angular/platform-browser-dynamic": "15.2.10",
+                "@angular/platform-server": "15.2.10",
+                "@angular/router": "15.2.10",
+                "@babel/runtime": "^7.28.2",
+                "@zxing/browser": "^0.1.3",
+                "@zxing/library": "^0.20.0",
+                "@zxing/ngx-scanner": "3.9.1",
+                "bowser": "^1.9.4",
+                "bson": "^4.0.0-rc5",
+                "chart.js": "^4.5.0",
+                "core-js": "^3.29.0",
+                "enhanced-resolve": "^4.1.0",
+                "file-saver": "^2.0.2",
+                "json-rules-engine": "^5.0.4",
+                "ng-drag-drop": "^5.0.0",
+                "ng-recaptcha": "^10.0.0",
+                "ng2-charts": "4.1.1",
+                "ng2-slugify": "^0.1.0",
+                "ngx-image-compress": "^13.1.16",
+                "ngx-infinite-scroll": "^8.0.0",
+                "ngx-observe": "^7.0.0",
+                "ol": "^5.3.3",
+                "rxjs": "^7.0.0",
+                "shiro-trie": "^0.4.9",
+                "socket.io-client": "^2.3.0",
+                "socketio-wildcard": "^2.0.0",
+                "tslib": "^2.0.0",
+                "vis-data": "^7.1.2",
+                "vis-timeline": "^7.4.8",
+                "vis-util": "^5.0.2",
+                "xlsx": "^0.15.4",
+                "xss": "^1.0.8",
+                "zone.js": "~0.11.4"
+            },
+            "devDependencies": {
+                "@angular-builders/custom-webpack": "^15.0.0",
+                "@angular-devkit/build-angular": "^15.2.11",
+                "@angular-eslint/eslint-plugin": "^15.2.1",
+                "@angular-eslint/eslint-plugin-template": "^15.2.1",
+                "@angular-eslint/template-parser": "^15.2.1",
+                "@angular/cli": "^15.2.11",
+                "@angular/compiler-cli": "15.2.10",
+                "@semantic-release/changelog": "^5.0.1",
+                "@semantic-release/git": "^9.0.0",
+                "@stylistic/eslint-plugin": "^5.2.3",
+                "@types/estree": "^1.0.2",
+                "@types/google.maps": "^3.58.1",
+                "@types/hammerjs": "^2.0.39",
+                "@types/jasmine": "^2.8.9",
+                "@types/node": "^20.19.9",
+                "@typescript-eslint/eslint-plugin": "^8.38.0",
+                "@typescript-eslint/parser": "^8.38.0",
+                "jasmine-core": "~3.5.0",
+                "jasmine-spec-reporter": "~5.0.0",
+                "ng-packagr": "^15.2.2",
+                "semantic-release": "^17.0.8",
+                "typescript": "^4.9.5"
+            },
+            "overrides": {
+                "ng2-charts": "4.1.1",
+                "@zxing/library": "^0.20.0",
+                "@zxing/browser": "^0.1.3",
+                "@zxing/ngx-scanner": "3.9.1",
+                "ng-recaptcha": {
+                    "@angular/core": "15.2.10"
+                },
+                "eslint": "^8.57.1"
+            },
+            "release": {
+                "branches": [
                     {
-                        "preset": "angular",
-                        "releaseRules": [
-                            {
-                                "type": "refactor",
-                                "release": "patch"
-                            },
-                            {
-                                "type": "chore",
-                                "release": "patch"
+                        "name": "master"
+                    }
+                ],
+                "plugins": [
+                    [
+                        "@semantic-release/commit-analyzer",
+                        {
+                            "preset": "angular",
+                            "releaseRules": [
+                                {
+                                    "type": "refactor",
+                                    "release": "patch"
+                                },
+                                {
+                                    "type": "chore",
+                                    "release": "patch"
+                                }
+                            ],
+                            "parserOpts": {
+                                "noteKeywords": [
+                                    "BREAKING CHANGE",
+                                    "BREAKING CHANGES"
+                                ]
                             }
-                        ],
-                        "parserOpts": {
-                            "noteKeywords": [
-                                "BREAKING CHANGE",
-                                "BREAKING CHANGES"
-                            ]
                         }
-                    }
-                ],
-                "@semantic-release/release-notes-generator",
-                "@semantic-release/changelog",
-                [
-                    "@semantic-release/github",
-                    {
-                        "successComment": false,
-                        "failComment": false
-                    }
-                ],
-                [
-                    "@semantic-release/npm",
-                    {
-                        "npmPublish": false
-                    }
-                ],
-                "@semantic-release/git"
-            ]
+                    ],
+                    "@semantic-release/release-notes-generator",
+                    "@semantic-release/changelog",
+                    [
+                        "@semantic-release/github",
+                        {
+                            "successComment": false,
+                            "failComment": false
+                        }
+                    ],
+                    [
+                        "@semantic-release/npm",
+                        {
+                            "npmPublish": false
+                        }
+                    ],
+                    "@semantic-release/git"
+                ]
+            }
         }
     }
 }

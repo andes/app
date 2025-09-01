@@ -1,42 +1,42 @@
 export interface IDemanda {
     profesional: {
-        id: String;
-        nombre: String;
-        apellido: String;
+        id: string;
+        nombre: string;
+        apellido: string;
     };
     organizacion: {
-        id: String;
-        nombre: String;
+        id: string;
+        nombre: string;
     };
-    motivo: String;
+    motivo: string;
     fecha: Date;
-    origen: String;
-};
+    origen: string;
+}
 
 export interface IListaEspera {
-    id?: String;
+    id?: string;
     paciente: { id: string };
     tipoPrestacion: any;
     fecha: Date;
     vencimiento?: Date;
-    estado: String;
+    estado: string;
     demandas: [IDemanda];
     resolucion: {
         fecha: Date;
-        motivo: String;
-        observacion: String;
+        motivo: string;
+        observacion: string;
         turno: {
-            id: String;
-            idAgenda: String;
+            id: string;
+            idAgenda: string;
             organizacion: {
-                id: String;
-                nombre: String;
+                id: string;
+                nombre: string;
             };
             horaInicio: Date;
-            tipo: String;
-            emitidoPor: String;
+            tipo: string;
+            emitidoPor: string;
             fechaHoraDacion: Date;
-            profesional: String;
+            profesional: string;
         };
     };
     llamados?: ILlamado[];
