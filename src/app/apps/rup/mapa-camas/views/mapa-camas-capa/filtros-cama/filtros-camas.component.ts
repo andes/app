@@ -21,7 +21,7 @@ export class FiltrosCamasComponent implements OnInit {
     public estadoList$: Observable<any[]>;
     public paciente = '';
     public collapse = true;
-
+    mostrarTodasCamas = false;
     filtro: any = {};
     censables = [
         { id: 0, nombre: 'No censable' },
@@ -75,7 +75,7 @@ export class FiltrosCamasComponent implements OnInit {
         this.mapaCamasService.unidadOrganizativaSelected.next(this.filtro.unidadOrganizativa);
         this.mapaCamasService.sectorSelected.next(this.filtro.sector);
         this.mapaCamasService.tipoCamaSelected.next(this.filtro.tipoCama);
-        this.mapaCamasService.esCensable.next(this.filtro.censable);
+        this.mapaCamasService.esCensable.next(this.mostrarTodasCamas ? null : 1);
         this.mapaCamasService.pacienteText.next(this.filtro.paciente);
 
         this.mapaCamasService.equipamientoSelected.next(this.filtro.equipamiento);
