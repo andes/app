@@ -4,7 +4,7 @@ import { Plex } from '@andes/plex';
 import { cache } from '@andes/shared';
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
-import { first, map, switchMap } from 'rxjs/operators';
+import { catchError, first, map, switchMap } from 'rxjs/operators';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
@@ -325,17 +325,19 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         if (valid.formValid) {
             this.inProgress = true;
             const afterSave = {
-                complete: () => {
-                    this.plex.info('success', 'Los datos se actualizaron correctamente');
-                    if (this.view === 'listado-internacion') {
-                        const fechaHasta = moment(this.registro.valor.InformeEgreso.fechaEgreso).add(1, 'minute').toDate();
-                        // actualiza el listado
-                        this.listadoInternacionService.setFechaHasta(fechaHasta);
-                        this.listadoInternacionCapasService.setFechaHasta(fechaHasta);
-                        this.mapaCamasService.selectPrestacion(null);
-                        this.mapaCamasService.selectResumen(null);
-                    } else if (this.view === 'mapa-camas') {
-                        this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
+                next: (result) => {
+                    if (result) {
+                        this.plex.info('success', 'Los datos se actualizaron correctamente');
+                        if (this.view === 'listado-internacion') {
+                            const fechaHasta = moment(this.registro.valor.InformeEgreso.fechaEgreso).add(1, 'minute').toDate();
+                            // actualiza el listado
+                            this.listadoInternacionService.setFechaHasta(fechaHasta);
+                            this.listadoInternacionCapasService.setFechaHasta(fechaHasta);
+                            this.mapaCamasService.selectPrestacion(null);
+                            this.mapaCamasService.selectResumen(null);
+                        } else if (this.view === 'mapa-camas') {
+                            this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
+                        }
                     }
                 },
                 error: (err) => {
@@ -442,6 +444,10 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                         return this.egresoSimplificado(this.estadoDestino);
                     }
                 }),
+                catchError(error => {
+                    this.plex.info('warning', `${error} ${moment(registros[0].valor.informeIngreso.fechaIngreso).format('YYYY-MM-DD HH:mm:ss').bold()}`, 'Error');
+                    return of(null);
+                })
             );
         }
         return of(null);
