@@ -98,6 +98,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public obrasSociales: IObraSocial[] = [];
     public OSPrivada = false;
     public esCensable = this.isCamaCensable();
+    resumenInternacion$: Observable<IResumenInternacion>;
 
 
     constructor(
@@ -146,6 +147,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         ) as Observable<string>;
     }
     ngOnInit() {
+        this.resumenInternacion$ = this.mapaCamasService.resumenInternacion$;
+        this.resumenInternacion$.subscribe(resumen => {
+            this.mapaCamasService.setFecha(resumen.fechaIngreso);
+        });
         this.view = this.mapaCamasService.view.getValue();
         this.fechaHasta = this.listadoInternacionService.fechaIngresoHasta.getValue();
         this.prepagas$ = this.obraSocialService.getPrepagas();
