@@ -37,6 +37,7 @@ import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 import { VistaLaboratorioComponent } from './components/ejecucion/laboratorios/vista-laboratorio.component';
 import { VistaRecetaComponent } from './components/huds/vistaReceta';
 import { SuspenderMedicacionComponent } from './components/ejecucion/recetas/suspenderMedicacion';
+import { RenovarMedicacionComponent } from './components/ejecucion/recetas/renovarMedicacion';
 
 @NgModule({
     imports: [
@@ -80,7 +81,8 @@ import { SuspenderMedicacionComponent } from './components/ejecucion/recetas/sus
         VistaHistorialTurnosComponent,
         HudsBusquedaComponent,
         ListadoInternacionHudsComponent,
-        SuspenderMedicacionComponent
+        SuspenderMedicacionComponent,
+        RenovarMedicacionComponent
     ],
     exports: [
         VistaCDAComponent,

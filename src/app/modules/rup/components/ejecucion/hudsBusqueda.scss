@@ -245,6 +245,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    .icon-wrapper {
+        display: flex;
+        margin-bottom: 5px;
+    }
 }
 
 .titulo-filtro {

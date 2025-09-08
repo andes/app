@@ -21,11 +21,35 @@
         </div>
     </div>
     <div class="menu-titulo">
-        <h6 class="titulo-filtro {{filtroActual}}">{{ getTitulo(filtroActual) | uppercase }}</h6>
-        <suspender-medicacion *ngIf="filtroActual==='recetas' && seleccionRecetas.length > 0"
-                              [seleccionRecetas]="seleccionSuspender" [motivoSelector]="motivoSuspensionSelector"
-                              [motivosSuspension]="motivosSuspension" [profesional]="profesional"
-                              (reset)="resetSeleccionRecetas()"></suspender-medicacion>
+        <ng-container>
+            <h6 class="titulo-filtro {{filtroActual}}">
+                <ng-container *ngIf="mostrarRenovacion">RENOVAR RECETAS</ng-container>
+                <ng-container *ngIf="mostrarSuspension">SUSPENDER RECETAS</ng-container>
+                <ng-container *ngIf="!mostrarRenovacion && !mostrarSuspension">{{ getTitulo(filtroActual) | uppercase
+                    }}</ng-container>
+            </h6>
+        </ng-container>
+        <div class="icon-wrapper" *ngIf="filtroActual==='recetas'">
+            <ng-container *ngIf="!mostrarRenovacion && !mostrarSuspension">
+                <plex-button type="info" class="mr-1" icon="refresh" label="Renovar" (click)="abrirRenovacion()" size="sm">
+                </plex-button>
+                <plex-button type="danger" icon="stop" label="Suspender" (click)="abrirSuspension()" size="sm">
+                </plex-button>
+            </ng-container>
+            <renovar-medicacion *ngIf="mostrarRenovacion" [seleccionRecetas]="seleccionRecetas"
+                                [motivoSelector]="motivoSuspensionSelector" [motivosSuspension]="motivosSuspension"
+                                [profesional]="profesional" (cerrar)="cerrarRenovacion()"
+                                (reset)="resetSeleccionRecetas()">
+            </renovar-medicacion>
+            <suspender-medicacion *ngIf="mostrarSuspension" [seleccionRecetas]="seleccionRecetas"
+                                  [motivoSelector]="motivoSuspensionSelector" [motivosSuspension]="motivosSuspension"
+                                  [profesional]="profesional" (cerrar)="cerrarSuspension()"
+                                  (reset)="resetSeleccionRecetas()">
+            </suspender-medicacion>
+            <plex-button *ngIf="mostrarRenovacion || mostrarSuspension" type="danger" size="sm" icon="arrow-left"
+                         (click)="resetEstado()" class="ml-1" tooltip="Volver" tooltipPosition="top">
+            </plex-button>
+        </div>
     </div>
     <div class="grow" *ngIf="filtroActual === 'planes'">
         <plex-options class="filtros-ambitos" (activated)='setAmbitoOrigen($event)' [items]="filtrosAmbitos">
@@ -52,7 +76,6 @@
         </plex-bool>
     </div>
 
-
     <!-- Vista Recetas -->
     <ng-container *ngIf="filtroActual === 'recetas'">
         <plex-text [(ngModel)]="searchRecetas" name="searchRecetas" (change)="filtrarRecetas()"
@@ -62,7 +85,8 @@
             <ul *ngIf="busquedaRecetas.length" class="hover listado list-unstyled">
                 <ng-container *ngFor="let grupo of busquedaRecetas; let iReceta = index">
                     <li>
-                        <plex-bool [readonly]="!esRecetaSeleccionable(grupo?.recetas[0])"
+                        <plex-bool *ngIf="mostrarRenovacion || mostrarSuspension"
+                                   [readonly]="esRecetSeleccionable(grupo?.recetas[0])"
                                    [ngModel]="seleccionRecetas[iReceta]" name="seleccionada" type="checkbox"
                                    (change)="seleccionarReceta($event, grupo.recetas, iReceta)">
                         </plex-bool>
