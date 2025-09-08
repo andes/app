@@ -9,13 +9,16 @@
         <thead>
             <tr>
                 <th>Indicacion</th>
+                <th>Cantidad</th>
                 <th>Profesional</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let receta of seleccionRecetas" [style.display]="receta ? 'table-row' : 'none'">
-                <td>{{ receta?.medicamento.concepto.term }}</td>
-                <td>{{ receta?.profesional.nombre }} {{ receta?.profesional.apellido }}
+            <tr *ngFor="let medicamento of groupedMedicamentos">
+                <td>{{ medicamento.term }}</td>
+                <td>{{ medicamento.count }}</td>
+                <td>{{ medicamento?.profesional.nombre }} {{ medicamento?.profesional.apellido }}
+
             </tr>
         </tbody>
     </table>
