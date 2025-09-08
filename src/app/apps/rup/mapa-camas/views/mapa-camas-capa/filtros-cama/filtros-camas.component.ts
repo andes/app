@@ -71,17 +71,26 @@ export class FiltrosCamasComponent implements OnInit {
         this.collapse = !this.collapse;
     }
 
+    onCensableChange() {
+        if (this.filtro.censable) {
+            this.mostrarTodasCamas = false;
+        }
+        this.filtrar();
+    }
+
     filtrar() {
         this.mapaCamasService.unidadOrganizativaSelected.next(this.filtro.unidadOrganizativa);
         this.mapaCamasService.sectorSelected.next(this.filtro.sector);
         this.mapaCamasService.tipoCamaSelected.next(this.filtro.tipoCama);
-        this.mapaCamasService.esCensable.next(this.mostrarTodasCamas ? null : 1);
         this.mapaCamasService.pacienteText.next(this.filtro.paciente);
-
         this.mapaCamasService.equipamientoSelected.next(this.filtro.equipamiento);
         this.mapaCamasService.estadoSelected.next(this.filtro.estado);
+        if (this.filtro.censable !== undefined && this.filtro.censable !== null) {
+            this.mapaCamasService.esCensable.next(this.filtro.censable.id);
+        } else {
+            this.mapaCamasService.esCensable.next(this.mostrarTodasCamas ? null : 1);
+        }
     }
-
     // Función que nos devuelve un array de jerarquía de sectores que no estan repetidos
     arraySectores(camas) {
         const listado = [];
