@@ -428,13 +428,10 @@ export class MapaCamasService {
             });
         }
 
-        if (esCensable != null) {
-            if (esCensable === 0) {
-                camasFiltradas = camasFiltradas.filter(snap => !snap.esCensable);
-            } else if (esCensable === 1) {
-                camasFiltradas = camasFiltradas.filter(snap => snap.esCensable);
-            }
-        }
+        camasFiltradas = (esCensable === 0 || esCensable === 1)
+            ? camasFiltradas.filter(snap => esCensable === 1 ? snap.esCensable : !snap.esCensable)
+            : camasFiltradas;
+
 
         return camasFiltradas;
     }
