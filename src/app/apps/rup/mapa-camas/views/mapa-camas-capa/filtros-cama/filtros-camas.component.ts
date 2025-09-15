@@ -4,14 +4,11 @@ import { Observable, combineLatest } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 
-
-
 @Component({
     selector: 'app-filtros-camas',
     templateUrl: './filtros-camas.component.html',
     styleUrls: ['filtros-camas.scss']
 })
-
 export class FiltrosCamasComponent implements OnInit {
 
     public unidadOrganizativaList$: Observable<any[]>;
@@ -40,6 +37,7 @@ export class FiltrosCamasComponent implements OnInit {
         this.sectorList$ = this.mapaCamasService.snapshotFiltrado$.pipe(
             map(cama => this.arraySectores(cama))
         );
+
         this.tipoCamaList$ = this.mapaCamasService.snapshotFiltrado$.pipe(
             map((camas) => arrayToSet(camas.filter(snap => !snap.sala), 'conceptId', (item) => item.tipoCama))
         );
@@ -74,6 +72,7 @@ export class FiltrosCamasComponent implements OnInit {
     onCensableChange() {
         if (this.filtro.censable) {
             this.mostrarTodasCamas = false;
+            this.mapaCamasService.mostrarTodasCamas.next(this.filtro.censable.id === 0);
         }
         this.filtrar();
     }
@@ -89,7 +88,8 @@ export class FiltrosCamasComponent implements OnInit {
             this.filtro.censable?.id ?? (this.mostrarTodasCamas ? null : 1)
         );
     }
-    // Función que nos devuelve un array de jerarquía de sectores que no estan repetidos
+
+    // Devuelve un array de jerarquía de sectores sin repetidos
     arraySectores(camas) {
         const listado = [];
         camas.forEach(elem => {
