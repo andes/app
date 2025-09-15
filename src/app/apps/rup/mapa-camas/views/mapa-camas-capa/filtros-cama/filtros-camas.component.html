@@ -30,9 +30,6 @@
                              idField="conceptId" labelField="term" (change)="filtrar()"
                              [data]="equipamientoList$ | async" multiple="true" grow="3">
                 </plex-select>
-                <plex-bool *ngIf="!filtro.censable" class="mt-4" label="Incluir No censables" name="activate"
-                           type="slide" [(ngModel)]="mostrarTodasCamas" (change)="filtrar()">
-                </plex-bool>
             </div>
         </div>
     </plex-wrapper>
