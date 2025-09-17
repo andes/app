@@ -84,7 +84,8 @@ export class VistaRecetaComponent implements OnInit {
         finalizada: 'success',
         suspendida: 'danger',
         vencida: 'danger',
-        rechazada: 'danger'
+        rechazada: 'danger',
+        pendiente: 'info'
     } as { [key: string]: string };
 
     public estadoDispensa = {
@@ -105,55 +106,73 @@ export class VistaRecetaComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.recetaPrincipal = this.recetaService.getUltimaReceta(this.registro.recetas);
+        this.recetaPrincipal = this.registro.recetas.length>1?this.recetaService.getRecetaTP(this.registro.recetas): this.registro.recetas[0];
         this.combinarDispensas();
-        this.historialRecetas = this.registro.recetas.filter(receta => receta.id !== this.recetaPrincipal.id);
+        this.historialRecetas = this.registro.recetas.filter(receta => receta.id !== this.recetaPrincipal.id && receta.estadoActual.tipo === 'finalizada');
     }
 
     combinarDispensas() {
-        if (!this.recetaPrincipal.estados || !this.recetaPrincipal.estadosDispensa) {
-            return;
-        }
-
         let dispensaDuplicada = false;
-        this.listadoDispensas = this.recetaPrincipal.estadosDispensa
-            .filter(dispensa => dispensa.tipo !== 'sin-dispensa') // Filtrar los que no son 'sin-dispensa'
-            .map(dispensa => {
-                let organizacionNombre = '';
-                const idDispensa = dispensa.idDispensaApp;
-                const dispensaCoincidente = this.recetaPrincipal.dispensa.find(dispensaPrimaria => {
-                    if (dispensaPrimaria.idDispensaApp === idDispensa) {
-                        organizacionNombre = dispensaPrimaria.organizacion?.nombre;
-                        return moment(dispensaPrimaria.fecha).isSame(moment(dispensa.fecha), 'day'); // Compara solo el día
-                    }
-                    return null;
+        let organizacionNombre = '';
+        if (this.recetaPrincipal.medicamento.tratamientoProlongado) {
+            this.listadoDispensas=this.registro.recetas
+                .filter(receta => receta.estadoDispensaActual.tipo !== 'sin-dispensa')
+                .map(rec => {
+                    organizacionNombre = this.recetaPrincipal.organizacion?.nombre;
+                    return {
+                        fecha: rec.estadoDispensaActual.fecha,
+                        tipo: rec.estadoDispensaActual.tipo,
+                        organizacion: organizacionNombre || 'Sin especificar',
+                        sistema: rec.estadoDispensaActual.sistema || 'Sin especificar',
+                        dispensaDuplicada: false// esDuplicada
+                    };
                 });
+        } else {
+            if (!this.recetaPrincipal.estados || !this.recetaPrincipal.estadosDispensa) {
+                return;
+            }
 
-                const esDuplicada = dispensaDuplicada;
-                if (dispensa.tipo === 'dispensada') {
-                    if (!dispensaDuplicada) {
-                        dispensaDuplicada = true;
+
+
+            this.listadoDispensas = this.recetaPrincipal.estadosDispensa
+                .filter(dispensa => dispensa.tipo !== 'sin-dispensa') // Filtrar los que no son 'sin-dispensa'
+                .map(dispensa => {
+                    let organizacionNombre = '';
+                    const idDispensa = dispensa.idDispensaApp;
+                    const dispensaCoincidente = this.recetaPrincipal.dispensa.find(dispensaPrimaria => {
+                        if (dispensaPrimaria.idDispensaApp === idDispensa) {
+                            organizacionNombre = dispensaPrimaria.organizacion?.nombre;
+                            return moment(dispensaPrimaria.fecha).isSame(moment(dispensa.fecha), 'day'); // Compara solo el día
+                        }
+                        return null;
+                    });
+
+                    const esDuplicada = dispensaDuplicada;
+                    if (dispensa.tipo === 'dispensada') {
+                        if (!dispensaDuplicada) {
+                            dispensaDuplicada = true;
+                        }
                     }
-                }
 
-                if (dispensaCoincidente) {
-                    return {
-                        fecha: dispensaCoincidente.fecha,
-                        tipo: dispensa.tipo,
-                        organizacion: organizacionNombre || 'Sin especificar',
-                        sistema: dispensa.sistema || 'Sin especificar',
-                        dispensaDuplicada: esDuplicada
-                    };
-                } else {
-                    return {
-                        fecha: dispensa.fecha,
-                        tipo: dispensa.tipo,
-                        organizacion: organizacionNombre || 'Sin especificar',
-                        sistema: dispensa.sistema || 'Sin especificar',
-                        dispensaDuplicada: esDuplicada
-                    };
-                }
-            });
+                    if (dispensaCoincidente) {
+                        return {
+                            fecha: dispensaCoincidente.fecha,
+                            tipo: dispensa.tipo,
+                            organizacion: organizacionNombre || 'Sin especificar',
+                            sistema: dispensa.sistema || 'Sin especificar',
+                            dispensaDuplicada: esDuplicada
+                        };
+                    } else {
+                        return {
+                            fecha: dispensa.fecha,
+                            tipo: dispensa.tipo,
+                            organizacion: organizacionNombre || 'Sin especificar',
+                            sistema: dispensa.sistema || 'Sin especificar',
+                            dispensaDuplicada: esDuplicada
+                        };
+                    }
+                });
+        }
 
         return this.listadoDispensas;
     }

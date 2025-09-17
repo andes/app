@@ -29,6 +29,21 @@ export class RecetaService {
         return this.server.patch(`${this.url}`, { op: 'suspender', recetas, motivo, observacion, profesional });
     }
 
+    getRecetaTP(recetas) {
+        const recetasConDispensa = recetas
+            .filter(receta => receta.estadoDispensaActual?.tipo !== 'sin-dispensa');
+        const suspendida= recetas.find(r => r.estadoActual?.tipo === 'suspendida');
+        if (suspendida) {
+            return suspendida;
+        }
+        if (recetasConDispensa.length > 0) {
+            return recetasConDispensa.reduce((max, receta) =>
+                (!max || receta.medicamento.ordenTratamiento > max.medicamento.ordenTratamiento) ? receta : max
+            , recetasConDispensa[0]);
+        } else {
+            return recetas.find(receta => receta.estadoActual?.tipo === 'vigente');
+        }
+    };
     getUltimaReceta(recetas) {
         return recetas?.reduce((mostRecent, receta) => {
             const recetaDate = moment(receta.fechaRegistro);
@@ -36,7 +51,8 @@ export class RecetaService {
 
             return recetaDate.isAfter(mostRecentDate) ? receta : mostRecent;
         });
-    };
+    }
+
 
     getLabel(recetas: any[]) {
         const receta = this.getUltimaReceta(recetas);
