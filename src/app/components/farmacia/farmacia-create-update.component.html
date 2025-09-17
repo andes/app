@@ -8,7 +8,7 @@
         </plex-title>
         <form #formulario="ngForm">
             <!-- DATOS BASICOS DE LA FARMACIA -->
-            <plex-grid type="full" responsive cols="3" colsSm="1">
+            <plex-grid type="full" responsive [cols]="3" [colsSm]="1">
                 <plex-text label="Denominación" [(ngModel)]="farmacia.denominacion" name="denominacionFarmacia"
                            [required]="true">
                 </plex-text>
@@ -45,17 +45,22 @@
                 <plex-text label="Expediente papel" [(ngModel)]="farmacia.expedientePapel" name="expedientePapel"
                            [required]="true">
                 </plex-text>
+            </plex-grid>
+            <plex-grid type="full" [cols]="4">
                 <plex-text label="Expediente GDE" [(ngModel)]="farmacia.expedienteGDE" name="expedienteGDE"
                            [required]="true">
                 </plex-text>
                 <plex-text label="Número caja" [(ngModel)]="farmacia.nroCaja" name="nroCaja" [required]="true">
                 </plex-text>
-                <plex-grid type="full" cols="2" size="lg">
-                    <plex-bool class="bool-posicion" label="Gabinete Inyectables" [(ngModel)]="gabinete" name="gabinete"
-                               type="slide">
+                <plex-select [(ngModel)]="establecimiento" name="establecimiento" [data]="arrayEstablecimiento"
+                             label="Tipo de establecimiento" [required]="true">
+                </plex-select>
+                <plex-grid type="full" [cols]="2">
+                    <plex-bool class="bool-posicion" label="Gabinete Inyectables"
+                               [(ngModel)]="farmacia.gabineteInyenctables" name="gabinete" type="slide">
                     </plex-bool>
-                    <plex-bool class="bool-posicion" label="Laboratorio Magistrales" [(ngModel)]="laboratorio"
-                               name="laboratorio" type="slide">
+                    <plex-bool class="bool-posicion" label="Laboratorio Magistrales"
+                               [(ngModel)]="farmacia.laboratoriosMagistrales" name="laboratorio" type="slide">
                     </plex-bool>
                 </plex-grid>
             </plex-grid>
@@ -69,7 +74,7 @@
             </plex-title>
             <plex-label *ngIf="!farmacia.farmaceuticosAuxiliares.length"> Para agregar un farmacéutico auxiliar
                 seleccione el botón ' + ' </plex-label>
-            <plex-grid type="full" cols="1" size="lg" responsive>
+            <plex-grid type="full" [cols]="1" size="lg" responsive>
                 <plex-wrapper *ngFor="let auxiliar of farmacia.farmaceuticosAuxiliares; let i = index">
                     <plex-text label="Farmacéutico" [(ngModel)]="auxiliar.farmaceutico" name="auxFarmaceutico-{{i}}"
                                [required]="true">
@@ -90,7 +95,7 @@
 
             <!-- HORARIOS DE ATENCIÓN -->
             <plex-title size="sm" titulo="Horarios"></plex-title>
-            <plex-wrapper *ngFor="let data of farmacia.horarios; let i = index">
+            <plex-wrapper *ngFor="let data of horarioFarmacia; let i = index">
                 <plex-text label="Día y horario" [(ngModel)]="data.dia" name="diaHora-{{i}}" [required]="true">
                 </plex-text>
                 <plex-button *ngIf="i === 0" type="success" icon="plus" name="agregarDia" (click)="addDia()"
@@ -104,7 +109,7 @@
 
             <!-- DOMICILIO DE LA FARMACIA -->
             <plex-title size="sm" titulo="Domicilios"></plex-title>
-            <plex-grid type="full" cols="1" size="lg" responsive>
+            <plex-grid type="full" [cols]="1" size="lg" responsive>
                 <plex-wrapper>
                     <plex-select [(ngModel)]="farmacia.domicilio.ubicacion.provincia" name="provincia"
                                  [data]="provincias$ | async" label="Provincia"
@@ -132,7 +137,7 @@
             </plex-title>
             <plex-label *ngIf="!farmacia.contactos.length"> Para agregar un contacto seleccione el botón ' + '
             </plex-label>
-            <plex-grid type="full" cols="1" size="lg" responsive>
+            <plex-grid type="full" [cols]="1" size="lg" responsive>
                 <plex-wrapper *ngFor="let contacto of farmacia.contactos; let i = index">
                     <plex-select [(ngModel)]="contacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}" label="Tipo"
                                  [required]="true" (change)="contacto.valor=''">
