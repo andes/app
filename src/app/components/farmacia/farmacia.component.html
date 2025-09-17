@@ -22,6 +22,10 @@
             <plex-select [(ngModel)]="filtros.asociado" [data]="arrayAsociado" name="asociado" label="Asociado"
                          placeholder="Seleccione una asociación" (change)="filtrar()">
             </plex-select>
+            <plex-select [(ngModel)]="filtros.establecimiento" [data]="tipoEstablecimiento" name="tipoEstablecimiento"
+                         label="Tipo de establecimiento" placeholder="Seleccione un establecimiento"
+                         (change)="filtrar()">
+            </plex-select>
         </plex-wrapper>
         <div *ngIf="!(listadoFarmacia$ | async)?.length" class="mt-5">
             <plex-label class="flex-column" icon="magnify" type="info" justify="center" size="xl" direction="column"
@@ -46,6 +50,8 @@
                     <td *plTableCol="'matriculaDTR'">{{farmacia.matriculaDTResponsable}}</td>
                     <td *plTableCol="'disposicionAltaDT'">{{farmacia.disposicionAltaDT}}</td>
                     <td *plTableCol="'asociado'">{{farmacia.asociadoA}}</td>
+                    <td *plTableCol="'establecimiento'"> {{farmacia.tipoEstablecimiento ? farmacia.tipoEstablecimiento :
+                        'Sin datos'}}</td>
                     <td style="text-align: right">
                         <plex-button *ngIf="puedeEliminarFarmacia()" size="sm" icon="cesto" type="danger"
                                      tooltip="Eliminar" tooltipPosition="top" (click)="eliminarFarmacia(farmacia)">
@@ -100,12 +106,15 @@
                 <plex-label *ngIf="farmaciaSelected.nroCaja" titulo="Expediente GDE"
                             subtitulo="{{ farmaciaSelected.nroCaja}}">
                 </plex-label>
+                <plex-label titulo="Tipo de establecimiento"
+                            subtitulo="{{ farmaciaSelected.tipoEstablecimiento || 'Sin datos'}}">
+                </plex-label>
             </plex-detail>
             <br>
 
             <!-- FECHAS -->
             <plex-title titulo="FECHAS HABILITACIÓN" size="sm"></plex-title>
-            <plex-grid type="full" cols="3" size="lg" responsive>
+            <plex-grid type="full" [cols]="3" size="lg" responsive>
                 <plex-label *ngIf="farmaciaSelected.fechaHabilitacion" titulo="Fecha habilitación"
                             subtitulo="{{ farmaciaSelected.fechaHabilitacion | fecha}}">
                 </plex-label>
@@ -148,7 +157,7 @@
                 </plex-table-columns>
                 <tr *ngFor="let data of farmaciaSelected.horarios">
                     <td>
-                        <plex-label icon="reloj" titulo="{{ data.dia }}"></plex-label>
+                        <plex-label icon="reloj" titulo="{{ data.dia || data }}"></plex-label>
                     </td>
                 </tr>
             </plex-table>
