@@ -295,7 +295,7 @@ export class DarTurnosComponent implements OnInit {
         this.permitirTurnoDoble = false;
         const tipoTurnoDoble = this.tiposTurnosSelect.toString();
         const cantidadDisponible = this.countBloques[this.indiceBloque];
-        if (cantidadDisponible) {
+        if (cantidadDisponible && !this.agenda.bloques[this.indiceBloque]?.pacienteSimultaneos) {
             if (this.agenda.bloques[this.indiceBloque].turnos.length) {
                 cantidadTurnos = this.agenda.bloques[this.indiceBloque].turnos.length;
                 cantidadTurnos--;
