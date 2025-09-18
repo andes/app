@@ -833,17 +833,19 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
                 return acc;
             }, {});
 
-            this.busquedaRecetas = Object.keys(grupoRecetas).map(key => ({
-                conceptId: key,
-                recetas: this.sortRecetas(grupoRecetas[key])
-            }));
+            this.busquedaRecetas = this.sortRecetas(
+                Object.keys(grupoRecetas).map(key => ({
+                    conceptId: key,
+                    recetas: grupoRecetas[key]
+                }))
+            );
         });
     }
 
     sortRecetas(recetas) {
         return recetas.sort((a, b) => {
-            const dateA = a.updatedAt ? moment(a.updatedAt) : moment(a.createdAt);
-            const dateB = b.updatedAt ? moment(b.updatedAt) : moment(b.createdAt);
+            const dateA = a.recetas[0].fechaRegistro ? moment(a.recetas[0].fechaRegistro) : moment(a.recetas[0].createdAt);
+            const dateB = b.recetas[0].fechaRegistro ? moment(b.recetas[0].fechaRegistro) : moment(b.recetas[0].createdAt);
             return dateB.diff(dateA);
         });
     }
