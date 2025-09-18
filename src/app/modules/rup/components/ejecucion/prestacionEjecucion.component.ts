@@ -649,7 +649,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         const params: any = {
             op: 'registros',
             solicitud: backupRegistros.solicitud,
-            registros: registros
+            registros: registros,
+            paciente: backupRegistros.paciente
         };
 
         this.servicioPrestacion.patch(this.prestacion.id, params).pipe(
