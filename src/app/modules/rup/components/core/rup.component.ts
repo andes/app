@@ -34,6 +34,7 @@ import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { RecetaService } from '../../../../services/receta.service';
 import { ECLQueriesService } from './../../../../services/eclqueries.service';
+import { ObraSocialService } from 'src/app/services/obraSocial.service';
 
 @Component({
     selector: 'rup',
@@ -159,6 +160,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
         public plexVisualizador: PlexVisualizadorService,
         public constantesService: ConstantesService,
         public recetasService: RecetaService,
+        public obraSocialService: ObraSocialService,
         @Optional() public ejecucionService: RupEjecucionService,
         public eclqueriesServicies: ECLQueriesService
     ) {
