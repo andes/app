@@ -1,9 +1,12 @@
 import { Unsubscribe } from '@andes/shared';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { forkJoin, Observable } from 'rxjs';
+import { RUPComponent } from './../core/rup.component';
 import { RupElement } from '.';
-import { RUPComponent } from '../core/rup.component';
+import { ObraSocialService } from '../../../../services/obraSocial.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { IObraSocial } from '../../../../interfaces/IObraSocial';
 @Component({
     selector: 'rup-recetaMedica',
     templateUrl: 'recetaMedica.html',
@@ -12,7 +15,7 @@ import { RUPComponent } from '../core/rup.component';
 
 
 @RupElement('RecetaMedicaComponent')
-export class RecetaMedicaComponent extends RUPComponent implements OnInit {
+export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnChanges {
     @ViewChild('formMedicamento') formMedicamento: NgForm;
     intervalos$: Observable<any>;
     public medicamento: any = {
@@ -57,6 +60,16 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     public requiereDosis = false;
     public requiereIntervalo = false;
 
+    // Propiedades para manejo de obras sociales
+    public financiadoresPaciente: IObraSocial[] = [];
+    public datosFinanciadores = [];
+    public financiadorSeleccionado;
+    public otroFinanciadorSeleccionado;
+    public showSelector = false;
+    public showListado = false;
+    public opcionesFinanciadores: any[] = [];
+    public obrasSocialesPaciente: any[] = [];
+
 
     ngOnInit() {
         if (!this.registro.valor) {
@@ -75,9 +88,26 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         });
         this.buscarDiagnosticosConTrastornos();
 
+        // Cargar obras sociales del paciente
+        setTimeout(() => {
+            this.cargarObrasSocialesPaciente();
+        }, 100);
+
         this.ejecucionService?.hasActualizacion().subscribe(async () => {
             this.loadRegistros();
         });
+
+        // También cargar cuando el paciente esté disponible
+        if (this.paciente) {
+            this.cargarObrasSocialesPaciente();
+        }
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.paciente && changes.paciente.currentValue) {
+            console.log('Paciente cambió en ngOnChanges:', changes.paciente.currentValue);
+            this.cargarObrasSocialesPaciente();
+        }
     }
 
     @Unsubscribe()
@@ -284,6 +314,101 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
             this.esDuplicado = false;
             this.medicamento.tratamientoProlongado = false;
             this.medicamento.tiempoTratamiento = null;
+        }
+    }
+
+    // Métodos para manejo de obras sociales
+    cargarObrasSocialesPaciente() {
+        if (this.paciente?.financiador?.length) {
+            this.financiadoresPaciente = this.paciente.financiador.map(f => ({
+                nombre: f.nombre || '',
+                codigoFinanciador: 0,
+                version: f.fechaDeActualizacion || new Date(),
+                numeroAfiliado: f.numeroAfiliado || '',
+                financiador: f.financiador || null,
+                codigoPuco: f.codigoPuco || null,
+                id: f.id || null,
+                tipoDocumento: null,
+                dni: null,
+                transmite: '',
+                prepaga: f.prepaga || false,
+                origen: f.origen || 'ANDES'
+            }));
+            this.showSelector = true;
+
+            const { financiador, nombre } = this.financiadoresPaciente[0];
+
+            this.financiadorSeleccionado = nombre || financiador;
+            this.datosFinanciadores = [
+                ...this.financiadoresPaciente.map((os: IObraSocial) => ({
+                    id: os.nombre || os.financiador,
+                    label: os.nombre || os.financiador
+                })),
+                { id: 'otras', label: 'Otras' }
+            ];
+        } else {
+            this.showSelector = false;
+            this.financiadorSeleccionado = undefined;
+        }
+        this.cargarOpcionesFinanciadores();
+    }
+
+    private cargarOpcionesFinanciadores() {
+        this.obraSocialService.getListado({}).subscribe((financiadores: any[]) => {
+            const financiadoresExistentes = [
+                ...this.financiadoresPaciente.map((f) => f.nombre)
+            ];
+
+            this.opcionesFinanciadores = financiadores.filter(
+                (financiador) => !financiadoresExistentes.includes(financiador.nombre)
+            );
+        });
+    }
+
+    public seleccionarFinanciador(event) {
+        this.showListado = false;
+
+        if (event.value === 'otras') {
+            this.showListado = true;
+            // No modificar financiadores cuando se selecciona "otras"
+        } else {
+            const nombre = event.value;
+            const obraSocialSeleccionada = this.financiadoresPaciente.find(
+                os => os.nombre === nombre || os.financiador === nombre
+            );
+            // Actualizar el financiador principal del paciente
+            if (obraSocialSeleccionada && this.paciente && this.paciente.financiador) {
+                // Mover el financiador seleccionado al primer lugar del array
+                const index = this.paciente.financiador.findIndex(
+                    f => f.nombre === obraSocialSeleccionada.nombre || f.financiador === obraSocialSeleccionada.financiador
+                );
+                if (index > -1) {
+                    const financiadorSeleccionado = this.paciente.financiador.splice(index, 1)[0];
+                    this.paciente.financiador.unshift(financiadorSeleccionado);
+                    console.log('Financiador principal actualizado:', this.paciente.financiador[0]);
+                }
+            }
+        }
+    }
+
+    public seleccionarOtroFinanciador(event) {
+        if (event.value && this.paciente) {
+            const { prepaga, nombre, financiador, codigoPuco } = event.value;
+            const nuevoFinanciador = {
+                prepaga: prepaga || false,
+                nombre,
+                financiador,
+                codigoPuco,
+                origen: 'ANDES',
+                numeroAfiliado: '',
+                id: null
+            };
+            // Agregar el nuevo financiador al inicio del array
+            if (!this.paciente.financiador) {
+                this.paciente.financiador = null;
+            }
+            this.paciente.financiador.unshift(nuevoFinanciador);
+            console.log('Nuevo financiador agregado:', this.paciente.financiador[0]);
         }
     }
 }

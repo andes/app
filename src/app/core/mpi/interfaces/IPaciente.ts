@@ -40,6 +40,9 @@ export interface IPaciente {
         financiador: string;
         id: string;
         numeroAfiliado: string;
+        prepaga?: boolean;
+        origen?: string;
+        fechaDeActualizacion?: Date;
     }];
     identificadores: [{
         entidad: string;
