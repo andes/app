@@ -39,8 +39,7 @@
                                  [(ngModel)]="camaEditada.equipamiento" label="Equipamiento">
                     </plex-select>
                     <plex-select name="especialidad" [required]="true" [snomedExpression]="expr.Especialidades"
-                                 [preload]="false" [(ngModel)]="camaEditada.especialidades" [multiple]="true"
-                                 label="Especialidad/es">
+                                 [(ngModel)]="camaEditada.especialidades" [multiple]="true" label="Especialidad/es">
                     </plex-select>
                     <plex-select [snomedExpression]="expr.Genero" name="genero" label="Genero"
                                  [(ngModel)]="camaEditada.genero">
