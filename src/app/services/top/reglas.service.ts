@@ -28,6 +28,14 @@ export class ReglaService {
         return this.server.delete(this.reglaUrl, { params: params, showError: true });
     }
 
+    deleteById(id: string): Observable<any> {
+        return this.server.delete(`${this.reglaUrl}/${id}`);
+    }
+
+    deletePrestacion(reglaId: string, prestacionId: string): Observable<any> {
+        return this.server.delete(`${this.reglaUrl}/${reglaId}/prestaciones/${prestacionId}`);
+    }
+
     saveRaw(regla: any): Observable<any> {
         if (regla.id) {
             return this.server.patch(this.reglaUrl + '/' + regla.id, regla);
