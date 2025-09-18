@@ -182,9 +182,8 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
     }
     habilitarTurnoDoble() {
         this.permitirTurnoDoble = false;
-        if (this.bloqueAgenda && this.turnoSeleccionado) {
-            const cantidadTurnos = this.bloqueAgenda.pacienteSimultaneos ? this.bloqueAgenda.turnos.length
-                : this.bloqueAgenda.cantidadTurnos;
+        if (!this.bloqueAgenda?.pacienteSimultaneos && this.turnoSeleccionado) {
+            const cantidadTurnos = this.bloqueAgenda.turnos.length;
             if (cantidadTurnos) {
                 this.siguienteTurnoIndex = this.indiceTurno + 1;
                 if (this.siguienteTurnoIndex < cantidadTurnos) {
