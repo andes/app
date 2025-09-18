@@ -63,15 +63,19 @@
                                      class="text-danger">Espacio físico no asignado</div>
                             </div>
                             <div class="col-md-12">
-                                <div
-                                     *ngIf="financiador?.nombre !== 'SUMAR' && turno?.profesionales?.length && turno?.estado !== 'suspendido' && turno?.paciente.documento">
-                                    <seleccionar-financiador [paciente]="turno.paciente"
-                                                             (setFinanciador)="setFinanciador($event)"></seleccionar-financiador>
-                                </div>
                                 <div *ngIf="financiador?.nombre === 'SUMAR'">
                                     <strong>Programa</strong>
                                     {{financiador?.nombre}}
                                 </div>
+                                <div *ngIf="turno.paciente?.obraSocial">
+                                    <strong>Obra Social asociada al turno</strong>
+                                    {{turno.paciente?.obraSocial?.nombre}}
+                                </div>
+                                <div *ngIf="financiador?.nombre !== 'SUMAR'">
+                                    <seleccionar-financiador [paciente]="turno.paciente"
+                                                             (setFinanciador)="setFinanciador($event)"></seleccionar-financiador>
+                                </div>
+
                             </div>
                             <div class="col-md-12"
                                  *ngIf=" turno.horaInicio >= todaysdate && turno.estado !== 'suspendido' && turno.organizacion._id === auth.organizacion.id">
