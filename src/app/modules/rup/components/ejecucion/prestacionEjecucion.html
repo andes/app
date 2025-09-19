@@ -75,6 +75,7 @@
                                         <div class="title text-capitalize">
                                             {{ registro.nombre }}
                                             <!-- vinculacion / desvinculacion -->
+                                             <h1>HOLA</h1>
                                             <div
                                                  *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && registro.relacionadoCon[0] && !confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))">
 
@@ -110,6 +111,7 @@
                                                     </div>
                                                 </ng-container>
                                             </div>
+                                        
                                         </div>
                                         <div class="actions"
                                              *ngIf="!confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i) )">
@@ -117,7 +119,6 @@
                                             <ng-container *ngIf="registro?.privacy?.scope !== 'public'">
                                                 <plex-badge type="info">Registro Privado</plex-badge>
                                             </ng-container>
-
                                             <ng-container
                                                           *ngIf="prestacion?.ejecucion?.registros !== null && prestacion?.ejecucion?.registros?.length > 1">
                                                 <plex-dropdown type="primary" class="dropdown-inline" [right]="true"
@@ -152,7 +153,7 @@
                                             </plex-button>
                                         </div>
                                     </div>
-
+                                <h1>adios</h1>
                                     <div class="rup-body" (click)="recuperaLosMasFrecuentes(registro.concepto)"
                                          [hidden]="itemsRegistros[registro.id]?.collapse || confirmarEliminar || confirmarDesvincular[registro.id]">
                                         <!-- ... Header -->
@@ -179,8 +180,20 @@
                                                  [conceptosAsociados]="conceptosAsociados" [alerta]="alerta">
                                             </rup>
                                         </div>
-                                    </div>
 
+                                    </div>
+                                       <div *ngIf="registro.concepto?.conceptId === '6541000013103'">
+  <textarea [(ngModel)]="registro.valor"
+            (ngModelChange)="onNuevoValor(registro)"
+            placeholder="Escriba nueva evolución...">
+  </textarea>
+
+  <!-- Mostrar el último valor guardado -->
+  <div class="mt-2">
+    <strong>Última evolución guardada:</strong>
+    <p>{{ registro.valor }}</p>
+  </div>
+</div>                     <h1>aca estoy</h1>
                                     <!-- Footer del registro -->
                                     <div class="rup-footer" *ngIf="registro.relacionadoCon || confirmarEliminar">
                                         <div class="type"></div>
@@ -221,10 +234,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                          </div>
                                 </div>
-
-
                             </ng-container>
 
                             <!-- Drop area -->
@@ -236,6 +247,7 @@
                                 Mover a esta posición
                             </div>
                         </div>
+                    
                     </plex-tab>
 
                     <plex-tab label="Resumen del Paciente" *ngIf="paciente && tieneAccesoHUDS">
