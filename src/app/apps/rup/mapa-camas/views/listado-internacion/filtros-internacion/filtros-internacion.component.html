@@ -1,18 +1,35 @@
 <form #formFiltros="ngForm">
     <plex-wrapper>
         <plex-text name="paciente" [(ngModel)]="filtros.paciente" label="paciente"></plex-text>
-        <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoDesde" name="fechaIngresoDesde"
-                       label="Ingreso desde" [max]="filtros.fechaIngresoHasta" [debounce]="600" required>
-        </plex-datetime>
-        <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoHasta" name='fechaIngresoHasta'
-                       label="Ingreso hasta" [debounce]="600" [max]="fechaHoy" [min]="filtros.fechaIngresoDesde" required>
-        </plex-datetime>
-        <plex-datetime type="date" [(ngModel)]="filtros.fechaEgresoDesde" name="fechaEgresoDesde" label="Egreso desde"
-                       [max]="filtros.fechaEgresoHasta" [debounce]="600" [min]="filtros.fechaIngresoDesde" [max]="filtros.fechaEgresoHasta">
-        </plex-datetime>
-        <plex-datetime type="date" [(ngModel)]="filtros.fechaEgresoHasta" name='fechaEgresoHasta' label="Egreso hasta"
-                       [min]="filtros.fechaEgresoDesde" [debounce]="600" [max]="fechaHoy" [min]="filtros.fechaIngresoDesde">
-        </plex-datetime>
+        <div>
+            <div class="fechas-container">
+                <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoDesde" name="fechaIngresoDesde"
+                               label="Ingreso desde" [max]="mapaCamasService.fechaActual$ | async" [debounce]="600"
+                               [required]="isRequired('fechaIngresoDesde')">
+                </plex-datetime>
+
+                <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoHasta" name="fechaIngresoHasta"
+                               label="Ingreso hasta" [debounce]="600" [max]="fechaHoy" [min]="filtros.fechaIngresoDesde"
+                               [required]="isRequired('fechaIngresoHasta')">
+                </plex-datetime>
+                <plex-datetime type="date" [(ngModel)]="filtros.fechaEgresoDesde" name="fechaEgresoDesde"
+                               label="Egreso desde" [max]="mapaCamasService.fechaActual$ | async" [debounce]="600"
+                               [required]="isRequired('fechaEgresoDesde')">
+                </plex-datetime>
+                <plex-datetime type="date" [(ngModel)]="filtros.fechaEgresoHasta" name='fechaEgresoHasta'
+                               label="Egreso hasta" [min]="filtros.fechaEgresoDesde" [debounce]="600" [max]="fechaHoy"
+                               [required]="isRequired('fechaEgresoHasta')">
+                </plex-datetime>
+
+            </div>
+            <div class="info-aviso" *ngIf="mostrarAvisoAutocompletado">
+                <plex-icon class="custom-icon" name="informacion" size="xs"></plex-icon>
+                <plex-label size="md"
+                            titulo="Si solo se completa una de las dos fechas, el sistema autocompletará la otra con un rango máximo de 3 meses."
+                            type="info">
+                </plex-label>
+            </div>
+        </div>
         <div collapse>
             <plex-select name="obraSocial" label="Obra Social" [(ngModel)]="filtros.obraSocial"
                          [data]="obraSociales$ | async" idField="_id">
