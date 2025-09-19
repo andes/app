@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
@@ -629,19 +630,23 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
      * @returns
      * @memberof PrestacionEjecucionComponent
      */
-    guardarPrestacion() {
 
+    onNuevoValor(registro) {
+        console.log('✍️ Nuevo valor escrito:', registro.valor);
+    }
+    guardarPrestacion() {
         this.flagValid = true;
         this.rupElements.forEach((item) => {
             const instance = item.rupInstance;
             instance.checkEmpty();
             this.flagValid = this.flagValid && (instance.soloValores || instance.validate());
         });
-        // validamos antes de guardar
+
         if (!this.beforeSave() || !this.flagValid) {
             this.plex.toast('danger', 'Revise los campos cargados');
             return;
         }
+
         const backupRegistros = JSON.parse(JSON.stringify(this.prestacion));
         unPopulateRelaciones(backupRegistros);
         const registros = JSON.parse(JSON.stringify(backupRegistros.ejecucion.registros));
@@ -653,23 +658,33 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             paciente: backupRegistros.paciente
         };
 
+        console.log('➡️ Prestación que estoy guardando:', this.prestacion.id);
+        console.log('➡️ Registros que estoy enviando:', registros);
+
         this.servicioPrestacion.patch(this.prestacion.id, params).pipe(
             switchMap(() => {
-                this.plex.toast('success', 'Prestación guardada correctamente', 'Prestacion guardada', 100);
-                if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
-                    this.prestacion = backupRegistros;
-                    // Actualizamos las prestaciones de la HUDS
-                    return this.servicioPrestacion.getByPaciente(this.paciente.id, true).pipe(
-                        tap(() => this.servicioPrestacion.clearRefSetData()),
-                    );
+                this.plex.toast('success', 'Evolución guardada correctamente', 'Evolución guardada', 100);
+
+                const registroEvolucion = this.prestacion.ejecucion.registros.find(
+                    r => r.concepto.conceptId === '6541000013103'
+                );
+                if (registroEvolucion?.valor) {
+                    console.log('Emitiendo nuevo valor desde prestacionEjecucion', registroEvolucion.valor);
+                    this.servicioPrestacion.emitirNuevoValor(registroEvolucion.valor);
                 }
+                registroEvolucion.valor = '';
+
+                this.router.navigate(['rup/validacion', this.prestacion.id]);
                 return of(null);
             })
-        ).subscribe(() => {
-            this.router.navigate(['rup/validacion', this.prestacion.id]);
+        ).subscribe({
+            error: (err) => {
+                this.plex.toast('danger', 'Error al guardar la evolución', '', 100);
+                console.error('Error al guardar la evolución', err);
+            }
         });
-
     }
+
     /**
      * Setea el boton volver, Segun la ruta que recibe y el
      *  ambito de origen de la prestacion

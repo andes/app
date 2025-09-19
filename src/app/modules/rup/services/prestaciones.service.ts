@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 
 import { map, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
@@ -37,6 +38,8 @@ export class PrestacionesService {
         conceptId: '32485007',
         term: 'internación'
     };
+    private nuevoValorSubject = new BehaviorSubject<any>(null);
+    public nuevoValor$ = this.nuevoValorSubject.asObservable();
 
     private prestacionesUrl = '/modules/rup/prestaciones'; // URL to web api
     private cache: any[] = [];
@@ -75,6 +78,15 @@ export class PrestacionesService {
     clearRefSetData() {
         this.datosRefSet.next(null);
     }
+    postNuevaEvolucion(idPrestacion: string, nuevaEvolucion: any): Observable<any> {
+        const cambios = {
+            op: 'registros',
+            action: 'add',
+            registro: nuevaEvolucion
+        };
+        return this.server.patch(this.prestacionesUrl + '/' + idPrestacion, cambios);
+    }
+
 
     constructor(
         private server: Server,
@@ -224,9 +236,14 @@ export class PrestacionesService {
     clearConceptosPaciente(idPaciente) {
         this._cacheRegistros[idPaciente] = null;
     }
+    emitirNuevoValor(valor: any) {
+        if (valor) {
+            this.nuevoValorSubject.next(valor);
+            console.log('Nuevo valor emitido desde PrestacionesService:', valor);
+        }
+    }
 
     getConceptosByPaciente(idPaciente: string, soloValidados?: boolean): Observable<any[]> {
-
         if (this._cacheRegistros[idPaciente]) {
             return new Observable(observe => observe.next(this._cacheRegistros[idPaciente]));
         } else {
@@ -247,16 +264,14 @@ export class PrestacionesService {
                         }
                     });
 
-
                     if (prestacion.ejecucion) {
                         const conceptos = prestacion.ejecucion.registros
-                            // .filter(registro => semanticTags.includes(registro.concepto.semanticTag))
                             .map(registro => {
                                 registro.idPrestacion = prestacion.id;
                                 registro.tipoPrestacion = prestacion.solicitud.tipoPrestacion.term;
                                 return registro;
                             });
-                        // ConceptId del informe requerido en en todas las prestaciones ambulatorias
+
                         if (conceptos.length > 0) {
                             conceptos[0].informeRequerido = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === PrestacionesService.InformeDelEncuentro);
                         }
@@ -301,7 +316,6 @@ export class PrestacionesService {
                                     .filter(r => r.id)
                                     .map(r => {
                                         r.fechaCarga = prestacion.ejecucion.fecha; return r;
-
                                     }),
                                 valor: registro.valor
                             }],
@@ -326,14 +340,16 @@ export class PrestacionesService {
                             relacionadoCon: (registro.relacionadoCon ? registro.relacionadoCon : [])
                                 .filter(r => r.id)
                                 .map(r => {
-                                    r.fechaCarga = prestacion.ejecucion.fecha; return r;
+                                    r.fechaCarga = prestacion.ejecucion.fecha;
+                                    return r;
                                 }),
                             valor: registro.valor
                         };
+
                         registroEncontrado.prestaciones.push(registro.idPrestacion);
                         registroEncontrado.evoluciones.push(nuevaEvolucion);
                         registroEncontrado.registros.push(registro);
-                        // ordenamos las evoluciones para que la primero del array sea la ultima registrada
+
                         registroEncontrado.evoluciones = registroEncontrado.evoluciones.sort((a, b) => b.fechaCarga - a.fechaCarga);
                         registroEncontrado.privacy = (registro.privacy && registro.privacy.scope) ? registro.privacy.scope : 'public';
                     }
