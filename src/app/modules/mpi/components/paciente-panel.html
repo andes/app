@@ -25,7 +25,8 @@
     </div>
 
     <plex-label *ngIf="paciente.fechaNacimiento" titulo="Fecha de Nacimiento"
-                subtitulo="{{ paciente.fechaNacimiento | fecha }}" [direction]="direction"></plex-label>
+                subtitulo="{{ (paciente.fechaNacimiento | fecha:(paciente.scan ? 'utc' : '')) || 'Desconocida' }}"
+                [direction]="direction"></plex-label>
 
     <plex-label *ngIf="paciente.fechaFallecimiento" titulo="Fecha de Fallecimiento"
                 subtitulo="{{ paciente.fechaFallecimiento | fecha }}" [direction]="direction">

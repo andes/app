@@ -13,7 +13,8 @@
                              {{ paciente.relaciones[0] | documento }} - {{ (paciente.relaciones[0] | nombre)}}">
             </plex-label>
 
-            <plex-label titulo="{{ paciente | edad }}" subtitulo="{{ paciente.fechaNacimiento | fecha }}">
+            <plex-label titulo="{{ paciente | edad }}"
+                        subtitulo="{{ paciente.fechaNacimiento | fecha:(paciente.scan ? 'utc' : '') }}">
             </plex-label>
 
             <plex-badge *ngIf="showDatosTutor(paciente)" type="warning">

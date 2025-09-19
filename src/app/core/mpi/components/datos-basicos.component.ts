@@ -105,6 +105,14 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
             this.paciente.reportarError = false;
         }
         if (changes.paciente && this.paciente?.fechaNacimiento) {
+            const horario = moment(this.paciente.fechaNacimiento).utc().format('HH:mm:ss.SSS');
+
+            // Verificar si el horario es 00:00:00.000Z
+            if (horario === '00:00:00.000') {
+                // Agregar 3 horas a la fecha
+                this.paciente.fechaNacimiento = moment(this.paciente.fechaNacimiento).add(3, 'hours').toDate();
+            }
+
             if ((this.paciente.fechaNacimiento as any)?.$date) {
                 this.paciente.fechaNacimiento = new Date((this.paciente.fechaNacimiento as any).$date);
             } else if (typeof this.paciente.fechaNacimiento === 'string') {
