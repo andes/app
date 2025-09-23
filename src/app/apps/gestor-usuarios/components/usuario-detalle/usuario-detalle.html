@@ -46,10 +46,12 @@
                            placeholder="usuario@mail.com" [required]="true">
                 </plex-text>
 
-                <plex-bool class="mt-4" label="Reenviar link de activación" [(ngModel)]="activate" name="activate"
-                           type="slide">
+                <plex-bool *ngIf="(usuario.tipo === 'temporal' || usuario.authMethod === 'password')" class="mt-4"
+                           label="Reenviar link de activación" [(ngModel)]="activate" name="activate" type="slide">
                 </plex-bool>
             </form>
         </plex-help>
+        <plex-badge class="ml-1" type="info">tipo: {{(usuario.tipo === 'temporal' || usuario.authMethod === 'password' )
+            ?"andes":"one login"}}</plex-badge>
     </div>
 </plex-detail>

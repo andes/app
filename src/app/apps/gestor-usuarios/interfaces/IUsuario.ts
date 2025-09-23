@@ -8,5 +8,6 @@ export interface IUsuario {
     lastLogin?: Date;
     email?: string;
     tipo?: string;
+    authMethod?: string;
     usuario: number;
 }
