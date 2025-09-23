@@ -69,7 +69,6 @@
                                         <div class="title text-capitalize">
                                             {{ registro.nombre }}
                                             <!-- vinculacion / desvinculacion -->
-                                             <h1>HOLA</h1>
                                             <div
                                                  *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && registro.relacionadoCon[0] && !confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))">
 
@@ -146,7 +145,10 @@
                                             </plex-button>
                                         </div>
                                     </div>
-                                <h1>adios</h1>
+                                        <!-- ... Textarea ACA ESTA  -->
+                                        <!-- ... Textarea ACA ESTA  -->
+                                        <!-- ... Textarea ACA ESTA  -->
+
                                     <div class="rup-body" (click)="recuperaLosMasFrecuentes(registro.concepto)"
                                          [hidden]="itemsRegistros[registro.id]?.collapse || confirmarEliminar || confirmarDesvincular[registro.id]">
                                         <!-- ... Header -->
@@ -160,7 +162,6 @@
                                                 registro.concepto.semanticTag}}
                                             </span>
                                         </div>
-
                                         <!-- ... Body -->
                                         <div class="content"
                                              *ngIf="paciente || (prestacion.solicitud.tipoPrestacion.noNominalizada)">
@@ -175,18 +176,13 @@
                                         </div>
 
                                     </div>
-                                       <div *ngIf="registro.concepto?.conceptId === '6541000013103'">
-  <textarea [(ngModel)]="registro.valor"
-            (ngModelChange)="onNuevoValor(registro)"
-            placeholder="Escriba nueva evolución...">
-  </textarea>
+ 
 
   <!-- Mostrar el último valor guardado -->
   <div class="mt-2">
     <strong>Última evolución guardada:</strong>
     <p>{{ registro.valor }}</p>
   </div>
-</div>                     <h1>aca estoy</h1>
                                     <!-- Footer del registro -->
                                     <div class="rup-footer" *ngIf="registro.relacionadoCon || confirmarEliminar">
                                         <div class="type"></div>
