@@ -192,47 +192,53 @@ export class FiltrosInternacionComponent implements OnInit {
     }
 
     filtrarFecha() {
-        const ingresoCorrecto = this.filtros.fechaIngresoDesde || this.filtros.fechaIngresoHasta;
-        const egresoCorrecto = this.filtros.fechaEgresoDesde || this.filtros.fechaEgresoHasta;
+        const autocompletarFechas = (desde, hasta) => {
+            const fechaActual = moment().toDate();
+            if (desde && !hasta) {
+                const posibleHasta = moment(desde).add(3, 'months').toDate();
+                hasta = posibleHasta > fechaActual ? fechaActual : posibleHasta;
+            }
+            if (!desde && hasta) {
+                desde = moment(hasta).subtract(3, 'months').toDate();
+            }
+            return { desde, hasta };
+        };
 
-        const algunaFechaVacia = !this.filtros.fechaIngresoDesde || !this.filtros.fechaIngresoHasta || !this.filtros.fechaEgresoDesde || !this.filtros.fechaEgresoHasta;
+        this.mostrarAvisoAutocompletado = (
+            (!this.filtros.fechaIngresoDesde || !this.filtros.fechaIngresoHasta) &&
+            (this.filtros.fechaIngresoDesde || this.filtros.fechaIngresoHasta)
+        ) || ((!this.filtros.fechaEgresoDesde || !this.filtros.fechaEgresoHasta) &&
+            (this.filtros.fechaEgresoDesde || this.filtros.fechaEgresoHasta));
 
-        if (algunaFechaVacia) {
-            this.mostrarAvisoAutocompletado = true;
+        // Ingreso: solo si al menos uno está completo
+        if (this.filtros.fechaIngresoDesde || this.filtros.fechaIngresoHasta) {
+            const { desde, hasta } = autocompletarFechas(this.filtros.fechaIngresoDesde, this.filtros.fechaIngresoHasta);
+            this.filtros.fechaIngresoDesde = desde;
+            this.filtros.fechaIngresoHasta = hasta;
+            this.listadoInternacionService.fechaIngresoDesde.next(desde);
+            this.listadoInternacionService.fechaIngresoHasta.next(hasta);
+        } else {
+            this.listadoInternacionService.fechaIngresoDesde.next(null);
+            this.listadoInternacionService.fechaIngresoHasta.next(null);
         }
 
-        if ((ingresoCorrecto) || (egresoCorrecto)) {
-            if (!this.filtros.fechaIngresoDesde || !this.filtros.fechaIngresoHasta) {
-
-                if (this.filtros.fechaIngresoDesde) {
-                    const fechaActual = moment().toDate();
-                    const posibleFechaHasta = moment(this.filtros.fechaIngresoDesde).add(3, 'month').toDate();
-                    this.filtros.fechaIngresoHasta = posibleFechaHasta > fechaActual ? fechaActual : posibleFechaHasta;
-                }
-                this.filtros.fechaIngresoHasta = this.filtros.fechaIngresoHasta || moment().toDate(); // Si falta, asigna la fecha actual
-                this.filtros.fechaIngresoDesde = this.filtros.fechaIngresoDesde || moment(this.filtros.fechaIngresoHasta).subtract(3, 'months').toDate(); // Si falta, asigna 3 meses antes
-
-            }
-            if (!this.filtros.fechaEgresoDesde || !this.filtros.fechaEgresoHasta) {
-
-                if (this.filtros.fechaEgresoDesde) {
-                    const fechaActual = moment().toDate();
-                    const posibleFechaHasta = moment(this.filtros.fechaEgresoDesde).add(3, 'month').toDate();
-                    this.filtros.fechaEgresoHasta = posibleFechaHasta > fechaActual ? fechaActual : posibleFechaHasta;
-                }
-                this.filtros.fechaEgresoHasta = this.filtros.fechaEgresoHasta || moment().toDate(); // Si falta, asigna la fecha actual
-                this.filtros.fechaEgresoDesde = this.filtros.fechaEgresoDesde || moment(this.filtros.fechaEgresoHasta).subtract(3, 'months').toDate(); // Si falta, asigna 3 meses antes
-            }
+        // Egreso: solo si al menos uno está completo
+        if (this.filtros.fechaEgresoDesde || this.filtros.fechaEgresoHasta) {
+            const { desde, hasta } = autocompletarFechas(this.filtros.fechaEgresoDesde, this.filtros.fechaEgresoHasta);
+            this.filtros.fechaEgresoDesde = desde;
+            this.filtros.fechaEgresoHasta = hasta;
+            this.listadoInternacionService.fechaEgresoDesde.next(desde);
+            this.listadoInternacionService.fechaEgresoHasta.next(hasta);
+        } else {
+            this.listadoInternacionService.fechaEgresoDesde.next(null);
+            this.listadoInternacionService.fechaEgresoHasta.next(null);
         }
 
-        this.listadoInternacionService.fechaIngresoDesde.next(this.filtros.fechaIngresoDesde);
-        this.listadoInternacionService.fechaIngresoHasta.next(this.filtros.fechaIngresoHasta);
-        this.listadoInternacionService.fechaEgresoDesde.next(this.filtros.fechaEgresoDesde);
-        this.listadoInternacionService.fechaEgresoHasta.next(this.filtros.fechaEgresoHasta);
     }
 
+
     reporteInternaciones() {
-        if (!this.filtros.fechaIngresoDesde || !this.filtros.fechaEgresoDesde) {
+        if (!this.filtros.fechaIngresoDesde && !this.filtros.fechaIngresoHasta && !this.filtros.fechaEgresoDesde && !this.filtros.fechaEgresoHasta) {
             this.plex.info('warning', 'Debe seleccionar al menos un rango de fechas para descargar el reporte');
             return;
         }
@@ -240,6 +246,7 @@ export class FiltrosInternacionComponent implements OnInit {
         if (!this.validarTodasLasFechas()) {
             return;
         }
+        this.filtrarFecha();
 
         const params = {
             desde: this.filtros.fechaIngresoDesde ? moment(this.filtros.fechaIngresoDesde).startOf('d').format() : undefined,
