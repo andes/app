@@ -869,9 +869,9 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         if (receta.estadoActual?.tipo === 'suspendida') {
             return false;
         }
-        if (receta.medicamento.tratamientoProlongado ) {
+        if (receta.medicamento.tratamientoProlongado) {
             const recetasMismoRegistro = this.busquedaRecetas?.flatMap(grupo =>
-                grupo.recetas.filter(r => r.idRegistro === receta.idRegistro)
+                grupo.recetas.filter(r => r.idRegistro === receta.idRegistro && r.medicamento.concepto.conceptId === receta.medicamento.concepto.conceptId)
             ) || [];
             if (recetasMismoRegistro.some(r => r.estadoActual?.tipo === 'suspendida')) {
                 return false;
@@ -880,13 +880,13 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
                 recetasMismoRegistro.every(r => r.estadoDispensaActual?.tipo === 'dispensada')) {
                 return false;
             }
-            const esSeleccionableTP =recetasMismoRegistro.some(r =>
+            const esSeleccionableTP = recetasMismoRegistro.some(r =>
                 (r.estadoDispensaActual?.tipo === 'dispensa-parcial' || r.estadoDispensaActual?.tipo === 'sin-dispensa')
-            )&& this.profesionalValido ;
+            ) && this.profesionalValido;
             return esSeleccionableTP;
         }
 
-        return estadoValido && dispensaValida && this.profesionalValido ;
+        return estadoValido && dispensaValida && this.profesionalValido;
     }
 
     getProfesional() {
@@ -907,8 +907,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
 
     seleccionarReceta(event, recetas, index) {
         const isSelected = event.value;
-        let recetaSeleccionada=<any>[];
-        if (!recetas[0].medicamento.tratamientoProlongado ) {
+        let recetaSeleccionada = <any>[];
+        if (!recetas[0].medicamento.tratamientoProlongado) {
             recetaSeleccionada = recetas
                 .filter(receta => receta.estadoActual.tipo === 'vigente')
                 .sort((a, b) => moment(b.fechaRegistro).diff(moment(a.fechaRegistro)))[0];
