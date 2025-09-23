@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 /* eslint-disable no-console */
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -106,6 +107,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     public alerta = 'Este registro no puede modificarse, si necesita cambiar una medicación prescripta puede suspender desde la HUDS y registrar una nueva.';
 
     private soloValores = ['33633005'];
+    conceptoSeleccionadoId: string;
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -638,9 +640,12 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         this.flagValid = true;
         this.rupElements.forEach((item) => {
             const instance = item.rupInstance;
-            instance.checkEmpty();
-            this.flagValid = this.flagValid && (instance.soloValores || instance.validate());
+            if (instance) {
+                instance.checkEmpty();
+                this.flagValid = this.flagValid && (instance.soloValores || instance.validate());
+            }
         });
+
 
         if (!this.beforeSave() || !this.flagValid) {
             this.plex.toast('danger', 'Revise los campos cargados');
@@ -658,21 +663,24 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             paciente: backupRegistros.paciente
         };
 
-        console.log('➡️ Prestación que estoy guardando:', this.prestacion.id);
-        console.log('➡️ Registros que estoy enviando:', registros);
+        console.log('ID:', + this.prestacion.id);
+        console.log('Parámetros del Patch (cambios):', params);
 
         this.servicioPrestacion.patch(this.prestacion.id, params).pipe(
             switchMap(() => {
                 this.plex.toast('success', 'Evolución guardada correctamente', 'Evolución guardada', 100);
+                debugger;
 
                 const registroEvolucion = this.prestacion.ejecucion.registros.find(
-                    r => r.concepto.conceptId === '6541000013103'
+                    r => r.concepto.conceptId === this.conceptoSeleccionadoId
                 );
+                console.log('🔍 Registro de evolución encontrado:', registroEvolucion);
+                // eslint-disable-next-line no-debugger
+                debugger;
                 if (registroEvolucion?.valor) {
                     console.log('Emitiendo nuevo valor desde prestacionEjecucion', registroEvolucion.valor);
                     this.servicioPrestacion.emitirNuevoValor(registroEvolucion.valor);
                 }
-                registroEvolucion.valor = '';
 
                 this.router.navigate(['rup/validacion', this.prestacion.id]);
                 return of(null);
