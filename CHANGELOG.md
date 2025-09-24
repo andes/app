@@ -1,3 +1,13 @@
+## [5.168.3](https://github.com/andes/app/compare/v5.168.2...v5.168.3) (2025-09-24)
+
+
+### Bug Fixes
+
+* **HUDS:** corrige condición para suspender recetas ([#3238](https://github.com/andes/app/issues/3238)) ([2ee7638](https://github.com/andes/app/commit/2ee76386a8ab951f9e01d46907fa36670405c7c0))
+* **IN:** Quita el preload false de combo especialidades ([#3233](https://github.com/andes/app/issues/3233)) ([aa094bc](https://github.com/andes/app/commit/aa094bce700664b709d4d1135f9d0a313e05e770))
+* **INT:** Cambia control de filtros de fechas en listado de internacion ([#3236](https://github.com/andes/app/issues/3236)) ([494c01e](https://github.com/andes/app/commit/494c01e4ea9f51b074bbad2ac8c72235c261b2b9))
+* **REC-119:** Suspención de receta con tratamiento prolongado ([#3228](https://github.com/andes/app/issues/3228)) ([10655fe](https://github.com/andes/app/commit/10655feaca50e2dcd0e509c64006e7e66b097c32))
+
 ## [5.168.2](https://github.com/andes/app/compare/v5.168.1...v5.168.2) (2025-08-27)
 
 
