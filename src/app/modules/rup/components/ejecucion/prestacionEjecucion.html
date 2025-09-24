@@ -104,7 +104,7 @@
                                                     </div>
                                                 </ng-container>
                                             </div>
-                                        
+
                                         </div>
                                         <div class="actions"
                                              *ngIf="!confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i) )">
@@ -141,14 +141,11 @@
 
                                             <plex-button *ngIf="!existe(registro.concepto);" size="sm" type="danger"
                                                          icon="delete"
-                                                         (click)="confirmarEliminarRegistro(registro, 'card')" [disabled]="!puedeEliminar(registro)">
+                                                         (click)="confirmarEliminarRegistro(registro, 'card')"
+                                                         [disabled]="!puedeEliminar(registro)">
                                             </plex-button>
                                         </div>
                                     </div>
-                                        <!-- ... Textarea ACA ESTA  -->
-                                        <!-- ... Textarea ACA ESTA  -->
-                                        <!-- ... Textarea ACA ESTA  -->
-
                                     <div class="rup-body" (click)="recuperaLosMasFrecuentes(registro.concepto)"
                                          [hidden]="itemsRegistros[registro.id]?.collapse || confirmarEliminar || confirmarDesvincular[registro.id]">
                                         <!-- ... Header -->
@@ -176,13 +173,22 @@
                                         </div>
 
                                     </div>
- 
+                                    <plex-button (click)="cambiaValorHistorial(registro.id)"
+                                                 style="text-align:center;margin-bottom:15px;" size="sm" type="primary"
+                                                 class="collapse-card"
+                                                 label="{{ (itemsHistorial[registro.id]?.collapse ?? true) ? 'Ver historial' : 'Ocultar historial' }}">
+                                    </plex-button>
 
-  <!-- Mostrar el último valor guardado -->
-  <div class="mt-2">
-    <strong>Última evolución guardada:</strong>
-    <p>{{ registro.valor }}</p>
-  </div>
+                                    <div *ngIf="!(itemsHistorial[registro.id]?.collapse ?? true)">
+                                        <!-- <rup-historial [prestacion]="prestacion" [registro]="registro"
+                                                       [params]="elementosRUPService.getParams(registro)">
+                                        </rup-historial> -->
+                                        <rup-historial [prestacion]="prestacion"
+               [registro]="registro"
+               [conceptId]="registro.concepto.conceptId">
+                                        </rup-historial>
+
+                                    </div>
                                     <!-- Footer del registro -->
                                     <div class="rup-footer" *ngIf="registro.relacionadoCon || confirmarEliminar">
                                         <div class="type"></div>
@@ -223,7 +229,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                          </div>
+                                    </div>
                                 </div>
                             </ng-container>
 
@@ -236,7 +242,7 @@
                                 Mover a esta posición
                             </div>
                         </div>
-                    
+
                     </plex-tab>
 
                     <plex-tab label="Resumen del Paciente" *ngIf="paciente && tieneAccesoHUDS">
@@ -316,9 +322,9 @@
                         </plex-tab>
 
                         <plex-tab *ngIf="registro.tipo === 'laboratorio'" [allowClose]="true"
-                              label="Informe de Laboratorio">
-                        <vista-laboratorio [protocolo]="registro"></vista-laboratorio>
-                    </plex-tab>
+                                  label="Informe de Laboratorio">
+                            <vista-laboratorio [protocolo]="registro"></vista-laboratorio>
+                        </plex-tab>
 
                         <plex-tab *ngIf="registro.tipo === 'receta'" color="receta" class="tab-receta"
                                   [allowClose]="true" [label]="recetaService.getLabel(registro.data.recetas)">
