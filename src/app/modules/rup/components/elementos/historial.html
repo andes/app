@@ -1,0 +1,18 @@
+<div *ngIf="isLoading">Cargando historial...</div>
+
+<div *ngIf="!isLoading && historial.length === 0">
+  <em>No hay evoluciones previas registradas</em>
+</div>
+
+<section *ngIf="!isLoading && historial.length > 0" class="mx-4 d-flex flex-column justify-content-between h-100">
+
+  <plex-label *ngFor="let item of historial"
+            type="info"
+            size="md"
+            direction="row">
+  <ng-container titulo>
+    <span class="fw-bold text-dark">{{ item.valor }}</span>
+  </ng-container>
+  <p dato style="font-weight: bold;">{{ item.fecha | date:'dd/MM/yyyy' }}</p>
+</plex-label>
+</section>

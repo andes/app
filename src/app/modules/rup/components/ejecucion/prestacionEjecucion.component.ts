@@ -1,5 +1,3 @@
-/* eslint-disable no-debugger */
-/* eslint-disable no-console */
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
@@ -52,6 +50,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     // Opciones del desplegable para vincular y desvincular
     public itemsRegistros = {};
+    public itemsHistorial: { [id: string]: { collapse: boolean } } = {};
 
     // utilizamos confirmarDesvincular para mostrar el boton de confirmacion de desvinculado
     public confirmarDesvincular: any[] = [];
@@ -249,6 +248,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                                     } else if (registoExiste.id && registoExiste.valor) {
                                         // Expandir sólo si no tienen algún valor
                                         this.itemsRegistros[registoExiste.id].collapse = false;
+                                        this.itemsHistorial[registoExiste.id] = { collapse: true };
+
                                     }
                                 }
                             }
@@ -632,26 +633,19 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
      * @returns
      * @memberof PrestacionEjecucionComponent
      */
-
-    onNuevoValor(registro) {
-        console.log('✍️ Nuevo valor escrito:', registro.valor);
-    }
     guardarPrestacion() {
+
         this.flagValid = true;
         this.rupElements.forEach((item) => {
             const instance = item.rupInstance;
-            if (instance) {
-                instance.checkEmpty();
-                this.flagValid = this.flagValid && (instance.soloValores || instance.validate());
-            }
+            instance.checkEmpty();
+            this.flagValid = this.flagValid && (instance.soloValores || instance.validate());
         });
-
-
+        // validamos antes de guardar
         if (!this.beforeSave() || !this.flagValid) {
             this.plex.toast('danger', 'Revise los campos cargados');
             return;
         }
-
         const backupRegistros = JSON.parse(JSON.stringify(this.prestacion));
         unPopulateRelaciones(backupRegistros);
         const registros = JSON.parse(JSON.stringify(backupRegistros.ejecucion.registros));
@@ -663,36 +657,23 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             paciente: backupRegistros.paciente
         };
 
-        console.log('ID:', + this.prestacion.id);
-        console.log('Parámetros del Patch (cambios):', params);
-
         this.servicioPrestacion.patch(this.prestacion.id, params).pipe(
             switchMap(() => {
-                this.plex.toast('success', 'Evolución guardada correctamente', 'Evolución guardada', 100);
-                debugger;
-
-                const registroEvolucion = this.prestacion.ejecucion.registros.find(
-                    r => r.concepto.conceptId === this.conceptoSeleccionadoId
-                );
-                console.log('🔍 Registro de evolución encontrado:', registroEvolucion);
-                // eslint-disable-next-line no-debugger
-                debugger;
-                if (registroEvolucion?.valor) {
-                    console.log('Emitiendo nuevo valor desde prestacionEjecucion', registroEvolucion.valor);
-                    this.servicioPrestacion.emitirNuevoValor(registroEvolucion.valor);
+                this.plex.toast('success', 'Prestación guardada correctamente', 'Prestacion guardada', 100);
+                if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                    this.prestacion = backupRegistros;
+                    // Actualizamos las prestaciones de la HUDS
+                    return this.servicioPrestacion.getByPaciente(this.paciente.id, true).pipe(
+                        tap(() => this.servicioPrestacion.clearRefSetData()),
+                    );
                 }
-
-                this.router.navigate(['rup/validacion', this.prestacion.id]);
                 return of(null);
             })
-        ).subscribe({
-            error: (err) => {
-                this.plex.toast('danger', 'Error al guardar la evolución', '', 100);
-                console.error('Error al guardar la evolución', err);
-            }
+        ).subscribe(() => {
+            this.router.navigate(['rup/validacion', this.prestacion.id]);
         });
-    }
 
+    }
     /**
      * Setea el boton volver, Segun la ruta que recibe y el
      *  ambito de origen de la prestacion
@@ -777,11 +758,17 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         });
     }
 
-    cambiaValorCollapse(indice) {
+    cambiaValorCollapse(indice: string) {
         if (this.itemsRegistros[indice]) {
             this.itemsRegistros[indice].collapse = !this.itemsRegistros[indice].collapse;
         }
-        // this.registrosColapsados();
+    }
+
+    cambiaValorHistorial(id: string) {
+        if (!this.itemsHistorial[id]) {
+            this.itemsHistorial[id] = { collapse: true };
+        }
+        this.itemsHistorial[id].collapse = !this.itemsHistorial[id].collapse;
     }
 
     toggleCollapse() {
