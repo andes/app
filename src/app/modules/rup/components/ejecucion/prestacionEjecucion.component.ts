@@ -50,7 +50,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     // Opciones del desplegable para vincular y desvincular
     public itemsRegistros = {};
-    public itemsHistorial: { [id: string]: { collapse: boolean } } = {};
 
     // utilizamos confirmarDesvincular para mostrar el boton de confirmacion de desvinculado
     public confirmarDesvincular: any[] = [];
@@ -248,7 +247,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                                     } else if (registoExiste.id && registoExiste.valor) {
                                         // Expandir sólo si no tienen algún valor
                                         this.itemsRegistros[registoExiste.id].collapse = false;
-                                        this.itemsHistorial[registoExiste.id] = { collapse: true };
 
                                     }
                                 }
@@ -762,13 +760,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         if (this.itemsRegistros[indice]) {
             this.itemsRegistros[indice].collapse = !this.itemsRegistros[indice].collapse;
         }
-    }
-
-    cambiaValorHistorial(id: string) {
-        if (!this.itemsHistorial[id]) {
-            this.itemsHistorial[id] = { collapse: true };
-        }
-        this.itemsHistorial[id].collapse = !this.itemsHistorial[id].collapse;
     }
 
     toggleCollapse() {

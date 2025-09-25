@@ -4,6 +4,8 @@ import { map, switchMap } from 'rxjs/operators';
 import { RUPComponent } from '../core/rup.component';
 import { RupElement } from '.';
 import { of } from 'rxjs';
+import { PlexTextToolBar } from '@andes/plex';
+
 
 @Component({
     selector: 'rup-historial',
@@ -11,98 +13,48 @@ import { of } from 'rxjs';
 })
 @RupElement('HistorialComponent')
 export class HistorialComponent extends RUPComponent implements OnInit {
-    @Input() registro: any;
-    @Input() prestacion: any;
-    @Input() params: any = {};
-    @Input() conceptId?: string;
-    @Input() fechaDesde?: Date;
-    @Input() cantidad?: number;
-    @Input() ecl?: string;
+
+    // Se usa por un bug en el quill-editor al ser cargado dinamicamente.
+    afterInit = false;
+    fullscreen = false;
+
+    public qlToolbar: PlexTextToolBar[] = [{
+        name: 'fullscreen',
+        handler: () => {
+            this.fullscreen = true;
+        }
+    }];
 
     public historial: any[] = [];
     public isLoading = false;
+    public verHistorial = false;
+    public fechaDesde = null;
 
     ngOnInit() {
-        const pacienteId = this.prestacion?.paciente?.id;
-        const conceptId = this.registro?.concepto?.conceptId;
 
-        if (!pacienteId || !conceptId) {
-            return;
-        }
+        const conceptId = this.registro?.concepto?.conceptId;
 
         this.isLoading = true;
 
-        this.prestacionesService.getByPaciente(pacienteId).pipe(
-            map(prestaciones => {
-                let registros: any[] = [];
+        if (!this.soloValores) {
+            if (this.params.pacienteInternado && this.params.requiereFechaInicio) {
 
-                // armo listado de registros
-                prestaciones.forEach(p => {
-                    p.ejecucion?.registros?.forEach(r => {
-                        if (r.valor) {
-                            registros.push({
-                                fecha: p.ejecucion.fecha,
-                                valor: r.valor,
-                                concepto: r.concepto?.term,
-                                conceptId: r.concepto?.conceptId,
-                                prestacion: p.solicitud?.tipoPrestacion?.term,
-                                prestacionId: p._id
-                            });
-                        }
-                    });
-                });
+                this.internacionResumenHTTP.search({ paciente: this.paciente.id }).subscribe(resumen => {
 
-                // filtro por concepto puntual
-                if (conceptId) {
-                    registros = registros.filter(r => r.conceptId === conceptId);
-                }
-
-                // filtro por fecha desde
-                if (this.fechaDesde) {
-                    registros = registros.filter(r =>
-                        new Date(r.fecha).getTime() >= new Date(this.fechaDesde).getTime()
-                    );
-                }
-
-                // orden descendente por fecha
-                registros.sort((a, b) =>
-                    new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
-                );
-
-                // límite de cantidad
-                if (this.cantidad) {
-                    registros = registros.slice(0, this.cantidad);
-                }
-
-                return registros;
-            }),
-            switchMap(registros => {
-                // filtro por ECL (si está definido)
-                if (this.ecl) {
-                    return this.eclqueriesServicies.search({ key: this.ecl }).pipe(
-                        switchMap((eclResult: any) => {
-                            const eclQuery = Array.isArray(eclResult) ? eclResult[0] : eclResult;
-                            if (eclQuery?.valor) {
-                                return this.snomedService.getQuery({ expression: eclQuery.valor }).pipe(
-                                    map((concepts: any[]) => {
-                                        const validConcepts = concepts.map(c => c.conceptId);
-                                        return registros.filter(r => validConcepts.includes(r.conceptId));
-                                    })
-                                );
+                    if (resumen.length && resumen[resumen.length - 1].fechaIngreso) {
+                        this.fechaDesde = new Date(resumen[resumen.length - 1].fechaIngreso);
+                        this.prestacionesService.getRegistrosHuds(this.paciente.id, conceptId, this.fechaDesde).subscribe(prestaciones => {
+                            this.isLoading = false;
+                            // Ver si tomamos el ultimo valor..
+                            if (prestaciones.length) {
+                                this.historial = prestaciones;
                             }
-                            return of(registros);
-                        })
-                    );
-                }
-                return of(registros);
-            })
-        ).subscribe(historial => {
-            this.historial = historial;
-            this.isLoading = false;
-        });
+
+                        });
+                    }
+                });
+            }
+        }
     }
 
-    getData() { return null; }
-    setData(_: any) { }
-    validate() { return true; }
 }
