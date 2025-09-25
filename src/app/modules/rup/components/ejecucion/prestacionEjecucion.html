@@ -173,22 +173,7 @@
                                         </div>
 
                                     </div>
-                                    <plex-button (click)="cambiaValorHistorial(registro.id)"
-                                                 style="text-align:center;margin-bottom:15px;" size="sm" type="primary"
-                                                 class="collapse-card"
-                                                 label="{{ (itemsHistorial[registro.id]?.collapse ?? true) ? 'Ver historial' : 'Ocultar historial' }}">
-                                    </plex-button>
 
-                                    <div *ngIf="!(itemsHistorial[registro.id]?.collapse ?? true)">
-                                        <!-- <rup-historial [prestacion]="prestacion" [registro]="registro"
-                                                       [params]="elementosRUPService.getParams(registro)">
-                                        </rup-historial> -->
-                                        <rup-historial [prestacion]="prestacion"
-               [registro]="registro"
-               [conceptId]="registro.concepto.conceptId">
-                                        </rup-historial>
-
-                                    </div>
                                     <!-- Footer del registro -->
                                     <div class="rup-footer" *ngIf="registro.relacionadoCon || confirmarEliminar">
                                         <div class="type"></div>
@@ -279,7 +264,7 @@
                         <plex-tab [allowClose]="true" [label]="registro.data.concepto.term"
                                   [class]="registro.data.class" [color]="registro.data.class"
                                   *ngIf="registro.tipo === 'concepto'">
-                            <detalle-registro *ngIf="registro.data.class === 'situación' || 
+                            <detalle-registro *="registro.data.class === 'situación' || 
                                                  registro.data.class === 'hallazgo' || registro.data.class === 'trastorno'"
                                               [registro]="registro.data" [paciente]="paciente">
                             </detalle-registro>

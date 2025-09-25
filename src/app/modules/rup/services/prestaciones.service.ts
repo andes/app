@@ -471,14 +471,14 @@ export class PrestacionesService {
      * @returns {any[]} Prestaciones del paciente que coincidan con los conceptIds
      * @memberof PrestacionesService
      */
-    getRegistrosHuds(idPaciente: string, expresion, deadLine = null, valor = null, searchTerm = null, form = null) {
+    getRegistrosHuds(idPaciente: string, expresion, deadline = null, valor = null, searchTerm = null, form = null) {
         const opt = {
             params: {
                 valor,
                 expresion,
                 searchTerm,
                 form,
-                deadLine,
+                deadline,
                 hudsToken: this.hudsService.getHudsToken()
             },
             options: {
