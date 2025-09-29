@@ -70,13 +70,15 @@ export class FiltrosCamasComponent implements OnInit {
     }
 
     onCensableChange() {
-        if (this.filtro.censable) {
-            this.mostrarTodasCamas = false;
-            this.mapaCamasService.mostrarTodasCamas.next(this.filtro.censable.id === 0);
+        this.mapaCamasService.censableSelected.next(this.filtro.censable);
+        let mostrarNoCensables = false;
+
+        if (this.filtro.censable?.id === 0) {
+            mostrarNoCensables = true;
         }
+        this.mapaCamasService.mostrarTodasCamas.next(mostrarNoCensables);
         this.filtrar();
     }
-
     filtrar() {
         this.mapaCamasService.unidadOrganizativaSelected.next(this.filtro.unidadOrganizativa);
         this.mapaCamasService.sectorSelected.next(this.filtro.sector);
