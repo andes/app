@@ -38,6 +38,7 @@ export class MapaCamasService {
     public estadoSelected = new BehaviorSubject<string>(null);
     public equipamientoSelected = new BehaviorSubject<ISnomedConcept[]>(null);
     public mostrarTodasCamas = new BehaviorSubject<boolean>(false);
+    public censableSelected = new BehaviorSubject<any>(null);
 
     public pacienteAux = new BehaviorSubject<any>({} as any);
 
