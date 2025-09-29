@@ -32,6 +32,14 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
     ) { }
     filtro: any = {};
     ngOnInit() {
+        this.mapaCamasService.censableSelected.subscribe(censable => {
+            this.filtro.censable = censable;
+        });
+
+        this.mapaCamasService.mostrarTodasCamas.subscribe(valor => {
+            this.mostrarTodasCamas = valor;
+            this.filtrar();
+        });
         this.fecha$ = this.mapaCamasService.fecha2;
 
         this.fechaActual$ = this.mapaCamasService.fechaActual$.pipe(
@@ -80,7 +88,7 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
     }
 
     onCensableChange() {
-        if (this.filtro.censable === 0) {
+        if (this.filtro.censable?.id === 0) {
             this.mostrarTodasCamas = true;
         } else {
             this.mostrarTodasCamas = false;
