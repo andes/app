@@ -83,11 +83,13 @@
                     <div class="detalle-dispensa">{{ estadoDispensa.fecha | date: 'dd/MM/yyyy HH:mm' }}</div>
                     <div class="detalle-dispensa">{{ estadoDispensa.sistema }}</div>
                     <div class="detalle-dispensa">{{ estadoDispensa.organizacion }}</div>
-                    <div class="detalle-dispensa">{{ estadoDispensa.tipo === 'sin-dispensa' ? 'creado' :
-                        estadoDispensa.tipo}}</div>
+                    <div class="detalle-dispensa">{{ estadoDispensa.tipo}} </div>
                     <div class="detalle-dispensa">
                         <plex-badge *ngIf="estadoDispensa.dispensaDuplicada" size="sm" [type]="'warning'">
                             dispensa duplicada
+                        </plex-badge>
+                        <plex-badge *ngIf="estadoDispensa.cancelada" size="sm" [type]="'danger'"  >
+                            dispensa cancelada {{(estadoDispensa.fechaCancelada | date: 'dd/MM/yyyy HH:mm')}}
                         </plex-badge>
                     </div>
                 </div>

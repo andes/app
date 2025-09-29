@@ -112,69 +112,35 @@ export class VistaRecetaComponent implements OnInit {
     }
 
     combinarDispensas() {
-        let dispensaDuplicada = false;
-        let organizacionNombre = '';
-        if (this.recetaPrincipal.medicamento.tratamientoProlongado) {
-            this.listadoDispensas=this.registro.recetas
-                .filter(receta => receta.estadoDispensaActual.tipo !== 'sin-dispensa')
-                .map(rec => {
-                    organizacionNombre = this.recetaPrincipal.organizacion?.nombre;
-                    return {
-                        fecha: rec.estadoDispensaActual.fecha,
-                        tipo: rec.estadoDispensaActual.tipo,
-                        organizacion: organizacionNombre || 'Sin especificar',
-                        sistema: rec.estadoDispensaActual.sistema || 'Sin especificar',
-                        dispensaDuplicada: false// esDuplicada
-                    };
-                });
-        } else {
-            if (!this.recetaPrincipal.estados || !this.recetaPrincipal.estadosDispensa) {
-                return;
+        const organizacionNombre = this.recetaPrincipal.organizacion?.nombre;
+        let anteriorDispensada = false;
+        this.listadoDispensas = this.recetaPrincipal.estadosDispensa
+            .map(rec => {
+                let esDuplicada = false;
+                if (anteriorDispensada && rec.tipo === 'dispensada') {
+                    esDuplicada = true;
+                }
+                anteriorDispensada = rec.tipo === 'dispensada';
+                return {
+                    fecha: rec.fecha,
+                    tipo: rec.tipo,
+                    organizacion: organizacionNombre || 'Sin especificar',
+                    sistema: rec.sistema || 'Sin especificar',
+                    dispensaDuplicada: esDuplicada,
+                    cancelada: rec.cancelada ?? false
+                };
+            });
+
+        for (let i = 1; i < this.listadoDispensas.length; i++) {
+            const actual = this.listadoDispensas[i];
+
+            if (actual.cancelada && actual.cancelada !== false) {
+                this.listadoDispensas[i - 1].cancelada = actual.cancelada;
+                this.listadoDispensas[i - 1].fechaCancelada = actual.fecha;
+                this.listadoDispensas.splice(i, 1);
             }
-
-
-
-            this.listadoDispensas = this.recetaPrincipal.estadosDispensa
-                .filter(dispensa => dispensa.tipo !== 'sin-dispensa') // Filtrar los que no son 'sin-dispensa'
-                .map(dispensa => {
-                    let organizacionNombre = '';
-                    const idDispensa = dispensa.idDispensaApp;
-                    const dispensaCoincidente = this.recetaPrincipal.dispensa.find(dispensaPrimaria => {
-                        if (dispensaPrimaria.idDispensaApp === idDispensa) {
-                            organizacionNombre = dispensaPrimaria.organizacion?.nombre;
-                            return moment(dispensaPrimaria.fecha).isSame(moment(dispensa.fecha), 'day'); // Compara solo el día
-                        }
-                        return null;
-                    });
-
-                    const esDuplicada = dispensaDuplicada;
-                    if (dispensa.tipo === 'dispensada') {
-                        if (!dispensaDuplicada) {
-                            dispensaDuplicada = true;
-                        }
-                    }
-
-                    if (dispensaCoincidente) {
-                        return {
-                            fecha: dispensaCoincidente.fecha,
-                            tipo: dispensa.tipo,
-                            organizacion: organizacionNombre || 'Sin especificar',
-                            sistema: dispensa.sistema || 'Sin especificar',
-                            dispensaDuplicada: esDuplicada
-                        };
-                    } else {
-                        return {
-                            fecha: dispensa.fecha,
-                            tipo: dispensa.tipo,
-                            organizacion: organizacionNombre || 'Sin especificar',
-                            sistema: dispensa.sistema || 'Sin especificar',
-                            dispensaDuplicada: esDuplicada
-                        };
-                    }
-                });
         }
-
-        return this.listadoDispensas;
+        return this.listadoDispensas.shift();
     }
 
 }
