@@ -1,12 +1,13 @@
 <ng-container *ngIf="fechaActual$ | async as fechaActual">
     <ng-container *ngIf="fecha$ | async as fecha">
 
-        <plex-title justify titulo="ESTADO CAMAS - {{fecha | date: 'dd/MM/yyyy  HH:mm'}}">
-         <plex-bool  *ngIf="!filtro.censable" style="margin-bottom: 1px;" label="Incluir No censables" name="activate" type="slide"
-    [(ngModel)]="mostrarTodasCamas" (change)="filtrar()">
-</plex-bool>
+        <plex-title justify
+                    titulo="ESTADO CAMAS{{ filtro.censable ? (' - ' + filtro.censable.nombre) : '' }} - {{ fecha | date: 'dd/MM/yyyy HH:mm' }}">
+            <plex-bool *ngIf="!filtro.censable" style="margin-bottom: 1px;" label="Incluir No censables" name="activate"
+                       type="slide" [(ngModel)]="mostrarTodasCamas" (change)="filtrar()">
+            </plex-bool>
         </plex-title>
-      
+
     </ng-container>
 </ng-container>
 <ng-container>
