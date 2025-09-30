@@ -1,13 +1,4 @@
 <form #form="ngForm" (keydown.enter)="$event.preventDefault()" *ngIf="!soloValores">
-    <plex-title size="sm" titulo="Principio Activo">
-        <plex-button size="sm" icon="plus" type="info" (click)="addSustancia()" tooltip="Agregar nuevo item"
-                     tooltipPosition="left"> </plex-button>
-        <plex-button size="sm" icon="delete" type="danger" (click)="deleteSustancia()" tooltip="Eliminar último item"
-                     tooltipPosition="left" [disabled]="registro.valor.sustancias.length === 1" class="ml-1">
-        </plex-button>
-
-    </plex-title>
-
     <!-- PRINCIPIO ACTIVO -->
     <ng-container *ngFor="let sustancia of registro.valor.sustancias">
         <plex-select [(ngModel)]="sustancia.ingrediente" name="medicamento" (getData)="loadMedicamentoGenerico($event)"

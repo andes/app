@@ -58,20 +58,6 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
         }
     }
 
-    addSustancia() {
-        this.registro.valor.sustancias.push({
-            ingrediente: null,
-            denominador: null,
-            numerador: null,
-            cantidad: null
-        });
-    }
-
-    deleteSustancia() {
-        if (this.registro.valor.sustancias.length > 1) {
-            this.registro.valor.sustancias.pop();
-        }
-    }
 
     valuesChange() {
         const nombre = this.registro.valor.sustancias.map(item => {
