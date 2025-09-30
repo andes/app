@@ -127,7 +127,7 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
             const financiadoresExistentes = [
                 ...this.obrasSocialesPUCO.map((f) => f.nombre),
                 ...this.financiadoresANDES.map((f) => f.nombre),
-                ...this.financiadoresPaciente.map((f) => f.nombre)
+                ...this.financiadoresPaciente?.map((f) => f.nombre)
             ];
 
             this.opcionesFinanciadores = financiadores.filter(
