@@ -17,7 +17,7 @@
     </ng-container>
 
     <plex-grid cols="4">
-        <plex-select [(ngModel)]="registro.valor.via" name="via" [snomedExpression]="viasSnomed" span="3"
+        <plex-select [(ngModel)]="registro.valor.via" name="via" [data]="vias$ | async" span="3"
                      (change)="valuesChange()" label="Vía de administración" [preload]="true">
         </plex-select>
         <plex-int label="Cantidad" [(ngModel)]="registro.valor.cantidad" name="cantidad" required span="1">

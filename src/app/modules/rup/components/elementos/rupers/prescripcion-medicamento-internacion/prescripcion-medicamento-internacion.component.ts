@@ -13,7 +13,6 @@ import { RUPComponent } from '../../../core/rup.component';
 export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPComponent implements OnInit, AfterViewInit {
 
     unidadesSnomed = '767525000 OR 258997004 OR 258684004 OR 258682000 OR 258685003 OR 258773002 OR 258989006 OR 439139003 OR 404218003';
-    viasSnomed = '764295003 OR 761829007 OR 738987007 OR 738986003 OR 738983006 OR 738956005 OR 738952007 OR 738948007 OR 255560000 OR 255559005 OR 421606006';
     formasFarmaceuticasSnomed = `732997007 OR 732994000 OR 732987003 OR 732986007 OR 732981002 OR 732978007 OR 732937005 OR 732936001 OR 
     739009002 OR 739006009 OR 738998008 OR 385099005 OR 739005008`;
     frecuencias$: Observable<any>;
@@ -24,6 +23,7 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
     fechaMax;
 
     public eclMedicamentos;
+    vias$: Observable<any[]>;
 
     ngAfterViewInit() {
         setTimeout(() => {
@@ -35,10 +35,11 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
         this.eclqueriesServicies.search({ key: '^receta' }).subscribe(query => {
             this.eclMedicamentos = query.find(q => q.key === 'receta:genericos');
         });
-
         this.fechaMin = moment().startOf('day').toDate();
         this.fechaMax = moment().endOf('day').toDate();
         this.frecuencias$ = this.constantesService.search({ source: 'plan-indicaciones:frecuencia' });
+        this.vias$ = this.constantesService.search({ source: 'plan-indicaciones:via' });
+
         if (!this.registro.valor) {
             this.registro.valor = {
                 nombre: '',
