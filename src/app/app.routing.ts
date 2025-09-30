@@ -43,6 +43,9 @@ import { PuntoInicioInternacionComponent } from './modules/rup/components/intern
 import { ValidarCertificadoComponent } from './modules/epidemiologia/components/validar-certificado/validar-certificado.component';
 import { DemandaInsatisfechaComponent } from './components/demandaInsatisfecha/demanda-insatisfecha.component';
 
+// COM
+import { EstadosCamaProvincialComponent } from './modules/com/components/estados-cama-provincial';
+
 
 const appRoutes: Routes = [
 
@@ -53,6 +56,8 @@ const appRoutes: Routes = [
     { path: 'tm/espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'tm/mapa_espacio_fisico', component: MapaEspacioFisicoVistaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'tm/farmacia', component: FarmaciaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+
+    { path: 'com/estados-cama-provincial', component: EstadosCamaProvincialComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     // MPI
     { path: 'apps/mpi/busqueda', component: BusquedaMpiComponent, canActivate: [RoutingGuard] },
     { path: 'apps/mpi/paciente', component: PacienteComponent, canActivate: [RoutingGuard] },
