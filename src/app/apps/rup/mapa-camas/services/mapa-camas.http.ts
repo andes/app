@@ -28,6 +28,21 @@ export class MapaCamasHTTP {
             }
         });
     }
+    estadosCamas(organizacion: string, unidadOrganizativa: string, ambito: string, capa: string, fecha: Date): Observable<any[]> {
+        const params = {
+            ambito,
+            capa,
+            fecha: fecha ? fecha : new Date()
+        };
+        if (organizacion) {
+            params['organizacion'] = organizacion;
+        }
+        if (unidadOrganizativa) {
+            params['unidadOrganizativa'] = unidadOrganizativa;
+        }
+
+        return this.server.get(`${this.url}/camas/resumen`, { params });
+    }
 
     historial(ambito: string, capa: string, desde: Date, hasta: Date, filtros: IFiltrosHistorial): Observable<ISnapshot[]> {
         const params = {
