@@ -62,15 +62,15 @@
             <ul *ngIf="busquedaRecetas.length" class="hover listado list-unstyled">
                 <ng-container *ngFor="let grupo of busquedaRecetas; let iReceta = index">
                     <li>
-                        <plex-bool [readonly]="!esRecetaSeleccionable(grupo?.recetas[0])"
+                        <plex-bool [readonly]="!esRecetaSeleccionable(grupo?.recetaVisible)"
                                    [ngModel]="seleccionRecetas[iReceta]" name="seleccionada" type="checkbox"
                                    (change)="seleccionarReceta($event, grupo.recetas, iReceta)">
                         </plex-bool>
                         <div class="total">
-                            <div class="row vista-badges" *ngIf="grupo.recetas[0].medicamento.tratamientoProlongado">
-                                <span class="pl-2 pr-2 mr-3 upTag" [ngClass]="{'active': huds.isOpen(grupo, 'receta')}">
-                                    Tratamiento prolongado: {{recetaVisible(grupo.recetas).medicamento.ordenTratamiento +1}} de {{grupo.recetas[0].medicamento.tiempoTratamiento?.id}}</span>
-                            </div>
+                           <div class="row vista-badges" *ngIf="grupo.recetaVisible?.medicamento?.tratamientoProlongado">
+                               <span class="pl-2 pr-2 mr-3 upTag" [ngClass]="{'active': huds.isOpen(grupo, 'receta')}">
+                                   Tratamiento prolongado: {{ (grupo.recetaVisible?.medicamento?.ordenTratamiento !== null && grupo.recetaVisible?.medicamento?.ordenTratamiento !== undefined) ? (grupo.recetaVisible.medicamento.ordenTratamiento + 1) : 0 }} de {{grupo.recetaVisible?.medicamento.tiempoTratamiento?.id}}</span>
+                           </div>
                             <div class="rup-card mini recetas total" [ngClass]="{'active': huds.isOpen(grupo, 'receta')}"
                                 (click)="emitTabs(grupo, 'receta', iReceta)">
                                 <div class="rup-header">
@@ -89,13 +89,13 @@
                                                             <div class="col-10 p-0 m-0">
                                                                 <div class="sugerido">
                                                                     <small>Fecha de Registro:
-                                                                        {{ recetaVisible(grupo.recetas).fechaRegistro | date:'short' }}
-                                                                    </small>
-                                                                    <br>
-                                                                    <small>Profesional: {{
-                                                                        grupo.recetas[0].profesional.nombre }} {{
-                                                                        grupo.recetas[0].profesional.apellido }}
-                                                                    </small>
+                                                                       {{ grupo.recetaVisible?.fechaRegistro | date:'short' }}
+                                                                   </small>
+                                                                   <br>
+                                                                   <small>Profesional: {{
+                                                                      grupo.recetaVisible?.profesional.nombre }} {{
+                                                                       grupo.recetaVisible?.profesional.apellido }}
+                                                                   </small>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -105,15 +105,15 @@
                                             <div class="col-3 p-0 m-0">
                                                 <div class="p-0 pt-1 pr-1 float-right">
                                                     <div class="vista-badges">
-                                                        <plex-badge *ngIf="grupo.recetas[0].estadoActual" size="sm"
-                                                                    [type]="estadoReceta[recetaVisible(grupo.recetas).estadoActual.tipo]">
-                                                            {{ recetaVisible(grupo.recetas).estadoActual.tipo.replace('-', ' ') }}
-                                                        </plex-badge>
-                                                        <plex-badge *ngIf="grupo.recetas[0].estadoDispensaActual" size="sm"
-                                                                    [type]="estadoDispensa[recetaVisible(grupo.recetas).estadoDispensaActual.tipo]">
-                                                            {{ recetaVisible(grupo.recetas).estadoDispensaActual.tipo.replace('-', ' ')
-                                                            }}
-                                                        </plex-badge>
+                                                       <plex-badge  size="sm"
+                                                                   [type]="estadoReceta[grupo.recetaVisible?.estadoActual.tipo]">
+                                                           {{ grupo.recetaVisible?.estadoActual?.tipo.replace('-', ' ') }}
+                                                       </plex-badge>
+                                                       <plex-badge  size="sm"
+                                                                   [type]="estadoDispensa[grupo.recetaVisible?.estadoDispensaActual.tipo]">
+                                                           {{ grupo.recetaVisible?.estadoDispensaActual?.tipo.replace('-', ' ')
+                                                           }}
+                                                       </plex-badge>
                                                     </div>
                                                 </div>
                                             </div>

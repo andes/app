@@ -17,8 +17,12 @@
                     </plex-badge>
                 </div>
                 <div case="capitalize"><b>{{ recetaPrincipal.medicamento.concepto.term }}</b></div>
+                <p *ngIf="recetaPrincipal.medicamento.cantidad && recetaPrincipal.medicamento.cantEnvases "><small>
+                                    {{ recetaPrincipal.medicamento.cantEnvases}} envase(s) de {{ recetaPrincipal.medicamento.cantidad}} {{recetaPrincipal.medicamento.presentacion }}(s) 
+
+                </small></p>
                 <p *ngIf="recetaPrincipal.medicamento.dosisDiaria.dosis"><small>{{
-                        recetaPrincipal.medicamento.dosisDiaria.dias ? recetaPrincipal.medicamento.dosisDiaria.dias
+                        '|' +recetaPrincipal.medicamento.dosisDiaria.dias ? recetaPrincipal.medicamento.dosisDiaria.dias
                         + ' día(s)' : '' }} {{
                         recetaPrincipal.medicamento.dosisDiaria.dosis }} {{
                         recetaPrincipal.medicamento.presentacion }} cada {{
