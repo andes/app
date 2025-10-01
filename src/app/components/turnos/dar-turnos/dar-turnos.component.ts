@@ -295,9 +295,9 @@ export class DarTurnosComponent implements OnInit {
         this.permitirTurnoDoble = false;
         const tipoTurnoDoble = this.tiposTurnosSelect.toString();
         const cantidadDisponible = this.countBloques[this.indiceBloque];
-        if (cantidadDisponible) {
-            if (this.agenda.bloques[this.indiceBloque].cantidadTurnos) {
-                cantidadTurnos = this.agenda.bloques[this.indiceBloque].cantidadTurnos;
+        if (cantidadDisponible && !this.agenda.bloques[this.indiceBloque]?.pacienteSimultaneos) {
+            if (this.agenda.bloques[this.indiceBloque].turnos.length) {
+                cantidadTurnos = this.agenda.bloques[this.indiceBloque].turnos.length;
                 cantidadTurnos--;
                 if (this.indiceTurno < cantidadTurnos && (cantidadDisponible[tipoTurnoDoble] >= 2)) {
                     // se verifica el estado del siguiente turno, si está disponible se permite la opción de turno doble
