@@ -28,7 +28,6 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
 
     obraSocial: IObraSocial;
     token$: Observable<string>;
-    notasDestacadas = [];
     hudsPermiso;
     documentacionPermiso;
 
@@ -58,6 +57,10 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
 
     get showNumeroAfiliado() {
         return this.fields.findIndex(i => i === 'numeroAfiliado') >= 0;
+    }
+
+    get notasDestacadas() {
+        return this.paciente?.notas?.filter(n => n.destacada) || [];
     }
 
     get showDireccion() {
@@ -190,9 +193,9 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
 
     ngOnChanges() {
         const requiereReload = this.reload ||
-        !this.paciente?.financiador ||
-        !this.paciente?.direccion ||
-        !this.paciente?.contacto;
+            !this.paciente?.financiador ||
+            !this.paciente?.direccion ||
+            !this.paciente?.contacto;
 
         if (requiereReload && this.paciente?.id) {
             this.pacienteService.getById(this.paciente.id).subscribe(result => {
