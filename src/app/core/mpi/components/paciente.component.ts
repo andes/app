@@ -115,7 +115,7 @@ export class PacienteComponent implements OnInit {
         fotoId: null,
         foto: null,
         relaciones: null,
-        financiador: [null],
+        financiador: null,
         identificadores: null,
         claveBlocking: null,
         entidadesValidadoras: [this.entidadValidadora],
@@ -124,7 +124,7 @@ export class PacienteComponent implements OnInit {
         nombreCorrectoReportado: '',
         apellidoCorrectoReportado: '',
         notaError: '',
-        vinculos: [null],
+        vinculos: null,
         documentos: [],
         createdBy: null,
         fallecimientoManual: {

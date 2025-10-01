@@ -3,6 +3,7 @@ import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { IObraSocial } from 'src/app/interfaces/IObraSocial';
 import { ObraSocialService } from 'src/app/services/obraSocial.service';
+import { ConstantesService } from './../../../services/constantes.service';
 
 @Component({
     selector: 'seleccionar-financiador',
@@ -33,7 +34,7 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
     public patronNumerico = '^[0-9]*$';
 
     private timeout: any;
-    private busquedaFinanciador;
+    public busquedaFinanciador;
 
     @Input() paciente;
     @Input() editable = false;
@@ -43,10 +44,12 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
     constructor(
         public obraSocialService: ObraSocialService,
         private pacienteService: PacienteService,
+        private constantesService: ConstantesService,
     ) { }
 
 
     ngOnChanges(changes: SimpleChanges) {
+        this.numeroAfiliado = this.paciente?.financiador?.length ? this.paciente.financiador[0]?.numeroAfiliado : undefined;
         if (changes.paciente?.currentValue?.id) {
             this.resetComponentState();
 
@@ -124,7 +127,7 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
             const financiadoresExistentes = [
                 ...this.obrasSocialesPUCO.map((f) => f.nombre),
                 ...this.financiadoresANDES.map((f) => f.nombre),
-                ...this.financiadoresPaciente.map((f) => f.nombre)
+                ...this.financiadoresPaciente?.map((f) => f.nombre)
             ];
 
             this.opcionesFinanciadores = financiadores.filter(
@@ -172,6 +175,11 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
         if (event.value) {
             const { prepaga, nombre, financiador, codigoPuco } = event.value;
             this.busquedaFinanciador = { prepaga: prepaga || false, nombre, financiador, codigoPuco, origen: 'ANDES' };
+            this.constantesService.search({ source: 'mpi:pacientes:update' }).subscribe(async (constante) => {
+                if (codigoPuco === parseInt(constante[0]?.key, 10)) {
+                    this.numeroAfiliado = this.paciente.documento;
+                }
+            });
         }
 
         this.guardarFinanciador();
@@ -202,5 +210,14 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
 
             if (!this.editable) { this.guardarFinanciador(); }
         }, 500);
+    }
+
+    public onSeleccionarFinanciador(event: any) {
+        this.numeroAfiliado = null;
+        this.constantesService.search({ source: 'mpi:pacientes:update' }).subscribe(async (constante) => {
+            if (event?.value?.codigoPuco === parseInt(constante[0]?.key, 10)) {
+                this.numeroAfiliado = this.paciente.documento;
+            }
+        });
     }
 }

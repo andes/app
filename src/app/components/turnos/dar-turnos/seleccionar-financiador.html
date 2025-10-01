@@ -18,7 +18,15 @@
     <div *ngIf="obrasSocialesPUCO.length > 0">
         <ul>
             <li *ngFor="let obra of obrasSocialesPUCO">
-                <plex-icon size="md" name="check" class="mr-2"></plex-icon> {{ obra.nombre }}
+                <div>
+                    <plex-icon size="md" name="check" class="mr-2"></plex-icon><strong>OBRA SOCIAL: </strong> {{
+                    obra.nombre }}
+                </div>
+                <div *ngIf="obra.numeroAfiliado">
+                    <plex-icon size="md" name="clipboard-account" class="mr-2"></plex-icon>
+                    <strong>NÚMERO DE
+                        AFILIADO:</strong> {{ obra.numeroAfiliado }}
+                </div>
             </li>
         </ul>
     </div>
@@ -50,9 +58,9 @@
             <plex-wrapper>
                 <plex-select [(ngModel)]="itemListaFinanciador" [data]="opcionesFinanciadores" label="Financiador"
                              idField="id" labelField="nombre" [disabled]="!opcionesFinanciadores.length"
-                             placeholder="Seleccione financiador">
+                             placeholder="Seleccione financiador" (change)="onSeleccionarFinanciador($event)">
                 </plex-select>
-                <plex-text *ngIf="itemListaFinanciador" [(ngModel)]="numeroAfiliado" label="Número de afiliado"
+                <plex-text *ngIf="itemListaFinanciador" [(ngModel)]="numeroAfiliado" label="Número de afiliados"
                            name="numeroAfiliado" [required]="false" [pattern]="patronNumerico"
                            placeholder="Ingrese el número de afiliado" (change)="setNumeroAfiliado($event)">
                 </plex-text>
