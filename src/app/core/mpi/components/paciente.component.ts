@@ -127,11 +127,7 @@ export class PacienteComponent implements OnInit {
         vinculos: null,
         documentos: [],
         createdBy: null,
-        fallecimientoManual: {
-            fecha: null,
-            registradoPor: { id: '', nombre: '', apellido: '', documento: '' },
-            registradoEn: null
-        }
+        fallecimientoManual: null
     };
 
     public pacientes: IPacienteMatch[] | IPaciente[];
