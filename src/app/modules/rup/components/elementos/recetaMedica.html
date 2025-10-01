@@ -5,6 +5,36 @@
                      hint="Se listaran los conceptos registrados en esta consulta" hintType="info" hintIcon="eye">
         </plex-select>
 
+        <!-- Sección de selección de obra social -->
+        <div class="row" *ngIf="showSelector">
+            <div class="col-md-12">
+                <label class="form-label">Obra Social / Financiador</label>
+                <plex-radio name="financiador" [(ngModel)]="financiadorSeleccionado"
+                            (change)="seleccionarFinanciador($event)" [data]="datosFinanciadores">
+                </plex-radio>
+            </div>
+        </div>
+
+        <!-- Selector de otros financiadores -->
+        <div class="row" *ngIf="showListado">
+            <div class="col-md-12">
+                <label class="form-label">Seleccionar otro financiador</label>
+                <plex-select name="otroFinanciador" placeholder="Buscar financiador..." [(ngModel)]="otroFinanciadorSeleccionado" [data]="opcionesFinanciadores"
+                             labelField="nombre" (change)="seleccionarOtroFinanciador($event)">
+                </plex-select>
+            </div>
+        </div>
+
+        <!-- Campo de número de afiliado -->
+        <div class="row" *ngIf="prestacion?.paciente?.obraSocial && showSelector">
+            <div class="col-md-6">
+                <plex-text name="numeroAfiliado" label="Número de afiliado" [(ngModel)]="numeroAfiliado"
+                           placeholder="Ingrese número de afiliado" [pattern]="patronNumerico"
+                           (ngModelChange)="actualizarNumeroAfiliado()">
+                </plex-text>
+            </div>
+        </div>
+
         <plex-grid cols="2">
             <plex-select [(ngModel)]="medicamento.generico" name="generico" (getData)="loadMedicamentoGenerico($event)"
                          placeholder="Medicamento genérico" label="Medicamento" idField="conceptId" labelField="term"
