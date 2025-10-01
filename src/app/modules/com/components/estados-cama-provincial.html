@@ -1,0 +1,96 @@
+<plex-layout [main]="showSidebar? 8 : 12">
+    <plex-layout-main>
+        <plex-title main titulo="CAMAS PROVINCIALES">
+            <plex-button label="volver" type="danger" size="sm" position="left" routerLink='/inicio'></plex-button>
+            <plex-button class="ml-1" title="Actualizar fecha" titlePosition="left" icon="reload" type="info" size="sm"
+                         (click)="setFecha()">
+            </plex-button>
+        </plex-title>
+
+        <plex-wrapper>
+            <plex-select [(ngModel)]="selectedOrganizacion" name="organizacion" tmOrganizaciones label="Organización"
+                         placeholder="Seleccione la organización" (change)="filtrar()">
+            </plex-select>
+            <plex-select name="unidadOrganizativa" [data]="unidadesOrganizativas$ | async" label="Unidad Organizativa"
+                         idField="conceptId" labelField="term" [(ngModel)]="selectedUnidadOrganizativa"
+                         (change)="filtrar()">
+            </plex-select>
+            <plex-datetime grow="1" type="datetime" [(ngModel)]="fecha" name="fecha" label="Fecha" [max]="fechaLimite"
+                           [disabled]="true">
+            </plex-datetime>
+        </plex-wrapper>
+
+        <ng-container *ngIf="(camasEstados$ | async)?.length">
+            <plex-grid size="md" [cols]="3">
+                <plex-card *ngFor="let efector of (camasEstados$ | async)" [selectable]="true"
+                           (click)="verDetalle(efector)" [selected]="efector._id === efectorSelected?._id">
+                    <div style="display: flex; flex-direction: column;">
+                        <plex-label titulo="{{efector.organizacion.nombre}}" size="xl" type="info"></plex-label>
+                        <plex-label titulo="Total de camas: {{efector.totalCamas}}"></plex-label>
+                        <plex-label titulo="Camas ocupadas: {{efector.camasOcupadas}}"></plex-label>
+                        <plex-label titulo="Camas disponibles: {{efector.camasDisponibles}}"></plex-label>
+                        <plex-label titulo="Camas Bloqueadas: {{efector.camasBloqueadas}}"></plex-label>
+                    </div>
+                </plex-card>
+            </plex-grid>
+        </ng-container>
+        <div *ngIf="!(camasEstados$ | async)?.length" justify="center" class="mt-5">
+            <plex-label class="flex-column" icon="informacion" size="xl" direction="column" type="info"
+                        titulo="No se encontraron camas disponibles">
+            </plex-label>
+        </div>
+    </plex-layout-main>
+    <plex-layout-sidebar type="invert">
+        <plex-title titulo="DETALLE EFECTOR">
+            <plex-button size="sm" type="danger" icon="close" tooltip="cerrar" (click)="closeSidebar()"></plex-button>
+        </plex-title>
+        <ng-container *ngIf="efectorSelected">
+            <plex-detail>
+                <plex-icon name="hospital"></plex-icon>
+                <div title>{{efectorSelected.organizacion.nombre}}</div>
+            </plex-detail>
+            <ng-container *ngIf="efectorSelected.unidad">
+                <plex-accordion>
+                    <plex-panel class="lista-panel">
+                        <div plex-accordion-title>
+                            <span class="d-flex justify-content-between align-items-center">
+                                <strong> {{efectorSelected.unidad.term}}</strong>
+                            </span>
+                        </div>
+                        <div plex-accordion-content>
+                            <plex-label size="xl" titulo="Total de camas: {{efectorSelected.totalCamas}}"
+                                        style="margin-bottom: 20px;"></plex-label>
+                            <plex-label size="xl" titulo="Camas Disponibles: {{efectorSelected.camasDisponibles}}"
+                                        style="margin-bottom: 20px;"></plex-label>
+                            <plex-label size="xl" titulo="Camas Ocupadas: {{efectorSelected.camasOcupadas}}"
+                                        style="margin-bottom: 20px;"></plex-label>
+                            <plex-label size="xl"
+                                        titulo="Camas Bloqueadas: {{efectorSelected.camasBloqueadas}}"></plex-label>
+                        </div>
+                    </plex-panel>
+                </plex-accordion>
+            </ng-container>
+            <ng-container *ngFor="let unidadOrganizativa of efectorSelected.unidadesOrganizativas">
+                <plex-accordion>
+                    <plex-panel class="lista-panel">
+                        <div plex-accordion-title>
+                            <span class="d-flex justify-content-between align-items-center">
+                                <strong> {{unidadOrganizativa.term}}</strong>
+                            </span>
+                        </div>
+                        <div plex-accordion-content>
+                            <plex-label size="xl" titulo="Total de camas: {{unidadOrganizativa.totalCamas}}"
+                                        style="margin-bottom: 20px;"></plex-label>
+                            <plex-label size="xl" titulo="Camas Disponibles: {{unidadOrganizativa.camasDisponibles}}"
+                                        style="margin-bottom: 20px;"></plex-label>
+                            <plex-label size="xl" titulo="Camas Ocupadas: {{unidadOrganizativa.camasOcupadas}}"
+                                        style="margin-bottom: 20px;"></plex-label>
+                            <plex-label size="xl"
+                                        titulo="Camas Bloqueadas: {{unidadOrganizativa.camasBloqueadas}}"></plex-label>
+                        </div>
+                    </plex-panel>
+                </plex-accordion>
+            </ng-container>
+        </ng-container>
+    </plex-layout-sidebar>
+</plex-layout>
