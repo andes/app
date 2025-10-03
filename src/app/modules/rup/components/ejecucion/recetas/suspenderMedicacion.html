@@ -1,4 +1,4 @@
-<plex-help size="sm" class="ml-2" btnType="danger" icon="stop" tooltip="Suspender" tooltipPosition="left">
+<plex-help size="sm" class="ml-2" btnType="danger" icon="stop" tooltip="Suspender" tooltipPosition="left" *ngIf="seleccionRecetas?.length > 0">
     <plex-title titulo="Suspender Medicamento" size="sm">
         <plex-button type="success" icon="check" size="sm" tooltip="Confirmar" tooltipPosition="left"
                      [disabled]="!formSuspension.valid" (click)="suspenderMedicacion()">
@@ -17,7 +17,7 @@
             <tr *ngFor="let medicamento of groupedMedicamentos">
                 <td>{{ medicamento.term }}</td>
                 <td>{{ medicamento.count }}</td>
-                <td>{{ medicamento?.profesional.nombre }} {{ medicamento?.profesional.apellido }}
+                <td>{{ medicamento?.profesional?.nombre }} {{ medicamento?.profesional?.apellido }}
 
             </tr>
         </tbody>
