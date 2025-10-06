@@ -112,7 +112,7 @@ export class ReglasComponent implements OnInit {
             this.plex.toast('danger', 'No se pudo obtener el ID de la regla.');
             return;
         }
-        this.plex.confirm('¿Está seguro de que desea eliminar esta regla?', 'Confirmar eliminación').then((respuesta) => {
+        this.plex.confirm('¿Está seguro de que desea eliminar esta regla?', 'Atención').then((respuesta) => {
             if (respuesta) {
                 this.servicioReglas.deleteById(id).subscribe({
                     next: (respuestaServidor) => {
@@ -159,7 +159,7 @@ export class ReglasComponent implements OnInit {
         const reglaId = this.regla._id || this.regla.id;
         const prestacionId = prestacion._id;
 
-        this.plex.confirm('¿Está seguro de que desea eliminar esta prestación?', 'Confirmar eliminación')
+        this.plex.confirm('¿Está seguro de que desea eliminar esta prestación?', 'Atención')
             .then((respuesta) => {
                 if (respuesta) {
                     this.servicioReglas.deletePrestacion(reglaId, prestacionId).subscribe({
