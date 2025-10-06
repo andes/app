@@ -66,20 +66,22 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
         this.registro.valor.nombre = nombre;
     }
 
-    onChangeUnicaVez(event) {
-        const frecuencias = this.registro.valor.frecuencias;
-        if (event.value) {
-            this.backUpFrecuencias = frecuencias.slice(0, frecuencias.length);
+    onChangeUnicaVez(event: any) {
+        const value = typeof event === 'object' ? event.value : event;
+        this.registro.valor.unicaVez = value;
+
+        if (value) {
+            this.registro.valor.sos = false;
+            this.backUpFrecuencias = this.registro.valor.frecuencias.slice(0);
             this.registro.valor.frecuencias = [{
-                horario: frecuencias[0].horario,
-                velocidad: frecuencias[0].velocidad
+                horario: this.backUpFrecuencias[0]?.horario || null,
+                velocidad: this.backUpFrecuencias[0]?.velocidad || null
             }];
-        } else {
-            delete this.registro.valor.motivoUnicaVez;
-            if (this.backUpFrecuencias.length) {
-                this.registro.valor.frecuencias = this.backUpFrecuencias;
-            }
+        } else if (this.backUpFrecuencias.length) {
+            this.registro.valor.frecuencias = this.backUpFrecuencias;
         }
+
+        this.emitChange();
     }
 
     @Unsubscribe()
@@ -128,7 +130,24 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
         this.registro.valor.medicamento = medicamento;
         this.emitChange2();
     }
+    onChangeSos(event: any) {
+        const value = typeof event === 'object' ? event.value : event;
+        this.registro.valor.sos = value;
 
+        if (value) {
+            this.registro.valor.unicaVez = false;
+            this.registro.valor.frecuencias = [];
+        } else {
+            if (!this.registro.valor.frecuencias?.length) {
+                this.registro.valor.frecuencias = [{
+                    frecuencia: null,
+                    horario: null,
+                    cantidad: null
+                }];
+            }
+        }
+        this.emitChange();
+    }
     emitChange2() {
         this.emitChange();
         if (this.registro.valor.medicamento?.conceptId) {
