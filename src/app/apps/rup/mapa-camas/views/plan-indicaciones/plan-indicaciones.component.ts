@@ -74,6 +74,8 @@ export class PlanIndicacionesComponent implements OnInit {
     );
     badgeFarmacia: String = 'Esperando control<br>de farmacia';
     eventoSeleccionado: any;
+    indicacionSeleccionada: any = null;
+
 
     get sidebarOpen() {
         return this.indicacionView || this.indicacionEventoSelected || this.nuevaIndicacion || this.suspenderIndicacion || this.showMotivoRechazo;
@@ -313,8 +315,10 @@ export class PlanIndicacionesComponent implements OnInit {
             this.indicacionEventoSelected = null;
             if (!this.indicacionView || this.indicacionView.id !== indicacion.id) {
                 this.indicacionView = indicacion;
+                this.indicacionSeleccionada = indicacion;
             } else {
                 this.indicacionView = null;
+                this.indicacionSeleccionada = null;
             }
         }
     }
