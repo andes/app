@@ -52,13 +52,21 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
                 frecuencias: [{
                     frecuencia: null,
                     horario: null,
-                    cantidad: null
+                    cantidad: null,
+                    velocidadValor: null,
+                    velocidadUnidad: null,
+                    velocidadOtra: null
                 }]
             };
         }
     }
 
-
+    unidadesVelocidad = [
+        { id: 'ml/h', nombre: 'ml/h' },
+        { id: 'gotas/min', nombre: 'gotas/min' },
+        { id: 'microgota/min', nombre: 'microgota/min' },
+        { id: 'otro', nombre: 'Otro' }
+    ];
     valuesChange() {
         const nombre = this.registro.valor.sustancias.map(item => {
             return `${item.ingrediente?.term || ''}`;
@@ -66,6 +74,12 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
         this.registro.valor.nombre = nombre;
     }
 
+    onChangeUnidad(frecuencia) {
+        if (frecuencia.velocidadUnidad?.id !== 'otro') {
+            frecuencia.velocidadOtra = null;
+        }
+        this.emitChange();
+    }
     onChangeUnicaVez(event: any) {
         const value = typeof event === 'object' ? event.value : event;
         this.registro.valor.unicaVez = value;
@@ -119,6 +133,19 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
             search: input,
             semanticTag: 'fármaco de uso clínico',
         });
+    }
+
+    updateVelocidadFinal(frecuencia: any) {
+        const valor = frecuencia.velocidadValor;
+        const unidad = frecuencia.velocidadUnidad?.nombre || frecuencia.velocidadUnidad?.id || '';
+
+        if (valor && unidad) {
+            frecuencia.velocidadFinal = `${valor} ${unidad}`;
+        } else if (valor) {
+            frecuencia.velocidadFinal = `${valor}`;
+        } else {
+            frecuencia.velocidadFinal = '';
+        }
     }
 
     isEmpty() {

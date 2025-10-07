@@ -38,23 +38,23 @@
 
     <div *ngIf="!registro.valor.sos">
         <plex-wrapper *ngFor="let frecuencia of registro.valor.frecuencias; let i = index">
+            <plex-select [(ngModel)]="frecuencia.frecuencia" name="frecuencia{{i}}" [data]="frecuencias$ | async"
+                         label="Frecuencia" [preload]="true" [required]="!registro.valor.unicaVez"
+                         [disabled]="registro.valor.unicaVez" span="1">
+            </plex-select>
             <plex-grid cols="2">
-                <plex-select [(ngModel)]="frecuencia.frecuencia" name="frecuencia" [data]="frecuencias$ | async"
-                             label="Frecuencia" [preload]="true" [required]="!registro.valor.unicaVez"
-                             [disabled]="registro.valor.unicaVez" span="1">
+                <plex-select label="Velocidad de Infusión:  Unidad" [(ngModel)]="frecuencia.velocidadUnidad"
+                             name="velocidadUnidad{{i}}" [data]="unidadesVelocidad" idField="id" labelField="nombre"
+                             (change)="updateVelocidadFinal(frecuencia)" span="1">
                 </plex-select>
+                <plex-int label="Velocidad de Infusión:  Valor" [(ngModel)]="frecuencia.velocidadValor"
+                          name="velocidadValor{{i}}" span="1" min="0"
+                          (ngModelChange)="updateVelocidadFinal(frecuencia)">
+                </plex-int>
 
-                <plex-text label="Velocidad Infusión" [(ngModel)]="frecuencia.velocidad" name="velocidad" span="1">
+                <plex-text *ngIf="frecuencia.velocidadUnidad?.id === 'otro'" label="Especificar unidad"
+                           [(ngModel)]="frecuencia.velocidadOtra" name="velocidadOtra{{i}}" span="2">
                 </plex-text>
-            </plex-grid>
-
-            <plex-grid *ngIf="i === 0" cols="2">
-                <plex-datetime type="time" name="hora" label="Horario de inicio" [(ngModel)]="frecuencia.horario"
-                               [min]="fechaMin" [max]="fechaMax"
-                               [disabled]="frecuencia.frecuencia && frecuencia.frecuencia.type !== 'number'" span="1">
-                </plex-datetime>
-
-
             </plex-grid>
         </plex-wrapper>
     </div>
