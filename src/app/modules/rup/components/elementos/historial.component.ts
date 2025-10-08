@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Component, OnInit, Input } from '@angular/core';
 import { map, switchMap } from 'rxjs/operators';
 import { RUPComponent } from '../core/rup.component';
@@ -9,6 +8,7 @@ import { PlexTextToolBar } from '@andes/plex';
 
 @Component({
     selector: 'rup-historial',
+    styleUrls: ['./historial.scss'],
     templateUrl: './historial.html'
 })
 @RupElement('HistorialComponent')
@@ -30,6 +30,11 @@ export class HistorialComponent extends RUPComponent implements OnInit {
     public verHistorial = false;
     public fechaDesde = null;
 
+    decodeHtml(html: string) {
+        const txt = document.createElement('textarea');
+        txt.innerHTML = html;
+        return txt.value;
+    }
     ngOnInit() {
 
         const conceptId = this.registro?.concepto?.conceptId;
