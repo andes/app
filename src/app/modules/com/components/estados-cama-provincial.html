@@ -20,10 +20,10 @@
             </plex-datetime>
         </plex-wrapper>
 
-        <ng-container *ngIf="(camasEstados$ | async)?.length">
+        <ng-container *ngIf="camasEstados$ | async as camasEstados">
             <plex-grid size="md" [cols]="3">
-                <plex-card *ngFor="let efector of (camasEstados$ | async)" [selectable]="true"
-                           (click)="verDetalle(efector)" [selected]="efector._id === efectorSelected?._id">
+                <plex-card *ngFor="let efector of camasEstados" [selectable]="true" (click)="verDetalle(efector)"
+                           [selected]="efector._id === efectorSelected?._id">
                     <div style="display: flex; flex-direction: column;">
                         <plex-label titulo="{{efector.organizacion.nombre}}" size="xl" type="info"></plex-label>
                         <plex-label titulo="Total de camas: {{efector.totalCamas}}"></plex-label>
@@ -33,12 +33,13 @@
                     </div>
                 </plex-card>
             </plex-grid>
+            <div *ngIf="!camasEstados?.length" justify="center" class="mt-5">
+                <plex-label class="flex-column" icon="informacion" size="xl" direction="column" type="info"
+                            titulo="No se encontraron camas disponibles">
+                </plex-label>
+            </div>
         </ng-container>
-        <div *ngIf="!(camasEstados$ | async)?.length" justify="center" class="mt-5">
-            <plex-label class="flex-column" icon="informacion" size="xl" direction="column" type="info"
-                        titulo="No se encontraron camas disponibles">
-            </plex-label>
-        </div>
+
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
         <plex-title titulo="DETALLE EFECTOR">

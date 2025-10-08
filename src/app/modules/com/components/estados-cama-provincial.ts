@@ -33,13 +33,7 @@ export class EstadosCamaProvincialComponent implements OnInit {
     public listadoActual: any[] = [];
 
     ngOnInit() {
-        this.unidadesOrganizativas$ = this.organizacionService.unidadesOrganizativas(this.auth.organizacion.id);
-        this.camasEstados$ = this.estadosCamaProvincialService.camasEstados$.pipe(
-            map(resp => {
-                this.listadoActual = resp; // futuro scroll infinito.
-                return resp;
-            })
-        );
+        this.camasEstados$ = this.estadosCamaProvincialService.camasEstados$;
     }
 
     closeSidebar() {
