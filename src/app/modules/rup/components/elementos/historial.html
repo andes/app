@@ -12,26 +12,22 @@
     </div>
   </div>
 </form>
-
-<plex-button (click)="verHistorial = !verHistorial"
- style="text-align:center;margin-bottom:15px;margin-top:20px;"
-             size="sm" type="primary" class="collapse-card"
-             label="{{ !verHistorial ? 'Ver historial' : 'Ocultar historial' }}">
-</plex-button>
-
+<div *ngIf="!soloValores" class="boton-historial">
+  <plex-button (click)="verHistorial = !verHistorial"
+               size="sm" type="primary" class="collapse-card"
+               label="{{ !verHistorial ? 'Ver historial' : 'Ocultar historial' }}">
+  </plex-button>
+</div>
 <section *ngIf="!isLoading && verHistorial && historial.length > 0"
          class="mx-4 d-flex flex-column justify-content-between h-100">
+  <div *ngFor="let item of historial" class="historial-item">
+    <div class="historial-fecha">
+      {{ item.fecha | date:'dd/MM/yyyy hh:mm a' }}
+    </div>
 
-  <plex-label *ngFor="let item of historial" type="info" size="md" direction="row">
-    <ng-container titulo>
-      <span style="font-family: Arial, sans-serif; font-weight: normal; color: #444444;"
-            [innerHTML]="item.registro.valor"></span>
-    </ng-container>
-
-    <p dato style="font-weight: bold; width: 100px; text-align: center;">{{ item.fecha | date:'dd/MM/yyyy hh:mm a' }}
-    </p>
-
-  </plex-label>
+    <div class="historial-texto" [innerHTML]="decodeHtml(item.registro.valor)">
+    </div>
+  </div>
 
 
 </section>
