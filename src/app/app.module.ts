@@ -226,6 +226,10 @@ import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
 import { ObraSocialComponent } from './core/mpi/components/obra-social.component';
 
+// COM
+import { EstadosCamaProvincialComponent } from './modules/com/components/estados-cama-provincial';
+import { EstadosCamaProvincialService } from './modules/com/services/estados-cama-provincial.service';
+
 
 registerLocaleData(localeEs, 'es');
 
@@ -296,6 +300,7 @@ registerLocaleData(localeEs, 'es');
         demandaInsatisfechaComponent,
         FarmaciaComponent,
         FarmaciaCreateUpdateComponent,
+        EstadosCamaProvincialComponent,
 
         // Solicitudes
         PrestamosHcComponent,
@@ -442,6 +447,7 @@ registerLocaleData(localeEs, 'es');
         NgxImageCompressService,
         FarmaciaService,
         HistorialTurnosService,
+        EstadosCamaProvincialService
     ]
 })
 
