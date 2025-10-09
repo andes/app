@@ -801,7 +801,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
                 if (vigenteRecetas.length > 0) {
                     acc.push({
                         conceptId: receta.conceptId,
-                        recetas: vigenteRecetas
+                        recetas: vigenteRecetas,
+                        recetaVisible: this.recetaVisible(vigenteRecetas)
                     });
                 }
                 return acc;
@@ -836,7 +837,9 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
             this.busquedaRecetas = this.sortRecetas(
                 Object.keys(grupoRecetas).map(key => ({
                     conceptId: key,
-                    recetas: grupoRecetas[key]
+                    recetas: grupoRecetas[key],
+                    recetaVisible: this.recetaVisible(grupoRecetas[key])
+
                 }))
             );
         });
@@ -861,32 +864,19 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     }
 
     esRecetaSeleccionable(receta) {
-        const estadosPermitidos = ['vigente'];
+        const estadosPermitidos = ['vigente', 'pendiente'];
         const dispensasPermitidas = ['sin-dispensa', 'dispensa-parcial'];
-
-        const estadoValido = estadosPermitidos.includes(receta.estadoActual?.tipo);
-        const dispensaValida = dispensasPermitidas.includes(receta.estadoDispensaActual?.tipo);
-        if (receta.estadoActual?.tipo === 'suspendida') {
-            return false;
-        }
-        if (receta.medicamento.tratamientoProlongado) {
+        if (!receta.medicamento.tratamientoProlongado) {
+            return (estadosPermitidos.includes(receta.estadoActual?.tipo)
+            && dispensasPermitidas.includes(receta.estadoDispensaActual?.tipo)) && this.profesionalValido;
+        } else {
             const recetasMismoRegistro = this.busquedaRecetas?.flatMap(grupo =>
                 grupo.recetas.filter(r => r.idRegistro === receta.idRegistro && r.medicamento.concepto.conceptId === receta.medicamento.concepto.conceptId)
             ) || [];
-            if (recetasMismoRegistro.some(r => r.estadoActual?.tipo === 'suspendida')) {
-                return false;
-            }
-            if (recetasMismoRegistro.length > 0 &&
-                recetasMismoRegistro.every(r => r.estadoDispensaActual?.tipo === 'dispensada')) {
-                return false;
-            }
-            const esSeleccionableTP = recetasMismoRegistro.some(r =>
-                (r.estadoDispensaActual?.tipo === 'dispensa-parcial' || r.estadoDispensaActual?.tipo === 'sin-dispensa')
-            ) && this.profesionalValido;
-            return esSeleccionableTP;
+            return recetasMismoRegistro.some(rec =>
+                (estadosPermitidos.includes(rec.estadoActual?.tipo)
+            && dispensasPermitidas.includes(rec.estadoDispensaActual?.tipo)) && this.profesionalValido);
         }
-
-        return estadoValido && dispensaValida && this.profesionalValido;
     }
 
     getProfesional() {
@@ -908,47 +898,36 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     seleccionarReceta(event, recetas, index) {
         const isSelected = event.value;
         let recetaSeleccionada = <any>[];
-        if (!recetas[0].medicamento.tratamientoProlongado) {
-            recetaSeleccionada = recetas
-                .filter(receta => receta.estadoActual.tipo === 'vigente')
-                .sort((a, b) => moment(b.fechaRegistro).diff(moment(a.fechaRegistro)))[0];
+        const estadosNoSeleccionables = ['suspendida', 'vencida', 'dispensada'];
+        setTimeout(() => {
+            if (!this.recetaVisible(recetas).medicamento.tratamientoProlongado) {
+                recetaSeleccionada = recetas
+                    .filter(receta => receta.estadoActual.tipo === 'vigente')
+                    .sort((a, b) => moment(b.fechaRegistro).diff(moment(a.fechaRegistro)))[0];
 
-            if (isSelected) {
-                this.seleccionRecetas[index] = true;
-                this.seleccionSuspender.push(recetaSeleccionada);
+                if (isSelected) {
+                    this.seleccionRecetas[index] = true;
+                    this.seleccionSuspender.push(recetaSeleccionada);
+                } else {
+                    this.seleccionRecetas[index] = null;
+                    this.seleccionSuspender = this.seleccionSuspender.filter(r => r.id !== recetaSeleccionada.id);
+                }
             } else {
-                this.seleccionRecetas[index] = null;
-                this.seleccionSuspender = this.seleccionSuspender.filter(r => r.id !== recetaSeleccionada.id);
+                if (isSelected) {
+                    this.seleccionRecetas[index] = true;
+                    this.seleccionSuspender.push(...recetas.filter(receta => !estadosNoSeleccionables.includes(receta.estadoDispensaActual.tipo) && !estadosNoSeleccionables.includes(receta.estadoActual.tipo)));
+                } else {
+                    this.seleccionRecetas[index] = null;
+                    this.seleccionSuspender = this.seleccionSuspender.filter(
+                        r => !recetas.some(receta => receta.id === r.id)
+                    );
+                }
             }
-        } else {
-            if (isSelected) {
-                this.seleccionRecetas[index] = true;
-                this.seleccionSuspender.push(...recetas.filter(receta => receta.estadoDispensaActual.tipo !== 'dispensada'));
-
-            } else {
-                this.seleccionRecetas[index] = null;
-                this.seleccionSuspender = this.seleccionSuspender.filter(
-                    r => !recetas.some(receta => receta.id === r.id)
-                );
-            }
-        }
-
+        }, 0);
     }
 
     recetaVisible(recetas) {
-        const recetasVisibles = recetas.filter(receta =>
-            receta.estadoActual.tipo !== 'pendiente' ||
-            receta.estadoDispensaActual?.tipo !== 'sin-dispensa'
-        );
+        return this.recetasService.getRecetaPrincipal(recetas);
 
-        if (recetasVisibles.length === 0) {
-            return null;
-        }
-
-        this.recetaVisibleSidebar = recetasVisibles.reduce((max, receta) =>
-            receta.medicamento.ordenTratamiento > max.medicamento.ordenTratamiento ? receta : max
-        );
-
-        return this.recetaVisibleSidebar;
     }
 }

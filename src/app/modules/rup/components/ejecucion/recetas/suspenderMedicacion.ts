@@ -1,5 +1,5 @@
 import { Plex } from '@andes/plex';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { RecetaService } from 'projects/portal/src/app/services/receta.service';
 
 @Component({
@@ -8,10 +8,11 @@ import { RecetaService } from 'projects/portal/src/app/services/receta.service';
     styleUrls: ['suspenderMedicacion.scss']
 })
 
-export class SuspenderMedicacionComponent {
+export class SuspenderMedicacionComponent implements AfterViewChecked {
     constructor(
         public plex: Plex,
         private recetasService: RecetaService,
+        private cdr: ChangeDetectorRef
     ) { }
 
     @Input() seleccionRecetas: any[];
@@ -24,7 +25,7 @@ export class SuspenderMedicacionComponent {
     public observacion: string;
 
     get groupedMedicamentos() {
-        if (!this.seleccionRecetas) {
+        if (!this.seleccionRecetas || !Array.isArray(this.seleccionRecetas)) {
             return [];
         }
         const validRecetas = this.seleccionRecetas.filter(receta => receta && receta.medicamento && receta.medicamento.concepto);
@@ -44,11 +45,16 @@ export class SuspenderMedicacionComponent {
     }
 
     public suspenderMedicacion() {
-        const medicamento = this.seleccionRecetas[0]?.medicamento.concepto.term;
+        if (!this.seleccionRecetas || !Array.isArray(this.seleccionRecetas) || this.seleccionRecetas.length === 0) {
+            this.plex.toast('warning', 'No hay recetas seleccionadas para suspender');
+            return;
+        }
+
+        const medicamento = this.seleccionRecetas[0]?.medicamento?.concepto?.term || 'medicamento';
         this.plex.confirm(`¿Está seguro que desea suspender ${this.seleccionRecetas.length > 1 ? `las (${this.seleccionRecetas.length}) medicaciones seleccionadas` : `<br><b>"${medicamento}"</b>`}?`, 'Atención').then(confirmacion => {
             if (confirmacion) {
-                const recetaIds = this.seleccionRecetas.map(receta => receta.id);
-                this.recetasService.suspender(recetaIds, this.profesional, this.motivoSelector.nombre, this.observacion).subscribe({
+                const recetaIds = this.seleccionRecetas.map(receta => receta.id).filter(id => id != null);
+                this.recetasService.suspender(recetaIds, this.profesional, this.motivoSelector?.nombre || 'Sin motivo', this.observacion).subscribe({
                     next: () => {
                         this.reset.emit();
                         this.plex.toast('success', 'Medicaciones suspendidas correctamente');
@@ -59,5 +65,11 @@ export class SuspenderMedicacionComponent {
                 });
             }
         });
+    }
+
+    ngAfterViewChecked() {
+        if (this.cdr) {
+            this.cdr.detectChanges();
+        }
     }
 }

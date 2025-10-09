@@ -29,20 +29,33 @@ export class RecetaService {
         return this.server.patch(`${this.url}`, { op: 'suspender', recetas, motivo, observacion, profesional });
     }
 
-    getRecetaTP(recetas) {
-        const recetasConDispensa = recetas
-            .filter(receta => receta.estadoDispensaActual?.tipo !== 'sin-dispensa');
-        const suspendida= recetas.find(r => r.estadoActual?.tipo === 'suspendida');
-        if (suspendida) {
-            return suspendida;
+    getRecetaPrincipal(recetas) {
+        if (recetas.length === 1) {
+            return recetas[0];
         }
-        if (recetasConDispensa.length > 0) {
-            return recetasConDispensa.reduce((max, receta) =>
-                (!max || receta.medicamento.ordenTratamiento > max.medicamento.ordenTratamiento) ? receta : max
-            , recetasConDispensa[0]);
-        } else {
-            return recetas.find(receta => receta.estadoActual?.tipo === 'vigente');
+        const recetaVigente = recetas.find(receta =>
+            receta.estadoActual.tipo === 'vigente'
+        );
+        const recetasDispensadaYPendiente = recetas.filter(receta =>
+            receta.estadoDispensaActual?.tipo !== 'sin-dispensa' &&
+        receta.estadoActual.tipo === 'pendiente'
+        );
+        if (recetasDispensadaYPendiente.length>0) {
+            return recetasDispensadaYPendiente.reduce((max, receta) =>
+                receta.medicamento.ordenTratamiento > max.medicamento.ordenTratamiento ? receta : max, recetasDispensadaYPendiente[0]
+            );
         }
+
+        if (!recetaVigente) {
+            const recetasCandidatas = recetas.filter(receta =>
+                receta.estadoDispensaActual?.tipo !== 'sin-dispensa' ||
+        receta.estadoActual.tipo !== 'pendiente'
+            );
+            return recetasCandidatas.reduce((max, receta) =>
+                receta.fechaRegistro > max.fechaRegistro ? receta : max, recetasCandidatas[0]
+            );
+        }
+        return recetaVigente;
     };
     getUltimaReceta(recetas) {
         return recetas?.reduce((mostRecent, receta) => {
