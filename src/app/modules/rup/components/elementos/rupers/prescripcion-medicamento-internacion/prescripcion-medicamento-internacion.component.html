@@ -38,16 +38,28 @@
 
     <div *ngIf="!registro.valor.sos">
         <plex-wrapper *ngFor="let frecuencia of registro.valor.frecuencias; let i = index">
-            <plex-select [(ngModel)]="frecuencia.frecuencia" name="frecuencia{{i}}" [data]="frecuencias$ | async"
-                         label="Frecuencia" [preload]="true" [required]="!registro.valor.unicaVez"
-                         [disabled]="registro.valor.unicaVez" span="1">
+            <plex-int label="Frecuencia" [(ngModel)]="frecuencia.frecuenciaValor" name="frecuenciaValor{{i}}"
+                      [required]="!registro.valor.unicaVez" [disabled]="registro.valor.unicaVez" [min]="frecuencia.min"
+                      [max]="frecuencia.max" span="1">
+            </plex-int>
+
+            <plex-select label="Unidad de tiempo" [(ngModel)]="frecuencia.frecuenciaUnidad" name="frecuenciaUnidad{{i}}"
+                         [data]="unidadesFrecuencia" idField="id" labelField="nombre"
+                         [required]="!registro.valor.unicaVez" [disabled]="registro.valor.unicaVez" span="1"
+                         (change)="onUnidadChange(frecuencia)">
+            </plex-select>
+
+            <plex-select *ngIf="frecuencia.frecuenciaUnidad?.id === 'otros'" label="Frecuencia especial"
+                         [(ngModel)]="frecuencia.frecuenciaEspecial" name="frecuenciaEspecial{{i}}"
+                         [data]="frecuenciasEspeciales" idField="id" labelField="nombre" span="2">
             </plex-select>
             <plex-grid cols="2">
-                <plex-select label="Velocidad de Infusión:  Unidad" [(ngModel)]="frecuencia.velocidadUnidad"
+                <plex-select label="Velocidad de Infusión: Unidad" [(ngModel)]="frecuencia.velocidadUnidad"
                              name="velocidadUnidad{{i}}" [data]="unidadesVelocidad" idField="id" labelField="nombre"
                              (change)="updateVelocidadFinal(frecuencia)" span="1">
                 </plex-select>
-                <plex-int label="Velocidad de Infusión:  Valor" [(ngModel)]="frecuencia.velocidadValor"
+
+                <plex-int label="Velocidad de Infusión: Valor" [(ngModel)]="frecuencia.velocidadValor"
                           name="velocidadValor{{i}}" span="1" min="0"
                           (ngModelChange)="updateVelocidadFinal(frecuencia)">
                 </plex-int>
@@ -56,6 +68,7 @@
                            [(ngModel)]="frecuencia.velocidadOtra" name="velocidadOtra{{i}}" span="2">
                 </plex-text>
             </plex-grid>
+
         </plex-wrapper>
     </div>
     <plex-title size="sm" titulo="Aclaraciones y/o Comentarios"></plex-title>

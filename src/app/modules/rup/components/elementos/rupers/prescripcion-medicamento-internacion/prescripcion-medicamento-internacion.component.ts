@@ -67,6 +67,20 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
         { id: 'microgota/min', nombre: 'microgota/min' },
         { id: 'otro', nombre: 'Otro' }
     ];
+
+    unidadesFrecuencia = [
+        { id: 'minutos', nombre: 'Minutos' },
+        { id: 'horas', nombre: 'Horas' },
+        { id: 'dias', nombre: 'Días' },
+        { id: 'otros', nombre: 'Otros' }
+    ];
+
+    frecuenciasEspeciales = [
+        { id: 'mañana', nombre: 'Mañana' },
+        { id: 'mediodia', nombre: 'Mediodía' },
+        { id: 'tarde', nombre: 'Tarde' },
+        { id: 'noche', nombre: 'Noche' }
+    ];
     valuesChange() {
         const nombre = this.registro.valor.sustancias.map(item => {
             return `${item.ingrediente?.term || ''}`;
@@ -151,6 +165,31 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
     isEmpty() {
         const value = this.registro.valor;
         return !value.indicaciones;
+    }
+
+    onUnidadChange(frecuencia) {
+        if (frecuencia.frecuenciaUnidad?.id !== 'otros') {
+            frecuencia.frecuenciaEspecial = null;
+        }
+        switch (frecuencia.frecuenciaUnidad?.id) {
+            case 'minutos':
+                frecuencia.min = 1;
+                frecuencia.max = 60;
+                break;
+            case 'horas':
+                frecuencia.min = 1;
+                frecuencia.max = 24;
+                break;
+            case 'dias':
+                frecuencia.min = 1;
+                frecuencia.max = 7;
+                break;
+            default:
+                frecuencia.min = null;
+                frecuencia.max = null;
+        }
+
+        this.emitChange();
     }
 
     onSelectMedicamentos(medicamento) {
