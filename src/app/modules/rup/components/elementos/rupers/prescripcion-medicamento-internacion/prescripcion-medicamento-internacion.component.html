@@ -68,7 +68,10 @@
                            [(ngModel)]="frecuencia.velocidadOtra" name="velocidadOtra{{i}}" span="2">
                 </plex-text>
             </plex-grid>
-
+            <plex-datetime type="time" name="hora" label="Horario de inicio" [(ngModel)]="frecuencia.horario"
+                           [min]="fechaMin" [max]="fechaMax"
+                           [disabled]="frecuencia.frecuencia && frecuencia.frecuencia.type !== 'number'" span="1">
+            </plex-datetime>
         </plex-wrapper>
     </div>
     <plex-title size="sm" titulo="Aclaraciones y/o Comentarios"></plex-title>
