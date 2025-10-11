@@ -99,41 +99,51 @@ export class PlanIndicacionEventoComponent implements OnChanges {
         (value.value?.id === 'realizado') ? this.labelEstado = 'Observaciones' : this.labelEstado = 'Motivo';
     }
     onGuardar() {
-        const evento = {
-            _id: this.evento?._id,
-            idInternacion: this.indicacion.idInternacion,
-            idIndicacion: this.indicacion.id,
-            fecha: this.fechaHora,
-            estado: this.estado.id,
-            observaciones: this.observaciones
-        };
-        this.indicacionEventosService.search({
-            idInternacion: this.indicacion.idInternacion,
-            idIndicacion: this.indicacion.id,
-            fecha: this.fechaHora
-        }).subscribe(eventos => {
-            if (eventos?.length > 0) {
-                const eventoExistente = eventos[0];
-                this.indicacionEventosService.update(eventoExistente._id, evento).subscribe(() => {
-                    this.finalizarEvento(true);
-                }, () => this.plex.toast('danger', 'Error al actualizar evento'));
+        if (this.evento) {
+            this.indicacionEventosService.update(
+                this.evento.id,
+                {
+                    estado: this.estado.id,
+                    observaciones: this.observaciones
+                }
+            ).subscribe(() => {
+                this.events.emit(true);
+                this.editando = false;
+            });
+        } else {
+            const evento = {
+                idInternacion: this.indicacion.idInternacion,
+                idIndicacion: this.indicacion.id,
+                fecha: this.fechaHora,
+                estado: this.estado.id,
+                observaciones: this.observaciones
+            };
+
+            if (this.estado.id === 'realizado') {
+                this.plex.confirm(
+                    'El horario seleccionado no coincide con la planificación. Si continúa, los próximos eventos se modificarán. ¿Desea registrarlo de todas formas?',
+                    'Atención', 'Sí', 'No'
+                ).then(response => {
+                    if (response) {
+                        this.indicacionEventosService.create(evento).subscribe(() => {
+                            this.plex.toast('success', 'Evento registrado y planificación actualizada.');
+                            this.events.emit(true);
+                            this.editando = false;
+                        }, (error) => {
+                            this.plex.toast('danger', 'Error al registrar el evento.');
+                        });
+                    }
+                });
             } else {
                 this.indicacionEventosService.create(evento).subscribe(() => {
-                    this.finalizarEvento(false);
-                }, () => this.plex.toast('danger', 'Error al crear evento'));
+                    this.plex.toast('success', 'Evento registrado.');
+                    this.events.emit(true);
+                    this.editando = false;
+                }, (error) => {
+                    this.plex.toast('danger', 'Error al registrar el evento.');
+                });
             }
-        });
+        }
     }
 
-    private finalizarEvento(editado: boolean) {
-        if (this.estado.id === 'realizado') {
-            if (this.indicacion.valor?.frecuencias?.length > 0) {
-                this.indicacion.valor.frecuencias[0].horario = this.fechaHora;
-            }
-            this.edit.emit(this.indicacion);
-        }
-        this.events.emit(true);
-        this.editando = false;
-        this.plex.toast('success', editado ? 'Evento actualizado con éxito' : 'Evento creado con éxito');
-    }
 }
