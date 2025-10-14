@@ -34,6 +34,7 @@ export class EstadosCamaProvincialComponent implements OnInit {
 
     ngOnInit() {
         this.camasEstados$ = this.estadosCamaProvincialService.camasEstados$;
+        this.unidadesOrganizativas$ = this.organizacionService.unidadesOrganizativas(this.auth.organizacion.id);
     }
 
     closeSidebar() {
