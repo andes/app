@@ -71,6 +71,9 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
 
     seleccionarAgenda(index) {
         this.agendaSeleccionada = this.agendasAutocitar[index];
+        this.agendaSeleccionada.bloques = this.agendaSeleccionada.bloques.filter(b => {
+            return b.restantesProfesional !== 0;
+        });
         this.agendasExpandidas[index] = !this.agendasExpandidas[index];
         this.turnoSeleccionado = null;
     }
