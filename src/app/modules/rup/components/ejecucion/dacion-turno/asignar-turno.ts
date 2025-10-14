@@ -16,6 +16,7 @@ import { AgendaService } from 'src/app/services/turnos/agenda.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
+import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
 
 @Component({
     selector: 'rup-asignar-turno',
@@ -24,7 +25,6 @@ import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe'
 export class RupAsignarTurnoComponent implements OnInit {
     public pacientes: IPacienteMatch[] | IPaciente[];
     public pacienteActivo: IPaciente;
-    public turnoTipoPrestacion: any;
     public datosTurno: any = {};
     public prestaciones = [];
     public obraSocialPaciente: IObraSocial;
@@ -35,6 +35,7 @@ export class RupAsignarTurnoComponent implements OnInit {
     public guardado = false;
     private prestacionesProfesional;
     public isButtonDisabled = false;
+    public tipoPrestacion: ITipoPrestacion;
 
     // Eventos
     @Input() agenda: IAgenda;
@@ -59,7 +60,6 @@ export class RupAsignarTurnoComponent implements OnInit {
         this.fin = this.agenda.horaFin;
         this.conceptosTurneablesService.getByPermisos('rup:tipoPrestacion:?').subscribe(data => {
             this.prestacionesProfesional = data.map(concept => concept.id);
-            this.getPrestacionesAgendaDinamicas();
         });
     }
 
@@ -136,27 +136,6 @@ export class RupAsignarTurnoComponent implements OnInit {
         this.cancel.emit();
     }
 
-
-    /**
-     * Guarda los datos del formulario y emite el dato guardado
-     *
-     * @param {any} $event formulario a validar
-     */
-    getPrestacionesAgendaDinamicas() {
-        let listaPrestaciones = [];
-
-        this.agenda.bloques.forEach(unBloque => {
-            listaPrestaciones = unBloque.tipoPrestaciones.filter((prestacion: any) => this.prestacionesProfesional.includes(prestacion.id));
-        });
-
-        this.prestaciones = listaPrestaciones.filter((elem, pos, arr) => {
-            return arr.indexOf(elem) === pos;
-        });
-        if (this.prestaciones.length === 1) {
-            this.turnoTipoPrestacion = this.prestaciones[0];
-        }
-    }
-
     /**
      * Obtiene los datos del formulario y llama a guardar el turno
      *
@@ -165,7 +144,7 @@ export class RupAsignarTurnoComponent implements OnInit {
     guardar($event: any) {
         if ($event.formValid) {
             if (this.datosTurno.paciente) {
-                this.datosTurno.tipoPrestacion = this.turnoTipoPrestacion;
+                this.datosTurno.tipoPrestacion = this.tipoPrestacion;
                 this.guardarDatosTurno();
             } else {
                 this.plex.info('warning', 'Debe seleccionar un paciente');
@@ -237,7 +216,7 @@ export class RupAsignarTurnoComponent implements OnInit {
                 'sobreturno': {
                     horaInicio: this.combinarFechas(this.agenda.horaInicio, this.horaTurno),
                     estado: 'asignado',
-                    tipoPrestacion: this.turnoTipoPrestacion,
+                    tipoPrestacion: this.tipoPrestacion,
                     paciente: this.pacienteActivo,
                 }
             };
