@@ -1,3 +1,10 @@
+## [5.168.4](https://github.com/andes/app/compare/v5.168.3...v5.168.4) (2025-10-15)
+
+
+### Bug Fixes
+
+* **REC-144:** Historial de recetas: No se visualizan recetas anteriores ([#3234](https://github.com/andes/app/issues/3234)) ([f66bde9](https://github.com/andes/app/commit/f66bde9dd83f6e37d1627e0ee9e40433ad4c359a))
+
 ## [5.168.3](https://github.com/andes/app/compare/v5.168.2...v5.168.3) (2025-09-24)
 
 
