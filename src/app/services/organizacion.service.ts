@@ -128,6 +128,10 @@ export class OrganizacionService {
         return this.server.get(`${this.organizacionUrl}/${id}/unidadesOrganizativas`);
     }
 
+    unidadesOrganizativasTotales() {
+        return this.server.get(`${this.organizacionUrl}/unidadesOrganizativasTotales`);
+    }
+
     /**
      * Funciones sobre sectores y unidades organizativas de la orgazacion
      */
