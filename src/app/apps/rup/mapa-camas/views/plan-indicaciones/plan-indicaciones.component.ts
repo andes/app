@@ -426,36 +426,16 @@ export class PlanIndicacionesComponent implements OnInit {
 
     onValidar(seleccionadas: boolean) {
         const indicaciones = seleccionadas ? Object.keys(this.selectedIndicacion).filter(k => this.selectedIndicacion[k]).map(k => this.indicaciones.find(i => i.id === k)) : this.indicaciones;
-        const registros = indicaciones.filter(indicacion => indicacion.estado?.tipo === 'draft').map((indicacion) => {
-            return {
-                _id: indicacion.idRegistro,
-                id: indicacion.idRegistro,
-                nombre: indicacion.nombre,
-                concepto: indicacion.concepto,
-                elementoRUP: indicacion.elementoRUP,
-                esSolicitud: true,
-                valor: indicacion.valor
-            };
-        });
-
-        const prestacion = this.prestacionService.inicializarPrestacion(
-            this.paciente,
-            this.tipoPrestacion,
-            'ejecucion',
-            this.ambito,
-            new Date(),
-            null,
-            null,
-            registros
-        );
-        prestacion.trackId = this.idInternacion;
-        prestacion.inicio = 'plan-indicaciones';
-        this.prestacionService.post(prestacion).pipe(
-            switchMap(prestacion => this.prestacionService.validarPrestacion(prestacion))
-        ).subscribe(() => {
-            this.actualizar();
-            setTimeout(() => { this.onDateChange({ value: this.fecha }); }, 500); // hackcito para actualizar la grilla
-            this.plex.toast('success', 'Indicaciones validadas correctamente.');
+        const estadoParams: any = {
+            tipo: 'active',
+            fecha: new Date()
+        };
+        indicaciones.forEach(indicacion => {
+            this.planIndicacionesServices.updateEstado(indicacion.id, estadoParams).subscribe(() => {
+                this.actualizar();
+                setTimeout(() => { this.onDateChange({ value: this.fecha }); }, 500); // hackcito para actualizar la grilla
+                this.plex.toast('success', 'Indicaciones validadas correctamente.');
+            });
         });
     }
 
