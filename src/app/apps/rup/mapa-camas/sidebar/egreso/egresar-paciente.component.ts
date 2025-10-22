@@ -177,16 +177,22 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
                     // Combinar el historial de cama con la búsqueda del resumen
                     return combineLatest([
-                        this.mapaCamasService.historial('cama', this.cama.fecha, moment().toDate(), this.cama),
+                        this.camasHTTP.historialInternacion(
+                            'internacion',
+                            capa,
+                            this.informeIngreso.fechaIngreso,
+                            moment().toDate(),
+                            prestacion.id
+                        ),
                         this.internacionResumenService.search({
                             organizacion: this.auth.organizacion.id,
                             paciente: paciente,
                             ingreso: this.internacionResumenService.queryDateParams(desde, hasta)
                         })
                     ]).pipe(
-                        map(([historialCama, resumenArray]) => {
-                            const fechaUltimoMovimiento = moment(historialCama[0].fecha);
-                            this.fechaMin = moment(fechaUltimoMovimiento, 'DD-MM-YYYY HH:mm').toDate();
+                        map(([historialInternacion, resumenArray]) => {
+                            const fechaUltimoMovimiento = moment(historialInternacion[historialInternacion.length - 1].fecha);
+                            this.fechaMin = moment(fechaUltimoMovimiento.add(1, 'm'), 'DD-MM-YYYY HH:mm').toDate();
                             return resumenArray[0];
                         })
                     );
@@ -254,7 +260,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                             if (this.cama) {
                                 this.cama.id = this.cama.idCama;
                                 this.refreshSaveButton.next({});
-                                this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').toDate();
+                                this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').add(1, 'minute').toDate();
                                 this.checkHistorial(fecha);
                                 if (this.subscription3) {
                                     this.subscription3.unsubscribe();
@@ -337,7 +343,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     if (result) {
                         this.plex.info('success', 'Los datos se actualizaron correctamente');
                         if (this.view === 'listado-internacion') {
-                            const fechaHasta = moment(this.registro.valor.InformeEgreso.fechaEgreso).add(1, 'minute').toDate();
+                            const fechaHasta = moment(this.registro.valor.InformeEgreso.fechaEgreso).add(1, 'm').toDate();
                             // actualiza el listado
                             this.listadoInternacionService.setFechaHasta(fechaHasta);
                             this.listadoInternacionCapasService.setFechaHasta(fechaHasta);
