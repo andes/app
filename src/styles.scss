@@ -54,6 +54,15 @@ nav .actions {
     text-align: left;
 }
 
+div[main-menu] {
+    padding: 12px;
+
+    &:hover {
+        cursor: pointer;
+        background: $invert;
+    }
+}
+
 @import "@andes/icons/scss/andes-icons.scss";
 
 // [TODO]: Migrar a adi y eliminar
