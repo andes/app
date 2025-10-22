@@ -16,6 +16,7 @@ import { PrestacionesService } from '../../../modules/rup/services/prestaciones.
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { ConstantesService } from 'src/app/services/constantes.service';
 import { SnomedService } from 'src/app/apps/mitos';
+import moment from 'moment';
 
 @Component({
     selector: 'solicitudes',

@@ -25,6 +25,7 @@ import { cache } from '@andes/shared';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 import { ListadoInternacionCapasService } from '../../views/listado-internacion-capas/listado-internacion-capas.service';
 import { IObraSocial } from 'src/app/interfaces/IObraSocial';
+import moment from 'moment';
 
 @Component({
     selector: 'app-ingresar-paciente',
