@@ -8,6 +8,7 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { cache } from '@andes/shared';
+import moment from 'moment';
 
 @Component({
     selector: 'app-cambiar-cama',

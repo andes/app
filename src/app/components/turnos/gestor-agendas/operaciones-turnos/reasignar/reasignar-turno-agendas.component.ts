@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, Input, EventEmitter, Output, OnInit, ViewChild } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -7,7 +8,6 @@ import { AgendaService } from '../../../../../services/turnos/agenda.service';
 import { TurnoService } from '../../../../../services/turnos/turno.service';
 import { SmsService } from './../../../../../services/turnos/sms.service';
 import { NgForm } from '@angular/forms';
-import * as moment from 'moment';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { map } from 'rxjs/operators';
 import { IAgenda } from './../../../../../interfaces/turnos/IAgenda';

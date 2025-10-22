@@ -1,9 +1,9 @@
+import moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
 import { Component, Input, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
-import * as moment from 'moment';
 
 
 

@@ -1,6 +1,5 @@
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
-import * as moment from 'moment';
 
 @Component({
     selector: 'rup-nueva-evolucion-problema',

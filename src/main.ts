@@ -1,10 +1,12 @@
 import './polyfills.ts';
-
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { enableProdMode } from '@angular/core';
 import { environment } from './environments/environment';
 import { AppModule } from './app/';
 import * as bowser from 'bowser';
+import moment from 'moment';
+import 'moment/locale/es';
+moment.locale('es');
 
 // Check browser version
 if (!(bowser as any).check({ chrome: '54' }) || !(bowser as any).check({ firefox: '54' })) {

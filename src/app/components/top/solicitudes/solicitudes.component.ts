@@ -17,6 +17,7 @@ import { TurnoService } from '../../../services/turnos/turno.service';
 import { ConstantesService } from 'src/app/services/constantes.service';
 import { SnomedService } from 'src/app/apps/mitos';
 import { ECLQueriesService } from 'src/app/services/eclqueries.service';
+import moment from 'moment';
 
 @Component({
     selector: 'solicitudes',
