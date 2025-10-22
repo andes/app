@@ -11,8 +11,8 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 import { HUDSService } from '../../services/huds.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
-import * as moment from 'moment';
-import { RecetaService } from 'projects/portal/src/app/services/receta.service';
+import moment from 'moment';
+import { RecetaService } from 'src/app/services/receta.service';
 
 @Component({
     selector: 'rup-vistaHuds',
