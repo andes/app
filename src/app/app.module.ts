@@ -21,7 +21,7 @@ import { AuthContext, Server, ServerErrorHandler, SharedModule } from '@andes/sh
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import localeEs from '@angular/common/locales/es';
+import localeEsAr from '@angular/common/locales/es-AR';
 import { ErrorHandler, LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HammerModule } from '@angular/platform-browser';
@@ -32,6 +32,16 @@ import { RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings, RECAPTCHA_SET
 import { NgChartsModule } from 'ng2-charts';
 import { NgxImageCompressService } from 'ngx-image-compress';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+
+
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import 'moment/locale/es';
+
 /** Configuraciones de entorno */
 import { environment } from '../environments/environment';
 // Locales
@@ -229,8 +239,7 @@ import { EstadosCamaProvincialComponent } from './modules/com/components/estados
 import { EstadosCamaProvincialService } from './modules/com/services/estados-cama-provincial.service';
 import { GeorrefMapComponent } from './core/mpi/components/georref-map.component';
 
-
-registerLocaleData(localeEs, 'es');
+registerLocaleData(localeEsAr);
 
 // Main module
 @NgModule({
@@ -259,7 +268,12 @@ registerLocaleData(localeEs, 'es');
         AuditoriaModule,
         RecaptchaModule,
         RecaptchaFormsModule,
-        VisualizacionInformacionModule
+        VisualizacionInformacionModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        NgxMatTimepickerModule.setLocale('es-AR')
     ],
     declarations: [
         AppComponent,
@@ -334,13 +348,14 @@ registerLocaleData(localeEs, 'es');
         CampaniaVisualizacionComponent,
         CampaniaFormComponent,
         LogoSvgComponent,
-        AcronimoSvgComponent,
+        AcronimoSvgComponent
     ],
     bootstrap: [
         AppComponent
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'es-AR' },
+        { provide: MAT_DATE_LOCALE, useValue: 'es-AR' },
         { provide: AuthContext, useExisting: Auth },
         HttpClient,
         Plex,
