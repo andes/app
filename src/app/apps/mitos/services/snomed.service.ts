@@ -2,7 +2,7 @@ import { Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class SnomedService {
     private snomedURL = '/core/term/snomed'; // URL to web api
     private snomedURLexpression = '/core/term/snomed/expression';
