@@ -1,13 +1,11 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import * as moment from 'moment';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
-
-
 
 @Component({
     selector: 'mapa-espacio-fisico',

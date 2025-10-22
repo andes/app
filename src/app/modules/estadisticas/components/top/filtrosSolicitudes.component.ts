@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import moment from 'moment';
 import { Component, HostBinding, EventEmitter, Output, SimpleChanges, SimpleChange, OnChanges, Input } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ProfesionalService } from '../../../../services/profesional.service';

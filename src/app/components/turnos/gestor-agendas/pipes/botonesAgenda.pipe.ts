@@ -1,6 +1,7 @@
 import { Auth } from '@andes/auth';
 import { Pipe, PipeTransform } from '@angular/core';
 import { IAgenda } from '../../../../interfaces/turnos/IAgenda';
+import moment from 'moment';
 
 @Pipe({
     name: 'botonesAgenda'

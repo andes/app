@@ -20,6 +20,8 @@ import { IProvincia } from '../../../interfaces/IProvincia';
 import { ILocalidad } from '../../../interfaces/ILocalidad';
 import { IPais } from 'src/app/interfaces/IPais';
 import { cache } from '@andes/shared';
+import moment from 'moment';
+
 @Component({
     selector: 'datos-basicos',
     templateUrl: 'datos-basicos.html',

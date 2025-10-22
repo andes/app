@@ -27,6 +27,7 @@ import { ListadoInternacionCapasService } from '../../views/listado-internacion-
 import { IObraSocial } from 'src/app/interfaces/IObraSocial';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { ICama } from '../../interfaces/ICama';
+import moment from 'moment';
 
 @Component({
     selector: 'app-ingresar-paciente',

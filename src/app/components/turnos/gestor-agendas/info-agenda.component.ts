@@ -1,6 +1,6 @@
+import moment from 'moment';
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { IAgenda } from '../../../interfaces/turnos/IAgenda';
-import * as moment from 'moment';
 @Component({
     selector: 'info-agenda',
     templateUrl: 'info-agenda.html',
