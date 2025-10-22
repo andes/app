@@ -6,7 +6,7 @@ import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { Observable } from 'rxjs';
-
+import moment from 'moment';
 @Component({
     selector: 'app-filtros-listado-capas',
     templateUrl: './filtros-listado-capas.component.html',

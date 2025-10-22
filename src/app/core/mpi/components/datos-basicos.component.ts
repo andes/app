@@ -12,6 +12,8 @@ import { IPaciente } from '../interfaces/IPaciente';
 import { PacienteService } from '../services/paciente.service';
 import { ConstantesService } from 'src/app/services/constantes.service';
 import { Auth } from 'projects/auth/src/lib/auth.service';
+import moment from 'moment';
+
 @Component({
     selector: 'datos-basicos',
     templateUrl: 'datos-basicos.html',

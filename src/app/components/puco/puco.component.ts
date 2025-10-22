@@ -7,6 +7,7 @@ import { DocumentosService } from '../../services/documentos.service';
 import { SugerenciasService } from '../../services/sendmailsugerencias.service';
 import { ObraSocialService } from './../../services/obraSocial.service';
 import { ProfeService } from './../../services/profe.service';
+import moment from 'moment';
 
 @Component({
     selector: 'puco',

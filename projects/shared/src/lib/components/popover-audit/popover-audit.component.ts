@@ -1,5 +1,5 @@
+import moment from 'moment';
 import { Component, Input, OnInit } from '@angular/core';
-import * as moment from 'moment';
 
 @Component({
     selector: 'shared-popover-audit',

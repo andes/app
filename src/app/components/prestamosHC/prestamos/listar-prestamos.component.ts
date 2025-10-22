@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { PrestamosService } from './../../../services/prestamosHC/prestamos-hc.service';
 import { EspacioFisicoService } from '../../../services/turnos/espacio-fisico.service';
@@ -6,7 +7,6 @@ import { enumToArray } from '../../../utils/enums';
 import { EstadosCarpetas } from './../enums';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import * as moment from 'moment';
 
 
 @Component({

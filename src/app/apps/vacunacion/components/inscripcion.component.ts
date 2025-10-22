@@ -1,8 +1,8 @@
+import moment from 'moment';
 import { Plex } from '@andes/plex';
 import { PlexModalComponent } from '@andes/plex';
 import { cache, calcularEdad } from '@andes/shared';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
 import { LocalidadService } from 'src/app/services/localidad.service';
