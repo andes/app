@@ -4,6 +4,7 @@ import { Observable, BehaviorSubject, combineLatest, of } from 'rxjs';
 import { switchMap, map, auditTime } from 'rxjs/operators';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { cache } from '@andes/shared';
+import moment from 'moment';
 
 @Injectable()
 export class ListadoInternacionService {

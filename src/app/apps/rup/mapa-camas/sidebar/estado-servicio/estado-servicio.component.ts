@@ -4,6 +4,7 @@ import { Observable, Subscription, from } from 'rxjs';
 import { map, tap, startWith, switchMap, filter, distinct, toArray } from 'rxjs/operators';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { Plex } from '@andes/plex';
+import moment from 'moment';
 
 @Component({
     selector: 'app-estado-servicio',
