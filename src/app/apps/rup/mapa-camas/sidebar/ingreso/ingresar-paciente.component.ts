@@ -24,6 +24,7 @@ import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paci
 import { cache } from '@andes/shared';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 import { ListadoInternacionCapasService } from '../../views/listado-internacion-capas/listado-internacion-capas.service';
+import moment from 'moment';
 
 @Component({
     selector: 'app-ingresar-paciente',

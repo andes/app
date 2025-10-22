@@ -7,7 +7,7 @@ import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { arrayToSet } from '@andes/shared';
-
+import moment from 'moment';
 @Component({
     selector: 'app-filtros-internacion',
     templateUrl: './filtros-internacion.component.html',

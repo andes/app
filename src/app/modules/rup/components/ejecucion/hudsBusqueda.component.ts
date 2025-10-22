@@ -1,7 +1,7 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { AfterContentInit, Component, EventEmitter, Input, Optional, Output, ViewEncapsulation } from '@angular/core';
-import * as moment from 'moment';
 import { LaboratorioService } from 'projects/portal/src/app/services/laboratorio.service';
 import { Observable, forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';

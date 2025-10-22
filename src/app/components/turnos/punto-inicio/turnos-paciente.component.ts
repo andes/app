@@ -1,7 +1,7 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import * as moment from 'moment';
 import { DocumentosService } from '../../../services/documentos.service';
 
 // Servicios

@@ -15,7 +15,7 @@ import { Location } from '@angular/common';
 import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 import { IMotivoAcceso } from 'src/app/modules/rup/interfaces/IMotivoAcceso';
-
+import moment from 'moment';
 
 @Component({
     selector: 'solicitudes',

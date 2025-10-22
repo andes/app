@@ -10,6 +10,7 @@ import * as enumerados from '../../../utils/enumerados';
 import { IPaciente } from '../interfaces/IPaciente';
 import { PacienteService } from '../services/paciente.service';
 import { ConstantesService } from 'src/app/services/constantes.service';
+import moment from 'moment';
 
 @Component({
     selector: 'datos-basicos',

@@ -1,8 +1,8 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 import { BiQueriesComponent } from 'src/app/modules/visualizacion-informacion/components/bi-queries/bi-queries.component';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
