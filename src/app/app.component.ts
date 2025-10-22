@@ -85,10 +85,10 @@ export class AppComponent {
         }
     ];
 
-    private menuList = [];
+    public menuList = [];
+    public tieneNovedades = false;
     private modulos$: Observable<any[]>;
 
-    public tieneNovedades = false;
 
     constructor(
         public plex: Plex,
@@ -161,15 +161,31 @@ export class AppComponent {
 
     public ribbonType() {
         switch (environment.environmentName) {
-        case 'produccion':
-            return 'info';
-        case 'demo':
-            return 'success';
-        case 'testing':
-            return 'warning';
-        case 'development':
-            return 'info';
+            case 'produccion':
+                return 'info';
+            case 'demo':
+                return 'success';
+            case 'testing':
+                return 'warning';
+            case 'development':
+                return 'info';
         }
+    }
+
+    private orderItems(items) {
+        this.menuList = items.sort((a, b) => {
+            const aHasSubmodules = a.submodulos && a.submodulos.length > 0;
+            const bHasSubmodules = b.submodulos && b.submodulos.length > 0;
+
+            if (!aHasSubmodules && bHasSubmodules) { return -1; }
+            if (aHasSubmodules && !bHasSubmodules) { return 1; }
+
+            if (!a.orden && !b.orden) { return 0; }
+            if (!a.orden) { return 1; }
+            if (!b.orden) { return -1; }
+
+            return a.orden - b.orden;
+        });
     }
 
     public checkPermissions() {
@@ -193,25 +209,53 @@ export class AppComponent {
 
         this.modulos$.subscribe(registros => {
             registros.forEach((modulo) => {
+                const menuOption = {
+                    id: modulo._id,
+                    label: modulo.nombre,
+                    icon: modulo.icono,
+                    prefix: 'adi',
+                    color: modulo.color,
+                    submodulos: []
+                };
+
                 modulo.permisos.forEach((permiso, index) => {
                     if (this.auth.getPermissions(permiso).length > 0) {
                         if (modulos.indexOf(modulo._id) === -1) {
-
                             modulosNovedades.push(modulo._id);
+
                             if (modulo.submodulos && modulo.submodulos.length > 0) {
+                                const submodulos = [];
+
                                 modulo.submodulos = modulo.submodulos.filter(x => this.auth.getPermissions(x.permisos[0]).length > 0);
                                 modulo.submodulos.forEach((submodulo, key) => {
-                                    modulos.push(submodulo._id);
-                                    const menuOptionSub = { id: key, label: `${modulo.nombre}: ${submodulo.nombre.replace(/<[^>]*>?/gm, ' ').replace('- ', '')}`, icon: `${submodulo.icono}`, route: submodulo.linkAcceso };
-                                    if (this.menuList.findIndex(x => x.label === menuOptionSub.label) === -1) {
-                                        this.menuList.push(menuOptionSub);
-                                    }
+                                    const subMenuOption = {
+                                        id: key,
+                                        label: submodulo.nombre.replace(/<[^>]*>?/gm, ' ').replace('- ', ''),
+                                        route: submodulo.linkAcceso,
+                                        prefix: 'adi'
+                                    };
+
+                                    submodulos.push(subMenuOption);
                                 });
+
+                                menuOption.submodulos = submodulos;
+
+                                if (this.menuList.findIndex(x => x.id === menuOption.id) === -1) {
+                                    this.menuList.push(menuOption);
+                                }
                             } else {
-                                modulos.push(modulo._id);
-                                const menuOption = { id: index, label: `${modulo.nombre}: ${modulo.subtitulo}`, icon: `${modulo.icono}`, route: modulo.linkAcceso };
-                                this.menuList.push(menuOption);
+                                const subMenuOption = {
+                                    id: index,
+                                    label: modulo.subtitulo,
+                                    route: modulo.linkAcceso,
+                                    icon: modulo.icono,
+                                    prefix: 'adi'
+                                };
+
+                                this.menuList.push(subMenuOption);
                             }
+
+                            this.orderItems(this.menuList);
                         }
                     }
                 });
@@ -227,6 +271,80 @@ export class AppComponent {
             this.plex.updateMenu(this.menuList);
         });
     }
+
+    // public checkPermissions() {
+    //     const modulosNovedades = [];
+    //     this.menuList = [];
+    //     this.menuList.push({ label: 'Página Principal', icon: 'home', route: '/inicio' });
+    //     this.menuList.push({ label: 'Padrones', icon: 'magnify', route: '/puco' });
+
+    //     if (this.auth.loggedIn()) {
+    //         this.auth.organizaciones().subscribe(data => {
+    //             if (data.length > 1) {
+    //                 this.menuList = [{ label: 'Seleccionar Organización', icon: 'home', route: '/auth/select-organizacion' }, ...this.menuList];
+    //                 this.plex.updateMenu(this.menuList);
+    //             }
+    //         });
+    //     }
+    //     this.modulos$ = this.modulosService.search({ activo: true }).pipe(
+    //         cacheStorage('modulos-v1')
+    //     );
+
+    //     this.modulos$.subscribe(modulos => {
+    //         modulos.forEach((modulo, index) => {
+    //             const permisosModulo = modulo.permisos.map(per => this.auth.getPermissions(per)).flat();
+    //             if (permisosModulo.length) {
+    //                 modulosNovedades.push(modulo._id);
+
+    //                 if (modulo.submodulos?.length) {
+    //                     modulo.submodulos = modulo.submodulos.filter(x => this.auth.getPermissions(x.permisos[0]).length);
+
+    //                     const menuOption = {
+    //                         id: index,
+    //                         label: `${modulo.nombre}: ${modulo.subtitulo.replace(/<[^>]*>?/gm, ' ').replace('- ', '')}`,
+    //                         icon: `${modulo.icono}`,
+    //                         route: modulo.linkAcceso,
+    //                         color: modulo.color,
+    //                         submodulos: modulo.submodulos.map((sub, key) => {
+    //                             return {
+    //                                 id: key,
+    //                                 label: `${sub.nombre.replace(/<[^>]*>?/gm, ' ').replace('- ', '')}`,
+    //                                 icon: `${sub.icono}`,
+    //                                 route: sub.linkAcceso,
+    //                                 color: sub.color
+    //                             }
+    //                         })
+    //                     }
+    //                     this.menuList.push(menuOption)
+    //                 } else {
+    //                     modulos.push(modulo._id);
+    //                     const menuOption = {
+    //                         id: index,
+    //                         label: `${modulo.nombre}: ${modulo.subtitulo}`,
+    //                         icon: `${modulo.icono}`,
+    //                         route: modulo.linkAcceso,
+    //                         color: modulo.color
+    //                     };
+    //                     this.menuList.push(menuOption);
+    //                 }
+    //                 this.orderItems(this.menuList);
+    //             }
+    //         });
+
+    //         if (modulosNovedades.length) {
+    //             this.commonNovedadesService.setNovedadesSinFiltrar(modulosNovedades);
+    //             this.commonNovedadesService.getNovedadesSinFiltrar().subscribe((novedades) => {
+    //                 this.tieneNovedades = novedades.length > 0;
+    //             });
+    //         }
+    //         this.menuList.push({ divider: true });
+    //         this.menuList.push({
+    //             label: 'Cerrar Sesión',
+    //             icon: 'logout', route: '/auth/logout'
+    //         });
+    //         this.plex.updateMenu(this.menuList);
+    //     });
+    // }
 
     public getModulos() {
         return this.modulos$;

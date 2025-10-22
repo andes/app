@@ -25,7 +25,8 @@ export class GeorrefMapComponent implements OnInit {
         if (value && value.length) {
             this._latLong = value;
             if (this.markerLayer) {
-                this.setMarker([this.latLong[1], this.latLong[0]]); // enviamos como longitud-latitud
+                const [lat, lon] = this._latLong;
+                this.setMarker([lon, lat]); // enviamos como longitud-latitud
             }
         }
     }
@@ -48,7 +49,7 @@ export class GeorrefMapComponent implements OnInit {
 
     ngOnInit() {
         this.source = new OlXYZ({
-            url: 'http://tile.osm.org/{z}/{x}/{y}.png'
+            url: 'https://tile.osm.org/{z}/{x}/{y}.png'
         });
 
         this.layer = new OlTileLayer({
@@ -56,8 +57,8 @@ export class GeorrefMapComponent implements OnInit {
         });
 
         this.view = new OlView({
-            center: mapCenter,
-            zoom: 17,
+            center: mapCenter?.length ? mapCenter : [0, 0],
+            zoom: 18,
             projection: 'EPSG:4326',
             rotation: 0
         });
@@ -101,32 +102,33 @@ export class GeorrefMapComponent implements OnInit {
 
         // --------- Chequeamos si hay coordenadas pre-cargadas -----------
         if (this.latLong && this.latLong.length) {
-            this.setMarker([this.latLong[1], this.latLong[0]]); // enviamos como longitud-latitud
+            const [lat, lon] = this.latLong;
+            this.setMarker([lon, lat]); // enviamos como longitud-latitud
         }
     }
 
     setMarkerMouseEvent(event) {
         // Obtenemos las coordenadas del evento (longitud-latitud)
-        const lonLat = this.map.getEventCoordinate(event);
-        this.setMarker(lonLat);
+        const [lon, lat] = this.map.getEventCoordinate(event);
+        this.setMarker([lon, lat]);
         // Notificamos nuevas coordenadas del marcador (latitud-longitud)
-        this.changeCoordinates.emit([lonLat[1], lonLat[0]]);
+        this.changeCoordinates.emit([lat, lon]);
     }
 
     setMarker(lonLat) {
         // Chequeamos si hay marcadores existentes
         const markerAdded = this.markerSource.getFeatures();
-        if (markerAdded && markerAdded.length) {
-            markerAdded[0].getGeometry().setCoordinates(lonLat); // modifica las coordenadas del Point
+        if (markerAdded?.length) {
+            markerAdded[0].getGeometry().setCoordinates(lonLat); // modifica las coordenadas del Point prexistente
         } else {
-            // Configuramos las caracteristicas del nuevo marcador (Point)
+            // Configuramos las caracteristicas de un nuevo marcador (Point)
             const marker = new OlFeature({
                 geometry: new OlPoint(lonLat)
             });
             // Agregamos el nuevo marcador a la fuente
             this.markerSource.addFeature(marker);
         }
-        this.view.animate({ zoom: 17, center: lonLat, duration: 500 });
+        this.view.animate({ zoom: 18, center: lonLat, duration: 500 });
         this.map.updateSize();
     }
 
