@@ -1,7 +1,7 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
-import * as moment from 'moment';
 import { EMPTY, Subscription, forkJoin, map, switchMap } from 'rxjs';
 import { InstitucionService } from '../../../../services/turnos/institucion.service';
 import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';

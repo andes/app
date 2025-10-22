@@ -9,6 +9,7 @@ import { IHistorialTurno } from 'src/app/interfaces/turnos/ITurno';
 import { IDemanda, ILlamado, IListaEspera } from 'src/app/interfaces/turnos/IListaEspera';
 import { ListaEsperaService } from 'src/app/services/turnos/listaEspera.service';
 import { TurnoService } from 'src/app/services/turnos/turno.service';
+import moment from 'moment';
 
 @Component({
     selector: 'demanda-insatisfecha',

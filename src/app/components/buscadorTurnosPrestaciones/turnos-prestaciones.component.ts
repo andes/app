@@ -17,7 +17,7 @@ import { IFinanciador } from 'src/app/interfaces/IFinanciador';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
-
+import moment from 'moment';
 @Component({
     selector: 'turnos-prestaciones',
     templateUrl: 'turnos-prestaciones.html',

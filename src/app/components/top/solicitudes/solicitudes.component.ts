@@ -19,6 +19,7 @@ import { ConstantesService } from 'src/app/services/constantes.service';
 import { SnomedService } from 'src/app/apps/mitos';
 import { ECLQueriesService } from 'src/app/services/eclqueries.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import moment from 'moment';
 
 @Component({
     selector: 'solicitudes',

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -6,7 +7,6 @@ import { OrganizacionService } from '../../../../../services/organizacion.servic
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Plex } from '@andes/plex';
 import { SnomedExpression } from '../../../../mitos';
-import * as moment from 'moment';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { Observable, forkJoin, of } from 'rxjs';
 import { ISnapshot } from '../../interfaces/ISnapshot';

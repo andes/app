@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
@@ -6,7 +7,6 @@ import { Observable, Subject } from 'rxjs';
 import { IntegridadService } from './integridad.service';
 import { IInconsistencia } from '../../interfaces/IInconsistencia';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import * as moment from 'moment';
 
 @Component({
     selector: 'app-integridad-camas',
