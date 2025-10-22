@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
@@ -7,7 +8,6 @@ import { SmsService } from './../../../services/turnos/sms.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 import { EstadosAgenda } from './../enums';
-import * as moment from 'moment';
 import { TurnoService } from 'src/app/services/turnos/turno.service';
 
 @Component({

@@ -1,8 +1,8 @@
+import moment from 'moment';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import * as moment from 'moment';
 import { WebSocketService } from '../../../services/websocket.service';
 import { PantallaService } from '../services/pantalla.service';
 

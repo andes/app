@@ -1,5 +1,5 @@
+import moment from 'moment';
 import { Component, OnInit } from '@angular/core';
-import * as moment from 'moment';
 import { RupElement } from '.';
 import { RUPComponent } from './../core/rup.component';
 

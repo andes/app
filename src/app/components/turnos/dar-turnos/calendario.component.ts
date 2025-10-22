@@ -1,7 +1,7 @@
+import moment from 'moment';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CalendarioDia } from './calendario-dia.class';
-import * as moment from 'moment';
 
 @Component({
     selector: 'app-calendario',

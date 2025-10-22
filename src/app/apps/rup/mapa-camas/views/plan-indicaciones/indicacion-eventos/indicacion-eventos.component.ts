@@ -1,10 +1,10 @@
+import moment from 'moment';
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { PlanIndicacionesEventosServices } from '../../../services/plan-indicaciones-eventos.service';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
 import { Auth } from '@andes/auth';
 import { tap } from 'rxjs/operators';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
-import * as moment from 'moment';
 import { Plex } from '@andes/plex';
 import { PlanIndicacionesServices } from '../../../services/plan-indicaciones.service';
 
