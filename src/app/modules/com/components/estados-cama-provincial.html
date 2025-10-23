@@ -11,7 +11,7 @@
             <plex-select [(ngModel)]="selectedOrganizacion" name="organizacion" tmOrganizaciones label="Organización"
                          placeholder="Seleccione la organización" (change)="filtrar()">
             </plex-select>
-            <plex-select name="unidadOrganizativa" [data]="unidadesOrganizativas$ | async" label="Unidad Organizativa"
+            <plex-select name="unidadOrganizativa" [data]="unidadesOrganizativas" label="Unidad Organizativa"
                          idField="conceptId" labelField="term" [(ngModel)]="selectedUnidadOrganizativa"
                          (change)="filtrar()">
             </plex-select>

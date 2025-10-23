@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { auditTime, map, switchMap } from 'rxjs/operators';
 import { MapaCamasHTTP } from 'src/app/apps/rup/mapa-camas/services/mapa-camas.http';
+import { cache } from '@andes/shared';
 
 @Injectable()
 
@@ -33,7 +34,8 @@ export class EstadosCamaProvincialService {
                         return (resumen && resumen.length) ? resumen : [];
                     })
                 )
-            )
+            ),
+            cache()
         );
     }
 }
