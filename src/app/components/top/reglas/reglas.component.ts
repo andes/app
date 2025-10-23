@@ -103,17 +103,35 @@ export class ReglasComponent implements OnInit {
         }
     }
 
-    deleteOrganizacion(indice) {
-        const isSelected = this.regla.origen?.organizacion?.id === this.reglas[indice].origen.organizacion?.id;
+    deleteOrganizacion(indice: number, event: Event) {
+        event.stopPropagation();
+        const regla = this.reglas[indice];
+        const id = regla.id || (regla._id && (regla._id.$oid || regla._id));
 
-        this.reglas.splice(indice, 1);
-        this.reglaActiva = -1;
-
-        if (isSelected) {
-            this.regla = this.reglas[0];
+        if (!id) {
+            this.plex.toast('danger', 'No se pudo obtener el ID de la regla.');
+            return;
         }
+        this.plex.confirm('¿Está seguro de que desea eliminar esta regla?', 'Atención').then((respuesta) => {
+            if (respuesta) {
+                this.servicioReglas.deleteById(id).subscribe({
+                    next: (respuestaServidor) => {
+                        this.reglas.splice(indice, 1);
+                        this.plex.toast('success', 'La regla se eliminó correctamente.');
+                        if (this.reglaActiva === indice) {
+                            this.reglaActiva = -1;
+                            this.regla = null;
+                        } else if (this.reglaActiva > indice) {
+                            this.reglaActiva--;
+                        }
+                    },
+                    error: () => {
+                        this.plex.toast('danger', 'Error al eliminar la regla.');
+                    }
+                });
+            }
+        });
     }
-
     addPrestacion() {
         this.prestaciones = [];
 
@@ -136,9 +154,33 @@ export class ReglasComponent implements OnInit {
         }
     }
 
-    deletePrestacion(indice) {
-        this.regla.origen.prestaciones.splice(indice, 1);
+    deletePrestacion(indice: number) {
+        const prestacion = this.regla.origen.prestaciones[indice];
+        const reglaId = this.regla._id || this.regla.id;
+        const prestacionId = prestacion._id;
+
+        if (!reglaId) { // prestación aún no guardada
+            this.regla.origen.prestaciones.splice(indice, 1);
+            this.plex.toast('success', 'Prestación eliminada correctamente.');
+            return;
+        }
+
+        this.plex.confirm('¿Está seguro de que desea eliminar esta prestación?', 'Atención')
+            .then((respuesta) => {
+                if (respuesta) {
+                    this.servicioReglas.deletePrestacion(reglaId, prestacionId).subscribe({
+                        next: () => {
+                            this.regla.origen.prestaciones.splice(indice, 1);
+                            this.plex.toast('success', 'Prestación eliminada correctamente.');
+                        },
+                        error: () => {
+                            this.plex.toast('danger', 'Error al eliminar la prestación.');
+                        }
+                    });
+                }
+            });
     }
+
 
     disabledSave() {
         return !this.regla?.origen?.organizacion.id || !this.regla?.origen?.prestaciones?.length;
@@ -193,4 +235,5 @@ export class ReglasComponent implements OnInit {
     volverASolicitudes() {
         this.volver.emit();
     }
+
 }

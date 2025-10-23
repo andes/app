@@ -33,7 +33,7 @@
             <plex-item [colors]="{ border: '#ffffff' , hover: '#ffffff' , background: '#ffffff' , name: 'media' }">
                 <plex-icon type="info" name="hospital" size="xl"></plex-icon>
                 <plex-label titulo="{{ regla.origen.organizacion.nombre }}"></plex-label>
-                <plex-button icon="close" type="danger" size="sm" (click)="deleteOrganizacion(i)">
+                <plex-button icon="close" type="danger" size="sm"  (click)="deleteOrganizacion(i, $event)">
                 </plex-button>
             </plex-item>
         </plex-list>
