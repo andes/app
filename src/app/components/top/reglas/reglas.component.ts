@@ -159,6 +159,12 @@ export class ReglasComponent implements OnInit {
         const reglaId = this.regla._id || this.regla.id;
         const prestacionId = prestacion._id;
 
+        if (!reglaId) { // prestación aún no guardada
+            this.regla.origen.prestaciones.splice(indice, 1);
+            this.plex.toast('success', 'Prestación eliminada correctamente.');
+            return;
+        }
+
         this.plex.confirm('¿Está seguro de que desea eliminar esta prestación?', 'Atención')
             .then((respuesta) => {
                 if (respuesta) {
