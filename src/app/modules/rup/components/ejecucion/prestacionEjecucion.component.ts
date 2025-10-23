@@ -169,93 +169,95 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                 if (resultado) {
                     this.servicioPrestacion.getById(id).pipe(
                         map(prestacion => populateRelaciones(prestacion))
-                    ).subscribe(prestacion => {
-                        this.prestacion = prestacion;
-                        this.ejecucionService.prestacion = prestacion;
+                    ).subscribe({
+                        next: (prestacion) => {
+                            this.prestacion = prestacion;
+                            this.ejecucionService.prestacion = prestacion;
 
-                        this.plex.updateTitle([{
-                            route: '/',
-                            name: 'ANDES'
-                        }, {
-                            route: '/rup',
-                            name: 'RUP'
-                        }, {
-                            name: this.prestacion && this.prestacion.solicitud.tipoPrestacion.term ? this.prestacion.solicitud.tipoPrestacion.term : ''
-                        }]);
+                            this.plex.updateTitle([{
+                                route: '/',
+                                name: 'ANDES'
+                            }, {
+                                route: '/rup',
+                                name: 'RUP'
+                            }, {
+                                name: this.prestacion && this.prestacion.solicitud.tipoPrestacion.term ? this.prestacion.solicitud.tipoPrestacion.term : ''
+                            }]);
 
-                        this.hasPacs = this.prestacion.metadata?.findIndex(item => item.key === 'pacs-uid') >= 0;
+                            this.hasPacs = this.prestacion.metadata?.findIndex(item => item.key === 'pacs-uid') >= 0;
 
-                        // this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
-                        // Si la prestación está validada, navega a la página de validación
-                        if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
-                            this.router.navigate(['/rup/validacion/', this.prestacion.id]);
-                        } else {
+                            // this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
+                            // Si la prestación está validada, navega a la página de validación
+                            if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
+                                this.router.navigate(['/rup/validacion/', this.prestacion.id]);
+                            } else {
 
-                            // Carga la información completa del paciente
-                            if (!prestacion.solicitud.tipoPrestacion.noNominalizada) {
-                                this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
-                                    this.paciente = paciente;
-                                    if (this.prestacion.groupId) {
-                                        this.cargarPrestacionAsociada();
-                                    }
-                                    this.ejecucionService.paciente = paciente; this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
-                                });
-                            }
-                            // cambio: this.prestacionSolicitud = prestacion.solicitud;
-                            // Trae el elementoRUP que implementa esta Prestación
-                            this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
-                            this.prestacion.elementoRUP = this.elementoRUP.id;
-                            if (this.elementoRUP.requeridos.length > 0) {
-                                for (const elementoRequerido of this.elementoRUP.requeridos) {
-                                    this.elementosRUPService.coleccionRetsetId[String(elementoRequerido.concepto.conceptId)] = elementoRequerido.params;
-                                }
-                            }
-                            this.ejecucionService.elementoRupPrestacion = this.elementoRUP;
-
-                            // Trae los "más frecuentes" (sugeridos) de esta Prestación
-                            this.recuperaLosMasFrecuentes(prestacion.solicitud.tipoPrestacion, this.elementoRUP);
-
-                            // Muestra los registros (y los colapsa)
-                            this.mostrarDatosEnEjecucion();
-
-                            this.prestacion.ejecucion.registros.map(x => {
-                                this.ps.get(x.concepto.conceptId, x.esSolicitud).subscribe(() => { });
-                            });
-
-                            if (this.prestacion.ejecucion.registros.length === 0) {
-                                this.elementosRUPService.requeridosDinamicos(
-                                    this.prestacion,
-                                    this.prestacion.solicitud.tipoPrestacion.conceptId
-                                ).subscribe(conceptos => {
-                                    conceptos.forEach(target => {
-                                        if (target.tipo === 'requerido') {
-                                            this.ejecucionService.agregarConcepto(target.concepto);
-                                        } else {
-                                            this.ejecucionService.addSugeridos([target.concepto]);
+                                // Carga la información completa del paciente
+                                if (!prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                                    this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
+                                        this.paciente = paciente;
+                                        if (this.prestacion.groupId) {
+                                            this.cargarPrestacionAsociada();
                                         }
+                                        this.ejecucionService.paciente = paciente; this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                                     });
-                                });
-                            }
-
-                            if (this.elementoRUP.requeridos.length > 0) {
-                                for (const elementoRequerido of this.elementoRUP.requeridos) {
-                                    const registoExiste = this.prestacion.ejecucion.registros.find(registro => registro.concepto.conceptId === elementoRequerido.concepto.conceptId);
-                                    if (!registoExiste) {
+                                }
+                                // cambio: this.prestacionSolicitud = prestacion.solicitud;
+                                // Trae el elementoRUP que implementa esta Prestación
+                                this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+                                this.prestacion.elementoRUP = this.elementoRUP.id;
+                                if (this.elementoRUP.requeridos.length > 0) {
+                                    for (const elementoRequerido of this.elementoRUP.requeridos) {
                                         this.elementosRUPService.coleccionRetsetId[String(elementoRequerido.concepto.conceptId)] = elementoRequerido.params;
-                                        this.ejecucionService.agregarConcepto(elementoRequerido.concepto);
-                                    } else if (registoExiste.id && registoExiste.valor) {
-                                        // Expandir sólo si no tienen algún valor
-                                        this.itemsRegistros[registoExiste.id].collapse = false;
+                                    }
+                                }
+                                this.ejecucionService.elementoRupPrestacion = this.elementoRUP;
+
+                                // Trae los "más frecuentes" (sugeridos) de esta Prestación
+                                this.recuperaLosMasFrecuentes(prestacion.solicitud.tipoPrestacion, this.elementoRUP);
+
+                                // Muestra los registros (y los colapsa)
+                                this.mostrarDatosEnEjecucion();
+
+                                this.prestacion.ejecucion.registros.map(x => {
+                                    this.ps.get(x.concepto.conceptId, x.esSolicitud).subscribe(() => { });
+                                });
+
+                                if (this.prestacion.ejecucion.registros.length === 0) {
+                                    this.elementosRUPService.requeridosDinamicos(
+                                        this.prestacion,
+                                        this.prestacion.solicitud.tipoPrestacion.conceptId
+                                    ).subscribe(conceptos => {
+                                        conceptos.forEach(target => {
+                                            if (target.tipo === 'requerido') {
+                                                this.ejecucionService.agregarConcepto(target.concepto);
+                                            } else {
+                                                this.ejecucionService.addSugeridos([target.concepto]);
+                                            }
+                                        });
+                                    });
+                                }
+
+                                if (this.elementoRUP.requeridos.length > 0) {
+                                    for (const elementoRequerido of this.elementoRUP.requeridos) {
+                                        const registoExiste = this.prestacion.ejecucion.registros.find(registro => registro.concepto.conceptId === elementoRequerido.concepto.conceptId);
+                                        if (!registoExiste) {
+                                            this.elementosRUPService.coleccionRetsetId[String(elementoRequerido.concepto.conceptId)] = elementoRequerido.params;
+                                            this.ejecucionService.agregarConcepto(elementoRequerido.concepto);
+                                        } else if (registoExiste.id && registoExiste.valor) {
+                                            // Expandir sólo si no tienen algún valor
+                                            this.itemsRegistros[registoExiste.id].collapse = false;
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        this.ejecucionService.actualizar('inicializar');
-                    }, (err) => {
-                        if (err) {
-                            this.plex.info('danger', err, 'Error');
-                            this.router.navigate(['/rup']);
+                            this.ejecucionService.actualizar('inicializar');
+                        }, error: (err) => {
+                            if (err) {
+                                this.plex.info('danger', err, 'Error');
+                                this.router.navigate(['/rup']);
+                            }
                         }
                     });
                 }
@@ -630,12 +632,13 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
      * @memberof PrestacionEjecucionComponent
      */
     guardarPrestacion() {
-
         this.flagValid = true;
         this.rupElements.forEach((item) => {
-            const instance = item.rupInstance;
-            instance.checkEmpty();
-            this.flagValid = this.flagValid && (instance.soloValores || instance.validate());
+            if (item.rupInstance) {
+                const instance = item.rupInstance;
+                instance.checkEmpty();
+                this.flagValid = this.flagValid && (instance.soloValores || instance.validate());
+            }
         });
         // validamos antes de guardar
         if (!this.beforeSave() || !this.flagValid) {

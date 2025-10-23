@@ -29,15 +29,24 @@
         <!-- Area droppable del elemento -->
         <div [class]="colForRegistros" class="mt-4" droppable [dropScope]="'registros-rup'"
              [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)">
-            <div class="text-center" *ngIf="soloValores && registro?.registros?.length === 0">
-                No hay registros vinculados
+            <div *ngIf="registro.elementoRUP">
+                <rup [elementoRUP]="elementosRUPService.buscarElemento(this.registro.concepto, this.registro.esSolicitud, this.registro.esIndicacion)"
+                     [prestacion]="prestacion" [paciente]="paciente" [registro]="registro" [soloValores]="soloValores"
+                     [params]="elementosRUPService.getParams(registro)" #rupInstance>
+                </rup>
             </div>
-            <div class="text-center" *ngIf="!soloValores && !registro?.registros?.length && !ocultarPanel">
-                <p>
-                    <i class="mdi mdi-plus-circle"></i>
-                    <br> Agregar prestaciones
-                    <br>asociadas al tratamiento
-                </p>
+
+            <div *ngIf="!registro.elementoRUP">
+                <div class="text-center" *ngIf="soloValores && registro?.registros?.length === 0">
+                    No hay registros vinculados
+                </div>
+                <div class="text-center" *ngIf="!soloValores && !registro?.registros?.length && !ocultarPanel">
+                    <p>
+                        <i class="mdi mdi-plus-circle"></i>
+                        <br> Agregar prestaciones
+                        <br>asociadas al tratamiento
+                    </p>
+                </div>
             </div>
             <div *ngIf="registro?.registros?.length">
                 <ng-container *ngFor="let registro of registro.registros, let i = index">
@@ -63,8 +72,8 @@
                                         <button (click)="desvincular(registro, registro.relacionadoCon[0])"
                                                 class="desvincular"
                                                 *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen && !soloValoresfact"
-                                                title="Desvincular"><plex-icon name="link-variant-off"></plex-icon> 
-                                                
+                                                title="Desvincular"><plex-icon name="link-variant-off"></plex-icon>
+
                                         </button>
 
 
