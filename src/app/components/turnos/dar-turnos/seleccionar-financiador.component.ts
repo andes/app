@@ -96,16 +96,18 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
         this.showSelector = true;
 
         if (this.financiadoresPaciente?.length) {
-            const { financiador, nombre } = this.financiadoresPaciente[0];
+            const { financiador, nombre, numeroAfiliado } = this.paciente.obraSocial ? this.paciente.obraSocial : this.financiadoresPaciente[0];
 
             this.busquedaFinanciador = this.financiadoresPaciente[0];
             this.financiadorSeleccionado = nombre || financiador;
+            this.numeroAfiliado = numeroAfiliado || '';
             this.datosFinanciadores = [
                 ...this.financiadoresPaciente.map((os: IObraSocial) => ({ id: os.nombre || os.financiador, label: os.nombre || os.financiador })),
                 { id: 'otras', label: 'Otras' }
             ];
         } else {
-            this.financiadorSeleccionado = undefined;
+            this.financiadorSeleccionado = this.paciente.obraSocial ? this.paciente.obraSocial.nombre : undefined;
+            this.numeroAfiliado = this.paciente.obraSocial ? this.paciente.obraSocial.numeroAfiliado : '';
         }
 
         this.guardarFinanciador();
@@ -127,7 +129,7 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
             const financiadoresExistentes = [
                 ...this.obrasSocialesPUCO.map((f) => f.nombre),
                 ...this.financiadoresANDES.map((f) => f.nombre),
-                ...this.financiadoresPaciente?.map((f) => f.nombre)
+                ...this.financiadoresPaciente?.map((f) => f && f.nombre)
             ];
 
             this.opcionesFinanciadores = financiadores.filter(

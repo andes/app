@@ -413,7 +413,7 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
                     registradoEn: new Date()
                 }
             };
-
+            this.paciente.fallecimientoManual = cambios.fallecimientoManual;
             this.pacienteService.patch(this.paciente.id, cambios).subscribe(() => {
                 this.plex.toast('success', 'Fecha de fallecimiento registrada correctamente');
             }, err => {
