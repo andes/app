@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Renderer2, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Renderer2, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar.service';
@@ -18,6 +18,7 @@ import { ProfesionalService } from 'src/app/services/profesional.service';
 @Component({
     selector: 'rup-buscador',
     templateUrl: 'buscador.html',
+    encapsulation: ViewEncapsulation.None,
     styleUrls: ['buscador.scss']
 })
 
