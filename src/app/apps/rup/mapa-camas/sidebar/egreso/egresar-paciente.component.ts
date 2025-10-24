@@ -4,7 +4,7 @@ import { Plex } from '@andes/plex';
 import { cache } from '@andes/shared';
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
-import { first, map, switchMap } from 'rxjs/operators';
+import { catchError, first, map, switchMap } from 'rxjs/operators';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
@@ -175,12 +175,26 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     const desde = moment(fechaIngreso).subtract(12, 'hours').toDate();
                     const hasta = moment(fechaIngreso).add(12, 'hours').toDate();
 
-                    return this.internacionResumenService.search({
-                        organizacion: this.auth.organizacion.id,
-                        paciente: paciente,
-                        ingreso: this.internacionResumenService.queryDateParams(desde, hasta)
-                    }).pipe(
-                        map(resumen => resumen[0])
+                    // Combinar el historial de cama con la búsqueda del resumen
+                    return combineLatest([
+                        this.camasHTTP.historialInternacion(
+                            'internacion',
+                            capa,
+                            this.informeIngreso.fechaIngreso,
+                            moment().toDate(),
+                            prestacion.id
+                        ),
+                        this.internacionResumenService.search({
+                            organizacion: this.auth.organizacion.id,
+                            paciente: paciente,
+                            ingreso: this.internacionResumenService.queryDateParams(desde, hasta)
+                        })
+                    ]).pipe(
+                        map(([historialInternacion, resumenArray]) => {
+                            const fechaUltimoMovimiento = moment(historialInternacion[historialInternacion.length - 1].fecha);
+                            this.fechaMin = moment(fechaUltimoMovimiento.add(1, 'm'), 'DD-MM-YYYY HH:mm').toDate();
+                            return resumenArray[0];
+                        })
                     );
                 }
                 if (capa === 'estadistica-v2' && this.view === 'listado-internacion') {
@@ -246,7 +260,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                             if (this.cama) {
                                 this.cama.id = this.cama.idCama;
                                 this.refreshSaveButton.next({});
-                                this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').toDate();
+                                this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').add(1, 'minute').toDate();
                                 this.checkHistorial(fecha);
                                 if (this.subscription3) {
                                     this.subscription3.unsubscribe();
@@ -325,17 +339,19 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         if (valid.formValid) {
             this.inProgress = true;
             const afterSave = {
-                complete: () => {
-                    this.plex.info('success', 'Los datos se actualizaron correctamente');
-                    if (this.view === 'listado-internacion') {
-                        const fechaHasta = moment(this.registro.valor.InformeEgreso.fechaEgreso).add(1, 'minute').toDate();
-                        // actualiza el listado
-                        this.listadoInternacionService.setFechaHasta(fechaHasta);
-                        this.listadoInternacionCapasService.setFechaHasta(fechaHasta);
-                        this.mapaCamasService.selectPrestacion(null);
-                        this.mapaCamasService.selectResumen(null);
-                    } else if (this.view === 'mapa-camas') {
-                        this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
+                next: (result) => {
+                    if (result) {
+                        this.plex.info('success', 'Los datos se actualizaron correctamente');
+                        if (this.view === 'listado-internacion') {
+                            const fechaHasta = moment(this.registro.valor.InformeEgreso.fechaEgreso).add(1, 'm').toDate();
+                            // actualiza el listado
+                            this.listadoInternacionService.setFechaHasta(fechaHasta);
+                            this.listadoInternacionCapasService.setFechaHasta(fechaHasta);
+                            this.mapaCamasService.selectPrestacion(null);
+                            this.mapaCamasService.selectResumen(null);
+                        } else if (this.view === 'mapa-camas') {
+                            this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
+                        }
                     }
                 },
                 error: (err) => {
@@ -442,6 +458,10 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                         return this.egresoSimplificado(this.estadoDestino);
                     }
                 }),
+                catchError(error => {
+                    this.plex.info('warning', `${error} ${moment(registros[0].valor.informeIngreso.fechaIngreso).format('YYYY-MM-DD HH:mm:ss').bold()}`, 'Error');
+                    return of(null);
+                })
             );
         }
         return of(null);
