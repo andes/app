@@ -220,7 +220,8 @@ export class PlanIndicacionesComponent implements OnInit {
                 eventos.forEach(evento => {
                     eventosMap[evento.idIndicacion] = eventosMap[evento.idIndicacion] || {};
                     const hora = moment(evento.fecha).hour();
-                    eventosMap[evento.idIndicacion][hora] = evento;
+                    eventosMap[evento.idIndicacion][hora] = eventosMap[evento.idIndicacion][hora] || [];
+                    eventosMap[evento.idIndicacion][hora].push(evento);
                 });
                 this.eventos = eventosMap;
                 this.borradores = this.indicaciones.filter(i => i.estado.tipo === 'draft');

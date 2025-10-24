@@ -252,7 +252,7 @@
                                                 (click)="onIndicacionesCellClick(indicacion, hora)">
                                                 <span *ngIf="eventos[indicacion.id] && eventos[indicacion.id][hora]"
                                                       class="punto"
-                                                      [ngClass]="eventos[indicacion.id][hora].estado"></span>
+                                                      [ngClass]="eventos[indicacion.id][hora][eventos[indicacion.id][hora].length -1].estado"></span>
                                             </td>
                                         </tr>
                                     </ng-container>

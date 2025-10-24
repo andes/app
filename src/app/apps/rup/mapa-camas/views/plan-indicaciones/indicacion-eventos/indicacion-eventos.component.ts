@@ -25,17 +25,34 @@ export class PlanIndicacionEventoComponent implements OnChanges {
     public horarioPlanificado: any = null;
     horaMin;
     horaMax;
-    estadoItems = [
-        { id: 'realizado', nombre: 'Realizado' },
-        { id: 'no-realizado', nombre: 'No realizado' },
-        { id: 'incompleto', nombre: 'Incompleto' },
-    ];
+    estadoItems = [];
     estado = null;
     observaciones = '';
     horarioEjecucion;
     estadoType;
     puedeEditar = false;
     capa;
+    public addEvent;
+    public indice;
+    public eventos = [
+        {
+            key: 'estado',
+            label: 'ESTADO'
+        },
+        {
+            key: 'creado',
+            label: 'CREADO'
+        },
+        {
+            key: 'actualizado',
+            label: 'ACTUALIZADO'
+        },
+        {
+            key: 'observaciones',
+            label: 'OBSERVACIONES'
+        },
+        {}
+    ];
 
     @Output() events = new EventEmitter();
     @Output() save = new EventEmitter<any>();
@@ -84,14 +101,36 @@ export class PlanIndicacionEventoComponent implements OnChanges {
             this.horarioEjecucion = this.evento.updatedAt ? this.evento.updatedAt : this.evento.createdAt;
             this.estadoType = this.evento.estado === 'realizado' ? 'info' : this.evento.estado === 'no-realizado' ? 'danger' : 'warning';
         }
+        this.estadoItems = [];
+        if (!this.evento) {
+            this.estadoItems = [{ id: 'realizado', nombre: 'Realizado' }];
+            this.agregarEvento();
+        } else {
+            this.estadoItems = [
+                { id: 'realizado', nombre: 'Realizado' },
+                { id: 'no-realizado', nombre: 'No realizado' },
+                { id: 'incompleto', nombre: 'Incompleto' }
+            ];
+            if (this.evento && this.evento[0].estado === 'on-hold') {
+                this.agregarEvento();
+            };
+        }
     }
 
     onCancelar() {
         this.events.emit(false);
+        this.addEvent = false;
     }
 
-    onEdit() {
+    onEdit(index) {
+        this.indice = index;
         this.editando = true;
+        if (index < this.evento.length - 1) {
+            this.horaMax = moment(this.evento[this.evento.length - 1].fecha);
+        }
+        this.fechaHora = moment(this.evento[index].fecha).toDate();
+        this.estado = this.evento[index].estado;
+        this.observaciones = this.evento[index].observaciones;
     }
 
     onInputChange(value) {
@@ -99,16 +138,33 @@ export class PlanIndicacionEventoComponent implements OnChanges {
     }
     onGuardar() {
         if (this.evento) {
-            this.indicacionEventosService.update(
-                this.evento.id,
-                {
+            if (this.evento[this.evento.length - 1].estado === 'on-hold' || this.editando) {
+                this.indicacionEventosService.update(
+                    (this.indice) ? this.evento[this.indice].id : this.evento[this.evento.length - 1].id,
+                    {
+                        estado: this.estado.id,
+                        observaciones: this.observaciones,
+                        fecha: this.fechaHora
+                    }
+                ).subscribe(() => {
+                    (this.editando) ? this.plex.toast('success', 'Evento modificado correctamente') : this.plex.toast('success', 'Evento registrado correctamente');
+                    this.events.emit(true);
+                    this.editando = false;
+                });
+            } else {
+                const evento = {
+                    idInternacion: this.indicacion.idInternacion,
+                    idIndicacion: this.indicacion.id,
+                    fecha: this.fechaHora,
                     estado: this.estado.id,
                     observaciones: this.observaciones
-                }
-            ).subscribe(() => {
-                this.events.emit(true);
-                this.editando = false;
-            });
+                };
+                this.indicacionEventosService.create(evento).subscribe(() => {
+                    this.plex.toast('success', 'Evento registrado correctamente');
+                    this.events.emit(true);
+                    this.addEvent = false;
+                });
+            }
         } else {
             const evento = {
                 idInternacion: this.indicacion.idInternacion,
@@ -145,4 +201,13 @@ export class PlanIndicacionEventoComponent implements OnChanges {
         }
     }
 
+    agregarEvento() {
+        if (this.evento) {
+            this.horaMin = this.evento[this.evento.length - 1].fecha;
+        }
+        this.fechaHora = null;
+        this.addEvent = true;
+        this.estado = null;
+        this.observaciones = '';
+    }
 }
