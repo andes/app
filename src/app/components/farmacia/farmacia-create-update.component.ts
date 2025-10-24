@@ -54,6 +54,7 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
         expedientePapel: '',
         expedienteGDE: '',
         nroCaja: '',
+        tipoEstablecimiento: '',
         disposiciones: [],
         sancion: []
     };
@@ -64,6 +65,7 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
     public laboratorio = false;
     public tipoComunicacion;
     public asociado;
+    public establecimiento;
     patronContactoCelular = /^[0-9]{3,4}[0-9]{6}$/;
     patronContactoFijo = /^[0-9]{7}$/;
     patronContactoAlfabetico = /^[-\w.%+]{1,61}@[a-z]+(.[a-z]+)+$/;
@@ -74,6 +76,16 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
         { id: 'farmacia', nombre: 'Farmacias Sociales' },
         { id: 'camara', nombre: 'Camara de Farmacéuticos' },
         { id: 'independiente', nombre: 'Independientes' }
+    ];
+
+    public arrayEstablecimiento = [
+        { id: 'tipoFarmacia', nombre: 'Farmacia' },
+        { id: 'tipoDrogueria', nombre: 'Droguería' },
+        { id: 'tipoBotiquin', nombre: 'Botiquín' },
+        { id: 'tipoDeposito', nombre: 'Depósito' },
+        { id: 'tipoDistribuidora', nombre: 'Distribuidora' },
+        { id: 'tipoVacunatorio', nombre: 'Vacunatorio' },
+        { id: 'tipoEsterilizacion', nombre: 'Esterilización' }
     ];
 
     constructor(
@@ -88,6 +100,7 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
         if (this.farmaciaSeleccionada) {
             this.farmacia = this.farmaciaSeleccionada;
             this.asociado = { id: this.farmaciaSeleccionada.asociadoA, nombre: this.farmaciaSeleccionada.asociadoA };
+            this.establecimiento = { id: this.farmaciaSeleccionada.tipoEstablecimiento, nombre: this.farmaciaSeleccionada.tipoEstablecimiento };
         }
         this.provincias$ = this.provinciaService.get({}).pipe(
             cache()
@@ -103,6 +116,7 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
 
     save() {
         this.farmacia.asociadoA = this.asociado.nombre;
+        this.farmacia.tipoEstablecimiento = this.establecimiento.nombre;
         // si estamos editado una farmacia.
         if (this.farmaciaSeleccionada) {
             const farmaciaUpdate = Object.assign({}, this.farmacia);
