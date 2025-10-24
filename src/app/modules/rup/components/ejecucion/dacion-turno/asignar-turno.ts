@@ -58,6 +58,7 @@ export class RupAsignarTurnoComponent implements OnInit {
     ngOnInit() {
         this.inicio = this.agenda.horaInicio;
         this.fin = this.agenda.horaFin;
+        this.tipoPrestacion = this.agenda.tipoPrestaciones?.length === 1 ? this.agenda.tipoPrestaciones[0] : null;
         this.conceptosTurneablesService.getByPermisos('rup:tipoPrestacion:?').subscribe(data => {
             this.prestacionesProfesional = data.map(concept => concept.id);
         });
