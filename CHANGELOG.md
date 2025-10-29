@@ -1,3 +1,17 @@
+# [5.169.0](https://github.com/andes/app/compare/v5.168.4...v5.169.0) (2025-10-29)
+
+
+### Bug Fixes
+
+* **CITAS:** Modifica la visualización de OS en listado de turnos ([#3240](https://github.com/andes/app/issues/3240)) ([c52058a](https://github.com/andes/app/commit/c52058a3502be247fbb31edc782c37369b2da379))
+* **COM:** cambia el filtro de unidades organizativas ([#3251](https://github.com/andes/app/issues/3251)) ([20f77b7](https://github.com/andes/app/commit/20f77b737a493f8d671867e245e5c3d9c5aecc4b))
+* **RUP:** Agrega tipo de prestacion por defecto en dinamicas ([#3252](https://github.com/andes/app/issues/3252)) ([64659e0](https://github.com/andes/app/commit/64659e0eb4a0556eb9ec35d00bfda08fecdd7219))
+
+
+### Features
+
+* **REC:** implementa selector de obras sociales en molecula de receta ([#3235](https://github.com/andes/app/issues/3235)) ([1b93cf0](https://github.com/andes/app/commit/1b93cf0fbbe64cada00d918bc513a623ae2c4b97))
+
 ## [5.168.4](https://github.com/andes/app/compare/v5.168.3...v5.168.4) (2025-10-15)
 
 
