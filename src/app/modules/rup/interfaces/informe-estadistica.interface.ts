@@ -99,7 +99,7 @@ export interface IInformeEstadistica {
     organizacion: {
         id: string;
         nombre: string;
-        [key: string]: any; // <-- esto permite campos faltantes
+        [key: string]: any;
     };
     unidadOrganizativa: ISnomedConcept;
     paciente: IPaciente;
@@ -108,6 +108,7 @@ export interface IInformeEstadistica {
     periodosCensables?: { desde: Date; hasta: Date }[];
     estados?: IInternacionEstado[];
     estadoActual?: IInternacionEstado;
+    estado?: IInternacionEstado | string;
     createdAt?: Date;
     createdBy?: {
         id: string;
