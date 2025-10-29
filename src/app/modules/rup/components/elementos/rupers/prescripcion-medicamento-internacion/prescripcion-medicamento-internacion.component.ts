@@ -168,25 +168,30 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
     }
 
     onUnidadChange(frecuencia) {
-        if (frecuencia.frecuenciaUnidad?.id !== 'otros') {
+        if (frecuencia.frecuenciaUnidad?.id === 'otros') {
+            frecuencia.frecuenciaValor = null;
+            frecuencia.min = null;
+            frecuencia.max = null;
+        } else {
             frecuencia.frecuenciaEspecial = null;
-        }
-        switch (frecuencia.frecuenciaUnidad?.id) {
-            case 'minutos':
-                frecuencia.min = 1;
-                frecuencia.max = 60;
-                break;
-            case 'horas':
-                frecuencia.min = 1;
-                frecuencia.max = 24;
-                break;
-            case 'dias':
-                frecuencia.min = 1;
-                frecuencia.max = 7;
-                break;
-            default:
-                frecuencia.min = null;
-                frecuencia.max = null;
+
+            switch (frecuencia.frecuenciaUnidad?.id) {
+                case 'minutos':
+                    frecuencia.min = 1;
+                    frecuencia.max = 60;
+                    break;
+                case 'horas':
+                    frecuencia.min = 1;
+                    frecuencia.max = 24;
+                    break;
+                case 'dias':
+                    frecuencia.min = 1;
+                    frecuencia.max = 7;
+                    break;
+                default:
+                    frecuencia.min = null;
+                    frecuencia.max = null;
+            }
         }
 
         this.emitChange();
