@@ -39,14 +39,13 @@
     <div *ngIf="!registro.valor.sos">
         <plex-wrapper *ngFor="let frecuencia of registro.valor.frecuencias; let i = index">
             <plex-int label="Frecuencia" [(ngModel)]="frecuencia.frecuenciaValor" name="frecuenciaValor{{i}}"
-                      [required]="!registro.valor.unicaVez" [disabled]="registro.valor.unicaVez" [min]="frecuencia.min"
-                      [max]="frecuencia.max" span="1">
+                      [required]="!registro.valor.unicaVez && frecuencia.frecuenciaUnidad?.id !== 'otros'"
+                      [disabled]="registro.valor.unicaVez || frecuencia.frecuenciaUnidad?.id === 'otros'"
+                      [min]="frecuencia.min" [max]="frecuencia.max" span="1">
             </plex-int>
-
             <plex-select label="Unidad de tiempo" [(ngModel)]="frecuencia.frecuenciaUnidad" name="frecuenciaUnidad{{i}}"
                          [data]="unidadesFrecuencia" idField="id" labelField="nombre"
-                         [required]="!registro.valor.unicaVez" [disabled]="registro.valor.unicaVez" span="1"
-                         (change)="onUnidadChange(frecuencia)">
+                         [required]="!registro.valor.unicaVez" (change)="onUnidadChange(frecuencia)">
             </plex-select>
 
             <plex-select *ngIf="frecuencia.frecuenciaUnidad?.id === 'otros'" label="Frecuencia especial"
