@@ -18,6 +18,8 @@ import { MapaCamasHTTP } from './mapa-camas.http';
 import { MaquinaEstadosHTTP } from './maquina-estados.http';
 import { InternacionResumenHTTP, IResumenInternacion } from './resumen-internacion.http';
 import { PermisosMapaCamasService } from '../services/permisos-mapa-camas.service';
+import { InformeEstadisticaService } from 'src/app/modules/rup/services/informe-estadistica.service';
+import { IInformeEstadistica } from 'src/app/modules/rup/interfaces/informe-estadistica.interface';
 @Injectable()
 export class MapaCamasService {
     public timer$;
@@ -45,6 +47,7 @@ export class MapaCamasService {
     public view = new BehaviorSubject<'mapa-camas' | 'listado-internacion' | 'mapa-recursos'>('mapa-camas');
 
     public prestacion$: Observable<IPrestacion>;
+    public informeEstadistica$: Observable<IInformeEstadistica>;
     public selectedPrestacion = new BehaviorSubject<IPrestacion>({ id: null } as any);
     public camaSelectedSegunView$: Observable<ISnapshot>;
 
@@ -80,6 +83,7 @@ export class MapaCamasService {
     constructor(
         private camasHTTP: MapaCamasHTTP,
         private prestacionService: PrestacionesService,
+        private informeEstadisticaService: InformeEstadisticaService,
         private pacienteService: PacienteService,
         private maquinaEstadosHTTP: MaquinaEstadosHTTP,
         private salaComunService: SalaComunService,
@@ -223,6 +227,50 @@ export class MapaCamasService {
             cache()
         ) as Observable<IResumenInternacion>;
 
+        this.informeEstadistica$ = combineLatest([
+            this.selectedPrestacion,
+            this.selectedCama,
+            this.view,
+            this.capa2
+        ]).pipe(
+            switchMap(([prestacion, cama, view, capa]) => {
+                if (view === 'listado-internacion') {
+                    if (prestacion?.id) {
+                        return this.informeEstadisticaService.get({ paciente: prestacion.paciente.id }).pipe(
+                            map(informes => informes?.[0] || null)
+                        );
+                    }
+                    return of(null);
+                }
+
+                if (!cama.idInternacion) {
+                    return of(null);
+                }
+
+                if (capa === 'estadistica') {
+                    return this.informeEstadisticaService.get({ paciente: cama.paciente.id }).pipe(
+                        map(informes => informes?.[0] || null)
+                    );
+                }
+
+                if (capa === 'estadistica-v2') {
+                    return this.internacionResumenHTTP.get(cama.idInternacion).pipe(
+                        switchMap(internacionResumen => {
+                            if (internacionResumen?.paciente?.id) {
+                                return this.informeEstadisticaService.get({ paciente: internacionResumen.paciente.id }).pipe(
+                                    map(informes => informes?.[0] || null)
+                                );
+                            }
+                            return of(null);
+                        })
+                    );
+                }
+
+                return of(null);
+            }),
+            catchError(() => of(null)),
+            cache()
+        );
 
         this.camaSelectedSegunView$ = this.view.pipe(
             switchMap(view => {
