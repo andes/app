@@ -63,6 +63,14 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
         if (!this.autorizado) {
             this.router.navigate(['/rup/crear/autocitar']);
         }
+        this.agendasAutocitar = this.agendasAutocitar
+            .map(agenda => ({
+                ...agenda,
+                bloques: agenda.bloques.filter(b =>
+                    b.restantesProfesional !== 0 && (b.tipoPrestaciones.some(tp => tp.id === this.prestacionAutocitar.id))
+                )
+            }))
+            .filter(agenda => agenda.bloques.length > 0);
 
         if (this.agendasAutocitar?.length) {
             this.showListaAgendas = true;
@@ -72,7 +80,7 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
     seleccionarAgenda(index) {
         this.agendaSeleccionada = this.agendasAutocitar[index];
         this.agendaSeleccionada.bloques = this.agendaSeleccionada.bloques.filter(b => {
-            return b.restantesProfesional !== 0;
+            return b.restantesProfesional !== 0 && b.tipoPrestaciones.some(tp => tp.id === this.prestacionAutocitar.id);
         });
         this.agendasExpandidas[index] = !this.agendasExpandidas[index];
         this.turnoSeleccionado = null;
