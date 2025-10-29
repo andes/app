@@ -2,3 +2,32 @@
     margin-bottom: 3px;
     display: block;
 }
+
+.contenido-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.icono-hospital {
+    margin-bottom: 10px;
+}
+
+.fila-camas {
+    display: flex;
+    align-items: center;
+}
+
+.col-cama {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.size-icon {
+    transform: scale(1.5);
+}
+
+.margen-left-10 {
+    margin-left: 10px;
+}
