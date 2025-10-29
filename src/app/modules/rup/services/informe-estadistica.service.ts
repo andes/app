@@ -1,46 +1,29 @@
-/* eslint-disable no-console */
 import { Injectable } from '@angular/core';
-import { ResourceBaseHttp, Server } from '@andes/shared';
-import { Observable, tap } from 'rxjs';
-import { IInformeEstadistica } from '../interfaces/informe-estadistica.interface'; // ruta según tu estructura
+import { Server } from '@andes/shared';
+import { Observable } from 'rxjs';
+import { IInformeEstadistica } from '../interfaces/informe-estadistica.interface';
 
 @Injectable({
     providedIn: 'root'
 })
-export class InformeEstadisticaService extends ResourceBaseHttp {
-    protected override url = '/modules/rup/internacion/informe-estadistica';
+export class InformeEstadisticaService {
+    private baseUrl = '/modules/rup/internacion/informe-estadistica';
 
-    constructor(protected override server: Server) {
-        super(server);
+    constructor(private server: Server) { }
+
+    get(params?: any): Observable<IInformeEstadistica[]> {
+        return this.server.get(this.baseUrl, { params });
     }
 
-    /**
-     * Crear un nuevo informe estadístico
-     */
-    CreateInforme(data: IInformeEstadistica): Observable<IInformeEstadistica> {
-        return this.server.post(this.url, data);
-    }
-
-    /**
-     * Actualizar un informe existente
-     */
-    updateInforme(id: string, data: Partial<IInformeEstadistica>): Observable<IInformeEstadistica> {
-        return this.server.patch(`${this.url}/${id}`, data);
-    }
-    /**
-     * Obtener un informe por su ID
-     */
     getById(id: string): Observable<IInformeEstadistica> {
-        const url = `${this.url}/${id}`;
-        return this.server.get(url);
+        return this.server.get(`${this.baseUrl}/${id}`);
     }
 
-    get(params: any = {}, options: any = {}): Observable<IInformeEstadistica[]> {
-        if (typeof options.showError === 'undefined') {
-            options.showError = true;
-        }
-        const opt = { params, options };
+    post(data: IInformeEstadistica): Observable<IInformeEstadistica> {
+        return this.server.post(this.baseUrl, data);
+    }
 
-        return this.server.get(this.url, opt);
+    put(id: string, data: IInformeEstadistica): Observable<IInformeEstadistica> {
+        return this.server.put(`${this.baseUrl}/${id}`, data);
     }
 }
