@@ -108,6 +108,16 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
             this.mapaCamasService.isLoading(false);
         });
 
+        // Nueva capa estadística (internacionFormEstadistica)
+        this.mapaCamasService.informeEstadistica$.subscribe(informe => {
+            if (informe?.paciente?.id) {
+                this.ingresoPacienteService.selectPaciente(informe.paciente.id);
+                this.existeIngreso = !!informe.informeIngreso;
+                this.estadoPrestacion = informe.estadoActual?.tipo || 'ejecucion';
+                this.editarEgreso = !informe.informeEgreso;
+            }
+        });
+
         // Configura los tabs a mostrar según capa y vista
         this.mapaCamasService.resumenInternacion$.pipe(
             map(resumen => {

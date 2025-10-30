@@ -26,11 +26,7 @@ export interface IInformeIngreso {
     paseAunidadOrganizativa?: string;
     cobertura?: {
         tipo?: string;
-        obraSocial?: {
-            codigoPuco?: number;
-            nombre?: string;
-            financiador?: string;
-        };
+        obraSocial?: IObraSocial;
     };
     createdAt?: Date;
     createdBy?: {
@@ -42,6 +38,12 @@ export interface IInformeIngreso {
         documento: string | number;
         organizacion: IOrganizacion;
     };
+}
+
+export interface IObraSocial {
+    nombre: string;
+    financiador: string;
+    codigoPuco?: number; // Nota: ES OPCIONAL
 }
 
 export interface IInformeEgreso {
@@ -95,12 +97,8 @@ export interface IInternacionEstado {
 }
 
 export interface IInformeEstadistica {
-    _id?: string;
-    organizacion: {
-        id: string;
-        nombre: string;
-        [key: string]: any;
-    };
+    id: string;
+    organizacion: Partial<IOrganizacion>;
     unidadOrganizativa: ISnomedConcept;
     paciente: IPaciente;
     informeIngreso: IInformeIngreso;
@@ -117,6 +115,7 @@ export interface IInformeEstadistica {
         apellido: string;
         username: string | number;
         documento: string | number;
-        organizacion: IOrganizacion;
+        organizacion: Partial<IOrganizacion>;
     };
 }
+
