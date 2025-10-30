@@ -15,8 +15,8 @@ import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.ser
 import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { Auth } from '@andes/auth';
-
-
+import { IInformeEstadistica } from 'src/app/modules/rup/interfaces/informe-estadistica.interface';
+import { InformeEstadisticaService } from 'src/app/modules/rup/services/informe-estadistica.service';
 @Component({
     selector: 'app-cama-detalle',
     templateUrl: 'cama-detalle.component.html'
@@ -69,6 +69,7 @@ export class CamaDetalleComponent implements OnInit, AfterViewChecked, OnDestroy
     public unicoMovimiento = false;
     public subscripcion: Subscription;
     public prestacion;
+    public InformeEstadistica;
 
     items = [
         {
@@ -93,6 +94,7 @@ export class CamaDetalleComponent implements OnInit, AfterViewChecked, OnDestroy
         private mapaCamasService: MapaCamasService,
         private mapaCamasHTTP: MapaCamasHTTP,
         private prestacionesService: PrestacionesService,
+        public InformeEstadisticaService: InformeEstadisticaService,
         public permisosMapaCamasService: PermisosMapaCamasService,
         private turneroService: TurneroService,
         private motivoAccesoService: ModalMotivoAccesoHudsService,
@@ -115,8 +117,7 @@ export class CamaDetalleComponent implements OnInit, AfterViewChecked, OnDestroy
         this.relaciones$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getRelacionesPosibles(cama)));
         this.accionesEstado$ = this.mapaCamasService.prestacionesPermitidas(this.mapaCamasService.selectedCama);
         this.organizacionV2$ = this.organizacionService.usaCapasUnificadas(this.auth.organizacion.id);
-        this.subscripcion = this.mapaCamasService.prestacion$.subscribe(p => this.prestacion = p);
-
+        this.subscripcion = this.mapaCamasService.informeEstadistica$.subscribe(p => this.InformeEstadistica = p);
         this.paciente$ = this.cama$.pipe(
             filter(cama => !!cama.paciente),
             switchMap(cama => cama.paciente ? this.mapaCamasService.getPaciente(cama.paciente) : of(null))
