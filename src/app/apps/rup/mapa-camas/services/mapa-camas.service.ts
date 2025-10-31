@@ -2,7 +2,7 @@ import { Auth } from '@andes/auth';
 import { cache, notNull } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, of, timer } from 'rxjs';
-import { catchError, map, multicast, pluck, startWith, switchMap } from 'rxjs/operators';
+import { catchError, map, multicast, pluck, startWith, switchMap, tap } from 'rxjs/operators';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { ISectores } from '../../../../interfaces/IOrganizacion';
@@ -18,6 +18,8 @@ import { MapaCamasHTTP } from './mapa-camas.http';
 import { MaquinaEstadosHTTP } from './maquina-estados.http';
 import { InternacionResumenHTTP, IResumenInternacion } from './resumen-internacion.http';
 import { PermisosMapaCamasService } from '../services/permisos-mapa-camas.service';
+import { InformeEstadisticaService } from 'src/app/modules/rup/services/informe-estadistica.service';
+import { IInformeEstadistica } from 'src/app/modules/rup/interfaces/informe-estadistica.interface';
 @Injectable()
 export class MapaCamasService {
     public timer$;
@@ -45,7 +47,11 @@ export class MapaCamasService {
     public view = new BehaviorSubject<'mapa-camas' | 'listado-internacion' | 'mapa-recursos'>('mapa-camas');
 
     public prestacion$: Observable<IPrestacion>;
+    public informeEstadistica$: Observable<IInformeEstadistica>;
+
     public selectedPrestacion = new BehaviorSubject<IPrestacion>({ id: null } as any);
+    public selectedInformeEstadistica = new BehaviorSubject<IInformeEstadistica>({ id: null } as any);
+
     public camaSelectedSegunView$: Observable<ISnapshot>;
 
     public maquinaDeEstado$: Observable<IMaquinaEstados>;
@@ -80,6 +86,7 @@ export class MapaCamasService {
     constructor(
         private camasHTTP: MapaCamasHTTP,
         private prestacionService: PrestacionesService,
+        private informeEstadisticaService: InformeEstadisticaService,
         private pacienteService: PacienteService,
         private maquinaEstadosHTTP: MaquinaEstadosHTTP,
         private salaComunService: SalaComunService,
@@ -135,6 +142,11 @@ export class MapaCamasService {
                         snap.diaEstada = 0;
                     }
                 });
+                // 👉 Aquí detectamos los casos sin sectores
+                const sinSectores = snapshot.filter(s => !s.sectores || s.sectores.length === 0);
+                if (sinSectores.length > 0) {
+                    console.warn('⚠️ Snapshots sin sectores:', sinSectores.map(s => s.id));
+                }
                 return snapshot.sort((a, b) => (a.unidadOrganizativa.term.localeCompare(b.unidadOrganizativa.term)) ||
                     (a.sectores[a.sectores.length - 1].nombre.localeCompare(b.sectores[b.sectores.length - 1].nombre + '')) ||
                     (a.nombre.localeCompare('' + b.nombre)));
@@ -187,7 +199,7 @@ export class MapaCamasService {
                 if (!cama.idInternacion) {
                     return of(null);
                 }
-                if (capa === 'estadistica') {
+                if (capa !== 'estadistica') {
                     return this.prestacionService.getById(cama.idInternacion, { showError: false });
                 }
                 return this.internacionResumenHTTP.get(cama.idInternacion).pipe(
@@ -223,6 +235,44 @@ export class MapaCamasService {
             cache()
         ) as Observable<IResumenInternacion>;
 
+        this.informeEstadistica$ = combineLatest([
+            this.selectedInformeEstadistica,
+            this.selectedCama,
+            this.view,
+            this.capa2
+        ]).pipe(
+            switchMap(([informe, cama, view, capa]) => {
+
+                if (view === 'listado-internacion') {
+                    const pacienteId = informe?.paciente?.id || cama?.paciente?.id;
+                    if (pacienteId) {
+                        return this.informeEstadisticaService.get({ paciente: pacienteId }).pipe(
+                            map(informes => informes?.[0] || null)
+                        );
+                    }
+                    return of(null);
+                }
+
+                if (!cama?.idInternacion) {
+                    return of(null);
+                }
+
+                if (capa === 'estadistica') {
+                    const id = informe?.id || cama?.idInternacion;
+                    if (!id) {
+                        console.warn('⚠️ No hay ID válido para obtener el informe estadístico');
+                        return of(null);
+                    }
+                    return this.informeEstadisticaService.getById(id, { showError: false });
+                }
+
+                return of(null);
+            }),
+            catchError(err => {
+                return of(null);
+            }),
+            cache()
+        );
 
         this.camaSelectedSegunView$ = this.view.pipe(
             switchMap(view => {
@@ -377,6 +427,14 @@ export class MapaCamasService {
             return this.selectedPrestacion.next({ id: null } as any);
         }
         this.selectedPrestacion.next(prestacion);
+    }
+
+    selectInformeEstadistica(informe: IInformeEstadistica) {
+        if (!informe) {
+            return this.selectedInformeEstadistica.next({ id: null } as any);
+        }
+
+        this.selectedInformeEstadistica.next(informe);
     }
 
     selectResumen(resumen: IResumenInternacion) {
