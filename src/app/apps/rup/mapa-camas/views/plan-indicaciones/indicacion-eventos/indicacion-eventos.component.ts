@@ -72,12 +72,11 @@ export class PlanIndicacionEventoComponent implements OnChanges {
         this.horaMin = moment(this.fechaHora).minutes(0);
         this.horaMax = moment(this.fechaHora).minutes(59);
 
-        if (this.indicacion && this.indicacion.valor && this.indicacion.valor.frecuencias && this.indicacion.valor.frecuencias.length > 0) {
+        if (this.indicacion?.valor?.frecuencias?.length > 0) {
             const frecuenciaGuardada = this.indicacion.valor.frecuencias[0];
             this.frecuenciaDelMedico = frecuenciaGuardada.frecuencia;
             this.horarioPlanificado = frecuenciaGuardada.horario;
         }
-
 
         if (this.evento) {
             this.estado = this.estadoItems.find(e => e.id === this.evento.estado);
