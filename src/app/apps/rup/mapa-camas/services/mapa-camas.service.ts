@@ -181,7 +181,7 @@ export class MapaCamasService {
 
         // Devuelve la prestación que contiene el informe de ingreso
         this.prestacion$ = combineLatest([
-            this.selectedPrestacion,
+            this.selectedInformeEstadistica,
             this.selectedCama,
             this.view,
             this.capa2
@@ -281,7 +281,7 @@ export class MapaCamasService {
                 }
                 // Para conseguir la cama de la internación desde el listado
                 return combineLatest([
-                    this.selectedPrestacion,
+                    this.selectedInformeEstadistica,
                     this.selectedResumen
                 ]).pipe(
                     switchMap(([prestacion, resumen]) => {
@@ -584,6 +584,38 @@ export class MapaCamasService {
         return listaInternacionFiltrada;
     }
 
+    filtrarInformesEstadistica(
+        listaInformes: IInformeEstadistica[],
+        documento?: string,
+        apellido?: string,
+        estado?: string
+    ): IInformeEstadistica[] {
+        let listaFiltrada = listaInformes;
+
+        if (documento) {
+            const doc = documento.toLowerCase();
+            listaFiltrada = listaFiltrada.filter((informe: IInformeEstadistica) =>
+                informe.paciente?.documento?.toLowerCase().includes(doc) ||
+                informe.paciente?.numeroIdentificacion?.toLowerCase().includes(doc)
+            );
+        }
+
+        if (apellido) {
+            const ape = apellido.toLowerCase();
+            listaFiltrada = listaFiltrada.filter((informe: IInformeEstadistica) =>
+                informe.paciente?.apellido?.toLowerCase().includes(ape)
+            );
+        }
+
+        if (estado) {
+            listaFiltrada = listaFiltrada.filter((informe: IInformeEstadistica) =>
+                informe.estadoActual?.tipo === estado
+            );
+        }
+
+        return listaFiltrada;
+    }
+
     snapshot(fecha, idInternacion = null, ambito: string = null, capa: string = null, estado: string = null): Observable<ISnapshot[]> {
         ambito = ambito || this.ambito;
         capa = capa || this.capa;
@@ -599,11 +631,11 @@ export class MapaCamasService {
             this.ambito2,
             this.capa2,
             this.selectedCama,
-            this.selectedPrestacion,
+            this.selectedInformeEstadistica,
             this.selectedResumen,
             this.view
         ]).pipe(
-            switchMap(([ambito, capa, selectedCama, selectedPrestacion, selectedResumen, view]) => {
+            switchMap(([ambito, capa, selectedCama, selectedInformeEstadistica, selectedResumen, view]) => {
                 hasta = hasta || new Date();
                 if (type === 'cama') {
                     return this.camasHTTP.historial(ambito, capa, desde, hasta, { idCama: cama ? cama.idCama : selectedCama.idCama });
@@ -614,11 +646,13 @@ export class MapaCamasService {
 
                     } else if (view === 'listado-internacion') {
                         if (!desde) {
-                            desde = selectedPrestacion ? selectedPrestacion.solicitud.fecha : selectedResumen.fechaIngreso;
+                            desde = selectedInformeEstadistica ? selectedInformeEstadistica.informeIngreso.fechaIngreso : selectedResumen.fechaIngreso;
+
                         }
-                        if (this.capa === 'estadistica' && selectedPrestacion.id) {
-                            desde = [desde, selectedPrestacion.solicitud.fecha].sort((a, b) => moment(a).diff(moment(b)))[0];
-                            return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedPrestacion.id);
+                        if (this.capa === 'estadistica' && selectedInformeEstadistica.id) {
+                            desde = [desde, selectedInformeEstadistica.informeIngreso.fechaIngreso].sort((a, b) => moment(a).diff(moment(b)))[0];
+
+                            return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedInformeEstadistica.id);
                         }
                         if (selectedResumen._id) {
                             desde = [desde, selectedResumen.fechaIngreso].sort((a, b) => moment(a).diff(moment(b)))[0];
