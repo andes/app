@@ -33,6 +33,7 @@ import { ConceptObserverService } from './../../services/conceptObserver.service
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { RecetaService } from 'src/app/modules/rup/services/receta.service';
+import { InsumosService } from 'src/app/modules/rup/services/insumos.service';
 import { ECLQueriesService } from './../../../../services/eclqueries.service';
 
 @Component({
@@ -159,6 +160,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
         public plexVisualizador: PlexVisualizadorService,
         public constantesService: ConstantesService,
         public recetasService: RecetaService,
+        public insumosService: InsumosService,
         @Optional() public ejecucionService: RupEjecucionService,
         public eclqueriesServicies: ECLQueriesService,
         public recetaService: RecetaService

@@ -58,12 +58,17 @@ export class PrescripcionDispositivoComponent extends RUPComponent implements On
     @Unsubscribe()
     loadDispositivo(event) {
         const input = event.query;
+
         if (input && input.length > 2) {
-            const query: any = {
-                expression: this.eclDispositivos.valor,
-                search: input
+            const query = {
+                'insumo': input,
+                'tipo': 'dispositivo',
+                'requiereEspecificacion': false,
             };
-            this.snomedService.get(query).subscribe(event.callback);
+
+            this.insumosService.getInsumos(query).subscribe(insumos => {
+                event.callback(insumos);
+            });
         } else {
             event.callback([]);
         }
