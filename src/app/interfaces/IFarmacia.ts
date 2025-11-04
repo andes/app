@@ -34,6 +34,7 @@ export interface IFarmacia {
     expedientePapel: string;
     expedienteGDE: string;
     nroCaja: string;
+    tipoEstablecimiento: string;
     disposiciones: [];
     sancion: [];
 }
