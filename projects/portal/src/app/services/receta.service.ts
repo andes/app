@@ -25,8 +25,8 @@ export class RecetaService {
         return this.server.get(`${this.url}/motivos`);
     }
 
-    suspender(recetas: string[], profesional: IProfesional, motivo: string, observacion: string) {
-        return this.server.patch(`${this.url}`, { op: 'suspender', recetas, motivo, observacion, profesional });
+    suspenderReceta(recetaId: string, profesional: IProfesional, motivo: string, observacion: string) {
+        return this.server.patch(`${this.url}`, { op: 'suspender', recetaId, motivo, observacion, profesional });
     }
 
     getRecetaPrincipal(recetas) {
@@ -49,7 +49,7 @@ export class RecetaService {
         if (!recetaVigente) {
             const recetasCandidatas = recetas.filter(receta =>
                 receta.estadoDispensaActual?.tipo !== 'sin-dispensa' ||
-        receta.estadoActual.tipo !== 'pendiente'
+        receta.estadoActual.tipo !== 'pendiente' && receta.estadoActual.tipo !== 'eliminada'
             );
             return recetasCandidatas.reduce((max, receta) =>
                 receta.fechaRegistro > max.fechaRegistro ? receta : max, recetasCandidatas[0]
