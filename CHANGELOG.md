@@ -1,3 +1,10 @@
+## [5.169.1](https://github.com/andes/app/compare/v5.169.0...v5.169.1) (2025-11-05)
+
+
+### Bug Fixes
+
+* **HUDS:** quitar link a browser ([#3256](https://github.com/andes/app/issues/3256)) ([860cbdc](https://github.com/andes/app/commit/860cbdceb8ac2611957603d5b44cb135d81d79a5))
+
 # [5.169.0](https://github.com/andes/app/compare/v5.168.4...v5.169.0) (2025-10-29)
 
 
