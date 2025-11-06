@@ -92,9 +92,17 @@
         <plex-label *ngIf="registro.valor.cantidad" titulo="Cantidad"
                     [subtitulo]="registro.valor.cantidad || 'Sin especificar'">
         </plex-label>
+
+        <plex-label titulo="Preparación" *ngIf="registro.valor.preparacion" [subtitulo]="registro.valor.preparacion">
+        </plex-label>
     </plex-grid>
 
-    <plex-title size="sm" titulo="Frecuencia"></plex-title>
+    <plex-title size="sm" [titulo]="registro.valor.sos ? 'Frecuencia SOS' : 'Frecuencia'">
+    </plex-title>
+
+    <!-- Mostrar motivo solo si es SOS -->
+    <plex-label *ngIf="registro.valor.sos && registro.valor.motivo" titulo="Motivo" [subtitulo]="registro.valor.motivo">
+    </plex-label>
 
     <plex-grid cols="3" *ngFor="let frecuencia of registro.valor.frecuencias">
 
@@ -114,18 +122,18 @@
                     titulo="Frecuencia Especial" [subtitulo]="frecuencia.frecuenciaEspecial?.nombre">
         </plex-label>
 
-        <plex-label titulo="Velocidad Infusión" [subtitulo]="frecuencia.velocidad || 'Sin especificar'">
+        <plex-label titulo="Velocidad Infusión" [subtitulo]="frecuencia.velocidadFinal || 'Sin especificar'">
         </plex-label>
         <plex-label *ngIf="frecuencia.horario" titulo="Horario"
                     [subtitulo]="frecuencia.horario ? (frecuencia.horario | hora) : frecuencia.frecuencia?.nombre">
         </plex-label>
-        <plex-label *ngIf="registro.valor.motivoUnicaVez" span="3" titulo="Motivo Única Vez" span="3"
-                    [subtitulo]="registro.valor.motivoUnicaVez">
+        <plex-label *ngIf="registro.valor.unicaVez && registro.valor.motivo" span="3" titulo="Motivo Única Vez"
+                    [subtitulo]="registro.valor.motivo">
         </plex-label>
+
     </plex-grid>
 
-    <plex-label titulo="Preparación" *ngIf="registro.valor.preparacion" [subtitulo]="registro.valor.preparacion">
-    </plex-label>
+
 
     <div *ngIf="registro.valor.indicaciones" class="mt-3">
         <plex-label titulo="Aclaraciones y/o Comentarios">
