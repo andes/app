@@ -105,6 +105,10 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
                 horario: this.backUpFrecuencias[0]?.horario || null,
                 velocidad: this.backUpFrecuencias[0]?.velocidad || null
             }];
+
+            if (!this.registro.valor.motivoUnicaVez) {
+                this.registro.valor.motivoUnicaVez = this.registro.valor.motivo || '';
+            }
         } else if (this.backUpFrecuencias.length) {
             this.registro.valor.frecuencias = this.backUpFrecuencias;
         }
