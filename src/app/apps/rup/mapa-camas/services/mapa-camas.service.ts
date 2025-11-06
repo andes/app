@@ -274,6 +274,7 @@ export class MapaCamasService {
             cache()
         );
 
+
         this.camaSelectedSegunView$ = this.view.pipe(
             switchMap(view => {
                 if (view === 'mapa-camas') {
@@ -433,7 +434,6 @@ export class MapaCamasService {
         if (!informe) {
             return this.selectedInformeEstadistica.next({ id: null } as any);
         }
-
         this.selectedInformeEstadistica.next(informe);
     }
 
