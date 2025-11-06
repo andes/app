@@ -9,7 +9,7 @@ import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.
 import { ListadoInternacionCapasService } from '../../../views/listado-internacion-capas/listado-internacion-capas.service';
 import { ListadoInternacionService } from '../../../views/listado-internacion/listado-internacion.service';
 import { IngresoPacienteService } from '../../ingreso/ingreso-paciente-workflow/ingreso-paciente-workflow.service';
-
+import { InformeEstadisticaService } from 'src/app/modules/rup/services/informe-estadistica.service';
 @Component({
     selector: 'app-internacion-detalle',
     templateUrl: './internacion-detalle.component.html',
@@ -51,7 +51,8 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
         private listadoInternacionCapasService: ListadoInternacionCapasService,
         private listadoInternacion: ListadoInternacionService,
         private cdr: ChangeDetectorRef,
-        private ingresoPacienteService: IngresoPacienteService
+        private ingresoPacienteService: IngresoPacienteService,
+        private informeEstadisticaService: InformeEstadisticaService
     ) { }
 
     ngAfterViewChecked() {
@@ -91,24 +92,23 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
             }
         );
 
-        this.mapaCamasService.prestacion$.subscribe(prestacion => {
-            this.estadoPrestacion = '';
-            this.existeIngreso = false;
+        // this.mapaCamasService.prestacion$.subscribe(prestacion => {
+        //     this.estadoPrestacion = '';
+        //     this.existeIngreso = false;
 
-            if (prestacion) {
-                this.estadoPrestacion = prestacion.estadoActual.tipo;
-                if (prestacion.ejecucion.registros[0].valor.informeIngreso) {
-                    this.existeIngreso = true;
-                }
-                this.existeEgreso = !!prestacion.ejecucion.registros[1]?.valor?.InformeEgreso;
-                this.editarEgreso = !this.existeEgreso;
-                this.ingresoPacienteService.selectPaciente(prestacion.paciente?.id);
-            }
-            // loading se setea en true desde el listado de internacion
-            this.mapaCamasService.isLoading(false);
-        });
+        //     if (prestacion) {
+        //         this.estadoPrestacion = prestacion.estadoActual.tipo;
+        //         if (prestacion.ejecucion.registros[0].valor.informeIngreso) {
+        //             this.existeIngreso = true;
+        //         }
+        //         this.existeEgreso = !!prestacion.ejecucion.registros[1]?.valor?.InformeEgreso;
+        //         this.editarEgreso = !this.existeEgreso;
+        //         this.ingresoPacienteService.selectPaciente(prestacion.paciente?.id);
+        //     }
+        //     // loading se setea en true desde el listado de internacion
+        //     this.mapaCamasService.isLoading(false);
+        // });
 
-        // Nueva capa estadística (internacionFormEstadistica)
         this.mapaCamasService.informeEstadistica$.subscribe(informe => {
             if (informe?.paciente?.id) {
                 this.ingresoPacienteService.selectPaciente(informe.paciente.id);
@@ -117,7 +117,6 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
                 this.editarEgreso = !informe.informeEgreso;
             }
         });
-
         // Configura los tabs a mostrar según capa y vista
         this.mapaCamasService.resumenInternacion$.pipe(
             map(resumen => {
