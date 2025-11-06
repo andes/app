@@ -70,6 +70,12 @@ export interface IInformeEgreso {
         diasEstadaOtrasCircunstancias?: number;
         diasDePermisoDeSalida?: number;
     };
+    nacimientos?: {
+        pesoAlNacer?: number;
+        condicionAlNacer?: string;
+        terminacion?: string;
+        sexo?: string;
+    }[];
     createdAt?: Date;
     createdBy?: {
         id: string;
@@ -98,7 +104,8 @@ export interface IInternacionEstado {
 
 export interface IInformeEstadistica {
     id: string;
-    organizacion: Partial<IOrganizacion>;
+    organizacion: Partial<IOrganizacion & { _id?: string }>;
+
     unidadOrganizativa: ISnomedConcept;
     paciente: IPaciente;
     informeIngreso: IInformeIngreso;
@@ -115,7 +122,7 @@ export interface IInformeEstadistica {
         apellido: string;
         username: string | number;
         documento: string | number;
-        organizacion: Partial<IOrganizacion>;
+        organizacion: Partial<IOrganizacion & { _id?: string }>;
     };
 }
 
