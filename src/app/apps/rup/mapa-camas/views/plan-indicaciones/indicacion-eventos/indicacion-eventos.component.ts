@@ -6,11 +6,11 @@ import { tap } from 'rxjs/operators';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
+import { PlanIndicacionesServices } from '../../../services/plan-indicaciones.service';
 
 @Component({
     selector: 'in-plan-indicacion-evento',
     templateUrl: './indicacion-eventos.component.html',
-
 })
 export class PlanIndicacionEventoComponent implements OnChanges {
     @Input() indicacion;
@@ -21,6 +21,8 @@ export class PlanIndicacionEventoComponent implements OnChanges {
     fechaHora: Date;
     editando: boolean;
     horaOrganizacion;
+    public frecuenciaDelMedico: any = null;
+    public horarioPlanificado: any = null;
     horaMin;
     horaMax;
     estadoItems = [
@@ -36,12 +38,17 @@ export class PlanIndicacionEventoComponent implements OnChanges {
     capa;
 
     @Output() events = new EventEmitter();
+    @Output() save = new EventEmitter<any>();
+    @Output() edit = new EventEmitter<any>();
+    public seleccionado = false;
+
 
     constructor(
         private indicacionEventosService: PlanIndicacionesEventosServices,
         private organizacionService: OrganizacionService,
         private auth: Auth,
         private mapaCamasService: MapaCamasService,
+        private planIndicacionesServices: PlanIndicacionesServices,
         private plex: Plex
     ) { }
 
@@ -60,9 +67,16 @@ export class PlanIndicacionEventoComponent implements OnChanges {
             }
         );
         this.puedeEditar = this.mapaCamasService.capa2.getValue() === 'enfermeria';
-        this.editando = this.evento?.estado === 'on-hold'; // Para nuevos eventos
+        this.editando = !this.evento || this.evento.estado === 'on-hold' || this.evento.estado === 'bypass';
+
         this.horaMin = moment(this.fechaHora).minutes(0);
         this.horaMax = moment(this.fechaHora).minutes(59);
+
+        if (this.indicacion?.valor?.frecuencias?.length > 0) {
+            const frecuenciaGuardada = this.indicacion.valor.frecuencias[0];
+            this.frecuenciaDelMedico = frecuenciaGuardada.frecuencia;
+            this.horarioPlanificado = frecuenciaGuardada.horario;
+        }
 
         if (this.evento) {
             this.estado = this.estadoItems.find(e => e.id === this.evento.estado);
@@ -79,6 +93,7 @@ export class PlanIndicacionEventoComponent implements OnChanges {
     onEdit() {
         this.editando = true;
     }
+
     onInputChange(value) {
         (value.value?.id === 'realizado') ? this.labelEstado = 'Observaciones' : this.labelEstado = 'Motivo';
     }
@@ -102,17 +117,32 @@ export class PlanIndicacionEventoComponent implements OnChanges {
                 estado: this.estado.id,
                 observaciones: this.observaciones
             };
-            const createReq = this.indicacionEventosService.create(evento);
+
             if (this.estado.id === 'realizado') {
-                this.plex.confirm('El horario seleccionado no coincide con la planificación. Si continúa, los próximos eventos se modificarán. ¿Deséa registrarlo de todas formas?', 'Atención', 'Si', 'No').then(response => {
+                this.plex.confirm(
+                    'El horario seleccionado no coincide con la planificación. Si continúa, los próximos eventos se modificarán. ¿Desea registrarlo de todas formas?',
+                    'Atención', 'Sí', 'No'
+                ).then(response => {
                     if (response) {
-                        createReq.subscribe(() => {
+                        this.indicacionEventosService.create(evento).subscribe(() => {
+                            this.plex.toast('success', 'Evento registrado y planificación actualizada.');
                             this.events.emit(true);
                             this.editando = false;
+                        }, (error) => {
+                            this.plex.toast('danger', 'Error al registrar el evento.');
                         });
                     }
+                });
+            } else {
+                this.indicacionEventosService.create(evento).subscribe(() => {
+                    this.plex.toast('success', 'Evento registrado.');
+                    this.events.emit(true);
+                    this.editando = false;
+                }, (error) => {
+                    this.plex.toast('danger', 'Error al registrar el evento.');
                 });
             }
         }
     }
+
 }
