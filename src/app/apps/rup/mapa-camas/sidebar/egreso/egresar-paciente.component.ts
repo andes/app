@@ -482,32 +482,40 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     // Setea valores de la prestacion (estadistica y estadistica-v2) antes de llamar al egreso simplificado
     egresoExtendido(): Observable<any> {
         const registros = this.controlRegistrosGuardar();
+
         if (registros) {
-            const params: any = {
-                op: 'registros',
-                registros: registros
+            const body = {
+                registros,
+                informeEgreso: this.registro.valor.InformeEgreso
             };
-            return this.informeEstadisticaService.patch(this.informe.id, params).pipe(
+            return this.informeEstadisticaService.patchRegistros(
+                this.informe._id || this.informe.id,
+                body
+            ).pipe(
                 switchMap(informe => {
+
                     if (this.view === 'listado-internacion' || this.capa === 'estadistica') {
                         this.mapaCamasService.selectInformeEstadistica(informe);
                     }
+
                     if (this.capa === 'estadistica-v2' && this.resumen?.fechaEgreso) {
-                        const idInternacion = this.view === 'listado-internacion' ? this.resumen.id : this.cama.idInternacion;
-                        // actualiza fecha y tipo de egreso en el resumen para mantener la sincronización
+                        const idInternacion = this.view === 'listado-internacion'
+                            ? this.resumen.id
+                            : this.cama.idInternacion;
                         return this.internacionResumenService.update(idInternacion, {
                             tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id,
                             fechaEgreso: this.registro.valor.InformeEgreso.fechaEgreso
                         });
                     } else {
-                        // estadistica o medica
                         return this.egresoSimplificado(this.estadoDestino);
                     }
-                }),
+                })
             );
         }
+
         return of(null);
     }
+
 
     controlRegistrosGuardar() {
         const registros: any[] = [];
