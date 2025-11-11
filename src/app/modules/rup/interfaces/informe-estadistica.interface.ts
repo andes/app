@@ -104,6 +104,7 @@ export interface IInternacionEstado {
 
 export interface IInformeEstadistica {
     id: string;
+    _id?: string;
     organizacion: Partial<IOrganizacion & { _id?: string }>;
 
     unidadOrganizativa: ISnomedConcept;
