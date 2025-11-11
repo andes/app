@@ -23,13 +23,36 @@
         <ng-container *ngIf="camasEstados$ | async as camasEstados">
             <plex-grid size="md" [cols]="3">
                 <plex-card *ngFor="let efector of camasEstados" [selectable]="true" (click)="verDetalle(efector)"
-                           [selected]="efector._id === efectorSelected?._id">
-                    <div style="display: flex; flex-direction: column;">
-                        <plex-label titulo="{{efector.organizacion.nombre}}" size="xl" type="info"></plex-label>
-                        <plex-label titulo="Total de camas: {{efector.totalCamas}}"></plex-label>
-                        <plex-label titulo="Camas ocupadas: {{efector.camasOcupadas}}"></plex-label>
-                        <plex-label titulo="Camas disponibles: {{efector.camasDisponibles}}"></plex-label>
-                        <plex-label titulo="Camas Bloqueadas: {{efector.camasBloqueadas}}"></plex-label>
+                           [selected]="efector.organizacion._id === efectorSelected?._id">
+                    <div class="contenido-card">
+                        <div class="icono-hospital">
+                            <plex-icon name="hospital" size="xl" type="info"></plex-icon>
+                        </div>
+                        <plex-label titulo="{{efector.organizacion.nombre}}" size="xl" class="text-center"></plex-label>
+                        <div class="fila-camas">
+                            <div class="col-cama">
+                                <plex-icon size="xl" name="cama" type="info" class="size-icon"></plex-icon>
+                                <plex-label size="xl" type="info" titulo="{{efector.totalCamas}}"
+                                            subtitulo="Total de camas" class="margen-left-10"></plex-label>
+                            </div>
+                            <div class="col-cama">
+                                <plex-icon size="xl" name="cama" type="success" class="size-icon"></plex-icon>
+                                <plex-label size="xl" type="success" titulo="{{efector.camasDisponibles}}"
+                                            subtitulo="Camas disponibles" class="margen-left-10"></plex-label>
+                            </div>
+                        </div>
+                        <div class="fila-camas">
+                            <div class="col-cama">
+                                <plex-icon size="xl" name="cama-paciente" type="warning" class="size-icon"></plex-icon>
+                                <plex-label size="xl" type="warning" titulo="{{efector.camasOcupadas}}"
+                                            subtitulo="Camas ocupadas" class="margen-left-10"></plex-label>
+                            </div>
+                            <div class="col-cama">
+                                <plex-icon size="xl" name="cama-candado" type="default" class="size-icon"></plex-icon>
+                                <plex-label size="xl" type="default" titulo="{{efector.camasBloqueadas}}"
+                                            subtitulo="Camas bloqueadas" class="margen-left-10"></plex-label>
+                            </div>
+                        </div>
                     </div>
                 </plex-card>
             </plex-grid>
@@ -47,30 +70,9 @@
         </plex-title>
         <ng-container *ngIf="efectorSelected">
             <plex-detail>
-                <plex-icon name="hospital"></plex-icon>
+                <plex-icon name="hospital" type="info"></plex-icon>
                 <div title>{{efectorSelected.organizacion.nombre}}</div>
             </plex-detail>
-            <ng-container *ngIf="efectorSelected.unidad">
-                <plex-accordion>
-                    <plex-panel class="lista-panel">
-                        <div plex-accordion-title>
-                            <span class="d-flex justify-content-between align-items-center">
-                                <strong> {{efectorSelected.unidad.term}}</strong>
-                            </span>
-                        </div>
-                        <div plex-accordion-content>
-                            <plex-label size="xl" titulo="Total de camas: {{efectorSelected.totalCamas}}"
-                                        style="margin-bottom: 20px;"></plex-label>
-                            <plex-label size="xl" titulo="Camas Disponibles: {{efectorSelected.camasDisponibles}}"
-                                        style="margin-bottom: 20px;"></plex-label>
-                            <plex-label size="xl" titulo="Camas Ocupadas: {{efectorSelected.camasOcupadas}}"
-                                        style="margin-bottom: 20px;"></plex-label>
-                            <plex-label size="xl"
-                                        titulo="Camas Bloqueadas: {{efectorSelected.camasBloqueadas}}"></plex-label>
-                        </div>
-                    </plex-panel>
-                </plex-accordion>
-            </ng-container>
             <ng-container *ngFor="let unidadOrganizativa of efectorSelected.unidadesOrganizativas">
                 <plex-accordion>
                     <plex-panel class="lista-panel">
@@ -80,14 +82,19 @@
                             </span>
                         </div>
                         <div plex-accordion-content>
-                            <plex-label size="xl" titulo="Total de camas: {{unidadOrganizativa.totalCamas}}"
-                                        style="margin-bottom: 20px;"></plex-label>
-                            <plex-label size="xl" titulo="Camas Disponibles: {{unidadOrganizativa.camasDisponibles}}"
-                                        style="margin-bottom: 20px;"></plex-label>
-                            <plex-label size="xl" titulo="Camas Ocupadas: {{unidadOrganizativa.camasOcupadas}}"
-                                        style="margin-bottom: 20px;"></plex-label>
-                            <plex-label size="xl"
-                                        titulo="Camas Bloqueadas: {{unidadOrganizativa.camasBloqueadas}}"></plex-label>
+                            <div class="d-flex">
+                                <div class="flex-1 mr-2">
+                                    <plex-label size="lg">Total de camas: {{unidadOrganizativa.totalCamas}}</plex-label>
+                                    <plex-label size="lg">Camas Ocupadas:
+                                        {{unidadOrganizativa.camasOcupadas}}</plex-label>
+                                </div>
+                                <div class="flex-1 ml-5">
+                                    <plex-label size="lg">Camas Disponibles:
+                                        {{unidadOrganizativa.camasDisponibles}}</plex-label>
+                                    <plex-label size="lg">Camas Bloqueadas:
+                                        {{unidadOrganizativa.camasBloqueadas}}</plex-label>
+                                </div>
+                            </div>
                         </div>
                     </plex-panel>
                 </plex-accordion>
