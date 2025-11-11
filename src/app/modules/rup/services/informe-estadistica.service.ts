@@ -8,16 +8,15 @@ import { HUDSService } from './huds.service';
     providedIn: 'root'
 })
 export class InformeEstadisticaService {
-    // URL base para el servicio de informe estadístico
     private baseUrl = '/modules/rup/internacion/informe-estadistica';
     // Añadimos la URL base del servicio de Prestaciones, donde residen los endpoints de HUDS (Historial Único de Salud).
     private prestacionesBaseUrl = '/modules/rup/prestaciones';
 
-    constructor(private server: Server,
-                private hudsService: HUDSService
+    constructor(
+        private server: Server,
+        private hudsService: HUDSService
     ) { }
 
-    // Obtiene una lista de informes estadísticos con filtros opcionales
     get(params?: any): Observable<IInformeEstadistica[]> {
         return this.server.get(this.baseUrl, { params });
     }
@@ -35,10 +34,16 @@ export class InformeEstadisticaService {
         return this.server.post(this.baseUrl, data);
     }
 
+
     patch(id: string, data: Partial<IInformeEstadistica>): Observable<IInformeEstadistica> {
-        return this.server.patch(`${this.baseUrl}/${id}`, data);
+        const url = `${this.baseUrl}/${id}`;
+        return this.server.patch(url, data);
     }
 
+    patchRegistros(id: string, body: any): Observable<IInformeEstadistica> {
+        const url = `${this.baseUrl}/${id}`;
+        return this.server.patch(url, body);
+    }
     put(id: string, data: IInformeEstadistica): Observable<IInformeEstadistica> {
         return this.server.put(`${this.baseUrl}/${id}`, data);
     }
