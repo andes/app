@@ -2,7 +2,7 @@ import { Server } from '@andes/shared';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class Cie10Service {
     private cie10URL = '/core/term/cie10'; // URL to web api
     constructor(private server: Server) { }

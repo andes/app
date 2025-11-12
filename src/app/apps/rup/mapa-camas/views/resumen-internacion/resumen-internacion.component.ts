@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';

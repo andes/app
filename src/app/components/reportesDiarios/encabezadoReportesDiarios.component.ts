@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
 import { OrganizacionService } from '../../services/organizacion.service';

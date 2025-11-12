@@ -19,6 +19,8 @@ import { InternacionResumenHTTP } from '../../services/resumen-internacion.http'
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
 import { ListadoInternacionCapasService } from '../../views/listado-internacion-capas/listado-internacion-capas.service';
 import { NgForm } from '@angular/forms';
+import moment from 'moment';
+
 @Component({
     selector: 'app-egresar-paciente',
     templateUrl: './egresar-paciente.component.html',
