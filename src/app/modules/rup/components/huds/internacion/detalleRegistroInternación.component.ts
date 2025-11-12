@@ -1,3 +1,4 @@
+import moment from 'moment';
 
 import { Auth } from '@andes/auth';
 import { Component, Input, OnInit } from '@angular/core';

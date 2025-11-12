@@ -13,6 +13,7 @@ import { PrestacionesService } from '../../../../../modules/rup/services/prestac
 import { IMAQEstado } from '../../interfaces/IMaquinaEstados';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-item.component';
+import moment from 'moment';
 
 @Component({
     selector: 'app-registros-huds-detalle',
