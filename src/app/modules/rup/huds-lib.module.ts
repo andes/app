@@ -42,7 +42,7 @@ import { VistaDerivacionComponent } from './components/huds/vistaDerivacion';
 @NgModule({
     imports: [
         CommonModule,
-        PlexModule,//.forRoot({ networkLoading: true }),
+        PlexModule, // .forRoot({ networkLoading: true }),
         FormsModule,
         RouterModule,
         HttpClientModule,
