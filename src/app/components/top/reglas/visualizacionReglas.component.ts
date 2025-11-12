@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ISnomedConcept } from 'src/app/modules/rup/interfaces/snomed-concept.interface';

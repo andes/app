@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Input, Component } from '@angular/core';
 
 @Component({

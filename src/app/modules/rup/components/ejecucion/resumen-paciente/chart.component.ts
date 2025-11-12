@@ -1,3 +1,4 @@
+import moment from 'moment';
 
 import { Component, AfterViewInit, HostBinding, Input } from '@angular/core';
 import { Auth } from '@andes/auth';

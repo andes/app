@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { INovedad } from 'src/app/interfaces/novedades/INovedad.interface';
