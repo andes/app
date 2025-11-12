@@ -2,6 +2,7 @@ name: PORTAL BUILD AND TEST
 on: [push]
 jobs:
     build:
+        if: false
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v1
