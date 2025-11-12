@@ -32,7 +32,7 @@ export class PlantillasService {
             return this.server.get(this.url, { params }).pipe(map(plantillas => {
                 if (plantillas.length > 0) {
                     plantillas = [...plantillas,
-                        { title: 'Limpiar', handler: this.limpiarTextoPlantilla(conceptId), descripcion: '' }];
+                                  { title: 'Limpiar', handler: this.limpiarTextoPlantilla(conceptId), descripcion: '' }];
                     cache.next(plantillas.map(p => {
                         return {
                             ...p,
