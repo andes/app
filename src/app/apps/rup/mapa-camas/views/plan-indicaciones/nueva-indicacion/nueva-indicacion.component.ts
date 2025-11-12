@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ChangeDetectorRef, AfterContentChecked } from '@angular/core';

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Unsubscribe } from '@andes/shared';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';

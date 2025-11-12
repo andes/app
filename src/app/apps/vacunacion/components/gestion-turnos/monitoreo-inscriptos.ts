@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { catchError } from 'rxjs/operators';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import moment from 'moment';
 
 @Component({
     selector: 'monitoreo-inscriptos',

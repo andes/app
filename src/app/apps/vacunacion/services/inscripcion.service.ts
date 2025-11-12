@@ -4,7 +4,7 @@ import { BehaviorSubject, combineLatest, EMPTY, Observable } from 'rxjs';
 import { auditTime, map, switchMap } from 'rxjs/operators';
 import { ILocalidad } from 'src/app/interfaces/ILocalidad';
 import { ICiudadano } from '../interfaces/ICiudadano';
-
+import moment from 'moment';
 @Injectable()
 export class InscripcionService extends ResourceBaseHttp {
     // URL to web api

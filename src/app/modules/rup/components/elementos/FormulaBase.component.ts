@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnInit, ReflectiveInjector } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { FormulaBaseService, FormularRegister } from '../formulas/index';
