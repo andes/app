@@ -41,7 +41,7 @@ import { SuspenderMedicacionComponent } from './components/ejecucion/recetas/sus
 @NgModule({
     imports: [
         CommonModule,
-        PlexModule,//.forRoot({ networkLoading: true }),
+        PlexModule, // .forRoot({ networkLoading: true }),
         FormsModule,
         RouterModule,
         HttpClientModule,

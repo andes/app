@@ -47,7 +47,7 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
     public loading = false;
     public disableGuardar = false;
     public resultadoBusqueda = null;
-    public tieneAccesoHUDS: Boolean;
+    public tieneAccesoHUDS: boolean;
     /**
      * Indica si muestra el calendario para dar turno autocitado
      */
