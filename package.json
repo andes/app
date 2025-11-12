@@ -92,6 +92,7 @@
     "devDependencies": {
         "@angular-builders/custom-webpack": "^15.0.0",
         "@angular-devkit/build-angular": "^15.2.11",
+        "@angular-eslint/builder": "^15.2.1",
         "@angular-eslint/eslint-plugin": "^15.2.1",
         "@angular-eslint/eslint-plugin-template": "^15.2.1",
         "@angular-eslint/template-parser": "^15.2.1",
@@ -99,13 +100,14 @@
         "@angular/compiler-cli": "15.2.10",
         "@semantic-release/changelog": "^5.0.1",
         "@semantic-release/git": "^9.0.0",
-        "@stylistic/eslint-plugin": "^5.2.3",
+        "@stylistic/eslint-plugin": "^0.0.8",
         "@types/estree": "^1.0.2",
         "@types/hammerjs": "^2.0.39",
         "@types/jasmine": "^2.8.9",
         "@types/node": "^20.19.9",
-        "@typescript-eslint/eslint-plugin": "^8.38.0",
-        "@typescript-eslint/parser": "^8.38.0",
+        "@typescript-eslint/eslint-plugin": "^5.62.0",
+        "@typescript-eslint/parser": "^5.62.0",
+        "eslint": "^8.57.1",
         "jasmine-core": "~3.5.0",
         "jasmine-spec-reporter": "~5.0.0",
         "ng-packagr": "^15.2.2",
@@ -119,8 +121,7 @@
         "@zxing/ngx-scanner": "3.9.1",
         "ng-recaptcha": {
             "@angular/core": "15.2.10"
-        },
-        "eslint": "^8.57.1"
+        }
     },
     "release": {
         "branches": [

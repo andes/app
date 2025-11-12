@@ -101,7 +101,7 @@ export class SolicitudesComponent implements OnInit {
     public accesoHudsPrestacion = null;
     public accesoHudsPaciente = null;
     public accesoHudsTurno = null;
-    public motivoRespuesta: String;
+    public motivoRespuesta: string;
     public observacionesCitar;
     public observacionesAnular;
     public observacionesIniciarPrestacion;

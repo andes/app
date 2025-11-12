@@ -14,7 +14,7 @@ import { Auth } from '@andes/auth';
 })
 export class ListaReglasComponent implements OnInit {
     @Input()
-    esParametrizado = false;
+        esParametrizado = false;
     /**
      * Organización ingresada en el filtro de organización origen
      * @type {IOrganizacion}

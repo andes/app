@@ -239,11 +239,11 @@ export class ClonarAgendaComponent implements OnInit {
                         if (agenda.profesionales.map(elem => {
                             return elem.id;
                         }).some
-                            (v => {
-                                return this.agenda.profesionales.map(elem => {
-                                    return elem.id;
-                                }).includes(v);
-                            })) {
+                        (v => {
+                            return this.agenda.profesionales.map(elem => {
+                                return elem.id;
+                            }).includes(v);
+                        })) {
                             agenda.conflictoProfesional = 1;
                             dia.estado = 'conflicto';
 
