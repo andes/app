@@ -46,7 +46,8 @@
         "./karma.conf.js",
         "./webpack.config.js",
         ".eslintrc.js",
-        "node_modules/ng2-slugify/**/*.ts"
+        "node_modules/ng2-slugify/**/*.ts",
+        "node_modules/@andes/plex/**/*.ts",
     ],
     "exclude": [
         "node_modules/@andes/plex/**/*.spec.ts",
