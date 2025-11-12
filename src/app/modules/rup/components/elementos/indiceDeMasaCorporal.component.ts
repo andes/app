@@ -121,17 +121,17 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
             // Buscamos si las prestaciones en ejecucion tienen datos como para calcular el imc
             switch (true) {
             // Mostramos el  Alerta de talla
-            case (this.peso && this.talla === null):
-                this.alerta = 'Falta completar el campo talla';
-                break;
+                case (this.peso && this.talla === null):
+                    this.alerta = 'Falta completar el campo talla';
+                    break;
                 // Mostramos alerta de peso.
-            case (this.talla && this.peso === null):
-                this.alerta = 'Falta completar el campo peso';
-                break;
+                case (this.talla && this.peso === null):
+                    this.alerta = 'Falta completar el campo peso';
+                    break;
                 // Se muestra alerta de talla y de peso
-            default:
-                this.alerta = 'Falta completar el campo talla y el campo peso';
-                break;
+                default:
+                    this.alerta = 'Falta completar el campo talla y el campo peso';
+                    break;
             }
         }
     }

@@ -407,7 +407,7 @@ export class RupPacientesComponent implements OnInit {
         if (!this.selectedConcept || this.selectedConcept.concepto.conceptId !== row.concepto.conceptId) {
             this.selectedConcept = row;
             this.selectIndex = index;
-            this.showFather[row.concepto.conceptId] = !(!!this.showFather[row.concepto.conceptId]);
+            this.showFather[row.concepto.conceptId] = !(this.showFather[row.concepto.conceptId]);
             this.selectedChilds = this.selectedFather = null;
             this.demografia();
         } else {

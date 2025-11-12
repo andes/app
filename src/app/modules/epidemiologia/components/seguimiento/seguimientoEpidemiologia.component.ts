@@ -76,12 +76,12 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
                 this.buscar();
             }
         },
-            {
-                'label': 'Fecha', handler: () => {
-                    this.orden = 'fecha';
-                    this.buscar();
-                }
-            });
+        {
+            'label': 'Fecha', handler: () => {
+                this.orden = 'fecha';
+                this.buscar();
+            }
+        });
     }
 
     volverInicio() {
