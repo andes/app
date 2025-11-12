@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 import { map, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, of } from 'rxjs';
@@ -17,7 +15,7 @@ import { ITurno } from 'src/app/interfaces/turnos/ITurno';
 import { Router } from '@angular/router';
 import { IPacienteBasico } from 'src/app/core/mpi/interfaces/IPaciente';
 import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
-
+import moment from 'moment';
 
 @Injectable()
 export class PrestacionesService {

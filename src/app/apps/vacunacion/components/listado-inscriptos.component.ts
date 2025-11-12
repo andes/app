@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { InscripcionService } from '../services/inscripcion.service';
 import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
