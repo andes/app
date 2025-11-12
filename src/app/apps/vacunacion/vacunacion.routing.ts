@@ -18,7 +18,7 @@ const routes: Routes = [
     { path: 'listado', component: ListadoInscriptosVacunacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'nueva/:paciente', component: NuevaInscripcionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'estado', component: EstadoPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-    { path: '', redirectTo: 'inscripcion' },
+    { path: '', redirectTo: 'inscripcion', pathMatch: 'full' },
 ];
 
 @NgModule({
