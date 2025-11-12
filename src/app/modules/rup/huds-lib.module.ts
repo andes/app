@@ -39,7 +39,7 @@ import { VistaLaboratorioComponent } from './components/ejecucion/laboratorios/v
 @NgModule({
     imports: [
         CommonModule,
-        PlexModule,//.forRoot({ networkLoading: true }),
+        PlexModule, // .forRoot({ networkLoading: true }),
         FormsModule,
         RouterModule,
         HttpClientModule,

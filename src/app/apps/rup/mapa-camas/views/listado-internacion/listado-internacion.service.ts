@@ -76,7 +76,7 @@ export class ListadoInternacionService {
                 );
             })
         ),
-            cache();
+        cache();
     }
 
     filtrarListaInternacion(listaInternacion: IPrestacion[], paciente: string, estado: string, obraSocial: any, unidad: any) {
@@ -89,7 +89,7 @@ export class ListadoInternacionService {
                     (internacion.paciente.documento?.includes(paciente) || internacion.paciente?.numeroIdentificacion?.includes(paciente)));
             } else {
                 listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
-                (internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                    (internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
                     internacion.paciente.alias?.toLowerCase().includes(paciente.toLowerCase()) ||
                     internacion.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
