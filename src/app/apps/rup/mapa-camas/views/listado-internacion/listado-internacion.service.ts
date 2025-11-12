@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
-import { Observable, BehaviorSubject, combineLatest, of } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { switchMap, map, auditTime } from 'rxjs/operators';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { cache } from '@andes/shared';

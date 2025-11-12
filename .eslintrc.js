@@ -12,239 +12,176 @@ https://github.com/typescript-eslint/tslint-to-eslint-config/blob/master/docs/FA
 Happy linting! 💖
 */
 
+// .eslintrc.js
 module.exports = {
     root: true,
     ignorePatterns: ['projects/**/*'],
-    parser: '@typescript-eslint/parser',
-    parserOptions: {
-        ecmaVersion: 2022,
-        sourceType: 'module',
-        project: ['./tsconfig.json']
-    },
-    plugins: [
-        '@typescript-eslint',
-        '@angular-eslint',
-        '@stylistic'
-    ],
-    extends: [
-        "eslint:recommended",
-        'plugin:@typescript-eslint/recommended',
-        'plugin:@angular-eslint/recommended',
-        'plugin:@stylistic/recommended'
-    ],
 
-
-    rules: {
-        // TypeScript rules
-        '@typescript-eslint/no-explicit-any': 'warn',
-        '@typescript-eslint/indent': [
-            'error',
-            4,
-            {
-                'ObjectExpression': 'first',
-                'FunctionDeclaration': {
-                    'parameters': 'first'
-                },
-                'FunctionExpression': {
-                    'parameters': 'first'
-                },
-                'SwitchCase': 1,
-                'ArrayExpression': 'first'
-            }
-        ],
-        '@typescript-eslint/no-empty-function': 'off',
-        '@typescript-eslint/no-empty-interface': 'error',
-        '@typescript-eslint/no-inferrable-types': [
-            'error',
-            {
-                'ignoreParameters': true
-            }
-        ],
-        '@typescript-eslint/prefer-function-type': 'error',
-        '@typescript-eslint/unified-signatures': 'error',
-
-        // Stylistic rules
-        '@stylistic/member-delimiter-style': [
-            'error',
-            {
-                multiline: { delimiter: 'semi', requireLast: true },
-                singleline: { delimiter: 'semi', requireLast: false },
-            },
-        ],
-        '@stylistic/semi': ['error', 'always'],
-        '@stylistic/quotes': ['error', 'single'],
-        '@stylistic/type-annotation-spacing': 'error',
-
-        // Angular-specific rules
-        '@angular-eslint/component-class-suffix': ['error', { suffixes: ['Component'] }],
-        '@angular-eslint/directive-class-suffix': ['error', { suffixes: ['Directive'] }],
-        '@angular-eslint/no-host-metadata-property': 'error',
-        '@angular-eslint/no-inputs-metadata-property': 'error',
-        '@angular-eslint/no-outputs-metadata-property': 'error',
-        '@angular-eslint/use-lifecycle-interface': 'warn',
-        '@angular-eslint/use-pipe-transform-interface': 'warn',
-        '@angular-eslint/no-outputs-metadata-property': 'error',
-
-
-        '@typescript-eslint/consistent-type-definitions': 'error',
-        '@typescript-eslint/dot-notation': 'off',
-        '@typescript-eslint/explicit-member-accessibility': [
-            'off',
-            {
-                'accessibility': 'explicit'
-            }
-        ],
-        '@angular-eslint/component-selector': [
-            'off',
-            {
-                'type': 'element',
-                'prefix': [
-                    'app',
-                    'mpi'
-                ],
-                'style': 'kebab-case'
-            }
-        ],
-        '@angular-eslint/directive-selector': [
-            'off',
-            {
-                'type': 'attribute',
-                'prefix': [
-                    'app',
-                    'mpi',
-                    'tm'
-                ],
-                'style': 'camelCase'
-            }
-        ],
-
-        // JS/TS base rules
-        "indent": "off",
-        'keyword-spacing': ['error', { 'after': true, 'before': true }],
-        'space-before-blocks': ['error', { 'functions': 'always', 'keywords': 'always', 'classes': 'always' }],
-        'brace-style': [
-            'error',
-            '1tbs',
-            { 'allowSingleLine': true }
-        ],
-        'object-curly-spacing': ['error', 'always'],
-        'curly': 'error',
-        'comma-spacing': ['error', { 'before': false, 'after': true }],
-        'dot-notation': 'off',
-        'eol-last': 'error',
-        'eqeqeq': [
-            'error',
-            'smart'
-        ],
-        'guard-for-in': 'off',
-        'id-blacklist': 'off',
-        'id-match': 'off',
-        'max-len': [
-            'off',
-            {
-                'code': 140
-            }
-        ],
-        'no-bitwise': 'error',
-        'no-caller': 'error',
-        'no-console': [
-            'error',
-            {
-                'allow': [
-                    'debug',
-                    'info',
-                    'dirxml',
-                    'warn',
-                    'dir',
-                    'time',
-                    'timeEnd',
-                    'timeLog',
-                    'trace',
-                    'assert',
-                    'clear',
-                    'count',
-                    'countReset',
-                    'group',
-                    'groupCollapsed',
-                    'groupEnd',
-                    'table',
-                    'Console',
-                    'markTimeline',
-                    'profile',
-                    'profileEnd',
-                    'timeline',
-                    'timelineEnd',
-                    'timeStamp',
-                    'context'
-                ]
-            }
-        ],
-        'no-debugger': 'error',
-        'no-empty': 'off',
-        'no-empty-function': 'off',
-        'no-eval': 'error',
-        'no-fallthrough': 'error',
-        'no-new-wrappers': 'error',
-        'no-redeclare': 'error',
-        'no-restricted-imports': 'error',
-        'no-throw-literal': 'error',
-        'no-trailing-spaces': 'error',
-        'no-underscore-dangle': 'off',
-        'no-unused-labels': 'error',
-        'no-var': 'error',
-        'prefer-const': ['error', {
-            'destructuring': 'any',
-            'ignoreReadBeforeAssign': false
-        }],
-        'prefer-arrow-callback': [
-            'error',
-            { 'allowUnboundThis': true, 'allowNamedFunctions': true }
-        ],
-        'space-before-function-paren': [
-            'error',
-            {
-                'anonymous': 'always',
-                'named': 'never',
-                'asyncArrow': 'always'
-            }
-        ],
-        'quotes': ['error', 'single'],
-        'radix': 'error',
-        'semi': 'error',
-        'spaced-comment': [
-            'error',
-            'always',
-            {
-                'markers': [
-                    '/'
-                ]
-            }
-        ],
-        'array-bracket-spacing': [
-            'error',
-            'never',
-            {
-                'singleValue': false,
-                'objectsInArrays': false,
-                'arraysInArrays': false
-            }
-        ],
-        'no-irregular-whitespace': ['error', { 'skipComments': true }],
-        'no-multi-spaces': 'error'
-    },
     overrides: [
-        // Templates
+        // ---- TypeScript / Angular ----
+        {
+            files: ['*.ts'],
+            parser: '@typescript-eslint/parser',
+            parserOptions: {
+                ecmaVersion: 2022,
+                sourceType: 'module',
+                project: ['./tsconfig.json'],
+            },
+            plugins: ['@typescript-eslint', '@angular-eslint', '@stylistic'],
+            extends: [
+                'eslint:recommended',
+                'plugin:@typescript-eslint/recommended',
+                'plugin:@angular-eslint/recommended',
+                // NOTA: NO usamos 'plugin:@stylistic/recommended' en v0.x (evita presets inestables).
+            ],
+            rules: {
+                /// TypeScript rules
+                '@typescript-eslint/no-explicit-any': 'off',
+                // '@typescript-eslint/indent' fue eliminada en v5. Por tanto usamos @stylistic/indent
+                '@typescript-eslint/no-empty-function': 'off',
+                '@typescript-eslint/no-empty-interface': 'error',
+                '@typescript-eslint/no-inferrable-types': ['error', { ignoreParameters: true }],
+                '@typescript-eslint/prefer-function-type': 'error',
+                '@typescript-eslint/unified-signatures': 'error',
+                '@typescript-eslint/consistent-type-definitions': 'error',
+                '@typescript-eslint/dot-notation': 'off',
+                '@typescript-eslint/explicit-member-accessibility': [
+                    'off',
+                    { accessibility: 'explicit' },
+                ],
+
+                // --- Angular ---
+                '@angular-eslint/component-class-suffix': ['error', { suffixes: ['Component'] }],
+                '@angular-eslint/directive-class-suffix': ['error', { suffixes: ['Directive'] }],
+                '@angular-eslint/no-host-metadata-property': 'error',
+                '@angular-eslint/no-inputs-metadata-property': 'error',
+                '@angular-eslint/no-outputs-metadata-property': 'error',
+                '@angular-eslint/use-lifecycle-interface': 'warn',
+                '@angular-eslint/use-pipe-transform-interface': 'warn',
+                '@angular-eslint/component-selector': [
+                    'off',
+                    { type: 'element', prefix: ['app', 'mpi'], style: 'kebab-case' },
+                ],
+                '@angular-eslint/directive-selector': [
+                    'off',
+                    { type: 'attribute', prefix: ['app', 'mpi', 'tm'], style: 'camelCase' },
+                ],
+
+                // --- Stylistic ---
+                // Se desactivan las core para no duplicar con @stylistic
+                indent: 'off',
+                quotes: 'off',
+                semi: 'off',
+                'space-before-function-paren': 'off',
+                'array-bracket-spacing': 'off',
+                'object-curly-spacing': 'off',
+                'brace-style': 'off',
+                'comma-spacing': 'off',
+                'eol-last': 'off',
+                'keyword-spacing': 'off',
+                'space-before-blocks': 'off',
+                'spaced-comment': 'off',
+                'no-trailing-spaces': 'off',
+
+                '@stylistic/indent': [
+                    'error',
+                    4,
+                    {
+                        SwitchCase: 1,
+                        ObjectExpression: 'first',
+                        ArrayExpression: 'first',
+                        FunctionDeclaration: { parameters: 'first' },
+                        FunctionExpression: { parameters: 'first' },
+                    },
+                ],
+                '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
+                '@stylistic/semi': ['error', 'always'],
+                '@stylistic/member-delimiter-style': [
+                    'error',
+                    {
+                        multiline: { delimiter: 'semi', requireLast: true },
+                        singleline: { delimiter: 'semi', requireLast: false },
+                    },
+                ],
+                '@stylistic/type-annotation-spacing': 'error',
+                '@stylistic/space-before-function-paren': [
+                    'error',
+                    { anonymous: 'always', named: 'never', asyncArrow: 'always' },
+                ],
+                '@stylistic/array-bracket-spacing': [
+                    'error',
+                    'never',
+                    {
+                        singleValue: false,
+                        objectsInArrays: false,
+                        arraysInArrays: false,
+                    },
+                ],
+                '@stylistic/object-curly-spacing': ['error', 'always'],
+                '@stylistic/brace-style': ['error', '1tbs', { allowSingleLine: true }],
+                '@stylistic/comma-spacing': ['error', { before: false, after: true }],
+                '@stylistic/eol-last': ['error', 'always'],
+                '@stylistic/keyword-spacing': ['error', { after: true, before: true }],
+                '@stylistic/space-before-blocks': [
+                    'error',
+                    { functions: 'always', keywords: 'always', classes: 'always' },
+                ],
+                '@stylistic/spaced-comment': ['error', 'always', { markers: ['/'] }],
+                '@stylistic/no-trailing-spaces': 'error',
+
+                // --- Otras reglas base ---
+                'curly': 'error',
+                'dot-notation': 'off',
+                'eqeqeq': ['error', 'smart'],
+                'guard-for-in': 'off',
+                'id-blacklist': 'off',
+                'id-match': 'off',
+                'max-len': ['off', { code: 140 }],
+                'no-bitwise': 'error',
+                'no-caller': 'error',
+                'no-console': [
+                    'error',
+                    {
+                        allow: [
+                            'debug', 'info', 'dirxml', 'warn', 'dir', 'time', 'timeEnd', 'timeLog',
+                            'trace', 'assert', 'clear', 'count', 'countReset', 'group', 'groupCollapsed',
+                            'groupEnd', 'table', 'Console', 'markTimeline', 'profile', 'profileEnd',
+                            'timeline', 'timelineEnd', 'timeStamp', 'context',
+                        ],
+                    },
+                ],
+                'no-debugger': 'error',
+                'no-empty': 'off',
+                'no-empty-function': 'off',
+                'no-eval': 'error',
+                'no-fallthrough': 'error',
+                'no-new-wrappers': 'error',
+                'no-redeclare': 'error',
+                'no-restricted-imports': 'error',
+                'no-throw-literal': 'error',
+                'no-underscore-dangle': 'off',
+                'no-unused-labels': 'error',
+                'no-var': 'error',
+                'prefer-const': ['error', { destructuring: 'any', ignoreReadBeforeAssign: false }],
+                'prefer-arrow-callback': ['error', { allowUnboundThis: true, allowNamedFunctions: true }],
+                'radix': 'error',
+                'no-irregular-whitespace': ['error', { skipComments: true }],
+                'no-multi-spaces': 'error',
+            },
+        },
+
+        // ---- Templates HTML ----
         {
             files: ['*.html'],
             parser: '@angular-eslint/template-parser',
             plugins: ['@angular-eslint/template'],
             extends: ['plugin:@angular-eslint/template/recommended'],
             rules: {
-                // Template rules
                 '@angular-eslint/template/no-negated-async': 'error',
             },
         },
-        // Component inline templates
+
+        // ---- Inline templates en componentes ----
         {
             files: ['*.component.ts'],
             extends: ['plugin:@angular-eslint/template/process-inline-templates'],

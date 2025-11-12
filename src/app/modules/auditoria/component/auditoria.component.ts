@@ -88,33 +88,33 @@ export class AuditoriaComponent implements OnInit {
 
     showInSidebar(opcion: string) {
         switch (opcion) {
-        case 'detallePaciente':
-            this.tituloSidebar = 'Detalle Paciente';
-            this.showDetallePaciente = true;
-            this.showCabeceraDetalle = false;
-            this.showReporteError = false;
-            this.vincularPacientes.close();
-            this.mainSize = 8;
-            break;
-        case 'vinculaciones':
-            this.tituloSidebar = 'Detalle Paciente';
-            this.showDetallePaciente = false;
-            this.showCabeceraDetalle = true;
-            this.showReporteError = false;
-            this.mainSize = 8;
-            break;
-        case 'reporteError':
-            this.tituloSidebar = 'Detalle Reporte';
-            this.showDetallePaciente = false;
-            this.showReporteError = true;
-            this.mainSize = 8;
-            break;
-        case 'vincular':
-            this.tituloSidebar = 'Buscar candidato';
-            this.showDetallePaciente = false;
-            this.showCabeceraDetalle = false;
-            this.mainSize = 8;
-            break;
+            case 'detallePaciente':
+                this.tituloSidebar = 'Detalle Paciente';
+                this.showDetallePaciente = true;
+                this.showCabeceraDetalle = false;
+                this.showReporteError = false;
+                this.vincularPacientes.close();
+                this.mainSize = 8;
+                break;
+            case 'vinculaciones':
+                this.tituloSidebar = 'Detalle Paciente';
+                this.showDetallePaciente = false;
+                this.showCabeceraDetalle = true;
+                this.showReporteError = false;
+                this.mainSize = 8;
+                break;
+            case 'reporteError':
+                this.tituloSidebar = 'Detalle Reporte';
+                this.showDetallePaciente = false;
+                this.showReporteError = true;
+                this.mainSize = 8;
+                break;
+            case 'vincular':
+                this.tituloSidebar = 'Buscar candidato';
+                this.showDetallePaciente = false;
+                this.showCabeceraDetalle = false;
+                this.mainSize = 8;
+                break;
         }
     }
 
