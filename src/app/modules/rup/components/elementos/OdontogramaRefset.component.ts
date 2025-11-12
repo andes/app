@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { IPrestacion } from './../../interfaces/prestacion.interface';
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';

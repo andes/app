@@ -1,3 +1,4 @@
+import moment from 'moment';
 
 import { map, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';

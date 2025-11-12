@@ -16,6 +16,7 @@ import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-ite
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { LaboratorioService } from 'src/app/services/laboratorio.service';
 import { PacienteCacheService } from 'src/app/core/mpi/services/pacienteCache.service';
+import moment from 'moment';
 
 @Component({
     selector: 'app-registros-huds-detalle',
