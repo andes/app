@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { cache } from '@andes/shared';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
