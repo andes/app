@@ -253,7 +253,7 @@ registerLocaleData(localeEsAr);
         AuthModule,
         TurneroProvidersModule,
         NgChartsModule,
-        MitosModule, //.forRoot(),
+        MitosModule,
         DndModule,
         routing,
         InfiniteScrollModule,
