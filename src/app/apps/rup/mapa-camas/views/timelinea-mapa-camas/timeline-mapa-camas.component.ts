@@ -17,6 +17,7 @@ import { Auth } from '@andes/auth';
 import { ISectores } from 'src/app/interfaces/IOrganizacion';
 import { forkJoin, Observable } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
+import moment from 'moment';
 
 @Component({
     selector: 'in-timeline-mapa-camas',
