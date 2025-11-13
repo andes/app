@@ -730,7 +730,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     actualizarInformeEstadistica(paciente) {
-        const idInforme = this.informeEstadistica?.id;
+        const idInforme = this.informeEstadistica?.id || this.informeEstadistica?._id;
         if (!idInforme) {
             this.plex.info('danger', 'No se encontró el identificador del informe estadístico');
             this.disableButton = false;
@@ -744,9 +744,14 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
         this.informeEstadisticaService.patch(idInforme, cambios).subscribe({
             next: (informeActualizado: any) => {
+                const informeActualizadoId = informeActualizado?.id || informeActualizado?._id || idInforme;
                 this.informeIngreso = informeActualizado.informeIngreso;
-                this.mapaCamasService.selectInformeEstadistica(informeActualizado);
-                this.ingresoSimplificado('ocupada', paciente, this.cama.idInternacion);
+                this.mapaCamasService.selectInformeEstadistica({
+                    ...informeActualizado,
+                    id: informeActualizadoId
+                });
+                // La cama referencia al resumen, no al documento del informe estadístico.
+                this.ingresoSimplificado('ocupada', paciente, this.cama?.idInternacion);
             },
             error: () => {
                 this.plex.info('danger', 'Error al actualizar informe estadístico');
@@ -799,19 +804,23 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
         this.informeEstadisticaService.post(nuevoInforme).subscribe({
             next: (informe) => {
-                if (!informe?.id) {
+                const idInforme = informe?.id || informe?._id;
+                if (!idInforme) {
                     this.plex.info('danger', 'ERROR: El informe estadístico no devolvió un identificador');
                     this.disableButton = false;
                     return;
                 }
-                this.mapaCamasService.selectInformeEstadistica(informe);
+                this.mapaCamasService.selectInformeEstadistica({
+                    ...informe,
+                    id: idInforme
+                });
                 // 🔗 Vinculamos el informe con un resumen de internación
                 this.internacionResumenService.create({
                     ambito: 'internacion',
                     fechaIngreso: this.informeIngreso.fechaIngreso,
                     paciente: paciente,
                     organizacion: this.auth.organizacion,
-                    idInformeEstadistica: informe.id
+                    idInformeEstadistica: idInforme
                 }).subscribe({
                     next: (resumen) => {
                         if (this.cama) {
@@ -862,7 +871,19 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             organizacion: this.auth.organizacion,
             unidadOrganizativa: this.cama?.unidadOrganizativa || this.mapaCamasService.unidadOrganizativaSelected.getValue(),
             paciente: this.paciente,
-            informeIngreso: this.informeIngreso,
+            informeIngreso: {
+                ...this.informeIngreso,
+                situacionLaboral: (typeof this.informeIngreso.situacionLaboral === 'string')
+                    ? this.informeIngreso.situacionLaboral
+                    : this.informeIngreso.situacionLaboral?.nombre || null,
+                nivelInstruccion: (typeof this.informeIngreso.nivelInstruccion === 'string')
+                    ? this.informeIngreso.nivelInstruccion
+                    : this.informeIngreso.nivelInstruccion?.nombre || null,
+                ocupacionHabitual: this.informeIngreso.ocupacionHabitual,
+                asociado: (typeof this.informeIngreso.asociado === 'string')
+                    ? this.informeIngreso.asociado
+                    : this.informeIngreso.asociado?.nombre || null,
+            } as any,
             estados: [{
                 tipo: 'ejecucion',
                 createdAt: new Date(),
@@ -877,7 +898,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 username: this.informeIngreso.profesional.documento,
                 documento: this.informeIngreso.profesional.documento,
                 organizacion: this.auth.organizacion
-
             }
         };
 

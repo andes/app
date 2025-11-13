@@ -8,6 +8,7 @@
 
         <ng-content></ng-content>
     </plex-title>
+
     <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal" [fields]="pacienteFields"
                       [accesoHuds]="true">
         <plex-label *ngIf="informeIngreso.situacionLaboral" titulo="Situación laboral"
@@ -17,10 +18,13 @@
         <plex-label *ngIf="informeIngreso.nivelInstruccion" titulo="Nivel de instrucción"
                     [subtitulo]="informeIngreso.nivelInstruccion">
         </plex-label>
+<plex-label
+    *ngIf="informeIngreso?.ocupacionHabitual"
+    titulo="Ocupación habitual"
+    [subtitulo]="informeIngreso?.ocupacionHabitual?.nombre">
+</plex-label>
+       
 
-        <plex-label *ngIf="informeIngreso.ocupacionHabitual" titulo="Ocupación habitual"
-                    [subtitulo]="informeIngreso.ocupacionHabitual?.nombre">
-        </plex-label>
     </paciente-detalle>
 
     <fieldset>
