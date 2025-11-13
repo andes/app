@@ -118,6 +118,12 @@ export class MapaCamasHTTP {
     }
 
     censoDiario(fecha: Date, unidadOrganizativa: string): Observable<any[]> {
+        console.log('🌐 [MapaCamasHTTP] Request a censo-diario →', {
+            url: `${this.url}/censo-diario`,
+            fecha,
+            unidadOrganizativa
+        });
+
         return this.server.get(`${this.url}/censo-diario`, {
             params: { fecha, unidadOrganizativa },
             showError: true
