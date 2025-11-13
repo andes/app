@@ -12,26 +12,25 @@
                        [max]="fechaMax || (mapaCamasService.fechaActual$ | async)" [min]="fechaMin"
                        (change)="setFecha()" [debounce]="600" grow="full" (typing)="onType()">
         </plex-datetime>
-
-        <plex-select grow="2" label="Tipo de egreso" [(ngModel)]="registro.valor.InformeEgreso.tipoEgreso"
-                     name="InformeEgreso.tipoEgreso" [data]="listaTipoEgreso" placeholder="Seleccione... "
-                     [required]="true" grow="full">
+        <plex-select grow="2" label="Tipo de egreso" [(ngModel)]="registro.valor.InformeEgreso.tipoEgreso.tipo"
+                     name="InformeEgreso.tipoEgreso.tipo" [data]="listaTipoEgreso" key="id" labelField="nombre"
+                     placeholder="Seleccione..." required>
         </plex-select>
-      <ng-container *ngIf="registro.valor.InformeEgreso.tipoEgreso?.nombre === 'Traslado'">
+
+        <ng-container *ngIf="registro.valor.InformeEgreso.tipoEgreso?.tipo?.nombre === 'Traslado'">
             <plex-bool class="pt-2" [(ngModel)]="checkTraslado" type="checkbox" label="Otra organización"
                        name="checkTraslado" (change)="onChangeTraslado($event)">
             </plex-bool>
             <ng-container *ngIf="!checkTraslado">
                 <plex-select grow="full" label="Organización destino"
-                             [(ngModel)]="registro.valor.InformeEgreso.UnidadOrganizativaDestino"
-                             name="InformeEgreso.UnidadOrganizativaDestino" (getData)="loadOrganizacion($event)"
+                             [(ngModel)]="registro.valor.InformeEgreso.tipoEgreso.OrganizacionDestino"
+                             name="InformeEgreso.OrganizacionDestino" (getData)="loadOrganizacion($event)"
                              placeholder="Seleccione..." [required]="true">
                 </plex-select>
             </ng-container>
             <ng-container *ngIf="checkTraslado">
                 <plex-text grow="full" label="Organización destino" name="otraOrganizacion"
-                           [(ngModel)]="registro.valor.InformeEgreso.UnidadOrganizativaDestino.nombre"
-                           [required]="true">
+                           [(ngModel)]="registro.valor.InformeEgreso.tipoEgreso.otraOrganizacion" [required]="true">
                 </plex-text>
             </ng-container>
         </ng-container>
@@ -53,64 +52,65 @@
         </ng-container>
 
 
-    <plex-title justify size="sm" titulo="Datos Estadísticos"></plex-title>
+        <plex-title justify size="sm" titulo="Datos Estadísticos"></plex-title>
 
-    <plex-wrapper>
-        <plex-int grow="1" name="diasEstada" label="Días de estada" suffix="Días"
-                  [(ngModel)]="registro.valor.InformeEgreso.diasDeEstada" required readonly>
-        </plex-int>
+        <plex-wrapper>
+            <plex-int grow="1" name="diasEstada" label="Días de estada" suffix="Días"
+                      [(ngModel)]="registro.valor.InformeEgreso.diasDeEstada" required readonly>
+            </plex-int>
 
-        <plex-select grow="3" label="Diagnóstico Principal al egreso"
-                     [(ngModel)]="registro.valor.InformeEgreso.diagnosticos.principal" name="diagnosticoPrincipal"
-                     (getData)="codigoCIE10($event, 'diagnostico')" placeholder="Buscar..." labelField="nombre"
-                     (change)="showProcedimientos_causas()">
-        </plex-select>
+            <plex-select grow="3" label="Diagnóstico Principal al egreso"
+                         [(ngModel)]="registro.valor.InformeEgreso.diagnosticos.principal" name="diagnosticoPrincipal"
+                         (getData)="codigoCIE10($event, 'diagnostico')" placeholder="Buscar..." labelField="nombre"
+                         (change)="showProcedimientos_causas()">
+            </plex-select>
 
-       <plex-select grow="full" (change)="showProcedimientos_causas()" label="Otros Diagnósticos"
+            <plex-select grow="full" (change)="showProcedimientos_causas()" label="Otros Diagnósticos"
                          [(ngModel)]="registro.valor.InformeEgreso.otrosDiagnosticos" name="otrosDiagnosticos"
                          (getData)="codigoCIE10($event,'diagnostico')" [multiple]="true" placeholder="buscar..."
                          labelField="nombre">
             </plex-select>
 
-    </plex-wrapper>
-
-    <plex-wrapper>
-        <plex-select grow="full" label="Otras circunstancias que prolongan la internación"
-                     [(ngModel)]="registro.valor.InformeEgreso.diagnosticos.otrasCircunstancias"
-                     name="otrasCircunstancias" (getData)="codigoCIE10($event, 'circunstancia')"
-                     placeholder="Buscar...">
-        </plex-select>
-
-        <ng-container *ngIf="registro.valor.InformeEgreso.diagnosticos.otrasCircunstancias">
-            <plex-int grow="2" name="diasEstadaOtrasCircunstancias" label="Otros días de estada" suffix="Días"
-                      [(ngModel)]="registro.valor.InformeEgreso.diagnosticos.diasEstadaOtrasCircunstancias">
-            </plex-int>
-
-            <plex-int grow="2" name="diasDePermisoDeSalida" label="Días de permiso de salida" suffix="Días"
-                      [(ngModel)]="registro.valor.InformeEgreso.diagnosticos.diasDePermisoDeSalida">
-            </plex-int>
-        </ng-container>
-    </plex-wrapper>
-
-    <ng-container *ngIf="existeCausaExterna">
-        <plex-title justify size="sm" titulo="Causa Externa"></plex-title>
-        <plex-wrapper>
-            <plex-select label="Producido por:" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.producidaPor"
-                         name="producidaPor" [data]="causaExterna.producidaPor" labelField="nombre" required>
-            </plex-select>
-          
-
-            <plex-select label="Lugar donde ocurrió" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.lugar"
-                         name="lugar" [data]="causaExterna.lugar" labelField="nombre" required>
-            </plex-select>
-
-            <plex-select label="Cómo se produjo" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.comoSeProdujo"
-                         name="comoSeProdujo" (getData)="searchComoSeProdujo($event)" labelField="nombre" required>
-            </plex-select>
         </plex-wrapper>
-    </ng-container>
 
-    <ng-container *ngIf="procedimientosObstetricos || procedimientosObstetricosNoReq">
+        <plex-wrapper>
+            <plex-select grow="full" label="Otras circunstancias que prolongan la internación"
+                         [(ngModel)]="registro.valor.InformeEgreso.diagnosticos.otrasCircunstancias"
+                         name="otrasCircunstancias" (getData)="codigoCIE10($event, 'circunstancia')"
+                         placeholder="Buscar...">
+            </plex-select>
+
+            <ng-container *ngIf="registro.valor.InformeEgreso.diagnosticos.otrasCircunstancias">
+                <plex-int grow="2" name="diasEstadaOtrasCircunstancias" label="Otros días de estada" suffix="Días"
+                          [(ngModel)]="registro.valor.InformeEgreso.diagnosticos.diasEstadaOtrasCircunstancias">
+                </plex-int>
+
+                <plex-int grow="2" name="diasDePermisoDeSalida" label="Días de permiso de salida" suffix="Días"
+                          [(ngModel)]="registro.valor.InformeEgreso.diagnosticos.diasDePermisoDeSalida">
+                </plex-int>
+            </ng-container>
+        </plex-wrapper>
+
+        <ng-container *ngIf="existeCausaExterna">
+            <plex-title justify size="sm" titulo="Causa Externa"></plex-title>
+            <plex-wrapper>
+                <plex-select label="Producido por:" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.producidaPor"
+                             name="producidaPor" [data]="causaExterna.producidaPor" labelField="nombre" required>
+                </plex-select>
+
+
+                <plex-select label="Lugar donde ocurrió" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.lugar"
+                             name="lugar" [data]="causaExterna.lugar" labelField="nombre" required>
+                </plex-select>
+
+                <plex-select label="Cómo se produjo"
+                             [(ngModel)]="registro.valor.InformeEgreso.causaExterna.comoSeProdujo" name="comoSeProdujo"
+                             (getData)="searchComoSeProdujo($event)" labelField="nombre" required>
+                </plex-select>
+            </plex-wrapper>
+        </ng-container>
+
+        <ng-container *ngIf="procedimientosObstetricos || procedimientosObstetricosNoReq">
             <plex-title justify size="sm" titulo="Eventos Obstetricos"></plex-title>
             <plex-wrapper>
                 <plex-datetime name="fechaTerminacion" label="Fecha terminación" type="date"
@@ -153,33 +153,33 @@
                 </plex-button>
             </plex-wrapper>
         </ng-container>
-        
-    <plex-title justify size="sm" titulo="Procedimientos Quirúrgicos">
-        <plex-button type="success" icon="plus" size="sm" tooltip="Nuevo Procedimiento" tooltipPosition="left"
-                     [disabled]="prestacionValidada" (click)="addProcedimientoQuirurgico()">
-        </plex-button>
-    </plex-title>
 
-    <ng-container *ngIf="registro.valor.InformeEgreso.procedimientosQuirurgicos?.length">
-        <ng-container
-                      *ngFor="let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos; let i = index">
-            <plex-grid size="sm" type="full" cols="6">
-                <plex-select label="Procedimiento" [(ngModel)]="procedimiento.procedimiento" name="procedimiento-{{i}}"
-                             (getData)="getListaProcedimientosQuirurgicos($event)" placeholder="Seleccione..."
-                             labelField="nom" span="6">
-                </plex-select>
+        <plex-title justify size="sm" titulo="Procedimientos Quirúrgicos">
+            <plex-button type="success" icon="plus" size="sm" tooltip="Nuevo Procedimiento" tooltipPosition="left"
+                         [disabled]="prestacionValidada" (click)="addProcedimientoQuirurgico()">
+            </plex-button>
+        </plex-title>
 
-                <plex-datetime name="fechaProcedimiento-{{i}}" label="Fecha" type="date"
-                               [(ngModel)]="procedimiento.fecha" [max]="fechaMaxProcedimiento" [debounce]="600"
-                               span="5">
-                </plex-datetime>
+        <ng-container *ngIf="registro.valor.InformeEgreso.procedimientosQuirurgicos?.length">
+            <ng-container
+                          *ngFor="let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos; let i = index">
+                <plex-grid size="sm" type="full" cols="6">
+                    <plex-select label="Procedimiento" [(ngModel)]="procedimiento.procedimiento"
+                                 name="procedimiento-{{i}}" (getData)="getListaProcedimientosQuirurgicos($event)"
+                                 placeholder="Seleccione..." labelField="nom" span="6">
+                    </plex-select>
 
-                <plex-button align="end" type="danger" size="md" icon="trash-can"
-                             ariaLabel="Borrar procedimiento quirúrgico" (click)="removeProcedimiento(i)">
-                </plex-button>
-            </plex-grid>
+                    <plex-datetime name="fechaProcedimiento-{{i}}" label="Fecha" type="date"
+                                   [(ngModel)]="procedimiento.fecha" [max]="fechaMaxProcedimiento" [debounce]="600"
+                                   span="5">
+                    </plex-datetime>
+
+                    <plex-button align="end" type="danger" size="md" icon="trash-can"
+                                 ariaLabel="Borrar procedimiento quirúrgico" (click)="removeProcedimiento(i)">
+                    </plex-button>
+                </plex-grid>
+            </ng-container>
         </ng-container>
     </ng-container>
-        </ng-container>
 
 </form>

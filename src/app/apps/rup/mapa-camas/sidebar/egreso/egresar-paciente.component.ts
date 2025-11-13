@@ -480,31 +480,48 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     // Setea valores de la prestacion (estadistica y estadistica-v2) antes de llamar al egreso simplificado
+
     egresoExtendido(): Observable<any> {
         const registros = this.controlRegistrosGuardar();
 
         if (registros) {
+            const informeEgresoNormalizado = JSON.parse(JSON.stringify(this.informe.informeEgreso));
+            const tipoEgreso = informeEgresoNormalizado?.tipoEgreso;
+
+            if (tipoEgreso && tipoEgreso.tipo && typeof tipoEgreso.tipo === 'object') {
+                const tipo: any = tipoEgreso.tipo;
+                informeEgresoNormalizado.tipoEgreso.tipo = tipo.id ?? null;
+            }
+
+            if (informeEgresoNormalizado.tipoEgreso?.OrganizacionDestino &&
+                typeof informeEgresoNormalizado.tipoEgreso.OrganizacionDestino === 'object') {
+
+                const org = informeEgresoNormalizado.tipoEgreso.OrganizacionDestino;
+                informeEgresoNormalizado.tipoEgreso.OrganizacionDestino = {
+                    id: org.id || null,
+                    nombre: org.nombre || null
+                };
+            }
+
             const body = {
                 registros,
-                informeEgreso: this.registro.valor.InformeEgreso
+                informeEgreso: informeEgresoNormalizado
             };
+
             return this.informeEstadisticaService.patchRegistros(
                 this.informe._id || this.informe.id,
                 body
             ).pipe(
                 switchMap(informe => {
-
-                    if (this.view === 'listado-internacion' || this.capa === 'estadistica') {
-                        this.mapaCamasService.selectInformeEstadistica(informe);
-                    }
-
+                    // ...
                     if (this.capa === 'estadistica-v2' && this.resumen?.fechaEgreso) {
                         const idInternacion = this.view === 'listado-internacion'
                             ? this.resumen.id
                             : this.cama.idInternacion;
+                        // NOTA: Asegúrate de que el ID del tipo de egreso venga correctamente
                         return this.internacionResumenService.update(idInternacion, {
-                            tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id,
-                            fechaEgreso: this.registro.valor.InformeEgreso.fechaEgreso
+                            tipo_egreso: informeEgresoNormalizado.tipoEgreso.id, // Usar el objeto normalizado
+                            fechaEgreso: informeEgresoNormalizado.fechaEgreso // Usar el objeto normalizado
                         });
                     } else {
                         return this.egresoSimplificado(this.estadoDestino);
@@ -550,13 +567,16 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         if (this.capa === 'estadistica' || this.capa === 'estadistica-v2') {
             const fechaIngreso = this.informe.informeIngreso?.fechaIngreso || this.resumen?.fechaIngreso;
             const fechaEgreso = this.registro.valor.InformeEgreso?.fechaEgreso;
-
             if (fechaIngreso && fechaEgreso) {
-                this.registro.valor.InformeEgreso.diasDeEstada =
-                    this.mapaCamasService.calcularDiasEstada(fechaIngreso, fechaEgreso);
+                const dias = this.mapaCamasService.calcularDiasEstada(fechaIngreso, fechaEgreso);
+
+                this.registro.valor.InformeEgreso.diasDeEstada = dias;
+
             } else {
-                console.warn('⚠️ No se puede calcular días de estadía: faltan fechas',
-                    { fechaIngreso, fechaEgreso });
+                console.warn('⚠️ No se puede calcular días de estadía: faltan fechas', {
+                    fechaIngreso,
+                    fechaEgreso
+                });
             }
         }
     }
