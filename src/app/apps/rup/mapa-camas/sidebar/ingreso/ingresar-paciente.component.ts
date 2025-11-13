@@ -734,13 +734,15 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             informeIngreso: this.informeIngreso,
         };
 
-        this.informeEstadisticaService.patch(this.informeEstadistica.id, cambios).subscribe({
+        this.informeEstadisticaService.patch(this.informeEstadistica._id, cambios).subscribe({
             next: (informeActualizado: any) => {
                 this.informeIngreso = informeActualizado.informeIngreso;
                 this.mapaCamasService.selectInformeEstadistica(informeActualizado);
+
+                // acá sí está perfecto usar el _id del actualizado
                 this.ingresoSimplificado('ocupada', paciente, informeActualizado._id);
             },
-            error: (err) => {
+            error: () => {
                 this.plex.info('danger', 'Error al actualizar informe estadístico');
             }
         });
@@ -772,7 +774,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         this.informeEstadisticaService.post(nuevoInforme).subscribe(informeEstadistica => {
             if (this.cama) {
                 if (this.capa === 'estadistica') {
-                    this.ingresoSimplificado('ocupada', paciente, informeEstadistica.id);
+                    this.ingresoSimplificado('ocupada', paciente, informeEstadistica._id);
                 } else {
                     // capa estadistica-v2 usa como idInternacion el id del resumen, por tanto primero hay que crearlo
                     this.ingresoSimplificado('ocupada', paciente, null, informeEstadistica);
@@ -814,7 +816,19 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             organizacion: this.auth.organizacion,
             unidadOrganizativa: this.cama.unidadOrganizativa,
             paciente: this.paciente,
-            informeIngreso: this.informeIngreso,
+            informeIngreso: {
+                ...this.informeIngreso,
+                situacionLaboral: (typeof this.informeIngreso.situacionLaboral === 'string')
+                    ? this.informeIngreso.situacionLaboral
+                    : this.informeIngreso.situacionLaboral?.nombre || null,
+                nivelInstruccion: (typeof this.informeIngreso.nivelInstruccion === 'string')
+                    ? this.informeIngreso.nivelInstruccion
+                    : this.informeIngreso.nivelInstruccion?.nombre || null,
+                ocupacionHabitual: this.informeIngreso.ocupacionHabitual,
+                asociado: (typeof this.informeIngreso.asociado === 'string')
+                    ? this.informeIngreso.asociado
+                    : this.informeIngreso.asociado?.nombre || null,
+            } as any,
             estados: [{
                 tipo: 'ejecucion',
                 createdAt: new Date(),
@@ -829,7 +843,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 username: this.informeIngreso.profesional.documento,
                 documento: this.informeIngreso.profesional.documento,
                 organizacion: this.auth.organizacion as unknown as IOrganizacion
-
             }
         };
 
