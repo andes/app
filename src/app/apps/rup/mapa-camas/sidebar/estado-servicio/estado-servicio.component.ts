@@ -20,6 +20,8 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
     public editaFecha = false;
     public fecha: Date;
     public puedeGuardar;
+    public esEstadistica = false;
+
     collapse = false;
 
     salas$: Observable<ISnapshot[]>;
@@ -35,7 +37,10 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
         this.mapaCamasService.censableSelected.subscribe(censable => {
             this.filtro.censable = censable;
         });
-
+        // para controlar los filtros
+        this.mapaCamasService.capa2.subscribe(capa => {
+            this.esEstadistica = capa === 'estadistica';
+        });
         this.mapaCamasService.mostrarTodasCamas.subscribe(valor => {
             this.mostrarTodasCamas = valor;
             this.filtrar();
