@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Auth } from '@andes/auth';
 import { cache, notNull } from '@andes/shared';
 import { Injectable } from '@angular/core';
@@ -690,6 +691,8 @@ export class MapaCamasService {
     }
 
     censoDiario(fecha, unidadOrganizativa): Observable<any[]> {
+        console.log('📞 Llamando a censoDiario con:', fecha, unidadOrganizativa);
+
         return this.camasHTTP.censoDiario(fecha, unidadOrganizativa);
     }
 

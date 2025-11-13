@@ -60,7 +60,7 @@ export interface IInformeEgreso {
     diasDeEstada?: number;
     tipoEgreso?: {
         tipo?: string;
-        OrganizacionDestino?: IOrganizacion;
+        OrganizacionDestino?: Partial<IOrganizacion>;
         otraOrganizacion?: string;
     };
     diagnosticos?: {
@@ -103,7 +103,7 @@ export interface IInternacionEstado {
 }
 
 export interface IInformeEstadistica {
-    id: string;
+    id: any;
     _id?: string;
     organizacion: Partial<IOrganizacion & { _id?: string }>;
 
