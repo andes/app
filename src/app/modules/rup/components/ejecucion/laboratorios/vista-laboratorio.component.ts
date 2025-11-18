@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { LaboratorioService } from 'projects/portal/src/app/services/laboratorio.service';
+import { LaboratorioService } from 'src/app/services/laboratorio.service';
 import { DocumentosService } from '../../../../../services/documentos.service';
 import { Auth } from '@andes/auth';
 

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { cacheStorage, Server } from '@andes/shared';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
+import { environment } from 'src/environments/environment';
 import { Auth } from '@andes/auth';
 @Injectable({
     providedIn: 'root',
