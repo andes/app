@@ -32,8 +32,8 @@
         </div>
     </plex-title>
 
-    <plex-text label="Motivo" name="motivo" [(ngModel)]="registro.valor.motivo" [required]="registro.valor.sos"
-               [disabled]="!registro.valor.sos && !registro.valor.unicaVez && !(registro.valor.frecuencias?.length)">
+    <plex-text *ngIf="registro.valor.sos || registro.valor.unicaVez" label="Motivo" name="motivo"
+               [(ngModel)]="registro.valor.motivo" [required]="registro.valor.sos || registro.valor.unicaVez">
     </plex-text>
 
     <div *ngIf="!registro.valor.sos">
