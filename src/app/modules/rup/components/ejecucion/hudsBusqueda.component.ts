@@ -317,7 +317,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
                 registro.tipo = 'ficha-epidemiologica';
                 registro.class = 'plan';
                 break;
-            case 'dominio':
+            case 'dominio': {
                 gtag('huds-open', tipo, registro.name, index);
                 const params = {
                     custodian: registro.identifier.value,
@@ -327,9 +327,9 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
                 registro.class = 'plan';
                 registro.params = params;
                 break;
+            }
             case 'internacion':
                 gtag('huds-open', 'rup', 'internacion', index);
-                registro.id = registro.id;
                 registro.tipo = 'internacion';
                 registro.index = index;
                 break;

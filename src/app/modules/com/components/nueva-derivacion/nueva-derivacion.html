@@ -31,7 +31,7 @@
             </plex-wrapper>
             <!-- Adjuntos -->
             <plex-title titulo="Cargar adjuntos">
-                <upload-file label="Adjuntar archivo" (onUpload)="onUpload($event)" [modulo]="'com'"></upload-file>
+                <upload-file label="Adjuntar archivo" (uploading)="onUpload($event)" [modulo]="'com'"></upload-file>
                 <br><br>
                 <span *ngIf="errorExt">
                     <plex-badge type="danger">Archivo inválido.</plex-badge>
