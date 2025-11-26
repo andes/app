@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { PrestamosService } from '../../../services/prestamosHC/prestamos-hc.service';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -8,7 +8,7 @@ import { Auth } from '@andes/auth';
     templateUrl: './prestar-hc.component.html'
 })
 
-export class PrestarHcComponent implements OnInit {
+export class PrestarHcComponent {
     private _carpeta: any;
     prestamo: any;
 
@@ -66,10 +66,6 @@ export class PrestarHcComponent implements OnInit {
         public plex: Plex,
         public prestamosService: PrestamosService,
         public auth: Auth) {
-    }
-
-    ngOnInit() {
-
     }
 
     save() {

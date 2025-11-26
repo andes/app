@@ -1,20 +1,15 @@
-import moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
-import { Component, Input, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
+import { Component, Input, HostBinding, Output, EventEmitter } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
-
-
-
 
 @Component({
     selector: 'cantidadConsultaXPrestacion',
     templateUrl: 'cantidadConsultaXPrestacion.html',
-
 })
 
-export class CantidadConsultaXPrestacionComponent implements OnInit {
+export class CantidadConsultaXPrestacionComponent {
     private _diagnosticos;
     @Input() // recibe un array de parametros
     set diagnosticos(value: any) {
@@ -24,7 +19,6 @@ export class CantidadConsultaXPrestacionComponent implements OnInit {
     get diagnosticos(): any {
         return this._diagnosticos;
     }
-
 
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
@@ -42,12 +36,4 @@ export class CantidadConsultaXPrestacionComponent implements OnInit {
     ) {
 
     }
-
-    public ngOnInit() {
-
-    }
-
-
-
-
 }

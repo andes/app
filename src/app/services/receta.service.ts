@@ -36,7 +36,7 @@ export class RecetaService {
 
             return recetaDate.isAfter(mostRecentDate) ? receta : mostRecent;
         });
-    };
+    }
 
     getLabel(recetas: any[]) {
         const receta = this.getUltimaReceta(recetas);

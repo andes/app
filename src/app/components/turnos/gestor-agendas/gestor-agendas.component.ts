@@ -711,7 +711,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     actualizarEstado(estado) {
 
         switch (estado) {
-            case 'publicada':
+            case 'publicada': {
                 const existeAgendaDelPasado = this.agendasSeleccionadas.some(agenda => moment(agenda.horaInicio).isBefore(moment().startOf('day')));
                 let mensaje = '';
                 if (this.agendasSeleccionadas.length > 1 && existeAgendaDelPasado) {
@@ -731,6 +731,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                     }
                 });
                 break;
+            }
             case 'suspendida':
                 this.actualizarGestor(estado);
                 break;

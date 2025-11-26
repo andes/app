@@ -13,7 +13,7 @@ import { map } from 'rxjs/operators';
 
 export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
     @Input() relacion: any;
-    @Output() onSave = new EventEmitter<any>();
+    @Output() save = new EventEmitter<any>();
 
     public fecha;
     public fechaMax = moment().toDate();
@@ -105,7 +105,7 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
                 this.mapaCamasService.save(this.selectedCama, this.fecha).subscribe(() => {
                     this.plex.info('success', 'Cama ' + this.destino);
                     this.mapaCamasService.setFecha(this.fecha);
-                    this.onSave.emit({ cama: this.selectedCama });
+                    this.save.emit({ cama: this.selectedCama });
                 }, (err1) => {
                     this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
                 });
