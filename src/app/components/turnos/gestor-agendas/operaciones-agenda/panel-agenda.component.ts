@@ -40,8 +40,8 @@ export class PanelAgendaComponent implements OnInit {
 
     // Usados en tag <panel-agenda> en gestor-agendas.html
     @Output() actualizarEstadoEmit = new EventEmitter<boolean>();
-    @Output() showVistaTurnosEmit = new EventEmitter<Boolean>();
-    @Output() agendasSolapadas = new EventEmitter<Boolean>();
+    @Output() showVistaTurnosEmit = new EventEmitter<boolean>();
+    @Output() agendasSolapadas = new EventEmitter<boolean>();
 
     showEditarAgendaPanel = true;
     public showMapa = false;

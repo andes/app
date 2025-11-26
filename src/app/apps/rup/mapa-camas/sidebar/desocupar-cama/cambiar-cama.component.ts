@@ -21,8 +21,8 @@ export class CambiarCamaComponent implements OnInit {
 
     // EVENTOS
     @Input() cambiarUO = null;
-    @Output() onSave = new EventEmitter<any>();
-    @Output() onCancel = new EventEmitter<any>();
+    @Output() saved = new EventEmitter<any>();
+    @Output() canceled = new EventEmitter<any>();
 
     // VARIABLES
     public nuevaCama: ISnapshot;
@@ -191,7 +191,7 @@ export class CambiarCamaComponent implements OnInit {
                                             // se realiza cambio
                                             return this.cambiarCama(camaActual, nuevaCama, fechaCambio).subscribe(camas => resolve(camas));
                                         }
-                                        this.onCancel.emit();
+                                        this.canceled.emit();
                                         return resolve(null);
                                     });
                             });
@@ -206,7 +206,7 @@ export class CambiarCamaComponent implements OnInit {
                         } else if (nuevaCama.estado === 'ocupada') {
                             this.plex.info('warning', `No es posible realizar el ${accion} ya que la cama ${nuevaCama.nombre} se encuentra ocupada.`, 'Atención');
                         }
-                        this.onCancel.emit();
+                        this.canceled.emit();
                         return of(null);
                     }
                 })
@@ -215,7 +215,7 @@ export class CambiarCamaComponent implements OnInit {
                     const mensaje = (this.cambiarUO) ? 'Pase de unidad organizativa exitoso!' : 'Cambio de cama exitoso!';
                     this.plex.info('success', mensaje);
                     this.mapaCamasService.setFecha(this.mapaCamasService.fecha); // para que actualice el snapshot al momento luego del cambio
-                    this.onSave.emit();
+                    this.saved.emit();
                 } else {
                     this.mapaCamasService.setFecha(this.mapaCamasService.fecha);
                     this.disableSaveButton = false;

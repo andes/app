@@ -1,4 +1,4 @@
-import { Inject, Injectable, Optional } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { environment } from '../../../environments/environment';
 import { Router, NavigationEnd } from '@angular/router';
@@ -41,8 +41,8 @@ export class GoogleTagManagerService {
     public getDataLayer() {
         const window = this.browserGlobals.windowRef();
         window['dataLayer'] = window['dataLayer'] || [];
-        window.gtag = function () {
-            window['dataLayer'].push(arguments);
+        window.gtag = function (...args: any[]) {
+            window['dataLayer'].push(args);
         };
         return window['dataLayer'];
     }

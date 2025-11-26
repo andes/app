@@ -11,15 +11,15 @@ import { AdjuntosService } from '../../rup/services/adjuntos.service';
     styleUrls: ['./adjuntos.scss', './punto-inicio.scss']
 })
 export class HistorialDerivacionComponent {
-    public derivacion;
+    public _derivacion;
     public itemsHistorial = [];
     public fileToken;
     public adjuntos = [];
 
     @Input() esCOM = false;
-    @Input('derivacion')
-    set _derivacion(value) {
-        this.derivacion = value;
+    @Input()
+    set derivacion(value) {
+        this._derivacion = value;
         this.adjuntosService.generateToken().subscribe((data: any) => {
             this.fileToken = data.token;
             this.cargarItemsHistorial();
@@ -34,7 +34,7 @@ export class HistorialDerivacionComponent {
     ) { }
 
     cargarItemsHistorial() {
-        let historial = [...this.derivacion.historial.filter(elto => !elto.eliminado)];
+        let historial = [...this._derivacion.historial.filter(elto => !elto.eliminado)];
         if (!historial) {
             historial = [];
         }
@@ -59,10 +59,10 @@ export class HistorialDerivacionComponent {
     eliminarNota(nota) {
         this.plex.confirm('¿Está seguro de querer eliminar la nota?', 'Eliminar nota').then((resultado) => {
             if (resultado) {
-                const index = this.derivacion.historial.findIndex(x => x._id === nota._id);
+                const index = this._derivacion.historial.findIndex(x => x._id === nota._id);
                 nota.eliminado = true;
-                this.derivacion.historial[index] = nota;
-                this.derivacionesService.update(this.derivacion._id, this.derivacion).subscribe((derivacion) => {
+                this._derivacion.historial[index] = nota;
+                this.derivacionesService.update(this._derivacion._id, this._derivacion).subscribe((derivacion) => {
                     this.plex.toast('success', 'Nota eliminada');
                     this.cargarItemsHistorial();
                 });

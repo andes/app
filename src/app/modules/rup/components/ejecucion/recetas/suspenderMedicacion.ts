@@ -19,7 +19,7 @@ export class SuspenderMedicacionComponent implements AfterViewChecked {
     @Input() motivosSuspension: any[];
     @Input() profesional: any;
 
-    @Output() reset: EventEmitter<any> = new EventEmitter<any>();
+    @Output() reseted: EventEmitter<any> = new EventEmitter<any>();
 
     public motivoSelector: any;
     public observacion: string;
@@ -64,7 +64,7 @@ export class SuspenderMedicacionComponent implements AfterViewChecked {
                         next: () => {
                             completadas++;
                             if (completadas + errores === total) {
-                                this.reset.emit();
+                                this.reseted.emit();
                                 if (errores === 0) {
                                     this.plex.toast('success', 'Medicaciones suspendidas correctamente');
                                 } else {
@@ -93,7 +93,7 @@ export class SuspenderMedicacionComponent implements AfterViewChecked {
         return recetas.filter(receta => {
             const conceptId = receta.medicamento?.concepto?.conceptId || receta.insumo?.id || receta.insumo?.concepto?.conceptId;
             const key = `${receta.idRegistro}-${conceptId}`;
-            if (seen.has(key)) {return false;}
+            if (seen.has(key)) { return false; }
             seen.add(key);
             return true;
         });

@@ -26,7 +26,7 @@ export class PacienteService {
      * Metodo getById. Trae un objeto paciente por su Id.
      * @param {String} id Busca por Id
      */
-    getById(id: String, options?: any): Observable<IPaciente> {
+    getById(id: string, options?: any): Observable<IPaciente> {
         return this.server.get(`${this.pacienteV2}/${id}`, options).pipe(
             tap((paciente: IPaciente) => this.pacienteCacheService.setPaciente(paciente))
         );
@@ -49,7 +49,7 @@ export class PacienteService {
         }));
     }
 
-    getEstadoInternacion(id: String, options?: any) {
+    getEstadoInternacion(id: string, options?: any) {
         return this.server.get(`${this.pacienteV2}/estadoActual/${id}/`, options);
     }
 

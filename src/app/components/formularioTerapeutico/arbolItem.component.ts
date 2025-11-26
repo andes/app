@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { FormTerapeuticoService } from '../../services/formTerapeutico/formTerapeutico.service';
 
@@ -7,7 +7,7 @@ import { FormTerapeuticoService } from '../../services/formTerapeutico/formTerap
     templateUrl: 'arbolItem.html',
 })
 
-export class ArbolItemComponent implements OnInit, OnChanges {
+export class ArbolItemComponent {
     public hijos: any[];
     @Output() enviarDetalle = new EventEmitter();
     @Output() enviarDatosMedicamento = new EventEmitter();
@@ -25,14 +25,6 @@ export class ArbolItemComponent implements OnInit, OnChanges {
 
     esHoja() {
         return !this.indice.arbol || this.indice.arbol.length === 0;
-    }
-
-    ngOnInit() {
-
-    }
-
-    ngOnChanges(changes: any) {
-
     }
 
     buscarHijos() {
