@@ -27,7 +27,7 @@
     <plex-modal size="lg" [startOpen]="true" *ngIf="showModal" (closed)="showModal = false">
         <main>
             <section class="w-100 h-100">
-                <rup-medicamentos-busqueda-detalle (select)="onSelectMedicamentos($event); showModal = false">
+                <rup-medicamentos-busqueda-detalle (selected)="onSelectMedicamentos($event); showModal = false">
                 </rup-medicamentos-busqueda-detalle>
             </section>
         </main>

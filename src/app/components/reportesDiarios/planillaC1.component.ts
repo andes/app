@@ -1,6 +1,6 @@
 import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
-import { Component, Input, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
+import { Component, Input, HostBinding, Output, EventEmitter } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
 
@@ -14,7 +14,7 @@ import { Auth } from '@andes/auth';
 })
 
 
-export class PlanillaC1Component implements OnInit {
+export class PlanillaC1Component {
 
     fecha = new Date();
 
@@ -41,7 +41,6 @@ export class PlanillaC1Component implements OnInit {
         return this._parametros;
     }
 
-
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
 
@@ -57,7 +56,4 @@ export class PlanillaC1Component implements OnInit {
 
     }
 
-    public ngOnInit() {
-
-    }
 }

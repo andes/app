@@ -1,5 +1,4 @@
-import { Component, OnInit, HostBinding, Input, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { ProfesionalService } from './../../../../services/profesional.service';
@@ -14,7 +13,7 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 export class FiltrosMapaEspacioFisicoComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
-    @Output() onChange = new EventEmitter<any>();
+    @Output() changed = new EventEmitter<any>();
 
     private timeoutId = null;
     public showListadoTurnos = false;
@@ -49,7 +48,7 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
     }
 
     validarTodo() {
-        this.onChange.emit(this.agenda);
+        this.changed.emit(this.agenda);
     }
 
     loadProfesionales(event) {

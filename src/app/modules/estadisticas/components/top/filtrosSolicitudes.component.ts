@@ -28,7 +28,7 @@ export class FiltrosSolicitudesComponent implements OnChanges {
     ];
 
     @Output() filter = new EventEmitter();
-    @Output() onDisplayChange = new EventEmitter();
+    @Output() displayChange = new EventEmitter();
     @Input() activeTab: any;
 
     public seleccion: any = {
@@ -48,7 +48,7 @@ export class FiltrosSolicitudesComponent implements OnChanges {
 
     changeTablaGrafico() {
         this.esTablaGrafico = !this.esTablaGrafico;
-        this.onDisplayChange.emit(this.esTablaGrafico);
+        this.displayChange.emit(this.esTablaGrafico);
     }
 
     loadProfesionales(event) {

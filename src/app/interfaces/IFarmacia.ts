@@ -1,7 +1,3 @@
-import { IDireccion } from '../core/mpi/interfaces/IDireccion';
-import { IContacto } from './IContacto';
-import { IUbicacion } from './IUbicacion';
-
 export interface IFarmacia {
     id: string;
     denominacion: string;
@@ -19,8 +15,8 @@ export interface IFarmacia {
         valor: string;
         codigoPostal: string;
         ubicacion: {
-            provincia: {};
-            localidad: {};
+            provincia: any;
+            localidad: any;
         };
     };
     contactos: any[];

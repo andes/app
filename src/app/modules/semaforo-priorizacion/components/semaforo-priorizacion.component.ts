@@ -11,7 +11,7 @@ import { ISemaforo } from '../interfaces/ISemaforo';
 })
 
 export class SemaforoPriorizacionComponent implements OnInit {
-    @Output() change = new EventEmitter<any>();
+    @Output() changed = new EventEmitter<any>();
     @Input() name;
     @Input() prioridad;
     public semaforo: ISemaforo;
@@ -36,6 +36,6 @@ export class SemaforoPriorizacionComponent implements OnInit {
 
     select(e) {
         this.prioridad = e.value;
-        this.change.emit(e);
+        this.changed.emit(e);
     }
 }

@@ -173,13 +173,14 @@ export class InscripcionComponent implements OnInit {
                     this.fechaMinimaNacimiento = moment().subtract(60, 'years').toDate();
                     this.fechaMaximaNacimiento = moment().subtract(12, 'years').toDate();
                     break;
-                default:
+                default: {
                     const excepciones = grupo.excepciones.any[0].all;
                     if (excepciones) {
                         this.fechaMinimaNacimiento = moment().subtract(excepciones[1].value, 'years').toDate();
                         this.fechaMaximaNacimiento = moment().subtract(excepciones[0].value, 'years').toDate();
                     }
                     break;
+                }
             }
         }
     }

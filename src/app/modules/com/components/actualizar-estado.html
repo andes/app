@@ -26,11 +26,12 @@
     </plex-title>
     <plex-wrapper>
         <dispositivo [modelo]="derivacion" [tipo]="oxigeno" grow="full"></dispositivo>
-        <semaforo-priorizacion *ngIf="esCOM && derivacion.prioridad" [name]="'com'" [prioridad]="nuevoEstado.prioridad" (change)="nuevoEstado.prioridad = $event?.label"></semaforo-priorizacion>
+        <semaforo-priorizacion *ngIf="esCOM && derivacion.prioridad" [name]="'com'" [prioridad]="nuevoEstado.prioridad"
+                               (changed)="nuevoEstado.prioridad = $event?.label"></semaforo-priorizacion>
         <plex-text [(ngModel)]="nuevoEstado.observacion" label="Observacion" name="observacion" multiline="true"
                    grow="full" required="true">
         </plex-text>
-        <upload-file label="Adjuntar archivo" (onUpload)="onUpload($event)" [modulo]="'com'"></upload-file>
+        <upload-file label="Adjuntar archivo" (uploading)="onUpload($event)" [modulo]="'com'"></upload-file>
         <br><br>
         <span *ngIf="errorExt">
             <plex-badge type="danger">Archivo inválido.</plex-badge>

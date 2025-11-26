@@ -1,6 +1,5 @@
 import moment from 'moment';
-
-import { Component, AfterViewInit, HostBinding, Input } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { PrestacionesService } from '../../../services/prestaciones.service';
@@ -9,7 +8,7 @@ import { PrestacionesService } from '../../../services/prestaciones.service';
     selector: 'radio-chart',
     templateUrl: 'chart.html'
 })
-export class ChartComponent implements AfterViewInit {
+export class ChartComponent {
     private _paciente: IPaciente;
     public chart;
     // variables para guardar los pesos de las prestaciones
@@ -44,9 +43,6 @@ export class ChartComponent implements AfterViewInit {
     ];
 
     constructor(public auth: Auth, public prestacionesService: PrestacionesService) { }
-
-    ngAfterViewInit() {
-    }
 
     generarDatosCurva(expresion: string, opcionesGrafico: any) {
         this.mostrarChart = false;

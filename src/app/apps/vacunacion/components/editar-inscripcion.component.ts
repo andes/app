@@ -16,7 +16,7 @@ import { InscripcionService } from '../services/inscripcion.service';
 })
 
 export class EditarInscripcionComponent implements OnInit, AfterViewChecked {
-    public inscripcion: any;
+    public _inscripcion: any;
     public estados = [
         { id: 'pendiente', nombre: 'Pendiente' },
         { id: 'inhabilitado', nombre: 'Inhabilitado' },
@@ -50,21 +50,24 @@ export class EditarInscripcionComponent implements OnInit, AfterViewChecked {
     public profesion;
     @ViewChild('formulario', { static: false }) form: NgForm;
 
-    @Input('inscripcion')
-    set _inscripcion(value) {
-        this.inscripcion = { ...value };
-        const validadoDomicilio = this.inscripcion.validaciones.includes('domicilio');
-        if (this.inscripcion.grupo.nombre === 'mayores60' && !this.inscripcion.paciente) {
+    @Input()
+    set inscripcion(value) {
+        this._inscripcion = { ...value };
+        const validadoDomicilio = this._inscripcion.validaciones.includes('domicilio');
+        if (this._inscripcion.grupo.nombre === 'mayores60' && !this._inscripcion.paciente) {
             this.permiteCambioFechaNacimiento = true;
         }
-        if (this.inscripcion.paciente || validadoDomicilio) {
+        if (this._inscripcion.paciente || validadoDomicilio) {
             this.estados.push(
                 { id: 'habilitado', nombre: 'Habilitado' });
         }
-        this.inscripcion.morbilidades = this.inscripcion.morbilidades.map(morbilidad => {
+        this._inscripcion.morbilidades = this._inscripcion.morbilidades.map(morbilidad => {
             return { id: morbilidad, label: morbilidad };
         });
-        this.setGruposPosibles(this.inscripcion.fechaNacimiento);
+        this.setGruposPosibles(this._inscripcion.fechaNacimiento);
+    }
+    get inscripcion() {
+        return this._inscripcion;
     }
 
     @Output() returnEdicion: EventEmitter<any> = new EventEmitter<any>();
@@ -88,8 +91,8 @@ export class EditarInscripcionComponent implements OnInit, AfterViewChecked {
 
     ngOnInit() {
         this.permisosEdicion = this.auth.getPermissions('vacunacion:editar:?');
-        if (this.inscripcion.email) {
-            this.inscripcion.email = this.inscripcion.email.toLowerCase().trim();
+        if (this._inscripcion.email) {
+            this._inscripcion.email = this._inscripcion.email.toLowerCase().trim();
         }
     }
 
@@ -134,25 +137,25 @@ export class EditarInscripcionComponent implements OnInit, AfterViewChecked {
                     this.morbilidades = grupofr.morbilidades;
                 }
                 this.opcionesGrupos = grupos;
-                const tieneGrupoValido = this.opcionesGrupos.find(opcionGrupo => opcionGrupo.nombre === this.inscripcion.grupo.nombre);
+                const tieneGrupoValido = this.opcionesGrupos.find(opcionGrupo => opcionGrupo.nombre === this._inscripcion.grupo.nombre);
                 if (!tieneGrupoValido) {
-                    this.inscripcion.grupo = null;
+                    this._inscripcion.grupo = null;
                 }
             });
         });
     }
 
     guardar() {
-        if (this.inscripcion.estado.id) {
-            this.inscripcion.estado = this.inscripcion.estado.id;
+        if (this._inscripcion.estado.id) {
+            this._inscripcion.estado = this._inscripcion.estado.id;
         }
-        if (this.inscripcion.grupo.nombre === 'factores-riesgo') {
-            this.inscripcion.morbilidades = this.inscripcion.morbilidades ? this.inscripcion.morbilidades.map(c => c.id) : [];
+        if (this._inscripcion.grupo.nombre === 'factores-riesgo') {
+            this._inscripcion.morbilidades = this._inscripcion.morbilidades ? this._inscripcion.morbilidades.map(c => c.id) : [];
         } else {
-            this.inscripcion.morbilidades = [];
+            this._inscripcion.morbilidades = [];
         }
-        this.inscripcion.diaseleccionados = this.diaSeleccion ? this.diaSeleccion.id : '';
-        this.inscripcionService.update(this.inscripcion.id, this.inscripcion).subscribe(resultado => {
+        this._inscripcion.diaseleccionados = this.diaSeleccion ? this.diaSeleccion.id : '';
+        this.inscripcionService.update(this._inscripcion.id, this._inscripcion).subscribe(resultado => {
             this.returnEdicion.emit(resultado);
             this.plex.toast('success', 'La inscripción ha sido actualizada exitosamente');
         }, error => {

@@ -160,10 +160,7 @@ export class PlanIndicacionesComponent implements OnInit {
             maquinas.forEach(m => {
                 if (m.planIndicaciones?.secciones) {
                     this.secciones.push(
-                        ...m.planIndicaciones?.secciones.map(s => ({
-                            ...s,
-                            capa: m.capa
-                        }))
+                        ...m.planIndicaciones?.secciones.map(s => ({ ...s, capa: m.capa })) || []
                     );
                 }
             });
