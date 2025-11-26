@@ -17,5 +17,5 @@
     </p>
 </form>
 <rup-observaciones-modal *ngIf="fullscreen" [label]="params.titulo" [value]="registro.valor"
-                         [concepto]="registro.concepto" (close)="onCloseFullscreen($event)">
+                         [concepto]="registro.concepto" (closed)="onCloseFullscreen($event)">
 </rup-observaciones-modal>

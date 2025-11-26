@@ -45,7 +45,7 @@
                         type="info" size="xl" icon="magnify"></plex-label>
         </div>
         <reporteC2 *ngIf="showReporteC2 && diagnosticos.length" [diagnosticos]="diagnosticos"
-                   (select)="diagnostico = $event">
+                   (selected)="diagnostico = $event">
         </reporteC2>
         <cantidadConsultaXPrestacion *ngIf="showCantidadConsultaXPrestacion && diagnosticos.length"
                                      [diagnosticos]="diagnosticos">
@@ -58,8 +58,7 @@
         </plex-title>
         <plex-list>
             <plex-item *ngFor="let paciente of diagnostico.pacientes;" class="">
-                <plex-label titulo="{{ paciente | nombre }}"
-                            subtitulo="{{ paciente | documento }}">
+                <plex-label titulo="{{ paciente | nombre }}" subtitulo="{{ paciente | documento }}">
                 </plex-label>
                 <plex-label titulo="{{paciente.sexo}}">
                 </plex-label>

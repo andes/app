@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 
@@ -8,7 +8,7 @@ import { Auth } from '@andes/auth';
     styleUrls: ['./icono-camita.component.scss'],
 })
 
-export class IconoCamitaComponent implements OnInit {
+export class IconoCamitaComponent {
     @Input() icono: string;
     @Input() color = 'info';
     @Input() nombre: string;
@@ -19,6 +19,4 @@ export class IconoCamitaComponent implements OnInit {
         private router: Router,
     ) { }
 
-    ngOnInit() {
-    }
 }

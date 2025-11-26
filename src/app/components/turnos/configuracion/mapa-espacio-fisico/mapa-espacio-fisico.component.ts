@@ -19,9 +19,9 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
     @Input() showBotonCancelar = false;
     @Input() fecha: Date;
 
-    @Output() onEspacioClick = new EventEmitter<IEspacioFisico>();
+    @Output() espacioClick = new EventEmitter<IEspacioFisico>();
     @Output() agendaVista = new EventEmitter<IAgenda>();
-    @Output() onCancelEmit = new EventEmitter<boolean>();
+    @Output() cancelEmit = new EventEmitter<boolean>();
 
     @Input() agendasTable: IAgenda[] = [];
 
@@ -113,7 +113,6 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
         } else {
             this.start = moment(this.opciones.start);
             this.end = moment(this.opciones.end);
-            this.unit = this.unit;
         }
         if (this.unit !== 'day') {
             this._unit = Number(this.unit);
@@ -251,13 +250,15 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
         switch (this.unit) {
             case 'day':
                 return 1;
-            case 'hour':
+            case 'hour': {
                 const _start = start.startOf('hour');
                 const _end = end.endOf('hour');
                 return _end.diff(_start, 'hours');
-            default:
+            }
+            default: {
                 const unit = parseInt(this.unit.toString(), 10);
                 return (end.diff(start) / 60000) / unit;
+            }
         }
     }
 
@@ -273,7 +274,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
                                 this.removeItem({ id: this.agendaSeleccionada.id, espacioID: this.agendaSeleccionada.espacioFisico.id });
                             }
                             this.addItem(index || 0, item, espacio);
-                            this.onEspacioClick.emit(this.espacioTable.find(_item => _item.id === espacio.id));
+                            this.espacioClick.emit(this.espacioTable.find(_item => _item.id === espacio.id));
                         } else {
                             return false;
                         }
@@ -367,7 +368,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
     }
 
     cerrarMapa(event) {
-        this.onCancelEmit.emit(true);
+        this.cancelEmit.emit(true);
     }
 
 

@@ -6,14 +6,14 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class AsignarSeguimientosComponent {
     profesional;
-    @Output() close: EventEmitter<any> = new EventEmitter<any>();
-    @Output() save: EventEmitter<any> = new EventEmitter<any>();
+    @Output() closed: EventEmitter<any> = new EventEmitter<any>();
+    @Output() saved: EventEmitter<any> = new EventEmitter<any>();
 
     guardar() {
-        this.save.emit(this.profesional);
+        this.saved.emit(this.profesional);
     }
 
     cerrar() {
-        this.close.emit(false);
+        this.closed.emit(false);
     }
 }

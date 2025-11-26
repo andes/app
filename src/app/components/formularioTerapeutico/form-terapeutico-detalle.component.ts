@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 
 @Component({
@@ -7,17 +7,10 @@ import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter, OnCh
     styleUrls: ['form-terapeutico-detalle.scss']
 })
 
-export class FormTerapeuticoDetallePageComponent implements OnInit, OnChanges {
+export class FormTerapeuticoDetallePageComponent {
     mostrarMenu = false;
 
 
     @Input() medicamento: any;
-
-
-    ngOnInit() {
-    }
-
-    ngOnChanges(changes: any) {
-    }
 
 }

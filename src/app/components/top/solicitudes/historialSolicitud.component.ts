@@ -6,25 +6,25 @@ import { Input, Component } from '@angular/core';
     templateUrl: './historialSolicitud.html'
 })
 export class HistorialSolicitudComponent {
-    turno;
-    prestacion;
+    _turno;
+    _prestacion;
     itemsHistorial = [];
 
-    @Input('prestacion')
-    set _prestacion(value) {
-        this.prestacion = value;
+    @Input()
+    set prestacion(value) {
+        this._prestacion = value;
         this.cargarItemsHistorial();
     }
 
-    @Input('turno')
-    set _turno(value) {
-        this.turno = value;
+    @Input()
+    set turno(value) {
+        this._turno = value;
         this.cargarItemsHistorial();
 
     }
 
     cargarItemsHistorial() {
-        let historial = this.prestacion.solicitud.historial;
+        let historial = this._prestacion.solicitud.historial;
         if (!historial) {
             historial = [];
         }
