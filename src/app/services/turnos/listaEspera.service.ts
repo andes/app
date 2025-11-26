@@ -43,7 +43,7 @@ export class ListaEsperaService {
         return this.server.patch(this.listaEsperaUrl + '/' + id + '/' + datoMod, cambios);
     }
 
-    save(paciente, tipoPrestacion, estado: String, profesional, organizacion, motivo: String, origen: String, showError?: boolean) {
+    save(paciente, tipoPrestacion, estado: string, profesional, organizacion, motivo: string, origen: string, showError?: boolean) {
         const datosProfesional = !profesional ? null : {
             id: profesional.id,
             nombre: profesional.nombre,

@@ -4,7 +4,7 @@
             <div class="col-12">
                 <strong *ngIf="!soloValores" class="pr-2">Cargar documentos</strong>
                 <span *ngIf="!waiting && !soloValores">
-                    <upload-file label="Desde mi PC" (onUpload)="onUpload($event)" modulo="rup"
+                    <upload-file label="Desde mi PC" (uploading)="onUpload($event)" modulo="rup"
                                  [extensiones]="extensions"></upload-file>
                     <plex-button *ngIf="!waiting" class="btn-sm" type="primary" label="Desde mi App móvil"
                                  (click)="fromMobile()"></plex-button>

@@ -2,7 +2,6 @@ import { Plex } from '@andes/plex';
 import { Input, Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
 import { ProfesionalService } from '../../../services/profesional.service';
-import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 import { Auth } from '@andes/auth';
 import { ReglaService } from '../../../services/top/reglas.service';
 import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
@@ -16,10 +15,13 @@ export class ReferirSolicitudComponent implements OnInit {
     imagenes = IMAGENES_EXT;
     extensions = FILE_EXT;
 
-    prestacionSeleccionada;
-    @Input('prestacionSeleccionada')
-    set _prestacionSeleccionada(value) {
-        this.prestacionSeleccionada = value;
+    _prestacionSeleccionada;
+    @Input()
+    set prestacionSeleccionada(value) {
+        this._prestacionSeleccionada = value;
+    }
+    get prestacionSeleccionada() {
+        return this._prestacionSeleccionada;
     }
     @Output() returnReferir: EventEmitter<any> = new EventEmitter<any>();
     @Output() returnCitar: EventEmitter<any> = new EventEmitter<any>();
@@ -59,7 +61,7 @@ export class ReferirSolicitudComponent implements OnInit {
 
         this.servicioReglas.get({
             organizacionOrigen: this.auth.organizacion.id,
-            prestacionOrigen: this.prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId
+            prestacionOrigen: this._prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId
         })
             .subscribe(
                 res => {
@@ -99,7 +101,7 @@ export class ReferirSolicitudComponent implements OnInit {
 
     esRemisionAuditable() {
         const regla = this.reglasTOP.find(rule => rule.destino.prestacion.conceptId === this.tipoPrestacionDestino.id);
-        const regla2 = regla.origen.prestaciones.find(rule => rule.prestacion.conceptId === this.prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId);
+        const regla2 = regla.origen.prestaciones.find(rule => rule.prestacion.conceptId === this._prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId);
         return regla2.auditable;
     }
 
@@ -130,9 +132,9 @@ export class ReferirSolicitudComponent implements OnInit {
     onSelectOrganizacionDestino() {
         if (this.organizacionDestino) {
             this.servicioReglas.get({
-                organizacionOrigen: this.prestacionSeleccionada.solicitud.organizacion.id,
+                organizacionOrigen: this._prestacionSeleccionada.solicitud.organizacion.id,
                 organizacionDestino: this.organizacionDestino.id,
-                prestacionOrigen: this.prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId
+                prestacionOrigen: this._prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId
             }).subscribe(res => {
                 this.reglasTOP = res;
                 this.tipoPrestacionesDestino = res.map(e => e.destino.prestacion);
@@ -146,7 +148,7 @@ export class ReferirSolicitudComponent implements OnInit {
     }
 
     mostrarMotivo() {
-        return (this.prestacionSeleccionada.solicitud?.registros?.[0]?.valor?.solicitudPrestacion?.motivo);
+        return (this._prestacionSeleccionada.solicitud?.registros?.[0]?.valor?.solicitudPrestacion?.motivo);
     }
 
 }

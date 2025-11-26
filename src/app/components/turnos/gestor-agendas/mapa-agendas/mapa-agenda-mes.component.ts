@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MapaAgendasService } from './mapa-agendas.service';
 
 
@@ -7,7 +7,7 @@ import { MapaAgendasService } from './mapa-agendas.service';
     templateUrl: 'mapa-agenda-mes.component.html',
     styleUrls: ['mapa-agendas.scss']
 })
-export class MapaAgendasMesComponent implements OnInit {
+export class MapaAgendasMesComponent {
 
     public headers = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
     public _fecha;
@@ -26,11 +26,6 @@ export class MapaAgendasMesComponent implements OnInit {
         private mapaAgendasService: MapaAgendasService
 
     ) { }
-
-    ngOnInit() {
-
-
-    }
 
     private cargarAgendas() {
 
