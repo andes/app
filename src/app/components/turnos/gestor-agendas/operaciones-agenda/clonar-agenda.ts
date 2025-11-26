@@ -238,8 +238,7 @@ export class ClonarAgendaComponent implements OnInit {
                         this.agenda.profesionales && this.agenda.profesionales.length > 0) {
                         if (agenda.profesionales.map(elem => {
                             return elem.id;
-                        }).some
-                        (v => {
+                        }).some(v => {
                             return this.agenda.profesionales.map(elem => {
                                 return elem.id;
                             }).includes(v);

@@ -19,7 +19,7 @@ export class SuspenderMedicacionComponent implements AfterViewChecked {
     @Input() motivosSuspension: any[];
     @Input() profesional: any;
 
-    @Output() reset: EventEmitter<any> = new EventEmitter<any>();
+    @Output() reseted: EventEmitter<any> = new EventEmitter<any>();
 
     public motivoSelector: any;
     public observacion: string;
@@ -56,7 +56,7 @@ export class SuspenderMedicacionComponent implements AfterViewChecked {
                 const recetaIds = this.seleccionRecetas.map(receta => receta.id).filter(id => id != null);
                 this.recetasService.suspender(recetaIds, this.profesional, this.motivoSelector?.nombre || 'Sin motivo', this.observacion).subscribe({
                     next: () => {
-                        this.reset.emit();
+                        this.reseted.emit();
                         this.plex.toast('success', 'Medicaciones suspendidas correctamente');
                     },
                     error: () => {

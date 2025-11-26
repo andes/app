@@ -30,7 +30,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     public id$ = new BehaviorSubject(null);
 
     public historial$: Observable<any>;
-    public historialFiltrado$: Observable<any> = of([]);;
+    public historialFiltrado$: Observable<any> = of([]);
     public estadoCama$: Observable<IMAQEstado>;
     public accionesEstado$: Observable<any>;
     public prestacionesList$: Observable<any>;

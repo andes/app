@@ -17,8 +17,8 @@
                     </plex-label>
                 </div>
 
-                <div *ngIf="!estaBuscando && !(listadoInternacionService.fechasIngreso$ | async)" justify="center"
-                     class="mt-5">
+                <div *ngIf="!estaBuscando && !!(listadoInternacionService.fechasIngreso$ | async) === false"
+                     justify="center" class="mt-5">
                     <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
                                 titulo="No hay resultados"
                                 subtitulo="Debe ingresar un rango válido de fechas de ingreso o egreso">
@@ -102,8 +102,8 @@
                 <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
                 </plex-button>
             </app-desocupar-cama>
-            <app-cambiar-cama *ngIf="mostrar === 'cambiarCama'" cambiarUO="{{ cambiarUO }}" (onSave)="refresh()"
-                              (cancel)="volverADetalle()">
+            <app-cambiar-cama *ngIf="mostrar === 'cambiarCama'" cambiarUO="{{ cambiarUO }}" (saved)="refresh()"
+                              (canceled)="volverADetalle()">
             </app-cambiar-cama>
         </plex-layout-sidebar>
     </plex-layout>

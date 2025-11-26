@@ -470,10 +470,11 @@ export class PacienteComponent implements OnInit {
             case 'sobreturno':
                 this._router.navigate(['citas/gestor_agendas']);
                 break;
-            case 'huds':
+            case 'huds': {
                 const id = this.paciente.id;
                 this._router.navigate(['huds/paciente', id]);
                 break;
+            }
             default:
                 this._router.navigate(['apps/mpi/busqueda']);
                 break;

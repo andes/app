@@ -284,4 +284,4 @@
 </plex-layout>
 
 <clonar-agenda *ngIf="showClonar && autorizado" [agenda]="modelo" (volverAlGestor)="cancelar()"></clonar-agenda>
-<modal-agenda *ngIf="showModal" #modalAgenda [dato]="datos" (close)="cerrarModal()"></modal-agenda>
+<modal-agenda *ngIf="showModal" #modalAgenda [dato]="datos" (closed)="cerrarModal()"></modal-agenda>

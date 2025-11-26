@@ -7,7 +7,7 @@
 </plex-title>
 <form #form="ngForm">
     <!-- SOLICITUD ENTRADA -->
-    <ng-container *ngIf="tipoSolicitud == 'entrada'">
+    <ng-container *ngIf="tipoSolicitud === 'entrada'">
         <plex-wrapper>
             <plex-datetime class="mr-0" type="date" [(ngModel)]="modelo.solicitud.fecha" name="fechaSolicitud"
                            label="Fecha de solicitud" [required]="true">
@@ -61,7 +61,7 @@
     </ng-container>
     <!-- /SOLICITUD ENTRADA -->
     <!-- SOLICITUD SALIDA -->
-    <ng-container *ngIf="tipoSolicitud == 'salida'">
+    <ng-container *ngIf="tipoSolicitud === 'salida'">
         <plex-wrapper>
             <plex-datetime class="mr-0" type="date" [(ngModel)]="modelo.solicitud.fecha" name="fechaSolicitud"
                            label="Fecha de solicitud" [required]="true">
@@ -109,7 +109,8 @@
     <!-- Adjuntar Archivos -->
     <plex-title [size]="size? size : ''" titulo="Cargar adjuntos"></plex-title>
     <plex-wrapper>
-        <upload-file label="Adjuntar archivo" (onUpload)="onUpload($event)" [extensiones]="extensions" [modulo]="'top'">
+        <upload-file label="Adjuntar archivo" (uploading)="onUpload($event)" [extensiones]="extensions"
+                     [modulo]="'top'">
         </upload-file>
         <br><br>
         <span *ngIf="errorExt">

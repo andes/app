@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 
 @Component({
@@ -6,7 +6,7 @@ import { RUPComponent } from './../core/rup.component';
     templateUrl: 'nuevaEvolucionProblema.html'
 })
 
-export class NuevaEvolucionProblemaComponent extends RUPComponent implements OnInit {
+export class NuevaEvolucionProblemaComponent extends RUPComponent {
     public fechaInicio: Date;
     public HallazgoCompleto;
     public unaEvolucion;
@@ -24,9 +24,5 @@ export class NuevaEvolucionProblemaComponent extends RUPComponent implements OnI
      * al ser este un caso de atomo medio particular que lleva muchas propiedades dentro
      * entonces inicializamos data como un objeto
      */
-    ngOnInit() {
-
-
-    }
 
 }

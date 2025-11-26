@@ -200,7 +200,7 @@ export class SuspenderTurnoComponent implements OnInit {
             })
         ).subscribe(turnoSaved => {
             turno.avisoSuspension = (turnoSaved as any).aviso;
-        });;
+        });
     }
 
     cancelar() {

@@ -181,7 +181,7 @@ export class PrestacionesService {
             // En caso de tener que buscar los datos nos fijamos si tiene restriccion por efector.
             if (this.restriccion) {
                 opt.params['efectorRestringido'] = this.auth.organizacion.id;
-            };
+            }
             if (desde) {
                 opt.params['fechaDesde'] = desde;
             }

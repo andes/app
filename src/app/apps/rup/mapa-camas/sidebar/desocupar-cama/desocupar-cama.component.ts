@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { cache } from '@andes/shared';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { ISnapshot } from '../../interfaces/ISnapshot';
@@ -11,7 +11,7 @@ import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.ser
     selector: 'app-desocupar-cama',
     templateUrl: 'desocupar-cama.component.html'
 })
-export class CamaDesocuparComponent implements OnInit, OnDestroy {
+export class CamaDesocuparComponent implements OnDestroy {
     camasDisponibles$: Observable<any>;
 
     // EVENTOS
@@ -33,9 +33,8 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
         public mapaCamasService: MapaCamasService,
         public permisosMapaCamasService: PermisosMapaCamasService,
     ) { }
-
-    ngOnDestroy() {
-
+    ngOnDestroy(): void {
+        throw new Error('Method not implemented.');
     }
 
     public historial$: Observable<any[]>;

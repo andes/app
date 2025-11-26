@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import { cache } from '@andes/shared';
 import { forkJoin } from 'rxjs';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { first, map, pluck } from 'rxjs/operators';
@@ -17,7 +16,7 @@ import { ObjectID } from 'bson';
 
 export class PrestarDevolverRecursoComponent implements OnInit {
     @Input() accion;
-    @Output() onSave = new EventEmitter<any>();
+    @Output() saved = new EventEmitter<any>();
 
     public unidadesOrganizativas$ = this.organizacionService.getById(this.auth.organizacion.id).pipe(
         pluck('unidadesOrganizativas'),
@@ -85,7 +84,7 @@ export class PrestarDevolverRecursoComponent implements OnInit {
                 `El recurso ahora se encuentra en <b>${datosCama.unidadOrganizativa.term}</b>`,
                 title
             );
-            this.onSave.emit();
+            this.saved.emit();
             this.mapaCamasService.setFecha(this.fecha);
         });
     }

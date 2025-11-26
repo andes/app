@@ -281,7 +281,7 @@ export class DemandaInsatisfechaComponent implements OnInit {
                 id: datosTurno.idTurno,
                 idAgenda: datosTurno.idAgenda,
             };
-        };
+        }
 
         this.listaEsperaService.patch(this.itemSelected._id, 'estado', data).subscribe({
             next: (item) => {

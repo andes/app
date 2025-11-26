@@ -1,17 +1,13 @@
-import { Plex } from '@andes/plex';
-import { Router } from '@angular/router';
 import { Component, Input, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
-import { Server } from '@andes/shared';
-import { Auth } from '@andes/auth';
-
-
 @Component({
     selector: 'reporteC2',
     templateUrl: 'reporteC2.html',
 })
 
 export class ReporteC2Component implements OnInit {
-    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
+    ngOnInit(): void {
+        throw new Error('Method not implemented.');
+    }
     private _diagnosticos;
     private diagnostico;
     public seleccionada = [];
@@ -101,39 +97,17 @@ export class ReporteC2Component implements OnInit {
     }
 
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
-    @Output() select: EventEmitter<any> = new EventEmitter<any>();
+    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(
-        private plex: Plex,
-        private router: Router,
-        private server: Server,
-
-        private auth: Auth,
-
-
-    ) {
-
-    }
-
-    public ngOnInit() {
-
-    }
 
     datosPacientes(indice) {
         this.diagnostico = this.diagnosticos[indice];
-        this.select.emit(this.diagnostico);
+        this.selected.emit(this.diagnostico);
         for (let i = 0; i < this.seleccionada.length; i++) {
             this.seleccionada[i] = false;
         }
-        // if (this.diagnostico.ficha !== null) {
         this.seleccionada[indice] = true;
         this.listaPacientes = true;
-        // } else {
-        //     this.listaPacientes = false;
-        // }
     }
-
-
-
 
 }

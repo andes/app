@@ -28,7 +28,7 @@ import moment from 'moment';
 
 export class EgresarPacienteComponent implements OnInit, OnDestroy {
     // EVENTOS
-    @Output() onSave = new EventEmitter<any>();
+    @Output() save = new EventEmitter<any>();
     @ViewChild('formEgreso', { static: true }) formEgreso: NgForm;
     // CONSTANTES
     public listaTipoEgreso = listaTipoEgreso;
@@ -418,7 +418,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
         return saveInternacion().pipe(
             switchMap(resumenSaved => {
-                this.onSave.emit();
+                this.save.emit();
                 this.inProgress = false;
 
                 if (this.capa !== 'estadistica' && !this.cama.sala && !resumenSaved) {
