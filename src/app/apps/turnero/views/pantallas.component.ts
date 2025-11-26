@@ -54,19 +54,21 @@ export class PantallasComponent implements OnInit, OnDestroy {
                         Object.assign(temp, data.pantalla);
                     }
                     break;
-                case 'turnero-create':
+                case 'turnero-create': {
                     const i = this.pantallas.findIndex(item => item.id === pantalla.id);
                     if (i < 0) {
                         this.pantallas.push(pantalla);
                     }
                     break;
-                case 'turnero-remove':
+                }
+                case 'turnero-remove': {
                     const index = this.pantallas.findIndex(item => item.id === pantalla.id);
                     if (index >= 0) {
                         this.pantallas.splice(index, 1);
                         this.pantallasService.pantallas = [...this.pantallasService.pantallas];
                     }
                     break;
+                }
             }
         });
         this.pantallasService.list();

@@ -27,8 +27,8 @@ export class UploadFileComponent implements OnInit {
     @Input() extensiones: string[] = null;
     @Input() modulo: string = null;
 
-    @Output() onProgress = new EventEmitter<IProgress>();
-    @Output() onUpload = new EventEmitter<ICompleted>();
+    @Output() progressing = new EventEmitter<IProgress>();
+    @Output() uploading = new EventEmitter<ICompleted>();
     @ViewChild('upload', { static: true }) uploadElement: ElementRef;
 
     public disabled = false;
@@ -92,7 +92,7 @@ export class UploadFileComponent implements OnInit {
         this.portFile(this.currentFileUpload).subscribe(event => {
             if (event.type === HttpEventType.UploadProgress) {
                 const { loaded, total } = event;
-                this.onProgress.emit({ loaded, total });
+                this.progressing.emit({ loaded, total });
                 this.progress = Math.round(loaded / total * 100);
             }
             if (event.type === HttpEventType.Response) {
@@ -104,10 +104,10 @@ export class UploadFileComponent implements OnInit {
                 if (status >= 200 && status < 300) {
                     body.ext = this.getExtension(this.currentFileUpload.name);
                     body.size = this.currentFileUpload.size;
-                    this.onUpload.emit({ status, body });
+                    this.uploading.emit({ status, body });
                 }
             }
-        }, (error) => {
+        }, () => {
             this.disabled = false;
         });
     }

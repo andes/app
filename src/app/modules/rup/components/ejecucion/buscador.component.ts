@@ -346,7 +346,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
         if (this.results && this.results[busquedaActual]) {
 
             // quitamos de this.filtroActual aquellos que son turneables, no es correcto que aparezcan
-            this.results[busquedaActual]['todos'] = this.results[busquedaActual]['todos'];
+            this.results[busquedaActual]['todos'] = [...this.results[busquedaActual]['todos']];
             // quitamos de los 'procedimientos' aquellos que son turneables, no es correcto que aparezcan
             this.results[busquedaActual]['procedimientos'] = this.results[busquedaActual]['procedimientos'] ? this.results[busquedaActual]['procedimientos'] : [];
             if (busquedaActual !== 'buscadorBasico') {

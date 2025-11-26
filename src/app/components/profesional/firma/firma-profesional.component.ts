@@ -24,7 +24,7 @@ export class FirmaProfesionalComponent {
     get profesional() {
         return this._profesional;
     }
-    @Output() onFileUploaded = new EventEmitter();
+    @Output() fileUploaded = new EventEmitter();
     private _profesional = null;
     public binaryString = null;
     public urlFirma = null;
@@ -84,7 +84,7 @@ export class FirmaProfesionalComponent {
                 // this.binaryString = readerEvt.target.result;
                 this.base64textString = btoa(compressedImg);
                 this.urlFirma = compressedImg; // this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + this.base64textString);
-                this.onFileUploaded.emit(this.base64textString);
+                this.fileUploaded.emit(this.base64textString);
             },
             () => {
                 this.plex.toast('danger', 'Ha ocurrido un error realizando la operación.');

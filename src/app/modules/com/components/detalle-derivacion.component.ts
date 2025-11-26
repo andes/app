@@ -18,7 +18,7 @@ import { DerivacionesService } from './../../../services/com/derivaciones.servic
 })
 export class DetalleDerivacionComponent implements OnInit {
     @ViewChildren('upload') childsComponents: QueryList<any>;
-    public derivacion;
+    public _derivacion;
     public reglaSeleccionada;
     public dispositivo = null;
     public opcionesPrioridad = [
@@ -45,16 +45,16 @@ export class DetalleDerivacionComponent implements OnInit {
     public documentosEstadoUrl = [];
     public adjuntosUrl = [];
 
-    @Input('derivacion')
-    set _derivacion(value) {
-        this.derivacion = value;
+    @Input()
+    set derivacion(value) {
+        this._derivacion = value;
         this.dispositivo = value.dispositivo;
         this.adjuntosService.generateToken().subscribe((data: any) => {
             this.fileToken = data.token;
             this.reglaSeleccionada = {};
             this.adjuntosEstado = [];
             this.documentosEstadoUrl = [];
-            this.adjuntosUrl = this.derivacion.adjuntos.map((doc) => {
+            this.adjuntosUrl = this._derivacion.adjuntos.map((doc) => {
                 return {
                     ...doc,
                     url: this.adjuntosService.createUrl('drive', doc, this.fileToken)
@@ -64,16 +64,16 @@ export class DetalleDerivacionComponent implements OnInit {
         });
     }
 
-    @Input('reglasDerivacion')
-    set _reglasDerivacion(value) {
-        this.reglasDerivacion = value;
+    @Input()
+    set reglasDerivacion(value) {
+        this._reglasDerivacion = value;
     }
 
     @Output() returnDetalle: EventEmitter<any> = new EventEmitter<any>();
     public tabIndex = 0;
     organizacionesDestino = [];
     unidadesDestino = [];
-    reglasDerivacion = [];
+    _reglasDerivacion = [];
     reglasDerivacionFiltradas = [];
     public nuevoEstado;
     public esCOM = false;
@@ -107,10 +107,10 @@ export class DetalleDerivacionComponent implements OnInit {
 
     cargarEstado() {
         this.nuevoEstado = {
-            organizacionDestino: this.derivacion.organizacionDestino,
-            unidadDestino: this.derivacion.unidadDestino,
-            estado: this.derivacion.estado,
-            prioridad: this.derivacion.prioridad || 'baja',
+            organizacionDestino: this._derivacion.organizacionDestino,
+            unidadDestino: this._derivacion.unidadDestino,
+            estado: this._derivacion.estado,
+            prioridad: this._derivacion.prioridad || 'baja',
             observacion: ''
         };
 
@@ -147,8 +147,8 @@ export class DetalleDerivacionComponent implements OnInit {
     }
 
     filterReglasDerivaciones() {
-        if (this.esCOM || this.derivacion.organizacionDestino.id === this.auth.organizacion.id) {
-            this.reglasDerivacionFiltradas = this.reglasDerivacion.filter(element => element.estadoInicial === this.derivacion.estado &&
+        if (this.esCOM || this._derivacion.organizacionDestino.id === this.auth.organizacion.id) {
+            this.reglasDerivacionFiltradas = this._reglasDerivacion.filter(element => element.estadoInicial === this._derivacion.estado &&
                 element.soloCOM === this.esCOM);
         }
     }
@@ -158,8 +158,8 @@ export class DetalleDerivacionComponent implements OnInit {
             this.nuevoEstado.organizacionDestino = null;
             this.nuevoEstado.unidadDestino = null;
         } else {
-            this.nuevoEstado.organizacionDestino = this.derivacion.organizacionDestino;
-            this.nuevoEstado.unidadDestino = this.derivacion.unidadDestino;
+            this.nuevoEstado.organizacionDestino = this._derivacion.organizacionDestino;
+            this.nuevoEstado.unidadDestino = this._derivacion.unidadDestino;
         }
         this.loadUnidadesDestino();
     }
@@ -172,17 +172,17 @@ export class DetalleDerivacionComponent implements OnInit {
             if (!this.reglaSeleccionada.definePrioridad) {
                 delete this.nuevoEstado.prioridad;
             }
-            this.nuevoEstado.dispositivo = this.derivacion.dispositivo;
-            this.derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
+            this.nuevoEstado.dispositivo = this._derivacion.dispositivo;
+            this._derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
             const body: any = {
                 estado: this.nuevoEstado,
                 trasladoEspecial: {
-                    tipoTraslado: this.derivacion.tipoTraslado,
-                    organizacionTraslado: this.derivacion.organizacionTraslado
+                    tipoTraslado: this._derivacion.tipoTraslado,
+                    organizacionTraslado: this._derivacion.organizacionTraslado
                 }
             };
 
-            this.derivacionService.updateHistorial(this.derivacion._id, body).subscribe(() => {
+            this.derivacionService.updateHistorial(this._derivacion._id, body).subscribe(() => {
                 this.plex.toast('success', 'La derivación fue actualizada exitosamente');
                 this.returnDetalle.emit(true);
             });
@@ -219,13 +219,13 @@ export class DetalleDerivacionComponent implements OnInit {
 
     editarPrestacion() {
         this.servicioPrestacion.notificaRuta({ nombre: 'COM', ruta: 'com' });
-        this.router.navigate(['rup/ejecucion', this.derivacion.prestacion]);
+        this.router.navigate(['rup/ejecucion', this._derivacion.prestacion]);
     }
 
     imprimirHistorial() {
         this.requestInProgress = true;
         const foo = () => this.requestInProgress = false;
-        this.documentosService.descargarHistorialDerivacion(this.derivacion._id, this.derivacion.paciente.apellido).subscribe(foo, foo);
+        this.documentosService.descargarHistorialDerivacion(this._derivacion._id, this._derivacion.paciente.apellido).subscribe(foo, foo);
     }
 
     cerrar() {

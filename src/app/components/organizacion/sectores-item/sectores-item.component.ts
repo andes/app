@@ -1,6 +1,6 @@
 import { SnomedService } from '../../../apps/mitos';
 import { Plex } from '@andes/plex';
-import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
+import { Component, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import { ISectores } from '../../../interfaces/IOrganizacion';
 import { SectoresService } from '../../../services/sectores.service';
 
@@ -9,15 +9,15 @@ import { SectoresService } from '../../../services/sectores.service';
     templateUrl: 'sectores-item.html',
     styleUrls: ['sectores-item.scss']
 })
-export class SectoresItemComponent implements OnInit {
+export class SectoresItemComponent {
 
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
     // definición de arreglos
-    @Output() onAdd: EventEmitter<any> = new EventEmitter();
-    @Output() onRemove: EventEmitter<any> = new EventEmitter();
-    @Output() onEdit: EventEmitter<any> = new EventEmitter();
-    @Output() onSelect: EventEmitter<any> = new EventEmitter();
+    @Output() add: EventEmitter<any> = new EventEmitter();
+    @Output() remove: EventEmitter<any> = new EventEmitter();
+    @Output() edit: EventEmitter<any> = new EventEmitter();
+    @Output() selectedNotify: EventEmitter<any> = new EventEmitter();
 
     @Input() root: ISectores;
     @Input() actions = true;
@@ -42,9 +42,6 @@ export class SectoresItemComponent implements OnInit {
         return c;
     }
 
-    ngOnInit() {
-    }
-
     /**
      * Clona un item sin sus hijos.
      * @param item
@@ -61,7 +58,7 @@ export class SectoresItemComponent implements OnInit {
      */
 
     onSelectItem($event) {
-        this.onSelect.emit([this.cloneObject(this.root), ...$event]);
+        this.selectedNotify.emit([this.cloneObject(this.root), ...$event]);
     }
 
     /**
@@ -72,7 +69,7 @@ export class SectoresItemComponent implements OnInit {
     selectItem($event) {
         $event.stopPropagation();
         if (!this.actions && this.root.hijos.length === 0) {
-            this.onSelect.emit([this.cloneObject(this.root)]);
+            this.selectedNotify.emit([this.cloneObject(this.root)]);
         }
     }
 
@@ -91,7 +88,7 @@ export class SectoresItemComponent implements OnInit {
      */
 
     onAddClick() {
-        this.onAdd.emit(this.root);
+        this.add.emit(this.root);
     }
 
     /**
@@ -100,7 +97,7 @@ export class SectoresItemComponent implements OnInit {
      */
 
     onRemoveClick() {
-        this.onRemove.emit(this.root);
+        this.remove.emit(this.root);
     }
 
     /**
@@ -109,7 +106,7 @@ export class SectoresItemComponent implements OnInit {
      */
 
     onEditClick() {
-        this.onEdit.emit(this.root);
+        this.edit.emit(this.root);
     }
 
     /**

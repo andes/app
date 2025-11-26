@@ -1,15 +1,15 @@
 import { Plex } from '@andes/plex';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { tipoContactos as _tipoContactos } from '../../constantes';
 
 @Component({
     selector: 'app-ficha-epidemiologica-contactos',
     templateUrl: './ficha-epidemiologica-contactos.component.html'
 })
-export class FichaEpidemiologicaContactosComponent implements OnInit {
+export class FichaEpidemiologicaContactosComponent {
     @Input() contactos: any;
     @Input() editMode: any;
-    @Output() onEditEmit = new EventEmitter<any>();
+    @Output() editEmited = new EventEmitter<any>();
     contactoEdicion;
     contactoUpdate;
     tipoContactos = _tipoContactos;
@@ -18,11 +18,9 @@ export class FichaEpidemiologicaContactosComponent implements OnInit {
         private plex: Plex,
     ) { }
 
-    ngOnInit() { }
-
     editContacto() {
         this.contactoEdicion = this.contactoEdicion ? this.contactoEdicion : { tipoContacto: null };
-        this.onEditEmit.emit(true);
+        this.editEmited.emit(true);
     }
 
     aceptar() {
@@ -47,7 +45,7 @@ export class FichaEpidemiologicaContactosComponent implements OnInit {
     cerrar() {
         this.contactoEdicion = null;
         this.contactoUpdate = null;
-        this.onEditEmit.emit(false);
+        this.editEmited.emit(false);
     }
 
 }

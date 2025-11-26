@@ -185,7 +185,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             map(([accion, items]) => {
                 const selected = this.selectPrestaciones$.getValue();
                 switch (accion.type) {
-                    case 'select-all':
+                    case 'select-all': {
                         const valor = accion.value;
                         if (valor) {
                             const seleccionados = items.reduce((acc, current) => ({ ...acc, [current.key]: true }), {});
@@ -194,14 +194,15 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
                             this.selectPrestaciones$.next({});
                         }
                         break;
-
-                    case 'select':
+                    }
+                    case 'select': {
                         const { key, value } = accion;
                         this.selectPrestaciones$.next({
                             ...selected,
                             [key]: value
                         });
                         break;
+                    }
                 }
             }),
         ).subscribe();

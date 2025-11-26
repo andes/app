@@ -13,7 +13,7 @@ import { AdjuntosService } from './../../rup/services/adjuntos.service';
 })
 export class ActualizarEstadoDerivacionComponent implements OnInit {
     @ViewChildren('upload') childsComponents: QueryList<any>;
-    public derivacion;
+    public _derivacion;
     // Adjuntar Archivo
     errorExt = false;
     waiting = false;
@@ -34,15 +34,15 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
         { id: 'especial', label: 'Especial' }
     ];
     @Input() esCOM = false;
-    @Input('derivacion')
-    set _derivacion(value) {
+    @Input()
+    set derivacion(value) {
         this.nuevoEstado = {
             observacion: '',
             prioridad: value.prioridad
         };
         this.dispositivo = value.dispositivo;
         this.adjuntosEstado = [];
-        this.derivacion = value;
+        this._derivacion = value;
     }
 
     @Output() returnEditarEstado: EventEmitter<any> = new EventEmitter<any>();
@@ -66,15 +66,15 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
         if ($event.formValid) {
             this.nuevoEstado.adjuntos = this.adjuntosEstado;
 
-            if (this.derivacion.prioridad === this.nuevoEstado.prioridad) {
+            if (this._derivacion.prioridad === this.nuevoEstado.prioridad) {
                 delete this.nuevoEstado.prioridad;
             }
 
-            this.nuevoEstado.dispositivo = this.derivacion.dispositivo;
+            this.nuevoEstado.dispositivo = this._derivacion.dispositivo;
 
             const body = { estado: this.nuevoEstado };
 
-            this.derivacionService.updateHistorial(this.derivacion._id, body).subscribe(() => {
+            this.derivacionService.updateHistorial(this._derivacion._id, body).subscribe(() => {
                 this.plex.toast('success', 'La derivación fue actualizada exitosamente');
                 this.returnEditarEstado.emit(true);
             });
