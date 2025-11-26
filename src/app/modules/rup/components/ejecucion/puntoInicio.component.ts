@@ -339,7 +339,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
                     const lengthBloques = this.agendas[indexAgenda]?.bloques.length;
                     for (let indexBloque = 0; indexBloque < lengthBloques; indexBloque++) {
-                        const _turnos = [...this.agendas[indexAgenda].bloques[indexBloque].turnos, ...this.agendas[indexAgenda]?.sobreturnos];
+                        const _turnos = [...this.agendas[indexAgenda].bloques[indexBloque].turnos, ...this.agendas[indexAgenda]?.sobreturnos ?? []];
 
                         const _filtros = _turnos.filter(t => {
                             let nombreCompleto = '';

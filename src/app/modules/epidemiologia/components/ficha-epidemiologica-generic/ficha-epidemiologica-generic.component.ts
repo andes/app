@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { NgForm } from '@angular/forms';
@@ -14,7 +14,7 @@ import { DocumentosService } from 'src/app/services/documentos.service';
     selector: 'app-ficha-epidemiologica-generic',
     templateUrl: './ficha-epidemiologica-generic.component.html'
 })
-export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
+export class FichaEpidemiologicaGenericComponent implements OnChanges {
     @Input() fichaName: string;
     @Input() paciente: IPaciente;
     @Input() form: any;
@@ -92,8 +92,6 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
         private organizacionService: OrganizacionService,
         private servicioDocumentos: DocumentosService
     ) { }
-
-    ngOnInit(): void { }
 
     ngOnChanges() {
         this.formsService.search({ name: this.fichaName }).subscribe(res => {

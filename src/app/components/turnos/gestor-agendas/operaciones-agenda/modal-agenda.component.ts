@@ -39,11 +39,11 @@ import { PlexModalComponent } from '@andes/plex';
 
 export class ModalAgendaComponent {
     @Input() dato: any;
-    @Output() close = new EventEmitter<any>();
+    @Output() closed = new EventEmitter<any>();
     @ViewChild('modal', { static: true }) modal: PlexModalComponent;
 
     cerrar() {
         this.modal.close();
-        this.close.emit();
+        this.closed.emit();
     }
 }

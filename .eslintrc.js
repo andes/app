@@ -37,7 +37,6 @@ module.exports = {
             rules: {
                 /// TypeScript rules
                 '@typescript-eslint/no-explicit-any': 'off',
-                // '@typescript-eslint/indent' fue eliminada en v5. Por tanto usamos @stylistic/indent
                 '@typescript-eslint/no-empty-function': 'off',
                 '@typescript-eslint/no-empty-interface': 'error',
                 '@typescript-eslint/no-inferrable-types': ['error', { ignoreParameters: true }],

@@ -1,7 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter, HostBinding } from '@angular/core';
-import { Plex } from '@andes/plex';
+import { Component, Input, Output, EventEmitter, HostBinding } from '@angular/core';
 import { Auth } from '@andes/auth';
-import { Router } from '@angular/router';
 import { FormTerapeuticoService } from './../../services/formTerapeutico/formTerapeutico.service';
 import { SnomedService } from '../../apps/mitos';
 
@@ -10,7 +8,7 @@ import { SnomedService } from '../../apps/mitos';
     selector: 'app-addFormTerapeutico',
     templateUrl: './add-form-terapeutico.html'
 })
-export class AddformTerapeuticoComponent implements OnInit {
+export class AddformTerapeuticoComponent {
     @HostBinding('class.plex-layout') layout = true;
     @Input() indice: any;
     @Input() deep: number;
@@ -30,24 +28,15 @@ export class AddformTerapeuticoComponent implements OnInit {
 
     @Output() objNuevoMedicamento = new EventEmitter();
 
-    constructor(private router: Router,
-                private plex: Plex, public auth: Auth,
-                public servicioFormTerapeutico: FormTerapeuticoService,
-                private SNOMED: SnomedService
+    constructor(
+        public auth: Auth,
+        public servicioFormTerapeutico: FormTerapeuticoService,
+        private SNOMED: SnomedService
     ) { }
-
-
-    ngOnInit() {
-        // this.loadMedicamentos();
-    }
-
 
     agregar() {
         this.objNuevoMedicamento.emit(this.datosParaAgregar);
     }
-
-
-
 
     selectConcept(unConcepto) {
         this.conceptoSeleccionado = unConcepto;

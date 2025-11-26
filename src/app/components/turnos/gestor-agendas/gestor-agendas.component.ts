@@ -735,7 +735,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
     actualizarEstado(estado) {
         switch (estado) {
-            case 'publicada':
+            case 'publicada': {
                 const agendasDelPasado = this.agendasSeleccionadas.filter(
                     agenda => moment(agenda.horaInicio).isBefore(moment().startOf('day'))
                 );
@@ -765,6 +765,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                     }
                 });
                 break;
+            }
             case 'suspendida':
                 this.actualizarGestor(estado);
                 break;
@@ -786,7 +787,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
     confirmarEstado(estado) {
         let alertCount = 0;
-        this.agendasSeleccionadas.forEach((agenda, index) => {
+        this.agendasSeleccionadas.forEach((agenda) => {
             const esAgendaDelPasado = moment(agenda.horaInicio).isBefore(moment().startOf('day'));
             const patch = {
                 'op': estado,
@@ -1008,7 +1009,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             i++;
         }
 
-        this.serviceAgenda.save(this.agendasSeleccionadas[0]).subscribe(res => {
+        this.serviceAgenda.save(this.agendasSeleccionadas[0]).subscribe(() => {
             this.showTurnos = true;
             this.enableQueries = false;
             this.plex.toast('success', 'Asignación automática exitosa', '', 1000);

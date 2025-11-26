@@ -25,9 +25,9 @@ export class RUPObservacionesModalComponent {
 
     @Input() concepto: ISnomedConcept;
 
-    @Output() close = new EventEmitter<string>();
+    @Output() closed = new EventEmitter<string>();
 
     onClose() {
-        this.close.emit(this.texto);
+        this.closed.emit(this.texto);
     }
 }
