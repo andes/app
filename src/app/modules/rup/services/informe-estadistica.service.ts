@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { Observable } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 import { IInformeEstadistica } from '../interfaces/informe-estadistica.interface';
 import { HUDSService } from './huds.service';
 
@@ -12,6 +12,9 @@ export class InformeEstadisticaService {
     // Añadimos la URL base del servicio de Prestaciones, donde residen los endpoints de HUDS (Historial Único de Salud).
     private prestacionesBaseUrl = '/modules/rup/prestaciones';
 
+
+
+
     constructor(
         private server: Server,
         private hudsService: HUDSService
@@ -21,7 +24,6 @@ export class InformeEstadisticaService {
         return this.server.get(this.baseUrl, { params });
     }
 
-    // Obtiene un informe estadístico por su ID
     getById(id: string, options: any = {}): Observable<IInformeEstadistica> {
         if (typeof options.showError === 'undefined') {
             options.showError = true;
@@ -34,7 +36,18 @@ export class InformeEstadisticaService {
         return this.server.post(this.baseUrl, data);
     }
 
+    validarInforme(id: string): Observable<IInformeEstadistica> {
+        const url = `${this.baseUrl}/${id}/operacion`;
 
+        const dto: any = {
+            op: 'estadoPush',
+            estado: {
+                tipo: 'validada'
+            }
+        };
+
+        return this.server.patch(url, dto);
+    }
     patch(id: string, data: Partial<IInformeEstadistica>): Observable<IInformeEstadistica> {
         const url = `${this.baseUrl}/${id}`;
         return this.server.patch(url, data);
