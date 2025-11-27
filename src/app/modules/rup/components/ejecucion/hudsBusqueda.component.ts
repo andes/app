@@ -1,3 +1,5 @@
+/* eslint-disable no-debugger */
+/* eslint-disable no-console */
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { AfterContentInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Optional, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
@@ -22,7 +24,8 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { CDAService } from '../../services/CDA.service';
 
 import { PuntoInicioService } from 'src/app/services/puntoInicio/punto-inicio.service';
-
+import { InformeEstadisticaService } from 'src/app/modules/rup/services/informe-estadistica.service';
+import { IInformeEstadistica } from 'src/app/modules/rup/interfaces/informe-estadistica.interface';
 @Component({
     selector: 'rup-hudsBusqueda',
     templateUrl: 'hudsBusqueda.html',
@@ -73,12 +76,14 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     public tiposPrestacion = [];
     public prestacionSeleccionada = [];
     private _prestaciones: any = [];
+    private _prestacionesEstadisticas: any = [];
     private prestacionesCopia: any = [];
+    private prestacionesEstadisticasCopia: any = [];
     private internaciones;
 
-    get prestaciones() {
-        return this._prestaciones;
-    }
+    // get prestaciones() {
+    //     return this._prestaciones;
+    // }
 
     set prestaciones(value) {
         this._prestaciones = value.sort((a, b) => {
@@ -194,6 +199,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
     constructor(
         public servicioPrestacion: PrestacionesService,
+        public informeEstadisticoService: InformeEstadisticaService,
         public plex: Plex,
         public auth: Auth,
         public huds: HUDSService,
@@ -454,35 +460,65 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
     listarInternaciones() {
         let request;
+
+        console.log('📌 [listarInternaciones] Buscando internaciones...');
+        console.log('➡️ Paciente:', this.paciente);
+        console.log('➡️ Fecha inicio:', this.fechaInicio);
+        console.log('➡️ Fecha fin:', this.fechaFin);
+
         if (this.paciente.idPacientePrincipal) {
+            console.log('👥 Es un paciente con vinculación → usando paciente principal');
+
             request = this.getPacientePrincipal(this.paciente.idPacientePrincipal).pipe(
-                switchMap((paciente: IPaciente) => this.resumenHTTP.search({
-                    ingreso: this.resumenHTTP.queryDateParams(this.fechaInicio, this.fechaFin),
-                    paciente: paciente.vinculos
-                }))
+                switchMap((paciente: IPaciente) => {
+                    console.log('🔗 Paciente principal obtenido:', paciente);
+
+                    return this.resumenHTTP.search({
+                        ingreso: this.resumenHTTP.queryDateParams(this.fechaInicio, this.fechaFin),
+                        paciente: paciente.vinculos,
+                    });
+                })
             );
         } else {
+            console.log('👤 Paciente normal → búsqueda directa');
+
             request = this.resumenHTTP.search({
                 ingreso: this.resumenHTTP.queryDateParams(this.fechaInicio, this.fechaFin),
                 paciente: this.paciente.vinculos || this.paciente.id
             });
         }
-        request.subscribe((internaciones) => this.internaciones = internaciones);
+
+        request.subscribe({
+            next: (internaciones) => {
+                console.log('📄 RESULTADO INTERNACIONES:', internaciones);
+
+                if (!internaciones || internaciones.length === 0) {
+                    console.warn('⚠️ No se encontraron internaciones para este paciente.');
+                }
+
+                this.internaciones = internaciones;
+            },
+            error: (err) => {
+                console.error('❌ ERROR en listarInternaciones:', err);
+            }
+        });
     }
 
     listarPrestaciones() {
-        function groupBy(prestaciones: IPrestacion[]) {
+        function groupBy(informeEstadistica: IInformeEstadistica[]) {
             const resultado = [];
-            const diccionario = {};
+            const diccionario: { [key: string]: IInformeEstadistica[] } = {};
 
-            prestaciones.forEach(p => {
-                if (p.groupId) {
-                    if (!diccionario[p.groupId]) {
-                        diccionario[p.groupId] = [];
+            informeEstadistica.forEach(inf => {
+                const key = inf.paciente?.id; // 🔥 El equivalente más estable a groupId
+                console.log('Key para agrupamiento:', key);
+                if (key) {
+                    if (!diccionario[key]) {
+                        diccionario[key] = [];
                     }
-                    diccionario[p.groupId].push(p);
+                    diccionario[key].push(inf);
                 } else {
-                    resultado.push(p);
+                    resultado.push(inf);
                 }
             });
 
@@ -491,9 +527,33 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             return resultado;
         }
 
+        // listarPrestaciones() {
+        // function groupBy(prestaciones: IPrestacion[]) {
+        //     const resultado = [];
+        //     const diccionario = {};
 
-        this.servicioPrestacion.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
+        //     prestaciones.forEach(p => {
+        //         if (p.groupId) {
+        //             if (!diccionario[p.groupId]) {
+        //                 diccionario[p.groupId] = [];
+        //             }
+        //             diccionario[p.groupId].push(p);
+        //         } else {
+        //             resultado.push(p);
+        //         }
+        //     });
+
+        //     Object.values(diccionario).forEach(dc => resultado.push(dc));
+
+        //     return resultado;
+        // }
+
+
+        // this.servicioPrestacion.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
+        this.informeEstadisticoService.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
+
             this.prestacionesTotales = prestaciones;
+            console.log('prestaciones', prestaciones);
             const validadas = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
 
             this.prestaciones = groupBy(validadas).map(p => {
@@ -596,9 +656,18 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     }
 
     private cargarSolicitudesMezcladas() {
+        // Línea 485:
         this.solicitudesMezcladas = this.solicitudes.concat(this.solicitudesTOP);
+        console.log('Solicitudes mezcladas:', this.solicitudesMezcladas);
 
+        // Línea 486: Inicia el sort
         this.solicitudesMezcladas.sort((e1, e2) => {
+            // --- CONSOLE LOG AÑADIDO PARA DEPURACIÓN ---
+            console.log('Elemento 1 (e1):', e1);
+            console.log('Elemento 2 (e2):', e2);
+            // -------------------------------------------
+
+            // Línea 487: Aquí ocurre el error
             const fecha1 = e1.fechaEjecucion ? e1.fechaEjecucion : e1.solicitud.fecha;
             const fecha2 = e2.fechaEjecucion ? e2.fechaEjecucion : e2.solicitud.fecha;
             return fecha2 - fecha1;
@@ -831,7 +900,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
     filtrarPorInternacion(prestaciones) {
         const prestacionesEnInternacion = [];
-
+        debugger;
         const internaciones = this.internaciones?.map(internacion => {
             const prestacionesPorInternacion = prestaciones.filter(prestacion => {
                 const fechaIngresoValida = moment(prestacion.fecha).isSameOrAfter(internacion.fechaIngreso);
@@ -870,7 +939,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             };
         })
             .filter(grupo => grupo.registros.length);
-
+        debugger;
         this.indiceInternaciones = internaciones?.reverse();
 
         this.filtrarOtrasPrestaciones(prestaciones, prestacionesEnInternacion);
@@ -889,7 +958,10 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             this.prestaciones = this.prestaciones.filter(p => p.fecha >= moment(this.fechaInicio).startOf('day').toDate() &&
                 p.fecha <= moment(this.fechaFin).endOf('day').toDate());
         }
-
+        console.log('Prestaciones Copia:', this.prestacionesCopia);
+        console.log('Ambito buscado:', this.ambitoOrigen);
+        console.log('Fecha inicio:', this.fechaInicio);
+        console.log('Fecha fin:', this.fechaFin);
         if (this.ambitoOrigen) {
             this.prestaciones = this.prestaciones.filter(p => p.ambito === this.ambitoOrigen);
 

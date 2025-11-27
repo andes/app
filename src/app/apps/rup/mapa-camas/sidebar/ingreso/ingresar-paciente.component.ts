@@ -772,11 +772,17 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             informeIngreso: {
                 ...this.informeIngreso,
                 situacionLaboral: (typeof this.informeIngreso.situacionLaboral === 'string')
-                    ? this.informeIngreso.situacionLaboral
-                    : this.informeIngreso.situacionLaboral?.nombre || null,
+                    ? {
+                        id: this.informeIngreso.situacionLaboral.toLowerCase().replace(/\s+/g, '-'),
+                        nombre: this.informeIngreso.situacionLaboral
+                    }
+                    : this.informeIngreso.situacionLaboral || null,
                 nivelInstruccion: (typeof this.informeIngreso.nivelInstruccion === 'string')
-                    ? this.informeIngreso.nivelInstruccion
-                    : this.informeIngreso.nivelInstruccion?.nombre || null,
+                    ? {
+                        id: this.informeIngreso.nivelInstruccion.toLowerCase().replace(/\s+/g, '-'),
+                        nombre: this.informeIngreso.nivelInstruccion
+                    }
+                    : this.informeIngreso.nivelInstruccion || null,
                 ocupacionHabitual: this.informeIngreso.ocupacionHabitual,
                 asociado: (typeof this.informeIngreso.asociado === 'string')
                     ? this.informeIngreso.asociado
