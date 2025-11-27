@@ -17,8 +17,8 @@ export interface IInformeIngreso {
         otraOrganizacion?: string;
     };
     ocupacionHabitual?: IOcupacion | null;
-    situacionLaboral?: string;
-    nivelInstruccion?: string;
+    situacionLaboral?: { id: string; nombre: string } | null;
+    nivelInstruccion?: { id: string; nombre: string } | null;
     especialidades?: ISnomedConcept[];
     nroCarpeta?: string | null;
     motivo?: string;
@@ -47,6 +47,7 @@ export interface IObraSocial {
 }
 
 export interface IInformeEgreso {
+    // para analizar _id: any;
     fechaEgreso?: Date;
     procedimientosQuirurgicos?: {
         procedimiento?: ISnomedConcept;
@@ -59,7 +60,8 @@ export interface IInformeEgreso {
     };
     diasDeEstada?: number;
     tipoEgreso?: {
-        tipo?: string;
+        id?: string;
+        nombre?: string;
         OrganizacionDestino?: Partial<IOrganizacion>;
         otraOrganizacion?: string;
     };

@@ -12,12 +12,13 @@
                        [max]="fechaMax || (mapaCamasService.fechaActual$ | async)" [min]="fechaMin"
                        (change)="setFecha()" [debounce]="600" grow="full" (typing)="onType()">
         </plex-datetime>
-        <plex-select grow="2" label="Tipo de egreso" [(ngModel)]="registro.valor.InformeEgreso.tipoEgreso.tipo"
-                     name="InformeEgreso.tipoEgreso.tipo" [data]="listaTipoEgreso" key="id" labelField="nombre"
-                     placeholder="Seleccione..." required>
+        <plex-select grow="2" label="Tipo de egreso" [(ngModel)]="registro.valor.InformeEgreso.tipoEgreso"
+                     name="InformeEgreso.tipoEgreso" [data]="listaTipoEgreso" placeholder="Seleccione... "
+                     [required]="true" grow="full">
         </plex-select>
 
-        <ng-container *ngIf="registro.valor.InformeEgreso.tipoEgreso?.tipo?.nombre === 'Traslado'">
+
+        <ng-container *ngIf="registro.valor.InformeEgreso.tipoEgreso?.id === 'Traslado'">
             <plex-bool class="pt-2" [(ngModel)]="checkTraslado" type="checkbox" label="Otra organización"
                        name="checkTraslado" (change)="onChangeTraslado($event)">
             </plex-bool>
@@ -59,11 +60,13 @@
                       [(ngModel)]="registro.valor.InformeEgreso.diasDeEstada" required readonly>
             </plex-int>
 
+
             <plex-select grow="3" label="Diagnóstico Principal al egreso"
                          [(ngModel)]="registro.valor.InformeEgreso.diagnosticos.principal" name="diagnosticoPrincipal"
                          (getData)="codigoCIE10($event, 'diagnostico')" placeholder="Buscar..." labelField="nombre"
                          (change)="showProcedimientos_causas()">
             </plex-select>
+
 
             <plex-select grow="full" (change)="showProcedimientos_causas()" label="Otros Diagnósticos"
                          [(ngModel)]="registro.valor.InformeEgreso.otrosDiagnosticos" name="otrosDiagnosticos"
