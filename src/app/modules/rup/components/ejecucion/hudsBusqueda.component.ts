@@ -22,8 +22,6 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { CDAService } from '../../services/CDA.service';
 
 import { PuntoInicioService } from 'src/app/services/puntoInicio/punto-inicio.service';
-import { DerivacionesService } from 'src/app/services/com/derivaciones.service';
-
 @Component({
     selector: 'rup-hudsBusqueda',
     templateUrl: 'hudsBusqueda.html',
@@ -86,7 +84,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     private _prestaciones: any = [];
     private prestacionesCopia: any = [];
     private internaciones;
-
 
     set prestaciones(value) {
         this._prestaciones = value.sort((a, b) => {
@@ -259,7 +256,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         private recetasService: RecetaService,
         private cdaService: CDAService,
         private profesionalService: ProfesionalService,
-        private derivacionesService: DerivacionesService
+        private puntoInicioService: PuntoInicioService
     ) {
     }
 
@@ -578,7 +575,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             return resultado;
         }
 
-
         this.servicioPrestacion.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
             this.prestacionesTotales = prestaciones;
             const validadas = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
@@ -678,7 +674,11 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     }
 
     listarDerivaciones() {
-        this.derivacionesService.search({ 'paciente': this.paciente.id }).subscribe((data) => {
+        const query = {
+            paciente: `^${this.paciente.documento}`
+        };
+
+        this.puntoInicioService.get(query).subscribe((data) => {
             if (data.length > 0) {
                 this.derivaciones = data.filter(d => d.estado === 'finalizada');
             }
@@ -968,7 +968,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
     filtrarPorInternacion(prestaciones) {
         const prestacionesEnInternacion = [];
-
         const internaciones = this.internaciones?.map(internacion => {
             const prestacionesPorInternacion = prestaciones.filter(prestacion => {
                 const fechaIngresoValida = moment(prestacion.fecha).isSameOrAfter(internacion.fechaIngreso);
@@ -1007,7 +1006,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             };
         })
             .filter(grupo => grupo.registros.length);
-
         this.indiceInternaciones = internaciones?.reverse();
 
         this.filtrarOtrasPrestaciones(prestaciones, prestacionesEnInternacion);
@@ -1033,7 +1031,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 return true;
             });
         }
-
         if (this.ambitoOrigen) {
             this.prestaciones = this.prestaciones.filter(p => p.ambito === this.ambitoOrigen);
 

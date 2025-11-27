@@ -118,7 +118,10 @@ export class PrestacionesService {
      * @memberof PrestacionesService
      */
     getSolicitudes(params: any): Observable<IPrestacion[]> {
-        return this.server.get(this.prestacionesUrl + '/solicitudes', { params: params, showError: true });
+        return this.server.get(this.prestacionesUrl + '/solicitudes', {
+            params,
+            showError: true
+        });
     }
 
 
@@ -200,7 +203,6 @@ export class PrestacionesService {
             this.cache[idPaciente] = this.server.get(this.prestacionesUrl, opt).pipe(
                 map(prestaciones => {
                     prestaciones.forEach(p => populateRelaciones(p));
-
                     this.prestacionesSubject.next(prestaciones);
                     return prestaciones;
                 }),

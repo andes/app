@@ -495,6 +495,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
         if (!registros) {
             return of(null);
+<<<<<<< HEAD
         }
 
         if (this.informe) {
@@ -577,8 +578,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 })
             );
         }
-
         return of(null);
+    }
     }
     controlRegistrosGuardar() {
         const egreso = this.registro.valor.InformeEgreso;
