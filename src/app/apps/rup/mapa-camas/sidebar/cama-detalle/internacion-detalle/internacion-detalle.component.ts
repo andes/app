@@ -9,6 +9,7 @@ import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.
 import { ListadoInternacionCapasService } from '../../../views/listado-internacion-capas/listado-internacion-capas.service';
 import { ListadoInternacionService } from '../../../views/listado-internacion/listado-internacion.service';
 import { IngresoPacienteService } from '../../ingreso/ingreso-paciente-workflow/ingreso-paciente-workflow.service';
+import { IInformeEstadistica } from 'src/app/modules/rup/interfaces/informe-estadistica.interface';
 import { InformeEstadisticaService } from 'src/app/modules/rup/services/informe-estadistica.service';
 @Component({
     selector: 'app-internacion-detalle',
@@ -78,7 +79,6 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
         this.editarIngresoIdInternacion = null;
         this.editarEgreso = false;
         this.capa = this.mapaCamasService.capa;
-
         this.mapaCamasService.historialInternacion$.subscribe(
             historial => {
                 if (historial.length && (this.capa === 'estadistica' || historial.some(mov => mov.extras.egreso))) {
@@ -92,31 +92,32 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
             }
         );
 
-        // this.mapaCamasService.prestacion$.subscribe(prestacion => {
-        //     this.estadoPrestacion = '';
-        //     this.existeIngreso = false;
-
-        //     if (prestacion) {
-        //         this.estadoPrestacion = prestacion.estadoActual.tipo;
-        //         if (prestacion.ejecucion.registros[0].valor.informeIngreso) {
-        //             this.existeIngreso = true;
-        //         }
-        //         this.existeEgreso = !!prestacion.ejecucion.registros[1]?.valor?.InformeEgreso;
-        //         this.editarEgreso = !this.existeEgreso;
-        //         this.ingresoPacienteService.selectPaciente(prestacion.paciente?.id);
-        //     }
-        //     // loading se setea en true desde el listado de internacion
-        //     this.mapaCamasService.isLoading(false);
-        // });
-
         this.mapaCamasService.informeEstadistica$.subscribe(informe => {
-            if (informe?.paciente?.id) {
-                this.ingresoPacienteService.selectPaciente(informe.paciente.id);
+            this.estadoPrestacion = '';
+            this.existeIngreso = false;
+
+            if (informe) {
+                if (informe.estadoActual?.tipo) {
+                    this.estadoPrestacion = informe.estadoActual.tipo;
+
+                } else if (informe.estados && informe.estados.length > 0) {
+                    this.estadoPrestacion = informe.estados[informe.estados.length - 1].tipo;
+
+                } else if (typeof informe.estado === 'string') {
+                    this.estadoPrestacion = informe.estado;
+                }
+
                 this.existeIngreso = !!informe.informeIngreso;
-                this.estadoPrestacion = informe.estadoActual?.tipo || 'ejecucion';
-                this.editarEgreso = !informe.informeEgreso;
+
+                this.existeEgreso = !!informe.informeEgreso;
+                this.editarEgreso = !this.existeEgreso;
+
+                this.ingresoPacienteService.selectPaciente(informe.paciente?.id);
             }
+
+            this.mapaCamasService.isLoading(false);
         });
+
         // Configura los tabs a mostrar según capa y vista
         this.mapaCamasService.resumenInternacion$.pipe(
             map(resumen => {
@@ -155,17 +156,18 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
         );
 
         this.anular$ = combineLatest([
-            this.mapaCamasService.selectedPrestacion,
+            this.mapaCamasService.informeEstadistica$,
             this.registraEgreso$,
             this.mapaCamasService.view,
             this.mapaCamasService.loading
         ]).pipe(
             auditTime(1),
-            map(([prestacion, registraEgreso, vista, loading]) => {
-                this.activateOption(this.items[0].key);
-                return prestacion?.estadoActual?.tipo !== 'validada' && vista === 'listado-internacion' && !loading;
+            map(([informe, registraEgreso, vista, loading]) => {
+                const estado = informe?.estadoActual?.tipo;
+                return estado !== 'validada' && vista === 'listado-internacion' && !loading;
             })
         );
+
     }
 
     onAnularInternacion() {
