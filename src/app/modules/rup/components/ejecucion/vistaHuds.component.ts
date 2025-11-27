@@ -112,6 +112,16 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                         idPaciente: id
                     };
                     this.internacione$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros);
+
+                    // DEBUG: Ver qué devuelve el servicio
+                    this.internacione$.subscribe(data => {
+                        console.log('=== DEBUG SERVICIO getPrestacionesInternacion ===');
+                        console.log('Datos recibidos del servicio:', data);
+                        if (data && data.length > 0) {
+                            console.log('Primera prestación estructura:', data[0]);
+                        }
+                        console.log('===============================================');
+                    });
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                 });
             });
