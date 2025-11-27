@@ -1,0 +1,26 @@
+<plex-title titulo="Historial de movimientos" size="md">
+    <plex-button size="sm" type="danger" icon="close" tooltip="Cerrar" (click)="onClose()"></plex-button>
+</plex-title>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>FECHA</th>
+            <th class="pl-5">PRESTACIÓN</th>
+            <th class="text-center">ESTADO</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of agenda?.historial">
+            <td>
+                {{ item.createdAt | fecha:'dd/MM/yyyy HH:mm' }} hs
+            </td>
+            <td>
+                {{ agenda.tipoPrestaciones | enumerar: ['nombre'] }}
+            </td>
+            <td class="text-center">
+                <plex-badge [type]="type(item.estado)">{{item.estado}}</plex-badge>
+            </td>
+        </tr>
+    </tbody>
+</table>

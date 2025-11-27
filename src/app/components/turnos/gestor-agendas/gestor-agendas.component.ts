@@ -96,11 +96,13 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public prestacionesPermisos = [];
     public puedeCrearAgenda: Boolean;
     public puedeRevisarAgendas: Boolean;
-    private scrollEnd = false;
     public enableQueries = false;
-    queries = [];
     public collapse = false;
+    public panelGeneral = true;
+    public showHistorialAgenda = false;
+    queries = [];
     loader = true;
+    private scrollEnd = false;
 
     // ultima request de profesionales que se almacena con el subscribe
     private lastRequestProf: Subscription;
@@ -596,6 +598,14 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
     verAgenda(agenda, multiple, e) {
 
+        if (this.agendasSeleccionadas.length === 1 && this.agendasSeleccionadas[0].id === agenda.id) {
+            return;
+        }
+
+        if (this.showHistorialAgenda) {
+            this.cerrarHistorial();
+        }
+
         if (this.showElegirSobreTurno) {
             this.showSobreturno = false;
             this.showElegirSobreTurno = false;
@@ -709,8 +719,19 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showGestorAgendas = false;
     }
 
-    actualizarEstado(estado) {
+    showHistorial() {
+        if (this.agendasSeleccionadas.length === 1) {
+            this.showHistorialAgenda = true;
+            this.panelGeneral = false;
+        }
+    }
 
+    cerrarHistorial() {
+        this.panelGeneral = true;
+        this.showHistorialAgenda = false;
+    }
+
+    actualizarEstado(estado) {
         switch (estado) {
             case 'publicada':
                 const existeAgendaDelPasado = this.agendasSeleccionadas.some(agenda => moment(agenda.horaInicio).isBefore(moment().startOf('day')));
