@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Auth } from '@andes/auth';
 import { cache, notNull } from '@andes/shared';
 import { Injectable } from '@angular/core';
@@ -182,7 +181,7 @@ export class MapaCamasService {
 
         // Devuelve la prestación que contiene el informe de ingreso
         this.prestacion$ = combineLatest([
-            this.selectedInformeEstadistica,
+            this.selectedPrestacion,
             this.selectedCama,
             this.view,
             this.capa2
@@ -200,8 +199,8 @@ export class MapaCamasService {
                 if (!cama.idInternacion) {
                     return of(null);
                 }
-                if (capa !== 'estadistica') {
-                    return this.prestacionService.getById(cama.idInternacion, { showError: false });
+                if (capa === 'estadistica') {
+                    return of(null);
                 }
                 return this.internacionResumenHTTP.get(cama.idInternacion).pipe(
                     switchMap(internacionResumen => {
@@ -215,6 +214,7 @@ export class MapaCamasService {
             catchError(() => of(null)),
             cache()
         );
+
 
         this.resumenInternacion$ = combineLatest([
             this.selectedCama,
@@ -245,12 +245,17 @@ export class MapaCamasService {
             switchMap(([informe, cama, view, capa]) => {
 
                 if (view === 'listado-internacion') {
-                    const pacienteId = informe?.paciente?.id || cama?.paciente?.id;
+                    if (informe?.id) {
+                        return of(informe);
+                    }
+
+                    const pacienteId = cama?.paciente?.id;
                     if (pacienteId) {
                         return this.informeEstadisticaService.get({ paciente: pacienteId }).pipe(
                             map(informes => informes?.[0] || null)
                         );
                     }
+
                     return of(null);
                 }
 
@@ -435,8 +440,11 @@ export class MapaCamasService {
         if (!informe) {
             return this.selectedInformeEstadistica.next({ id: null } as any);
         }
+
         this.selectedInformeEstadistica.next(informe);
+
     }
+
 
     selectResumen(resumen: IResumenInternacion) {
         if (!resumen) {
@@ -691,8 +699,6 @@ export class MapaCamasService {
     }
 
     censoDiario(fecha, unidadOrganizativa): Observable<any[]> {
-        console.log('📞 Llamando a censoDiario con:', fecha, unidadOrganizativa);
-
         return this.camasHTTP.censoDiario(fecha, unidadOrganizativa);
     }
 

@@ -7,7 +7,7 @@
 
         <td *plTableCol="'organizacion'">
 
-            {{internacion.ejecucion.organizacion.nombre}}
+            {{internacion.organizacion?.nombre}}
 
         </td>
         <td *plTableCol="'unidad_organizativa'">
@@ -17,30 +17,30 @@
         </td>
         <td *plTableCol="'fechaIngreso'">
 
-            {{ internacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso | fecha }}
+            {{ internacion.informeIngreso?.fechaIngreso | fecha }}
 
-            {{ internacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso | hora }}
+            {{ internacion.informeIngreso?.fechaIngreso | hora }}
 
         </td>
         <td *plTableCol="'fechaEgreso'">
 
-            <span *ngIf="internacion.ejecucion.registros[1]?.valor.InformeEgreso?.fechaEgreso ">
+            <span *ngIf="internacion.informeEgreso?.fechaEgreso">
 
-                {{ internacion.ejecucion.registros[1].valor.InformeEgreso?.fechaEgreso | fecha }}
+                {{ internacion.informeEgreso?.fechaEgreso | fecha }}
 
-                {{ internacion.ejecucion.registros[1].valor.InformeEgreso?.fechaEgreso | hora }}
+                {{ internacion.informeEgreso?.fechaEgreso | hora }}
 
             </span>
 
         </td>
         <td *plTableCol="'razon_alta'">
-            <span *ngIf="internacion.ejecucion.registros[1]?.valor.InformeEgreso?.tipoEgreso.nombre ">
-                {{internacion.ejecucion.registros[1].valor.InformeEgreso?.tipoEgreso.nombre}}
+            <span *ngIf="internacion.informeEgreso?.tipoEgreso?.nombre">
+                {{internacion.informeEgreso?.tipoEgreso?.nombre}}
             </span>
         </td>
         <td *plTableCol="'accion'">
             <plex-button label="Exploracion" tooltip="Exploracion Visual" type="info" size="sm"
-                         (click)="gotoExploracionVisual(internacion.id)">
+                (click)="gotoExploracionVisual(internacion.id)">
             </plex-button>
         </td>
 
