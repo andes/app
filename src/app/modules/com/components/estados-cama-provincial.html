@@ -18,6 +18,8 @@
             <plex-datetime grow="1" type="datetime" [(ngModel)]="fecha" name="fecha" label="Fecha" [max]="fechaLimite"
                            [disabled]="true">
             </plex-datetime>
+            <plex-select [(ngModel)]="capaSeleccionada" name="capa" label="Capa" [data]="capa" (change)="filtrar()">
+            </plex-select>
         </plex-wrapper>
 
         <ng-container *ngIf="camasEstados$ | async as camasEstados">

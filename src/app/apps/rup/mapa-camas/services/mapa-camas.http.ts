@@ -31,7 +31,6 @@ export class MapaCamasHTTP {
     estadosCamas(organizacion: string, unidadOrganizativa: string, ambito: string, capa: string, fecha: Date): Observable<any[]> {
         const params = {
             ambito,
-            capa,
             fecha: fecha ? fecha : new Date()
         };
         if (organizacion) {
@@ -39,6 +38,9 @@ export class MapaCamasHTTP {
         }
         if (unidadOrganizativa) {
             params['unidadOrganizativa'] = unidadOrganizativa;
+        }
+        if (capa) {
+            params['capa'] = capa;
         }
 
         return this.server.get(`${this.url}/camas/resumen`, { params });
