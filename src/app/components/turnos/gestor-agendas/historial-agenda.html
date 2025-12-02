@@ -2,7 +2,13 @@
     <plex-button size="sm" type="danger" icon="close" tooltip="Cerrar" (click)="onClose()"></plex-button>
 </plex-title>
 
-<table class="table">
+<div *ngIf="!agenda?.historial.length" class="h-50" justify="center">
+    <plex-label icon="calendar-clock" size="md" direction="column" [tituloBold]="false"
+                titulo="Aún no hay un historial registrado" subtitulo="">
+    </plex-label>
+</div>
+
+<table *ngIf="agenda?.historial.length" class="table">
     <thead>
         <tr>
             <th>FECHA</th>

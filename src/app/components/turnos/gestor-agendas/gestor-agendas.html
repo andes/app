@@ -86,7 +86,7 @@
             </plex-table-columns>
             <tr *ngFor="let agenda of agendas; let i=index" [class.selected]="estaSeleccionada(agenda) >= 0"
                 [class.selectable]="selectable">
-                <td *plTableCol="'seleccion'" (click)="verAgenda(agenda, true, $event)">
+                <td *plTableCol="'seleccion'" (click)="verAgenda(agenda, true, 'checkbox')">
                     <i *ngIf="estaSeleccionada(agenda) >= 0"> <plex-icon name="checkbox-marked"></plex-icon> </i>
                     <i *ngIf="!(estaSeleccionada(agenda) >= 0)"> <plex-icon name="checkbox-blank-outline"></plex-icon>
                     </i>

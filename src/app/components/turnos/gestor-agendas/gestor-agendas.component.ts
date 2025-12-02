@@ -134,7 +134,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         {
             key: 'seleccion',
             label: '',
-
         },
         {
             key: 'fecha',
@@ -596,9 +595,12 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         }
     }
 
-    verAgenda(agenda, multiple, e) {
+    verAgenda(agenda, multiple, ev) {
 
         if (this.agendasSeleccionadas.length === 1 && this.agendasSeleccionadas[0].id === agenda.id) {
+            if (ev === 'checkbox') {
+                this.agendasSeleccionadas = [];
+            }
             return;
         }
 
