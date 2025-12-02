@@ -74,6 +74,8 @@
             <plex-detail>
                 <plex-icon name="hospital" type="info"></plex-icon>
                 <div title>{{efectorSelected.organizacion.nombre}}</div>
+                <plex-label titulo="Capa" size="lg" subtitulo="{{ capaSeleccionada.nombre }}">
+                </plex-label>
             </plex-detail>
             <ng-container *ngFor="let unidadOrganizativa of efectorSelected.unidadesOrganizativas">
                 <plex-accordion>
