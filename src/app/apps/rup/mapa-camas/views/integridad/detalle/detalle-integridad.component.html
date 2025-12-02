@@ -39,7 +39,7 @@
             </app-desocupar-cama>
         </ng-container>
         <ng-container *ngIf="accion === 'cambiarCama'">
-            <app-cambiar-cama cambiarUO="{{ cambiarUO }}" (onSave)="refresh()">
+            <app-cambiar-cama cambiarUO="{{ cambiarUO }}" (saved)="refresh()">
                 <plex-button title="Volver" icon="arrow-left" type="danger" size="sm"
                              (click)="accionar('desocuparCama')" [autodisabled]="true">
                 </plex-button>

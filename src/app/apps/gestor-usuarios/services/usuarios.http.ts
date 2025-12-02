@@ -48,7 +48,7 @@ export class UsuariosHttp {
         return this.server.delete(`${this.url}/${id}`);
     }
 
-    ldap(id: String): Observable<any> {
+    ldap(id: string): Observable<any> {
         return this.server.get(`${this.url}/ldap/${id}`);
     }
 

@@ -1,9 +1,9 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import * as moment from 'moment';
-import { Subscription, forkJoin, map } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { BiQueriesComponent } from 'src/app/modules/visualizacion-informacion/components/bi-queries/bi-queries.component';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { QueriesService } from 'src/app/services/query.service';
@@ -17,7 +17,6 @@ import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.
 import * as enumerado from './../enums';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { NgForm } from '@angular/forms';
-
 import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
@@ -94,8 +93,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public btnCrearAgendas = false;
     public permisos: any;
     public prestacionesPermisos = [];
-    public puedeCrearAgenda: Boolean;
-    public puedeRevisarAgendas: Boolean;
+    public puedeCrearAgenda: boolean;
+    public puedeRevisarAgendas: boolean;
     private scrollEnd = false;
     public enableQueries = false;
     queries = [];
@@ -712,7 +711,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     actualizarEstado(estado) {
 
         switch (estado) {
-            case 'publicada':
+            case 'publicada': {
                 const existeAgendaDelPasado = this.agendasSeleccionadas.some(agenda => moment(agenda.horaInicio).isBefore(moment().startOf('day')));
                 let mensaje = '';
                 if (this.agendasSeleccionadas.length > 1 && existeAgendaDelPasado) {
@@ -732,6 +731,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                     }
                 });
                 break;
+            }
             case 'suspendida':
                 this.actualizarGestor(estado);
                 break;

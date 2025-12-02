@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as enumerados from '../../../../../../utils/enumerados';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
 import { ListadoInternacionCapasService } from '../listado-internacion-capas.service';
-
+import moment from 'moment';
 @Component({
     selector: 'app-filtros-listado-capas',
     templateUrl: './filtros-listado-capas.component.html',

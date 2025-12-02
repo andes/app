@@ -44,6 +44,7 @@
                                name="modelo.horaFin" label="Fin">
                 </plex-datetime>
             </plex-grid>
+
             <plex-wrapper>
                 <plex-select [ngClass]="{'w-100' : smallScreen(), 'w-50': !smallScreen()}" [disabled]="!modelo.horaFin"
                              [(ngModel)]="modelo.tipoPrestaciones" name="modelo.tipoPrestaciones"
@@ -52,7 +53,7 @@
                              (change)="cambioPrestaciones()" [closeAfterSelect]="true">
                 </plex-select>
                 <div class="pt-1" [ngClass]="{'w-100 mt-3' : smallScreen(), 'w-50': !smallScreen()}">
-                    <plex-label class="float-left mr-3" titulo="Equipo de Salud"
+                    <plex-label class="float-left mr-2" titulo="Equipo de Salud"
                                 hint="Si no encuentra el profesional en el listado, puede que no exista o no tenga permisos para las prestaciones seleccionadas"
                                 hintType="info" hintIcon="eye" detach="top">
                     </plex-label>
@@ -283,4 +284,4 @@
 </plex-layout>
 
 <clonar-agenda *ngIf="showClonar && autorizado" [agenda]="modelo" (volverAlGestor)="cancelar()"></clonar-agenda>
-<modal-agenda *ngIf="showModal" #modalAgenda [dato]="datos" (close)="cerrarModal()"></modal-agenda>
+<modal-agenda *ngIf="showModal" #modalAgenda [dato]="datos" (closed)="cerrarModal()"></modal-agenda>
