@@ -160,6 +160,8 @@ export class EstadisticasPacientesComponent implements OnInit {
     }
 
     motivoLiberado(turno) {
-        return `Por ${turno.updatedBy.nombreCompleto} el ${moment(turno.updatedAt).format('DD/MM/YYYY')} a las ${moment(turno.updatedAt).format('HH:mm')}`;
+        const fechaModificacion = turno.createdAt ? moment(turno.createdAt) : moment(turno.updatedAt);
+        const usuarioModificacion = turno.createdBy?.email ? turno.createdBy.nombre : turno.createdBy.nombreCompleto;
+        return `Por ${usuarioModificacion} el ${moment(fechaModificacion).format('DD/MM/YYYY')} a las ${moment(fechaModificacion).format('HH:mm')}`;
     }
 }
