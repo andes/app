@@ -14,7 +14,7 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamaListadoColumns } from '../../interfaces/mapa-camas.internface';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
-import { LaboratorioService } from 'projects/portal/src/app/services/laboratorio.service';
+import { LaboratorioService } from 'src/app/services/laboratorio.service';
 import { DocumentosService } from 'src/app/services/documentos.service';
 
 @Component({

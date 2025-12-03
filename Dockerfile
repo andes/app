@@ -14,6 +14,5 @@ RUN npm install
 
 COPY . .
 RUN cp src/environments/apiKeyMaps.ts.example src/environments/apiKeyMaps.ts
-RUN cp projects/portal/src/environments/configuracion.ts.example projects/portal/src/environments/configuracion.ts 
 RUN npm run "build:${ENV}"
 
