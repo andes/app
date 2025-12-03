@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
@@ -17,11 +17,14 @@ import { TurnoService } from '../../../../services/turnos/turno.service';
 })
 
 export class AgregarPacienteComponent implements OnInit {
+
+    @Input() agenda;
+    @Output() cerrar = new EventEmitter<any>();
+
     public nota: any;
     public lenNota = 140;
     public changeCarpeta: boolean;
     public carpetaEfector: any;
-    public agenda;
     public loading = false;
     public resultadoBusqueda: IPaciente[] = [];
     public paciente: IPaciente;
@@ -60,10 +63,12 @@ export class AgregarPacienteComponent implements OnInit {
             if (params && params['idAgenda']) {
                 this.agendaService.getById(params['idAgenda']).subscribe(agenda => {
                     this.agenda = agenda;
-                    if (this.agenda.tipoPrestaciones.length === 1) {
-                        this.tipoPrestacion = this.agenda.tipoPrestaciones[0];
-                    }
                 });
+            }
+            if (this.agenda) {
+                if (this.agenda.tipoPrestaciones.length === 1) {
+                    this.tipoPrestacion = this.agenda.tipoPrestaciones[0];
+                }
             }
         });
 
@@ -77,7 +82,6 @@ export class AgregarPacienteComponent implements OnInit {
         this.showPaciente = false;
         this.pacientesSearch = true;
     }
-
 
     afterCreateUpdate(paciente) {
         this.showCreateUpdate = false;
@@ -293,7 +297,7 @@ export class AgregarPacienteComponent implements OnInit {
                 };
                 this.servicePaciente.patch(pacienteSave.id, cambios).subscribe(resultado => {
                     if (resultado) {
-                        this.plex.info('success', 'Se actualizó el numero de telefono');
+                        this.plex.toast('success', 'Se actualizó el numero de teléfono');
                     }
                 });
             }
@@ -326,6 +330,6 @@ export class AgregarPacienteComponent implements OnInit {
     }
 
     volver() {
-        this.router.navigate(['citas/revision_agenda', this.agenda.id]);
+        this.cerrar.emit();
     }
 }

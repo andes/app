@@ -35,14 +35,39 @@ export const EstadosAgenda: IEnum = {
     }
 };
 
+export const EstadosAgendaAuditoria: IEnum = {
+    'pendienteAsistencia': {
+        nombre: 'Pendiente Asistencia',
+        class: 'warning'
+    },
+    'pendienteAuditoria': {
+        nombre: 'Pendiente Auditoria',
+        class: 'warning'
+    },
+    'auditada': {
+        nombre: 'Auditada',
+        class: 'info'
+    }
+};
+
+export const EstadosFueraAgenda: IEnum = {
+    'pendienteAuditoria': {
+        nombre: 'Pendiente Auditoria',
+        class: 'warning'
+    },
+    'auditada': {
+        nombre: 'Auditada',
+        class: 'info'
+    }
+};
 
 export const EstadosAsistencia: IEnum = {
     'asistio': {
-        nombre: 'Asistio',
+        nombre: 'Asistió',
         class: 'success'
     },
     'noAsistio': {
-        nombre: 'No Asistio',
+        nombre: 'No Asistió',
         class: 'danger'
     },
     'sinDatos': {
