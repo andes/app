@@ -20,7 +20,7 @@ import { DocumentoPipe } from './pipes/documento.pipe';
 import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 import { CapitalizeFirstPipe } from './pipes/capitalizeFirst.pipe';
 import { FileSize } from './pipes/fileSize.pipe';
-
+import { TruncatePipe } from './pipes/truncate.pipe';
 @NgModule({
     imports: [
         CommonModule,
@@ -44,7 +44,8 @@ import { FileSize } from './pipes/fileSize.pipe';
         NotasComponent,
         PacienteRestringidoPipe,
         CapitalizeFirstPipe,
-        FileSize
+        FileSize,
+        TruncatePipe
     ],
     exports: [
         FechaPipe,
@@ -62,7 +63,8 @@ import { FileSize } from './pipes/fileSize.pipe';
         UploadFileComponent,
         NotasComponent,
         PacienteRestringidoPipe,
-        CapitalizeFirstPipe
+        CapitalizeFirstPipe,
+        TruncatePipe
     ],
     providers: [
         PacienteRestringidoPipe
