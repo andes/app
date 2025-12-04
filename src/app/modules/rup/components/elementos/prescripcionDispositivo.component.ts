@@ -1,0 +1,124 @@
+import { Unsubscribe } from '@andes/shared';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { RupElement } from '.';
+import { RUPComponent } from '../core/rup.component';
+@Component({
+    selector: 'rup-prescripcion-dispositivo',
+    templateUrl: 'prescripcionDispositivo.html',
+    styleUrls: ['recetaMedica.scss']
+})
+
+@RupElement('PrescripcionDispositivoComponent')
+
+export class PrescripcionDispositivoComponent extends RUPComponent implements OnInit {
+    @ViewChild('formDispositivo') formDispositivo: NgForm;
+
+    public dispositivo: any = {
+        diagnostico: null,
+        generico: null,
+        cantidad: null,
+        tratamientoProlongado: false,
+        tiempoTratamiento: null
+    };
+    public collapse = false;
+    public unidades = [];
+    public genericos = [];
+    public registros = [];
+    public loading = false;
+    public diagnosticos = [];
+    public recetasConFiltros = [];
+    private eclDispositivos;
+    public mostrarEspecificacion = false;
+
+    public tiemposTratamiento = [
+        { id: '3meses', nombre: '3 meses' },
+        { id: '6meses', nombre: '6 meses' }
+    ];
+
+
+    ngOnInit() {
+        if (!this.registro.valor) {
+            this.registro.valor = {};
+        }
+        if (!this.registro.valor.dispositivos) {
+            this.registro.valor.dispositivos = [];
+        }
+        this.registros = this.prestacion.ejecucion.registros.filter(reg => reg.id !== this.registro.id).map(reg => reg.concepto);
+        this.buscarDiagnosticosConTrastornos();
+
+        this.ejecucionService?.hasActualizacion().subscribe(async (estado) => {
+            this.loadRegistros();
+        });
+
+        this.eclqueriesServicies.search({ key: '^receta' }).subscribe(query => {
+            this.eclDispositivos = query.filter(q => q.key === 'receta:dispositivos');
+        });
+    }
+
+    @Unsubscribe()
+    loadDispositivo(event) {
+        const input = event.query;
+
+        if (input && input.length > 2) {
+            const query = {
+                'insumo': '^'+input,
+                'tipo': this.params.type||'' };
+
+            this.insumosService.getInsumos(query).subscribe(
+                event.callback);
+
+        } else {
+            event.callback([]);
+        }
+    }
+
+    requiereEspecificacion() {
+        if (this.dispositivo?.generico?.requiereEspecificacion) {
+            this.mostrarEspecificacion = true;
+        } else {
+            this.mostrarEspecificacion = false;
+        }
+
+    }
+
+    loadRegistros() {
+        this.registros = [
+            ...this.prestacion.ejecucion.registros
+                .filter(reg => reg.id !== this.registro.id && (reg.concepto.semanticTag === 'procedimiento'
+                    || reg.concepto.semanticTag === 'hallazgo' || reg.concepto.semanticTag === 'trastorno'))
+                .map(reg => reg.concepto),
+            ...this.recetasConFiltros
+        ];
+    }
+
+    buscarDiagnosticosConTrastornos() {
+        this.recetaService.buscarDiagnosticosConTrastornos(this.paciente).subscribe(diagnosticos => {
+            this.recetasConFiltros = diagnosticos;
+        });
+    }
+
+    agregarDispositivo() {
+        this.registro.valor.dispositivos.push(this.dispositivo);
+        this.unidades = [];
+        this.dispositivo = {
+            diagnostico: null,
+            generico: null,
+            cantidad: null,
+            tratamientoProlongado: false,
+            tiempoTratamiento: null
+        };
+        this.formDispositivo.reset();
+        this.formDispositivo.form.markAsPristine();
+        this.formDispositivo.form.markAsUntouched();
+    }
+
+    borrar(dispositivo) {
+        this.plex.confirm('¿Está seguro que desea eliminar este dispositivo de la receta?').then((resultado) => {
+            if (resultado) {
+                const index = this.registro.valor.dispositivos.indexOf(dispositivo);
+                this.registro.valor.dispositivos.splice(index, 1);
+            }
+        });
+    }
+}
