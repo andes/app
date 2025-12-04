@@ -38,7 +38,6 @@ export interface IAgenda {
     bloques: IBloque[];
     estado: String;
     prePausada: String;
-    sobreturnos?: ITurno[];
     turnosDisponibles: number; // Virtual
     turnosRestantesDelDia: number; // Virtual
     turnosRestantesProgramados: number; // Virtual
@@ -58,4 +57,6 @@ export interface IAgenda {
     }];
     enviarSms: String;
     condicionLlave: boolean;
+    sobreturnos?: ITurno[];
+    historial?: any[];
 }
