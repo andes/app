@@ -118,8 +118,10 @@
                                             'estilo-pendiente': pendiente(indicacion), 
                                             'estilo-suspendido': indicacion.estadoActual.tipo === 'cancelled' }"
                                             *ngFor="let indicacion of indicaciones$">
-                                            <td justify class="item-indicacion pointer">
-                                                <div class="item__container" (click)="onSelectIndicacion(indicacion)">
+                                            <td justify class="item-indicacion pointer"
+                                                (click)="onSelectIndicacion(indicacion)"
+                                                [class.selected]="indicacionSeleccionada?.id === indicacion.id">
+                                                <div class="item__container">
                                                     <plex-bool *ngIf="!indicacion.readonly && indicacion.estadoActual.tipo !== 'cancelled'"
                                                                type="checkbox"
                                                                [(ngModel)]="selectedIndicacion[indicacion.id]"
@@ -152,13 +154,13 @@
 
                                                     <span class="item-title-container item-title-container--vertical">
                                                         <h2 class="item__title">{{ indicacion.nombre }}
-                                                            <plex-icon *ngIf="indicacion.valor.indicaciones" size="md"
-                                                                       name="documento"
-                                                                       [tooltip]="indicacion.valor.indicaciones"
-                                                                       type="info"></plex-icon>
                                                         </h2>
                                                         <h3>
                                                             {{ indicacion | detalleIndicacion }}
+                                                            <strong *ngIf="indicacion.valor?.sos"
+                                                                    style="margin-left: 4px;">
+                                                                SOS
+                                                            </strong>
                                                         </h3>
                                                     </span>
                                                 </div>
