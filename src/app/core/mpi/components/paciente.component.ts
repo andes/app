@@ -345,7 +345,7 @@ export class PacienteComponent implements OnInit {
             apellido: nuevoPaciente.apellido,
             sexo: nuevoPaciente.sexo,
             genero: nuevoPaciente.genero,
-            fechaNacimiento: nuevoPaciente.fechaNacimiento,
+            fechaNacimiento: moment(nuevoPaciente.fechaNacimiento).utc().toDate(),
             documento: nuevoPaciente.documento,
             estadoCivil: nuevoPaciente.estadoCivil,
             direccion: nuevoPaciente.direccion,
