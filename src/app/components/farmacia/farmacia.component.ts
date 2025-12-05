@@ -41,6 +41,16 @@ export class FarmaciaComponent implements OnInit {
         { id: 'independiente', nombre: 'Independientes' }
     ];
 
+    public tipoEstablecimiento = [
+        { id: 'tipoFarmacia', nombre: 'Farmacia' },
+        { id: 'tipoDrogueria', nombre: 'Droguería' },
+        { id: 'tipoBotiquin', nombre: 'Botiquín' },
+        { id: 'tipoDeposito', nombre: 'Depósito' },
+        { id: 'tipoDistribuidora', nombre: 'Distribuidora' },
+        { id: 'tipoVacunatorio', nombre: 'Vacunatorio' },
+        { id: 'tipoEsterilizacion', nombre: 'Esterilización' }
+    ];
+
     constructor(
         private farmaciaService: FarmaciaService,
         private router: Router,
@@ -93,6 +103,13 @@ export class FarmaciaComponent implements OnInit {
         {
             key: 'asociado',
             label: 'Asociado',
+            sorteable: true,
+            opcional: true,
+            sort: (a: any, b: any) => a.asociadoA.localeCompare(b.asociadoA)
+        },
+        {
+            key: 'establecimiento',
+            label: 'Establecimiento',
             sorteable: true,
             opcional: true,
             sort: (a: any, b: any) => a.asociadoA.localeCompare(b.asociadoA)
@@ -155,6 +172,7 @@ export class FarmaciaComponent implements OnInit {
         this.farmaciaService.cuit.next(this.filtros.cuit);
         this.farmaciaService.DTResponsable.next(this.filtros.DTResponsable);
         this.farmaciaService.asociado.next(this.filtros.asociado);
+        this.farmaciaService.establecimiento.next(this.filtros.establecimiento?.nombre);
     }
 
     seleccionarFarmacia(farmacia) {
