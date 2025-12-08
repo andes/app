@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { MapaCamasHTTP } from 'src/app/apps/rup/mapa-camas/services/mapa-camas.http';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
@@ -109,19 +110,13 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
 
                     const filtros = {
                         fechaIngresoDesde: moment('2016-01-01').toDate(),
-                        idPaciente: id
+                        idPaciente: id,
+                        estado: 'validada' // Solo mostrar internaciones validadas
                     };
-                    this.internacione$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros);
-
-                    // DEBUG: Ver qué devuelve el servicio
-                    this.internacione$.subscribe(data => {
-                        console.log('=== DEBUG SERVICIO getPrestacionesInternacion ===');
-                        console.log('Datos recibidos del servicio:', data);
-                        if (data && data.length > 0) {
-                            console.log('Primera prestación estructura:', data[0]);
-                        }
-                        console.log('===============================================');
-                    });
+                    this.internacione$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros).pipe(
+                        tap(internaciones => {
+                        })
+                    );
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                 });
             });
