@@ -1,0 +1,112 @@
+<div *ngIf="loading" class="text-center p-4">
+    <plex-loader type="linear"></plex-loader>
+    <p>Cargando informe estadístico...</p>
+</div>
+
+<div *ngIf="!loading && informe">
+    <plex-title titulo="Internación" size="lg"></plex-title>
+
+    <!-- Información de validación -->
+    <div class="d-flex">
+        <plex-grid responsive colsMd="2" colsLg="2" type="full">
+            <plex-label class="prestacion-label" icon="reloj" size="md" case="capitalize" titulo="Fecha De Validación"
+                *ngIf="informe.estadoActual?.updatedAt"
+                subtitulo="{{ informe.estadoActual.updatedAt | date: 'EEE dd/MM/yyyy HH:mm' }}">
+            </plex-label>
+            <plex-label class="prestacion-label" icon="medico" size="md" case="capitalize"
+                titulo="Profesional que valida" *ngIf="informe.estadoActual?.updatedBy"
+                subtitulo="{{ informe.estadoActual.updatedBy.apellido }}, {{ informe.estadoActual.updatedBy.nombre }}">
+            </plex-label>
+        </plex-grid>
+    </div>
+
+    <!-- Documento de solicitud de admisión -->
+    <div class="lista-prestacion mt-3">
+        <div class="rup-card">
+            <div class="rup-header bg-success text-white p-2">
+                <i class="adi adi-documento mr-2"></i>
+                <strong>Documento de solicitud de admisión</strong>
+                <span class="badge badge-light ml-2">elemento de registro</span>
+            </div>
+            <div class="rup-body p-3">
+                <plex-grid responsive colsMd="3" colsLg="3" type="full">
+                    <plex-label size="sm" titulo="Fecha Ingreso"
+                        subtitulo="{{ informe.informeIngreso.fechaIngreso | date: 'dd/MM/yyyy HH:mm' }}">
+                    </plex-label>
+                    <plex-label size="sm" titulo="Origen hospitalización" *ngIf="informe.informeIngreso.origen"
+                        subtitulo="{{ informe.informeIngreso.origen.nombre }}">
+                    </plex-label>
+                    <plex-label size="sm" titulo="Motivo de ingreso" *ngIf="informe.informeIngreso.motivoIngreso"
+                        subtitulo="{{ informe.informeIngreso.motivoIngreso }}">
+                    </plex-label>
+                </plex-grid>
+
+                <plex-grid responsive colsMd="3" colsLg="3" type="full" class="mt-2">
+                    <plex-label size="sm" titulo="Asociado a" *ngIf="informe.informeIngreso.asociadoA"
+                        subtitulo="{{ informe.informeIngreso.asociadoA }}">
+                    </plex-label>
+                    <plex-label size="sm" titulo="Obra social" *ngIf="informe.informeIngreso.obraSocial"
+                        subtitulo="{{ informe.informeIngreso.obraSocial.nombre }}">
+                    </plex-label>
+                </plex-grid>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alta del paciente -->
+    <div class="lista-prestacion mt-3" *ngIf="informe.informeEgreso">
+        <div class="rup-card">
+            <div class="rup-header bg-danger text-white p-2">
+                <i class="adi adi-termometro mr-2"></i>
+                <strong>Alta del paciente</strong>
+                <span class="badge badge-info ml-2" *ngIf="informe.informeEgreso.diagnosticoPrincipal">
+                    Procedimiento / diagnóstico principal
+                </span>
+            </div>
+            <div class="rup-body p-3">
+                <plex-grid responsive colsMd="3" colsLg="3" type="full">
+                    <plex-label size="sm" titulo="Fecha de egreso"
+                        subtitulo="{{ informe.informeEgreso.fechaEgreso | date: 'dd/MM/yyyy HH:mm' }}">
+                    </plex-label>
+                    <plex-label size="sm" titulo="Días de estada"
+                        *ngIf="informe.informeEgreso.diasDeEstada !== undefined"
+                        subtitulo="{{ informe.informeEgreso.diasDeEstada }}">
+                    </plex-label>
+                    <plex-label size="sm" titulo="Tipo de egreso" *ngIf="informe.informeEgreso.tipoEgreso"
+                        subtitulo="{{ informe.informeEgreso.tipoEgreso.nombre }}">
+                    </plex-label>
+                </plex-grid>
+
+                <div class="mt-3" *ngIf="informe.informeEgreso.diagnosticoPrincipal">
+                    <plex-label size="sm" titulo="Diagnostico Principal al egreso"
+                        subtitulo="{{ informe.informeEgreso.diagnosticoPrincipal.codificacionProfesional?.term || informe.informeEgreso.diagnosticoPrincipal.concepto?.term }}">
+                    </plex-label>
+                </div>
+
+                <!-- Otros diagnósticos -->
+                <div class="mt-3" *ngIf="informe.informeEgreso.otrosDiagnosticos?.length">
+                    <h6>Otros diagnósticos:</h6>
+                    <ul>
+                        <li *ngFor="let diagnostico of informe.informeEgreso.otrosDiagnosticos">
+                            {{ diagnostico.codificacionProfesional?.term || diagnostico.concepto?.term }}
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Procedimientos quirúrgicos -->
+                <div class="mt-3" *ngIf="informe.informeEgreso.procedimientosQuirurgicos?.length">
+                    <h6>Procedimientos quirúrgicos:</h6>
+                    <ul>
+                        <li *ngFor="let procedimiento of informe.informeEgreso.procedimientosQuirurgicos">
+                            {{ procedimiento.concepto?.term }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="!loading && !informe" class="text-center p-4">
+    <plex-label icon="alert" titulo="No se pudo cargar el informe estadístico"></plex-label>
+</div>
