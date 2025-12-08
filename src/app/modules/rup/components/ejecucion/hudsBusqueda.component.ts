@@ -1,8 +1,7 @@
-/* eslint-disable no-debugger */
-/* eslint-disable no-console */
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { AfterContentInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Optional, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { LaboratorioService } from 'src/app/services/laboratorio.service';
 import { RecetaService } from 'src/app/services/receta.service';
@@ -76,14 +75,12 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     public tiposPrestacion = [];
     public prestacionSeleccionada = [];
     private _prestaciones: any = [];
-    private _prestacionesEstadisticas: any = [];
     private prestacionesCopia: any = [];
-    private prestacionesEstadisticasCopia: any = [];
     private internaciones;
 
-    // get prestaciones() {
-    //     return this._prestaciones;
-    // }
+    get prestaciones() {
+        return this._prestaciones;
+    }
 
     set prestaciones(value) {
         this._prestaciones = value.sort((a, b) => {
@@ -199,12 +196,13 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
     constructor(
         public servicioPrestacion: PrestacionesService,
-        public informeEstadisticoService: InformeEstadisticaService,
         public plex: Plex,
         public auth: Auth,
         public huds: HUDSService,
         private formEpidemiologiaService: FormsEpidemiologiaService,
         private resumenHTTP: InternacionResumenHTTP,
+        private informeEstadisticaService: InformeEstadisticaService,
+        private router: Router,
         @Optional() private ejecucionService: RupEjecucionService,
         private pacienteService: PacienteService,
         private laboratorioService: LaboratorioService,
@@ -437,9 +435,29 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 break;
             case 'internacion':
                 gtag('huds-open', 'rup', 'internacion', index);
-                registro.id = registro.id;
-                registro.tipo = 'internacion';
-                registro.index = index;
+
+                // Verificar si es un informe estadístico
+                if (registro.registros && registro.registros[index]?.esInformeEstadistico) {
+                    // Marcar como internación para que abra la pestaña correcta
+                    // El componente detalleRegistroInternacion detectará que es estadístico
+                    registro.tipo = 'internacion';
+                    registro.index = index;
+                    // Agregar todas las propiedades necesarias en data
+                    if (!registro.data) {
+                        registro.data = {};
+                    }
+                    registro.data.id = registro.id;
+                    registro.data.index = index;
+                    registro.data.registros = registro.registros;
+                    registro.data.fechaIngreso = registro.fechaIngreso;
+                    registro.data.prestaciones = registro.prestaciones; // Agregar prestaciones filtradas
+                    registro.data.esInformeEstadistico = true;
+                } else {
+                    // Prestaciones normales de internación
+                    registro.id = registro.id;
+                    registro.tipo = 'internacion';
+                    registro.index = index;
+                }
                 break;
             case 'laboratorio':
                 gtag('huds-open', tipo, 'laboratorio', index);
@@ -459,66 +477,53 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     }
 
     listarInternaciones() {
-        let request;
+        // Usar el nuevo servicio de informes estadísticos
+        const params: any = {
+            idPaciente: this.paciente.id, // IMPORTANTE: Filtrar por paciente
+            estado: 'validada' // Solo internaciones validadas
+        };
 
-        console.log('📌 [listarInternaciones] Buscando internaciones...');
-        console.log('➡️ Paciente:', this.paciente);
-        console.log('➡️ Fecha inicio:', this.fechaInicio);
-        console.log('➡️ Fecha fin:', this.fechaFin);
-
-        if (this.paciente.idPacientePrincipal) {
-            console.log('👥 Es un paciente con vinculación → usando paciente principal');
-
-            request = this.getPacientePrincipal(this.paciente.idPacientePrincipal).pipe(
-                switchMap((paciente: IPaciente) => {
-                    console.log('🔗 Paciente principal obtenido:', paciente);
-
-                    return this.resumenHTTP.search({
-                        ingreso: this.resumenHTTP.queryDateParams(this.fechaInicio, this.fechaFin),
-                        paciente: paciente.vinculos,
-                    });
-                })
-            );
-        } else {
-            console.log('👤 Paciente normal → búsqueda directa');
-
-            request = this.resumenHTTP.search({
-                ingreso: this.resumenHTTP.queryDateParams(this.fechaInicio, this.fechaFin),
-                paciente: this.paciente.vinculos || this.paciente.id
-            });
+        // Agregar filtros de fecha si existen
+        if (this.fechaInicio) {
+            params.fechaDesde = this.fechaInicio;
+        }
+        if (this.fechaFin) {
+            params.fechaHasta = this.fechaFin;
         }
 
-        request.subscribe({
-            next: (internaciones) => {
-                console.log('📄 RESULTADO INTERNACIONES:', internaciones);
 
-                if (!internaciones || internaciones.length === 0) {
-                    console.warn('⚠️ No se encontraron internaciones para este paciente.');
+
+        this.informeEstadisticaService.search(params).subscribe((informes) => {
+
+
+            // Mapear IInformeEstadistica a la estructura esperada por filtrarPorInternacion
+            this.internaciones = informes.map(informe => ({
+                id: informe._id || informe.id, // MongoDB usa _id
+                fechaIngreso: informe.informeIngreso.fechaIngreso,
+                fechaEgreso: informe.informeEgreso?.fechaEgreso,
+                organizacion: {
+                    id: informe.organizacion._id || informe.organizacion.id,
+                    nombre: informe.organizacion.nombre
                 }
+            }));
 
-                this.internaciones = internaciones;
-            },
-            error: (err) => {
-                console.error('❌ ERROR en listarInternaciones:', err);
-            }
+
         });
     }
 
     listarPrestaciones() {
-        function groupBy(informeEstadistica: IInformeEstadistica[]) {
+        function groupBy(prestaciones: IPrestacion[]) {
             const resultado = [];
-            const diccionario: { [key: string]: IInformeEstadistica[] } = {};
+            const diccionario = {};
 
-            informeEstadistica.forEach(inf => {
-                const key = inf.paciente?.id; // 🔥 El equivalente más estable a groupId
-                console.log('Key para agrupamiento:', key);
-                if (key) {
-                    if (!diccionario[key]) {
-                        diccionario[key] = [];
+            prestaciones.forEach(p => {
+                if (p.groupId) {
+                    if (!diccionario[p.groupId]) {
+                        diccionario[p.groupId] = [];
                     }
-                    diccionario[key].push(inf);
+                    diccionario[p.groupId].push(p);
                 } else {
-                    resultado.push(inf);
+                    resultado.push(p);
                 }
             });
 
@@ -527,33 +532,9 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             return resultado;
         }
 
-        // listarPrestaciones() {
-        // function groupBy(prestaciones: IPrestacion[]) {
-        //     const resultado = [];
-        //     const diccionario = {};
 
-        //     prestaciones.forEach(p => {
-        //         if (p.groupId) {
-        //             if (!diccionario[p.groupId]) {
-        //                 diccionario[p.groupId] = [];
-        //             }
-        //             diccionario[p.groupId].push(p);
-        //         } else {
-        //             resultado.push(p);
-        //         }
-        //     });
-
-        //     Object.values(diccionario).forEach(dc => resultado.push(dc));
-
-        //     return resultado;
-        // }
-
-
-        // this.servicioPrestacion.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
-        this.informeEstadisticoService.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
-
+        this.servicioPrestacion.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
             this.prestacionesTotales = prestaciones;
-            console.log('prestaciones', prestaciones);
             const validadas = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
 
             this.prestaciones = groupBy(validadas).map(p => {
@@ -656,18 +637,9 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     }
 
     private cargarSolicitudesMezcladas() {
-        // Línea 485:
         this.solicitudesMezcladas = this.solicitudes.concat(this.solicitudesTOP);
-        console.log('Solicitudes mezcladas:', this.solicitudesMezcladas);
 
-        // Línea 486: Inicia el sort
         this.solicitudesMezcladas.sort((e1, e2) => {
-            // --- CONSOLE LOG AÑADIDO PARA DEPURACIÓN ---
-            console.log('Elemento 1 (e1):', e1);
-            console.log('Elemento 2 (e2):', e2);
-            // -------------------------------------------
-
-            // Línea 487: Aquí ocurre el error
             const fecha1 = e1.fechaEjecucion ? e1.fechaEjecucion : e1.solicitud.fecha;
             const fecha2 = e2.fechaEjecucion ? e2.fechaEjecucion : e2.solicitud.fecha;
             return fecha2 - fecha1;
@@ -900,19 +872,41 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
     filtrarPorInternacion(prestaciones) {
         const prestacionesEnInternacion = [];
-        debugger;
-        const internaciones = this.internaciones?.map(internacion => {
+        this.indiceInternaciones = [];
+
+        this.internaciones?.forEach((internacion) => {
+
+            // Log de la primera prestación para ver su estructura
+            if (prestaciones.length > 0) {
+                const ejemploPrestacion = prestaciones[0];
+                // Verificar por qué no coincide
+                const fechaIngresoValida = moment(ejemploPrestacion.fecha).isSameOrAfter(internacion.fechaIngreso);
+                const fechaEgresoValida = internacion.fechaEgreso
+                    ? moment(ejemploPrestacion.fecha).isSameOrBefore(internacion.fechaEgreso)
+                    : moment(ejemploPrestacion.fecha).isSameOrBefore(moment().toDate());
+                const organizacionValida = internacion.organizacion?.id
+                    ? internacion.organizacion.id === ejemploPrestacion.organizacion
+                    : internacion.organizacion === ejemploPrestacion.data?.solicitud?.organizacion?.nombre;
+
+            }
+
+            // Buscar prestaciones que coincidan con esta internación por fecha y organización
             const prestacionesPorInternacion = prestaciones.filter(prestacion => {
                 const fechaIngresoValida = moment(prestacion.fecha).isSameOrAfter(internacion.fechaIngreso);
-                const fechaEgresoValida = internacion.fechaEgreso ? moment(prestacion.fecha).isSameOrBefore(internacion.fechaEgreso) : moment(prestacion.fecha).isSameOrBefore(moment().toDate());
-                const organizacionValida = internacion.organizacion.id === prestacion.organizacion;
+                const fechaEgresoValida = internacion.fechaEgreso
+                    ? moment(prestacion.fecha).isSameOrBefore(internacion.fechaEgreso)
+                    : moment(prestacion.fecha).isSameOrBefore(moment().toDate());
 
-                if (fechaIngresoValida && fechaEgresoValida && organizacionValida) {
-                    prestacionesEnInternacion.push(prestacion);
+                // Comparar organización (puede ser ID u objeto)
+                const organizacionValida = internacion.organizacion?.id
+                    ? internacion.organizacion.id === prestacion.organizacion
+                    : internacion.organizacion === prestacion.data?.solicitud?.organizacion?.nombre;
 
-                    return prestacion;
-                } else { return null; }
+                const coincide = fechaIngresoValida && fechaEgresoValida && organizacionValida;
+
+                return coincide;
             });
+
 
             const indicePrestaciones = prestacionesPorInternacion.reduce((grupo, prestacion) => {
                 return ({ ...grupo, [prestacion.data.id]: prestacion });
@@ -921,47 +915,58 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             const registros = prestacionesPorInternacion.flatMap((prestacion) => prestacion.data.ejecucion.registros);
 
             const grupoRegistros = registros.reduce((grupo, registro) => {
-                const dataRegistro = { conceptId: registro.concepto.conceptId, term: registro.concepto.term, id: registro.id, idPrestacion: registro.idPrestacion };
+                const dataRegistro = {
+                    conceptId: registro.concepto.conceptId,
+                    term: registro.concepto.term,
+                    id: registro.id,
+                    idPrestacion: registro.idPrestacion
+                };
 
                 if (this.planIndicaciones.includes(registro.concepto.conceptId)) {
                     return ({ ...grupo, [registro.concepto.conceptId]: dataRegistro });
                 }
 
-                return ({ ...grupo, ['otras']: { ...grupo['otras'], [registro.idPrestacion]: { ...indicePrestaciones[registro.idPrestacion] } } });
+                return ({
+                    ...grupo,
+                    ['otras']: {
+                        ...grupo['otras'],
+                        [registro.idPrestacion]: { ...indicePrestaciones[registro.idPrestacion] }
+                    }
+                });
             }, {});
 
-            return {
+            const registrosArray = Object.values(grupoRegistros);
+
+
+
+            // Si no hay registros (internación estadística sin prestaciones), crear un registro especial
+            if (registrosArray.length === 0) {
+
+                registrosArray.push({
+                    conceptId: 'informe-estadistico',
+                    term: 'Evoluciones y otros registros',
+                    id: internacion.id,
+                    esInformeEstadistico: true
+                });
+            }
+
+            this.indiceInternaciones.push({
                 id: internacion.id,
                 fechaIngreso: internacion.fechaIngreso,
                 fechaEgreso: internacion.fechaEgreso,
-                organizacion: internacion.organizacion.nombre,
-                registros: Object.values(grupoRegistros)
-            };
-        })
-            .filter(grupo => grupo.registros.length);
-        debugger;
-        this.indiceInternaciones = internaciones?.reverse();
+                organizacion: internacion.organizacion?.nombre || internacion.organizacion,
+                registros: registrosArray,
+                prestaciones: prestacionesPorInternacion // Agregar las prestaciones filtradas
+            });
+        });
+
+
 
         this.filtrarOtrasPrestaciones(prestaciones, prestacionesEnInternacion);
     }
 
     filtrar() {
-        this.prestaciones = this.prestacionesCopia.slice();
-        if (this.prestacionSeleccionada && this.prestacionSeleccionada.length > 0) {
-            const prestacionesTemp = this.prestacionSeleccionada.map(e => e.conceptId);
-            this.prestaciones = this.prestaciones.filter(p => prestacionesTemp.find(e => e === p.prestacion.conceptId));
-        }
 
-        if (this.fechaInicio || this.fechaFin) {
-            this.fechaInicio = this.fechaInicio ? this.fechaInicio : new Date();
-            this.fechaFin = this.fechaFin ? this.fechaFin : new Date();
-            this.prestaciones = this.prestaciones.filter(p => p.fecha >= moment(this.fechaInicio).startOf('day').toDate() &&
-                p.fecha <= moment(this.fechaFin).endOf('day').toDate());
-        }
-        console.log('Prestaciones Copia:', this.prestacionesCopia);
-        console.log('Ambito buscado:', this.ambitoOrigen);
-        console.log('Fecha inicio:', this.fechaInicio);
-        console.log('Fecha fin:', this.fechaFin);
         if (this.ambitoOrigen) {
             this.prestaciones = this.prestaciones.filter(p => p.ambito === this.ambitoOrigen);
 

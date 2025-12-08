@@ -74,8 +74,8 @@ export class InformeEstadisticaService {
             }
         };
 
-        if (fechaDesde) {opt.params['fechaDesde'] = fechaDesde;}
-        if (fechaHasta) {opt.params['fechaHasta'] = fechaHasta;}
+        if (fechaDesde) { opt.params['fechaDesde'] = fechaDesde; }
+        if (fechaHasta) { opt.params['fechaHasta'] = fechaHasta; }
 
         // Guardamos el observable cacheado
         this.cache[idPaciente] = this.server.get(this.baseUrl, opt).pipe(
