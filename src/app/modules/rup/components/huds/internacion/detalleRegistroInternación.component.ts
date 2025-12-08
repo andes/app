@@ -6,6 +6,8 @@ import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { DocumentosService } from 'src/app/services/documentos.service';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';
 import { PrestacionesService } from '../../../services/prestaciones.service';
+import { InformeEstadisticaService } from '../../../services/informe-estadistica.service';
+import { IInformeEstadistica } from '../../../interfaces/informe-estadistica.interface';
 
 @Component({
     selector: 'detalle-registro-internacion',
@@ -39,25 +41,62 @@ export class DetalleRegistroInternacionComponent implements OnInit {
     public paginaInvalida = false;
     public collapse = false;
 
+    // Para internaciones estadísticas
+    public informeEstadistico: IInformeEstadistica;
+    public loadingInforme = false;
+
     constructor(
         public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
         private planIndicacionesServices: PlanIndicacionesServices,
         private servicioDocumentos: DocumentosService,
-        private auth: Auth
+        private auth: Auth,
+        private informeEstadisticaService: InformeEstadisticaService
     ) { }
 
     ngOnInit() {
-        const { data: { id, index, registros, fechaIngreso } } = this.internacion;
+
+        // HUDSService envuelve el objeto en data, así que puede estar en data.data
+        const internacionData = this.internacion.data.data || this.internacion.data;
+        const { id, index, registros, fechaIngreso, esInformeEstadistico, prestaciones } = internacionData;
+
+
+
         this.puedeDescargarInforme = this.auth.check('huds:impresion');
-        this.cargarRegistros(id, registros, index, fechaIngreso);
+
+        // Si es una internación estadística, cargar el informe PRIMERO
+        if (esInformeEstadistico) {
+            this.cargarInformeEstadistico(id, () => {
+                // Cargar registros DESPUÉS de que el informe se haya cargado
+                this.cargarRegistros(id, registros, index, fechaIngreso, prestaciones);
+            });
+        } else {
+            this.cargarRegistros(id, registros, index, fechaIngreso, null);
+        }
+    }
+
+    cargarInformeEstadistico(id: string, callback?: () => void) {
+        this.loadingInforme = true;
+        this.informeEstadisticaService.getById(id).subscribe(
+            (informe: IInformeEstadistica) => {
+                this.informeEstadistico = informe;
+                this.loadingInforme = false;
+                if (callback) {
+                    callback();
+                }
+            },
+            (error) => {
+                this.loadingInforme = false;
+            }
+        );
     }
 
     esPlanIndicacion(registro) {
         return registro.conceptId && ['33633005', '430147008'].includes(registro.conceptId);
     }
 
-    cargarRegistros(idInternacion, registros, index, fechaIngreso) {
+    cargarRegistros(idInternacion, registros, index, fechaIngreso, prestaciones = null) {
+
         this.registro = registros[index];
 
         if (this.esPlanIndicacion(this.registro)) {
@@ -65,15 +104,57 @@ export class DetalleRegistroInternacionComponent implements OnInit {
             this.getIndicaciones(this.registro.conceptId, idInternacion, fechaIngreso);
             this.getPrestacion(this.registro.idPrestacion);
         } else {
-            this.registro = Object.values(this.registro);
+            // Si es un informe estadístico, usar las prestaciones que vienen de hudsBusqueda
+            if (this.informeEstadistico && prestaciones) {
 
-            if (idInternacion) {
+                // Crear el objeto de prestación para el informe estadístico
+                const informePrestacion = {
+                    prestacion: {
+                        term: 'INTERNACIÓN'
+                    },
+                    data: {
+                        estadoActual: {
+                            createdAt: this.informeEstadistico.informeEgreso?.fechaEgreso || this.informeEstadistico.informeIngreso?.fechaIngreso,
+                            createdBy: { nombreCompleto: 'Sistema' }
+                        }
+                    },
+                    esInformeEstadistico: true,
+                    informe: this.informeEstadistico
+                };
+
+
+                // Mapear prestaciones al formato esperado
+                const prestacionesMapeadas = prestaciones.map((p, idx) => {
+                    const mapped = {
+                        prestacion: p.solicitud?.tipoPrestacion || { term: 'Sin tipo' },
+                        data: p,
+                        esInformeEstadistico: false
+                    };
+                    return mapped;
+                });
+
+
+
+                // Agregar el informe al inicio + las prestaciones médicas
+                this.registro = [informePrestacion, ...prestacionesMapeadas];
+
                 this.tipo = 'registrosInternacion';
-            } else {
-                this.tipo = 'fueraDeInternacion';
-            }
 
-            this.actualizarPaginacion();
+                this.actualizarPaginacion();
+            } else {
+
+
+                // Prestaciones normales
+                this.registro = Object.values(this.registro);
+
+                if (idInternacion) {
+                    this.tipo = 'registrosInternacion';
+                } else {
+                    this.tipo = 'fueraDeInternacion';
+                }
+
+                this.actualizarPaginacion();
+            }
         }
     }
 
@@ -141,10 +222,15 @@ export class DetalleRegistroInternacionComponent implements OnInit {
     }
 
     actualizarPaginacion() {
+
+
         const startIndex = (this.pagina - 1) * this.sizePagina;
         const endIndex = startIndex + this.sizePagina;
 
+
         this.paginacion = this.registro.slice(startIndex, endIndex);
+
+
     }
 
     primera() {
