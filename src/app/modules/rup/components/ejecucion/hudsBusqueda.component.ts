@@ -22,6 +22,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { CDAService } from '../../services/CDA.service';
 
 import { PuntoInicioService } from 'src/app/services/puntoInicio/punto-inicio.service';
+import { InformeEstadisticaService } from 'src/app/modules/rup/services/informe-estadistica.service';
 @Component({
     selector: 'rup-hudsBusqueda',
     templateUrl: 'hudsBusqueda.html',
@@ -84,6 +85,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     private _prestaciones: any = [];
     private prestacionesCopia: any = [];
     private internaciones;
+    private internacionesResumen = [];
+    private internacionesEstadisticas = [];
 
     set prestaciones(value) {
         this._prestaciones = value.sort((a, b) => {
@@ -250,6 +253,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         public huds: HUDSService,
         private formEpidemiologiaService: FormsEpidemiologiaService,
         private resumenHTTP: InternacionResumenHTTP,
+        private informeEstadisticaService: InformeEstadisticaService,
         @Optional() private ejecucionService: RupEjecucionService,
         private pacienteService: PacienteService,
         private laboratorioService: LaboratorioService,
@@ -518,6 +522,16 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 gtag('huds-open', 'rup', 'internacion', index);
                 registro.tipo = 'internacion';
                 registro.index = index;
+                if (registro.registros && registro.registros[index]?.esInformeEstadistico) {
+                    registro.data = {
+                        id: registro.id,
+                        index,
+                        registros: registro.registros,
+                        fechaIngreso: registro.fechaIngreso,
+                        prestaciones: registro.prestaciones,
+                        esInformeEstadistico: true
+                    };
+                }
                 break;
             case 'laboratorio':
                 gtag('huds-open', tipo, 'laboratorio', index);
@@ -536,6 +550,14 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         return this.pacienteService.getById(id);
     }
 
+    private actualizarInternaciones() {
+        this.internaciones = [...this.internacionesResumen, ...this.internacionesEstadisticas];
+
+        if (this.ambitoOrigen === 'internacion') {
+            this.filtrarPorInternacion(this._prestaciones.filter(p => p.ambito === 'internacion'));
+        }
+    }
+
     listarInternaciones() {
         let request;
         if (this.paciente.idPacientePrincipal) {
@@ -551,7 +573,39 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 paciente: this.paciente.vinculos || this.paciente.id
             });
         }
-        request.subscribe((internaciones) => this.internaciones = internaciones);
+        const fechaDesde = this.fechaInicio ? moment(this.fechaInicio).toISOString() : null;
+        const fechaHasta = this.fechaFin ? moment(this.fechaFin).toISOString() : null;
+        request.subscribe(internaciones => {
+            this.internacionesResumen = internaciones || [];
+            this.actualizarInternaciones();
+        });
+
+        this.informeEstadisticaService.getByPaciente(
+            this.paciente.id,
+            true,
+            fechaDesde,
+            fechaHasta
+        ).subscribe(informes => {
+            this.internacionesEstadisticas = (informes || [])
+                .filter(informe => {
+                    const ultimoEstado = informe.estados?.[informe.estados.length - 1]?.tipo;
+                    const estado = informe.estadoActual?.tipo || ultimoEstado ||
+                        (typeof informe.estado === 'string' ? informe.estado : informe.estado?.tipo);
+                    return estado === 'validada';
+                })
+                .map(informe => ({
+                    id: informe._id || informe.id,
+                    fechaIngreso: informe.informeIngreso.fechaIngreso,
+                    fechaEgreso: informe.informeEgreso?.fechaEgreso,
+                    organizacion: {
+                        id: informe.organizacion?._id || informe.organizacion?.id,
+                        nombre: informe.organizacion?.nombre
+                    },
+                    esInformeEstadistico: true
+                }));
+
+            this.actualizarInternaciones();
+        });
     }
 
     listarPrestaciones() {
@@ -968,19 +1022,28 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
     filtrarPorInternacion(prestaciones) {
         const prestacionesEnInternacion = [];
-        const internaciones = this.internaciones?.map(internacion => {
+        this.indiceInternaciones = [];
+
+        this.internaciones?.forEach((internacion) => {
             const prestacionesPorInternacion = prestaciones.filter(prestacion => {
                 const fechaIngresoValida = moment(prestacion.fecha).isSameOrAfter(internacion.fechaIngreso);
-                const fechaEgresoValida = internacion.fechaEgreso ? moment(prestacion.fecha).isSameOrBefore(internacion.fechaEgreso) : moment(prestacion.fecha).isSameOrBefore(moment().toDate());
-                const organizacionValida = internacion.organizacion.id === prestacion.organizacion;
+                const fechaEgresoValida = internacion.fechaEgreso
+                    ? moment(prestacion.fecha).isSameOrBefore(internacion.fechaEgreso)
+                    : moment(prestacion.fecha).isSameOrBefore(moment().toDate());
+                const organizacionInternacion = internacion.organizacion;
+                const organizacionPrestacion = prestacion.data?.solicitud?.organizacion;
+                const idInternacion = organizacionInternacion?.id || organizacionInternacion?._id;
+                const idPrestacion = prestacion.organizacion || organizacionPrestacion?.id || organizacionPrestacion?._id;
+                const nombreInternacion = organizacionInternacion?.nombre || organizacionInternacion;
+                const nombrePrestacion = organizacionPrestacion?.nombre;
+                const organizacionValida = idInternacion && idPrestacion
+                    ? idInternacion === idPrestacion
+                    : nombreInternacion && nombrePrestacion && nombreInternacion === nombrePrestacion;
 
-                if (fechaIngresoValida && fechaEgresoValida && organizacionValida) {
-                    prestacionesEnInternacion.push(prestacion);
-
-                    return prestacion;
-                } else { return null; }
+                return fechaIngresoValida && fechaEgresoValida && organizacionValida;
             });
 
+            prestacionesEnInternacion.push(...prestacionesPorInternacion);
             const indicePrestaciones = prestacionesPorInternacion.reduce((grupo, prestacion) => {
                 return ({ ...grupo, [prestacion.data.id]: prestacion });
             }, {});
@@ -988,35 +1051,55 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             const registros = prestacionesPorInternacion.flatMap((prestacion) => prestacion.data.ejecucion.registros);
 
             const grupoRegistros = registros.reduce((grupo, registro) => {
-                const dataRegistro = { conceptId: registro.concepto.conceptId, term: registro.concepto.term, id: registro.id, idPrestacion: registro.idPrestacion };
+                const dataRegistro = {
+                    conceptId: registro.concepto.conceptId,
+                    term: registro.concepto.term,
+                    id: registro.id,
+                    idPrestacion: registro.idPrestacion
+                };
 
                 if (this.planIndicaciones.includes(registro.concepto.conceptId)) {
                     return ({ ...grupo, [registro.concepto.conceptId]: dataRegistro });
                 }
 
-                return ({ ...grupo, ['otras']: { ...grupo['otras'], [registro.idPrestacion]: { ...indicePrestaciones[registro.idPrestacion] } } });
+                return ({
+                    ...grupo,
+                    ['otras']: {
+                        ...grupo['otras'],
+                        [registro.idPrestacion]: { ...indicePrestaciones[registro.idPrestacion] }
+                    }
+                });
             }, {});
 
-            return {
-                id: internacion.id,
-                fechaIngreso: internacion.fechaIngreso,
-                fechaEgreso: internacion.fechaEgreso,
-                organizacion: internacion.organizacion.nombre,
-                registros: Object.values(grupoRegistros)
-            };
-        })
-            .filter(grupo => grupo.registros.length);
-        this.indiceInternaciones = internaciones?.reverse();
+            const registrosArray = Object.values(grupoRegistros);
+
+            if (internacion.esInformeEstadistico) {
+                registrosArray.push({
+                    conceptId: 'informe-estadistico',
+                    term: 'Evoluciones y otros registros',
+                    id: internacion.id,
+                    esInformeEstadistico: true
+                });
+            }
+
+            if (registrosArray.length) {
+                this.indiceInternaciones.push({
+                    id: internacion.id,
+                    fechaIngreso: internacion.fechaIngreso,
+                    fechaEgreso: internacion.fechaEgreso,
+                    organizacion: internacion.organizacion?.nombre || internacion.organizacion,
+                    registros: registrosArray,
+                    prestaciones: prestacionesPorInternacion
+                });
+            }
+        });
+        this.indiceInternaciones.reverse();
 
         this.filtrarOtrasPrestaciones(prestaciones, prestacionesEnInternacion);
     }
 
     filtrar() {
         this.prestaciones = this.prestacionesCopia.slice();
-        if (this.prestacionSeleccionada && this.prestacionSeleccionada.length > 0) {
-            const prestacionesTemp = this.prestacionSeleccionada.map(e => e.conceptId);
-            this.prestaciones = this.prestaciones.filter(p => prestacionesTemp.find(e => e === p.prestacion.conceptId));
-        }
 
         if (this.fechaInicio || this.fechaFin) {
             this.fechaInicio = this.fechaInicio ? moment(this.fechaInicio).startOf('day').toDate() : null;
