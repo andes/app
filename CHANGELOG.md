@@ -1,3 +1,10 @@
+## [5.169.2](https://github.com/andes/app/compare/v5.169.1...v5.169.2) (2025-12-10)
+
+
+### Bug Fixes
+
+* **CITAS:** Se agrega informacion de liberacion de turno ([#3267](https://github.com/andes/app/issues/3267)) ([38cfb8c](https://github.com/andes/app/commit/38cfb8ca0c743a3d884f9d5784a40c3d4837e788))
+
 ## [5.169.1](https://github.com/andes/app/compare/v5.169.0...v5.169.1) (2025-11-05)
 
 
