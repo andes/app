@@ -6,7 +6,6 @@ import { tap } from 'rxjs/operators';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
-import { PlanIndicacionesServices } from '../../../services/plan-indicaciones.service';
 
 @Component({
     selector: 'in-plan-indicacion-evento',
@@ -31,6 +30,8 @@ export class PlanIndicacionEventoComponent implements OnChanges {
     horarioEjecucion;
     estadoType;
     puedeEditar = false;
+    agregarEditarEvento = false;
+    public eventSelected;
     capa;
     public addEvent;
     public indice;
@@ -50,8 +51,7 @@ export class PlanIndicacionEventoComponent implements OnChanges {
         {
             key: 'observaciones',
             label: 'OBSERVACIONES'
-        },
-        {}
+        }
     ];
 
     @Output() events = new EventEmitter();
@@ -65,7 +65,6 @@ export class PlanIndicacionEventoComponent implements OnChanges {
         private organizacionService: OrganizacionService,
         private auth: Auth,
         private mapaCamasService: MapaCamasService,
-        private planIndicacionesServices: PlanIndicacionesServices,
         private plex: Plex
     ) { }
 
@@ -102,19 +101,15 @@ export class PlanIndicacionEventoComponent implements OnChanges {
             this.estadoType = this.evento.estado === 'realizado' ? 'info' : this.evento.estado === 'no-realizado' ? 'danger' : 'warning';
         }
         this.estadoItems = [];
-        if (!this.evento) {
-            this.estadoItems = [{ id: 'realizado', nombre: 'Realizado' }];
+
+        this.estadoItems = [
+            { id: 'realizado', nombre: 'Realizado' },
+            { id: 'no-realizado', nombre: 'No realizado' },
+            { id: 'incompleto', nombre: 'Incompleto' }
+        ];
+        if (!this.evento || (this.evento[0].estado === 'on-hold')) {
             this.agregarEvento();
-        } else {
-            this.estadoItems = [
-                { id: 'realizado', nombre: 'Realizado' },
-                { id: 'no-realizado', nombre: 'No realizado' },
-                { id: 'incompleto', nombre: 'Incompleto' }
-            ];
-            if (this.evento && this.evento[0].estado === 'on-hold') {
-                this.agregarEvento();
-            };
-        }
+        };
     }
 
     onCancelar() {
@@ -122,15 +117,15 @@ export class PlanIndicacionEventoComponent implements OnChanges {
         this.addEvent = false;
     }
 
-    onEdit(index) {
-        this.indice = index;
+    onEdit() {
+        this.agregarEditarEvento = true;
         this.editando = true;
-        if (index < this.evento.length - 1) {
+        if (this.indice < this.evento.length - 1) {
             this.horaMax = moment(this.evento[this.evento.length - 1].fecha);
         }
-        this.fechaHora = moment(this.evento[index].fecha).toDate();
-        this.estado = this.evento[index].estado;
-        this.observaciones = this.evento[index].observaciones;
+        this.fechaHora = moment(this.evento[this.indice].fecha).toDate();
+        this.estado = this.evento[this.indice].estado;
+        this.observaciones = this.evento[this.indice].observaciones;
     }
 
     onInputChange(value) {
@@ -204,10 +199,34 @@ export class PlanIndicacionEventoComponent implements OnChanges {
     agregarEvento() {
         if (this.evento) {
             this.horaMin = this.evento[this.evento.length - 1].fecha;
+            this.agregarEditarEvento = true;
         }
-        this.fechaHora = null;
+        this.fechaHora = this.horaMin;
         this.addEvent = true;
         this.estado = null;
         this.observaciones = '';
     }
+
+    selectedEvent(event, i) {
+        this.indice = i;
+        this.eventSelected = event;
+    }
+
+    getTipoEstado(estado: string) {
+        switch (estado) {
+            case 'realizado':
+                return 'success';
+            case 'no-realizado':
+                return 'danger';
+            case 'incompleto':
+                return 'warning';
+        }
+    }
+
+    onVolver() {
+        this.agregarEditarEvento = false;
+        this.addEvent = false;
+        this.editando = false;
+    }
+
 }
