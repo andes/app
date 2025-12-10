@@ -2,10 +2,14 @@
     <plex-title titulo="Registrar evento" size="md">
         <plex-button *ngIf="editando || addEvent" class="mr-1" type="success" size="sm" icon="check"
                      [validateForm]="form"
-                     [disabled]="!estado || labelEstado=='Motivo' && !observaciones || !form.valid"
-                     (click)="onGuardar()">
+                     [disabled]="!estado || (labelEstado==='Motivo' && !observaciones) || !form.valid"
+                     (click)="onGuardar()" tooltip="Guardar">
         </plex-button>
-        <plex-button type="danger" size="sm" icon="close" (click)="onCancelar()">
+        <plex-button *ngIf="!evento || !agregarEditarEvento || evento[0].estado === 'on-hold'" type="danger" size="sm"
+                     icon="close" (click)="onCancelar()" tooltip="Cancelar">
+        </plex-button>
+        <plex-button *ngIf="agregarEditarEvento && evento && evento[0].estado !== 'on-hold'" type="danger" size="sm"
+                     icon="flecha-izquierda" (click)="onVolver()" tooltip="Volver">
         </plex-button>
     </plex-title>
 
@@ -51,11 +55,17 @@
     <plex-title titulo="Historial de eventos" size="md">
         <plex-button class="mr-1" type="success" size="sm" icon="plus" tooltip="Agregar evento" tooltipPosition="left"
                      (click)="agregarEvento()"></plex-button>
+        <plex-button *ngIf="eventSelected" type="warning" size="sm" icon="pencil" tooltip="Editar"
+                     tooltipPosition="left" (click)="onEdit()"></plex-button>
     </plex-title>
-    <plex-table [columns]="eventos" #table="plTable">
-        <tr *ngFor="let event of evento; let i = index">
+    <plex-table [columns]="eventos" #table="plTable" class="tabla-eventos">
+        <plex-table-columns>
+        </plex-table-columns>
+        <tr *ngFor="let event of evento; let i = index" [class.selectable]="true"
+            [class.selected]="eventSelected === event" (click)="selectedEvent(event, i)">
             <td>
-                <plex-label titulo="{{ event.estado }}" subtitulo="a las {{event.fecha | date:'HH:mm'}}"></plex-label>
+                <plex-badge [type]="getTipoEstado(event.estado)">{{ event.estado }} a las {{event.fecha |
+                    date:'HH:mm'}}</plex-badge>
             </td>
             <td>
                 <plex-label>{{ event.createdBy.nombreCompleto || 'Automát. por prescripción'}}</plex-label>
@@ -65,10 +75,6 @@
             </td>
             <td>
                 <plex-label>{{event.observaciones}}</plex-label>
-            </td>
-            <td>
-                <plex-button type="warning" size="sm" icon="pencil" tooltip="Editar" tooltipPosition="left"
-                             (click)="onEdit(i)"></plex-button>
             </td>
         </tr>
     </plex-table>

@@ -30,8 +30,10 @@ export class PlanIndicacionEventoComponent implements OnChanges {
     estadoType;
     puedeEditar = false;
     capa;
+    agregarEditarEvento = false;
     public addEvent;
     public indice;
+    public eventSelected;
     public eventos = [
         {
             key: 'estado',
@@ -48,8 +50,7 @@ export class PlanIndicacionEventoComponent implements OnChanges {
         {
             key: 'observaciones',
             label: 'OBSERVACIONES'
-        },
-        {}
+        }
     ];
 
     @Output() events = new EventEmitter();
@@ -88,19 +89,15 @@ export class PlanIndicacionEventoComponent implements OnChanges {
             this.estadoType = this.evento.estado === 'realizado' ? 'info' : this.evento.estado === 'no-realizado' ? 'danger' : 'warning';
         }
         this.estadoItems = [];
-        if (!this.evento) {
-            this.estadoItems = [{ id: 'realizado', nombre: 'Realizado' }];
+
+        this.estadoItems = [
+            { id: 'realizado', nombre: 'Realizado' },
+            { id: 'no-realizado', nombre: 'No realizado' },
+            { id: 'incompleto', nombre: 'Incompleto' }
+        ];
+        if (!this.evento || (this.evento[0].estado === 'on-hold')) {
             this.agregarEvento();
-        } else {
-            this.estadoItems = [
-                { id: 'realizado', nombre: 'Realizado' },
-                { id: 'no-realizado', nombre: 'No realizado' },
-                { id: 'incompleto', nombre: 'Incompleto' }
-            ];
-            if (this.evento && this.evento[0].estado === 'on-hold') {
-                this.agregarEvento();
-            };
-        }
+        };
     }
 
     onCancelar() {
@@ -108,19 +105,21 @@ export class PlanIndicacionEventoComponent implements OnChanges {
         this.addEvent = false;
     }
 
-    onEdit(index) {
-        this.indice = index;
+    onEdit() {
+        this.agregarEditarEvento = true;
         this.editando = true;
-        if (index < this.evento.length - 1) {
+        if (this.indice < this.evento.length - 1) {
             this.horaMax = moment(this.evento[this.evento.length - 1].fecha);
         }
-        this.fechaHora = moment(this.evento[index].fecha).toDate();
-        this.estado = this.evento[index].estado;
-        this.observaciones = this.evento[index].observaciones;
+        this.fechaHora = moment(this.evento[this.indice].fecha).toDate();
+        this.estado = this.evento[this.indice].estado;
+        this.observaciones = this.evento[this.indice].observaciones;
     }
+
     onInputChange(value) {
         (value.value?.id === 'realizado') ? this.labelEstado = 'Observaciones' : this.labelEstado = 'Motivo';
     }
+
     onGuardar() {
         if (this.evento) {
             if (this.evento[this.evento.length - 1].estado === 'on-hold' || this.editando) {
@@ -159,21 +158,21 @@ export class PlanIndicacionEventoComponent implements OnChanges {
                 observaciones: this.observaciones
             };
             const createReq = this.indicacionEventosService.create(evento);
-            if (this.estado.id === 'realizado') {
-                this.plex.confirm('El horario seleccionado no coincide con la planificación. Si continúa, los próximos eventos se modificarán. ¿Deséa registrarlo de todas formas?', 'Atención', 'Si', 'No').then(response => {
-                    if (response) {
-                        createReq.subscribe(() => {
-                            this.plex.toast('success', 'Evento registrado correctamente');
-                            this.events.emit(true);
-                            this.editando = false;
-                        });
-                    }
-                });
-            }
+
+            this.plex.confirm('El horario seleccionado no coincide con la planificación. Si continúa, los próximos eventos se modificarán. ¿Deséa registrarlo de todas formas?', 'Atención', 'Si', 'No').then(response => {
+                if (response) {
+                    createReq.subscribe(() => {
+                        this.plex.toast('success', 'Evento registrado correctamente');
+                        this.events.emit(true);
+                        this.editando = false;
+                    });
+                }
+            });
         }
     }
 
     agregarEvento() {
+        this.agregarEditarEvento = true;
         if (this.evento) {
             this.horaMin = this.evento[this.evento.length - 1].fecha;
         }
@@ -181,5 +180,27 @@ export class PlanIndicacionEventoComponent implements OnChanges {
         this.addEvent = true;
         this.estado = null;
         this.observaciones = '';
+    }
+
+    selectedEvent(event, i) {
+        this.indice = i;
+        this.eventSelected = event;
+    }
+
+    getTipoEstado(estado: string) {
+        switch (estado) {
+            case 'realizado':
+                return 'success';
+            case 'no-realizado':
+                return 'danger';
+            case 'incompleto':
+                return 'warning';
+        }
+    }
+
+    onVolver() {
+        this.agregarEditarEvento = false;
+        this.addEvent = false;
+        this.editando = false;
     }
 }
