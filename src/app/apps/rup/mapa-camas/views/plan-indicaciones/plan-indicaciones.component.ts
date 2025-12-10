@@ -609,4 +609,26 @@ export class PlanIndicacionesComponent implements OnInit {
         this.suspenderIndicacion = false;
     }
 
+    getTipoIcono(estado: string): string {
+        switch (estado) {
+            case 'realizado':
+                return 'check-circle';
+            default:
+                return 'alert-circle';
+        }
+    }
+
+    getColorIcono(estado: string): string {
+        switch (estado) {
+            case 'realizado':
+                return 'success';
+            case 'incompleto':
+                return 'warning';
+            case 'no-realizado':
+                return 'danger';
+            default:
+                return 'info';
+        }
+    }
+
 }
