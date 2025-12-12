@@ -2,8 +2,6 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { AfterContentInit, Component, EventEmitter, Input, OnInit, Optional, Output, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
-import { LaboratorioService } from 'src/app/services/laboratorio.service';
-import { RecetaService } from 'src/app/services/receta.service';
 import { Observable, forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { InternacionResumenHTTP } from 'src/app/apps/rup/mapa-camas/services/resumen-internacion.http';
@@ -12,7 +10,9 @@ import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { SECCION_CLASIFICACION } from 'src/app/modules/epidemiologia/constantes';
 import { FormsEpidemiologiaService } from 'src/app/modules/epidemiologia/services/ficha-epidemiologia.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import { LaboratorioService } from 'src/app/services/laboratorio.service';
 import { ProfesionalService } from 'src/app/services/profesional.service';
+import { RecetaService } from 'src/app/services/receta.service';
 import { gtag } from '../../../../shared/services/analytics.service';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { getSemanticClass } from '../../pipes/semantic-class.pipes';
@@ -77,6 +77,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         });
     }
 
+
     public todos: any = [];
     public solicitudes: any = [];
     public solicitudesTOP: any = [];
@@ -137,6 +138,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     public filtroRecetas;
     public searchRecetas;
     public busquedaRecetas;
+    public busquedaRecetasOriginal;
     public motivosSuspension;
     public motivoSuspensionSelector;
     public seleccionRecetas = [];
@@ -240,11 +242,26 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         this._onDragEnd.emit(e);
     }
 
+    public tiposPrescripcion = [
+        { id: 'medicamento', nombre: 'Medicamento' },
+        { id: 'insumo', nombre: 'Dispositivos / Insumos' },
+        { id: 'alimentacion', nombre: 'Alimentación' },
+        { id: 'magistral', nombre: 'Magistrales' }
+    ];
+    public tipoPrescripcionSeleccionado = this.tiposPrescripcion[0];
+    public fechaInicioRecetas;
+    public fechaFinRecetas;
+
     toogleFiltros() {
         this.showFiltros = !this.showFiltros;
         if (!this.showFiltros) {
             this.fechaInicio = this.fechaFin = this.prestacionSeleccionada = null;
+            this.fechaInicioRecetas = this.fechaFinRecetas = null;
+            this.tipoPrescripcionSeleccionado = this.tiposPrescripcion[0];
             this.filtrar();
+            if (this.filtroActual === 'recetas') {
+                this.filtrarRecetas();
+            }
         }
     }
 
@@ -597,7 +614,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
             case 'solicitudes':
                 return this.solicitudesMezcladas.length;
             case 'recetas':
-                return this.busquedaRecetas?.length;
+                return this.busquedaRecetasOriginal?.length;
             case 'registro':
                 return this.registrosTotalesCopia.registro.length;
         }
@@ -782,12 +799,12 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     filtrarRecetas() {
         const searchTerm = this.searchRecetas?.toLowerCase() || '';
 
-        if (!searchTerm && !this.filtroRecetas) {
-            this.groupRecetas();
+        if (!searchTerm && !this.filtroRecetas && !this.tipoPrescripcionSeleccionado && !this.fechaInicioRecetas && !this.fechaFinRecetas) {
+            this.busquedaRecetas = this.busquedaRecetasOriginal;
             return;
         }
 
-        let filteredRecetas = this.busquedaRecetas;
+        let filteredRecetas = this.busquedaRecetasOriginal;
 
         if (searchTerm) {
             filteredRecetas = filteredRecetas.filter(group => {
@@ -795,9 +812,51 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
             });
         }
 
+        if (this.fechaInicioRecetas || this.fechaFinRecetas) {
+            const fechaInicio = this.fechaInicioRecetas ? moment(this.fechaInicioRecetas).startOf('day') : null;
+            const fechaFin = this.fechaFinRecetas ? moment(this.fechaFinRecetas).endOf('day') : null;
+
+            filteredRecetas = filteredRecetas.filter(group => {
+                const fecha = moment(group.recetaVisible.fechaRegistro);
+                if (fechaInicio && fecha.isBefore(fechaInicio)) {
+                    return false;
+                }
+                if (fechaFin && fecha.isAfter(fechaFin)) {
+                    return false;
+                }
+                return true;
+            });
+        }
+
+        if (this.tipoPrescripcionSeleccionado) {
+            const tipo = this.tipoPrescripcionSeleccionado.id;
+            filteredRecetas = filteredRecetas.filter(group => {
+                const medicamento = group.recetaVisible.medicamento;
+                const concept = medicamento.concepto;
+                const semanticTag = concept.semanticTag;
+                const term = concept.term.toLowerCase();
+
+                switch (tipo) {
+                    case 'medicamento':
+                        return true;
+                    case 'insumo':
+                        return (semanticTag === 'objeto físico' || semanticTag === 'producto') && !term.includes('alimentacion') && !term.includes('fórmula');
+                    case 'alimentacion':
+                        // Assuming semantic tag is 'producto' but checking term for 'alimentacion' as heuristic
+                        return semanticTag === 'producto' && (term.includes('alimentacion') || term.includes('fórmula') || term.includes('leche'));
+                    case 'magistral':
+                        // Check if properties indicate magistral, currently no explicit property known, might be in concept term
+                        return term.includes('magistral');
+                    default:
+                        return true;
+                }
+            });
+        }
+
         if (this.filtroRecetas) {
             filteredRecetas = filteredRecetas.reduce((acc, receta) => {
                 const vigenteRecetas = receta.recetas.filter(r => r.estadoActual.tipo === 'vigente');
+
                 if (vigenteRecetas.length > 0) {
                     acc.push({
                         conceptId: receta.conceptId,
@@ -842,6 +901,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
 
                 }))
             );
+            this.busquedaRecetasOriginal = this.busquedaRecetas;
         });
     }
 
@@ -929,5 +989,21 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     recetaVisible(recetas) {
         return this.recetasService.getRecetaPrincipal(recetas);
 
+    }
+
+    checkDispensaAnticipada(receta) {
+        if (receta.estadoDispensaActual && receta.estadoDispensaActual.fecha) {
+            const fechaDispensa = moment(receta.estadoDispensaActual.fecha);
+            const fechaRegistro = moment(receta.fechaRegistro);
+
+            if (fechaDispensa.isBefore(fechaRegistro)) {
+                if (receta.estadoActual.tipo === 'finalizada') {
+                    return 'dispensa anticipada';
+                } else if (receta.estadoActual.tipo === 'pendiente') {
+                    return 'dispensa parcial anticipada';
+                }
+            }
+        }
+        return null;
     }
 }
