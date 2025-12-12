@@ -15,6 +15,8 @@ import { ElementosRUPModule } from './elementos-rup.module';
 import { HUDSLibModule } from './huds-lib.module';
 import { RUPLibModule } from './rup-lib.module';
 import { HUDSTimelineComponent } from './views/huds-timeline/huds-timeline.component';
+import { HudsBusquedaComponent } from './components/ejecucion/hudsBusqueda.component';
+
 @NgModule({
     imports: [
         CommonModule,

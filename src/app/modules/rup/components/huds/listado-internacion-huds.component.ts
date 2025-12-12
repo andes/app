@@ -1,19 +1,20 @@
 import moment from 'moment';
-import { Component, Input, OnInit, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { IInformeEstadistica } from '../../interfaces/informe-estadistica.interface';
 
 @Component({
     selector: 'listado-internacion-huds',
     templateUrl: 'listado-internacion-huds.html'
 })
+
 export class ListadoInternacionHudsComponent implements OnChanges {
 
-    @Input() internaciones: IInformeEstadistica[];
+    @Input() internaciones: IInformeEstadistica[] = [];
 
     public internacione$: Observable<IInformeEstadistica[]>;
+
 
     public columns = [
         {
@@ -21,11 +22,8 @@ export class ListadoInternacionHudsComponent implements OnChanges {
             label: 'Organizacion',
             sorteable: true,
             opcional: true,
-            sort: (a: IInformeEstadistica, b: IInformeEstadistica) => {
-                const org1 = (a.organizacion?.nombre || '') as string;
-                const org2 = (b.organizacion?.nombre || '') as string;
-                return org1.localeCompare(org2);
-            }
+            sort: (a: IInformeEstadistica, b: IInformeEstadistica) =>
+                (a.organizacion?.nombre || '').localeCompare(b.organizacion?.nombre || '')
         },
         {
             key: 'unidad_organizativa',
@@ -55,8 +53,8 @@ export class ListadoInternacionHudsComponent implements OnChanges {
             sorteable: true,
             opcional: true,
             sort: (a: IInformeEstadistica, b: IInformeEstadistica) => {
-                const fecha1 = a.informeEgreso?.fechaEgreso ? new Date(a.informeEgreso.fechaEgreso).getTime() : 0;
-                const fecha2 = b.informeEgreso?.fechaEgreso ? new Date(b.informeEgreso.fechaEgreso).getTime() : 0;
+                const fecha1 = a.informeEgreso?.fechaEgreso ? moment(a.informeEgreso.fechaEgreso).valueOf() : 0;
+                const fecha2 = b.informeEgreso?.fechaEgreso ? moment(b.informeEgreso.fechaEgreso).valueOf() : 0;
                 return fecha1 - fecha2;
             }
         },
@@ -70,6 +68,7 @@ export class ListadoInternacionHudsComponent implements OnChanges {
                 const r2 = b.informeEgreso?.tipoEgreso?.nombre || '';
                 return r1.localeCompare(r2);
             }
+
         },
         {
             key: 'accion',
@@ -77,15 +76,16 @@ export class ListadoInternacionHudsComponent implements OnChanges {
             opcional: true
         }
     ];
-
-    constructor(
-        private router: Router
-    ) { }
-
+    constructor(private router: Router) { }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes['internaciones'] && changes['internaciones'].currentValue) {
-            this.internacione$ = of(this.internaciones);
+        if (changes['internaciones']) {
+            const informes = this.internaciones || [];
+            this.internacione$ = of([...informes].sort((a, b) => {
+                const fecha1 = moment(a.informeIngreso?.fechaIngreso);
+                const fecha2 = moment(b.informeIngreso?.fechaIngreso);
+                return fecha2.diff(fecha1);
+            }));
         }
     }
 

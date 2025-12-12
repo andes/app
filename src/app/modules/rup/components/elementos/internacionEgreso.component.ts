@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
 import { RupElement } from '.';
@@ -24,7 +23,6 @@ export class InternacionEgresoComponent extends RUPComponent implements OnInit {
         // Inicializar observable
         this.informeEgreso$.next(this.registro.valor.InformeEgreso);
 
-        console.log('DEBUG - informeEgreso$', this.registro.valor.InformeEgreso);
     }
 
 }
