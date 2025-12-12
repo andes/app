@@ -73,6 +73,9 @@ export class PlanIndicacionesComponent implements OnInit {
         })
     );
     badgeFarmacia: String = 'Esperando control<br>de farmacia';
+    eventoSeleccionado: any;
+    indicacionSeleccionada: any = null;
+
 
     get sidebarOpen() {
         return this.indicacionView || this.indicacionEventoSelected || this.nuevaIndicacion || this.suspenderIndicacion || this.showMotivoRechazo;
@@ -219,7 +222,6 @@ export class PlanIndicacionesComponent implements OnInit {
                     const hora = moment(evento.fecha).hour();
                     eventosMap[evento.idIndicacion][hora] = evento;
                 });
-
                 this.eventos = eventosMap;
                 this.borradores = this.indicaciones.filter(i => i.estado.tipo === 'draft');
                 this.loading = false;
@@ -313,8 +315,10 @@ export class PlanIndicacionesComponent implements OnInit {
             this.indicacionEventoSelected = null;
             if (!this.indicacionView || this.indicacionView.id !== indicacion.id) {
                 this.indicacionView = indicacion;
+                this.indicacionSeleccionada = indicacion;
             } else {
                 this.indicacionView = null;
+                this.indicacionSeleccionada = null;
             }
         }
     }
@@ -327,9 +331,12 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     private onIndicaciones(indicacion, hora) {
+        const eventoDeLaCelda = this.eventos[indicacion?.id] ? this.eventos[indicacion.id][hora] : null; // Usa null o undefined
+
         if (this.capa === 'enfermeria' || (this.eventos[indicacion?.id] && this.eventos[indicacion?.id][hora]?.estado === 'realizado')) {
             this.indicacionEventoSelected = indicacion;
             this.horaSelected = hora;
+            this.eventoSeleccionado = eventoDeLaCelda;
             this.indicacionView = null;
             this.cd.detectChanges();
         }
@@ -480,7 +487,7 @@ export class PlanIndicacionesComponent implements OnInit {
 
     onEditIndicacion(indicacion) {
         if (indicacion) {
-            this.planIndicacionesServices.update(indicacion._id, indicacion).subscribe(s => {
+            this.planIndicacionesServices.update(indicacion._id, indicacion).subscribe(() => {
                 this.actualizar();
                 this.nuevaIndicacion = false;
                 this.plex.toast('success', 'Indicación editada con éxito');
