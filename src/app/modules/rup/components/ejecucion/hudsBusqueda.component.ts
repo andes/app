@@ -1,14 +1,12 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { AfterContentInit, Component, EventEmitter, Input, OnInit, Optional, Output, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { LaboratorioService } from 'src/app/services/laboratorio.service';
 import { RecetaService } from 'src/app/services/receta.service';
 import { Observable, forkJoin } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { InternacionResumenHTTP } from 'src/app/apps/rup/mapa-camas/services/resumen-internacion.http';
-import { InformeEstadisticaService } from '../../services/informe-estadistica.service';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { SECCION_CLASIFICACION } from 'src/app/modules/epidemiologia/constantes';
@@ -21,7 +19,24 @@ import { getSemanticClass } from '../../pipes/semantic-class.pipes';
 import { EmitConcepto, RupEjecucionService } from '../../services/ejecucion.service';
 import { HUDSService } from '../../services/huds.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { InformeEstadisticaService } from '../../services/informe-estadistica.service';
+import { IInformeEstadistica } from '../../interfaces/informe-estadistica.interface';
 
+
+interface IInternacionExtendida {
+    id: string;
+    fechaIngreso: any;
+    fechaEgreso: any;
+    paciente?: any;
+    esEstadistica?: boolean;
+    informesEstadisticos?: IInformeEstadistica[];
+    registros?: any[];
+    ambito?: string;
+    ingreso?: any;
+    organizacion?: any;
+    tipo_egreso?: string | null;
+    [key: string]: any;
+}
 @Component({
     selector: 'rup-hudsBusqueda',
     templateUrl: 'hudsBusqueda.html',
@@ -44,6 +59,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     public loading = false;
 
     public cdas = [];
+    public informe: IInformeEstadistica[] = [];
 
     @Input() paciente: IPaciente;
     @Input() vistaHuds = false;
@@ -67,7 +83,9 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     public prestacionSeleccionada = [];
     private _prestaciones: any = [];
     private prestacionesCopia: any = [];
-    private internaciones;
+    // private internaciones;
+    private internaciones: IInternacionExtendida[] = [];
+
 
     get prestaciones() {
         return this._prestaciones;
@@ -188,13 +206,12 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         public huds: HUDSService,
         private formEpidemiologiaService: FormsEpidemiologiaService,
         private resumenHTTP: InternacionResumenHTTP,
-        private informeEstadisticaService: InformeEstadisticaService,
-        private router: Router,
         @Optional() private ejecucionService: RupEjecucionService,
         private pacienteService: PacienteService,
         private laboratorioService: LaboratorioService,
         private recetasService: RecetaService,
         private profesionalService: ProfesionalService,
+        private informeEstadisticaService: InformeEstadisticaService,
     ) {
     }
 
@@ -205,13 +222,23 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
      */
     ngAfterContentInit() {
         if (this.paciente) {
-            this.listarInternaciones();
-            this.listarPrestaciones();
             this.listarConceptos();
+
+            forkJoin({
+                internaciones: this.listarInternaciones(),
+                prestaciones: this.listarPrestaciones(),
+                informes: this.listarInformeEstadistico()
+            }).subscribe(() => {
+                this.mergeInternacionesConInformes();
+
+                if (this.internaciones && this.internaciones.length > 0) {
+                    this.setAmbitoOrigen('internacion');
+                } else {
+                    this.setAmbitoOrigen('ambulatorio');
+                }
+            });
         }
         const token = this.huds.getHudsToken();
-        // Cuando se inicia una prestación debemos volver a consultar si hay CDA nuevos al ratito.
-        // [TODO] Ser notificado via websockets
         setTimeout(() => {
             this.buscarCDAPacientes(token);
         }, 1000 * 30);
@@ -333,29 +360,9 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
                 break;
             case 'internacion':
                 gtag('huds-open', 'rup', 'internacion', index);
-
-                // Verificar si es un informe estadístico
-                if (registro.registros && registro.registros[index]?.esInformeEstadistico) {
-                    // Marcar como internación para que abra la pestaña correcta
-                    // El componente detalleRegistroInternacion detectará que es estadístico
-                    registro.tipo = 'internacion';
-                    registro.index = index;
-                    // Agregar todas las propiedades necesarias en data
-                    if (!registro.data) {
-                        registro.data = {};
-                    }
-                    registro.data.id = registro.id;
-                    registro.data.index = index;
-                    registro.data.registros = registro.registros;
-                    registro.data.fechaIngreso = registro.fechaIngreso;
-                    registro.data.prestaciones = registro.prestaciones; // Agregar prestaciones filtradas
-                    registro.data.esInformeEstadistico = true;
-                } else {
-                    // Prestaciones normales de internación
-                    registro.id = registro.id;
-                    registro.tipo = 'internacion';
-                    registro.index = index;
-                }
+                registro.id = registro.id;
+                registro.tipo = 'internacion';
+                registro.index = index;
                 break;
             case 'laboratorio':
                 gtag('huds-open', tipo, 'laboratorio', index);
@@ -373,40 +380,111 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     getPacientePrincipal(id): Observable<IPaciente> {
         return this.pacienteService.getById(id);
     }
+    listarInformeEstadistico() {
+        return this.informeEstadisticaService.getByPaciente(
+            this.paciente.id,
+            false,
+            this.fechaInicio,
+            this.fechaFin
+        ).pipe(tap((informe) => {
+            const informesFiltrados = informe.filter(inf => {
+                const idPacienteInforme = inf.paciente?.id || (inf.paciente as any)?._id;
+                return idPacienteInforme === this.paciente.id;
+            });
+
+
+            this.informe = informesFiltrados;
+        }));
+    }
+
+    mergeInternacionesConInformes() {
+        const base: IInternacionExtendida[] = this.internaciones || [];
+        const informes: IInformeEstadistica[] = this.informe || [];
+
+        const internacionesPorId = new Map<string, IInternacionExtendida>(
+            base.map(i => [i.id, i])
+        );
+
+        const internacionesResultantes: IInternacionExtendida[] = [...base];
+
+        for (const inf of informes) {
+
+            const idInternacionReal = inf._id || inf.id;
+
+            const existente = internacionesPorId.get(idInternacionReal);
+
+            if (!existente) {
+
+                const nuevaInternacion: IInternacionExtendida = {
+                    id: idInternacionReal,
+                    fechaIngreso: inf.informeIngreso?.fechaIngreso || null,
+                    fechaEgreso: inf.informeEgreso?.fechaEgreso || null,
+                    paciente: inf.paciente,
+                    esEstadistica: true,
+                    informesEstadisticos: [inf],
+
+                    registros: [],
+                    ambito: 'internacion',
+                    ingreso: null,
+                    organizacion: inf.organizacion || null,
+                    tipo_egreso: null,
+                    createdAt: inf.createdAt || null
+                };
+
+                internacionesResultantes.push(nuevaInternacion);
+                internacionesPorId.set(idInternacionReal, nuevaInternacion);
+
+            } else {
+
+                if (!existente.informesEstadisticos) {
+                    existente.informesEstadisticos = [];
+                }
+
+                existente.informesEstadisticos.push(inf);
+            }
+        }
+
+        this.internaciones = internacionesResultantes;
+    }
+    mezclarInformes(informes) {
+        this.internaciones = this.internaciones.map(int => {
+            const informe = informes.find(i => i.idInternacion === int.id);
+
+            if (informe) {
+                int.registros = [
+                    ...int.registros,
+                    {
+                        term: 'Informe Estadístico',
+                        conceptId: null,
+                        tipo: 'informe-estadistico',
+                        data: informe
+                    }
+                ];
+            }
+
+            return int;
+        });
+    }
 
     listarInternaciones() {
-        // Usar el nuevo servicio de informes estadísticos
-        const params: any = {
-            idPaciente: this.paciente.id, // IMPORTANTE: Filtrar por paciente
-            estado: 'validada' // Solo internaciones validadas
-        };
-
-        // Agregar filtros de fecha si existen
-        if (this.fechaInicio) {
-            params.fechaDesde = this.fechaInicio;
+        let request;
+        if (this.paciente.idPacientePrincipal) {
+            request = this.getPacientePrincipal(this.paciente.idPacientePrincipal).pipe(
+                switchMap((paciente: IPaciente) => this.resumenHTTP.search({
+                    ingreso: this.resumenHTTP.queryDateParams(this.fechaInicio, this.fechaFin),
+                    paciente: paciente.vinculos
+                }))
+            );
+        } else {
+            request = this.resumenHTTP.search({
+                ingreso: this.resumenHTTP.queryDateParams(this.fechaInicio, this.fechaFin),
+                paciente: this.paciente.vinculos || this.paciente.id
+            });
         }
-        if (this.fechaFin) {
-            params.fechaHasta = this.fechaFin;
-        }
 
-
-
-        this.informeEstadisticaService.search(params).subscribe((informes) => {
-
-
-            // Mapear IInformeEstadistica a la estructura esperada por filtrarPorInternacion
-            this.internaciones = informes.map(informe => ({
-                id: informe._id || informe.id, // MongoDB usa _id
-                fechaIngreso: informe.informeIngreso.fechaIngreso,
-                fechaEgreso: informe.informeEgreso?.fechaEgreso,
-                organizacion: {
-                    id: informe.organizacion._id || informe.organizacion.id,
-                    nombre: informe.organizacion.nombre
-                }
-            }));
-
-
-        });
+        return request.pipe(tap((internaciones: any) => {
+            this.internaciones = internaciones;
+        }));
     }
 
     listarPrestaciones() {
@@ -431,7 +509,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         }
 
 
-        this.servicioPrestacion.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
+        return this.servicioPrestacion.getByPaciente(this.paciente.id, false).pipe(tap(prestaciones => {
             this.prestacionesTotales = prestaciones;
             const validadas = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
 
@@ -462,14 +540,14 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
                 }
             });
             this.prestacionesCopia = this.prestaciones.slice();
-            this.setAmbitoOrigen('ambulatorio');
+            // this.setAmbitoOrigen('ambulatorio');
             this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
             this.organizaciones = this.prestaciones.filter(p => p.data.ejecucion?.organizacion);
             this.organizaciones = this.organizaciones.map(o => o.data.ejecucion.organizacion);
             this.buscarCDAPacientes(this.huds.getHudsToken());
             this.buscarFichasEpidemiologicas();
 
-        });
+        }));
     }
 
     // Trae los hallazgos
@@ -628,7 +706,18 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
             case 'procedimiento':
                 return this.registrosTotalesCopia.procedimiento.length;
             case 'planes':
-                return this.prestacionesCopia.length;
+                // Contar prestaciones en internaciones combinadas
+                let totalPrestaciones = 0;
+                if (this.indiceInternaciones && this.indiceInternaciones.length > 0) {
+                    this.indiceInternaciones.forEach((internacion: any) => {
+                        internacion.registros.forEach((registro: any) => {
+                            if (registro.otras) {
+                                totalPrestaciones += Object.keys(registro.otras).length;
+                            }
+                        });
+                    });
+                }
+                return totalPrestaciones;
             case 'producto':
                 return this.registrosTotalesCopia.producto.length;
             case 'laboratorios':
@@ -711,43 +800,138 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         this.otrasPrestaciones = { fechaDesde, fechaHasta, indices: Object.values(indiceRegistros.indices), registros: Object.values(indiceRegistros.registros) };
     }
 
+
     filtrarPorInternacion(prestaciones) {
+
+
         const prestacionesEnInternacion = [];
-        this.indiceInternaciones = [];
 
-        this.internaciones?.forEach((internacion) => {
+        // Importar las constantes SNOMED para ingreso y egreso
+        const snomedIngreso = {
+            fsn: 'documento de solicitud de admisión (elemento de registro)',
+            semanticTag: 'elemento de registro',
+            conceptId: '721915006',
+            term: 'documento de solicitud de admisión'
+        };
 
-            // Log de la primera prestación para ver su estructura
-            if (prestaciones.length > 0) {
-                const ejemploPrestacion = prestaciones[0];
-                // Verificar por qué no coincide
-                const fechaIngresoValida = moment(ejemploPrestacion.fecha).isSameOrAfter(internacion.fechaIngreso);
-                const fechaEgresoValida = internacion.fechaEgreso
-                    ? moment(ejemploPrestacion.fecha).isSameOrBefore(internacion.fechaEgreso)
-                    : moment(ejemploPrestacion.fecha).isSameOrBefore(moment().toDate());
-                const organizacionValida = internacion.organizacion?.id
-                    ? internacion.organizacion.id === ejemploPrestacion.organizacion
-                    : internacion.organizacion === ejemploPrestacion.data?.solicitud?.organizacion?.nombre;
+        const snomedEgreso = {
+            fsn: 'alta del paciente (procedimiento)',
+            semanticTag: 'procedimiento',
+            conceptId: '58000006',
+            term: 'alta del paciente'
+        };
 
+        const internaciones = this.internaciones?.map(internacion => {
+
+            if (internacion.esEstadistica) {
+                const registrosFormateados = {};
+
+                internacion.informesEstadisticos?.forEach((informe, index) => {
+                    const id = informe._id || informe.id;
+
+                    const registrosRUP = [];
+
+                    const origenString = informe.informeIngreso?.origen?.tipo ||
+                        informe.informeIngreso?.origen?.organizacionOrigen?.nombre ||
+                        informe.informeIngreso?.origen?.otraOrganizacion ||
+                        'Consultorio externo';
+
+                    registrosRUP.push({
+                        id: `${id}-ingreso-registro`,
+                        concepto: snomedIngreso,
+                        nombre: snomedIngreso.term,
+                        valor: {
+                            informeIngreso: {
+                                ...informe.informeIngreso,
+                                origen: origenString
+                            }
+                        }
+                    });
+
+                    if (informe.informeEgreso) {
+                        registrosRUP.push({
+                            id: `${id}-egreso-registro`,
+                            concepto: snomedEgreso,
+                            nombre: snomedEgreso.term,
+                            valor: {
+                                InformeEgreso: informe.informeEgreso
+                            }
+                        });
+                    }
+
+                    const registroCombinadoKey = `informe-estadistico-${id}`;
+                    registrosFormateados[registroCombinadoKey] = {
+                        prestacion: {
+                            term: 'Informe Estadístico de Internación',
+                            conceptId: '32485007' // internación
+                        },
+                        data: {
+                            id: id,
+                            estadoActual: {
+                                createdAt: informe.informeIngreso?.fechaIngreso || informe.createdAt || new Date(),
+                                createdBy: informe.createdBy || {}
+                            },
+                            solicitud: {
+                                profesional: informe.createdBy || {},
+                                organizacion: informe.organizacion || {},
+                                ambitoOrigen: 'internacion'
+                            },
+                            unidadOrganizativa: {
+                                term: informe.unidadOrganizativa?.term || 'Unidad Estadística'
+                            },
+                            paciente: informe.paciente,
+                            ejecucion: {
+                                registros: registrosRUP
+                            },
+                            _esInformeEstadistico: false
+                        }
+                    };
+                });
+
+                const prestacionesPorInternacion = prestaciones.filter(prestacion => {
+                    const fechaIngresoValida = moment(prestacion.fecha).isSameOrAfter(internacion.fechaIngreso);
+                    const fechaEgresoValida = internacion.fechaEgreso ? moment(prestacion.fecha).isSameOrBefore(internacion.fechaEgreso) : moment(prestacion.fecha).isSameOrBefore(moment().toDate());
+                    const organizacionValida = internacion.organizacion._id === prestacion.organizacion || internacion.organizacion.id === prestacion.organizacion;
+
+                    if (fechaIngresoValida && fechaEgresoValida && organizacionValida) {
+                        prestacionesEnInternacion.push(prestacion);
+                        return prestacion;
+                    } else { return null; }
+                });
+
+
+                // Agregar las prestaciones RUP al objeto registrosFormateados
+                prestacionesPorInternacion.forEach(prestacion => {
+                    registrosFormateados[prestacion.data.id] = {
+                        prestacion: prestacion.prestacion,
+                        data: prestacion.data
+                    };
+                });
+
+                const resultado = {
+                    id: internacion.id,
+                    fechaIngreso: internacion.fechaIngreso,
+                    fechaEgreso: internacion.fechaEgreso,
+                    organizacion: internacion.organizacion?.nombre || 'Organización Estadística',
+                    registros: [{
+                        otras: registrosFormateados
+                    }]
+                };
+
+                return resultado;
             }
 
-            // Buscar prestaciones que coincidan con esta internación por fecha y organización
             const prestacionesPorInternacion = prestaciones.filter(prestacion => {
                 const fechaIngresoValida = moment(prestacion.fecha).isSameOrAfter(internacion.fechaIngreso);
-                const fechaEgresoValida = internacion.fechaEgreso
-                    ? moment(prestacion.fecha).isSameOrBefore(internacion.fechaEgreso)
-                    : moment(prestacion.fecha).isSameOrBefore(moment().toDate());
+                const fechaEgresoValida = internacion.fechaEgreso ? moment(prestacion.fecha).isSameOrBefore(internacion.fechaEgreso) : moment(prestacion.fecha).isSameOrBefore(moment().toDate());
+                const organizacionValida = internacion.organizacion.id === prestacion.organizacion;
 
-                // Comparar organización (puede ser ID u objeto)
-                const organizacionValida = internacion.organizacion?.id
-                    ? internacion.organizacion.id === prestacion.organizacion
-                    : internacion.organizacion === prestacion.data?.solicitud?.organizacion?.nombre;
+                if (fechaIngresoValida && fechaEgresoValida && organizacionValida) {
+                    prestacionesEnInternacion.push(prestacion);
 
-                const coincide = fechaIngresoValida && fechaEgresoValida && organizacionValida;
-
-                return coincide;
+                    return prestacion;
+                } else { return null; }
             });
-
 
             const indicePrestaciones = prestacionesPorInternacion.reduce((grupo, prestacion) => {
                 return ({ ...grupo, [prestacion.data.id]: prestacion });
@@ -756,57 +940,98 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
             const registros = prestacionesPorInternacion.flatMap((prestacion) => prestacion.data.ejecucion.registros);
 
             const grupoRegistros = registros.reduce((grupo, registro) => {
-                const dataRegistro = {
-                    conceptId: registro.concepto.conceptId,
-                    term: registro.concepto.term,
-                    id: registro.id,
-                    idPrestacion: registro.idPrestacion
-                };
+                const dataRegistro = { conceptId: registro.concepto.conceptId, term: registro.concepto.term, id: registro.id, idPrestacion: registro.idPrestacion };
 
                 if (this.planIndicaciones.includes(registro.concepto.conceptId)) {
                     return ({ ...grupo, [registro.concepto.conceptId]: dataRegistro });
                 }
 
-                return ({
-                    ...grupo,
-                    ['otras']: {
-                        ...grupo['otras'],
-                        [registro.idPrestacion]: { ...indicePrestaciones[registro.idPrestacion] }
-                    }
-                });
+                return ({ ...grupo, ['otras']: { ...grupo['otras'], [registro.idPrestacion]: { ...indicePrestaciones[registro.idPrestacion] } } });
             }, {});
 
-            const registrosArray = Object.values(grupoRegistros);
-
-
-
-            // Si no hay registros (internación estadística sin prestaciones), crear un registro especial
-            if (registrosArray.length === 0) {
-
-                registrosArray.push({
-                    conceptId: 'informe-estadistico',
-                    term: 'Evoluciones y otros registros',
-                    id: internacion.id,
-                    esInformeEstadistico: true
-                });
-            }
-
-            this.indiceInternaciones.push({
+            return {
                 id: internacion.id,
                 fechaIngreso: internacion.fechaIngreso,
                 fechaEgreso: internacion.fechaEgreso,
-                organizacion: internacion.organizacion?.nombre || internacion.organizacion,
-                registros: registrosArray,
-                prestaciones: prestacionesPorInternacion // Agregar las prestaciones filtradas
-            });
+                organizacion: internacion.organizacion.nombre,
+                registros: Object.values(grupoRegistros)
+            };
+        })
+            .filter(grupo => grupo.registros.length);
+
+        internaciones.forEach((int, idx) => {
+            const ingreso = int.fechaIngreso ? new Date(int.fechaIngreso).toLocaleString() : 'sin fecha';
+            const egreso = int.fechaEgreso ? new Date(int.fechaEgreso).toLocaleString() : 'sin fecha';
+
         });
+        const internacionesCombinadas = [];
+        const procesadas = new Set();
 
+        for (let i = 0; i < internaciones.length; i++) {
+            if (procesadas.has(i)) { continue; }
 
+            const internacionBase = internaciones[i];
+
+            let otrasCombinadas: any = {};
+
+            internacionBase.registros.forEach((registro: any) => {
+                if (registro.otras) {
+                    otrasCombinadas = { ...otrasCombinadas, ...registro.otras };
+                } else {
+                    otrasCombinadas = { ...otrasCombinadas, ...registro };
+                }
+            });
+
+            procesadas.add(i);
+
+            for (let j = i + 1; j < internaciones.length; j++) {
+                if (procesadas.has(j)) { continue; }
+
+                const otraInternacion = internaciones[j];
+
+                const mismoDia = moment(internacionBase.fechaIngreso).isSame(otraInternacion.fechaIngreso, 'day');
+                const cercanas = Math.abs(moment(internacionBase.fechaIngreso).diff(otraInternacion.fechaIngreso, 'hours')) < 24;
+
+                if (mismoDia || cercanas) {
+
+                    otraInternacion.registros.forEach((registro: any) => {
+                        if (registro.otras) {
+                            otrasCombinadas = { ...otrasCombinadas, ...registro.otras };
+                        } else {
+                            otrasCombinadas = { ...otrasCombinadas, ...registro };
+                        }
+                    });
+
+                    procesadas.add(j);
+                }
+            }
+
+            internacionesCombinadas.push({
+                ...internacionBase,
+                registros: [{
+                    otras: otrasCombinadas
+                }]
+            });
+        }
+
+        this.indiceInternaciones = internacionesCombinadas?.reverse();
 
         this.filtrarOtrasPrestaciones(prestaciones, prestacionesEnInternacion);
     }
 
     filtrar() {
+        this.prestaciones = this.prestacionesCopia.slice();
+        if (this.prestacionSeleccionada && this.prestacionSeleccionada.length > 0) {
+            const prestacionesTemp = this.prestacionSeleccionada.map(e => e.conceptId);
+            this.prestaciones = this.prestaciones.filter(p => prestacionesTemp.find(e => e === p.prestacion.conceptId));
+        }
+
+        if (this.fechaInicio || this.fechaFin) {
+            this.fechaInicio = this.fechaInicio ? this.fechaInicio : new Date();
+            this.fechaFin = this.fechaFin ? this.fechaFin : new Date();
+            this.prestaciones = this.prestaciones.filter(p => p.fecha >= moment(this.fechaInicio).startOf('day').toDate() &&
+                p.fecha <= moment(this.fechaFin).endOf('day').toDate());
+        }
 
         if (this.ambitoOrigen) {
             this.prestaciones = this.prestaciones.filter(p => p.ambito === this.ambitoOrigen);
