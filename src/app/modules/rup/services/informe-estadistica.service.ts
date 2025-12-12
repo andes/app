@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { catchError, Observable, tap, throwError } from 'rxjs';
@@ -54,7 +53,6 @@ export class InformeEstadisticaService {
             fechaHasta
         };
 
-        // Si ya estaba en cache y no pedimos recargar → devolvemos
         const mismaBusqueda =
             cacheAnterior[idPaciente] &&
             cacheAnterior[idPaciente].fechaDesde === fechaDesde &&
@@ -64,7 +62,6 @@ export class InformeEstadisticaService {
             return this.cache[idPaciente];
         }
 
-        // Construcción de parámetros de la API
         const opt: any = {
             params: {
                 paciente: idPaciente
@@ -77,13 +74,8 @@ export class InformeEstadisticaService {
         if (fechaDesde) { opt.params['fechaDesde'] = fechaDesde; }
         if (fechaHasta) { opt.params['fechaHasta'] = fechaHasta; }
 
-        // Guardamos el observable cacheado
         this.cache[idPaciente] = this.server.get(this.baseUrl, opt).pipe(
-            tap(informes => {
-                console.log('📘 Informes Estadísticos (getByPaciente):', informes);
-            }),
             catchError(err => {
-                console.error('❌ Error en informe estadístico (getByPaciente):', err);
                 return throwError(() => err);
             })
         );
