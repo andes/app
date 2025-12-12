@@ -743,12 +743,12 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                 let mensaje = '';
                 if (cantidadAgendasDelPasado > 0) {
                     if (cantidadAgendasDelPasado === this.agendasSeleccionadas.length) {
-                        mensaje = 'Una o varias agendas pasarán a estado Auditada. ¿Desea publicar de todas formas?';
+                        mensaje = 'Las agendas seleccionadas pasarán a estado Auditada. ¿Desea publicar de todas formas?';
                         if (cantidadAgendasDelPasado === 1) {
                             mensaje = 'La agenda seleccionada pasará a estado Auditada. ¿Desea publicar de todas formas?';
                         }
                     } else {
-                        mensaje = 'Existen una o varias agendas a futuro que pasarán a estado Auditada. ¿Desea publicar de todas formas?';
+                        mensaje = 'Existen una o varias agendas del pasado que pasarán a estado Auditada. ¿Desea publicar de todas formas?';
                     }
                 } else {
                     if (this.agendasSeleccionadas.length > 1) {
@@ -808,7 +808,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                     }
                     alertCount++;
                 }
-
             }, err => {
                 if (err) {
                     this.plex.info('warning', 'Otro usuario ha modificado el estado de la agenda seleccionada, su gestor se ha actualizado', err);
