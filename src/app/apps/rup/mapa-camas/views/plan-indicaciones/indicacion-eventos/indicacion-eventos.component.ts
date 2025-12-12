@@ -23,17 +23,35 @@ export class PlanIndicacionEventoComponent implements OnChanges {
     horaOrganizacion;
     horaMin;
     horaMax;
-    estadoItems = [
-        { id: 'realizado', nombre: 'Realizado' },
-        { id: 'no-realizado', nombre: 'No realizado' },
-        { id: 'incompleto', nombre: 'Incompleto' },
-    ];
+    estadoItems = [];
     estado = null;
     observaciones = '';
     horarioEjecucion;
     estadoType;
     puedeEditar = false;
     capa;
+    agregarEditarEvento = false;
+    public addEvent;
+    public indice;
+    public eventSelected;
+    public eventos = [
+        {
+            key: 'estado',
+            label: 'ESTADO'
+        },
+        {
+            key: 'creado',
+            label: 'CREADO'
+        },
+        {
+            key: 'actualizado',
+            label: 'ACTUALIZADO'
+        },
+        {
+            key: 'observaciones',
+            label: 'OBSERVACIONES'
+        }
+    ];
 
     @Output() events = new EventEmitter();
 
@@ -70,30 +88,67 @@ export class PlanIndicacionEventoComponent implements OnChanges {
             this.horarioEjecucion = this.evento.updatedAt ? this.evento.updatedAt : this.evento.createdAt;
             this.estadoType = this.evento.estado === 'realizado' ? 'info' : this.evento.estado === 'no-realizado' ? 'danger' : 'warning';
         }
+        this.estadoItems = [];
+
+        this.estadoItems = [
+            { id: 'realizado', nombre: 'Realizado' },
+            { id: 'no-realizado', nombre: 'No realizado' },
+            { id: 'incompleto', nombre: 'Incompleto' }
+        ];
+        if (!this.evento || (this.evento[0].estado === 'on-hold')) {
+            this.agregarEvento();
+        };
     }
 
     onCancelar() {
         this.events.emit(false);
+        this.addEvent = false;
     }
 
     onEdit() {
+        this.agregarEditarEvento = true;
         this.editando = true;
+        if (this.indice < this.evento.length - 1) {
+            this.horaMax = moment(this.evento[this.evento.length - 1].fecha);
+        }
+        this.fechaHora = moment(this.evento[this.indice].fecha).toDate();
+        this.estado = this.evento[this.indice].estado;
+        this.observaciones = this.evento[this.indice].observaciones;
     }
+
     onInputChange(value) {
         (value.value?.id === 'realizado') ? this.labelEstado = 'Observaciones' : this.labelEstado = 'Motivo';
     }
+
     onGuardar() {
         if (this.evento) {
-            this.indicacionEventosService.update(
-                this.evento.id,
-                {
+            if (this.evento[this.evento.length - 1].estado === 'on-hold' || this.editando) {
+                this.indicacionEventosService.update(
+                    (this.indice) ? this.evento[this.indice].id : this.evento[this.evento.length - 1].id,
+                    {
+                        estado: this.estado.id,
+                        observaciones: this.observaciones,
+                        fecha: this.fechaHora
+                    }
+                ).subscribe(() => {
+                    (this.editando) ? this.plex.toast('success', 'Evento modificado correctamente') : this.plex.toast('success', 'Evento registrado correctamente');
+                    this.events.emit(true);
+                    this.editando = false;
+                });
+            } else {
+                const evento = {
+                    idInternacion: this.indicacion.idInternacion,
+                    idIndicacion: this.indicacion.id,
+                    fecha: this.fechaHora,
                     estado: this.estado.id,
                     observaciones: this.observaciones
-                }
-            ).subscribe(() => {
-                this.events.emit(true);
-                this.editando = false;
-            });
+                };
+                this.indicacionEventosService.create(evento).subscribe(() => {
+                    this.plex.toast('success', 'Evento registrado correctamente');
+                    this.events.emit(true);
+                    this.addEvent = false;
+                });
+            }
         } else {
             const evento = {
                 idInternacion: this.indicacion.idInternacion,
@@ -103,16 +158,49 @@ export class PlanIndicacionEventoComponent implements OnChanges {
                 observaciones: this.observaciones
             };
             const createReq = this.indicacionEventosService.create(evento);
-            if (this.estado.id === 'realizado') {
-                this.plex.confirm('El horario seleccionado no coincide con la planificación. Si continúa, los próximos eventos se modificarán. ¿Deséa registrarlo de todas formas?', 'Atención', 'Si', 'No').then(response => {
-                    if (response) {
-                        createReq.subscribe(() => {
-                            this.events.emit(true);
-                            this.editando = false;
-                        });
-                    }
-                });
-            }
+
+            this.plex.confirm('El horario seleccionado no coincide con la planificación. Si continúa, los próximos eventos se modificarán. ¿Deséa registrarlo de todas formas?', 'Atención', 'Si', 'No').then(response => {
+                if (response) {
+                    createReq.subscribe(() => {
+                        this.plex.toast('success', 'Evento registrado correctamente');
+                        this.events.emit(true);
+                        this.editando = false;
+                    });
+                }
+            });
         }
+    }
+
+    agregarEvento() {
+        this.agregarEditarEvento = true;
+        if (this.evento) {
+            this.horaMin = this.evento[this.evento.length - 1].fecha;
+        }
+        this.fechaHora = null;
+        this.addEvent = true;
+        this.estado = null;
+        this.observaciones = '';
+    }
+
+    selectedEvent(event, i) {
+        this.indice = i;
+        this.eventSelected = event;
+    }
+
+    getTipoEstado(estado: string) {
+        switch (estado) {
+            case 'realizado':
+                return 'success';
+            case 'no-realizado':
+                return 'danger';
+            case 'incompleto':
+                return 'warning';
+        }
+    }
+
+    onVolver() {
+        this.agregarEditarEvento = false;
+        this.addEvent = false;
+        this.editando = false;
     }
 }

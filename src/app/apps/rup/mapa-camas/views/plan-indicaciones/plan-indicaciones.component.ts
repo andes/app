@@ -217,7 +217,8 @@ export class PlanIndicacionesComponent implements OnInit {
                 eventos.forEach(evento => {
                     eventosMap[evento.idIndicacion] = eventosMap[evento.idIndicacion] || {};
                     const hora = moment(evento.fecha).hour();
-                    eventosMap[evento.idIndicacion][hora] = evento;
+                    eventosMap[evento.idIndicacion][hora] = eventosMap[evento.idIndicacion][hora] || [];
+                    eventosMap[evento.idIndicacion][hora].push(evento);
                 });
 
                 this.eventos = eventosMap;
@@ -599,6 +600,28 @@ export class PlanIndicacionesComponent implements OnInit {
         this.indicacionView = null;
         this.indicacionEventoSelected = null;
         this.suspenderIndicacion = false;
+    }
+
+    getTipoIcono(estado: string): string {
+        switch (estado) {
+            case 'realizado':
+                return 'check-circle';
+            default:
+                return 'alert-circle';
+        }
+    }
+
+    getColorIcono(estado: string): string {
+        switch (estado) {
+            case 'realizado':
+                return 'success';
+            case 'incompleto':
+                return 'warning';
+            case 'no-realizado':
+                return 'danger';
+            default:
+                return 'info';
+        }
     }
 
 }
