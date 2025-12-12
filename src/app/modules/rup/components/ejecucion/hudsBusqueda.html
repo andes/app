@@ -32,16 +32,16 @@
                 tooltip="Buscar nuevos registros" [disabled]="disabledBtnCDA" (click)="regenerarCDA()">
             </plex-button>
         </div>
-
-        <suspender-medicacion *ngIf="filtroActual==='recetas' && seleccionRecetas.length > 0"
-            [seleccionRecetas]="seleccionSuspender" [motivoSelector]="motivoSuspensionSelector"
-            [motivosSuspension]="motivosSuspension" [profesional]="profesional" (reset)="resetSeleccionRecetas()">
-        </suspender-medicacion>
     </div>
-    <div class="grow" *ngIf="filtroActual === 'planes'">
-        <plex-options class="filtros-ambitos" (activated)='setAmbitoOrigen($event)' [items]="filtrosAmbitos">
+    <div class="grow d-flex w-100" *ngIf="filtroActual === 'planes' || filtroActual === 'recetas'">
+        <plex-options *ngIf="filtroActual === 'planes'" class="filtros-ambitos" (activated)='setAmbitoOrigen($event)'
+            [items]="filtrosAmbitos">
         </plex-options>
-        <div class="ml-1">
+        <div class="d-flex align-items-center justify-content-end">
+            <suspender-medicacion *ngIf="filtroActual==='recetas' && seleccionRecetas.length > 0"
+                [seleccionRecetas]="seleccionSuspender" [motivoSelector]="motivoSuspensionSelector"
+                [motivosSuspension]="motivosSuspension" [profesional]="profesional" (reset)="resetSeleccionRecetas()">
+            </suspender-medicacion>
             <plex-button type="info" size="sm" [icon]="showFiltros ? 'chevron-up' : 'chevron-down'"
                 [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" class="float-right" tooltipPosition="left"
                 (click)="toogleFiltros()">
@@ -68,6 +68,28 @@
 
     <!-- Vista Recetas -->
     <ng-container *ngIf="filtroActual === 'recetas'">
+        <ng-container *ngIf="showFiltros">
+            <div class="row">
+                <div class="col-12">
+                    <plex-select [(ngModel)]="tipoPrescripcionSeleccionado" label="Tipo de prescripción"
+                        [data]="tiposPrescripcion" idField="id" labelField="nombre" (change)="filtrarRecetas()"
+                        [readonly]="true">
+                    </plex-select>
+                </div>
+            </div>
+            <div class="row pb-2">
+                <div class="col-6">
+                    <plex-datetime type="date" [(ngModel)]="fechaInicioRecetas" (change)="filtrarRecetas()"
+                        name="fechaInicioRecetas" label="Fecha Desde" [debounce]="400">
+                    </plex-datetime>
+                </div>
+                <div class="col-6">
+                    <plex-datetime type="date" [(ngModel)]="fechaFinRecetas" (change)="filtrarRecetas()"
+                        name="fechaFinRecetas" label="Fecha Hasta" [debounce]="400">
+                    </plex-datetime>
+                </div>
+            </div>
+        </ng-container>
         <plex-text [(ngModel)]="searchRecetas" name="searchRecetas" (change)="filtrarRecetas()"
             placeholder="Buscar recetas..." [autoFocus]="true">
         </plex-text>
@@ -883,11 +905,11 @@
                 <ng-container *ngFor="let registro of derivaciones; let iDerivacion = index">
                     <li>
                         <div class="rup-card mini recc"
-                             [ngClass]="{'active': huds.isOpen(registro, 'recc'), 'recc': true}"
-                             (click)="clickDerivacion(registro, iDerivacion)">
+                            [ngClass]="{'active': huds.isOpen(registro, 'recc'), 'recc': true}"
+                            (click)="clickDerivacion(registro, iDerivacion)">
                             <div class="rup-header">
                                 <div class="rup-border rup-border-recc"
-                                     [ngClass]="{'active': huds.isOpen(registro, 'recc') , 'rup-border-recc': true}">
+                                    [ngClass]="{'active': huds.isOpen(registro, 'recc') , 'rup-border-recc': true}">
                                     <div class="row p-0 m-0 border-secondary border-left-0">
                                         <div class="col-10 p-0 m-0">
                                             <div class="row m-0 p-0">
@@ -908,12 +930,12 @@
                                                                 <br>
                                                                 <small>Profesional:
                                                                     <ng-container
-                                                                                  *ngIf='registro.profesionalSolicitante'>
+                                                                        *ngIf='registro.profesionalSolicitante'>
                                                                         {{ registro.profesionalSolicitante |
                                                                         nombre }}
                                                                     </ng-container>
                                                                     <ng-container
-                                                                                  *ngIf='!registro.profesionalSolicitante'>
+                                                                        *ngIf='!registro.profesionalSolicitante'>
                                                                         No existe
                                                                     </ng-container>
                                                                 </small>
@@ -934,7 +956,7 @@
                 <hr class="mt-0">
                 <div class="item-lista-vacia">
                     <plex-label size="sm" justify="center" icon="adi adi-mano-corazon"
-                                titulo="No hay derivaciones registradas">
+                        titulo="No hay derivaciones registradas">
                     </plex-label>
                 </div>
             </div>
