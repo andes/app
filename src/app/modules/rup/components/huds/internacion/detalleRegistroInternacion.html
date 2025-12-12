@@ -1,37 +1,36 @@
 <div *ngIf="ready$ | async">
-    <!-- Contenido original (prestaciones) -->
     <div *ngIf="tipo === 'planIndicaciones'">
         <plex-title titulo="Detalle de la Prestación" size="lg"></plex-title>
         <div class="d-flex">
             <plex-grid responsive colsMd="3" colsLg="3" type="full">
                 <plex-label class="prestacion-label" icon="paciente" size="md" case="capitalize"
-                    titulo="{{ paciente | nombre }}" subtitulo="{{ paciente |
+                            titulo="{{ paciente | nombre }}" subtitulo="{{ paciente |
                                 documento }}">
                 </plex-label>
                 <plex-label *ngIf="prestacion?.estadoActual" class="prestacion-label" icon="reloj" size="md"
-                    case="capitalize" titulo="Fecha De Validación"
-                    subtitulo="{{ prestacion.estadoActual.createdAt | date: 'EEE dd/MM/yyyy HH:mm' }}">
+                            case="capitalize" titulo="Fecha De Validación"
+                            subtitulo="{{ prestacion.estadoActual.createdAt | date: 'EEE dd/MM/yyyy HH:mm' }}">
                 </plex-label>
                 <plex-label *ngIf="prestacion?.estadoActual" class="prestacion-label" icon="hospital" case="capitalize"
-                    titulo="Organización que Valida"
-                    subtitulo="{{ prestacion.estadoActual.createdBy.organizacion.nombre}}">
+                            titulo="Organización que Valida"
+                            subtitulo="{{ prestacion.estadoActual.createdBy.organizacion.nombre}}">
                 </plex-label>
             </plex-grid>
         </div>
         <div class="d-flex">
             <plex-grid *ngIf="mostrarMas" responsive colsMd="3" colsLg="3" type="full">
                 <plex-label class="prestacion-label" icon="medico" size="md" case="capitalize"
-                    titulo="Profesional que inicia"
-                    subtitulo="{{  prestacion.solicitud.profesional | nombre }}"></plex-label>
+                            titulo="Profesional que inicia"
+                            subtitulo="{{  prestacion.solicitud.profesional | nombre }}"></plex-label>
                 <plex-label class="prestacion-label" icon="hospital" size="md" case="capitalize"
-                    titulo="Organización Ejecutante" subtitulo="{{ prestacion.solicitud.organizacion.nombre }}">
+                            titulo="Organización Ejecutante" subtitulo="{{ prestacion.solicitud.organizacion.nombre }}">
                 </plex-label>
                 <plex-label class="prestacion-label" icon="estetoscopio" size="md" case="capitalize" titulo="Ámbito"
-                    subtitulo="{{ prestacion.solicitud.ambitoOrigen }}"></plex-label>
+                            subtitulo="{{ prestacion.solicitud.ambitoOrigen }}"></plex-label>
             </plex-grid>
         </div>
         <plex-button type="info" size="md" [icon]="mostrarMas ? 'chevron-up' : 'chevron-down'" class="mt-2"
-            label="{{ mostrarMas ? 'Ocultar' : 'Mostrar más' }}" justify="center" (click)="mostrar()">
+                     label="{{ mostrarMas ? 'Ocultar' : 'Mostrar más' }}" justify="center" (click)="mostrar()">
         </plex-button>
 
         <listado-registros [registro]="registro" [indicaciones]="indicaciones"></listado-registros>
@@ -40,40 +39,6 @@
     <!-- Otras prestaciones de una internación -->
     <div *ngIf="tipo === 'registrosInternacion'">
         <plex-title titulo="Prestaciones de la Internación" size="lg"></plex-title>
-
-        <!-- PANEL DE DEBUG -->
-        <div class="debug-panel"
-            style="background-color: #fff3cd; border: 2px solid #ffc107; padding: 15px; margin: 10px 0; border-radius: 5px;">
-            <h4 style="color: #856404; margin-top: 0;">🐛 DEBUG INFO</h4>
-            <div style="font-family: monospace; font-size: 12px;">
-                <p><strong>Tipo:</strong> {{ tipo }}</p>
-                <p><strong>Total Registros:</strong> {{ registro?.length || 0 }}</p>
-                <p><strong>Total Paginación:</strong> {{ paginacion?.length || 0 }}</p>
-                <p><strong>Es Informe Estadístico:</strong> {{ informeEstadistico ? 'SÍ' : 'NO' }}</p>
-                <p><strong>Loading Informe:</strong> {{ loadingInforme ? 'SÍ' : 'NO' }}</p>
-                <p><strong>Página Actual:</strong> {{ pagina }} / {{ totalPaginas() }}</p>
-                <hr style="border-color: #ffc107;">
-                <details>
-                    <summary style="cursor: pointer; color: #856404; font-weight: bold;">Ver Registro Completo (JSON)
-                    </summary>
-                    <pre
-                        style="background: #f8f9fa; padding: 10px; overflow: auto; max-height: 300px;">{{ registro | json }}</pre>
-                </details>
-                <details>
-                    <summary style="cursor: pointer; color: #856404; font-weight: bold;">Ver Paginación (JSON)</summary>
-                    <pre
-                        style="background: #f8f9fa; padding: 10px; overflow: auto; max-height: 300px;">{{ paginacion | json }}</pre>
-                </details>
-                <details *ngIf="informeEstadistico">
-                    <summary style="cursor: pointer; color: #856404; font-weight: bold;">Ver Informe Estadístico (JSON)
-                    </summary>
-                    <pre
-                        style="background: #f8f9fa; padding: 10px; overflow: auto; max-height: 300px;">{{ informeEstadistico | json }}</pre>
-                </details>
-            </div>
-        </div>
-        <!-- FIN PANEL DE DEBUG -->
-
         <div class="paginacion mt-2">
             <div class="controles">
                 <span class="mr-2">{{ registro.length }} resultados, página {{ pagina < 1 ? '1' : pagina> totalPaginas()
@@ -81,19 +46,19 @@
                         totalPaginas() : pagina }} de {{ totalPaginas() }}</span>
 
                 <select [(ngModel)]="selectorSizePagina" (change)="setTotalPaginas(selectorSizePagina)"
-                    class="selector-maximo">
+                        class="selector-maximo">
                     <option *ngFor="let size of maxSizePaginas" [value]="size">{{ size }}</option>
                 </select>
                 <plex-button type="link" size="medium" (click)="primera()" [disabled]="!hayAnterior()"
-                    icon="chevron-double-left"></plex-button>
+                             icon="chevron-double-left"></plex-button>
                 <plex-button type="link" size="medium" (click)="anterior()" [disabled]="!hayAnterior()"
-                    icon="pico-izquierda"></plex-button>
+                             icon="pico-izquierda"></plex-button>
                 <plex-text [(ngModel)]="pagina" (input)="setNumeroPagina(pagina)"
-                    class="selector-pagina {{ paginaInvalida ? 'has-danger' : '' }}"></plex-text>
+                           class="selector-pagina {{ paginaInvalida ? 'has-danger' : '' }}"></plex-text>
                 <plex-button type="link" size="medium" (click)="siguiente()" [disabled]="!haySiguiente()"
-                    icon="pico-derecha"></plex-button>
+                             icon="pico-derecha"></plex-button>
                 <plex-button type="link" size="medium" (click)="ultima()" [disabled]="!haySiguiente()"
-                    icon="chevron-double-right"></plex-button>
+                             icon="chevron-double-right"></plex-button>
             </div>
             <div *ngIf="paginaInvalida" class="error">
                 El número de página no puede ser mayor que {{ totalPaginas() }}
@@ -111,19 +76,19 @@
                         totalPaginas() : pagina }} de {{ totalPaginas() }}</span>
 
                 <select [(ngModel)]="selectorSizePagina" (change)="setTotalPaginas(selectorSizePagina)"
-                    class="selector-maximo">
+                        class="selector-maximo">
                     <option *ngFor="let size of maxSizePaginas" [value]="size">{{ size }}</option>
                 </select>
                 <plex-button type="link" size="medium" (click)="primera()" [disabled]="!hayAnterior()"
-                    icon="chevron-double-left"></plex-button>
+                             icon="chevron-double-left"></plex-button>
                 <plex-button type="link" size="medium" (click)="anterior()" [disabled]="!hayAnterior()"
-                    icon="pico-izquierda"></plex-button>
+                             icon="pico-izquierda"></plex-button>
                 <plex-text [(ngModel)]="pagina" (input)="setNumeroPagina(pagina)"
-                    class="selector-pagina {{ paginaInvalida ? 'has-danger' : '' }}"></plex-text>
+                           class="selector-pagina {{ paginaInvalida ? 'has-danger' : '' }}"></plex-text>
                 <plex-button type="link" size="medium" (click)="siguiente()" [disabled]="!haySiguiente()"
-                    icon="pico-derecha"></plex-button>
+                             icon="pico-derecha"></plex-button>
                 <plex-button type="link" size="medium" (click)="ultima()" [disabled]="!haySiguiente()"
-                    icon="chevron-double-right"></plex-button>
+                             icon="chevron-double-right"></plex-button>
             </div>
             <div *ngIf="paginaInvalida" class="error">
                 El número de página no puede ser mayor que {{ totalPaginas() }}
@@ -131,172 +96,97 @@
         </div>
     </div>
 
-    <!-- Prestaciones (incluye informes estadísticos) -->
     <div *ngIf="tipo === 'fueraDeInternacion' || tipo === 'registrosInternacion'">
         <div *ngFor="let prestacion of paginacion; let iPrestacion = index">
             <div class="lista-prestacion mt-2">
-                <plex-title titulo="{{prestacion.prestacion.term}}" size="md">
-                    <plex-button *ngIf="puedeDescargarInforme && !prestacion.esInformeEstadistico" type="info" size="sm"
-                        icon="download" tooltip="Descargar PDF" [disabled]="requestInProgress"
-                        (click)="descargarInforme(prestacion.data)">
+                <plex-title titulo="{{prestacion?.prestacion?.term}}" size="md">
+                    <plex-button *ngIf="puedeDescargarInforme" type="info" size="sm" icon="download"
+                                 tooltip="Descargar PDF" [disabled]="requestInProgress"
+                                 (click)="descargarInforme(prestacion.data)">
                     </plex-button>
                 </plex-title>
                 <div class="mt-1">
                     <div class="collapse-wrapper" (click)="colapsar(iPrestacion)">
                         <plex-label class="prestacion-label" size="md" case="capitalize" titulo="Fecha De Validación"
-                            subtitulo="{{ prestacion.data.estadoActual.createdAt | date: 'EEE dd/MM/yyyy HH:mm' }}">
+                                    subtitulo="{{ prestacion.data.estadoActual.createdAt | date: 'EEE dd/MM/yyyy HH:mm' }}">
                         </plex-label>
-                        <div class="prestacion-info" *ngIf="!prestacion.esInformeEstadistico">
+                        <div class="prestacion-info">
                             <plex-label class="prestacion-label" size="md" case="capitalize"
-                                titulo="Profesional que valida"
-                                subtitulo="{{ prestacion.data.solicitud.profesional | nombre }}">
+                                        titulo="Profesional que valida"
+                                        subtitulo="{{ prestacion.data.solicitud.profesional | nombre }}">
                             </plex-label>
                             <plex-label *ngIf="tipo === 'registrosInternacion'" class="prestacion-label" size="md"
-                                case="capitalize" titulo="Unidad organizativa"
-                                subtitulo="{{ prestacion.data.unidadOrganizativa?.term || 'Sin unidad organizativa' }}">
-                            </plex-label>
-                        </div>
-                        <div class="prestacion-info" *ngIf="prestacion.esInformeEstadistico">
-                            <plex-label class="prestacion-label" size="md" case="capitalize"
-                                titulo="Profesional que valida"
-                                subtitulo="{{ prestacion.data.estadoActual.createdBy?.nombreCompleto || 'N/A' }}">
+                                        case="capitalize" titulo="Unidad organizativa"
+                                        subtitulo="{{ prestacion.data.unidadOrganizativa?.term || 'Sin unidad organizativa' }}">
                             </plex-label>
                         </div>
                         <plex-button class="collapse-button" type="primary" size="sm"
-                            icon="{{ colapsable.includes(iPrestacion) ? 'chevron-up' : 'chevron-down'}}">
+                                     icon="{{ colapsable.includes(iPrestacion) ? 'chevron-up' : 'chevron-down'}}">
                         </plex-button>
                     </div>
 
-                    <!-- Contenido expandido para prestaciones normales -->
-                    <div *ngIf="colapsable.includes(iPrestacion) && !prestacion.esInformeEstadistico"
-                        class="collapse-content">
-                        <ng-container *ngFor="let elemento of prestacion.data.ejecucion.registros; let i = index">
-                            <div class="rup-card {{ elemento | semanticClass }}">
-                                <div class="rup-header">
-                                    <div class="icon-rup">
-                                        <i class="adi {{ elemento | semanticIcon }}"></i>
-                                    </div>
-                                    <div class="title">
-                                        <ng-container *ngIf="elemento?.nombre">
-                                            {{ elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1) }}
-                                        </ng-container>
-                                        <div class="float-left"
-                                            *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 1">
-                                            <b class="clearfix">Relacionado con:</b>
-                                            <ng-container *ngFor="let relacionado of elemento?.relacionadoCon">
-                                                <plex-badge size="sm" type="info mr-1">
-                                                    {{ relacionado | relacionRUP }}
-                                                </plex-badge>
+                    <div *ngIf="colapsable.includes(iPrestacion)" class="collapse-content">
+                        <div *ngIf="prestacion.data._esInformeEstadistico">
+                            <vista-informe-estadistico [informe]="prestacion.data._informeEstadistico">
+                            </vista-informe-estadistico>
+                        </div>
+
+                        <ng-container *ngIf="!prestacion.data._esInformeEstadistico">
+                            <ng-container *ngFor="let elemento of prestacion.data.ejecucion.registros; let i = index">
+                                <div class="rup-card {{ elemento | semanticClass }}">
+                                    <div class="rup-header">
+                                        <div class="icon-rup">
+                                            <i class="adi {{ elemento | semanticIcon }}"></i>
+                                        </div>
+                                        <div class="title">
+                                            <ng-container *ngIf="elemento?.nombre">
+                                                {{ elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1) }}
                                             </ng-container>
+                                            <div class="float-left"
+                                                 *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 1">
+                                                <b class="clearfix">Relacionado con:</b>
+                                                <ng-container *ngFor="let relacionado of elemento?.relacionadoCon">
+                                                    <plex-badge size="sm" type="info mr-1">
+                                                        {{ relacionado | relacionRUP }}
+                                                    </plex-badge>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                        <div class="actions">
+                                            <plex-badge *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length === 1"
+                                                        size="sm" type="info">
+                                                <b> Relacionado con: </b>
+                                                {{ elemento.relacionadoCon[0].concepto?.term[0].toUpperCase() +
+                                                elemento.relacionadoCon[0].concepto?.term.slice(1)}}
+                                            </plex-badge>
+                                            <plex-badge size="sm" type="info" *ngIf="elemento.esDiagnosticoPrincipal">
+                                                Procedimiento / diagnóstico principal
+                                            </plex-badge>
                                         </div>
                                     </div>
-                                    <div class="actions">
-                                        <plex-badge
-                                            *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length === 1"
-                                            size="sm" type="info">
-                                            <b> Relacionado con: </b>
-                                            {{ elemento.relacionadoCon[0].concepto?.term[0].toUpperCase() +
-                                            elemento.relacionadoCon[0].concepto?.term.slice(1)}}
-                                        </plex-badge>
-                                        <plex-badge size="sm" type="info" *ngIf="elemento.esDiagnosticoPrincipal">
-                                            Procedimiento / diagnóstico principal
-                                        </plex-badge>
-                                    </div>
-                                </div>
-                                <div class="rup-body">
-                                    <div class="legend">
-                                        <span>
-                                            {{ (elemento.esSolicitud) ? 'solicitud' :
-                                            elemento.concepto.semanticTag}}
-                                        </span>
-                                    </div>
-                                    <div class="content">
-                                        <div class="row" *ngIf="prestacion.data.paciente">
-                                            <div class="col-12">
-                                                <rup [elementoRUP]="elementosRUPService.elementoRegistro(elemento)"
-                                                    [params]="elementosRUPService.getParams(elemento)"
-                                                    [prestacion]="prestacion.data" [registro]="elemento"
-                                                    [paciente]="prestacion.data.paciente" [soloValores]="true"
-                                                    [vistaHUDS]="false">
-                                                </rup>
+                                    <div class="rup-body">
+                                        <div class="legend">
+                                            <span>
+                                                {{ (elemento.esSolicitud) ? 'solicitud' :
+                                                elemento.concepto.semanticTag}}
+                                            </span>
+                                        </div>
+                                        <div class="content">
+                                            <div class="row" *ngIf="prestacion.data.paciente">
+                                                <div class="col-12">
+                                                    <rup [elementoRUP]="elementosRUPService.elementoRegistro(elemento)"
+                                                         [params]="elementosRUPService.getParams(elemento)"
+                                                         [prestacion]="prestacion.data" [registro]="elemento"
+                                                         [paciente]="prestacion.data.paciente" [soloValores]="true"
+                                                         [vistaHUDS]="false">
+                                                    </rup>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </ng-container>
                         </ng-container>
-                    </div>
-
-                    <!-- Contenido expandido para informe estadístico -->
-                    <div *ngIf="colapsable.includes(iPrestacion) && prestacion.esInformeEstadistico"
-                        class="collapse-content">
-                        <!-- Documento De Solicitud De Admisión -->
-                        <div class="documento-admision mb-3 p-3"
-                            style="background-color: #e8f5e9; border-left: 4px solid #4caf50;">
-                            <plex-badge type="success" class="mb-2">
-                                <plex-icon name="hospital" size="sm"></plex-icon>
-                                Documento De Solicitud De Admisión
-                            </plex-badge>
-
-                            <plex-grid responsive colsMd="3" colsLg="3" type="full">
-                                <plex-label icon="reloj" size="sm" titulo="Fecha Ingreso"
-                                    subtitulo="{{ prestacion.informe.informeIngreso?.fechaIngreso | date: 'dd/MM/yyyy HH:mm' }}">
-                                </plex-label>
-                                <plex-label icon="hospital" size="sm" titulo="Origen hospitalización"
-                                    subtitulo="{{ prestacion.informe.informeIngreso?.origen?.nombre || 'N/A' }}">
-                                </plex-label>
-                                <plex-label icon="motivo" size="sm" titulo="Motivo de ingreso"
-                                    subtitulo="{{ prestacion.informe.informeIngreso?.motivo || 'N/A' }}">
-                                </plex-label>
-                            </plex-grid>
-
-                            <plex-grid responsive colsMd="3" colsLg="3" type="full" class="mt-2">
-                                <plex-label *ngIf="prestacion.informe.informeIngreso?.obraSocial" icon="obra-social"
-                                    size="sm" titulo="Obra social"
-                                    subtitulo="{{ prestacion.informe.informeIngreso.obraSocial.nombre }}">
-                                </plex-label>
-                                <plex-label *ngIf="prestacion.informe.informeIngreso?.asociadoA" icon="link" size="sm"
-                                    titulo="Asociado a"
-                                    subtitulo="{{ prestacion.informe.informeIngreso.asociadoA.nombre }}">
-                                </plex-label>
-                            </plex-grid>
-                        </div>
-
-                        <!-- Alta Del Paciente -->
-                        <div *ngIf="prestacion.informe.informeEgreso" class="documento-alta p-3"
-                            style="background-color: #ffebee; border-left: 4px solid #f44336;">
-                            <plex-badge type="danger" class="mb-2">
-                                <plex-icon name="salida" size="sm"></plex-icon>
-                                Alta Del Paciente
-                            </plex-badge>
-
-                            <plex-grid responsive colsMd="3" colsLg="3" type="full">
-                                <plex-label icon="reloj" size="sm" titulo="Fecha de egreso"
-                                    subtitulo="{{ prestacion.informe.informeEgreso.fechaEgreso | date: 'dd/MM/yyyy HH:mm' }}">
-                                </plex-label>
-                                <plex-label icon="calendario" size="sm" titulo="Días de estadía"
-                                    subtitulo="{{ prestacion.informe.diasEstada || 'N/A' }}">
-                                </plex-label>
-                                <plex-label icon="tipo-egreso" size="sm" titulo="Tipo de egreso"
-                                    subtitulo="{{ prestacion.informe.informeEgreso.tipoEgreso?.nombre || 'N/A' }}">
-                                </plex-label>
-                            </plex-grid>
-
-                            <!-- Diagnósticos -->
-                            <div *ngIf="prestacion.informe.informeEgreso.diagnosticoPrincipal" class="mt-3">
-                                <strong>Diagnóstico Principal al egreso:</strong>
-                                <p class="ml-3">{{ prestacion.informe.informeEgreso.diagnosticoPrincipal.term }}</p>
-                            </div>
-
-                            <div *ngIf="prestacion.informe.informeEgreso.otrosDiagnosticos?.length > 0" class="mt-2">
-                                <strong>Otros diagnósticos:</strong>
-                                <ul class="ml-3">
-                                    <li *ngFor="let diagnostico of prestacion.informe.informeEgreso.otrosDiagnosticos">
-                                        {{ diagnostico.term }}
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
