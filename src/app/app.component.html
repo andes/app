@@ -19,7 +19,7 @@
             </div>
         </plex-detail>
         <div *ngIf="profesional?.formacionGrado?.length">
-            <plex-title titulo="Matrículas" size="sm"></plex-title>
+            <plex-title titulo="Matrículas de grado" size="sm"></plex-title>
             <plex-table [columns]="columns" #table="plTable">
                 <tr *ngFor="let item of profesional.formacionGrado">
                     <td>
@@ -38,6 +38,37 @@
                     </td>
                     <td>
                         <plex-badge *ngIf="item.estado" type="{{item.estado.tipo}}"> {{item.estado.nombre}}</plex-badge>
+                    </td>
+                </tr>
+            </plex-table>
+        </div>
+        <div *ngIf="profesional?.formacionPosgrado?.length">
+            <plex-title titulo="Matrículas de posgrado" size="sm"></plex-title>
+            <plex-table [columns]="columnsPosgrado" #table="plTable">
+                <tr *ngFor="let item of profesional.formacionPosgrado">
+                    <td>
+                        <plex-label *ngIf="item.especialidad" [titulo]="item.especialidad.nombre"></plex-label>
+                    </td>
+                    <td>
+                        <plex-label *ngIf="item.matriculacion"
+                                    [titulo]="item.matriculacion[item.matriculacion?.length-1]?.matriculaNumero">
+                        </plex-label>
+                        <plex-badge *ngIf="!item.matriculacion" type="danger">NO POSEE MATRICULA</plex-badge>
+                    </td>
+                    <td>
+                        <plex-badge *ngIf="item.fechasDeAltas?.length" type="info" size="sm">
+                            {{ vencimientoAlta(item.fechasDeAltas[item.fechasDeAltas?.length-1]?.fecha) | date:
+                            'dd/MM/yyyy' }}
+                        </plex-badge>
+                    </td>
+                    <td>
+                        <plex-badge *ngIf="item.matriculacion?.length" type="info" size="sm">{{
+                            item.matriculacion[item.matriculacion.length-1].fin | date:
+                            'dd/MM/yyyy'}}</plex-badge>
+                    </td>
+                    <td>
+                        <plex-badge *ngIf="esVigente(item)" type="success">VIGENTE</plex-badge>
+                        <plex-badge *ngIf="!esVigente(item)" type="danger">VENCIDA</plex-badge>
                     </td>
                 </tr>
             </plex-table>
