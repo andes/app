@@ -152,6 +152,12 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         this.router.navigate(['huds', 'timeline', this.paciente.id]);
     }
 
+    detalleRegistro(registro) {
+        return registro.data.class === 'situación' ||
+            registro.data.class === 'hallazgo' ||
+            registro.data.class === 'trastorno';
+    }
+
     prestacionVisible(registro) {
         return registro.data.class === 'plan' ||
             registro.data.class === 'regimen' ||
