@@ -874,6 +874,9 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                         });
                     });
                 }
+                if (this.prestacionesCopia && this.prestacionesCopia.length) {
+                    totalPrestaciones += this.prestacionesCopia.length;
+                }
                 return totalPrestaciones;
             case 'producto':
                 return this.registrosTotalesCopia.producto.length;
@@ -1002,7 +1005,9 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                         valor: {
                             informeIngreso: {
                                 ...informe.informeIngreso,
-                                origen: origenString
+                                origen: origenString,
+                                situacionLaboral: informe.informeIngreso?.situacionLaboral?.nombre || '',
+                                nivelInstruccion: informe.informeIngreso?.nivelInstruccion?.nombre || ''
                             }
                         }
                     });
@@ -1059,7 +1064,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 });
 
 
-                // Agregar las prestaciones RUP al objeto registrosFormateados
                 prestacionesPorInternacion.forEach(prestacion => {
                     registrosFormateados[prestacion.data.id] = {
                         prestacion: prestacion.prestacion,
@@ -1131,13 +1135,18 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
             const internacionBase = internaciones[i];
 
-            let otrasCombinadas: any = {};
+            const otrasCombinadas: any = {};
+
+            const registrosFinales = [];
+            let otrasAcumuladas = {};
 
             internacionBase.registros.forEach((registro: any) => {
                 if (registro.otras) {
-                    otrasCombinadas = { ...otrasCombinadas, ...registro.otras };
+                    otrasAcumuladas = { ...otrasAcumuladas, ...registro.otras };
+                } else if (this.planIndicaciones.includes(registro.conceptId)) {
+                    registrosFinales.push(registro);
                 } else {
-                    otrasCombinadas = { ...otrasCombinadas, ...registro };
+                    otrasAcumuladas = { ...otrasAcumuladas, ...registro };
                 }
             });
 
@@ -1155,9 +1164,11 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
                     otraInternacion.registros.forEach((registro: any) => {
                         if (registro.otras) {
-                            otrasCombinadas = { ...otrasCombinadas, ...registro.otras };
+                            otrasAcumuladas = { ...otrasAcumuladas, ...registro.otras };
+                        } else if (this.planIndicaciones.includes(registro.conceptId)) {
+                            registrosFinales.push(registro);
                         } else {
-                            otrasCombinadas = { ...otrasCombinadas, ...registro };
+                            otrasAcumuladas = { ...otrasAcumuladas, ...registro };
                         }
                     });
 
@@ -1165,11 +1176,13 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 }
             }
 
+            if (Object.keys(otrasAcumuladas).length > 0) {
+                registrosFinales.push({ otras: otrasAcumuladas });
+            }
+
             internacionesCombinadas.push({
                 ...internacionBase,
-                registros: [{
-                    otras: otrasCombinadas
-                }]
+                registros: registrosFinales
             });
         }
 
