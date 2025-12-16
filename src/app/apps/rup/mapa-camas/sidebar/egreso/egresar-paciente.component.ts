@@ -1,4 +1,3 @@
-
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { cache } from '@andes/shared';
@@ -190,13 +189,13 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     const desde = moment(fechaIngreso).subtract(12, 'hours').toDate();
                     const hasta = moment(fechaIngreso).add(12, 'hours').toDate();
                     return combineLatest([
+
                         this.camasHTTP.historialInternacion(
                             'internacion',
                             capa,
-                            this.informeIngreso.fechaIngreso,
+                            fechaIngreso,
                             moment().toDate(),
                             informe.id
-                            // prestacion.id
                         ),
                         this.internacionResumenService.search({
                             organizacion: this.auth.organizacion.id,
@@ -486,89 +485,37 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             return of(null);
         }
 
-        if (this.informe) {
-            const informeEgresoNormalizado = JSON.parse(JSON.stringify(this.informe.informeEgreso));
-            const tipoEgreso = informeEgresoNormalizado?.tipoEgreso;
+        const informeId = this.informe._id || this.informe.id;
+        const body = { informeEgreso: this.registro.valor.InformeEgreso };
 
-            if (tipoEgreso && tipoEgreso.tipo && typeof tipoEgreso.tipo === 'object') {
-                const tipo: any = tipoEgreso.tipo;
-                informeEgresoNormalizado.tipoEgreso.tipo = tipo.id ?? null;
-            }
+        return this.informeEstadisticaService.patchRegistros(informeId, body).pipe(
+            switchMap(informes => {
 
-            if (informeEgresoNormalizado.tipoEgreso?.OrganizacionDestino &&
-                typeof informeEgresoNormalizado.tipoEgreso.OrganizacionDestino === 'object') {
+                if (this.view === 'listado-internacion' || this.capa === 'estadistica') {
+                    this.mapaCamasService.selectInformeEstadistica(informes);
+                }
 
-                const org = informeEgresoNormalizado.tipoEgreso.OrganizacionDestino;
-                informeEgresoNormalizado.tipoEgreso.OrganizacionDestino = {
-                    id: org.id || null,
-                    nombre: org.nombre || null
-                };
-            }
+                if (this.capa === 'estadistica-v2' && this.resumen?.fechaEgreso) {
+                    const idInternacion = this.resumen.id;
+                    this.internacionResumenService.update(idInternacion, {
+                        tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso?.id,
+                        fechaEgreso: this.registro.valor.InformeEgreso.fechaEgreso
+                    }).subscribe();
+                }
 
-            const body = {
-                registros,
-                informeEgreso: informeEgresoNormalizado
-            };
+                return this.egresoSimplificado(this.estadoDestino);
+            }),
 
-            return this.informeEstadisticaService.patchRegistros(
-                this.informe._id || this.informe.id,
-                body
-            ).pipe(
-                switchMap(informes => {
-                    if (this.view === 'listado-internacion' || this.capa === 'estadistica') {
-                        this.mapaCamasService.selectInformeEstadistica(informes);
-                    }
-
-                    if (this.capa === 'estadistica-v2' && this.resumen?.fechaEgreso) {
-                        const idInternacion = this.view === 'listado-internacion'
-                            ? this.resumen.id
-                            : this.cama.idInternacion;
-                        return this.internacionResumenService.update(idInternacion, {
-                            tipo_egreso: informeEgresoNormalizado.tipoEgreso.id,
-                            fechaEgreso: informeEgresoNormalizado.fechaEgreso
-                        });
-                    } else {
-                        return this.egresoSimplificado(this.estadoDestino);
-                    }
-                }),
-                catchError(error => {
-                    this.plex.info(
-                        'warning',
-                        `${error} ${moment(this.registro.valor.InformeEgreso.fechaEgreso).format('YYYY-MM-DD HH:mm:ss').bold()}`,
-                        'Error'
-                    );
-                    return of(null);
-                })
-            );
-        } else if (this.prestacion) {
-            const params: any = {
-                op: 'registros',
-                registros: registros
-            };
-            return this.servicioPrestacion.patch(this.prestacion.id, params).pipe(
-                switchMap(prestacion => {
-                    if (this.view === 'listado-internacion' || this.capa === 'estadistica') {
-                        this.mapaCamasService.selectPrestacion(prestacion);
-                    }
-                    if (this.capa === 'estadistica-v2' && this.resumen?.fechaEgreso) {
-                        const idInternacion = this.view === 'listado-internacion' ? this.resumen.id : this.cama.idInternacion;
-                        return this.internacionResumenService.update(idInternacion, {
-                            tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id,
-                            fechaEgreso: this.registro.valor.InformeEgreso.fechaEgreso
-                        });
-                    } else {
-                        return this.egresoSimplificado(this.estadoDestino);
-                    }
-                }),
-                catchError(error => {
-                    this.plex.info('warning', `${error} ${moment(registros[0].valor.informeIngreso.fechaIngreso).format('YYYY-MM-DD HH:mm:ss').bold()}`, 'Error');
-                    return of(null);
-                })
-            );
-        }
-        return of(null);
+            catchError(error => {
+                this.plex.info(
+                    'warning',
+                    `${error} ${moment(this.registro.valor.InformeEgreso.fechaEgreso).format('YYYY-MM-DD HH:mm:ss').bold()}`,
+                    'Error'
+                );
+                return of(null);
+            })
+        );
     }
-
     controlRegistrosGuardar() {
         const egreso = this.registro.valor.InformeEgreso;
 
