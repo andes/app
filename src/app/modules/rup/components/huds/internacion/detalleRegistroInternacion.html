@@ -108,12 +108,12 @@
                 <div class="mt-1">
                     <div class="collapse-wrapper" (click)="colapsar(iPrestacion)">
                         <plex-label class="prestacion-label" size="md" case="capitalize" titulo="Fecha De Validación"
-                                    subtitulo="{{ prestacion.data.estadoActual.createdAt | date: 'EEE dd/MM/yyyy HH:mm' }}">
+                                    subtitulo="{{ prestacion.data?.estadoActual?.createdAt | date: 'EEE dd/MM/yyyy HH:mm' }}">
                         </plex-label>
                         <div class="prestacion-info">
                             <plex-label class="prestacion-label" size="md" case="capitalize"
                                         titulo="Profesional que valida"
-                                        subtitulo="{{ prestacion.data.solicitud.profesional | nombre }}">
+                                        subtitulo="{{ prestacion.data?.solicitud?.profesional | nombre }}">
                             </plex-label>
                             <plex-label class="prestacion-label" size="md" case="capitalize" titulo="Organización"
                                         subtitulo="{{ prestacion.data.solicitud?.organizacion?.nombre || prestacion.data.ejecucion?.organizacion?.nombre || 'Sin organización' }}">
@@ -121,13 +121,13 @@
 
                             <plex-label *ngIf="prestacion.data.unidadOrganizativa" class="prestacion-label" size="md"
                                         case="capitalize" titulo="Unidad organizativa"
-                                        subtitulo="{{ prestacion.data.unidadOrganizativa.term }}">
+                                        subtitulo="{{ prestacion.data?.unidadOrganizativa?.term || 'Sin unidad organizativa' }}">
                             </plex-label>
                         </div>
                         <div class="prestacion-info" *ngIf="prestacion.esInformeEstadistico">
                             <plex-label class="prestacion-label" size="md" case="capitalize"
                                 titulo="Profesional que valida"
-                                subtitulo="{{ prestacion.data.estadoActual.createdBy?.nombreCompleto || 'N/A' }}">
+                                subtitulo="{{ prestacion.data?.estadoActual?.createdBy?.nombreCompleto || 'N/A' }}">
                             </plex-label>
                         </div>
                         <plex-button class="collapse-button" type="primary" size="sm"
@@ -136,13 +136,13 @@
                     </div>
 
                     <div *ngIf="colapsable.includes(iPrestacion)" class="collapse-content">
-                        <div *ngIf="prestacion.data._esInformeEstadistico">
-                            <vista-informe-estadistico [informe]="prestacion.data._informeEstadistico">
+                        <div *ngIf="prestacion.data?._esInformeEstadistico">
+                            <vista-informe-estadistico [informe]="prestacion.data?._informeEstadistico">
                             </vista-informe-estadistico>
                         </div>
 
-                        <ng-container *ngIf="!prestacion.data._esInformeEstadistico">
-                            <ng-container *ngFor="let elemento of prestacion.data.ejecucion.registros; let i = index">
+                        <ng-container *ngIf="!prestacion.data?._esInformeEstadistico">
+                            <ng-container *ngFor="let elemento of prestacion.data?.ejecucion?.registros; let i = index">
                                 <div class="rup-card {{ elemento | semanticClass }}">
                                     <div class="rup-header">
                                         <div class="icon-rup">
@@ -182,12 +182,12 @@
                                             </span>
                                         </div>
                                         <div class="content">
-                                            <div class="row" *ngIf="prestacion.data.paciente">
+                                            <div class="row" *ngIf="prestacion.data?.paciente">
                                                 <div class="col-12">
                                                     <rup [elementoRUP]="elementosRUPService.elementoRegistro(elemento)"
                                                          [params]="elementosRUPService.getParams(elemento)"
                                                          [prestacion]="prestacion.data" [registro]="elemento"
-                                                         [paciente]="prestacion.data.paciente" [soloValores]="true"
+                                                         [paciente]="prestacion.data?.paciente" [soloValores]="true"
                                                          [vistaHUDS]="false">
                                                     </rup>
                                                 </div>
