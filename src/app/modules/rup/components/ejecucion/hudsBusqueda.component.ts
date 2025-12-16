@@ -925,6 +925,9 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                         });
                     });
                 }
+                if (this.prestacionesCopia && this.prestacionesCopia.length) {
+                    totalPrestaciones += this.prestacionesCopia.length;
+                }
                 return totalPrestaciones;
             }
             case 'producto':

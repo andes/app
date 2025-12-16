@@ -103,10 +103,12 @@ export class DetalleRegistroInternacionComponent implements OnInit {
         });
     }
 
+
+
     descargarInforme(prestacion) {
         this.requestInProgress = true;
-        const term = prestacion.solicitud.tipoPrestacion.term;
-        const informe = { idPrestacion: prestacion.id };
+        const term = prestacion.solicitud?.tipoPrestacion?.term || 'Internacion';
+        const informe = { idPrestacion: prestacion._id || prestacion.id };
 
         this.servicioDocumentos.descargarInformeRUP(informe, term).subscribe({
             complete: () => this.requestInProgress = false,
@@ -154,7 +156,6 @@ export class DetalleRegistroInternacionComponent implements OnInit {
         const startIndex = (this.pagina - 1) * this.sizePagina;
         const endIndex = startIndex + this.sizePagina;
         this.paginacion = this.registro.slice(startIndex, endIndex);
-
     }
 
     primera() {

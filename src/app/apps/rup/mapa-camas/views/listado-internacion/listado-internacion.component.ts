@@ -191,6 +191,16 @@ export class InternacionListadoComponent implements OnInit {
         });
     }
 
+    cancelar() {
+        this.mapaCamasService.selectPrestacion(null);
+        this.mapaCamasService.selectInformeEstadistica(null);
+        this.mostrar = 'datosInternacion';
+    }
+
+    cambiarCama() {
+        this.mostrar = 'desocuparCama';
+    }
+
     verificarPrestacion(informe: IInformeEstadistica) {
         this.puedeValidar = false;
         this.puedeRomper = false;
@@ -302,6 +312,11 @@ export class InternacionListadoComponent implements OnInit {
     volver() {
         this.mapaCamasService.selectInformeEstadistica(null);
         this.location.back();
+    }
+
+    accionDesocupar(accion) {
+        this.mostrar = 'cambiarCama';
+        this.cambiarUO = accion.cambiarUO;
     }
 
     onAccion($event) {
