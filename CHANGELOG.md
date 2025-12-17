@@ -1,3 +1,15 @@
+# [5.170.0](https://github.com/andes/app/compare/v5.169.2...v5.170.0) (2025-12-17)
+
+
+### Bug Fixes
+
+* **MPI:** Corregir formato de fecha de nacimiento al cargar pacientes ([#3260](https://github.com/andes/app/issues/3260)) ([3e33d10](https://github.com/andes/app/commit/3e33d10f268ff08686471456c99f7f78527acacf))
+
+
+### Features
+
+* **IN-647:** "Plan de indicaciones" ([#3241](https://github.com/andes/app/issues/3241)) ([77543df](https://github.com/andes/app/commit/77543dfa2edaec061ada19ce765fc2730b171b7e))
+
 ## [5.169.2](https://github.com/andes/app/compare/v5.169.1...v5.169.2) (2025-12-10)
 
 
