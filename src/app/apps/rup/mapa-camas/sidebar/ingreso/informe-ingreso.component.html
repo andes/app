@@ -12,11 +12,11 @@
     <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal" [fields]="pacienteFields"
                       [accesoHuds]="true">
         <plex-label *ngIf="informeIngreso.situacionLaboral" titulo="Situación laboral"
-                    [subtitulo]="informeIngreso.situacionLaboral">
+                    [subtitulo]="informeIngreso.situacionLaboral?.nombre || informeIngreso.situacionLaboral">
         </plex-label>
 
         <plex-label *ngIf="informeIngreso.nivelInstruccion" titulo="Nivel de instrucción"
-                    [subtitulo]="informeIngreso.nivelInstruccion">
+                    [subtitulo]="informeIngreso.nivelInstruccion?.nombre || informeIngreso.nivelInstruccion">
         </plex-label>
 <plex-label
     *ngIf="informeIngreso?.ocupacionHabitual"
@@ -76,7 +76,7 @@
 
         <div class="row">
             <div class="col-6">
-                <plex-label titulo="Cobertura" [subtitulo]="informeIngreso.cobertura?.tipo || informeIngreso.asociado">
+                <plex-label titulo="Cobertura" [subtitulo]="informeIngreso.cobertura?.tipo || informeIngreso.asociado?.nombre || informeIngreso.asociado">
                 </plex-label>
             </div>
             <div class="col-6">
