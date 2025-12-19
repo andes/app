@@ -1039,6 +1039,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         };
     }
 
+    // modificaciones para el pdf y huds
 
     filtrarPorInternacion(prestaciones) {
         const prestacionesEnInternacion = [];
