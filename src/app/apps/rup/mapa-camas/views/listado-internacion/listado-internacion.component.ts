@@ -13,7 +13,6 @@ import { IngresoPacienteService } from '../../sidebar/ingreso/ingreso-paciente-w
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 import { InformeEstadisticaService } from 'src/app/modules/rup/services/informe-estadistica.service';
 import { IInformeEstadistica } from 'src/app/modules/rup/interfaces/informe-estadistica.interface';
-import { debug } from 'console';
 
 @Component({
     selector: 'app-internacion-listado',
@@ -147,15 +146,7 @@ export class InternacionListadoComponent implements OnInit {
         this.selectedInforme$ = this.mapaCamasService.selectedInformeEstadistica.pipe(
             map((prestacion: any) => {
                 const informe = prestacion as IInformeEstadistica;
-
-                if (informe) {
-                    this.puedeValidar = !!(
-                        informe.informeEgreso?.fechaEgreso &&
-                        informe.informeEgreso?.tipoEgreso &&
-                        informe.informeEgreso?.diagnosticos?.principal
-                    );
-                    this.puedeRomper = informe.estadoActual?.tipo === 'validada';
-                }
+                this.verificarInforme(informe);
                 return informe;
             })
         );
@@ -178,7 +169,7 @@ export class InternacionListadoComponent implements OnInit {
                             this.informeEstadisticaService.validarInforme(id).subscribe({
                                 next: prestacion => {
                                     this.mapaCamasService.selectInformeEstadistica(seleccionarInforme);
-                                    this.verificarPrestacion(prestacion);
+                                    this.verificarInforme(prestacion);
                                     this.listadoInternacionService.refresh.next(true);
                                 },
                                 error: () => this.plex.info('danger', 'ERROR: No es posible validar la informre')
@@ -204,36 +195,15 @@ export class InternacionListadoComponent implements OnInit {
         this.mostrar = 'desocuparCama';
     }
 
-    verificarPrestacion(informe: IInformeEstadistica) {
-        this.puedeValidar = false;
-        this.puedeRomper = false;
-        if (informe) {
-            if (informe.estados[informe.estados.length - 1].tipo !== 'validada') {
-                const informeEgreso = informe.informeEgreso;
-                if (informeEgreso) {
-                    if (informeEgreso.fechaEgreso && informeEgreso.tipoEgreso && informeEgreso.diagnosticos?.principal) {
-                        this.puedeValidar = true;
-                    }
-                }
-            } else {
-                this.puedeRomper = true;
-            }
-
-        }
-    }
     devuelveFecha(internacion: IInformeEstadistica, tipo: 'ingreso' | 'egreso') {
         return tipo === 'ingreso' ? internacion.informeIngreso?.fechaIngreso : internacion.informeEgreso?.fechaEgreso || null;
     }
 
-    romperValidacion(seleccionarInforme: IInformeEstadistica,) {
+    romperValidacion(seleccionarInforme: IInformeEstadistica) {
+        const id = seleccionarInforme.id || seleccionarInforme._id;
         this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {
             if (validar) {
-                const cambioEstado: any = {
-                    op: 'romperValidacion',
-                    desdeInternacion: true
-                };
-                // En api el estado de la prestación cambia a ejecucion
-                this.informeEstadisticaService.patch(seleccionarInforme.id, cambioEstado).subscribe({
+                this.informeEstadisticaService.romperValidacion(id).subscribe({
                     next: informe => {
                         this.mapaCamasService.selectInformeEstadistica(informe);
                         this.verificarInforme(informe);
@@ -249,17 +219,14 @@ export class InternacionListadoComponent implements OnInit {
         this.puedeValidar = false;
         this.puedeRomper = false;
         if (informe) {
-            if (informe) {
-                if (informe.estados[informe.estados.length - 1].tipo !== 'validada') {
-                    const informeEgreso = informe.informeEgreso;
-                    if (informeEgreso) {
-                        if (informeEgreso.fechaEgreso && informeEgreso.tipoEgreso && informeEgreso.diagnosticos?.principal) {
-                            this.puedeValidar = true;
-                        }
-                    }
-                } else {
-                    this.puedeRomper = true;
+            const ultimoEstado = informe.estados?.length ? informe.estados[informe.estados.length - 1].tipo : (informe.estadoActual?.tipo || informe.estado);
+            if (ultimoEstado !== 'validada') {
+                const informeEgreso = informe.informeEgreso;
+                if (informeEgreso?.fechaEgreso && informeEgreso?.tipoEgreso && informeEgreso?.diagnosticos?.principal) {
+                    this.puedeValidar = true;
                 }
+            } else {
+                this.puedeRomper = true;
             }
         }
     }
