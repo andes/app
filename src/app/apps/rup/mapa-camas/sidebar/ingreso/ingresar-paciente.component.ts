@@ -662,9 +662,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     ingresoExtendido(paciente) {
         // construimos el informe de ingreso
-        this.informeIngreso.situacionLaboral = (this.informeIngreso.situacionLaboral) ? this.informeIngreso.situacionLaboral.nombre : null;
-        this.informeIngreso.nivelInstruccion = ((typeof this.informeIngreso.nivelInstruccion === 'string')) ? this.informeIngreso.nivelInstruccion : (Object(this.informeIngreso.nivelInstruccion).nombre);
-        this.informeIngreso.asociado = ((typeof this.informeIngreso.asociado === 'string')) ? this.informeIngreso.asociado : (Object(this.informeIngreso.asociado).nombre);
         const origenAntiguo: string | { [key: string]: any } = (this.informeIngreso as any).origen;
 
         if (origenAntiguo) {
@@ -704,14 +701,30 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         if (this.informeIngreso.origen?.tipo && typeof this.informeIngreso.origen.tipo !== 'string') {
             this.informeIngreso.origen.tipo = this.informeIngreso.origen.tipo.nombre || null;
         }
-        if (!this.informeIngreso.cobertura?.tipo && this.informeIngreso.cobertura?.obraSocial) {
-            this.informeIngreso.cobertura.obraSocial = null;
+        if (!this.informeIngreso.cobertura) {
+            this.informeIngreso.cobertura = { tipo: null, obraSocial: null };
         }
 
-        if (this.informeIngreso.cobertura?.tipo === 'Plan o Seguro público') {
+        const asociado = this.informeIngreso.asociado?.id || this.informeIngreso.asociado;
+        if (asociado === 'Plan de salud privado o Mutual') {
+            this.informeIngreso.cobertura.tipo = 'Plan de salud privado o Mutual';
+            this.informeIngreso.cobertura.obraSocial =
+                this.financiador || this.paciente.obraSocial || this.informeIngreso.cobertura.obraSocial || null;
+        } else if (asociado === 'Plan o Seguro público' || asociado === 'Hospital Público') {
+            this.informeIngreso.cobertura.tipo = 'Plan o Seguro público';
+            this.informeIngreso.cobertura.obraSocial = null;
+        } else if (asociado === 'Sin cobertura' || asociado === 'Ninguno') {
+            this.informeIngreso.cobertura.tipo = 'sinCobertura';
             this.informeIngreso.cobertura.obraSocial = null;
         } else {
-            this.informeIngreso.cobertura.obraSocial = this.paciente.obraSocial || this.financiador;
+            if (!this.informeIngreso.cobertura.tipo && this.informeIngreso.cobertura.obraSocial) {
+                this.informeIngreso.cobertura.obraSocial = null;
+            }
+            if (this.informeIngreso.cobertura.tipo === 'Plan o Seguro público') {
+                this.informeIngreso.cobertura.obraSocial = null;
+            } else {
+                this.informeIngreso.cobertura.obraSocial = this.paciente.obraSocial || this.financiador;
+            }
         }
 
         if (this.paciente.fechaNacimiento) {
@@ -873,22 +886,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             paciente: this.paciente,
             informeIngreso: {
                 ...this.informeIngreso,
-                situacionLaboral: (typeof this.informeIngreso.situacionLaboral === 'string')
-                    ? {
-                        id: this.informeIngreso.situacionLaboral.toLowerCase().replace(/\s+/g, '-'),
-                        nombre: this.informeIngreso.situacionLaboral
-                    }
-                    : this.informeIngreso.situacionLaboral || null,
-                nivelInstruccion: (typeof this.informeIngreso.nivelInstruccion === 'string')
-                    ? {
-                        id: this.informeIngreso.nivelInstruccion.toLowerCase().replace(/\s+/g, '-'),
-                        nombre: this.informeIngreso.nivelInstruccion
-                    }
-                    : this.informeIngreso.nivelInstruccion || null,
+                situacionLaboral: this.informeIngreso.situacionLaboral,
+                nivelInstruccion: this.informeIngreso.nivelInstruccion,
                 ocupacionHabitual: this.informeIngreso.ocupacionHabitual,
-                asociado: (typeof this.informeIngreso.asociado === 'string')
-                    ? this.informeIngreso.asociado
-                    : this.informeIngreso.asociado?.nombre || null,
+                asociado: this.informeIngreso.asociado,
             } as any,
             estados: [{
                 tipo: 'ejecucion',

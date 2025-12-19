@@ -191,7 +191,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     public txtABuscar;
     public efectorRestringido = this.auth.check('huds:soloEfectorActual');
     public indiceInternaciones;
-    public otrasPrestaciones;
+    public otrasPrestaciones: any = { registros: [] };
     public filtroRecetas;
     public searchRecetas;
     public busquedaRecetas;
@@ -921,12 +921,14 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                         internacion.registros.forEach((registro: any) => {
                             if (registro.otras) {
                                 totalPrestaciones += Object.keys(registro.otras).length;
+                            } else {
+                                totalPrestaciones++;
                             }
                         });
                     });
                 }
-                if (this.prestacionesCopia && this.prestacionesCopia.length) {
-                    totalPrestaciones += this.prestacionesCopia.length;
+                if (this.otrasPrestaciones?.registros?.length) {
+                    totalPrestaciones += this.otrasPrestaciones.registros.length;
                 }
                 return totalPrestaciones;
             }
