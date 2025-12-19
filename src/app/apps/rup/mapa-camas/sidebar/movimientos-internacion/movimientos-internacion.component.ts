@@ -28,7 +28,7 @@ export class MovimientosInternacionComponent implements OnInit, OnDestroy {
 
     getFechasInternacion() {
         const capa = this.mapaCamasService.capa2.getValue();
-
+        // modificaciones para que se vean los movimientos con la estructura nueva
         if (capa === 'estadistica') {
             return this.mapaCamasService.informeEstadistica$.pipe(
                 map(informeEstadistica => ({
