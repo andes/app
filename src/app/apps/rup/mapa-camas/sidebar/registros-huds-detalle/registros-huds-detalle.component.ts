@@ -16,6 +16,8 @@ import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-ite
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { LaboratorioService } from 'src/app/services/laboratorio.service';
 import { PacienteCacheService } from 'src/app/core/mpi/services/pacienteCache.service';
+import { InformeEstadisticaService } from 'src/app/modules/rup/services/informe-estadistica.service';
+import { IInformeEstadistica } from 'src/app/modules/rup/interfaces/informe-estadistica.interface';
 
 @Component({
     selector: 'app-registros-huds-detalle',
@@ -57,6 +59,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     constructor(
         public mapaCamasService: MapaCamasService,
         private prestacionService: PrestacionesService,
+        private informeEstadisticaService: InformeEstadisticaService,
         private auth: Auth,
         private router: Router,
         private motivoAccesoService: ModalMotivoAccesoHudsService,
@@ -74,22 +77,32 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         this.token$ = combineLatest([
             this.cama$,
             this.mapaCamasService.selectedPrestacion,
-            this.mapaCamasService.resumenInternacion$,
+            this.mapaCamasService.informeEstadistica$,
+            this.mapaCamasService.resumenInternacion$
         ]).pipe(
-            map(([cama, prestacion, resumen]) => {
-                if (cama?.paciente && cama.paciente === this.paciente
-                    || prestacion?.paciente && prestacion.paciente === this.paciente ||
-                    resumen?.paciente && resumen.paciente === this.paciente) {
+            map(([cama, prestacion, informe, resumen]) => {
+                const paciente =
+                    cama?.paciente ||
+                    prestacion?.paciente ||
+                    resumen?.paciente ||
+                    informe?.paciente;
+
+                if (!paciente?.id) {
                     return null;
                 }
+
+                if (this.paciente?.id === paciente.id) {
+                    return null;
+                }
+
                 this.inProgress = true;
-                return [cama, prestacion, resumen];
+                return paciente;
             }),
             notNull(),
-            switchMap(([cama, prestacion, resumen]) => {
-                this.paciente = cama.paciente || prestacion.paciente || resumen.paciente;
-                return this.motivoAccesoService.getAccessoHUDS(this.paciente as IPaciente);
-            }),
+            switchMap((paciente: IPaciente) => {
+                this.paciente = paciente;
+                return this.motivoAccesoService.getAccessoHUDS(paciente);
+            })
         );
 
         this.token$.subscribe({
