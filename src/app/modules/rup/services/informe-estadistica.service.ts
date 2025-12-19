@@ -95,6 +95,15 @@ export class InformeEstadisticaService {
 
         return this.server.patch(url, dto);
     }
+
+    romperValidacion(id: string): Observable<IInformeEstadistica> {
+        const url = `${this.baseUrl}/${id}/operacion`;
+        const dto: any = {
+            op: 'romperValidacion',
+            desdeInternacion: true
+        };
+        return this.server.patch(url, dto);
+    }
     patch(id: string, data: Partial<IInformeEstadistica>): Observable<IInformeEstadistica> {
         const url = `${this.baseUrl}/${id}`;
         return this.server.patch(url, data);

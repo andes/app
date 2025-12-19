@@ -163,38 +163,28 @@
             </plex-button>
         </plex-title>
 
-        <ng-container *ngIf="registro.valor.InformeEgreso.procedimientosQuirurgicos?.length">
+        <ng-container *ngIf="registro.valor.InformeEgreso.procedimientosQuirurgicos.length > 0">
             <ng-container
-                          *ngFor="let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos; let i = index">
+                          *ngFor=" let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos; let i = index ">
                 <plex-grid size="sm" type="full" cols="6">
-                    <plex-select label="Procedimiento" [(ngModel)]="procedimiento.procedimiento"
-                                 name="procedimiento-{{i}}" (getData)="getListaProcedimientosQuirurgicos($event)"
-                                 placeholder="Seleccione..." labelField="nom" span="6">
+                    <plex-select label="Procedimientos" [(ngModel)]="procedimiento.procedimiento"
+                                 name="InformeEgreso.procedimientoQuirurgico-{{i}}"
+                                 (getData)="getListaProcedimientosQuirurgicos($event)" placeholder="Seleccione..."
+                                 labelField="nom" span="6" [required]="true">
                     </plex-select>
 
-                    <ng-container *ngIf="registro.valor.InformeEgreso.procedimientosQuirurgicos.length > 0">
-                        <ng-container
-                                      *ngFor=" let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos; let i = index ">
-                            <plex-grid size="sm" type="full" cols="6">
-                                <plex-select label="Procedimientos" [(ngModel)]="procedimiento.procedimiento"
-                                             name="InformeEgreso.procedimientoQuirurgico-{{i}}"
-                                             (getData)="getListaProcedimientosQuirurgicos($event)"
-                                             placeholder="Seleccione..." labelField="nom" span="6" [required]="true">
-                                </plex-select>
+                    <plex-datetime name="fecha-procedimientoQuirurgico-{{i}}" label="Fecha" type="date"
+                                   [max]="fechaMaxProcedimiento" [(ngModel)]="procedimiento.fecha" [debounce]="600"
+                                   span="5" [required]="true">
+                    </plex-datetime>
 
-                                <plex-datetime name="fecha-procedimientoQuirurgico-{{i}}" label="Fecha" type="date"
-                                               [max]="fechaMaxProcedimiento" [(ngModel)]="procedimiento.fecha"
-                                               [debounce]="600" span="5" [required]="true">
-                                </plex-datetime>
-
-                                <plex-button align="end" type="danger" size="md" icon="trash-can"
-                                             ariaLabel="Borrar nuevo procedimiento quirúrgico"
-                                             [disabled]="prestacionValidada" (click)="removeProcedimiento(i)">
-                                </plex-button>
-                            </plex-grid>
-                        </ng-container>
-                    </ng-container>
+                    <plex-button align="end" type="danger" size="md" icon="trash-can"
+                                 ariaLabel="Borrar nuevo procedimiento quirúrgico" [disabled]="prestacionValidada"
+                                 (click)="removeProcedimiento(i)">
+                    </plex-button>
+                </plex-grid>
             </ng-container>
         </ng-container>
+    </ng-container>
 
 </form>
