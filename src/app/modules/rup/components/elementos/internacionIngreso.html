@@ -22,22 +22,21 @@
         </div>
         <div class="col-4" *ngIf="registro.valor.informeIngreso.situacionLaboral">
             <label class="block">Situación laboral</label>
-            <span>{{ registro.valor.informeIngreso.situacionLaboral }}</span>
+            <span>{{ registro.valor.informeIngreso.situacionLaboral?.nombre || registro.valor.informeIngreso.situacionLaboral }}</span>
         </div>
         <div class="col-4" *ngIf="registro.valor.informeIngreso.nivelInstruccion">
             <label class="block">Nivel instrucción</label>
-            <span>{{ registro.valor.informeIngreso.nivelInstruccion }}</span>
+            <span>{{ registro.valor.informeIngreso.nivelInstruccion?.nombre || registro.valor.informeIngreso.nivelInstruccion }}</span>
         </div>
     </div>
     <div class="row">
         <div class="col-4">
             <label class="block">Asociado a</label>
-            <span *ngIf="registro.valor.informeIngreso.asociado">{{ registro.valor.informeIngreso.asociado }}</span>
+            <span *ngIf="registro.valor.informeIngreso.asociado">{{ registro.valor.informeIngreso.asociado?.nombre || registro.valor.informeIngreso.asociado }}</span>
         </div>
         <div class="col-4">
             <label class="block">Obra social</label>
-            <span
-                  *ngIf="registro.valor.informeIngreso.obraSocial">{{registro.valor.informeIngreso.obraSocial.financiador}}</span>
+            <span>{{ registro.valor.informeIngreso.cobertura?.obraSocial?.nombre || 'SIN DATO' }}</span>
         </div>
     </div>
 </ng-container>
