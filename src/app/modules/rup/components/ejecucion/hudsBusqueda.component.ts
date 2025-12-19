@@ -482,6 +482,9 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     getPacientePrincipal(id): Observable<IPaciente> {
         return this.pacienteService.getById(id);
     }
+
+    // modificaciones para el pdf y huds
+
     listarInformeEstadistico() {
         return this.informeEstadisticaService.getByPaciente(
             this.paciente.id,
@@ -498,6 +501,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             this.informe = informesFiltrados;
         }));
     }
+    // modificaciones para el pdf y huds
 
     mergeInternacionesConInformes() {
         const base: IInternacionExtendida[] = this.internaciones || [];
@@ -548,6 +552,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
         this.internaciones = internacionesResultantes;
     }
+    // modificaciones para el pdf y huds
+
     mezclarInformes(informes) {
         this.internaciones = this.internaciones.map(int => {
             const informe = informes.find(i => i.idInternacion === int.id);
@@ -962,6 +968,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         this.otrasPrestaciones = { fechaDesde, fechaHasta, indices: Object.values(indiceRegistros.indices), registros: Object.values(indiceRegistros.registros) };
     }
 
+    // modificaciones para el pdf y huds
 
     filtrarPorInternacion(prestaciones) {
 
