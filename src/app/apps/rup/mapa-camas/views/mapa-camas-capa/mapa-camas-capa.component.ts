@@ -1,7 +1,7 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { Observable, of } from 'rxjs';
@@ -14,7 +14,7 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamaListadoColumns } from '../../interfaces/mapa-camas.internface';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
-import { LaboratorioService } from 'projects/portal/src/app/services/laboratorio.service';
+import { LaboratorioService } from 'src/app/services/laboratorio.service';
 import { DocumentosService } from 'src/app/services/documentos.service';
 
 @Component({
@@ -28,6 +28,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     @ViewChild(CdkVirtualScrollViewport, { static: false })
     public viewPort: CdkVirtualScrollViewport;
 
+    @ViewChild('helpFecha', { read: ElementRef }) helpFechaRef: ElementRef;
     selectedCama$: Observable<ISnapshot>;
     organizacion: string;
     fecha = moment().toDate();
@@ -332,6 +333,23 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
             this.fechaSelector = nuevaFecha;
             this.fechaInput = nuevaFecha.format(format);
             this.mapaCamasService.setFecha(nuevaFecha.toDate());
+        } else {
+            this.isValidDate = false;
+        }
+
+        if (this.helpFechaRef) {
+            setTimeout(() => {
+                const native = this.helpFechaRef.nativeElement as HTMLElement;
+                const btnClose = native.querySelector('.btn-close') as HTMLElement;
+                if (btnClose) {
+                    btnClose.click();
+                } else {
+                    const instance = (this.helpFechaRef as any).componentInstance;
+                    if (instance && typeof instance.toggle === 'function') {
+                        instance.toggle();
+                    }
+                }
+            }, 0);
         }
     }
 

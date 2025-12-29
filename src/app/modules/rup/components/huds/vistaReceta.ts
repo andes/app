@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { HUDSService } from '../../services/huds.service';
-import { RecetaService } from 'projects/portal/src/app/services/receta.service';
+import { RecetaService } from 'src/app/services/receta.service';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 
 @Component({

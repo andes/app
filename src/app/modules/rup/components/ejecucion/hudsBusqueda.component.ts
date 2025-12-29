@@ -2,8 +2,8 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { AfterContentInit, Component, EventEmitter, Input, OnInit, Optional, Output, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
-import { LaboratorioService } from 'projects/portal/src/app/services/laboratorio.service';
-import { RecetaService } from 'projects/portal/src/app/services/receta.service';
+import { LaboratorioService } from 'src/app/services/laboratorio.service';
+import { RecetaService } from 'src/app/services/receta.service';
 import { Observable, forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { InternacionResumenHTTP } from 'src/app/apps/rup/mapa-camas/services/resumen-internacion.http';
@@ -658,8 +658,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
             const data = { conceptId, term, id, fecha };
 
             return ({
-                indices: { ...grupo.indices, ['otras']: { ...grupo.indices['otras'], [data.conceptId]: data } },
-                registros: { ...grupo.registros, ['otras']: { ...grupo.registros['otras'], [data.conceptId]: prestacion } }
+                indices: { ...grupo.indices, ['otras']: { ...grupo.indices['otras'], [data.id]: data } },
+                registros: { ...grupo.registros, ['otras']: { ...grupo.registros['otras'], [data.id]: prestacion } }
             });
         }, { indices: {}, registros: {} });
 
@@ -868,14 +868,14 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         const dispensasPermitidas = ['sin-dispensa', 'dispensa-parcial'];
         if (!receta.medicamento.tratamientoProlongado) {
             return (estadosPermitidos.includes(receta.estadoActual?.tipo)
-            && dispensasPermitidas.includes(receta.estadoDispensaActual?.tipo)) && this.profesionalValido;
+                && dispensasPermitidas.includes(receta.estadoDispensaActual?.tipo)) && this.profesionalValido;
         } else {
             const recetasMismoRegistro = this.busquedaRecetas?.flatMap(grupo =>
                 grupo.recetas.filter(r => r.idRegistro === receta.idRegistro && r.medicamento.concepto.conceptId === receta.medicamento.concepto.conceptId)
             ) || [];
             return recetasMismoRegistro.some(rec =>
                 (estadosPermitidos.includes(rec.estadoActual?.tipo)
-            && dispensasPermitidas.includes(rec.estadoDispensaActual?.tipo)) && this.profesionalValido);
+                    && dispensasPermitidas.includes(rec.estadoDispensaActual?.tipo)) && this.profesionalValido);
         }
     }
 

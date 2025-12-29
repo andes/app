@@ -14,7 +14,7 @@ import { IMAQEstado } from '../../interfaces/IMaquinaEstados';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-item.component';
 import { ISnapshot } from '../../interfaces/ISnapshot';
-import { LaboratorioService } from 'projects/portal/src/app/services/laboratorio.service';
+import { LaboratorioService } from 'src/app/services/laboratorio.service';
 import { PacienteCacheService } from 'src/app/core/mpi/services/pacienteCache.service';
 
 @Component({

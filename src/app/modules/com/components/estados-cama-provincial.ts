@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Component, OnInit } from '@angular/core';
-import { map, Observable, flatMap, from, mergeMap, shareReplay } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { EstadosCamaProvincialService } from './../services/estados-cama-provincial.service';
@@ -14,27 +14,30 @@ import { EstadosCamaProvincialService } from './../services/estados-cama-provinc
 export class EstadosCamaProvincialComponent implements OnInit {
 
     constructor(
-        private organizacionService: OrganizacionService,
-        private estadosCamaProvincialService: EstadosCamaProvincialService,
-        private auth: Auth
+        private estadosCamaProvincialService: EstadosCamaProvincialService
     ) { }
 
     public camasEstados$: Observable<any[]>;
     public selectedOrganizacion: IOrganizacion;
     public selectedUnidadOrganizativa;
     public unidadesOrganizativas = [];
+    public capa = [
+        { id: 'medica', nombre: 'Asistencial' }, // medica === asistencial
+        { id: 'estadistica', nombre: 'Estadístico' }
+    ];
+    public capaSeleccionada = { id: 'medica', nombre: 'Asistencial' };
     public organizacionCamas: any[] = [];
     public showSidebar = false;
     public efectorSelected;
     public fecha = moment().toDate();
     public fechaLimite = new Date();
-    public capa = 'medica';
     public ambito = 'internacion';
     public listadoActual: any[] = [];
 
     ngOnInit() {
         this.camasEstados$ = this.estadosCamaProvincialService.camasEstados$;
         this.cargaUnidadesOrganizativas();
+        this.filtrar();
     }
 
     closeSidebar() {
@@ -55,6 +58,7 @@ export class EstadosCamaProvincialComponent implements OnInit {
     filtrar() {
         this.estadosCamaProvincialService.organizacion.next(this.selectedOrganizacion?.id);
         this.estadosCamaProvincialService.unidadOrganizativa.next(this.selectedUnidadOrganizativa?.conceptId);
+        this.estadosCamaProvincialService.capa.next(this.capaSeleccionada?.id);
     }
 
     cargaUnidadesOrganizativas() {

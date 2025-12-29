@@ -1,6 +1,6 @@
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, Output, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
-import { RecetaService } from 'projects/portal/src/app/services/receta.service';
+import { RecetaService } from 'src/app/services/receta.service';
 
 @Component({
     selector: 'suspender-medicacion',
