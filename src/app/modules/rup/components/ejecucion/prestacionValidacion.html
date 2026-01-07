@@ -197,6 +197,21 @@
         </div>
     </plex-layout-main>
     <plex-layout-sidebar *ngIf="prestacion.solicitud.ambitoOrigen == 'ambulatorio'">
+        <!-- Mostrar profesionales que registraron datos -->
+        <plex-box type="default" class="profesionales" *ngIf="profesionales?.length > 0">
+            <plex-title titulo="Profesional/es que registra/n" size="sm"></plex-title>
+            <plex-list>
+                <plex-item *ngFor="let profesional of profesionales">
+                    <plex-label size="sm" icon="account" [titulo]="profesional.nombre + ' ' + profesional.apellido"
+                                [subtitulo]="'DNI: ' + profesional.documento">
+                    </plex-label>
+                    <plex-label *ngIf="esValidador(profesional)" size="sm" type="success"
+                                [titulo]="'Validado el ' + (ultimoValidador.createdAt | fecha)"
+                                [subtitulo]="'a las ' + (ultimoValidador.createdAt | date: 'HH:mm') + ' hs'">
+                    </plex-label>
+                </plex-item>
+            </plex-list>
+        </plex-box>
         <rup-relaciones [registros]="prestacion.ejecucion.registros"></rup-relaciones>
     </plex-layout-sidebar>
     <plex-layout-footer *ngIf="!showDarTurnos">

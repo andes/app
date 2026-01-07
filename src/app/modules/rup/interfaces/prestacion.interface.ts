@@ -91,6 +91,15 @@ export class IPrestacion {
         id: string;
     };
 
+    // Listado de profesionales que han registrado datos en esta prestación
+    profesionalesRegistrantes?: {
+        id: string;
+        nombreCompleto: string;
+        nombre: string;
+        apellido: string;
+        documento: number;
+    }[];
+
     metadata: { key: string; valor: any }[];
 
     /**
