@@ -49,11 +49,15 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
             sexo: '',
             fechaNacimiento: null
         },
-        detalle: '',
         estado: 'solicitada',
         dispositivo: null,
         obraSocial: null,
-        historial: []
+        historial: [],
+        motivoDerivacion: '',
+        diagnosticoActual: '',
+        estadoClinico: '',
+        diagnosticoBase: '',
+        comorbilidades: '',
     };
     organizacionesOrigen = [];
     organizacionesDestino = [];
