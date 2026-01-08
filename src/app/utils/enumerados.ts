@@ -26,6 +26,7 @@ export enum EstadoCivil {
 export enum tipoComunicacion {
     'Teléfono Fijo',
     'Teléfono Celular',
+    'Celular Extranjero',
     'Email'
 }
 
