@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
-import { Observable, BehaviorSubject, combineLatest, of } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { switchMap, map, auditTime } from 'rxjs/operators';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { cache } from '@andes/shared';
+import { IInformeEstadistica } from 'src/app/modules/rup/interfaces/informe-estadistica.interface';
 
 @Injectable()
 export class ListadoInternacionService {
 
-    public listaInternacion$: Observable<IPrestacion[]>;
-    public listaInternacionFiltrada$: Observable<IPrestacion[]>;
+    public listaInternacion$: Observable<IInformeEstadistica[]>;
+    public listaInternacionFiltrada$: Observable<IInformeEstadistica[]>;
     public pacienteText = new BehaviorSubject<string>(null);
     public fechaIngresoDesde = new BehaviorSubject<Date>(moment().subtract(1, 'months').toDate());
     public fechaIngresoHasta = new BehaviorSubject<Date>(moment().toDate());
@@ -41,7 +41,6 @@ export class ListadoInternacionService {
                     fechaEgresoHasta,
                 };
                 return this.mapaHTTP.getPrestacionesInternacion(filtros);
-
             }),
             cache()
         );
@@ -54,7 +53,7 @@ export class ListadoInternacionService {
             this.unidadOrganizativa
         ]).pipe(
             map(([listaInternacion, paciente, estado, obraSocial, unidad]) =>
-                this.filtrarListaInternacion(listaInternacion, paciente, estado, obraSocial, unidad)
+                this.filtrarInformesEstadistica(listaInternacion, { paciente, estado, obraSocial, unidad })
             )
         );
 
@@ -64,8 +63,7 @@ export class ListadoInternacionService {
             this.fechaEgresoDesde,
             this.fechaEgresoHasta
         ]).pipe(
-            map(([
-                ingresoDesde, ingresoHasta, egresoDesde, egresoHasta]) => {
+            map(([ingresoDesde, ingresoHasta, egresoDesde, egresoHasta]) => {
                 return !(
                     (moment(ingresoDesde).isValid() && moment(ingresoHasta).isValid()) ||
                     (moment(egresoDesde).isValid() && moment(egresoHasta).isValid())
@@ -86,45 +84,97 @@ export class ListadoInternacionService {
         );
     }
 
-    filtrarListaInternacion(listaInternacion: IPrestacion[], paciente: string, estado: string, obraSocial: any, unidad: any) {
+    // Método viejo
+    filtrarListaInternacion(listaInternacion: IInformeEstadistica[], paciente: string, estado: string, obraSocial: any, unidad: any) {
         let listaInternacionFiltrada = listaInternacion;
 
         if (paciente) {
             const esNumero = Number.isInteger(Number(paciente));
             if (esNumero) {
-                listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
+                listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IInformeEstadistica) =>
                     (internacion.paciente.documento?.includes(paciente) || internacion.paciente?.numeroIdentificacion?.includes(paciente)));
             } else {
-                listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) => (internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IInformeEstadistica) =>
+                    (internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
                     internacion.paciente.alias?.toLowerCase().includes(paciente.toLowerCase()) ||
                     internacion.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
         }
+
         if (estado) {
-            listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
+            listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IInformeEstadistica) =>
                 internacion.estados[internacion.estados.length - 1].tipo === estado
             );
         }
+
         if (obraSocial) {
             listaInternacionFiltrada = listaInternacionFiltrada.filter(
-                (internacion: IPrestacion) => {
+                (internacion: IInformeEstadistica) => {
+                    const cobertura = internacion.informeIngreso?.cobertura;
+                    const obra = cobertura?.obraSocial;
+
                     if (obraSocial._id === 'sin-obra-social') {
-                        return !internacion.paciente.obraSocial;
+                        return !obra;
                     }
-                    return internacion.paciente.obraSocial?.nombre === obraSocial.nombre;
+                    return obra?.nombre === obraSocial.nombre;
                 }
             );
         }
 
         if (unidad) {
-            listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
+            listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IInformeEstadistica) =>
                 internacion.unidadOrganizativa?.term === unidad.term
             );
         }
 
         return listaInternacionFiltrada;
     }
+
+    filtrarInformesEstadistica(informes: any[], filtros: any) {
+        const { paciente, estado, obraSocial, unidad } = filtros || {};
+
+        let listaFiltrada = informes;
+
+        if (paciente) {
+            const esNumero = Number.isInteger(Number(paciente));
+            if (esNumero) {
+                listaFiltrada = listaFiltrada.filter((i) =>
+                    i.paciente?.documento?.includes(paciente) ||
+                    i.paciente?.numeroIdentificacion?.includes(paciente)
+                );
+            } else {
+                const valor = paciente.toLowerCase();
+                listaFiltrada = listaFiltrada.filter((i) =>
+                    i.paciente?.nombre?.toLowerCase().includes(valor) ||
+                    i.paciente?.apellido?.toLowerCase().includes(valor) ||
+                    i.paciente?.alias?.toLowerCase().includes(valor)
+                );
+            }
+        }
+
+        if (estado) {
+            listaFiltrada = listaFiltrada.filter((i) =>
+                i.estados?.[i.estados.length - 1]?.tipo === estado
+            );
+        }
+
+        if (obraSocial) {
+            listaFiltrada = listaFiltrada.filter((i) => {
+                if (obraSocial._id === 'sin-obra-social') {
+                    return !i.paciente?.obraSocial;
+                }
+                return i.paciente?.obraSocial?.nombre === obraSocial.nombre;
+            });
+        }
+        if (unidad) {
+            listaFiltrada = listaFiltrada.filter((i) =>
+                i.unidadOrganizativa?.term === unidad.term
+            );
+        }
+        return listaFiltrada;
+    }
+
 
     setFechaHasta(fecha: Date) {
         this.fechaIngresoHasta.next(fecha);
