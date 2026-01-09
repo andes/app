@@ -3,8 +3,8 @@ import { Plex } from '@andes/plex';
 import { cacheStorage, Server } from '@andes/shared';
 import { Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { finalize, switchMap } from 'rxjs/operators';
 import { environment } from './../environments/environment';
 import { CommonNovedadesService } from './components/novedades/common-novedades.service';
 import { IProfesional } from './interfaces/IProfesional';
@@ -33,10 +33,10 @@ export class AppComponent {
             setTimeout(() => {
                 this.server.get('/core/status', { params: null, showError: false, showLoader: false }).pipe(
                     finalize(() => this.initStatusCheck()))
-                    .subscribe(
-                        (data) => this.plex.updateAppStatus(data),
-                        (err) => this.plex.updateAppStatus({ API: 'Error' })
-                    );
+                    .subscribe({
+                        next: (data) => this.plex.updateAppStatus(data),
+                        error: () => this.plex.updateAppStatus({ API: 'Error' })
+                    });
             }, 100000);
         } else {
             this.plex.updateAppStatus({ API: 'OK' });
@@ -62,10 +62,32 @@ export class AppComponent {
         }
     ];
 
+    public columnsPosgrado = [
+        {
+            key: 'profesion',
+            label: 'Profesión',
+        },
+        {
+            key: 'matricula',
+            label: 'Matrícula',
+        },
+        {
+            key: 'altas',
+            label: 'Fin de alta',
+        },
+        {
+            key: 'vencimiento',
+            label: 'Vencimiento',
+        },
+        {
+            key: 'estado',
+            label: 'Estado',
+        }
+    ];
+
     private menuList = [];
     private modulos$: Observable<any[]>;
 
-    // private loading = true;
     public tieneNovedades = false;
 
     constructor(
@@ -98,18 +120,21 @@ export class AppComponent {
                 this.checkPermissions();
             }
             if (this.auth.profesional) {
-                this.profesionalService.getByID(this.auth.profesional).subscribe((profesional: IProfesional) => {
-                    if (profesional) {
-                        this.profesional = profesional;
-                        this.profesional.formacionGrado?.forEach(item => {
-                            item['estado'] = this.verificarEstado(item);
-                        });
-                        this.profesionalService.getFoto({ id: this.auth.profesional }).subscribe(resp => {
-                            if (resp) {
-                                this.foto = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp);
-                                this.tieneFoto = true;
-                            }
-                        });
+                this.profesionalService.getByID(this.auth.profesional).pipe(
+                    switchMap((profesional: IProfesional) => {
+                        if (profesional) {
+                            this.profesional = profesional;
+                            this.profesional.formacionGrado?.forEach(item => {
+                                item['estado'] = this.verificarEstado(item);
+                            });
+                            return this.profesionalService.getFoto({ id: this.auth.profesional });
+                        }
+                        return of(null);
+                    })
+                ).subscribe(resp => {
+                    if (resp) {
+                        this.foto = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp);
+                        this.tieneFoto = true;
                     }
                 });
             }
@@ -228,5 +253,22 @@ export class AppComponent {
                 }
             }
         }
+    }
+
+    vencimientoAlta(fecha: Date): Date {
+        const nuevaFecha = new Date(fecha);
+        nuevaFecha.setFullYear(nuevaFecha.getFullYear() + 5);
+        return nuevaFecha;
+    }
+
+    esVigente(formacionPosgrado) {
+        const fechaUltimaAlta = new Date(formacionPosgrado.fechasDeAltas[formacionPosgrado.fechasDeAltas.length - 1].fecha);
+        fechaUltimaAlta.setFullYear(fechaUltimaAlta.getFullYear() + 5);
+        if (fechaUltimaAlta < this.hoy) {
+            if (new Date(formacionPosgrado.matriculacion[formacionPosgrado.matriculacion.length - 1].fin) < this.hoy) {
+                return false;
+            }
+        }
+        return true;
     }
 }
