@@ -788,13 +788,25 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         let alertCount = 0;
         this.agendasSeleccionadas.forEach((agenda, index) => {
             const esAgendaDelPasado = moment(agenda.horaInicio).isBefore(moment().startOf('day'));
-            if (estado === 'publicada' && esAgendaDelPasado) {
-                estado = 'auditada';
-            }
             const patch = {
                 'op': estado,
                 'estado': estado
             };
+            if ((estado === 'publicada' || estado === 'disponible') && esAgendaDelPasado) {
+                const tieneTurno = agenda.bloques.find(bloque =>
+                    bloque.turnos.some(turno => turno.estado === 'asignado')
+                );
+
+                if (tieneTurno) {
+                    patch.op = 'pendienteAuditoria';
+                    patch.estado = 'pendienteAuditoria';
+                } else {
+                    patch.op = 'auditada';
+                    patch.estado = 'auditada';
+                }
+
+            }
+
             this.serviceAgenda.patch(agenda.id, patch).subscribe((resultado: any) => {
                 // Si son múltiples, esperar a que todas se actualicen
                 agenda.estado = resultado.estado;
@@ -815,7 +827,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                 }
             });
 
-            estado = 'publicada';
         });
     }
 
