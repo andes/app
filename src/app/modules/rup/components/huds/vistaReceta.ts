@@ -3,6 +3,7 @@ import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { HUDSService } from '../../services/huds.service';
 import { RecetaService } from 'src/app/services/receta.service';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
+import * as moment from 'moment';
 
 @Component({
     selector: 'vista-receta',
@@ -13,6 +14,8 @@ export class VistaRecetaComponent implements OnInit {
 
     @Input() paciente: IPaciente;
     @Input() registro: any;
+
+    public showModal = false;
 
     public columns = [
         {
@@ -106,7 +109,7 @@ export class VistaRecetaComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.recetaPrincipal = this.registro.recetas.length>1?this.recetaService.getRecetaPrincipal(this.registro.recetas): this.registro.recetas[0];
+        this.recetaPrincipal = this.registro.recetas.length > 1 ? this.recetaService.getRecetaPrincipal(this.registro.recetas) : this.registro.recetas[0];
         this.combinarDispensas();
         this.historialRecetas = this.registro.recetas.filter(receta => receta.id !== this.recetaPrincipal.id && receta.fechaRegistro <= this.recetaPrincipal.fechaRegistro);
     }
@@ -141,6 +144,21 @@ export class VistaRecetaComponent implements OnInit {
             }
         }
         return this.listadoDispensas.shift();
+    }
+
+    checkDispensaAnticipada(receta) {
+        if (receta.estadoDispensaActual && receta.estadoDispensaActual.fecha) {
+            const fechaDispensa = moment(receta.estadoDispensaActual.fecha);
+            const fechaRegistro = moment(receta.fechaRegistro);
+            if (fechaDispensa.isBefore(fechaRegistro)) {
+                if (receta.estadoActual.tipo === 'finalizada') {
+                    return 'dispensa anticipada';
+                } else if (receta.estadoActual.tipo === 'pendiente') {
+                    return 'dispensa parcial anticipada';
+                }
+            }
+        }
+        return null;
     }
 
 }
