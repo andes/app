@@ -277,6 +277,9 @@ export class DarTurnosComponent implements OnInit {
                     return this.permisos.indexOf(x.id) >= 0;
                 });
             }
+            dataF = dataF.filter((x) => {
+                return x.teleConsulta !== true;
+            });
             event.callback(dataF);
             if (this._solicitudPrestacion) {
                 this.actualizar();
