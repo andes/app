@@ -32,7 +32,6 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
     public itemListaFinanciador: any;
     public numeroAfiliado: string;
     public patronNumerico = '^[0-9]*$';
-
     private timeout: any;
     public busquedaFinanciador;
 
@@ -40,7 +39,7 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
     @Input() editable = false;
     @Output() setFinanciador = new EventEmitter<any>();
     @Output() setPaciente = new EventEmitter<IPaciente>();
-
+    @Input() financiadorActual: any;
     constructor(
         public obraSocialService: ObraSocialService,
         private pacienteService: PacienteService,
@@ -49,8 +48,8 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
 
 
     ngOnChanges(changes: SimpleChanges) {
-        this.numeroAfiliado = this.paciente?.financiador?.length ? this.paciente.financiador[0]?.numeroAfiliado : undefined;
         if (changes.paciente?.currentValue?.id) {
+            this.numeroAfiliado = this.paciente?.financiador?.length ? this.paciente.financiador[0]?.numeroAfiliado : undefined;
             this.resetComponentState();
 
             if (this.editable) {
@@ -58,6 +57,8 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
             } else {
                 this.cargarDatosModoLectura(changes.paciente.currentValue.id);
             }
+        } else if (changes.financiadorActual && this.paciente?.id) {
+            this.cargarOpcionesObraSocial(this.paciente);
         }
     }
 
@@ -96,18 +97,42 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
         this.showSelector = true;
 
         if (this.financiadoresPaciente?.length) {
-            const { financiador, nombre, numeroAfiliado } = this.paciente.obraSocial ? this.paciente.obraSocial : this.financiadoresPaciente[0];
+            let financiadorParaSeleccion;
 
-            this.busquedaFinanciador = this.financiadoresPaciente[0];
+            if (this.financiadorActual?.nombre) {
+                const nombreFinanciadorPrestacion = this.financiadorActual.nombre;
+
+                financiadorParaSeleccion = this.financiadoresPaciente.find(
+                    os => os.nombre === nombreFinanciadorPrestacion
+                );
+            }
+
+            if (!financiadorParaSeleccion) {
+                financiadorParaSeleccion = this.paciente.obraSocial ? this.paciente.obraSocial : this.financiadoresPaciente[0];
+            }
+
+            const { financiador, nombre, numeroAfiliado } = financiadorParaSeleccion;
+
+            this.busquedaFinanciador = financiadorParaSeleccion;
             this.financiadorSeleccionado = nombre || financiador;
-            this.numeroAfiliado = numeroAfiliado || '';
+            this.numeroAfiliado = numeroAfiliado;
+
             this.datosFinanciadores = [
-                ...this.financiadoresPaciente.map((os: IObraSocial) => ({ id: os.nombre || os.financiador, label: os.nombre || os.financiador })),
+                ...this.financiadoresPaciente.map((os: IObraSocial) => ({
+                    id: os.nombre || os.financiador,
+                    label: (os.nombre || os.financiador) + (os.origen ? ` ${this.toBold('(' + os.origen + ')')}` : '')
+                })),
                 { id: 'otras', label: 'Otras' }
             ];
+
         } else {
-            this.financiadorSeleccionado = this.paciente.obraSocial ? this.paciente.obraSocial.nombre : undefined;
-            this.numeroAfiliado = this.paciente.obraSocial ? this.paciente.obraSocial.numeroAfiliado : '';
+            this.financiadorSeleccionado = this.paciente.obraSocial
+                ? this.paciente.obraSocial.nombre
+                : undefined;
+
+            this.numeroAfiliado = this.paciente.obraSocial
+                ? this.paciente.obraSocial.numeroAfiliado
+                : '';
         }
 
         this.guardarFinanciador();
@@ -140,8 +165,9 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
 
     public seleccionarFinanciador(event) {
         this.showListado = false;
+        const nombreSeleccionado = event.value;
 
-        if (event.value === 'otras') {
+        if (nombreSeleccionado === 'otras') {
             this.showListado = true;
             this.busquedaFinanciador = undefined;
         } else {
@@ -149,6 +175,7 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
 
             this.busquedaFinanciador = this.financiadoresPaciente.find(os => os.nombre === nombre || os.financiador === nombre);
             this.numeroAfiliado = this.busquedaFinanciador.numeroAfiliado;
+
 
             this.guardarFinanciador();
         }
@@ -221,5 +248,15 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
                 this.numeroAfiliado = this.paciente.documento;
             }
         });
+    }
+
+    private toBold(text: string) {
+        const boldChars = {
+            'A': '𝗔', 'B': '𝗕', 'C': '𝗖', 'D': '𝗗', 'E': '𝗘', 'F': '𝗙', 'G': '𝗚', 'H': '𝗛', 'I': '𝗜', 'J': '𝗝', 'K': '𝗞', 'L': '𝗟', 'M': '𝗠', 'N': '𝗡', 'O': '𝗢', 'P': '𝗣', 'Q': '𝗤', 'R': '𝗥', 'S': '𝗦', 'T': '𝗧', 'U': '𝗨', 'V': '𝗩', 'W': '𝗪', 'X': '𝗫', 'Y': '𝗬', 'Z': '𝗭',
+            'a': '𝗮', 'b': '𝗯', 'c': '𝗰', 'd': '𝗱', 'e': '𝗲', 'f': '𝗳', 'g': '𝗴', 'h': '𝗵', 'i': '𝗶', 'j': '𝗷', 'k': '𝗸', 'l': '𝗹', 'm': '𝗺', 'n': '𝗻', 'o': '𝗼', 'p': '𝗽', 'q': '𝗾', 'r': '𝗿', 's': '𝘀', 't': '𝘁', 'u': '𝘂', 'v': '𝘃', 'w': '𝘄', 'x': '𝘅', 'y': '𝘆', 'z': '𝘇',
+            '0': '𝟬', '1': '𝟭', '2': '𝟮', '3': '𝟯', '4': '𝟰', '5': '𝟱', '6': '𝟲', '7': '𝟳', '8': '𝟴', '9': '𝟵',
+            '(': '❪', ')': '❫'
+        };
+        return text.split('').map(char => boldChars[char] || char).join('');
     }
 }
