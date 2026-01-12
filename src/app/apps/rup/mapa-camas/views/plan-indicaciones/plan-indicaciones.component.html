@@ -249,10 +249,16 @@
                                             </td>
                                             <td *ngFor="let hora of horas" class="pointer"
                                                 [class.selected]="indicacionEventoSelected?.id === indicacion.id && hora === horaSelected"
+                                                [ngClass]="eventos[indicacion.id] && eventos[indicacion.id][hora] ? eventos[indicacion.id][hora][eventos[indicacion.id][hora].length -1].estado : ''"
                                                 (click)="onIndicacionesCellClick(indicacion, hora)">
                                                 <span *ngIf="eventos[indicacion.id] && eventos[indicacion.id][hora]"
                                                       class="punto"
-                                                      [ngClass]="eventos[indicacion.id][hora].estado"></span>
+                                                      [ngClass]="eventos[indicacion.id][hora][eventos[indicacion.id][hora].length -1].estado">
+                                                </span>
+                                                <plex-icon *ngIf="eventos[indicacion.id] && eventos[indicacion.id][hora] && eventos[indicacion.id][hora][eventos[indicacion.id][hora].length -1].estado !== 'on-hold'"
+                                                           [name]="getTipoIcono(eventos[indicacion.id][hora][eventos[indicacion.id][hora].length -1].estado)"
+                                                           size="xl" class="icon-alerta-celda"
+                                                           [type]="getColorIcono(eventos[indicacion.id][hora][eventos[indicacion.id][hora].length -1].estado)"></plex-icon>
                                             </td>
                                         </tr>
                                     </ng-container>
