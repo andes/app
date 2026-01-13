@@ -1,11 +1,29 @@
 <plex-layout [main]="4">
     <plex-layout-main>
         <header>
+
             <plex-title [titulo]="orgName" size="md">
                 <plex-button label="VOLVER" (click)="volver()" type="danger"></plex-button>
             </plex-title>
+
+            <div class="fecha-vencimiento" *ngIf="canEditAccount">
+                <plex-badge size="sm" [type]="isExpired ? 'danger' : 'warning'">
+                    VENCIMIENTO
+                    <span dato>
+                        {{ (fechaVencimiento | date: 'dd/MM/yyyy') || 'Sin fecha' }}
+                    </span>
+                </plex-badge>
+
+                <plex-datetime type="date" [(ngModel)]="fechaVencimiento" (change)="onEditarFechaVencimiento()"
+                               tooltip="Agregar fecha" name="fechaVencimiento" [min]="hoy" [btnOnly]="true" size="sm">
+                </plex-datetime>
+                <plex-button icon="clock" type="danger" size="sm"
+                             (click)="fechaVencimiento = null; onEditarFechaVencimiento()" tooltip="Eliminar fecha"
+                             tooltipPosition="right"></plex-button>
+            </div>
             <ng-container *ngIf="user$ | async as user">
                 <gestor-usuarios-usuario-detalle [usuario]="user"></gestor-usuarios-usuario-detalle>
+
             </ng-container>
         </header>
         <ng-container *ngIf="arbolPermisos.length && perfiles.length">
@@ -20,6 +38,7 @@
                     </div>
                 </ng-container>
             </div>
+
         </ng-container>
     </plex-layout-main>
     <plex-layout-sidebar>
@@ -42,4 +61,5 @@
                         [organizacion]="organizacionId">
         </arbol-permisos>
     </plex-layout-sidebar>
+
 </plex-layout>
