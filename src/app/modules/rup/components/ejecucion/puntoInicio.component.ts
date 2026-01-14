@@ -292,6 +292,13 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                     return (profesional.id === this.auth.profesional);
                 }));
             });
+
+            this.fueraDeAgenda = this.fueraDeAgenda.filter(p => {
+                const creadaPorMi = p.estadoActual.createdBy.username === this.auth.usuario.username;
+                const profesionalSolicitante = p.solicitud.profesional?.id === this.auth.profesional;
+                const profesionalRegistrante = p.profesionalesRegistrantes?.some(pr => pr.id === this.auth.profesional);
+                return creadaPorMi || profesionalSolicitante || profesionalRegistrante;
+            });
         }
 
         // por tipo de prestación
