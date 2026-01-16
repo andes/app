@@ -134,7 +134,8 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
                     sexo: this.paciente.sexo,
                     fechaNacimiento: this.paciente.fechaNacimiento,
                     obraSocial: obraSocialPaciente,
-                    genero: this.paciente.genero
+                    genero: this.paciente.genero,
+                    cuil: this.paciente.cuil ? this.paciente.cuil : null
                 },
                 solicitud: {
                     fecha: this.fecha,
