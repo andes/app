@@ -99,4 +99,5 @@ export interface IPacienteBasico {
         };
         nroCarpeta: string;
     }];
+    cuil?: string;
 }

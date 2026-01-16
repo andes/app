@@ -538,7 +538,8 @@ export class PrestacionesService {
                 genero: paciente.genero,
                 documento: paciente.documento,
                 sexo: paciente.sexo,
-                fechaNacimiento: paciente.fechaNacimiento
+                fechaNacimiento: paciente.fechaNacimiento,
+                cuil: paciente.cuil ? paciente.cuil : null
             };
             if (paciente.obraSocial) {
                 pacientePrestacion.obraSocial = paciente.obraSocial;
