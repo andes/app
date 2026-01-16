@@ -654,8 +654,10 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
             !prestacionesEnInternacion.some(filtro => filtro.data.id === prestacion.data.id));
 
         const indiceRegistros = filtroPrestaciones.reduce((grupo, prestacion) => {
-            const { solicitud: { tipoPrestacion: { conceptId, term } }, id, createdAt: fecha } = prestacion.data;
-            const data = { conceptId, term, id, fecha };
+            const dataPrestacion = Array.isArray(prestacion.data) ? prestacion.data[0] : prestacion.data;
+            const { solicitud: { tipoPrestacion: { conceptId, term } }, id, createdAt: fecha } = dataPrestacion;
+            const unidadOrganizativa = dataPrestacion.unidadOrganizativa?.term;
+            const data = { conceptId, term, id, fecha, unidadOrganizativa };
 
             return ({
                 indices: { ...grupo.indices, ['otras']: { ...grupo.indices['otras'], [data.id]: data } },
@@ -663,11 +665,22 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
             });
         }, { indices: {}, registros: {} });
 
-        const fechas = filtroPrestaciones.map(({ data }) => data.estadoActual.createdAt);
+        const fechas = filtroPrestaciones.map(({ data }) => Array.isArray(data) ? data[0].estadoActual.createdAt : data.estadoActual.createdAt);
+        const dataFirst = filtroPrestaciones.length ? (Array.isArray(filtroPrestaciones[0].data) ? filtroPrestaciones[0].data[0] : filtroPrestaciones[0].data) : null;
+        const organizacion = dataFirst?.solicitud?.organizacion?.nombre;
+        const unidadOrganizativa = dataFirst?.unidadOrganizativa?.term;
+
         const fechaDesde = fechas[fechas.length - 1];
         const fechaHasta = fechas[0];
 
-        this.otrasPrestaciones = { fechaDesde, fechaHasta, indices: Object.values(indiceRegistros.indices), registros: Object.values(indiceRegistros.registros) };
+        this.otrasPrestaciones = {
+            fechaDesde,
+            fechaHasta,
+            indices: Object.values(indiceRegistros.indices),
+            registros: Object.values(indiceRegistros.registros),
+            organizacion,
+            unidadOrganizativa
+        };
     }
 
     filtrarPorInternacion(prestaciones) {
