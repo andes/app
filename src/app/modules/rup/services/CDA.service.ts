@@ -51,6 +51,12 @@ export class CDAService {
         return this.server.get(this.CDAUrl + 'paciente/' + idPaciente);
     }
 
+    regenerarCDA(paciente) {
+        return this.server.post(this.CDAUrl + 'paciente', {
+            paciente
+        });
+    }
+
     protected extractData(res: Response) {
         return res.blob();
     }
