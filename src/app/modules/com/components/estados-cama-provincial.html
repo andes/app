@@ -68,13 +68,15 @@
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
         <plex-title titulo="DETALLE EFECTOR">
+            <plex-button type="warning" size="sm" (click)="goTo(efectorSelected, capaSeleccionada)">Ver Mapa
+            </plex-button>&nbsp; &nbsp;
             <plex-button size="sm" type="danger" icon="close" tooltip="cerrar" (click)="closeSidebar()"></plex-button>
         </plex-title>
         <ng-container *ngIf="efectorSelected">
             <plex-detail>
                 <plex-icon name="hospital" type="info"></plex-icon>
                 <div title>{{efectorSelected.organizacion.nombre}}</div>
-                <plex-label titulo="Capa" size="lg" subtitulo="{{ capaSeleccionada.nombre }}">
+                <plex-label titulo="Capa: {{ capaSeleccionada.nombre }}" size="lg" subtitulo="">
                 </plex-label>
             </plex-detail>
             <ng-container *ngFor="let unidadOrganizativa of efectorSelected.unidadesOrganizativas">
