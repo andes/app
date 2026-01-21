@@ -107,7 +107,7 @@ export class MapaCamasService {
             this.fecha2
         ]).pipe(
             switchMap(([ambito, capa, fecha]) => {
-                return this.camasHTTP.snapshot(ambito, capa, fecha).pipe(
+                return this.camasHTTP.snapshot(ambito, capa, fecha, null, null, null, this.organizacion2.getValue()).pipe(
                     map(snapshot => [snapshot, fecha])
                 );
             }),
@@ -397,7 +397,7 @@ export class MapaCamasService {
                     snap.paciente.documento.includes(paciente) || snap.paciente.numeroIdentificacion?.includes(paciente));
             } else {
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
-                    (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
                     snap.paciente.alias?.toLowerCase().includes(paciente.toLowerCase()) ||
                     snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
