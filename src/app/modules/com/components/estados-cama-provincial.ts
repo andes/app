@@ -4,6 +4,7 @@ import { map, Observable } from 'rxjs';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { EstadosCamaProvincialService } from './../services/estados-cama-provincial.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'estados-cama-provincial',
@@ -14,7 +15,8 @@ import { EstadosCamaProvincialService } from './../services/estados-cama-provinc
 export class EstadosCamaProvincialComponent implements OnInit {
 
     constructor(
-        private estadosCamaProvincialService: EstadosCamaProvincialService
+        private estadosCamaProvincialService: EstadosCamaProvincialService,
+        private router: Router
     ) { }
 
     public camasEstados$: Observable<any[]>;
@@ -80,5 +82,18 @@ export class EstadosCamaProvincialComponent implements OnInit {
         });
 
     }
+
+
+    goTo(efectorSelected, capaSeleccionada) {
+        this.router.navigate([
+            'mapa-camas',
+            'internacion',
+            'resumen',
+            capaSeleccionada.id,
+            efectorSelected.organizacion._id
+        ]);
+        // this.router.navigate([`mapa-camas/internacion/resumen/${capaSeleccionada.id}/${efectorSelected.organizacion._id}`]);
+    }
+
 }
 
