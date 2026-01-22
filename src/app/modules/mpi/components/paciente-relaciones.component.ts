@@ -47,9 +47,10 @@ export class PacienteRelacionesComponent {
     ) { }
 
     public seleccionarRelacion(relacionado: IPacienteRelacion) {
-        if (relacionado.referencia) {
+        const id = relacionado.referencia?.id || relacionado.referencia?._id || relacionado.referencia;
+        if (id) {
             let pacienteRel: IPaciente;
-            this.pacienteService.getById(relacionado.referencia).subscribe(result => {
+            this.pacienteService.getById(id).subscribe(result => {
                 pacienteRel = result;
                 (pacienteRel) ? this.selected.emit(pacienteRel) : this.selected.emit(null);
             });
