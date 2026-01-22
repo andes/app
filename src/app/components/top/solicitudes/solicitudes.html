@@ -69,9 +69,10 @@
                                          label="Prioridad" ngModelOptions="{standalone: true}"
                                          (change)="cargarSolicitudes()">
                             </plex-select>
-                            <plex-select [(ngModel)]="conceptoAsociado" name="conceptoAsociado"
-                                         label="Diagnóstico asociado" name="conceptoAsociado"
-                                         [data]="listaConceptosAsociados" (change)="setConceptoAsociado($event)">
+                            <plex-select *ngIf="listaConceptosAsociados.length" [(ngModel)]="conceptoAsociado"
+                                         name="conceptoAsociado" label="Diagnóstico asociado" name="conceptoAsociado"
+                                         [data]="listaConceptosAsociados" labelField="term" idField="conceptId"
+                                         (change)="setConceptoAsociado($event)">
                             </plex-select>
                             <plex-bool class="bool-actualizacion" [(ngModel)]="check" label="Actualización"
                                        (change)="onChange()" [ngModelOptions]="{standalone: true}" type="slide">
@@ -238,9 +239,10 @@
                                          label="Prioridad" ngModelOptions="{standalone: true}"
                                          (change)="cargarSolicitudes()">
                             </plex-select>
-                            <plex-select [(ngModel)]="conceptoAsociado" name="conceptoAsociado"
-                                         label="Diagnóstico asociado" name="conceptoAsociado"
-                                         [data]="listaConceptosAsociados" (change)="setConceptoAsociado($event)">
+                            <plex-select [(ngModel)]="conceptoAsociado" *ngIf="listaConceptosAsociados.length"
+                                         name="conceptoAsociado" label="Diagnóstico asociado" name="conceptoAsociado"
+                                         [data]="listaConceptosAsociados" labelField="term" idField="conceptId"
+                                         (change)="setConceptoAsociado($event)">
                             </plex-select>
                             <plex-bool class="bool-actualizacion" [(ngModel)]="check" label="Actualización"
                                        (change)="onChange()" [ngModelOptions]="{standalone: true}" type="slide">
