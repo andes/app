@@ -333,6 +333,15 @@ export class PacienteComponent implements OnInit {
             return elem;
         });
 
+        if (pacienteGuardar.relaciones) {
+            pacienteGuardar.relaciones = pacienteGuardar.relaciones.map(rel => {
+                if (rel.referencia && typeof rel.referencia === 'object' && (rel.referencia.nombre || rel.referencia.apellido)) {
+                    return { ...rel, referencia: rel.referencia.id || rel.referencia._id };
+                }
+                return rel;
+            });
+        }
+
         return pacienteGuardar;
     }
 
@@ -485,13 +494,21 @@ export class PacienteComponent implements OnInit {
         if (unPacienteSave) {
             // Borramos relaciones
             this.relacionesBorradas.forEach(rel => {
-                if (rel.referencia) {
-                    this.pacienteService.getById(rel.referencia).pipe(
+                const idReferencia = rel.referencia?.id || rel.referencia?._id || rel.referencia;
+                if (idReferencia) {
+                    this.pacienteService.getById(idReferencia).pipe(
                         map(pac => {
-                            const index = pac.relaciones?.findIndex((unaRel: any) => unaRel.referencia === unPacienteSave.id);
+                            const index = pac.relaciones?.findIndex((unaRel: any) => (unaRel.referencia?.id || unaRel.referencia?._id || unaRel.referencia) === unPacienteSave.id);
                             if (index >= 0) {
                                 pac.relaciones.splice(index, 1);
                             }
+                            // Limpiamos referencias por si están populadas
+                            pac.relaciones = pac.relaciones?.map(r => {
+                                if (r.referencia && typeof r.referencia === 'object' && (r.referencia.nombre || r.referencia.apellido)) {
+                                    return { ...r, referencia: r.referencia.id || r.referencia._id };
+                                }
+                                return r;
+                            });
                             return pac;
                         }),
                         mergeMap(pac => {
@@ -509,27 +526,27 @@ export class PacienteComponent implements OnInit {
                 });
                 relacionOpuesta['esConviviente'] = rel.relacion.esConviviente ? rel.relacion.esConviviente : false;
                 const dto = {
-                    id: null,
-                    activo: unPacienteSave.activo,
                     relacion: relacionOpuesta,
                     referencia: unPacienteSave.id,
-                    nombre: unPacienteSave.nombre,
-                    apellido: unPacienteSave.apellido,
-                    fechaNacimiento: unPacienteSave.fechaNacimiento,
-                    documento: (unPacienteSave.documento) ? unPacienteSave.documento : null,
-                    numeroIdentificacion: (unPacienteSave.numeroIdentificacion) ? unPacienteSave.numeroIdentificacion : null,
-                    foto: unPacienteSave.foto ? unPacienteSave.foto : null,
-                    fotoId: unPacienteSave.fotoId ? unPacienteSave.fotoId : null
+                    activo: unPacienteSave.activo,
                 };
-                if (dto.referencia) {
-                    this.pacienteService.getById(rel.referencia).pipe(
+                const idReferencia = rel.referencia?.id || rel.referencia?._id || rel.referencia;
+                if (idReferencia) {
+                    this.pacienteService.getById(idReferencia).pipe(
                         map(pac => {
-                            const index = pac.relaciones?.findIndex((unaRel: any) => unaRel.referencia === unPacienteSave.id);
+                            const index = pac.relaciones?.findIndex((unaRel: any) => (unaRel.referencia?.id || unaRel.referencia?._id || unaRel.referencia) === unPacienteSave.id);
                             if (index >= 0) {
                                 pac.relaciones[index] = dto;
                             } else {
                                 pac.relaciones?.length ? pac.relaciones.push(dto) : pac.relaciones = [dto];
                             }
+                            // Limpiamos referencias por si están populadas
+                            pac.relaciones = pac.relaciones?.map(r => {
+                                if (r.referencia && typeof r.referencia === 'object' && (r.referencia.nombre || r.referencia.apellido)) {
+                                    return { ...r, referencia: r.referencia.id || r.referencia._id };
+                                }
+                                return r;
+                            });
                             return pac;
                         }),
                         mergeMap(pac => {

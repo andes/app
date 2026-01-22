@@ -1,13 +1,15 @@
 <plex-item *ngFor="let relacionado of listado" (click)="seleccionarRelacion(relacionado)" [colors]="colorRelaciones">
-    <img [ngClass]=" {'img-fallecido' : relacionado.fechaFallecimiento}"
-         [mpiFotoPaciente]="{ id: relacionado.referencia, fotoId: relacionado.fotoId}" />
+    <img [ngClass]=" {'img-fallecido' : relacionado.referencia.fechaFallecimiento || relacionado.fechaFallecimiento}"
+         [mpiFotoPaciente]="{ id: relacionado.referencia.id || relacionado.referencia._id || relacionado.referencia, fotoId: relacionado.referencia.fotoId || relacionado.fotoId}" />
 
-    <plex-label *ngIf="!relacionado.numeroIdentificacion?.length" titulo="{{ relacionado | nombre }}"
-                subtitulo="{{ (relacionado.documento | number) || 'Sin DNI' }}">
+    <plex-label *ngIf="!(relacionado.referencia.numeroIdentificacion || relacionado.numeroIdentificacion)?.length"
+                titulo="{{ (relacionado.referencia.id || relacionado.referencia._id ? relacionado.referencia : relacionado) | nombre }}"
+                subtitulo="{{ (relacionado.referencia.documento || relacionado.documento | number) || 'Sin DNI' }}">
     </plex-label>
 
-    <plex-label *ngIf="relacionado.numeroIdentificacion?.length" titulo="{{ relacionado | nombre }}"
-                subtitulo="{{ relacionado.numeroIdentificacion }}">
+    <plex-label *ngIf="(relacionado.referencia.numeroIdentificacion || relacionado.numeroIdentificacion)?.length"
+                titulo="{{ (relacionado.referencia.id || relacionado.referencia._id ? relacionado.referencia : relacionado) | nombre }}"
+                subtitulo="{{ relacionado.referencia.numeroIdentificacion || relacionado.numeroIdentificacion }}">
     </plex-label>
 
     <plex-badge type="info">{{ relacionado.relacion?.nombre || 'S/D' }}
