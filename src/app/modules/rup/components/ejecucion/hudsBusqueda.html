@@ -737,11 +737,11 @@
         <!-- Vista: LABORATORIOS -->
         <ng-container *ngIf="filtroActual === 'laboratorios'">
             <plex-title titulo="Registros del paciente" size="sm" main>
-                <plex-button label="Refrescar laboratorios" type="primary" size="sm" [autodisabled]="true"
-                             (click)="refreshLaboratorios(token)">
+                <plex-button label="Refrescar laboratorios" style="margin-right: 7px;" type="primary" size="sm"
+                             [autodisabled]="true" (click)="refreshLaboratorios(token)">
                 </plex-button>
-                <plex-button [disabled]="disabledBtnCDA" label="regenerar" type="success" size="sm"
-                             (click)="regenerarCDA()">
+                <plex-button icon="refresh" type="success" size="sm" tooltipPosition="left" tooltip="Regenerar"
+                             [disabled]="disabledBtnCDA" (click)="regenerarCDA()">
                 </plex-button>
             </plex-title>
             <div *ngIf="laboratorios.length" class="conceptos hover list-unstyled">
