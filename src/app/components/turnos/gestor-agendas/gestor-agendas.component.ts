@@ -792,9 +792,19 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                 'op': estado,
                 'estado': estado
             };
-            if (estado === 'publicada' && esAgendaDelPasado) {
-                patch.op = 'auditada';
-                patch.estado = 'auditada';
+            if ((estado === 'publicada' || estado === 'disponible') && esAgendaDelPasado) {
+                const tieneTurno = agenda.bloques.find(bloque =>
+                    bloque.turnos.some(turno => turno.estado === 'asignado')
+                );
+
+                if (tieneTurno) {
+                    patch.op = 'pendienteAuditoria';
+                    patch.estado = 'pendienteAuditoria';
+                } else {
+                    patch.op = 'auditada';
+                    patch.estado = 'auditada';
+                }
+
             }
 
             this.serviceAgenda.patch(agenda.id, patch).subscribe((resultado: any) => {
