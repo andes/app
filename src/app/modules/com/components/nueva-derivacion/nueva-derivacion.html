@@ -25,6 +25,15 @@
                 </plex-select>
                 <dispositivo [modelo]="modelo" [tipo]="oxigeno" grow="full"></dispositivo>
                 <tipo-traslado [derivacion]="modelo" grow="full"></tipo-traslado>
+                <plex-select [(ngModel)]="modelo.condicion" name="condicion" label="Condición"
+                             placeholder="Seleccione una condición"
+                             [data]="condiciones" [required]="true" grow="full">
+
+                </plex-select>
+                <plex-select [(ngModel)]="modelo.necesidad" name="necesidad" label="Necesidad"
+                             placeholder="Seleccione una necesidad"
+                             [data]="necesidad" [required]="true" grow="full">
+                </plex-select>
                 <plex-text [(ngModel)]="modelo.motivoDerivacion" label="Motivo de la derivación" name="motivo"
                            [required]="true" grow="full">
                 </plex-text>

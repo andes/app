@@ -58,6 +58,8 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         estadoClinico: '',
         diagnosticoBase: '',
         comorbilidades: '',
+        condicion: '',
+        necesidad: ''
     };
     organizacionesOrigen = [];
     organizacionesDestino = [];
@@ -65,6 +67,16 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
     paramsSubscribe: any;
     esCOM;
     public oxigeno = 'oxigeno';
+    public condiciones = [
+        { id: 'agudo', nombre: 'Agudo' },
+        { id: 'cronico', nombre: 'Crónico' },
+    ];
+
+    public necesidad = [
+        { id: 'mayorComplejidad', nombre: 'Mayor complejidad' },
+        { id: 'menorComplejidad', nombre: 'Menor complejidad' },
+        { id: 'rehabilitacion', nombre: 'Rehabilitación' },
+    ];
 
     constructor(
         private plex: Plex,
@@ -220,6 +232,8 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
             dispositivo: (this.modelo.dispositivo) ? this.modelo.dispositivo : null,
             observacion: 'Inicio de derivación'
         });
+        this.modelo.condicion = this.modelo.condicion.nombre;
+        this.modelo.necesidad = this.modelo.necesidad.nombre;
         this.modelo.adjuntos = this.adjuntos;
         return this.derivacionesService.create(this.modelo);
     }
