@@ -240,7 +240,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.paciente && changes.paciente.currentValue) {
+        if (changes.paciente?.currentValue) {
             const pac = changes.paciente.currentValue;
             if (pac.idPaciente) {
                 this.paciente = pac.idPaciente;
@@ -286,6 +286,23 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
     }
 
+    textoTratamientoProlongado(grupo: any): string {
+        const medicamento = grupo?.recetaVisible?.medicamento;
+
+        if (!medicamento) {
+            return '';
+        }
+
+        const orden =
+            medicamento.ordenTratamiento != null
+                ? medicamento.ordenTratamiento + 1
+                : 0;
+
+        const tiempo = medicamento.tiempoTratamiento?.id ?? '';
+
+        return `Tratamiento prolongado: ${orden} de ${tiempo}`;
+    }
+
     refreshCDA() {
         forkJoin([
             this.cdaService.getCDAList(this.pacienteSelected.id),
@@ -313,7 +330,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
         this.cdaService.regenerarCDA(this.paciente).subscribe(
             () => {
-                this.plex.toast('success', 'CDA regenerado correctamente');
+                this.plex.toast('success', 'CDA regenerado correctamente', 'TIEMPO DE ESPERA 15 SEGUNDOS');
                 this.secondsToUpdate = 15;
                 if (this.intervalUpdate) {
                     clearInterval(this.intervalUpdate);

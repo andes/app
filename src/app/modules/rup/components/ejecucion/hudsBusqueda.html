@@ -72,10 +72,8 @@
                             <div class="row vista-badges"
                                  *ngIf="grupo.recetaVisible?.medicamento?.tratamientoProlongado">
                                 <span class="pl-2 pr-2 mr-3 upTag" [ngClass]="{'active': huds.isOpen(grupo, 'receta')}">
-                                    Tratamiento prolongado: {{ (grupo.recetaVisible?.medicamento?.ordenTratamiento !==
-                                    null && grupo.recetaVisible?.medicamento?.ordenTratamiento !== undefined) ?
-                                    (grupo.recetaVisible.medicamento.ordenTratamiento + 1) : 0 }} de
-                                    {{grupo.recetaVisible?.medicamento.tiempoTratamiento?.id}}</span>
+                                    {{ textoTratamientoProlongado(grupo) }}
+                                </span>
                             </div>
                             <div class="rup-card mini recetas total"
                                  [ngClass]="{'active': huds.isOpen(grupo, 'receta')}"
