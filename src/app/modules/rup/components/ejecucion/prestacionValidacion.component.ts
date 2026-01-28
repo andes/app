@@ -121,7 +121,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     }
 
     get profesionales() {
-        let profesionales = [...(this.prestacion?.profesionalesQueRegistran || [])];
+        let profesionales = [...(this.prestacion?.profesionalesRegistrantes || [])];
         if (this.ultimoValidador) {
             const validador = this.ultimoValidador.createdBy;
             const index = profesionales.findIndex(p => (p.id || p._id) === (validador.id || validador._id) || String(p.documento) === String(validador.documento));
