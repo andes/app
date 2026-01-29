@@ -132,6 +132,10 @@
             @include card-estilo($vacuna);
         }
 
+        .com {
+            @include card-estilo($com);
+        }
+
         .dominios {
             @include card-estilo($dominiosNac);
         }
@@ -284,6 +288,10 @@
 
     &.vacunas {
         color: $vacuna
+    }
+
+    &.com {
+        color: $com
     }
 
     &.dominios {

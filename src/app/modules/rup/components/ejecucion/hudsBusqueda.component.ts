@@ -21,6 +21,7 @@ import { HUDSService } from '../../services/huds.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { CDAService } from '../../services/CDA.service';
 
+import { PuntoInicioService } from 'src/app/services/puntoInicio/punto-inicio.service';
 
 @Component({
     selector: 'rup-hudsBusqueda',
@@ -32,6 +33,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     laboratoriosFS: any;
     laboratorios: any = [];
     vacunas: any = [];
+    derivaciones: any = [];
     ordenDesc = true;
     searchTerm: string;
     hallazgosCronicosAux: any[];
@@ -116,6 +118,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         elementoderegistro: ['elemento de registro'],
         laboratorios: ['laboratorios'],
         vacunas: ['vacunas'],
+        com: ['com']
     };
     public prestacionesTotales;
     public registrosTotales = {
@@ -163,7 +166,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         { key: 'recetas', titulo: 'recetas', icono: 'listado-receta' },
         { key: 'producto', titulo: 'productos', icono: 'pildoras' },
         { key: 'laboratorios', titulo: 'laboratorios', icono: 'recipiente' },
-        { key: 'vacunas', titulo: 'vacunas', icono: 'vacuna' }
+        { key: 'vacunas', titulo: 'vacunas', icono: 'vacuna' },
+        { key: 'com', titulo: 'com', icono: 'account-switch' }
     ];
 
     public estadoReceta = {
@@ -201,6 +205,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         private recetasService: RecetaService,
         private cdaService: CDAService,
         private profesionalService: ProfesionalService,
+        private puntoInicioService: PuntoInicioService
     ) {
     }
 
@@ -214,6 +219,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             this.listarInternaciones();
             this.listarPrestaciones();
             this.listarConceptos();
+            this.listarDerivaciones();
         }
         this.token = this.huds.getHudsToken();
         // Cuando se inicia una prestación debemos volver a consultar si hay CDA nuevos al ratito.
@@ -402,6 +408,11 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 registro.tipo = 'solicitud';
                 registro.class = 'plan';
                 break;
+            case 'com':
+                gtag('huds-open', tipo, registro.organizacionOrigen.nombre, index);
+                registro = registro;
+                registro.class = 'com';
+                break;
             case 'ficha-epidemiologica':
                 gtag('huds-open', tipo, registro.prestacion.term, index);
                 registro = registro.data;
@@ -571,6 +582,16 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         });
     }
 
+    listarDerivaciones() {
+        const query = {
+            paciente: `^${this.paciente.documento}`
+        };
+
+        this.puntoInicioService.get(query).subscribe((data) => {
+            this.derivaciones = data;
+        });
+    }
+
     private cargarSolicitudesMezcladas() {
         this.solicitudesMezcladas = this.solicitudes.concat(this.solicitudesTOP);
 
@@ -727,6 +748,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 return this.laboratorios.length;
             case 'vacunas':
                 return this.vacunas.length;
+            case 'com':
+                return this.derivaciones.length;
             case 'solicitudes':
                 return this.solicitudesMezcladas.length;
             case 'recetas':
@@ -886,6 +909,10 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
     clickSolicitud(registro, index) {
         this.emitTabs(registro, (registro.evoluciones ? 'concepto' : 'solicitud'), index);
+    }
+
+    clickDerivacion(registro, index) {
+        this.emitTabs(registro, 'com', index);
     }
 
     normalizarCadena(cadena) {

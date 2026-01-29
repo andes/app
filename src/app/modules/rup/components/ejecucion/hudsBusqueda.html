@@ -877,5 +877,67 @@
                 </div>
             </div>
         </ng-container>
+
+        <!-- Vista: COM -->
+        <ng-container *ngIf="filtroActual === 'com'">
+            <ul class="hover listado list-unstyled mb-0">
+                <ng-container *ngFor="let registro of derivaciones; let iDerivacion = index">
+                    <li>
+                        <div class="rup-card mini com" [ngClass]="{'active': huds.isOpen(registro, 'com'), 'com': true}"
+                             (click)="clickDerivacion(registro, iDerivacion)">
+                            <div class="rup-header">
+                                <div class="rup-border rup-border-com"
+                                     [ngClass]="{'active': huds.isOpen(registro, 'com') , 'rup-border-com': true}">
+                                    <div class="row p-0 m-0 border-secondary border-left-0">
+                                        <div class="col-10 p-0 m-0">
+                                            <div class="row m-0 p-0">
+                                                <div class="col-2 icon-rup drag-handle">
+                                                    <i class='adi adi-mano-corazon'></i>
+                                                </div>
+                                                <div class="col p-0 pl-2 float-left">
+                                                    <ng-container *ngIf='registro.organizacionOrigen'>
+                                                        {{ registro.organizacionOrigen.nombre }}</ng-container>
+                                                    <div class="row p-0 m-0">
+                                                        <div class="col-10 p-0 m-0">
+                                                            <div class="sugerido">
+                                                                <small>Organización Destino:
+                                                                    <ng-container>
+                                                                        {{ registro.organizacionDestino?.nombre }}
+                                                                    </ng-container>
+                                                                </small>
+                                                                <br>
+                                                                <small>Profesional:
+                                                                    <ng-container
+                                                                                  *ngIf='registro.profesionalSolicitante'>
+                                                                        {{ registro.profesionalSolicitante |
+                                                                        nombre }}
+                                                                    </ng-container>
+                                                                    <ng-container
+                                                                                  *ngIf='!registro.profesionalSolicitante'>
+                                                                        No existe
+                                                                    </ng-container>
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ng-container>
+            </ul>
+            <div *ngIf="!derivaciones.length">
+                <hr class="mt-0">
+                <div class="item-lista-vacia">
+                    <plex-label size="sm" justify="center" icon="adi adi-mano-corazon"
+                                titulo="No hay derivaciones registradas">
+                    </plex-label>
+                </div>
+            </div>
+        </ng-container>
     </div>
 </div>
