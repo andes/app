@@ -92,7 +92,6 @@ export class EstadosCamaProvincialComponent implements OnInit {
             capaSeleccionada.id,
             efectorSelected.organizacion._id
         ]);
-        // this.router.navigate([`mapa-camas/internacion/resumen/${capaSeleccionada.id}/${efectorSelected.organizacion._id}`]);
     }
 
 }
