@@ -1,0 +1,95 @@
+<ng-container *ngIf="registro">
+    <plex-title titulo=" DATOS DE DERIVACIÓN " size="lg">
+        <div class="titulo-badges">
+            <plex-button size="sm" class="pr-1" type="info" [icon]="'printer'" title="Imprimir histórico de derivación"
+                         [disabled]="requestInProgress" (click)="imprimirHistorial()">
+            </plex-button>
+            <plex-badge *ngIf="registro.estado === 'solicitada' || registro.estado === 'asignada' || registro.estado === 'finalizada' "
+                        type="info">
+                {{registro.estado}}
+            </plex-badge>
+            <plex-badge *ngIf="registro.estado === 'habilitada'|| registro.estado === 'aceptada' || registro.estado === 'encomendada'"
+                        type="success" class="pr-1">
+                {{registro.estado}}
+            </plex-badge>
+            <plex-badge *ngIf="registro.estado === 'inhabilitada' || registro.estado === 'rechazada'" type="danger">
+                {{registro.estado}}
+            </plex-badge>
+        </div>
+    </plex-title>
+
+    <plex-grid class="mt-4" type="full" cols="2">
+        <plex-label titulo="Organización origen" subtitulo="{{registro.organizacionOrigen.nombre}}">
+        </plex-label>
+        <plex-label titulo="Organización destino" subtitulo="{{registro.organizacionDestino.nombre}}">
+        </plex-label>
+        <plex-label *ngIf='registro.unidadDestino' titulo="Unidad destino" subtitulo="{{registro.unidadDestino.term}}">
+        </plex-label>
+        <plex-label *ngIf='registro.organizacionTraslado' titulo="Traslado"
+                    subtitulo="{{registro.organizacionTraslado.nombre}}">
+        </plex-label>
+        <plex-label *ngIf='registro.tipoTraslado' titulo="Tipo de traslado"
+                    subtitulo="{{registro.tipoTraslado.nombre}}">
+        </plex-label>
+        <plex-label *ngIf='registro.dispositivo' titulo="Dispositivo de soporte de oxígeno"
+                    subtitulo="{{registro.dispositivo.nombre}}: {{registro.dispositivo.descripcion}}">
+        </plex-label>
+        <plex-label titulo="Creada por" subtitulo="{{registro.createdBy | nombre}}">
+        </plex-label>
+        <plex-label titulo="Ultima actualización" subtitulo="{{registro.updatedAt
+                                        | fecha}}  {{registro.updatedAt
+                                | hora}}">
+        </plex-label>
+    </plex-grid>
+
+    <plex-title size="sm" titulo="Nota"></plex-title>
+    <plex-grid type="full" cols="1">
+        {{registro.detalle}}
+    </plex-grid>
+    <shared-galeria-archivos [files]="adjuntosUrl" [readonly]="true">
+    </shared-galeria-archivos>
+
+    <plex-list class="mt-3 mb-4 w-100">
+        <plex-title size="sm" titulo="Historial de derivación"></plex-title>
+        <ng-container *ngIf="historialDerivaciones?.length">
+            <plex-item *ngFor="let reg of historialDerivaciones">
+                <plex-icon name="entrada" type="info" size="md"></plex-icon>
+                <div collapse>
+                    <div>
+                        <plex-grid cols="3" size="md" type="auto">
+                            <plex-label size="md" [tituloBold]="true" titulo="Fecha"
+                                        subtitulo="{{  reg.fechaCreacion  }}">
+                            </plex-label>
+                            <plex-label size="md" [tituloBold]="true" titulo="Organización Origen"
+                                        subtitulo="{{reg.createdBy.organizacion?.nombre? reg.createdBy.organizacion.nombre : 'No indica organización'}}">
+                            </plex-label>
+                            <plex-label size="md" *ngIf="reg.estado" [tituloBold]="true" titulo="Estado"
+                                        subtitulo="{{reg.estado }}">
+                            </plex-label>
+
+                            <plex-label size="md" *ngIf="reg.prioridad" [tituloBold]="true" titulo="Proridad"
+                                        subtitulo="{{ reg.prioridad }}">
+                            </plex-label>
+
+                            <plex-label size=" md" *ngIf="reg.observacion" [tituloBold]="true" titulo="Observación"
+                                        subtitulo="{{ reg.observacion }}">
+                            </plex-label>
+                            <plex-label size=" md" *ngIf="reg.createdBy" [tituloBold]="true" titulo="Usuario"
+                                        subtitulo="{{ reg.createdBy.nombreCompleto }}">
+                            </plex-label>
+                            <plex-label size="md" *ngIf="reg.organizacionDestino" [tituloBold]="true"
+                                        titulo="Organización Destino"
+                                        subtitulo="{{ reg.organizacionDestino.nombre}}"></plex-label>
+                        </plex-grid>
+                    </div>
+                </div>
+            </plex-item>
+        </ng-container>
+
+        <div *ngIf="!historialDerivaciones.length" justify="center" class="mt-4">
+            <plex-label class="flex-column" icon="informacion" size="m" direction="column"
+                        titulo="No existe historial para esta derivación">
+            </plex-label>
+        </div>
+    </plex-list>
+</ng-container>

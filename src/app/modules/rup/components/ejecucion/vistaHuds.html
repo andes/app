@@ -98,6 +98,10 @@
                         <vista-cda [registro]="registro"></vista-cda>
                     </plex-tab>
 
+                    <plex-tab *ngIf="registro.tipo === 'com'" [allowClose]="true" label="COM" [class]="registro.class"
+                              color="com">
+                        <vista-derivacion [registro]="registro.data"></vista-derivacion>
+                    </plex-tab>
 
                     <plex-tab [allowClose]="true" label="Ficha Epidemilógica"
                               *ngIf="registro.tipo === 'ficha-epidemiologica'">
