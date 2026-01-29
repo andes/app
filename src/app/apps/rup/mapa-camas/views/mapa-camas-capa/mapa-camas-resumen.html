@@ -1,7 +1,7 @@
 <plex-layout main="12">
     <plex-layout-main>
         <header>
-            <plex-title titulo="Mapa de camas">
+            <plex-title [titulo]="'Mapa de camas' + ' - ' + dataOrganizacion?.nombre">
                 <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
             </plex-title>
         </header>
@@ -9,11 +9,11 @@
         <!-- Listado de camas -->
         <ng-container>
             <ng-container>
-                <plex-label *ngIf="dataOrganizacion" titulo="Organización"
-                            [subtitulo]="dataOrganizacion.nombre"></plex-label>
-
+                <plex-label *ngIf="capaActual" [titulo]="'Capa:' + capaActual"></plex-label>
+                <plex-label *ngIf="fechaBusqueda"
+                            [titulo]="'fechaBusqueda: ' + (fechaBusqueda | date:'dd/MM/yyyy')"></plex-label>
             </ng-container>
-            <app-filtros-camas></app-filtros-camas>
+            <app-filtros-camas [filtroCompleto]="false"></app-filtros-camas>
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
