@@ -1,17 +1,16 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { Observable, of } from 'rxjs';
-import { map, take, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { WebSocketService } from 'src/app/services/websocket.service';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 import { ISnapshot } from '../../interfaces/ISnapshot';
-import { MapaCamaListadoColumns } from '../../interfaces/mapa-camas.internface';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 import { Location } from '@angular/common';
@@ -23,7 +22,7 @@ import { Location } from '@angular/common';
 
 })
 
-export class MapaCamasResumenComponent implements OnInit, OnDestroy {
+export class MapaCamasResumenComponent implements OnInit {
 
     @ViewChild(CdkVirtualScrollViewport, { static: false })
     public viewPort: CdkVirtualScrollViewport;
@@ -47,6 +46,8 @@ export class MapaCamasResumenComponent implements OnInit, OnDestroy {
     fecha$: Observable<Date>;
     organizacionv2; // true si la organizacion usa capas unificadas
     estado$: Observable<IMaquinaEstados>;
+    capaActual: string;
+    fechaBusqueda: Date;
 
     public sortBy: string;
     public sortOrder = 'desc';
@@ -81,7 +82,6 @@ export class MapaCamasResumenComponent implements OnInit, OnDestroy {
     constructor(
         public auth: Auth,
         private plex: Plex,
-        private location: Location,
         private router: Router,
         private route: ActivatedRoute,
         public mapaCamasService: MapaCamasService,
@@ -92,10 +92,6 @@ export class MapaCamasResumenComponent implements OnInit, OnDestroy {
 
     ) { }
 
-    ngOnDestroy() {
-        this.ws.disconnect();
-    }
-
     ngOnInit() {
         this.mapaCamasService.resetView();
         const ambito = this.route.snapshot.paramMap.get('ambito');
@@ -105,6 +101,9 @@ export class MapaCamasResumenComponent implements OnInit, OnDestroy {
         this.mapaCamasService.setOrganizacion(idOrganizacion);
         this.permisosMapaCamasService.setAmbito(ambito);
         this.mapaCamasService.setCapa(capa);
+        this.capaActual = capa;
+        this.fechaBusqueda = new Date();
+
 
         this.plex.updateTitle([{
             route: '/inicio',
@@ -138,7 +137,6 @@ export class MapaCamasResumenComponent implements OnInit, OnDestroy {
         }
         this.camas$ = this.mapaCamasService.snapshotOrdenado$.pipe(
             map(snapshots => {
-                console.log('snapshots', snapshots);
                 return snapshots.filter(snap => snap.estado !== 'inactiva' && snap.esCensable);
             })
         );
