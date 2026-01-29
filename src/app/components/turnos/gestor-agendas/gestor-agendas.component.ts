@@ -323,6 +323,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                 this.parametros['estado'] = '';
             }
         }
+        this.parametros['teleConsulta'] = true;
         // cada vez que se modifican los filtros seteamos el skip en 0
         this.parametros.skip = 0;
         this.scrollEnd = false;
