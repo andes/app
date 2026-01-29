@@ -55,7 +55,7 @@ export const INTERNACION_ROUTES = [
     { path: ':ambito/:capa', component: MapaCamasCapaComponent, pathMatch: 'full' },
     { path: ':ambito/:capa/:idOrganizacion', component: MapaCamasCapaComponent, pathMatch: 'full' },
     { path: ':ambito/resumen/:capa/:idOrganizacion', component: MapaCamasResumenComponent, pathMatch: 'full' },
-    { path: '', redirectTo: 'internacion', pathMatch: 'full' }
+    { path: '', component: MapaCamasMainComponent }
 
 ];
 
