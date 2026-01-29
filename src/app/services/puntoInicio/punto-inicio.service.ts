@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { DerivacionesService } from 'src/app/services/com/derivaciones.service';
-import { IDerivacion } from '../interfaces/IDerivacion.interface';
+import { IDerivacion } from '../../modules/com/interfaces/IDerivacion.interface';
+import { DerivacionesService } from '../com/derivaciones.service';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PuntoInicioService {
 
     public derivacionesOrdenadas$: Observable<any[]>;

@@ -132,6 +132,10 @@
             @include card-estilo($vacuna);
         }
 
+        .com {
+            @include card-estilo($com);
+        }
+
         .dominios {
             @include card-estilo($dominiosNac);
         }
@@ -286,6 +290,10 @@
         color: $vacuna
     }
 
+    &.com {
+        color: $com
+    }
+
     &.dominios {
         color: $dominiosNac
     }
@@ -349,6 +357,7 @@
     font-size: 80%;
 
 }
+
 .total {
     width: 100% !important;
 }

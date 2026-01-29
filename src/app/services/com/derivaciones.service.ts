@@ -2,7 +2,9 @@ import { ResourceBaseHttp, Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class DerivacionesService extends ResourceBaseHttp {
     protected url = '/modules/com/derivaciones';
     constructor(protected server: Server) { super(server); }
