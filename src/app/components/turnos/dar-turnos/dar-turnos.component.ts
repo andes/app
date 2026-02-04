@@ -44,6 +44,7 @@ export class DarTurnosComponent implements OnInit {
     public link: String = '';
     public changeCarpeta = false;
     public financiador;
+    public todaysdate: Date;
     hideDarTurno: boolean;
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
     autocitado = false;
@@ -66,6 +67,10 @@ export class DarTurnosComponent implements OnInit {
     @Input('demandaInsatisfecha')
     set demandaInsatisfecha(value: any) {
         this.desdeDemanda = value;
+    }
+    turnosPaciente: any;
+    get paciente(): any {
+        return this._paciente;
     }
 
     @Input('solicitudPrestacion')
@@ -127,7 +132,7 @@ export class DarTurnosComponent implements OnInit {
     public organizacion = this.auth.organizacion;
     public _pacienteSeleccionado: any;
     public _solicitudPrestacion: any; // TODO: cambiar por IPrestacion cuando esté
-    public paciente: IPaciente;
+    public _paciente: IPaciente;
     public opciones: any = {};
     public agenda: IAgenda;
     public agendas: IAgenda[];
@@ -216,6 +221,8 @@ export class DarTurnosComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.todaysdate = new Date();
+        this.todaysdate.setHours(0, 0, 0, 0);
         this.hoy = new Date();
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
         this.puedeDarSobreturno = this.auth.check('turnos:puntoInicio:darSobreturno');
@@ -251,11 +258,24 @@ export class DarTurnosComponent implements OnInit {
         this.actualizar();
     }
 
+    cargarTurnos() {
+        if (this._paciente?.id) {
+            this.serviceTurno.getHistorial({ pacienteId: this._paciente.id }).subscribe(turnos => {
+                const turnosFiltrados = turnos.filter(t => t.estado !== 'liberado' && moment(t.horaInicio).isSameOrAfter(this.todaysdate, 'day'));
+                this.turnosPaciente = turnosFiltrados.sort((a, b) => {
+                    const inia = a.horaInicio ? new Date(a.horaInicio) : null;
+                    const inib = b.horaInicio ? new Date(b.horaInicio) : null;
+                    return ((inia && inib) ? (inib.getTime() - inia.getTime()) : 0);
+                });
+            });
+        }
+    }
     actualizarDatosPaciente(paciente) {
         const idPaciente = paciente._id || paciente.id;
         this.servicePaciente.getById(idPaciente).subscribe(
             pacienteMPI => {
-                this.paciente = pacienteMPI;
+                this._paciente = pacienteMPI;
+                this.cargarTurnos();
                 this.verificarTelefono(pacienteMPI);
                 this.obtenerCarpetaPaciente();
                 if (this.paciente.documento) {

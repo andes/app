@@ -53,8 +53,9 @@ export class TurnosSolicitudComponent implements OnInit {
     }
 
     cargarTurnos() {
-        if (this._paciente?.id) {
-            this.serviceTurno.getHistorial({ pacienteId: this._paciente.id }).subscribe(turnos => {
+        const pacienteId = this._paciente?.id || (this._paciente as any)?._id;
+        if (pacienteId) {
+            this.serviceTurno.getHistorial({ pacienteId }).subscribe(turnos => {
                 const turnosFiltrados = turnos.filter(t => t.estado !== 'liberado' && moment(t.horaInicio).isSameOrAfter(this.todaysdate, 'day'));
                 this.turnosPaciente = turnosFiltrados.sort((a, b) => {
                     const inia = a.horaInicio ? new Date(a.horaInicio) : null;
