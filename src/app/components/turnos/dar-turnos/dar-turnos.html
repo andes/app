@@ -74,6 +74,52 @@
             <paciente-detalle [paciente]="paciente" orientacion="horizontal" [fields]="pacienteFields">
             </paciente-detalle>
         </ng-container>
+        <plex-title titulo="Turnos futuros" size="sm"></plex-title>
+        <plex-list *ngIf="turnosPaciente?.length">
+            <plex-item *ngFor="let turno of turnosPaciente">
+                <plex-icon name="calendario" type="info" size="md"></plex-icon>
+                <div>
+                    <plex-grid cols="3" size="md" type="auto">
+                        <plex-label size="md" [tituloBold]="true"
+                                    titulo="{{ turno.horaInicio | date:'dd/MM/yyyy HH:mm' }}"
+                                    subtitulo="{{ turno.tipoPrestacion?.term }}">
+                        </plex-label>
+
+                        <div *ngIf="turno.profesionales?.length">
+                            <plex-label size="md" [tituloBold]="true" titulo="Equipo de Salud">
+                            </plex-label>
+                            <div *ngFor="let profesional of turno.profesionales" class="small">
+                                {{profesional | nombre}}
+                            </div>
+                        </div>
+                        <div *ngIf="!turno.profesionales?.length">
+                            <plex-label size="md" [tituloBold]="true" titulo="Equipo de Salud"
+                                        subtitulo="Profesional no asignado">
+                            </plex-label>
+                        </div>
+
+                        <plex-label size="md" [tituloBold]="true" titulo="Espacio Físico"
+                                    subtitulo="{{ turno.espacioFisico?.nombre || turno.otroEspacioFisico?.nombre || 'No asignado' }}">
+                        </plex-label>
+
+                        <plex-label size="md" [tituloBold]="true" titulo="Efector"
+                                    subtitulo="{{ turno.organizacion?.nombre }}">
+                        </plex-label>
+
+                        <div *ngIf="turno.paciente?.obraSocial">
+                            <plex-label size="md" [tituloBold]="true" titulo="Obra Social"
+                                        subtitulo="{{ turno.paciente.obraSocial.nombre }}">
+                            </plex-label>
+                        </div>
+                    </plex-grid>
+                </div>
+            </plex-item>
+        </plex-list>
+        <div *ngIf="turnosPaciente && !turnosPaciente.length" justify="center" class="mt-4" style="margin-bottom: 2em;">
+            <plex-label class="flex-column" icon="informacion" size="md" direction="column"
+                        titulo="No existen turnos futuros para este paciente">
+            </plex-label>
+        </div>
         <plex-title *ngIf="estadoT === 'noSeleccionada' && !_solicitudPrestacion?.solicitud"
                     titulo="Búsquedas recientes" size="sm"></plex-title>
         <plex-list *ngIf="estadoT === 'noSeleccionada' && !_solicitudPrestacion?.solicitud" [selectable]="true">
