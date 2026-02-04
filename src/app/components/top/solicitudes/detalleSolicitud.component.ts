@@ -23,9 +23,10 @@ export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
 
     public items = [
         { key: 'solicitud', label: 'SOLICITUD' },
-        { key: 'historial', label: 'HISTORIAL' }
+        { key: 'historial', label: 'HISTORIAL' },
+        { key: 'turnos', label: 'TURNOS' }
     ];
-    public mostrar;
+    public mostrar = 'solicitud';
     public verIndicaciones = false;
 
     constructor(
@@ -48,15 +49,16 @@ export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
                     };
                 });
             });
-        }
-        this.pacienteService.getEstadoInternacion(this.prestacionSeleccionada.paciente.id).subscribe(resp => {
-
-            if (resp) {
-                this.internacion = resp.estado;
-                this.organizacionInternacion = resp.organizacion ? resp.organizacion : 'Sin organización';
+            if (this.prestacionSeleccionada?.paciente?.id) {
+                this.pacienteService.getEstadoInternacion(this.prestacionSeleccionada.paciente.id).subscribe(resp => {
+                    if (resp) {
+                        this.internacion = resp.estado;
+                        this.organizacionInternacion = resp.organizacion ? resp.organizacion : 'Sin organización';
+                    }
+                    this.internacionPaciente.emit(this.internacion);
+                });
             }
-            this.internacionPaciente.emit(this.internacion);
-        });
+        }
     }
 
     cambiarOpcion(opcion) {
