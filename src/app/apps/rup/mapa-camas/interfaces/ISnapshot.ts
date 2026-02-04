@@ -56,6 +56,7 @@ export interface ISnapshot {
         edicionCama?: boolean;
         cambioDeCama?: boolean;
         desbloqueo?: boolean;
+        edicionFinanciador?: boolean;
     };
     nota: string;
     prioridad?: {
