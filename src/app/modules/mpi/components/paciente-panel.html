@@ -56,20 +56,21 @@
         </plex-label>
 
         <plex-item *ngFor="let relacionado of paciente.relaciones; let i = index" class="">
-            <img [ngClass]="{'img-fallecido' : relacionado.fechaFallecimiento}"
-                 [mpiFotoPaciente]="{ id: relacionado.referencia, fotoId: relacionado.fotoId}" />
+            <img [ngClass]="{'img-fallecido' : relacionado.fechaFallecimiento || relacionado.referencia?.fechaFallecimiento}"
+                 [mpiFotoPaciente]="{ id: relacionado.referencia?.id || relacionado.referencia, fotoId: relacionado.fotoId || relacionado.referencia?.fotoId}" />
 
-            <plex-label *ngIf="!relacionado.numeroIdentificacion" titulo="{{ relacionado | nombre }}"
-                        subtitulo="{{ (relacionado.documento | number) || 'Sin DNI' }}">
+            <plex-label *ngIf="!(relacionado.numeroIdentificacion || relacionado.referencia?.numeroIdentificacion)"
+                        titulo="{{ relacionado | nombre }}"
+                        subtitulo="{{ (relacionado.documento || relacionado.referencia?.documento | number) || 'Sin DNI' }}">
             </plex-label>
 
-            <plex-label *ngIf="relacionado.numeroIdentificacion" titulo="{{ relacionado | nombre }}"
-                        subtitulo="{{ relacionado.numeroIdentificacion }}">
+            <plex-label *ngIf="relacionado.numeroIdentificacion || relacionado.referencia?.numeroIdentificacion"
+                        titulo="{{ relacionado | nombre }}"
+                        subtitulo="{{ relacionado.numeroIdentificacion || relacionado.referencia?.numeroIdentificacion }}">
             </plex-label>
-
+            
             <plex-badge type="info">{{ relacionado?.relacion?.nombre }}
             </plex-badge>
-
             <plex-badge type="danger" *ngIf="relacionado.fechaFallecimiento"> Fallecido
             </plex-badge>
 
