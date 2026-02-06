@@ -27,6 +27,7 @@ import { TurnoService } from './../../../services/turnos/turno.service';
 import { EstadosAgenda } from './../enums';
 import { CalendarioDia } from './calendario-dia.class';
 import { EstadosDarTurnos } from './enums';
+import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 
 @Component({
     selector: 'dar-turnos',
@@ -183,6 +184,7 @@ export class DarTurnosComponent implements OnInit {
     prestacionesAlternativa;
     turnosFuturos = [];
     modalTurnosRepetidos = false;
+    origen = '';
 
     // Muestra sólo las agendas a las que se puede asignar el turno (oculta las "con/sin alternativa")
     mostrarNoDisponibles = false;
@@ -197,6 +199,7 @@ export class DarTurnosComponent implements OnInit {
     private eventoProfesional: any = null;
     public mostrarCalendario = false;
     public condicionLlaveAgenda: any;
+    private solicitudesPendientes: IPrestacion[];
 
     constructor(
         public serviceProfesional: ProfesionalService,
@@ -206,7 +209,7 @@ export class DarTurnosComponent implements OnInit {
         public servicePaciente: PacienteService,
         public servicioCarpetaPaciente: CarpetaPacienteService,
         public conceptosTurneablesService: ConceptosTurneablesService,
-        public servicioPrestacionPaciente: PrestacionesService,
+        public prestacionesService: PrestacionesService,
         public servicioOS: ObraSocialService,
         public plex: Plex,
         public auth: Auth,
@@ -219,7 +222,19 @@ export class DarTurnosComponent implements OnInit {
         this.hoy = new Date();
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
         this.puedeDarSobreturno = this.auth.check('turnos:puntoInicio:darSobreturno');
+        this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
         this.opciones.fecha = moment().toDate();
+
+        const paramsSolicitudes = {
+            idPaciente: this._pacienteSeleccionado?.id,
+            solicitudDesde: moment().subtract(1, 'years').toDate(),
+            solicitudHasta: moment().toDate(),
+            organizacion: this.organizacion.id,
+            estados: 'pendiente'
+        };
+        this.prestacionesService.getSolicitudes(paramsSolicitudes).subscribe(solicitudes => {
+            this.solicitudesPendientes = solicitudes.filter(s => !s.solicitud.turno); // solicitudes sin turno asignado
+        });
 
         this.carpetaEfector = {
             organizacion: {
@@ -228,7 +243,6 @@ export class DarTurnosComponent implements OnInit {
             },
             nroCarpeta: ''
         };
-        this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
 
         if (this._pacienteSeleccionado) {
             this.pacientesSearch = false;
@@ -361,6 +375,41 @@ export class DarTurnosComponent implements OnInit {
         this.prestacionSeleccionada = this.opciones.tipoPrestacion;
         this.profesionalSeleccionado = this.opciones.profesional;
 
+        if (this.solicitudesPendientes?.length && this.router.url.includes('citas/punto-inicio')) {
+            if (this.prestacionSeleccionada) {
+                let solicitudPendiente = this.solicitudesPendientes.filter(s => s.solicitud.tipoPrestacion.id === this.prestacionSeleccionada.id);
+                if (solicitudPendiente.length) {
+                    return new Promise(resolve => { // promise para cortar el flujo hasta que se responda el alert
+                        this.plex.confirm(
+                            'El paciente tiene una solicitud pendiente para esta prestación. ¿Desea asignar un turno para resolverla?',
+                            'Turno para solicitud pendiente',
+                            'Turno para solicitud',
+                            'Turno programado',
+                            'success',
+                            'info')
+                            .then(respuesta => {
+                                if (respuesta) {
+                                    /* caso especial para pacientes con solicitudes aún no resueltas que intentan sacar un turno directo ..
+                                            buscamos solicitudes en estado 'pendiente' para la prestación seleccionada */
+                                    if (solicitudPendiente.length && this.profesionalSeleccionado) {
+                                        solicitudPendiente = solicitudPendiente.filter(s => s.solicitud.profesional?.id === this.profesionalSeleccionado.id);
+                                    }
+                                    if (solicitudPendiente.length) {
+                                        this.solicitudPrestacion = solicitudPendiente[0];
+                                        this.tipoPrestacionesPermitidas = this.solicitudPrestacion.solicitud.tipoPrestacion;
+                                    }
+                                }
+                            });
+                        return resolve(null);
+                    });
+                }
+            } else {
+                // a este punto solo se llega limpiando el campo de tipo prestacion, dando un turno por ventanilla a un paciente con solicitudes pendientes
+                this.solicitudPrestacion = null;
+                this.tipoPrestacionesPermitidas = null;
+            }
+        }
+
         const search = {
             'tipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion : null,
             'profesional': this.opciones.profesional ? this.opciones.profesional : null,
@@ -409,6 +458,59 @@ export class DarTurnosComponent implements OnInit {
             this.actualizar();
         }
     }
+
+
+    /*  Filtra las agendas a mostrar en el calendario segun se acceda desde el listado de pacientes
+        o el de solicitudes.
+    */
+    filtrarSegunOrigen(): IAgenda[] {
+        let arrAgendas: IAgenda[] = [];
+        this.agendas.forEach(agenda => {
+
+            const delDia = agenda.horaInicio >= moment().startOf('day').toDate() && agenda.horaInicio <= moment().endOf('day').toDate();
+            // por estados
+            const publicada = agenda.estado === 'publicada';
+            const disponible = agenda.estado === 'disponible';
+            const esGestion = this.tipoTurno === 'gestion';
+            // por tipo
+            const dinamicaDelDiaConCupoDisponible = agenda.dinamica && delDia && ((agenda as any).cupo > 0 || agenda.cupo === -1) && !esGestion;
+            const delDiaConTurnosDisponibles = (agenda.turnosRestantesDelDia + agenda.turnosRestantesProgramados) > 0 && delDia;
+            const programadaConTurnosDisponibles = agenda.turnosRestantesProgramados > 0 && !delDia;
+            const autocitadoConTurnosDisponibles = this.autocitado && agenda.turnosRestantesProfesional > 0;
+            const llaveConTurnosDisponibles = !this.autocitado && agenda.turnosRestantesGestion > 0;
+            // condiciones
+            const accesoDirectoConTurnosDisponibles = (!esGestion || this.desdeDemanda) && ((delDiaConTurnosDisponibles && this.hayTurnosEnHorario(agenda)) || programadaConTurnosDisponibles);
+            const gestionConTurnosDisponibles = esGestion && (autocitadoConTurnosDisponibles || llaveConTurnosDisponibles);
+            const agendaDinamicaOconLlave = (publicada && accesoDirectoConTurnosDisponibles) ||
+                ((publicada || disponible) && (gestionConTurnosDisponibles || dinamicaDelDiaConCupoDisponible || agenda.condicionLlave));
+
+            if (this.solicitudPrestacion?.id && this.router.url.includes('citas/punto-inicio')) { // ventanilla citas, dando turno a paciente con solicitud pendiente
+                // Verificamos si existen agendas con llave y limpiamos el array (por si existen agendas programadas y del dia).
+                if (agendaDinamicaOconLlave) {
+                    if (arrAgendas.length && (arrAgendas[arrAgendas.length - 1].turnosRestantesDelDia > 0 || arrAgendas[arrAgendas.length - 1].turnosRestantesProgramados > 0)) {
+                        arrAgendas = [];
+                    }
+                    arrAgendas.push(agenda);
+                    // Verificamos si existen agendas con turnos programados y limpiamos el array (por si existen agendas programadas)
+                } else if (programadaConTurnosDisponibles) {
+                    if (arrAgendas.length && arrAgendas[arrAgendas.length - 1].turnosRestantesDelDia > 0) {
+                        arrAgendas = [];
+                    }
+                    arrAgendas.push(agenda);
+                } else if (delDiaConTurnosDisponibles) {
+                    arrAgendas.push(agenda);
+                }
+            } else { // ventanilla citas (turno común) o desde listado de TOP
+                const cond = (publicada && accesoDirectoConTurnosDisponibles) ||
+                    ((publicada || disponible) && (gestionConTurnosDisponibles || dinamicaDelDiaConCupoDisponible || agenda.condicionLlave));
+                if (cond) {
+                    arrAgendas.push(agenda);
+                }
+            }
+        });
+        return arrAgendas;
+    }
+
 
     actualizar() {
         if (this._solicitudPrestacion && !this.tipoPrestacionesPermitidas) {
@@ -473,26 +575,8 @@ export class DarTurnosComponent implements OnInit {
 
                 // Por defecto no se muestran las agendas que no tienen turnos disponibles
                 if (!this.mostrarNoDisponibles) {
-                    this.agendas = this.agendas.filter(agenda => {
-                        const delDia = agenda.horaInicio >= moment().startOf('day').toDate() && agenda.horaInicio <= moment().endOf('day').toDate();
-                        // por estados
-                        const publicada = agenda.estado === 'publicada';
-                        const disponible = agenda.estado === 'disponible';
-                        const esGestion = this.tipoTurno === 'gestion';
-                        // por tipo
-                        const dinamicaDelDiaConCupoDisponible = agenda.dinamica && delDia && ((agenda as any).cupo > 0 || agenda.cupo === -1) && !esGestion;
-                        const delDiaConTurnosDisponibles = (agenda.turnosRestantesDelDia + agenda.turnosRestantesProgramados) > 0 && delDia;
-                        const programadaConTurnosDisponibles = agenda.turnosRestantesProgramados > 0 && !delDia;
-                        const autocitadoConTurnosDisponibles = this.autocitado && agenda.turnosRestantesProfesional > 0;
-                        const llaveConTurnosDisponibles = !this.autocitado && agenda.turnosRestantesGestion > 0;
-                        // condiciones
-                        const accesoDirectoConTurnosDisponibles = (!esGestion || this.desdeDemanda) && ((delDiaConTurnosDisponibles && this.hayTurnosEnHorario(agenda)) || programadaConTurnosDisponibles);
-                        const gestionConTurnosDisponibles = esGestion && (autocitadoConTurnosDisponibles || llaveConTurnosDisponibles);
-
-                        const cond = (publicada && accesoDirectoConTurnosDisponibles) ||
-                            ((publicada || disponible) && (gestionConTurnosDisponibles || dinamicaDelDiaConCupoDisponible || agenda.condicionLlave));
-                        return cond;
-                    });
+                    // filtramos agendas a mostrar segun el origen de la dación de turno
+                    this.agendas = this.filtrarSegunOrigen();
                 }
                 // Ordena las Agendas por fecha/hora de inicio
                 this.agendas = this.agendas.sort((a, b) => {
@@ -1154,7 +1238,7 @@ export class DarTurnosComponent implements OnInit {
                 op: 'asignarTurno',
                 idTurno: this.turno.id
             };
-            this.servicioPrestacionPaciente.patch(this._solicitudPrestacion.id, params).subscribe(prestacion => {
+            this.prestacionesService.patch(this._solicitudPrestacion.id, params).subscribe(prestacion => {
                 this.volverValidacion.emit(prestacion);
             });
         }
