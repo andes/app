@@ -11,7 +11,7 @@ import { OrganizacionService } from '../../../services/organizacion.service';
 import { SemaforoService } from '../../semaforo-priorizacion/service/semaforo.service';
 import { IDerivacion } from '../interfaces/IDerivacion.interface';
 import { DerivacionesService } from './../../../services/com/derivaciones.service';
-import { PuntoInicioService } from './../services/punto-inicio.service';
+import { PuntoInicioService } from 'src/app/services/puntoInicio/punto-inicio.service';
 
 @Component({
     selector: 'com-punto-inicio',
