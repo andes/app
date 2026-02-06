@@ -17,6 +17,7 @@ import { PrestacionesService } from '../../../modules/rup/services/prestaciones.
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { ConstantesService } from 'src/app/services/constantes.service';
 import { SnomedService } from 'src/app/apps/mitos';
+import { ECLQueriesService } from 'src/app/services/eclqueries.service';
 
 
 @Component({
@@ -177,6 +178,7 @@ export class SolicitudesComponent implements OnInit {
         public motivosHudsService: MotivosHudsService,
         public constantesService: ConstantesService,
         public snomedService: SnomedService,
+        public eclqueriesServicies: ECLQueriesService
     ) {
     }
 
@@ -214,7 +216,7 @@ export class SolicitudesComponent implements OnInit {
             this.fechaDesde = moment(this.fechaHasta).subtract(this.diasIntervalo, 'days').toDate();
             this.estadoEntrada = { id: 'asignada', nombre: 'ASIGNADA' };
         }
-
+        this.cargarConceptosAsociados();
         this.buscarSolicitudes();
     }
 
@@ -580,7 +582,6 @@ export class SolicitudesComponent implements OnInit {
                     this.scrollEnd = true;
                 }
                 this.loader = false;
-                this.cargarConceptosAsociados();
             });
     }
 
@@ -951,19 +952,24 @@ export class SolicitudesComponent implements OnInit {
     }
 
     setConceptoAsociado(event) {
-        this.conceptoAsociado = event.value?.id || null;
+        this.conceptoAsociado = event.value?.conceptId || null;
         this.cargarSolicitudes();
     }
 
     cargarConceptosAsociados() {
-        this.constantesService.search({ source: 'solicitud:conceptosAsociados' }).subscribe(async (constantes) => {
-            const query = constantes[0].query;
-
-            this.snomedService?.get({
-                search: query
-            }).subscribe((resultados) => {
-                this.listaConceptosAsociados = resultados.map(concepto => ({ id: concepto.conceptId, nombre: concepto.term }));
-            });
+        this.eclqueriesServicies.search({ key: 'conceptos-asociadosm' }).pipe(
+            switchMap(ecl => {
+                if (ecl?.length > 0) {
+                    const query: any = {
+                        expression: ecl[0].valor,
+                        search: ''
+                    };
+                    return this.snomedService.get(query); // Retorna el observable del segundo servicio
+                }
+                return []; // Retorna un observable vacío si no hay conceptos
+            })
+        ).subscribe((resultado) => {
+            this.listaConceptosAsociados = [...resultado];
         });
     }
 }
