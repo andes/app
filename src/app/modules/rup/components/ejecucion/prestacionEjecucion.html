@@ -104,6 +104,7 @@
                                                     </div>
                                                 </ng-container>
                                             </div>
+
                                         </div>
                                         <div class="actions"
                                              *ngIf="!confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i) )">
@@ -111,7 +112,6 @@
                                             <ng-container *ngIf="registro?.privacy?.scope !== 'public'">
                                                 <plex-badge type="info">Registro Privado</plex-badge>
                                             </ng-container>
-
                                             <ng-container
                                                           *ngIf="prestacion?.ejecucion?.registros !== null && prestacion?.ejecucion?.registros?.length > 1">
                                                 <plex-dropdown type="primary" class="dropdown-inline" [right]="true"
@@ -141,11 +141,11 @@
 
                                             <plex-button *ngIf="!existe(registro.concepto);" size="sm" type="danger"
                                                          icon="delete"
-                                                         (click)="confirmarEliminarRegistro(registro, 'card')" [disabled]="!puedeEliminar(registro)">
+                                                         (click)="confirmarEliminarRegistro(registro, 'card')"
+                                                         [disabled]="!puedeEliminar(registro)">
                                             </plex-button>
                                         </div>
                                     </div>
-
                                     <div class="rup-body" (click)="recuperaLosMasFrecuentes(registro.concepto)"
                                          [hidden]="itemsRegistros[registro.id]?.collapse || confirmarEliminar || confirmarDesvincular[registro.id]">
                                         <!-- ... Header -->
@@ -159,7 +159,6 @@
                                                 registro.concepto.semanticTag}}
                                             </span>
                                         </div>
-
                                         <!-- ... Body -->
                                         <div class="content"
                                              *ngIf="paciente || (prestacion.solicitud.tipoPrestacion.noNominalizada)">
@@ -172,6 +171,7 @@
                                                  [conceptosAsociados]="conceptosAsociados" [alerta]="alerta">
                                             </rup>
                                         </div>
+
                                     </div>
 
                                     <!-- Footer del registro -->
@@ -216,8 +216,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             </ng-container>
 
                             <!-- Drop area -->
@@ -229,6 +227,7 @@
                                 Mover a esta posición
                             </div>
                         </div>
+
                     </plex-tab>
 
                     <plex-tab label="Resumen del Paciente" *ngIf="paciente && tieneAccesoHUDS">
@@ -265,7 +264,7 @@
                         <plex-tab [allowClose]="true" [label]="registro.data.concepto.term"
                                   [class]="registro.data.class" [color]="registro.data.class"
                                   *ngIf="registro.tipo === 'concepto'">
-                            <detalle-registro *ngIf="registro.data.class === 'situación' || 
+                            <detalle-registro *="registro.data.class === 'situación' || 
                                                  registro.data.class === 'hallazgo' || registro.data.class === 'trastorno'"
                                               [registro]="registro.data" [paciente]="paciente">
                             </detalle-registro>
@@ -308,9 +307,9 @@
                         </plex-tab>
 
                         <plex-tab *ngIf="registro.tipo === 'laboratorio'" [allowClose]="true"
-                              label="Informe de Laboratorio">
-                        <vista-laboratorio [protocolo]="registro"></vista-laboratorio>
-                    </plex-tab>
+                                  label="Informe de Laboratorio">
+                            <vista-laboratorio [protocolo]="registro"></vista-laboratorio>
+                        </plex-tab>
 
                         <plex-tab *ngIf="registro.tipo === 'receta'" color="receta" class="tab-receta"
                                   [allowClose]="true" [label]="recetaService.getLabel(registro.data.recetas)">
