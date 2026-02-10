@@ -58,18 +58,22 @@ export class GraficosComponent {
     public extraData = [];
 
     public barOptions = {
-        legend: { display: false },
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
         scales: {
-            xAxes: [{
+            x: {
                 ticks: {
                     autoSkip: false
                 }
-            }],
-            yAxes: [{
+            },
+            y: {
                 ticks: {
                     min: 0,
                 }
-            }],
+            },
 
         },
     };
