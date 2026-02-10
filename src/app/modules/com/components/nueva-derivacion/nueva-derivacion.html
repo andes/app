@@ -1,10 +1,10 @@
 <plex-layout main="8">
     <plex-layout-main>
         <plex-title main titulo="NUEVA DERIVACIÓN">
-            <plex-button class="float-left mr-1" position="left" type="danger" label="Cancelar" (click)="cancelar()">
+            <plex-button position="right" type="danger" label="Cancelar" (click)="cancelar()">
             </plex-button>
-            <plex-button position="right" class="float-right mr-1" type="success" label="Guardar"
-                         (click)="guardarDerivacion($event)" [validateForm]="form" [disabled]="form.invalid">
+            <plex-button position="right" type="success" label="Guardar" (click)="guardarDerivacion($event)"
+                         [validateForm]="form" [disabled]="form.invalid">
             </plex-button>
         </plex-title>
         <form #form="ngForm">
@@ -26,44 +26,42 @@
                 <dispositivo [modelo]="modelo" [tipo]="oxigeno" grow="full"></dispositivo>
                 <tipo-traslado [derivacion]="modelo" grow="full"></tipo-traslado>
                 <plex-select [(ngModel)]="modelo.condicion" name="condicion" label="Condición"
-                             placeholder="Seleccione una condición"
-                             [data]="condiciones" [required]="true" grow="full">
+                             placeholder="Seleccione una condición" [data]="condiciones" [required]="true" grow="full">
 
                 </plex-select>
                 <plex-select [(ngModel)]="modelo.necesidad" name="necesidad" label="Necesidad"
-                             placeholder="Seleccione una necesidad"
-                             [data]="necesidad" [required]="true" grow="full">
+                             placeholder="Seleccione una necesidad" [data]="necesidad" [required]="true" grow="full">
                 </plex-select>
                 <plex-text [(ngModel)]="modelo.motivoDerivacion" label="Motivo de la derivación" name="motivo"
                            [required]="true" grow="full">
                 </plex-text>
             </plex-wrapper>
-            <plex-title titulo="Datos diagnóstico">
-                <plex-wrapper>
-                    <plex-text [(ngModel)]="modelo.diagnosticoActual" label="Diagnóstico actual"
-                               name="diagnosticoActual" [required]="true" grow="full"></plex-text>
-                    <div style="position: relative; width: 100%;">
-                        <plex-text [(ngModel)]="modelo.estadoClinico" label="Estado clínico resumido"
-                                   name="estadoClinico" [required]="true" grow="full">
-                        </plex-text>
-                        <plex-icon name="information" size="lg" type="info"
-                                   tooltip="SV, glasgow, TA, saturación, medicación en curso" tooltipPosition="right"
-                                   style="margin-left: -15px;">
-                        </plex-icon>
-                    </div>
-                    <plex-text [(ngModel)]="modelo.diagnosticoBase" label="Diagnóstico de base" name="diagnosticoBase"
-                               [required]="true" grow="full"></plex-text>
-                    <plex-text [(ngModel)]="modelo.comorbilidades" label="Comorbilidades relevantes"
-                               name="comorbilidades" [required]="true" grow="full"></plex-text>
-                </plex-wrapper>
-            </plex-title>
+            <plex-title titulo="Datos diagnóstico"></plex-title>
+            <plex-wrapper>
+                <plex-text [(ngModel)]="modelo.diagnosticoActual" label="Diagnóstico actual" name="diagnosticoActual"
+                           [required]="true" grow="full"></plex-text>
+                <div style="position: relative; width: 100%;">
+                    <plex-text [(ngModel)]="modelo.estadoClinico" label="Estado clínico resumido" name="estadoClinico"
+                               [required]="true" grow="full">
+                    </plex-text>
+                    <plex-icon name="information" size="lg" type="info"
+                               tooltip="SV, glasgow, TA, saturación, medicación en curso" tooltipPosition="right"
+                               style="margin-left: -15px;">
+                    </plex-icon>
+                </div>
+                <plex-text [(ngModel)]="modelo.diagnosticoBase" label="Diagnóstico de base" name="diagnosticoBase"
+                           [required]="true" grow="full"></plex-text>
+                <plex-text [(ngModel)]="modelo.comorbilidades" label="Comorbilidades relevantes" name="comorbilidades"
+                           [required]="true" grow="full"></plex-text>
+            </plex-wrapper>
             <!-- Adjuntos -->
-            <plex-title titulo="Cargar adjuntos">
+            <plex-title titulo="Cargar adjuntos"></plex-title>
+            <plex-wrapper>
                 <upload-file label="Adjuntar archivo" (onUpload)="onUpload($event)" [modulo]="'com'"></upload-file>
                 <span *ngIf="errorExt">
                     <plex-badge type="danger">Archivo inválido.</plex-badge>
                 </span>
-            </plex-title>
+            </plex-wrapper>
 
             <shared-galeria-archivos [files]="adjuntosUrl" (remove)="removeFile($event)">
             </shared-galeria-archivos>
