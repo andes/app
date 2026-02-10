@@ -126,10 +126,18 @@ export class ChartComponent {
                     callbacks: {
                         footer: (tooltipItems) => {
                             const text: string[] = [];
+
                             tooltipItems.forEach((tooltipItem) => {
-                                text.push('Profesional: ' + data[tooltipItem.dataIndex].profesional.nombreCompleto);
-                                text.push('Prestación: ' + data[tooltipItem.dataIndex].tipoPrestacion.term);
+                                const index = tooltipItem.dataIndex;
+
+                                text.push(
+                                    'Profesional: ' + data[index].profesional.nombreCompleto
+                                );
+                                text.push(
+                                    'Prestación: ' + data[index].tipoPrestacion.term
+                                );
                             });
+
                             return text;
                         }
                     }
