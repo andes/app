@@ -69,7 +69,7 @@ export class RecetaService {
             }, recetasCandidatas[0]);
         }
         return recetaVigente;
-    };
+    }
 
     getUltimaReceta(recetas) {
         return recetas?.reduce((mostRecent, receta) => {
