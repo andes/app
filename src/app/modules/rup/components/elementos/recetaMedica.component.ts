@@ -5,12 +5,12 @@ import { forkJoin, Observable } from 'rxjs';
 import { RupElement } from '.';
 import { IObraSocial } from '../../../../interfaces/IObraSocial';
 import { RUPComponent } from './../core/rup.component';
+
 @Component({
     selector: 'rup-recetaMedica',
     templateUrl: 'recetaMedica.html',
     styleUrls: ['recetaMedica.scss'],
 })
-
 
 @RupElement('RecetaMedicaComponent')
 export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnChanges, OnDestroy {
@@ -58,7 +58,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     public eclUnidadesFiltro;
 
     // Propiedades para manejo de obras sociales
-    public financiadoresPaciente: IObraSocial[] = [];
+    public financiadoresPaciente: Partial<IObraSocial>[] = [];
     public datosFinanciadores = [];
     public financiadorSeleccionado;
     public otroFinanciadorSeleccionado;
@@ -260,7 +260,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
                 if (esMagistralActual) {
                     return !!receta.medicamento?.esMagistral &&
                         (receta.medicamento?.magistral?.nombre === termNombreActual ||
-                         receta.medicamento?.magistral?.id === conceptIdActual);
+                            receta.medicamento?.magistral?.id === conceptIdActual);
                 } else {
                     return !receta.medicamento?.esMagistral &&
                         receta.medicamento?.concepto?.conceptId === conceptIdActual;

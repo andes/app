@@ -73,7 +73,7 @@ export class PlanIndicacionesComponent implements OnInit {
             return indicaciones;
         })
     );
-    badgeFarmacia: String = 'Esperando control<br>de farmacia';
+    badgeFarmacia = 'Esperando control<br>de farmacia';
     eventoSeleccionado: any;
     indicacionSeleccionada: any = null;
 
