@@ -40,7 +40,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import 'moment/locale/es';
 
 /** Configuraciones de entorno */
 import { environment } from '../environments/environment';

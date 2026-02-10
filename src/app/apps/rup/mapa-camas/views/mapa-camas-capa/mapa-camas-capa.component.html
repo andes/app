@@ -34,10 +34,8 @@
 
                             <plex-help #helpMapa class="ml-1" type="help" size="sm" cardSize="half" btnType="warning"
                                        icon="pencil" tooltip="Modificar fecha" (close)="closeDatetimeSelector()">
-                                <div class="mb-2 d-flex" justify="between">
-                                    <plex-title size="sm" titulo="Editar fecha y hora"></plex-title>
-                                </div>
-                                <div class="datetime-selector">
+                                <plex-title size="sm" titulo="Editar fecha y hora"></plex-title>
+                                <div class="mt-2 datetime-selector">
                                     <div class="d-flex flex-column">
                                         <plex-text placeholder="Cambiar Fecha" name="fechaInput"
                                                    [(ngModel)]="fechaInput"
