@@ -93,7 +93,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
     constructor(
         public auth: Auth,
-        private plex: Plex,
+        public plex: Plex,
         private router: Router,
         private route: ActivatedRoute,
         public mapaCamasService: MapaCamasService,
