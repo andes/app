@@ -14,7 +14,7 @@ export class BusquedaMpiComponent implements OnInit {
 
     historialSeleccionados: IPaciente[] = [];
     escaneado: boolean;
-    sidebar = 8;
+    sidebar = 7;
     paciente: IPaciente = null;
     showDetallePaciente = false;
 
