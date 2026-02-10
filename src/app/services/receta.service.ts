@@ -56,7 +56,7 @@ export class RecetaService {
             );
         }
         return recetaVigente;
-    };
+    }
 
     getUltimaReceta(recetas) {
         return recetas?.reduce((mostRecent, receta) => {

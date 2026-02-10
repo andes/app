@@ -28,7 +28,7 @@ export class LaboratorioService {
         );
     }
 
-    getProtocolos(pacienteId: String, fechaDesde?: Date, fechaHasta?: Date): Observable<any[]> {
+    getProtocolos(pacienteId: string, fechaDesde?: Date, fechaHasta?: Date): Observable<any[]> {
         const params = {
             pacienteId,
             fechaDesde,
@@ -37,7 +37,7 @@ export class LaboratorioService {
         return this.server.get('/modules/rup/protocolosLab', { params });
     }
 
-    getProtocoloById(id: String): Observable<any> {
+    getProtocoloById(id: string): Observable<any> {
         return this.server.get(`/modules/rup/protocolosLab/${id}`);
     }
 
