@@ -1,7 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PlexModalComponent, PlexHelpComponent } from '@andes/plex';
 import { Unsubscribe } from '@andes/shared';
 import { Location } from '@angular/common';
 import { Component, ElementRef, HostBinding, Input, OnInit, ViewChild } from '@angular/core';
@@ -17,7 +16,7 @@ import { PrestacionesService } from '../../../modules/rup/services/prestaciones.
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { ConstantesService } from 'src/app/services/constantes.service';
 import { SnomedService } from 'src/app/apps/mitos';
-
+import moment from 'moment';
 
 @Component({
     selector: 'solicitudes',
@@ -90,7 +89,7 @@ export class SolicitudesComponent implements OnInit {
     public accesoHudsPrestacion = null;
     public accesoHudsPaciente = null;
     public accesoHudsTurno = null;
-    public motivoRespuesta: String;
+    public motivoRespuesta: string;
     public observacionesCitar;
     public observacionesAnular;
     public observacionesIniciarPrestacion;

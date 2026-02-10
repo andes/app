@@ -1,51 +1,66 @@
 {
-  "compilerOptions": {
-    "declaration": false,
-    "downlevelIteration": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "lib": [
-      "es6",
-      "dom"
+    "compilerOptions": {
+        "declaration": false,
+        "downlevelIteration": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "skipLibCheck": true,
+        "allowUmdGlobalAccess": true,
+        "lib": [
+            "es2022",
+            "dom"
+        ],
+        "module": "esnext",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "outDir": "../dist/out-tsc",
+        "target": "ES2022",
+        "forceConsistentCasingInFileNames": true,
+        "strict": false,
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "baseUrl": "./",
+        "paths": {
+            "src/*": [
+                "src/*"
+            ],
+            "@andes/auth": [
+                "projects/auth/src/public-api.ts"
+            ],
+            "@andes/shared": [
+                "projects/shared/src/public-api.ts"
+            ],
+            "@andes/form-builder": [
+                "projects/form-builder/src/public-api.ts"
+            ]
+        },
+        "useDefineForClassFields": false
+    },
+    "files": [
+        "src/main.ts",
+        "src/polyfills.ts"
     ],
-    "baseUrl": ".",
-    "module": "es2020",
-    "moduleResolution": "node",
-    "outDir": "../dist/out-tsc",
-    "target": "es2015",
-    "typeRoots": [
-      "node_modules/@types"
+    "include": [
+        "src/app/**/*.ts",
+        "./karma.conf.js",
+        "./webpack.config.js",
+        ".eslintrc.js",
+        "node_modules/ng2-slugify/**/*.ts",
+        "node_modules/@andes/plex/**/*.ts",
     ],
-    "paths": {
-      "@andes/auth": [
-        "projects/auth/src/public-api.ts"
-      ],
-      "@andes/shared": [
-        "projects/shared/src/public-api.ts"
-      ],
-      "@andes/form-builder": [
-        "projects/form-builder/src/public-api.ts"
-      ]
+    "exclude": [
+        "node_modules/@andes/plex/**/*.spec.ts",
+        "node_modules/@schematics/**/*.ts",
+        "node_modules/karma/**/*.ts",
+        "**/environments/*.ts",
+        "projects/portal/**/*"
+    ],
+    "angularCompilerOptions": {
+        "fullTemplateTypeCheck": false,
+        "strictInjectionParameters": false,
+        "strictTemplates": false
     }
-  },
-  "files": [
-    "src/main.ts",
-    "src/polyfills.ts"
-  ],
-  "include": [
-    "./**/*.ts",
-    "./webpack.config.js",
-    ".eslintrc.js",
-    "node_modules/ng2-slugify/**/*.ts",
-    "node_modules/@andes/plex/**/*.ts",
-  ],
-  "exclude": [
-    "node_modules/@andes/plex/**/*.spec.ts",
-    "node_modules/@schematics/**/*.ts",
-    "node_modules/karma/**/*.ts",
-  ],
-  "angularCompilerOptions": {
-    "fullTemplateTypeCheck": false,
-    "strictInjectionParameters": true
-  }
 }

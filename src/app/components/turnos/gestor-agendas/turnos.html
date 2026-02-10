@@ -49,7 +49,7 @@
                          (click)="cambiarADisponible()">
             </plex-button>
         </ng-container>
-        <plex-help *ngIf="!agenda.dinamica" type="help" icon="cog">
+        <plex-help *ngIf="!agenda.dinamica" size="md" type="help" icon="cog">
             <plex-title titulo="Prestaciones asociadas" size="sm"></plex-title>
             <plex-label titulo="{{prestacionTerm}}"></plex-label>
             <plex-title titulo="Configuración inicial del bloque" size="sm"></plex-title>
@@ -209,7 +209,7 @@
                     </plex-button>
                     <plex-button *ngIf="botones.quitarTurnoDoble && turnosSeleccionados[0]?.id === turno.id"
                                  ariaLabel="Quitar Turno doble" size="sm" type="default" icon="numeric-1-box-outline"
-                                 (click)="eventosTurno('quitarTurnoDoble', agenda)" tooltip="Quitar Turno doble"
+                                 (click)="eventosTurno('quitarTurnoDoble')" tooltip="Quitar Turno doble"
                                  tooltipPosition="top">
                     </plex-button>
                     <plex-help *ngIf="botones.editarCarpeta && turnosSeleccionados[0]?.id === turno.id" type="info"

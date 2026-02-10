@@ -33,7 +33,7 @@
     </div>
 </div>
 
-<filtros-mapa-espacio-fisico *ngIf="showMapa" (onChange)="espaciosChange($event)"></filtros-mapa-espacio-fisico>
+<filtros-mapa-espacio-fisico *ngIf="showMapa" (changed)="espaciosChange($event)"></filtros-mapa-espacio-fisico>
 <mapa-espacio-fisico *ngIf="showMapa" [agendaSeleccionada]="editaAgendaPanel" [espacioTable]="espaciosList"
-                     (onEspacioClick)="selectEspacio($event)">
+                     (espacioClick)="selectEspacio($event)">
 </mapa-espacio-fisico>

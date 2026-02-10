@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { ILlamado } from 'src/app/interfaces/turnos/IListaEspera';
 import { ListaEsperaService } from 'src/app/services/turnos/listaEspera.service';
 import { TurnoService } from 'src/app/services/turnos/turno.service';
+import moment from 'moment';
 
 @Component({
     selector: 'demanda-insatisfecha',
@@ -280,7 +281,7 @@ export class DemandaInsatisfechaComponent implements OnInit {
                 id: datosTurno.idTurno,
                 idAgenda: datosTurno.idAgenda,
             };
-        };
+        }
 
         this.listaEsperaService.patch(this.itemSelected._id, 'estado', data).subscribe({
             next: (item) => {

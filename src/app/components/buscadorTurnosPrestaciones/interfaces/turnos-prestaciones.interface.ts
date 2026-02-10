@@ -9,9 +9,9 @@ export interface ITurnosPrestaciones {
     financiador: any; // TODO: cuando suba la interface de financiador (Pendiente PR)
     prestacion: ITipoPrestacion;
     profesionales: IProfesional[];
-    estado: String;
-    idAgenda: String;
-    idBloque: String;
+    estado: string;
+    idAgenda: string;
+    idBloque: string;
     turno: ITurno;
-    idPrestacion: String;
+    idPrestacion: string;
 }

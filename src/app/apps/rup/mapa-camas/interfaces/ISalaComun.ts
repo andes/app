@@ -2,11 +2,11 @@ import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concep
 import { ISectores } from '../../../../interfaces/IOrganizacion';
 
 export interface ISalaComun {
-    id: String;
+    id: string;
     nombre: string;
     organizacion: {
-        id: String;
-        nombre: String;
+        id: string;
+        nombre: string;
     };
     capacidad?: number;
     ambito: string;

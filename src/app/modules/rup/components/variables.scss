@@ -1,4 +1,4 @@
-@import '~@andes/plex/src/lib/css/variables';
+@import '@andes/plex/styles/variables';
 
 @import './functions';
 
@@ -27,32 +27,32 @@ $recetas: #7b2ff7;
 // la interpolacion del string a una variable directamente
 
 $rup_colors: (
-    problema: $problema,
-    calificador: $calificador,
-    laboratorio: $laboratorio,
-    trastorno: $trastorno,
-    situación: $problema,
-    hallazgo: $hallazgo,
-    procedimiento: $procedimiento,
-    regimen: $procedimiento,
-    entidad: $procedimiento,
-    solicitud: $solicitud,
-    prestacion: $prestacion,
-    plan: $solicitud,
-    producto: $producto,
-    'medicamento.clínico': $producto,
-    adjunto: $adjunto,
-    vacuna: $vacuna,
-    dominiosNac: $dominiosNac,
-    elemento: $registro,
-    elementoderegistro: $registro,
-    'estructura.corporal': $registro,
-    invert: $invert,
-    blue: $blue,
-    todos: $todos,
-    informacion: $informacion,
-    otro: $otro,
-    recetas: $recetas
+    "problema": $problema,
+    "calificador": $calificador,
+    "laboratorio": $laboratorio,
+    "trastorno": $trastorno,
+    "situación": $problema,
+    "hallazgo": $hallazgo,
+    "procedimiento": $procedimiento,
+    "regimen": $procedimiento,
+    "entidad": $procedimiento,
+    "solicitud": $solicitud,
+    "prestacion": $prestacion,
+    "plan": $solicitud,
+    "producto": $producto,
+    "medicamento.clínico": $producto,
+    "adjunto": $adjunto,
+    "vacuna": $vacuna,
+    "dominiosNac": $dominiosNac,
+    "elemento": $registro,
+    "elementoderegistro": $registro,
+    "estructura.corporal": $registro,
+    "invert": $invert,
+    "blue": $blue,
+    "todos": $todos,
+    "informacion": $informacion,
+    "recetas": $recetas,
+    "otro": $otro
 );
 
 //TODO: hay que unificar los badges de distintas pantallas: tamaño, colores, bordes, espacios...    

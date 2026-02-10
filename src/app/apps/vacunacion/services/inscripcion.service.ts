@@ -4,7 +4,7 @@ import { BehaviorSubject, combineLatest, EMPTY, Observable } from 'rxjs';
 import { auditTime, map, switchMap } from 'rxjs/operators';
 import { ILocalidad } from 'src/app/interfaces/ILocalidad';
 import { ICiudadano } from '../interfaces/ICiudadano';
-
+import moment from 'moment';
 @Injectable()
 export class InscripcionService extends ResourceBaseHttp {
     // URL to web api
@@ -14,7 +14,7 @@ export class InscripcionService extends ResourceBaseHttp {
     public localidadSelected = new BehaviorSubject<ILocalidad>(null);
     public fechaDesde = new BehaviorSubject<Date>(null);
     public fechaHasta = new BehaviorSubject<Date>(null);
-    public tieneCertificado = new BehaviorSubject<Boolean>(null);
+    public tieneCertificado = new BehaviorSubject<boolean>(null);
     public inscriptosFiltrados$: Observable<any[]>;
     public lastResults = new BehaviorSubject<any[]>(null);
     private limit = 15;

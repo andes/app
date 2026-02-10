@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 
@@ -7,14 +7,10 @@ import { Auth } from '@andes/auth';
     templateUrl: 'estadisticas-agendas.html'
 })
 
-export class EstadisticasAgendasComponent implements OnInit {
+export class EstadisticasAgendasComponent {
 
     // Inicialización
     constructor(public plex: Plex, public auth: Auth) { }
-
-    ngOnInit() {
-
-    }
 
 
 }

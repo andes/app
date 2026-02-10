@@ -26,13 +26,13 @@ export class SolicitudManualComponent {
     carpetaEfector: any;
     tieneCarpeta = false;
 
-    @Output() cancelSolicitudManualEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+    @Output() cancelSolicitudManualEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() nuevaCarpetaManualEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() crearNuevaCarpetaEmmiter: EventEmitter<any> = new EventEmitter<any>();
 
     pacientesSearch = true;
 
-    @Input('pacienteSeleccionado')
+    @Input()
     set pacienteSeleccionado(value: any) {
         this.paciente = value;
         this.searchPaciente(this.paciente);

@@ -1,7 +1,7 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
-import * as moment from 'moment';
 import { EMPTY, Subscription, forkJoin, map, switchMap } from 'rxjs';
 import { InstitucionService } from '../../../../services/turnos/institucion.service';
 import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
@@ -29,7 +29,7 @@ export class PlanificarAgendaComponent implements OnInit {
     private _editarAgenda: any;
     bloquesAux: any[];
     ultimaPrestacion: any;
-    @Input('editaAgenda')
+    @Input()
     set editaAgenda(value: any) {
         if (value.otroEspacioFisico) {
             this.espacioFisicoPropios = false;
@@ -52,7 +52,7 @@ export class PlanificarAgendaComponent implements OnInit {
     public noNominalizada = false;
     public dinamica = false;
     public multiprofesional = false;
-    public bloqueActivo: Number = 0;
+    public bloqueActivo = 0;
     public elementoActivo: any = { descripcion: null };
     public alertas = [];
     public alertaEspacioFisico = '';
@@ -69,7 +69,7 @@ export class PlanificarAgendaComponent implements OnInit {
     espacioFisicoPropios = true;
     textoEspacio = 'Espacios físicos de la organización';
     showBloque = true;
-    cupoMaximo: Number;
+    cupoMaximo: number;
     setCupo = false;
     // ultima request de profesionales que se almacena con el subscribe
     private lastRequest: Subscription;
@@ -438,7 +438,7 @@ export class PlanificarAgendaComponent implements OnInit {
         this.elementoActivo.horaFin = this.modelo.horaFin;
     }
 
-    cambioHoraBloques(texto: String) {
+    cambioHoraBloques(texto: string) {
         if (this.elementoActivo.horaInicio && this.elementoActivo.horaFin) {
             this.fecha = new Date(this.modelo.fecha);
             if (this.elementoActivo.horaInicio) {
@@ -469,7 +469,7 @@ export class PlanificarAgendaComponent implements OnInit {
 
     }
 
-    cambiaTurnos(cual: String) {
+    cambiaTurnos(cual: string) {
         this.fecha = new Date(this.modelo.fecha);
         const inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
         const fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
@@ -485,7 +485,7 @@ export class PlanificarAgendaComponent implements OnInit {
         this.validarTodo();
     }
 
-    cambiaCantTipo(cual: String) {
+    cambiaCantTipo(cual: string) {
         if (this.elementoActivo.cantidadTurnos) {
             switch (cual) {
                 case 'accesoDirectoDelDia':
@@ -505,7 +505,7 @@ export class PlanificarAgendaComponent implements OnInit {
         }
     }
 
-    cambiaPorcentajeTipo(cual: String) {
+    cambiaPorcentajeTipo(cual: string) {
         if (this.elementoActivo.cantidadTurnos) {
             switch (cual) {
                 case 'accesoDirectoDelDia':
@@ -764,7 +764,7 @@ export class PlanificarAgendaComponent implements OnInit {
         }
     }
 
-    onSave($event, clonar: Boolean) {
+    onSave($event, clonar: boolean) {
         this.hideGuardar = true;
         if (this.dinamica) {
             this.modelo.dinamica = true;
