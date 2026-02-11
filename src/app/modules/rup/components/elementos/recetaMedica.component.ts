@@ -335,8 +335,6 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
                 financiador: this.prestacion.paciente.obraSocial.financiador || null,
                 codigoPuco: this.prestacion.paciente.obraSocial.codigoPuco || null,
                 id: this.prestacion.paciente.obraSocial.id || null,
-                tipoDocumento: null,
-                dni: null,
                 transmite: '',
                 prepaga: this.prestacion.paciente.obraSocial.prepaga || false,
                 origen: this.prestacion.paciente.obraSocial.origen || 'ANDES'
@@ -411,27 +409,17 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
                 nombre,
                 financiador,
                 codigoPuco,
-                tipoDocumento: null,
-                dni: null,
-                transmite: '',
                 numeroAfiliado: this.numeroAfiliado || '',
-                version: new Date(),
-                codigoFinanciador: null,
                 prepaga: prepaga || false,
                 origen: 'ANDES'
             };
 
             const nuevaObraSocial = {
                 nombre,
-                codigoFinanciador: 0,
-                version: new Date(),
                 numeroAfiliado: this.numeroAfiliado || '',
                 financiador,
                 codigoPuco,
                 id: null,
-                tipoDocumento: null,
-                dni: null,
-                transmite: '',
                 prepaga: prepaga || false,
                 origen: 'ANDES'
             };

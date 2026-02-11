@@ -208,7 +208,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             otroEspacioFisico: '',
             estado: '',
             skip: 0,
-            limit: 15
+            limit: 15,
+            teleConsulta: true
         };
         if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
             this.parametros['tipoPrestaciones'] = [...this.prestacionesPermisos];
