@@ -208,7 +208,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             otroEspacioFisico: '',
             estado: '',
             skip: 0,
-            limit: 15
+            limit: 15,
+            teleConsulta: true
         };
         if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
             this.parametros['tipoPrestaciones'] = [...this.prestacionesPermisos];
@@ -323,7 +324,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                 this.parametros['estado'] = '';
             }
         }
-        this.parametros['teleConsulta'] = true;
         // cada vez que se modifican los filtros seteamos el skip en 0
         this.parametros.skip = 0;
         this.scrollEnd = false;
