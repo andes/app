@@ -1,15 +1,14 @@
 <div *ngIf="showSelector && !editable">
     <plex-radio *ngIf="financiadorSeleccionado" [(ngModel)]="financiadorSeleccionado" name="financiadorSeleccionado"
-                (change)="seleccionarFinanciador($event)" label="Seleccione una Obra Social"
-                [data]="datosFinanciadores">
+        (change)="seleccionarFinanciador($event)" label="Seleccione una obra social" [data]="datosFinanciadores">
     </plex-radio>
     <plex-select class="w-100" *ngIf="showListado || !financiadorSeleccionado" [(ngModel)]="otroFinanciadorSeleccionado"
-                 name="financiador" [data]="opcionesFinanciadores" label="Seleccione una opción" idField="nombre"
-                 labelField="nombre" (change)="seleccionarOtro($event)">
+        name="financiador" [data]="opcionesFinanciadores" label="Seleccione una opción" idField="nombre"
+        labelField="nombre" (change)="seleccionarOtro($event)">
     </plex-select>
     <plex-text *ngIf="busquedaFinanciador" [(ngModel)]="numeroAfiliado" name="numeroAfiliado" [required]="false"
-               placeholder="Ingrese el número de afiliado" label="Ingrese el número de afiliado"
-               (change)="setNumeroAfiliado($event)">
+        placeholder="Ingrese el número de afiliado" label="Ingrese el número de afiliado"
+        (change)="setNumeroAfiliado($event)">
     </plex-text>
 </div>
 
@@ -31,7 +30,7 @@
         </ul>
     </div>
     <plex-label *ngIf="!obrasSocialesPUCO.length" class="mt-3" direction="column" size="md" icon="informacion"
-                type="warning" titulo="El paciente no contiene obras sociales cargadas">
+        type="warning" titulo="El paciente no contiene obras sociales cargadas">
     </plex-label>
 
     <plex-title titulo="Editar financiadores" size="sm"></plex-title>
@@ -39,35 +38,35 @@
         <plex-list>
             <plex-item *ngFor="let financiador of financiadoresANDES; let i = index">
                 <plex-label size="sm" icon="check" titulo="{{ financiador.nombre }}"
-                            subtitulo="Fecha actualización: {{ financiador.fechaDeActualizacion | fecha }}">
+                    subtitulo="Fecha actualización: {{ financiador.fechaDeActualizacion | fecha }}">
                 </plex-label>
                 <plex-label *ngIf="financiador.numeroAfiliado" icon="clipboard-account" size="sm"
-                            titulo="Número de afiliado" subtitulo="{{ financiador.numeroAfiliado }}"
-                            (change)="setNumeroAfiliado($event)">
+                    titulo="Número de afiliado" subtitulo="{{ financiador.numeroAfiliado }}"
+                    (change)="setNumeroAfiliado($event)">
                 </plex-label>
                 <plex-button icon="delete" type="danger" size="sm" (click)="eliminarFinanciador(i)">
                 </plex-button>
             </plex-item>
         </plex-list>
         <plex-label *ngIf="!financiadoresANDES.length" class="mt-3" direction="column" size="md" icon="informacion"
-                    type="warning" titulo="El paciente no contiene otros financiadores cargados">
+            type="warning" titulo="El paciente no contiene otros financiadores cargados">
         </plex-label>
     </div>
     <div class="selector-wrapper">
         <div class="selector">
             <plex-wrapper>
                 <plex-select [(ngModel)]="itemListaFinanciador" [data]="opcionesFinanciadores" label="Financiador"
-                             idField="id" labelField="nombre" [disabled]="!opcionesFinanciadores.length"
-                             placeholder="Seleccione financiador" (change)="onSeleccionarFinanciador($event)">
+                    idField="id" labelField="nombre" [disabled]="!opcionesFinanciadores.length"
+                    placeholder="Seleccione financiador" (change)="onSeleccionarFinanciador($event)">
                 </plex-select>
                 <plex-text *ngIf="itemListaFinanciador" [(ngModel)]="numeroAfiliado" label="Número de afiliados"
-                           name="numeroAfiliado" [required]="false" [pattern]="patronNumerico"
-                           placeholder="Ingrese el número de afiliado" (change)="setNumeroAfiliado($event)">
+                    name="numeroAfiliado" [required]="false" [pattern]="patronNumerico"
+                    placeholder="Ingrese el número de afiliado" (change)="setNumeroAfiliado($event)">
                 </plex-text>
 
                 <plex-button icon="plus" type="info" tooltip="Agregar financiador" titlePosition="left" size="md"
-                             [disabled]="!itemListaFinanciador || (numeroAfiliado && !numeroAfiliado.match(patronNumerico))"
-                             (click)="agregarFinanciador(itemListaFinanciador)">
+                    [disabled]="!itemListaFinanciador || (numeroAfiliado && !numeroAfiliado.match(patronNumerico))"
+                    (click)="agregarFinanciador(itemListaFinanciador)">
                 </plex-button>
             </plex-wrapper>
         </div>
