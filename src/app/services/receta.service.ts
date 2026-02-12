@@ -1,8 +1,9 @@
-import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { IProfesional } from 'src/app/interfaces/IProfesional';
+import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
+
 
 @Injectable({
     providedIn: 'root',
@@ -13,7 +14,7 @@ export class RecetaService {
 
     constructor(
         private server: Server,
-        private auth: Auth
+        private prestacionesService: PrestacionesService
     ) { }
 
 
@@ -76,6 +77,24 @@ export class RecetaService {
         }
 
         return label;
+    }
+    // -------------- NO HTTP ---------------------------
+
+    buscarDiagnosticosConTrastornos(paciente): Observable<any[]> {
+        const recetasConFiltros = [];
+        const fechaLimite = moment().subtract(6, 'months');
+        return this.prestacionesService.getByPacienteTrastorno(paciente.id).pipe(
+            map(trastornos => {
+                trastornos.forEach(trastorno => {
+                    const fechaCreacion = trastorno.fechaEjecucion ? moment(trastorno.fechaEjecucion) : null;
+                    const esActivo = trastorno.evoluciones[trastorno.evoluciones.length - 1].estado === 'activo';
+                    if (fechaCreacion?.isAfter(fechaLimite) && esActivo) {
+                        recetasConFiltros.push(trastorno.concepto);
+                    }
+                });
+                return recetasConFiltros;
+            })
+        );
     }
 }
 
