@@ -47,7 +47,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public situacionesLaborales = situacionesLaborales;
     public snomedIngreso = snomedIngreso;
     public expr = SnomedExpression;
-    public fechaMax = moment().toDate();
 
     // VARIABLES
     public esPrepaga = false;
@@ -98,6 +97,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public obrasSociales: IObraSocial[] = [];
     public OSPrivada = false;
     public esCensable = this.isCamaCensable();
+    public resumenInternacion$: Observable<IResumenInternacion>;
+    public fechaMax;
 
 
     constructor(
@@ -146,6 +147,15 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         ) as Observable<string>;
     }
     ngOnInit() {
+        this.resumenInternacion$ = this.mapaCamasService.resumenInternacion$;
+        this.resumenInternacion$.subscribe(resumen => {
+            if (resumen) {
+                this.mapaCamasService.setFecha(resumen.fechaIngreso);
+                this.mapaCamasService.historial('cama', resumen.fechaIngreso, moment().toDate()).subscribe(historial => {
+                    this.fechaMax = moment(historial[historial.length - 1].fecha).toDate();
+                });
+            }
+        });
         this.view = this.mapaCamasService.view.getValue();
         this.fechaHasta = this.listadoInternacionService.fechaIngresoHasta.getValue();
         this.prepagas$ = this.obraSocialService.getPrepagas();
@@ -755,7 +765,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         const HOY = moment().toDate();
         this.mapaCamasService.historial('internacion', this.fechaIngresoOriginal, HOY).subscribe(h => {
             const movimientoEncontrado = h.filter((s: ISnapshot) => {
-                if (s.fecha.getTime() > this.fechaIngresoOriginal.getTime() && s.fecha.getTime() < this.informeIngreso.fechaIngreso.getTime()) {
+                if (s.fecha.getTime() > this.fechaIngresoOriginal.getTime() && s.fecha.getTime() < this.informeIngreso.fechaIngreso?.getTime()) {
                     return s;
                 }
             });
