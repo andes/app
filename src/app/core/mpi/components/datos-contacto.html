@@ -5,29 +5,33 @@
 
         <plex-title titulo=" datos de contacto" size="sm">
             <plex-bool class="pr-1" [(ngModel)]="noPoseeContacto" label="Sin datos de contacto" name="noPoseeContacto"
-                       type="slide" (change)="limpiarContacto()"></plex-bool>
+                type="slide" (change)="limpiarContacto()"></plex-bool>
         </plex-title>
 
         <plex-grid type="full" cols="1" size="lg" responsive>
             <div class="pr-1" grow="1">
                 <plex-wrapper *ngFor="let _unContacto of paciente.contacto; let i = index">
                     <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}"
-                                 [required]="true" label="Tipo" (change)="_unContacto.valor = ''"
-                                 [readonly]="noPoseeContacto">
+                        [required]="true" label="Tipo" (change)="_unContacto.valor = ''" [readonly]="noPoseeContacto">
                     </plex-select>
 
                     <plex-phone *ngIf="contactoTelefonico(i)" label="Número" [(ngModel)]="_unContacto.valor"
-                                placeholder="Ej: 2990000000" name="valor-{{i}}"
-                                [required]="!noPoseeContacto && (i <= 0)" [readonly]="noPoseeContacto"
-                                [pattern]="patronContactoNumerico">
+                        placeholder="Ej: 2990000000" name="valor-{{i}}" [required]="!noPoseeContacto && (i <= 0)"
+                        [readonly]="noPoseeContacto" [pattern]="patronContactoNumerico">
                     </plex-phone>
-                    <plex-text email label="Dirección" *ngIf="!contactoTelefonico(i)" [(ngModel)]="_unContacto.valor"
-                               placeholder="Ej: ejemplo@email.com" [required]="!noPoseeContacto && (i <= 0)"
-                               name="valor-{{i}}" [readonly]="noPoseeContacto" [pattern]="patronContactoAlfabetico">
+
+                    <plex-text label="Número" *ngIf="isCelularExtranjero(i)" [(ngModel)]="_unContacto.valor"
+                        placeholder="Ej: +5492990000000" [required]="!noPoseeContacto && (i <= 0)"
+                        name="valor-ext-{{i}}" [readonly]="noPoseeContacto" [pattern]="patronContactoCelularExtranjero">
+                    </plex-text>
+
+                    <plex-text email label="Dirección" *ngIf="!contactoTelefonico(i) && !isCelularExtranjero(i)"
+                        [(ngModel)]="_unContacto.valor" placeholder="Ej: ejemplo@email.com"
+                        [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}" [readonly]="noPoseeContacto"
+                        [pattern]="patronContactoAlfabetico">
                     </plex-text>
                     <plex-button *ngIf="i == 0" title="Agregar contacto" titlePosition="left" type="info" icon="plus"
-                                 name="agregarContacto" (click)="addContacto('celular', '')"
-                                 [disabled]="noPoseeContacto">
+                        name="agregarContacto" (click)="addContacto('celular', '')" [disabled]="noPoseeContacto">
                     </plex-button>
                     <plex-button *ngIf="i > 0" label="" type="danger" icon="close" (click)="removeContacto(i)">
                     </plex-button>
@@ -46,16 +50,16 @@
 
         <plex-title titulo="Lugar de nacimiento" size="sm">
             <plex-bool class="mr-3" *ngIf="paisActual" [(ngModel)]="nacioPaisActual"
-                       label="¿País de {{ paisActual?.[0]?.nombre || '' }}?" name="nacioPaisActual"
-                       (change)="changePaisActualNacimiento()">
+                label="¿País de {{ paisActual?.[0]?.nombre || '' }}?" name="nacioPaisActual"
+                (change)="changePaisActualNacimiento()">
             </plex-bool>
             <plex-bool class="mr-3" *ngIf="nacioPaisActual && provinciaActual" [(ngModel)]="nacioProvActual"
-                       label="¿Provincia de {{provinciaActual.nombre}}?" name="nacioProvActual"
-                       (change)="changeProvActualNacimiento()">
+                label="¿Provincia de {{provinciaActual.nombre}}?" name="nacioProvActual"
+                (change)="changeProvActualNacimiento()">
             </plex-bool>
             <plex-bool *ngIf="nacioProvActual && localidadActual" [(ngModel)]="nacioLocActual"
-                       label="¿Localidad {{localidadActual.nombre}}?" name="nacioLocActual"
-                       (change)="changeLocalidadActualNacimiento()">
+                label="¿Localidad {{localidadActual.nombre}}?" name="nacioLocActual"
+                (change)="changeLocalidadActualNacimiento()">
             </plex-bool>
         </plex-title>
 
@@ -63,22 +67,21 @@
             <ng-container *ngIf="paciente?.lugarNacimiento">
                 <plex-wrapper>
                     <plex-select [disabled]="nacioPaisActual" [(ngModel)]="paciente.lugarNacimiento.pais"
-                                 name="paisNacimiento" [data]="paisesNacimiento$ | async" idField="nombre"
-                                 labelField="nombre" label="País" (change)="loadPaisActualNacimiento()" grow="2">
+                        name="paisNacimiento" [data]="paisesNacimiento$ | async" idField="nombre" labelField="nombre"
+                        label="País" (change)="loadPaisActualNacimiento()" grow="2">
                     </plex-select>
                     <plex-select *ngIf="nacioPaisActual" [disabled]="nacioProvActual"
-                                 [(ngModel)]="paciente.lugarNacimiento.provincia" name="provinciaNacimiento"
-                                 [data]="provincias$ | async" idField="nombre" labelField="nombre" label="Provincia"
-                                 (change)="loadLocalidadesNacimiento(paciente.lugarNacimiento.provincia)" grow="2">
+                        [(ngModel)]="paciente.lugarNacimiento.provincia" name="provinciaNacimiento"
+                        [data]="provincias$ | async" idField="nombre" labelField="nombre" label="Provincia"
+                        (change)="loadLocalidadesNacimiento(paciente.lugarNacimiento.provincia)" grow="2">
                     </plex-select>
                     <plex-text *ngIf="!nacioPaisActual || (nacioPaisActual && !nacioProvActual)" label="Lugar"
-                               [(ngModel)]="paciente.lugarNacimiento.lugar" name="nombre" grow="2">
+                        [(ngModel)]="paciente.lugarNacimiento.lugar" name="nombre" grow="2">
                     </plex-text>
                     <plex-select *ngIf="nacioPaisActual && nacioProvActual" [disabled]="nacioLocActual"
-                                 label="Localidad" [required]="nacioProvActual"
-                                 [(ngModel)]="paciente.lugarNacimiento.localidad" name="localidadNacimiento"
-                                 [data]="localidadesNacimiento$ | async" labelField="nombre"
-                                 (change)="updateNacioLocalidadActual()" grow="2">
+                        label="Localidad" [required]="nacioProvActual" [(ngModel)]="paciente.lugarNacimiento.localidad"
+                        name="localidadNacimiento" [data]="localidadesNacimiento$ | async" labelField="nombre"
+                        (change)="updateNacioLocalidadActual()" grow="2">
                     </plex-select>
                 </plex-wrapper>
             </ng-container>
@@ -88,12 +91,10 @@
 
         <plex-title titulo="Datos del domicilio" size="sm">
             <plex-bool class="mr-3" *ngIf="provinciaActual" [(ngModel)]="viveProvActual"
-                       label="¿Provincia de {{provinciaActual.nombre}}?" name="viveProvActual"
-                       (change)="changeProvActual()">
+                label="¿Provincia de {{provinciaActual.nombre}}?" name="viveProvActual" (change)="changeProvActual()">
             </plex-bool>
             <plex-bool *ngIf="viveProvActual && localidadActual" [(ngModel)]="viveLocActual"
-                       label="¿Localidad {{localidadActual.nombre}}?" name="viveLocActual"
-                       (change)="changeLocalidadActual()">
+                label="¿Localidad {{localidadActual.nombre}}?" name="viveLocActual" (change)="changeLocalidadActual()">
             </plex-bool>
         </plex-title>
 
@@ -104,39 +105,38 @@
                         <plex-grid type="auto" size="sm" cols="2">
                             <h6>
                                 <b hint="Domicilio declarado por el paciente como su domicilio actual"
-                                   detach="both">Domicilio
+                                    detach="both">Domicilio
                                     referido por el paciente</b>
                             </h6>
                         </plex-grid>
                     </div>
                     <plex-select [disabled]="viveProvActual" [(ngModel)]="paciente.direccion[0].ubicacion.provincia"
-                                 name="provincia" [required]="!viveProvActual" [data]="provincias$ | async"
-                                 idField="nombre" labelField="nombre" label="Provincia"
-                                 (change)="loadLocalidades(paciente.direccion[0].ubicacion.provincia)" grow="2">
+                        name="provincia" [required]="!viveProvActual" [data]="provincias$ | async" idField="nombre"
+                        labelField="nombre" label="Provincia"
+                        (change)="loadLocalidades(paciente.direccion[0].ubicacion.provincia)" grow="2">
                     </plex-select>
                     <plex-select [disabled]="viveLocActual" label="Localidad" [required]="viveProvActual"
-                                 [(ngModel)]="paciente.direccion[0].ubicacion.localidad" name="localidad"
-                                 [data]="localidades$ | async" labelField="nombre"
-                                 (change)="loadBarrios(paciente.direccion[0].ubicacion.localidad)" grow="2">
+                        [(ngModel)]="paciente.direccion[0].ubicacion.localidad" name="localidad"
+                        [data]="localidades$ | async" labelField="nombre"
+                        (change)="loadBarrios(paciente.direccion[0].ubicacion.localidad)" grow="2">
                     </plex-select>
                     <!-- barrios solo para NQN capital-->
                     <plex-select class="pr-3" label="Barrio" [disabled]="!viveLocActual"
-                                 [(ngModel)]="paciente.direccion[0].ubicacion.barrio" name="barrio"
-                                 [data]="barrios$ | async" labelField="nombre" grow="full">
+                        [(ngModel)]="paciente.direccion[0].ubicacion.barrio" name="barrio" [data]="barrios$ | async"
+                        labelField="nombre" grow="full">
                     </plex-select>
                     <label class="mb-1">Direccion</label>
                     <div class="w-100" justify="between">
                         <plex-text label="" [(ngModel)]="paciente.direccion[0].valor" name="direccion"
-                                   placeholder="Ej: Avenida las Flores 1200">
+                            placeholder="Ej: Avenida las Flores 1200">
                         </plex-text>
                         <plex-button [disabled]="disableGeoreferenciar" type="info" size="md" icon="map-marker"
-                                     (click)="geoReferenciar()">
+                            (click)="geoReferenciar()">
                         </plex-button>
                     </div>
                     <div>
                         <plex-bool class="mt-3" name="sitacionCalle" label="Vive en situación de calle"
-                                   [(ngModel)]="paciente.direccion[0].situacionCalle"
-                                   (change)="changeSituacion($event)">
+                            [(ngModel)]="paciente.direccion[0].situacionCalle" (change)="changeSituacion($event)">
                         </plex-bool>
                     </div>
                     <div class="w-100" *ngIf="paciente.direccion[1]">
@@ -144,7 +144,7 @@
                         <plex-grid type="auto" size="sm" cols="2">
                             <h6 class="mb-0">
                                 <b hint="Domicilio declarado en el documento de identidad del paciente "
-                                   detach="both">Domicilio legal del paciente</b>
+                                    detach="both">Domicilio legal del paciente</b>
                             </h6>
                             <span span="2">{{ direccionLegal }}</span>
                         </plex-grid>
@@ -155,7 +155,7 @@
             <!-- MAPA -->
 
             <georref-map class="columna" #mapa [latLong]="georeferencia$ | async"
-                         (changeCoordinates)="changeCoordenadas($event)">
+                (changeCoordinates)="changeCoordenadas($event)">
             </georref-map>
         </plex-grid>
     </form>
