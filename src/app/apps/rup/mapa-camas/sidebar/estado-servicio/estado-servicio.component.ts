@@ -10,7 +10,6 @@ import { Plex } from '@andes/plex';
     templateUrl: './estado-servicio.component.html',
     styleUrls: ['./estado-servicio.component.scss'],
 })
-
 export class EstadoServicioComponent implements OnInit, OnDestroy {
     fechaActual$: Observable<Date>;
     fecha$: Observable<Date>;
@@ -21,16 +20,31 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
     public editaFecha = false;
     public fecha: Date;
     public puedeGuardar;
+    public esEstadistica = false;
+
+    collapse = false;
 
     salas$: Observable<ISnapshot[]>;
     salasPaciente$: Observable<ISnapshot[]>;
+    mostrarTodasCamas: any;
 
     constructor(
         public mapaCamasService: MapaCamasService,
         private plex: Plex
     ) { }
-
+    filtro: any = {};
     ngOnInit() {
+        this.mapaCamasService.censableSelected.subscribe(censable => {
+            this.filtro.censable = censable;
+        });
+        // para controlar los filtros
+        this.mapaCamasService.capa2.subscribe(capa => {
+            this.esEstadistica = capa === 'estadistica';
+        });
+        this.mapaCamasService.mostrarTodasCamas.subscribe(valor => {
+            this.mostrarTodasCamas = valor;
+            this.filtrar();
+        });
         this.fecha$ = this.mapaCamasService.fecha2;
 
         this.fechaActual$ = this.mapaCamasService.fechaActual$.pipe(
@@ -46,22 +60,22 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
         ).subscribe();
 
         this.salas$ = this.mapaCamasService.snapshotFiltrado$.pipe(
-            switchMap((camas) => {
-                return from(camas).pipe(
+            switchMap((camas) =>
+                from(camas).pipe(
                     filter(c => c.sala),
                     distinct(c => c.id),
                     toArray()
-                );
-            })
+                )
+            )
         );
 
         this.salasPaciente$ = this.mapaCamasService.snapshotFiltrado$.pipe(
-            switchMap((camas) => {
-                return from(camas).pipe(
+            switchMap((camas) =>
+                from(camas).pipe(
                     filter(c => c.sala && !!c.paciente),
                     toArray()
-                );
-            })
+                )
+            )
         );
     }
 
@@ -71,6 +85,25 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
         }
     }
 
+    filtrar() {
+        const censableId = this.filtro?.censable?.id ?? null;
+        this.mapaCamasService.esCensable.next(
+            censableId ?? (this.mostrarTodasCamas ? null : 1)
+        );
+    }
+
+    onCensableChange() {
+        if (this.filtro.censable?.id === 0) {
+            this.mostrarTodasCamas = true;
+        } else {
+            this.mostrarTodasCamas = false;
+        }
+        this.filtrar();
+    }
+
+    colapsar() {
+        this.collapse = !this.collapse;
+    }
 
     groupBy(xs: ISnapshot[], key: string) {
         return xs.reduce((rv, x) => {
