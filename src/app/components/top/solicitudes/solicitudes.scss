@@ -14,3 +14,35 @@
     height: 60px;
     font-size: 3rem;
 }
+
+.table {
+
+    th,
+    td {
+        vertical-align: middle
+    }
+
+}
+
+.table-container {
+    th {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color: rgba(255, 255, 255, 0.8);
+    }
+}
+
+th.sortable {
+    cursor: pointer;
+}
+
+.column-right {
+    plex-badge {
+        margin-right: 4px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}

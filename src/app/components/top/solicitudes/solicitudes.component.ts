@@ -130,14 +130,24 @@ export class SolicitudesComponent implements OnInit {
     public check;
     public collapse = false;
     public loader = true;
+    public sort = 'fechaSolicitudAsc';
+    public sortBy = 'fechaSolicitud';
+    public sortOrder = 'asc';
     public columns = [
         {
-            key: 'fecha',
-            label: 'Fecha',
+            key: 'fechaRegistro',
+            label: 'Fecha registro',
+            sorteable: true
+        },
+        {
+            key: 'fechaSolicitud',
+            label: 'Fecha Solicitud',
+            sorteable: true
         },
         {
             key: 'paciente',
             label: 'Paciente',
+            sorteable: false
         },
         {
             key: 'origen',
@@ -150,6 +160,7 @@ export class SolicitudesComponent implements OnInit {
         {
             key: 'actualizacion',
             label: 'actualización',
+            sorteable: true
         },
         {
             key: 'EstadoAcciones',
@@ -285,9 +296,8 @@ export class SolicitudesComponent implements OnInit {
     }
 
     closeSidebar() {
-        const tableCols = (this.columnas as any)?.columns$.source._value;
-        if (tableCols && !tableCols.some(col => col.key === 'paciente')) {
-            tableCols.splice(1, 0, { key: 'paciente', label: 'Paciente' });
+        if (this.columns && !this.columns.some(col => col.key === 'paciente')) {
+            this.columns.splice(2, 0, { key: 'paciente', label: 'Paciente', sorteable: false });
             this.showPacienteData = true;
         }
         this.showAuditar = false;
@@ -307,9 +317,8 @@ export class SolicitudesComponent implements OnInit {
             this.closeSidebar();
         } else {
             this.prestacionSeleccionada = prestacion;
-            const tableCols = (this.columnas as any).columns$.source._value;
-            if (tableCols.some(col => col.key === 'paciente')) {
-                (this.columnas as any).columns$.source._value.splice(1, 1);
+            if (this.columns.some(col => col.key === 'paciente')) {
+                this.columns = this.columns.filter(col => col.key !== 'paciente');
                 this.showPacienteData = false;
             }
             (this.tipoSolicitud === 'entrada' ? this.prestacionesEntrada : this.prestacionesSalida).forEach(e => e.seleccionada = false);
@@ -427,6 +436,21 @@ export class SolicitudesComponent implements OnInit {
         this.buscarSolicitudes();
     }
 
+    sortTable(event: string) {
+        const column = this.columns.find(p => p.key === event);
+        if (!column?.sorteable) {
+            return;
+        }
+        if (this.sortBy === event) {
+            this.sortOrder = (this.sortOrder === 'asc') ? 'desc' : 'asc';
+        } else {
+            this.sortBy = event;
+            this.sortOrder = 'desc';
+        }
+        this.sort = this.sortBy + (this.sortOrder === 'asc' ? 'Asc' : 'Desc');
+        this.cargarSolicitudes();
+    }
+
     getParams() {
         const params: any = {
             estados: [
@@ -446,7 +470,10 @@ export class SolicitudesComponent implements OnInit {
             } else {
                 params['solicitudDesdeActualizacion'] = this.fechaDesde;
                 params['solicitudHastaActualizacion'] = this.fechaHasta;
-                params['ordenFechaDescAct'] = true;
+                params['solicitudHastaActualizacion'] = this.fechaHasta;
+                if (!this.sort) {
+                    params['sortBy'] = 'fechaSolicitudDesc';
+                }
             }
             /*
                 TODO: Se remueve temporalmente la inclusión de referidas en la búsqueda de prestaciones.
@@ -498,7 +525,10 @@ export class SolicitudesComponent implements OnInit {
             } else {
                 params['solicitudDesdeActualizacion'] = this.fechaDesde;
                 params['solicitudHastaActualizacion'] = this.fechaHasta;
-                params['ordenFechaDescAct'] = true;
+                params['solicitudHastaActualizacion'] = this.fechaHasta;
+                if (!this.sort) {
+                    params['sortBy'] = 'fechaSolicitudDesc';
+                }
             }
             if (this.asignadas) {
                 params['idProfesionalOrigen'] = this.auth.profesional;
@@ -537,6 +567,9 @@ export class SolicitudesComponent implements OnInit {
             }
         }
         this.setOrganizacionesParams(params);
+        if (this.sort) {
+            params['sortBy'] = this.sort;
+        }
         params['skip'] = this.skip;
         params['limit'] = this.limit;
         return params;
@@ -638,7 +671,7 @@ export class SolicitudesComponent implements OnInit {
         this.showAuditar = false;
         this.showReferir = false;
         this.showSidebar = false;
-        this.columns.splice(1, 0, { key: 'paciente', label: 'Paciente' });
+        this.columns.splice(2, 0, { key: 'paciente', label: 'Paciente', sorteable: false });
         if (event.status !== false) {
             if (event?.status !== this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados?.length) {
                 const patch = {
@@ -674,9 +707,11 @@ export class SolicitudesComponent implements OnInit {
         this.closeSidebar();
     }
 
-    onScroll() {
-        if (!this.scrollEnd) {
-            this.buscarSolicitudes();
+    onScroll(event: any) {
+        if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight - 50) {
+            if (!this.scrollEnd) {
+                this.buscarSolicitudes();
+            }
         }
     }
 
