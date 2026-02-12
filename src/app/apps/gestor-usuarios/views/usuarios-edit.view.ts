@@ -13,12 +13,14 @@ import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'gestor-usarios-usuarios-edit',
-    templateUrl: 'usuarios-edit.view.html'
+    templateUrl: 'usuarios-edit.view.html',
+    styleUrls: ['usuarios-edit.view.scss']
 })
 export class UsuariosEditComponent implements OnInit, OnDestroy {
     destroy$: Subject<boolean> = new Subject<boolean>();
 
     @ViewChild(ArbolPermisosComponent, { static: true }) arbol: ArbolPermisosComponent;
+
     private userId = '';
     private _permisos = new BehaviorSubject([]);
 
@@ -29,6 +31,17 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
     public perfiles = [];
     public arbolPermisos = [];
     public habilitados = {};
+    public fechaVencimiento: Date;
+    public canEditAccount = this.auth.check('usuarios:cuenta');
+    public hoy = new Date();
+    public get isExpired() {
+        if (!this.fechaVencimiento) {
+            return false;
+        }
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return new Date(this.fechaVencimiento) < today;
+    }
 
     get permisos() {
         return this._permisos.getValue();
@@ -100,6 +113,7 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
                         if (orgPermisos) {
                             this.orgName = orgPermisos.nombre;
                             this.permisos = orgPermisos.permisos;
+                            this.fechaVencimiento = orgPermisos.fechaVencimiento;
                         }
                     })
                 ),
@@ -122,7 +136,9 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
                     _id: p.id,
                     nombre: p.nombre
                 };
-            })
+            }),
+            fechaVencimiento: this.fechaVencimiento,
+            activo: !this.isExpired
         };
 
         if (
@@ -180,6 +196,16 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
                 .forEach(p => permisos.push(p));
             this.permisos = permisos;
         }
+    }
+
+    onEditarFechaVencimiento() {
+        this.usuariosHttp.updateOrganizacion(this.userId, this.organizacionId, {
+            id: this.organizacionId,
+            fechaVencimiento: this.fechaVencimiento,
+            activo: !this.isExpired
+        }).subscribe(() => {
+            this.plex.toast('success', 'Usuario modificado exitosamente');
+        });
     }
 
     copy() {
