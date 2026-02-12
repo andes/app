@@ -112,6 +112,27 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         return this.prestacion && this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada';
     }
 
+    get ultimoValidador() {
+        if (this.prestacion && this.prestacion.estados) {
+            const estados = [...this.prestacion.estados].reverse();
+            return estados.find(e => e.tipo === 'validada');
+        }
+        return null;
+    }
+
+    get profesionales() {
+        let profesionales = [...(this.prestacion?.profesionalesRegistrantes || [])];
+        if (this.ultimoValidador) {
+            const validador = this.ultimoValidador.createdBy;
+            const index = profesionales.findIndex(p => (p.id || p._id) === (validador.id || validador._id) || String(p.documento) === String(validador.documento));
+            if (index > -1) {
+                const [v] = profesionales.splice(index, 1);
+                profesionales = [v, ...profesionales];
+            }
+        }
+        return profesionales;
+    }
+
     ngOnDestroy() {
         this.prestacionSubscription.unsubscribe();
     }
@@ -402,6 +423,14 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
     volver() {
         this.router.navigate(['rup/ejecucion/', this.prestacion.id]);
+    }
+
+    esValidador(profesional) {
+        if (!this.ultimoValidador) {
+            return false;
+        }
+        const validador = this.ultimoValidador.createdBy;
+        return (validador.id === profesional.id || validador.id === profesional._id || String(validador.documento) === String(profesional.documento));
     }
 
     volverInicio(ambito = 'ambulatorio', ruta = null) {
