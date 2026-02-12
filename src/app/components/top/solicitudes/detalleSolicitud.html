@@ -110,3 +110,7 @@
     <historial-solicitud [prestacion]="prestacionSeleccionada" [turno]='turnoSeleccionado'>
     </historial-solicitud>
 </div>
+<div *ngIf="mostrar === 'turnos'" class="mt-3">
+    <turnos-solicitud [prestacionSeleccionada]="prestacionSeleccionada" [turnoSeleccionado]="turnoSeleccionado">
+    </turnos-solicitud>
+</div>
