@@ -6,13 +6,16 @@ export class NombrePipe implements PipeTransform {
     transform(value: any): any {
         if (!value) {
             return null;
-        } else if (value.alias) {
-            return value.apellido + ', ' + value.alias;
+        }
+        const data = (value.referencia && typeof value.referencia === 'object' && (value.referencia.nombre || value.referencia.apellido))
+            ? value.referencia : value;
+        if (data.alias) {
+            return data.apellido + ', ' + data.alias;
         } else {
-            if (value.apellido && value.nombre) {
-                return value.apellido + ', ' + value.nombre;
+            if (data.apellido && data.nombre) {
+                return data.apellido + ', ' + data.nombre;
             } else {
-                return (value.apellido ? value.apellido : value.nombre);
+                return (data.apellido ? data.apellido : data.nombre);
             }
         }
     }
