@@ -611,7 +611,8 @@ export class PlanificarAgendaComponent implements OnInit {
                                 return agenda.id !== this.modelo.id || !this.modelo.id;
                             });
                             if (agds.length > 0) {
-                                this.alertaProfesional = 'El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario';
+                                this.alertaProfesional = 'El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en el día ' + moment(agds[0].horaInicio).format('DD/MM/YYYY')
+                                    + ' en el rango horario de ' + moment(agds[0].horaInicio).format('HH:mm') + ' a ' + moment(agds[0].horaFin).format('HH:mm') + ' dentro del efector ' + agds[0].organizacion.nombre;
                             }
                         });
                 });
@@ -633,7 +634,6 @@ export class PlanificarAgendaComponent implements OnInit {
                             return agenda.id !== this.modelo.id || !this.modelo.id;
                         });
                         if (agds.length > 0) {
-
                             let ef = this.modelo.espacioFisico.nombre;
                             if (this.modelo.espacioFisico.servicio && this.modelo.espacioFisico.servicio.nombre) {
                                 ef = ef + this.modelo.espacioFisico.servicio.nombre;
@@ -641,7 +641,8 @@ export class PlanificarAgendaComponent implements OnInit {
                             if (this.modelo.espacioFisico.edificio && this.modelo.espacioFisico.edificio.descripcion) {
                                 ef = ef + this.modelo.espacioFisico.edificio.descripcion;
                             }
-                            this.alertaEspacioFisico = 'El ' + ef + ' está asignado a otra agenda en ese rango horario';
+                            this.alertaEspacioFisico = 'El ' + ef + ' está asignado en otra agenda el día ' + moment(agds[0].horaInicio).format('DD/MM/YYYY') +
+                                ' en el rango horario de ' + moment(agds[0].horaInicio).format('HH:mm') + ' a ' + moment(agds[0].horaFin).format('HH:mm');
                         }
                     });
             }
