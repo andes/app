@@ -287,11 +287,10 @@ export class SolicitudesComponent implements OnInit {
     }
 
     closeSidebar() {
-        const tableCols = (this.columnas as any)?.columns$.source._value;
-        if (tableCols && !tableCols.some(col => col.key === 'paciente')) {
-            tableCols.splice(1, 0, { key: 'paciente', label: 'Paciente' });
-            this.showPacienteData = true;
+        if (!this.columns.some(col => col.key === 'paciente')) {
+            this.columns.splice(1, 0, { key: 'paciente', label: 'Paciente' });
         }
+        this.showPacienteData = true;
         this.showAuditar = false;
         this.showReferir = false;
         this.showSidebar = false;
