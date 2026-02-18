@@ -1,3 +1,10 @@
+## [5.170.1](https://github.com/andes/app/compare/v5.170.0...v5.170.1) (2026-02-18)
+
+
+### Bug Fixes
+
+* **TOP:** Se cambia el acceso a los conceptos asociados para una solicitud ([#3286](https://github.com/andes/app/issues/3286)) ([06b8456](https://github.com/andes/app/commit/06b8456ff948b01d01f0067a141088a4d977a304))
+
 # [5.170.0](https://github.com/andes/app/compare/v5.169.2...v5.170.0) (2025-12-17)
 
 
