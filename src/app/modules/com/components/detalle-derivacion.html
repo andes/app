@@ -50,10 +50,22 @@
                             | hora}}">
         </plex-label>
     </plex-grid>
-    <plex-title size="sm" titulo="Nota"></plex-title>
-    <plex-grid type="full" cols="1">
-        {{derivacion.detalle}}
-    </plex-grid>
+    <ng-container *ngIf="derivacion.detalle">
+        <plex-title size="sm" titulo="Nota"></plex-title>
+        <plex-grid type="full" cols="1">
+            {{derivacion.detalle}}
+        </plex-grid>
+    </ng-container>
+    <ng-container *ngIf="!derivacion.detalle">
+        <plex-title size="sm" titulo="Datos de diagnóstico"></plex-title>
+        <plex-grid type="full" cols="2">
+            <plex-label titulo="Motivo de la derivación" subtitulo="{{derivacion.motivoDerivacion}}"></plex-label>
+            <plex-label titulo="Diagnóstico actual" subtitulo="{{derivacion.diagnosticoActual}}"></plex-label>
+            <plex-label titulo="Estado Clínico" subtitulo="{{derivacion.estadoClinico}}"></plex-label>
+            <plex-label titulo="Diagnóstico base" subtitulo="{{derivacion.diagnosticoBase}}"></plex-label>
+            <plex-label titulo="Comorbilidades" subtitulo="{{derivacion.comorbilidades}}"></plex-label>
+        </plex-grid>
+    </ng-container>
     <shared-galeria-archivos [files]="adjuntosUrl" [readonly]="true">
     </shared-galeria-archivos>
     <plex-button *ngIf="derivacion.prestacion && derivacion.organizacionOrigen.id === auth.organizacion.id && derivacion.estado === 'solicitada'"
@@ -84,7 +96,9 @@
                 <dispositivo [modelo]="derivacion" [tipo]="oxigeno" grow="full"></dispositivo>
                 <tipo-traslado *ngIf="reglaSeleccionada?.modificaDestino" [derivacion]="derivacion" grow="full">
                 </tipo-traslado>
-                <semaforo-priorizacion *ngIf="reglaSeleccionada?.definePrioridad" [name]="'com'" [prioridad]="nuevoEstado.prioridad" (change)="nuevoEstado.prioridad = $event?.label"></semaforo-priorizacion>
+                <semaforo-priorizacion *ngIf="reglaSeleccionada?.definePrioridad" [name]="'com'"
+                                       [prioridad]="nuevoEstado.prioridad"
+                                       (change)="nuevoEstado.prioridad = $event?.label"></semaforo-priorizacion>
                 <plex-text [(ngModel)]="nuevoEstado.observacion" label="Observacion" name="observacion" multiline="true"
                            grow="full">
                 </plex-text>

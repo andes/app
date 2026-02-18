@@ -64,6 +64,9 @@ export class ComPuntoInicioComponent implements OnInit {
     public sortOrder = 'asc';
     public ordenarPorPrioridad = false;
     public opcionesSemaforo;
+    public fechaDesde;
+    public fechaHasta;
+    public hoy = new Date();
 
     constructor(
         private derivacionesService: DerivacionesService,
@@ -156,6 +159,26 @@ export class ComPuntoInicioComponent implements OnInit {
         if (this.paciente) {
             query.paciente = `^${this.paciente}`;
         }
+
+        let rangoFecha;
+        let desde;
+        let hasta;
+        if (this.fechaDesde) {
+            desde = moment(this.fechaDesde).format('YYYY-MM-DD HH:mm:ss');
+            if (this.fechaHasta) {
+                hasta = moment(this.fechaHasta).format('YYYY-MM-DD HH:mm:ss');
+                rangoFecha = `${desde}|${hasta}`;
+            } else {
+                rangoFecha = `>=${desde}`;
+            }
+        } else {
+            if (this.fechaHasta) {
+                hasta = moment(this.fechaHasta).format('YYYY-MM-DD HH:mm:ss');
+                rangoFecha = `<=${hasta}`;
+            }
+        }
+
+        query.fecha = rangoFecha;
 
         return query;
     }

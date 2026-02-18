@@ -2,30 +2,35 @@
     <plex-layout-main>
         <plex-title main titulo="CENTRO OPERATIVO MÉDICO">
             <plex-button position="left" type="success" class="mr-1" label="Nueva derivación"
-                         (click)="nuevaDerivacion()">
+                (click)="nuevaDerivacion()">
             </plex-button>
             <plex-button type="info" (click)="cambiarVerAyuda(true)" icon="help-circle">
             </plex-button>
         </plex-title>
         <plex-tabs [activeIndex]="tabIndex" (change)="cambiarTab($event)"
-                   *ngIf="(derivaciones$ | async) as derivacionesOrdenadas">
+            *ngIf="(derivaciones$ | async) as derivacionesOrdenadas">
             <plex-tab label="DERIVACIONES ENTRANTES">
                 <plex-wrapper>
+                    <plex-datetime type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Fecha desde"
+                        class="fechas" (change)="cargarDerivaciones()" debounce="800" [max]="fechaHasta || hoy">
+                    </plex-datetime>
+                    <plex-datetime type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Fecha hasta"
+                        class="fechas" (change)="cargarDerivaciones()" debounce="800" [min]="fechaDesde" [max]="hoy">
+                    </plex-datetime>
                     <plex-select [(ngModel)]="organizacionOrigen" name="orgOrigen" tmOrganizaciones
-                                 label="Organización origen" placeholder="Seleccione la organización"
-                                 (change)="cargarDerivaciones()">
+                        label="Organización origen" placeholder="Seleccione la organización"
+                        (change)="cargarDerivaciones()">
                     </plex-select>
                     <plex-text [(ngModel)]="paciente" name="paciente" (change)="cargarDerivaciones()"
-                               label="Buscar paciente" debounce="400"></plex-text>
+                        label="Buscar paciente" debounce="400"></plex-text>
                     <plex-select [(ngModel)]="estado" (change)="cargarDerivaciones()" [data]="estados" name="estado"
-                                 label="Estado">
+                        label="Estado">
                     </plex-select>
                     <div *ngIf="esCOM">
                         <plex-label titulo="Ordenar por prioridad"></plex-label>
                         <plex-bool (change)="ordenarPrioridad()" [(ngModel)]="ordenarPorPrioridad" type="slide">
                         </plex-bool>
                     </div>
-
                 </plex-wrapper>
                 <div *ngIf="!derivacionesOrdenadas?.length && !loading" class="alert alert-default">
                     No hay resultados que coincidan con los filtros de búsqueda
@@ -60,50 +65,51 @@
                                 </plex-item>
                                 <ng-container *ngFor="let derivacion of derivacionesOrdenadas">
                                     <plex-item [colors]="getColorPrioridad(derivacion.prioridad)"
-                                               [selected]="showSidebar && (derivacion === derivacionSeleccionada)"
-                                               (click)="seleccionar(derivacion)">
+                                        [selected]="showSidebar && (derivacion === derivacionSeleccionada)"
+                                        (click)="seleccionar(derivacion)">
                                         <plex-label *ngIf="!showSidebar" [tituloBold]="true"
-                                                    titulo="{{derivacion.createdAt | fecha}}" subtitulo="Última actualización: {{(derivacion.updatedAt?derivacion.updatedAt:derivacion.createdAt)
+                                            titulo="{{derivacion.createdAt | fecha}}" subtitulo="Última actualización: {{(derivacion.updatedAt?derivacion.updatedAt:derivacion.createdAt)
                                                         | fecha}}">
                                         </plex-label>
                                         <plex-label [tituloBold]="true"
-                                                    titulo="{{ derivacion.organizacionOrigen.nombre }}"
-                                                    subtitulo="Solicitante: {{ derivacion.profesionalSolicitante.apellido }}, {{ derivacion.profesionalSolicitante.nombre }}">
+                                            titulo="{{ derivacion.organizacionOrigen.nombre }}"
+                                            subtitulo="Solicitante: {{ derivacion.profesionalSolicitante.apellido }}, {{ derivacion.profesionalSolicitante.nombre }}">
                                         </plex-label>
                                         <plex-label titulo="{{ derivacion.organizacionDestino.nombre }}"
-                                                    subtitulo="{{ derivacion.organizacionDestino.direccion.ubicacion.localidad?.nombre }}">
+                                            subtitulo="{{ derivacion.organizacionDestino.direccion.ubicacion.localidad?.nombre }}">
                                         </plex-label>
                                         <div>
                                             <plex-label *ngIf="derivacion.prioridad && esCOM"
-                                                        titulo="{{ derivacion.paciente | nombre }}"
-                                                        subtitulo="{{ derivacion.paciente | documento }}">
+                                                titulo="{{ derivacion.paciente | nombre }}"
+                                                subtitulo="{{ derivacion.paciente | documento }}">
                                             </plex-label>
                                             <plex-label *ngIf="!esCOM || !derivacion.prioridad"
-                                                        titulo="{{ derivacion.paciente | nombre }}"
-                                                        subtitulo="{{ derivacion.paciente | documento }}">
+                                                titulo="{{ derivacion.paciente | nombre }}"
+                                                subtitulo="{{ derivacion.paciente | documento }}">
                                             </plex-label>
                                         </div>
-                                        <plex-button *ngIf="esTrasladoEspecial || esCOM || (derivacion.estado === 'aceptada' || derivacion.estado === 'encomendada') || (derivacion.historial[derivacion.historial.length - 1].createdBy?.organizacion._id === orgActual._id)"
-                                                     type="info" size="sm"
-                                                     (click)="actualizarEstado(derivacion);$event.stopPropagation()">
+                                        <plex-button
+                                            *ngIf="esTrasladoEspecial || esCOM || (derivacion.estado === 'aceptada' || derivacion.estado === 'encomendada') || (derivacion.historial[derivacion.historial.length - 1].createdBy?.organizacion._id === orgActual._id)"
+                                            type="info" size="sm"
+                                            (click)="actualizarEstado(derivacion);$event.stopPropagation()">
                                             ACTUALIZAR
                                         </plex-button>
                                         <plex-button *ngIf="derivacion.estado === 'finalizada'" type="warning" size="sm"
-                                                     (click)="imprimirComprobante(derivacion)">
+                                            (click)="imprimirComprobante(derivacion)">
                                             COMPROBANTE
                                         </plex-button>
                                         <plex-badge *ngIf="derivacion.dispositivo" type="danger"
-                                                    title="{{derivacion.dispositivo.nombre}}: {{derivacion.dispositivo.descripcion}}">
+                                            title="{{derivacion.dispositivo.nombre}}: {{derivacion.dispositivo.descripcion}}">
                                             <plex-icon name="{{derivacion.dispositivo.icono}}"></plex-icon>
                                         </plex-badge>
 
                                         <plex-badge *ngIf="derivacion.tipoTraslado" type="warning"
-                                                    title="Requiere traslado especial: {{derivacion.tipoTraslado.nombre}}">
+                                            title="Requiere traslado especial: {{derivacion.tipoTraslado.nombre}}">
                                             <plex-icon name="avion"></plex-icon>
                                         </plex-badge>
 
                                         <plex-badge
-                                                    type="{{(derivacion.estado === 'denegada' || derivacion.estado === 'rechazada')?'danger':'success'}}">
+                                            type="{{(derivacion.estado === 'denegada' || derivacion.estado === 'rechazada')?'danger':'success'}}">
                                             {{ derivacion.estado }}
                                         </plex-badge>
 
@@ -116,14 +122,20 @@
             </plex-tab>
             <plex-tab label="DERIVACIONES SOLICITADAS">
                 <plex-wrapper>
+                    <plex-datetime type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Fecha desde"
+                        class="fechas" (change)="cargarDerivaciones()" debounce="800">
+                    </plex-datetime>
+                    <plex-datetime type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Fecha hasta"
+                        class="fechas" (change)="cargarDerivaciones()" debounce="800">
+                    </plex-datetime>
                     <plex-select [(ngModel)]="organizacionDestino" name="orgDestino" tmOrganizaciones
-                                 label="Organización destino" placeholder="Seleccione la organización"
-                                 (change)="cargarDerivaciones()">
+                        label="Organización destino" placeholder="Seleccione la organización"
+                        (change)="cargarDerivaciones()">
                     </plex-select>
                     <plex-text [(ngModel)]="paciente" name="paciente" (change)="cargarDerivaciones()"
-                               label="Buscar paciente" debounce="400"></plex-text>
+                        label="Buscar paciente" debounce="400"></plex-text>
                     <plex-select [(ngModel)]="estado" (change)="cargarDerivaciones()" [data]="estados" name="estado"
-                                 label="Estado">
+                        label="Estado">
                     </plex-select>
                     <div *ngIf="esCOM">
                         <plex-label titulo="Ordenar por prioridad"></plex-label>
@@ -169,51 +181,51 @@
                                 <ng-container *ngFor="let derivacion of derivacionesOrdenadas">
 
                                     <plex-item [colors]="getColorPrioridad(derivacion.prioridad)"
-                                               [selected]="showSidebar && (derivacion === derivacionSeleccionada)"
-                                               (click)="seleccionar(derivacion)">
+                                        [selected]="showSidebar && (derivacion === derivacionSeleccionada)"
+                                        (click)="seleccionar(derivacion)">
                                         <plex-label *ngIf="!showSidebar" [tituloBold]="true"
-                                                    titulo="{{derivacion.createdAt | fecha}}" subtitulo="Última actualización: {{derivacion.updatedAt
+                                            titulo="{{derivacion.createdAt | fecha}}" subtitulo="Última actualización: {{derivacion.updatedAt
                                                 | fecha}}">
                                         </plex-label>
                                         <plex-label [tituloBold]="true"
-                                                    titulo="{{ derivacion.organizacionOrigen.nombre }}"
-                                                    subtitulo="Solicitante: {{ derivacion.profesionalSolicitante.apellido }}, {{ derivacion.profesionalSolicitante.nombre }}">
+                                            titulo="{{ derivacion.organizacionOrigen.nombre }}"
+                                            subtitulo="Solicitante: {{ derivacion.profesionalSolicitante.apellido }}, {{ derivacion.profesionalSolicitante.nombre }}">
                                         </plex-label>
                                         <plex-label titulo="{{ derivacion.organizacionDestino.nombre }}"
-                                                    subtitulo="{{ derivacion.organizacionDestino.direccion.ubicacion.localidad?.nombre }}">
+                                            subtitulo="{{ derivacion.organizacionDestino.direccion.ubicacion.localidad?.nombre }}">
                                         </plex-label>
                                         <div>
                                             <plex-label *ngIf="derivacion.prioridad && esCOM"
-                                                        titulo="{{ derivacion.paciente | nombre }}"
-                                                        subtitulo="{{ derivacion | documento }}">
+                                                titulo="{{ derivacion.paciente | nombre }}"
+                                                subtitulo="{{ derivacion | documento }}">
                                             </plex-label>
                                             <plex-label *ngIf="!esCOM || !derivacion.prioridad"
-                                                        titulo="{{ derivacion.paciente | nombre }}"
-                                                        subtitulo="{{ derivacion | documento }}">
+                                                titulo="{{ derivacion.paciente | nombre }}"
+                                                subtitulo="{{ derivacion | documento }}">
                                             </plex-label>
                                         </div>
                                         <plex-button *ngIf="derivacion.estado === 'solicitada'" type="danger" size="sm"
-                                                     (click)="cancelar(derivacion);$event.stopPropagation()">
+                                            (click)="cancelar(derivacion);$event.stopPropagation()">
                                             CANCELAR
                                         </plex-button>
                                         <plex-button type="info" size="sm"
-                                                     (click)="actualizarEstado(derivacion);$event.stopPropagation()">
+                                            (click)="actualizarEstado(derivacion);$event.stopPropagation()">
                                             ACTUALIZAR
                                         </plex-button>
                                         <plex-button *ngIf="derivacion.estado === 'finalizada'" type="warning" size="sm"
-                                                     (click)="imprimirComprobante(derivacion)">
+                                            (click)="imprimirComprobante(derivacion)">
                                             COMPROBANTE
                                         </plex-button>
                                         <plex-badge *ngIf="derivacion.dispositivo" type="danger"
-                                                    title="{{derivacion.dispositivo.nombre}}: {{derivacion.dispositivo.descripcion}}">
+                                            title="{{derivacion.dispositivo.nombre}}: {{derivacion.dispositivo.descripcion}}">
                                             <plex-icon name="{{derivacion.dispositivo.icono}}"></plex-icon>
                                         </plex-badge>
                                         <plex-badge *ngIf="derivacion.tipoTraslado" type="warning"
-                                                    title="Requiere traslado especial: {{derivacion.tipoTraslado.nombre}}">
+                                            title="Requiere traslado especial: {{derivacion.tipoTraslado.nombre}}">
                                             <plex-icon name="avion"></plex-icon>
                                         </plex-badge>
                                         <plex-badge
-                                                    type="{{(derivacion.estado === 'denegada' || derivacion.estado === 'rechazada')?'danger':'success'}}">
+                                            type="{{(derivacion.estado === 'denegada' || derivacion.estado === 'rechazada')?'danger':'success'}}">
                                             {{ derivacion.estado }}</plex-badge>
 
                                     </plex-item>
@@ -231,18 +243,18 @@
         </ng-container>
         <div *ngIf="showDetalle">
             <detalle-derivacion [derivacion]="derivacionSeleccionada" [reglasDerivacion]="reglasDerivacion"
-                                (returnDetalle)="returnDetalle($event)">
+                (returnDetalle)="returnDetalle($event)">
             </detalle-derivacion>
         </div>
         <div *ngIf="showEditarEstado">
             <actualizar-estado [esCOM]="esCOM" [derivacion]="derivacionSeleccionada"
-                               (returnEditarEstado)="returnDetalle($event)">
+                (returnEditarEstado)="returnDetalle($event)">
             </actualizar-estado>
         </div>
     </plex-layout-sidebar>
 </plex-layout>
 <plex-modal *ngIf="verAyuda" [allowClose]="true" [allowEscClose]="false" #modal [startOpen]="true"
-            (closed)="cambiarVerAyuda(false)">
+    (closed)="cambiarVerAyuda(false)">
     <plex-icon name="help-circle" type="info"></plex-icon>
     <plex-modal-title type="info">Descripción de los estados</plex-modal-title>
     <main>
