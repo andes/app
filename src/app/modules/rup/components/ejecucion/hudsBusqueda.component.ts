@@ -19,6 +19,7 @@ import { getSemanticClass } from '../../pipes/semantic-class.pipes';
 import { EmitConcepto, RupEjecucionService } from '../../services/ejecucion.service';
 import { HUDSService } from '../../services/huds.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { PuntoInicioService } from 'src/app/services/puntoInicio/punto-inicio.service';
 
 @Component({
     selector: 'rup-hudsBusqueda',
@@ -30,6 +31,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     laboratoriosFS: any;
     laboratorios: any = [];
     vacunas: any = [];
+    derivaciones: any = [];
     ordenDesc = true;
     searchTerm: string;
     hallazgosCronicosAux: any[];
@@ -109,6 +111,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         elementoderegistro: ['elemento de registro'],
         laboratorios: ['laboratorios'],
         vacunas: ['vacunas'],
+        com: ['com']
     };
     public prestacionesTotales;
     public registrosTotales = {
@@ -156,7 +159,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         { key: 'recetas', titulo: 'recetas', icono: 'listado-receta' },
         { key: 'producto', titulo: 'productos', icono: 'pildoras' },
         { key: 'laboratorios', titulo: 'laboratorios', icono: 'recipiente' },
-        { key: 'vacunas', titulo: 'vacunas', icono: 'vacuna' }
+        { key: 'vacunas', titulo: 'vacunas', icono: 'vacuna' },
+        { key: 'com', titulo: 'com', icono: 'account-switch' }
     ];
 
     public estadoReceta = {
@@ -191,6 +195,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         private laboratorioService: LaboratorioService,
         private recetasService: RecetaService,
         private profesionalService: ProfesionalService,
+        private puntoInicioService: PuntoInicioService
     ) {
     }
 
@@ -204,6 +209,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
             this.listarInternaciones();
             this.listarPrestaciones();
             this.listarConceptos();
+            this.listarDerivaciones();
         }
         const token = this.huds.getHudsToken();
         // Cuando se inicia una prestación debemos volver a consultar si hay CDA nuevos al ratito.
@@ -310,6 +316,11 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
                 gtag('huds-open', tipo, registro.solicitud.registros[0].concepto.term, index);
                 registro.tipo = 'solicitud';
                 registro.class = 'plan';
+                break;
+            case 'com':
+                gtag('huds-open', tipo, registro.organizacionOrigen.nombre, index);
+                registro = registro;
+                registro.class = 'com';
                 break;
             case 'ficha-epidemiologica':
                 gtag('huds-open', tipo, registro.prestacion.term, index);
@@ -480,6 +491,16 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         });
     }
 
+    listarDerivaciones() {
+        const query = {
+            paciente: `^${this.paciente.documento}`
+        };
+
+        this.puntoInicioService.get(query).subscribe((data) => {
+            this.derivaciones = data;
+        });
+    }
+
     private cargarSolicitudesMezcladas() {
         this.solicitudesMezcladas = this.solicitudes.concat(this.solicitudesTOP);
 
@@ -594,6 +615,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
                 return this.laboratorios.length;
             case 'vacunas':
                 return this.vacunas.length;
+            case 'com':
+                return this.derivaciones.length;
             case 'solicitudes':
                 return this.solicitudesMezcladas.length;
             case 'recetas':
@@ -753,6 +776,10 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
 
     clickSolicitud(registro, index) {
         this.emitTabs(registro, (registro.evoluciones ? 'concepto' : 'solicitud'), index);
+    }
+
+    clickDerivacion(registro, index) {
+        this.emitTabs(registro, 'com', index);
     }
 
     normalizarCadena(cadena) {
