@@ -75,6 +75,7 @@ import { SemanticClassPipe } from './pipes/semantic-class.pipes';
 import { SemanticIconPipe } from './pipes/semantic-icon.pipes';
 import { RUPSoloValorPipe } from './pipes/elemento-rup-valor.pipes';
 import { DirectiveLibModule } from '../../directives/directives.module';
+import { ColposcopiaComponent } from './components/elementos/colposcopia.component';
 
 const RUPComponentsArray = [
     RUPComponent,
@@ -159,7 +160,8 @@ const RUPComponentsArray = [
         SemanticClassPipe,
         ElementoRUPByIdPipes,
         RUPSoloValorPipe,
-        RUPMedicamentosBusquedaDetalleComponent
+        RUPMedicamentosBusquedaDetalleComponent,
+        ColposcopiaComponent
     ],
     entryComponents: [
         ...RUPComponentsArray
