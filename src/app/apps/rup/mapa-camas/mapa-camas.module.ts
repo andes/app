@@ -70,6 +70,7 @@ import { IngresoPacienteService } from './sidebar/ingreso/ingreso-paciente-workf
 import { PeriodosCensablesComponent } from './sidebar/periodos-censables/periodos-censables.component';
 import { ListadoMedicamentosCapasComponent } from './views/listado-internacion-capas/listado-medicamentos-capas.component';
 import { CITASLibModule } from '../../../components/turnos/citas.module';
+import { MapaCamasResumenComponent } from './views/mapa-camas-capa/mapa-camas-resumen.component';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -116,7 +117,8 @@ export const INTERNACION_COMPONENTS = [
     RecursosListadoComponent,
     ResumenInternacionComponent,
     TimelineMapaCamasComponent,
-    PeriodosCensablesComponent
+    PeriodosCensablesComponent,
+    MapaCamasResumenComponent
 ];
 
 export const INTERNACION_PROVIDERS = [
