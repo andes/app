@@ -15,8 +15,8 @@
         </div>
     </fieldset>
 </ng-container>
-<ng-container *ngIf="prestacion$ | async as prestacion">
-    <ng-container *ngIf="registro$ | async as registro">
+        <ng-container *ngIf="registro$ | async as registro">
+    <ng-container *ngIf="informeEgreso$ | async as informeEgreso">
         <ng-container *ngIf="informeEgreso$ | async as informeEgreso">
             <fieldset>
                 <div class="row">
@@ -28,20 +28,21 @@
                         <b>Tipo de egreso</b>
                         <p>{{informeEgreso.tipoEgreso?.nombre}}</p>
                     </div>
+                        
                     <div class="col" *ngIf="informeEgreso.tipoEgreso?.nombre === 'Traslado'">
                         <b>Organización destino</b>
-                        <p>{{informeEgreso.UnidadOrganizativaDestino?.nombre}}</p>
+                        <p>{{informeEgreso.tipoEgreso?.OrganizacionDestino?.nombre}}</p>
                     </div>
                 </div>
 
                 <!-- Detalle  -->
-                <div class="row" *ngIf="informeEgreso.diagnosticoPrincipal">
+                <div class="row" *ngIf="informeEgreso.diagnosticos.principal">
                     <div class="col">
                         <b>Diagnostico Principal al egreso</b>
-                        <p>{{informeEgreso.diagnosticoPrincipal.codigo}} -
-                            {{informeEgreso.diagnosticoPrincipal.nombre}}
+                        <p>{{informeEgreso.diagnosticos.principal.codigo}} -
+                            {{informeEgreso.diagnosticos.principal.nombre}}
                         </p>
-                        <ng-container *ngIf="informeEgreso.diagnosticoPrincipal.c2">
+                        <ng-container *ngIf="informeEgreso.diagnosticos.principal.c2">
                             <b>Es primera vez:</b>
                             <p>
                                 <span *ngIf="registro.esPrimeraVez">SI</span>

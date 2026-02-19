@@ -1,0 +1,29 @@
+.lista-prestacion {
+    .rup-card {
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        overflow: hidden;
+
+        .rup-header {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            
+            &.bg-success {
+                background-color: #28a745 !important;
+            }
+
+            &.bg-danger {
+                background-color: #dc3545 !important;
+            }
+        }
+
+        .rup-body {
+            background-color: #f8f9fa;
+        }
+    }
+}
+
+.prestacion-label {
+    margin-bottom: 10px;
+}

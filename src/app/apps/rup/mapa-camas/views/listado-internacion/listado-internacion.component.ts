@@ -1,137 +1,103 @@
+/* eslint-disable no-console */
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Plex } from '@andes/plex';
-import { snomedIngreso, snomedEgreso } from '../../constantes-internacion';
-import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
-import { MapaCamasService } from '../../services/mapa-camas.service';
-import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
+import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { Auth } from '@andes/auth';
+
+import { MapaCamasService } from '../../services/mapa-camas.service';
 import { ListadoInternacionService } from './listado-internacion.service';
 import { IngresoPacienteService } from '../../sidebar/ingreso/ingreso-paciente-workflow/ingreso-paciente-workflow.service';
-import { map } from 'rxjs/operators';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
-import { Auth } from '@andes/auth';
+import { InformeEstadisticaService } from 'src/app/modules/rup/services/informe-estadistica.service';
+import { IInformeEstadistica } from 'src/app/modules/rup/interfaces/informe-estadistica.interface';
 
 @Component({
     selector: 'app-internacion-listado',
     templateUrl: './listado-internacion.component.html',
 })
-
 export class InternacionListadoComponent implements OnInit {
-    listaInternacion$: Observable<IPrestacion[]>;
-    selectedPrestacion$: Observable<IPrestacion>;
+    listaInternacion$: Observable<IInformeEstadistica[]>;
+    selectedInforme$: Observable<IInformeEstadistica>;
+
+
+
     fechaIngresoHasta$ = this.listadoInternacionService.fechaIngresoHasta;
     mainView$ = this.mapaCamasService.mainView;
 
-    // VARIABLES
     public mostrar = 'datosInternacion';
     public cambiarUO = false;
     public puedeValidar = false;
     public puedeRomper = false;
     public editando = false;
     public estaBuscando = false;
+
     public columns = [
-        { // prioriza nombre autopercibido en caso de tener
+        {
             key: 'apellido-nombre',
             label: 'Apellido y nombre',
             sorteable: true,
             opcional: false,
-            sort: (a, b) => {
-                const aNombre = a.paciente.alias || a.paciente.nombre;
-                const bNombre = b.paciente.alias || b.paciente.nombre;
-                return (a.paciente.apellido + aNombre).localeCompare(b.paciente.apellido + bNombre);
-            }
+            sort: (a, b) => (a.paciente.apellido + a.paciente.nombre).localeCompare(b.paciente.apellido + b.paciente.nombre)
         },
         {
             key: 'documento',
             label: 'Documento',
             sorteable: true,
             opcional: false,
-            sort: (a, b) => {
-                const aDocumento = a.paciente.documento || a.paciente.numeroIdentificacion;
-                const bDocumento = b.paciente.documento || b.paciente.numeroIdentificacion;
-                return aDocumento.localeCompare(bDocumento);
-            }
+            sort: (a, b) => (a.paciente.documento || '').localeCompare(b.paciente.documento || '')
         },
         {
             key: 'diagnostico',
-            label: 'Motivo Ingreso',
+            label: 'Motivo ingreso',
             sorteable: true,
             opcional: true,
-            sort: (a: any, b: any) => {
-                const nameA = a.ejecucion?.registros[0]?.valor?.informeIngreso?.motivo || '';
-                const nameB = b.ejecucion?.registros[0]?.valor?.informeIngreso?.motivo || '';
-                return nameA.localeCompare(nameB);
-            }
+            sort: (a, b) => (a.informeIngreso?.motivo || '').localeCompare(b.informeIngreso?.motivo || '')
         },
         {
             key: 'fechaIngreso',
             label: 'Fecha de ingreso',
             sorteable: true,
             opcional: false,
-            sort: (a, b) => {
-                const fecha1 = moment(this.devuelveFecha(a, 'ingreso'));
-                const fecha2 = moment(this.devuelveFecha(b, 'ingreso'));
-                return fecha1.diff(fecha2);
-            }
+            sort: (a, b) => moment(a.informeIngreso?.fechaIngreso).diff(moment(b.informeIngreso?.fechaIngreso))
         },
         {
             key: 'fechaEgreso',
             label: 'Fecha de egreso',
             sorteable: true,
             opcional: false,
-            sort: (a, b) => {
-                let fecha1 = this.devuelveFecha(a, 'egreso');
-                let fecha2 = this.devuelveFecha(b, 'egreso');
-                if (fecha1) {
-                    fecha1 = moment(fecha1);
-                    if (fecha2) {
-                        fecha2 = moment(fecha2);
-                        return fecha1.diff(fecha2);
-                    } else {
-                        return 1;
-                    }
-                }
-                return -1;
-            }
+            sort: (a, b) => moment(a.informeEgreso?.fechaEgreso).diff(moment(b.informeEgreso?.fechaEgreso))
         },
         {
             key: 'obraSocial',
             label: 'Obra social',
             sorteable: true,
             opcional: false,
-            sort: (a, b) => {
-                const p1 = a.paciente.obraSocial?.nombre || '';
-                const p2 = b.paciente.obraSocial?.nombre || '';
-                return p1.localeCompare(p2);
-            }
+            sort: (a, b) => (a.obraSocial?.nombre || '').localeCompare(b.obraSocial?.nombre || '')
         },
         {
             key: 'unidadOrganizativa',
             label: 'Unidad organizativa',
             sorteable: true,
             opcional: false,
-            sort: (a, b) => {
-                return a.unidadOrganizativa.term.localeCompare(b.unidadOrganizativa.term);
-            }
+            sort: (a, b) => (a.unidadOrganizativa?.term || '').localeCompare(b.unidadOrganizativa?.term || '')
         },
         {
             key: 'estado',
             label: 'Estado',
             sorteable: true,
             opcional: false,
-            sort: (a, b) => {
-                return a.estadoActual.tipo.localeCompare(b.estadoActual.tipo);
-            }
+            sort: (a, b) => (a.estadoActual?.tipo || '').localeCompare(b.estadoActual?.tipo || '')
         }
     ];
 
     constructor(
         private plex: Plex,
         private location: Location,
-        private prestacionService: PrestacionesService,
-        public mapaCamasService: MapaCamasService,
+        private informeEstadisticaService: InformeEstadisticaService,
+        private mapaCamasService: MapaCamasService,
         private listadoInternacionService: ListadoInternacionService,
         private ingresoPacienteService: IngresoPacienteService,
         private permisosMapaCamasService: PermisosMapaCamasService,
@@ -141,151 +107,72 @@ export class InternacionListadoComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        // verificamos permisos
+
         const capa = this.route.snapshot.paramMap.get('capa');
         const permisosInternacion = this.auth.getPermissions('internacion:rol:?');
-        if (permisosInternacion.length >= 1 && (permisosInternacion.indexOf(capa) !== -1 || permisosInternacion[0] === '*')) {
+
+        if (permisosInternacion.length >= 1 && (permisosInternacion.includes(capa) || permisosInternacion[0] === '*')) {
             this.mapaCamasService.setCapa(capa);
         } else {
             this.router.navigate(['/inicio']);
         }
+
         this.mapaCamasService.setAmbito('internacion');
         this.permisosMapaCamasService.setAmbito('internacion');
         this.mapaCamasService.setView('listado-internacion');
-        this.mapaCamasService.select({ id: ' ' } as any); // Pequeño HACK
-        this.plex.updateTitle([{
-            route: '/inicio',
-            name: 'Andes'
-        }, {
-            name: 'Internacion'
-        }, {
-            name: 'Listado de Internacion'
-        }]);
+        this.mapaCamasService.select({ id: ' ' } as any);
 
-        this.selectedPrestacion$ = this.mapaCamasService.selectedPrestacion.pipe(
-            map(prestacion => {
-                this.puedeValidar = false;
-                this.puedeRomper = false;
-                if (prestacion?.ejecucion?.registros[1] && prestacion.ejecucion.registros[1].valor?.InformeEgreso) {
-                    const informeEgreso = prestacion.ejecucion.registros[1].valor.InformeEgreso;
-                    this.puedeValidar = prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' &&
-                        informeEgreso.fechaEgreso &&
-                        informeEgreso.tipoEgreso &&
-                        informeEgreso.diagnosticoPrincipal;
-                    this.puedeRomper = (prestacion.ejecucion && prestacion.ejecucion.registros[1] && prestacion.estados[prestacion.estados.length - 1].tipo === 'validada');
+        this.plex.updateTitle([
+            { route: '/inicio', name: 'Andes' },
+            { name: 'Internación' },
+            { name: 'Listado de Internación' }
+        ]);
+
+        this.listaInternacion$ = this.listadoInternacionService.listaInternacionFiltrada$.pipe(
+            map((res: any) => {
+                if (Array.isArray(res)) {
+                    return res;
+                } else if (Array.isArray(res?.data)) {
+                    return res.data;
+                } else if (Array.isArray(res?.listaInternacion)) {
+                    return res.listaInternacion;
+                } else {
+                    console.warn('⚠️ listaInternacionFiltrada$ no devolvió un array. Valor recibido:', res);
+                    return [];
                 }
-                return prestacion;
             })
         );
-        this.listaInternacion$ = this.listadoInternacionService.listaInternacionFiltrada$;
+
+        this.selectedInforme$ = this.mapaCamasService.selectedInformeEstadistica.pipe(
+            map((prestacion: any) => {
+                const informe = prestacion as IInformeEstadistica;
+                this.verificarInforme(informe);
+                return informe;
+            })
+        );
     }
 
-    devuelveFecha(internacion, tipo) {
-        const informe = this.verRegistro(internacion, tipo);
-        if (tipo === 'ingreso') {
-            return informe.informeIngreso.fechaIngreso;
-        } else {
-            return informe ? informe.InformeEgreso.fechaEgreso : null;
 
-        }
-    }
-
-    verRegistro(prestacion, tipoRegistro) {
-        let registro = null;
-        if (tipoRegistro === 'ingreso') {
-            registro = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === snomedIngreso.conceptId);
-        }
-        if (tipoRegistro === 'egreso') {
-            registro = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === snomedEgreso.conceptId);
-        }
-
-        if (registro) {
-            return registro.valor;
-        }
-        return null;
-    }
-
-    seleccionarPrestacion(prestacion, selectedPrestacion) {
-        if (this.mostrar === 'datosInternacion') {
-            if (selectedPrestacion._id === prestacion._id) {
-                this.mapaCamasService.selectPrestacion(null);
-                this.mapaCamasService.select(null);
-            } else {
-                this.mapaCamasService.selectPrestacion(prestacion);
-                this.mapaCamasService.setFecha(prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso);
-                this.ingresoPacienteService.selectPaciente(prestacion.paciente.id);
-                this.verificarPrestacion(prestacion);
-                this.mapaCamasService.isLoading(true);
-            }
-        }
-    }
-
-    cancelar() {
-        this.mapaCamasService.selectPrestacion(null);
-        this.mostrar = 'datosInternacion';
-    }
-
-    volver() {
-        this.mapaCamasService.selectPrestacion(null);
-        this.location.back();
-    }
-
-    cambiarCama() {
-        this.mostrar = 'desocuparCama';
-    }
-
-    refresh() {
-        this.listadoInternacionService.refresh.next(true);
-        this.volverADetalle();
-    }
-
-    volverADetalle() {
-        this.mostrar = 'datosInternacion';
-    }
-
-    accionDesocupar(accion) {
-        this.mostrar = 'cambiarCama';
-        this.cambiarUO = accion.cambiarUO;
-    }
-
-    verificarPrestacion(prestacion: IPrestacion) {
-        this.puedeValidar = false;
-        this.puedeRomper = false;
-        if (prestacion.ejecucion) {
-            if (prestacion.ejecucion.registros[1]) {
-                if (prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada') {
-                    const informeEgreso = prestacion.ejecucion.registros[1].valor.InformeEgreso;
-                    if (informeEgreso) {
-                        if (informeEgreso.fechaEgreso && informeEgreso.tipoEgreso && informeEgreso.diagnosticoPrincipal) {
-                            this.puedeValidar = true;
-                        }
-                    }
-                } else {
-                    this.puedeRomper = true;
-                }
-            }
-        }
-    }
-
-    onAccion($event) {
-        this.editando = $event?.accion === 'editando';
-    }
-
-    validar(selectedPrestacion: IPrestacion) {
+    validar(seleccionarInforme: IInformeEstadistica) {
         this.plex.confirm('Luego de validar la prestación ya no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
             if (validar) {
-                if (selectedPrestacion.ejecucion.registros[1]) {
-                    const egresoExiste = selectedPrestacion.ejecucion.registros[1].valor;
-                    if (egresoExiste && selectedPrestacion.estados[selectedPrestacion.estados.length - 1].tipo !== 'validada') {
-                        if (egresoExiste.InformeEgreso.fechaEgreso && egresoExiste.InformeEgreso.tipoEgreso &&
-                            egresoExiste.InformeEgreso.diagnosticoPrincipal) {
-                            this.prestacionService.validarPrestacion(selectedPrestacion).subscribe({
+                if (seleccionarInforme) {
+                    const id = seleccionarInforme._id;
+                    console.log('🔵 Enviando a validarInforme() el ID:', id);
+
+                    const egresoExiste = seleccionarInforme.informeEgreso;
+                    const ultimoEstado = seleccionarInforme.estados[seleccionarInforme.estados.length - 1].tipo;
+                    console.log('🟨 Último estado:', ultimoEstado);
+                    if (egresoExiste && ultimoEstado !== 'validada') {
+                        if (egresoExiste.fechaEgreso && egresoExiste.tipoEgreso &&
+                            egresoExiste.diagnosticos?.principal) {
+                            this.informeEstadisticaService.validarInforme(id).subscribe({
                                 next: prestacion => {
-                                    this.mapaCamasService.selectPrestacion(prestacion);
-                                    this.verificarPrestacion(prestacion);
+                                    this.mapaCamasService.selectInformeEstadistica(seleccionarInforme);
+                                    this.verificarInforme(prestacion);
                                     this.listadoInternacionService.refresh.next(true);
                                 },
-                                error: () => this.plex.info('danger', 'ERROR: No es posible validar la prestación')
+                                error: () => this.plex.info('danger', 'ERROR: No es posible validar la informre')
                             });
                         } else {
                             this.plex.info('danger', 'ERROR: Faltan datos');
@@ -298,19 +185,28 @@ export class InternacionListadoComponent implements OnInit {
         });
     }
 
-    romperValidacion(selectedPrestacion: IPrestacion,) {
+    cancelar() {
+        this.mapaCamasService.selectPrestacion(null);
+        this.mapaCamasService.selectInformeEstadistica(null);
+        this.mostrar = 'datosInternacion';
+    }
+
+    cambiarCama() {
+        this.mostrar = 'desocuparCama';
+    }
+
+    devuelveFecha(internacion: IInformeEstadistica, tipo: 'ingreso' | 'egreso') {
+        return tipo === 'ingreso' ? internacion.informeIngreso?.fechaIngreso : internacion.informeEgreso?.fechaEgreso || null;
+    }
+
+    romperValidacion(seleccionarInforme: IInformeEstadistica) {
+        const id = seleccionarInforme.id || seleccionarInforme._id;
         this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {
             if (validar) {
-                // hacemos el patch y luego creamos los planes
-                const cambioEstado: any = {
-                    op: 'romperValidacion',
-                    desdeInternacion: true
-                };
-                // En api el estado de la prestación cambia a ejecucion
-                this.prestacionService.patch(selectedPrestacion.id, cambioEstado).subscribe({
-                    next: prestacion => {
-                        this.mapaCamasService.selectPrestacion(prestacion);
-                        this.verificarPrestacion(prestacion);
+                this.informeEstadisticaService.romperValidacion(id).subscribe({
+                    next: informe => {
+                        this.mapaCamasService.selectInformeEstadistica(informe);
+                        this.verificarInforme(informe);
                         this.listadoInternacionService.refresh.next(true);
                     },
                     error: () => this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación')
@@ -319,7 +215,87 @@ export class InternacionListadoComponent implements OnInit {
         });
     }
 
+    verificarInforme(informe: IInformeEstadistica) {
+        this.puedeValidar = false;
+        this.puedeRomper = false;
+        if (informe) {
+            const ultimoEstado = informe.estados?.length ? informe.estados[informe.estados.length - 1].tipo : (informe.estadoActual?.tipo || informe.estado);
+            if (ultimoEstado !== 'validada') {
+                const informeEgreso = informe.informeEgreso;
+                if (informeEgreso?.fechaEgreso && informeEgreso?.tipoEgreso && informeEgreso?.diagnosticos?.principal) {
+                    this.puedeValidar = true;
+                }
+            } else {
+                this.puedeRomper = true;
+            }
+        }
+    }
+
+    seleccionarInforme(informe: IInformeEstadistica, selected: IInformeEstadistica) {
+
+        const id = informe.id || informe._id;
+        const selectedId = selected?.id || selected?._id;
+
+        if (this.mostrar === 'datosInternacion') {
+
+            if (selectedId === id) {
+                this.mapaCamasService.selectInformeEstadistica(null);
+                this.mapaCamasService.select(null);
+            } else {
+                const informeNormalizado = {
+                    ...informe,
+                    id,
+                    _id: id
+                };
+
+                this.mapaCamasService.selectInformeEstadistica(informeNormalizado);
+                this.mapaCamasService.setFecha(informeNormalizado.informeIngreso?.fechaIngreso);
+                this.ingresoPacienteService.selectPaciente(informeNormalizado.paciente.id);
+                this.mapaCamasService.isLoading(true);
+            }
+        }
+    }
+
+    seleccionarPrestacion(informe: IInformeEstadistica, selected: IInformeEstadistica) {
+        if (this.mostrar === 'datosInternacion') {
+            if (selected?.id === informe.id) {
+                this.mapaCamasService.selectInformeEstadistica(null);
+                this.mapaCamasService.select(null);
+            } else {
+                this.mapaCamasService.selectInformeEstadistica(informe);
+                this.mapaCamasService.setFecha(informe.informeIngreso?.fechaIngreso);
+                this.ingresoPacienteService.selectPaciente(informe.paciente.id);
+                this.mapaCamasService.isLoading(true);
+            }
+        }
+    }
+
+    refresh() {
+        this.listadoInternacionService.refresh.next(true);
+        this.volverADetalle();
+    }
+
+    volverADetalle() {
+        this.mostrar = 'datosInternacion';
+    }
+
+    volver() {
+        this.mapaCamasService.selectInformeEstadistica(null);
+        this.location.back();
+    }
+
+    accionDesocupar(accion) {
+        this.mostrar = 'cambiarCama';
+        this.cambiarUO = accion.cambiarUO;
+    }
+
+    onAccion($event) {
+        this.editando = $event?.accion === 'editando';
+    }
+
     buscando(valor) {
         this.estaBuscando = valor;
     }
+
+
 }

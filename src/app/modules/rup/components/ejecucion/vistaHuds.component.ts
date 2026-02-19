@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { MapaCamasHTTP } from 'src/app/apps/rup/mapa-camas/services/mapa-camas.http';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
@@ -109,9 +110,13 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
 
                     const filtros = {
                         fechaIngresoDesde: moment('2016-01-01').toDate(),
-                        idPaciente: id
+                        idPaciente: id,
+                        estado: 'validada' // Solo mostrar internaciones validadas
                     };
-                    this.internacione$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros);
+                    this.internacione$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros).pipe(
+                        tap(internaciones => {
+                        })
+                    );
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                 });
             });

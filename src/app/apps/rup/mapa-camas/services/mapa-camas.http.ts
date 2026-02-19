@@ -1,6 +1,7 @@
+/* eslint-disable no-console */
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { ISnapshot } from '../interfaces/ISnapshot';
 import { ICama } from '../interfaces/ICama';
 
@@ -117,6 +118,12 @@ export class MapaCamasHTTP {
     }
 
     censoDiario(fecha: Date, unidadOrganizativa: string): Observable<any[]> {
+        console.log('🌐 [MapaCamasHTTP] Request a censo-diario →', {
+            url: `${this.url}/censo-diario`,
+            fecha,
+            unidadOrganizativa
+        });
+
         return this.server.get(`${this.url}/censo-diario`, {
             params: { fecha, unidadOrganizativa },
             showError: true
@@ -135,6 +142,6 @@ export class MapaCamasHTTP {
     }
 
     getPrestacionesInternacion(params: any): Observable<any[]> {
-        return this.server.get(`${this.url}/prestaciones`, { params: params, showError: true });
+        return this.server.get(`${this.url}/informe-estadistica`, { params: params, showError: true });
     }
 }
