@@ -18,6 +18,7 @@ export class ListadoInternacionCapasService {
     public refresh = new BehaviorSubject<any>(null);
     public missingFilters$: Observable<boolean>;
     public estado = new BehaviorSubject<any>(null);
+    public unidadOrganizativa = new BehaviorSubject<any>(null);
 
     constructor(
         private resumenHTTP: InternacionResumenHTTP,
@@ -28,15 +29,17 @@ export class ListadoInternacionCapasService {
             this.fechaIngresoHasta,
             this.fechaEgresoDesde,
             this.fechaEgresoHasta,
+            this.unidadOrganizativa,
             this.refresh
         ]).pipe(
             auditTime(0),
-            switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta, refresh]) => {
+            switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta, unidad, refresh]) => {
                 if ((fechaIngresoDesde && fechaIngresoHasta) || fechaEgresoDesde && fechaEgresoHasta) {
                     return this.resumenHTTP.getListado({
                         idOrganizacion: this.auth.organizacion.id,
                         ingreso: this.resumenHTTP.queryDateParams(fechaIngresoDesde, fechaIngresoHasta),
                         egreso: this.resumenHTTP.queryDateParams(fechaEgresoDesde, fechaEgresoHasta),
+                        unidad: unidad?.conceptId || unidad,
                         populate: 'idPrestacion'
                     }).pipe(
                         map(resumen => {
@@ -50,10 +53,11 @@ export class ListadoInternacionCapasService {
         this.listaInternacionFiltrada$ = combineLatest([
             this.listaInternacion$,
             this.pacienteText,
-            this.estado
+            this.estado,
+            this.unidadOrganizativa
         ]).pipe(
-            map(([listaInternacion, paciente, estado]) =>
-                this.filtrarListaInternacion(listaInternacion, paciente)
+            map(([listaInternacion, paciente, estado, unidad]) =>
+                this.filtrarListaInternacion(listaInternacion, paciente, unidad)
             )
         );
 
@@ -72,7 +76,7 @@ export class ListadoInternacionCapasService {
         ), cache();
     }
 
-    filtrarListaInternacion(listaInternacion: IResumenInternacion[], paciente: string) {
+    filtrarListaInternacion(listaInternacion: IResumenInternacion[], paciente: string, unidad: any) {
         let listaInternacionFiltrada = listaInternacion;
         if (paciente) {
             const esNumero = Number.isInteger(Number(paciente));
@@ -89,6 +93,13 @@ export class ListadoInternacionCapasService {
                         internacion.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
+        }
+
+        if (unidad) {
+            listaInternacionFiltrada = listaInternacionFiltrada.filter(
+                (internacion: IResumenInternacion) =>
+                    (internacion as any).idPrestacion?.unidadOrganizativa?.conceptId === (unidad?.conceptId || unidad)
+            );
         }
         return listaInternacionFiltrada;
     }
