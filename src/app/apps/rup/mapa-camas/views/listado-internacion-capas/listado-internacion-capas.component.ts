@@ -70,6 +70,17 @@ export class ListadoInternacionCapasComponent implements OnInit, OnDestroy {
             sorteable: true,
             opcional: true,
             sort: (a: any, b: any) => a.fechaEgreso?.getTime() - b.fechaEgreso?.getTime()
+        },
+        {
+            key: 'unidadOrganizativa',
+            label: 'Unidad Organizativa',
+            sorteable: true,
+            opcional: true,
+            sort: (a: any, b: any) => {
+                const nameA = a.idPrestacion?.unidadOrganizativa?.term || a.estadosCama?.[0]?.estados?.[0]?.unidadOrganizativa?.term || '';
+                const nameB = b.idPrestacion?.unidadOrganizativa?.term || b.estadosCama?.[0]?.estados?.[0]?.unidadOrganizativa?.term || '';
+                return nameA.localeCompare(nameB);
+            }
         }
     ];
 
