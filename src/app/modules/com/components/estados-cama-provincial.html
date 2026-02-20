@@ -1,8 +1,8 @@
 <plex-layout [main]="showSidebar? 8 : 12">
     <plex-layout-main>
         <plex-title main titulo="CAMAS PROVINCIALES">
-            <plex-button label="volver" type="danger" size="sm" position="left" routerLink='/inicio'></plex-button>
-            <plex-button class="ml-1" title="Actualizar fecha" titlePosition="left" icon="reload" type="info" size="sm"
+            <plex-button label="volver" type="danger" size="md" position="left" routerLink='/inicio'></plex-button>
+            <plex-button class="ml-1" title="Actualizar fecha" titlePosition="left" icon="reload" type="info" size="md"
                          (click)="setFecha()">
             </plex-button>
         </plex-title>
@@ -27,32 +27,40 @@
                 <plex-card *ngFor="let efector of camasEstados" [selectable]="true" (click)="verDetalle(efector)"
                            [selected]="efector.organizacion._id === efectorSelected?._id">
                     <div class="contenido-card">
-                        <div class="icono-hospital">
+                        <div class="icono-hospital mb-0">
                             <plex-icon name="hospital" size="xl" type="info"></plex-icon>
                         </div>
-                        <plex-label titulo="{{efector.organizacion.nombre}}" size="xl" class="text-center"></plex-label>
+                        <div class="mb-3">
+                            <plex-label titulo="{{efector.organizacion.nombre}}" size="xl" class="text-center">
+                            </plex-label>
+                            <hr class="my-1 w-50">
+                        </div>
                         <div class="fila-camas">
                             <div class="col-cama">
                                 <plex-icon size="xl" name="cama" type="info" class="size-icon"></plex-icon>
                                 <plex-label size="xl" type="info" titulo="{{efector.totalCamas}}"
-                                            subtitulo="Total de camas" class="margen-left-10"></plex-label>
+                                            subtitulo="Total de camas" class="margen-left-10">
+                                </plex-label>
                             </div>
                             <div class="col-cama">
                                 <plex-icon size="xl" name="cama" type="success" class="size-icon"></plex-icon>
                                 <plex-label size="xl" type="success" titulo="{{efector.camasDisponibles}}"
-                                            subtitulo="Camas disponibles" class="margen-left-10"></plex-label>
+                                            subtitulo="Camas disponibles" class="margen-left-10">
+                                </plex-label>
                             </div>
                         </div>
                         <div class="fila-camas">
                             <div class="col-cama">
                                 <plex-icon size="xl" name="cama-paciente" type="warning" class="size-icon"></plex-icon>
                                 <plex-label size="xl" type="warning" titulo="{{efector.camasOcupadas}}"
-                                            subtitulo="Camas ocupadas" class="margen-left-10"></plex-label>
+                                            subtitulo="Camas ocupadas" class="margen-left-10">
+                                </plex-label>
                             </div>
                             <div class="col-cama">
                                 <plex-icon size="xl" name="cama-candado" type="default" class="size-icon"></plex-icon>
                                 <plex-label size="xl" type="default" titulo="{{efector.camasBloqueadas}}"
-                                            subtitulo="Camas bloqueadas" class="margen-left-10"></plex-label>
+                                            subtitulo="Camas bloqueadas" class="margen-left-10">
+                                </plex-label>
                             </div>
                         </div>
                     </div>
@@ -67,8 +75,8 @@
 
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
-        <plex-title titulo="DETALLE EFECTOR">
-            <plex-button size="sm" type="danger" icon="close" tooltip="cerrar" (click)="closeSidebar()"></plex-button>
+        <plex-title titulo="DETALLE EFECTOR" size="md">
+            <plex-button size="sm" type="danger" icon="close" tooltip="Cerrar" (click)="closeSidebar()"></plex-button>
         </plex-title>
         <ng-container *ngIf="efectorSelected">
             <plex-detail>
@@ -94,9 +102,11 @@
                                 </div>
                                 <div class="flex-1 ml-5">
                                     <plex-label size="lg">Camas Disponibles:
-                                        {{unidadOrganizativa.camasDisponibles}}</plex-label>
+                                        {{unidadOrganizativa.camasDisponibles}}
+                                    </plex-label>
                                     <plex-label size="lg">Camas Bloqueadas:
-                                        {{unidadOrganizativa.camasBloqueadas}}</plex-label>
+                                        {{unidadOrganizativa.camasBloqueadas}}
+                                    </plex-label>
                                 </div>
                             </div>
                         </div>
