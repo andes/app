@@ -213,11 +213,14 @@
                                  tooltipPosition="top">
                     </plex-button>
                     <plex-help *ngIf="botones.editarCarpeta && turnosSeleccionados[0]?.id === turno.id" type="info"
-                               btnType="info" icon="folder-account" tooltip="Editar Carpeta" tooltipPosition="top">
+                               size="sm" btnType="info" icon="folder-account" tooltip="Editar Carpeta"
+                               tooltipPosition="top">
                         <plex-title size="sm" titulo="Editar carpeta"></plex-title>
-                        <plex-label class="text-white" titulo="Paciente"
-                                    subtitulo="{{turnosSeleccionados[0].paciente | nombre }}" icon="paciente">
-                        </plex-label>
+                        <div class="mt-3">
+                            <plex-label class="text-white" titulo="Paciente"
+                                        subtitulo="{{turnosSeleccionados[0].paciente | nombre }}" icon="paciente">
+                            </plex-label>
+                        </div>
                         <carpeta-paciente class="text-white" [turnoSeleccionado]="turnosSeleccionados[0] "
                                           (guardarCarpetaEmit)="afterComponenteCarpeta($event)"
                                           (cancelarCarpetaEmit)="afterComponenteCarpeta($event)">
