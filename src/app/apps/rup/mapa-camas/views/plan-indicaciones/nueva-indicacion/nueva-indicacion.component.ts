@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
@@ -33,7 +34,7 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit, AfterCo
         'semanticTag': 'procedimiento'
     };
     @Input() indicacion = null;
-    @Input('seccion')
+    @Input()
     set seccion(value) {
         this._seccion = value;
         let concepto;

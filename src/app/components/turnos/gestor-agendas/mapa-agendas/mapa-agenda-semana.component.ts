@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MapaAgendasService } from './mapa-agendas.service';
@@ -20,7 +21,7 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
     public semanaSeleccionada;
     @Output() diaDetalle = new EventEmitter<any>();
     calendario: any;
-    @Input('fecha')
+    @Input()
     set fecha(value: any) {
         this._fecha = value;
         this.cambiarSemana();

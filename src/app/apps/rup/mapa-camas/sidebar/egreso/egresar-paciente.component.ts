@@ -19,6 +19,8 @@ import { InternacionResumenHTTP } from '../../services/resumen-internacion.http'
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
 import { ListadoInternacionCapasService } from '../../views/listado-internacion-capas/listado-internacion-capas.service';
 import { NgForm } from '@angular/forms';
+import moment from 'moment';
+
 @Component({
     selector: 'app-egresar-paciente',
     templateUrl: './egresar-paciente.component.html',
@@ -26,7 +28,7 @@ import { NgForm } from '@angular/forms';
 
 export class EgresarPacienteComponent implements OnInit, OnDestroy {
     // EVENTOS
-    @Output() onSave = new EventEmitter<any>();
+    @Output() save = new EventEmitter<any>();
     @ViewChild('formEgreso', { static: true }) formEgreso: NgForm;
     // CONSTANTES
     public listaTipoEgreso = listaTipoEgreso;
@@ -416,7 +418,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
         return saveInternacion().pipe(
             switchMap(resumenSaved => {
-                this.onSave.emit();
+                this.save.emit();
                 this.inProgress = false;
 
                 if (this.capa !== 'estadistica' && !this.cama.sala && !resumenSaved) {

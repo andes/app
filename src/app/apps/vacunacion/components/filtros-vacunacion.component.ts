@@ -6,6 +6,7 @@ import { ILocalidad } from 'src/app/interfaces/ILocalidad';
 import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
 import { LocalidadService } from 'src/app/services/localidad.service';
 import { InscripcionService } from '../services/inscripcion.service';
+import moment from 'moment';
 
 @Component({
     selector: 'filtros-vacunacion',

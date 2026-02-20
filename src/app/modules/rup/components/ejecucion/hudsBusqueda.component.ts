@@ -1,7 +1,7 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { AfterContentInit, Component, EventEmitter, Input, OnInit, Optional, Output, ViewEncapsulation } from '@angular/core';
-import * as moment from 'moment';
 import { LaboratorioService } from 'src/app/services/laboratorio.service';
 import { RecetaService } from 'src/app/services/receta.service';
 import { Observable, forkJoin } from 'rxjs';
@@ -43,10 +43,10 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
 
     public cdas = [];
 
-    @Input() paciente: IPaciente;
-    @Input() vistaHuds = false;
-    @Input() _dragScope: String;
-    @Input() _dragOverClass: String = 'drag-over-border';
+    @Input() paciente: any;
+
+    @Input() _dragScope: string;
+    @Input() _dragOverClass = 'drag-over-border';
 
     /**
     * Variable por parámetro para mostrar o no todo lo relacionado a emitir conceptos
@@ -317,7 +317,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
                 registro.tipo = 'ficha-epidemiologica';
                 registro.class = 'plan';
                 break;
-            case 'dominio':
+            case 'dominio': {
                 gtag('huds-open', tipo, registro.name, index);
                 const params = {
                     custodian: registro.identifier.value,
@@ -327,9 +327,9 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
                 registro.class = 'plan';
                 registro.params = params;
                 break;
+            }
             case 'internacion':
                 gtag('huds-open', 'rup', 'internacion', index);
-                registro.id = registro.id;
                 registro.tipo = 'internacion';
                 registro.index = index;
                 break;

@@ -8,6 +8,7 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { cache } from '@andes/shared';
+import moment from 'moment';
 
 @Component({
     selector: 'app-cambiar-cama',
@@ -20,8 +21,8 @@ export class CambiarCamaComponent implements OnInit {
 
     // EVENTOS
     @Input() cambiarUO = null;
-    @Output() onSave = new EventEmitter<any>();
-    @Output() onCancel = new EventEmitter<any>();
+    @Output() saved = new EventEmitter<any>();
+    @Output() canceled = new EventEmitter<any>();
 
     // VARIABLES
     public nuevaCama: ISnapshot;
@@ -35,8 +36,8 @@ export class CambiarCamaComponent implements OnInit {
     public historial$: Observable<any[]>;
     public movimientoEgreso$: Observable<ISnapshot>;
     public fechaMin$: Observable<Date>;
-    public hayMovimientosAt$: Observable<Boolean>;
-    public camaDesocupada$: Observable<Boolean>;
+    public hayMovimientosAt$: Observable<boolean>;
+    public camaDesocupada$: Observable<boolean>;
     public fecha: Date;
     public inProgress = true;
 
@@ -190,7 +191,7 @@ export class CambiarCamaComponent implements OnInit {
                                             // se realiza cambio
                                             return this.cambiarCama(camaActual, nuevaCama, fechaCambio).subscribe(camas => resolve(camas));
                                         }
-                                        this.onCancel.emit();
+                                        this.canceled.emit();
                                         return resolve(null);
                                     });
                             });
@@ -205,7 +206,7 @@ export class CambiarCamaComponent implements OnInit {
                         } else if (nuevaCama.estado === 'ocupada') {
                             this.plex.info('warning', `No es posible realizar el ${accion} ya que la cama ${nuevaCama.nombre} se encuentra ocupada.`, 'Atención');
                         }
-                        this.onCancel.emit();
+                        this.canceled.emit();
                         return of(null);
                     }
                 })
@@ -214,7 +215,7 @@ export class CambiarCamaComponent implements OnInit {
                     const mensaje = (this.cambiarUO) ? 'Pase de unidad organizativa exitoso!' : 'Cambio de cama exitoso!';
                     this.plex.info('success', mensaje);
                     this.mapaCamasService.setFecha(this.mapaCamasService.fecha); // para que actualice el snapshot al momento luego del cambio
-                    this.onSave.emit();
+                    this.saved.emit();
                 } else {
                     this.mapaCamasService.setFecha(this.mapaCamasService.fecha);
                     this.disableSaveButton = false;

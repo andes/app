@@ -17,7 +17,7 @@ export class OrganizacionOfertaPrestacionalComponent implements OnInit {
     editando = false;
     prestacion: ITipoPrestacion;
     detalle: string;
-    public idOrganizacion: String;
+    public idOrganizacion: string;
     public organizacion: IOrganizacion;
     public ofertaPrestacionalSeleccionada: any;
     public modelo: any = { prestacion: null, descripcion: null };

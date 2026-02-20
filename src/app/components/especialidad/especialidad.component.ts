@@ -5,7 +5,7 @@ import { IEspecialidad } from './../../interfaces/IEspecialidad';
 import { EspecialidadService } from './../../services/especialidad.service';
 import { Observable } from 'rxjs';
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
@@ -21,7 +21,7 @@ export class EspecialidadComponent implements OnInit {
     showcreate = false;
     showupdate = false;
     datos: IEspecialidad[];
-    searchForm: FormGroup;
+    searchForm: UntypedFormGroup;
     seleccion: IEspecialidad;
     skip = 0;
     loader = false;
@@ -29,7 +29,7 @@ export class EspecialidadComponent implements OnInit {
     value: any;
     tengoDatos = true;
 
-    constructor(private formBuilder: FormBuilder,
+    constructor(private formBuilder: UntypedFormBuilder,
                 public plex: Plex,
                 private especialidadService: EspecialidadService,
                 private router: Router,

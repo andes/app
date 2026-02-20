@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { InscripcionService } from '../services/inscripcion.service';
 import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
@@ -7,7 +8,7 @@ import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { Plex } from '@andes/plex';
 import * as enumerados from '../../../utils/enumerados';
 import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'listado-inscriptos',

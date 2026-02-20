@@ -1,9 +1,9 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
-import { Plex } from '@andes/plex';
+import { Plex, PlexHelpComponent } from '@andes/plex';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as moment from 'moment';
 import { Observable, of } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
@@ -25,6 +25,7 @@ import { DocumentosService } from 'src/app/services/documentos.service';
 })
 
 export class MapaCamasCapaComponent implements OnInit, OnDestroy {
+    @ViewChild('helpMapa', { static: false }) helpMapa: PlexHelpComponent;
     @ViewChild(CdkVirtualScrollViewport, { static: false })
     public viewPort: CdkVirtualScrollViewport;
 
@@ -92,7 +93,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
     constructor(
         public auth: Auth,
-        private plex: Plex,
+        public plex: Plex,
         private router: Router,
         private route: ActivatedRoute,
         public mapaCamasService: MapaCamasService,
@@ -333,23 +334,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
             this.fechaSelector = nuevaFecha;
             this.fechaInput = nuevaFecha.format(format);
             this.mapaCamasService.setFecha(nuevaFecha.toDate());
-        } else {
-            this.isValidDate = false;
-        }
-
-        if (this.helpFechaRef) {
-            setTimeout(() => {
-                const native = this.helpFechaRef.nativeElement as HTMLElement;
-                const btnClose = native.querySelector('.btn-close') as HTMLElement;
-                if (btnClose) {
-                    btnClose.click();
-                } else {
-                    const instance = (this.helpFechaRef as any).componentInstance;
-                    if (instance && typeof instance.toggle === 'function') {
-                        instance.toggle();
-                    }
-                }
-            }, 0);
+            this.helpMapa.toggle();
         }
     }
 

@@ -1,8 +1,6 @@
 import { Plex } from '@andes/plex';
 import { Component, OnInit } from '@angular/core';
-
 import { Auth } from '@andes/auth';
-
 import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { Router } from '@angular/router';
@@ -20,17 +18,9 @@ export class EspacioFisicoComponent implements OnInit {
     public tengoDatos = true;
     public loader = false;
 
-    constructor(private espacioFisicoService: EspacioFisicoService, private router: Router, public auth: Auth, public plex: Plex) {
-
-    }
+    constructor(private espacioFisicoService: EspacioFisicoService, private router: Router, public auth: Auth, public plex: Plex) { }
 
     ngOnInit() {
-        // this.plex.updateTitle([{
-        //     route: '/inicio',
-        //     name: 'Citas'
-        // }, {
-        //     name: 'Espacios Físicos'
-        // }]);
         // Verificamos permisos globales para espacios fisicos, si no posee realiza redirect al home
         if (!this.auth.check('turnos:editarEspacio') && !this.auth.check('turnos:*')) {
             this.router.navigate(['./inicio']);
@@ -55,7 +45,7 @@ export class EspacioFisicoComponent implements OnInit {
             }); // Bind to view
     }
 
-    onReturn(espacioFisico: IEspacioFisico): void {
+    onReturn(): void {
         this.showEditar = false;
         this.selectedEspacioFisico = null;
         this.loadEspaciosFisicos();

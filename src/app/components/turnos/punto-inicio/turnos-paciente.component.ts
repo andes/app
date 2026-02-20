@@ -1,7 +1,7 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import * as moment from 'moment';
 import { DocumentosService } from '../../../services/documentos.service';
 
 // Servicios
@@ -39,7 +39,7 @@ export class TurnosPacienteComponent implements OnInit {
         prepaga: false
     };
     public _paciente: IPaciente;
-    @Input('operacion')
+    @Input()
     set operacion(value: string) {
         this._operacion = value;
     }
@@ -47,7 +47,7 @@ export class TurnosPacienteComponent implements OnInit {
     get operacion(): string {
         return this._operacion;
     }
-    @Input('paciente')
+    @Input()
     set paciente(value: any) {
         this._paciente = value;
     }
@@ -55,7 +55,7 @@ export class TurnosPacienteComponent implements OnInit {
         return this._paciente;
     }
 
-    @Input('turnos')
+    @Input()
     set turnos(value: any) {
         if (value) {
             this._turnos = value;

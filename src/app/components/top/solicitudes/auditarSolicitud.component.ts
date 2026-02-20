@@ -18,16 +18,20 @@ export class AuditarSolicitudComponent implements OnInit {
     imagenes = IMAGENES_EXT;
     extensions = FILE_EXT;
 
-    prestacionSeleccionada: any;
-    @Input('prestacionSeleccionada')
-    set _prestacionSeleccionada(value) {
-        this.prestacionSeleccionada = value;
+    _prestacionSeleccionada: any;
+    @Input()
+    set prestacionSeleccionada(value) {
+        this._prestacionSeleccionada = value;
         this.resetAuditoria();
     }
+    get prestacionSeleccionada() {
+        return this._prestacionSeleccionada;
+    }
+
     @Output() returnAuditoria: EventEmitter<any> = new EventEmitter<any>();
     // Adjuntos
     fotos: any[] = [];
-    fileToken: String = null;
+    fileToken: string = null;
     showConfirmar = false;
     showPrioridad = false;
     prioridad;
@@ -89,7 +93,7 @@ export class AuditarSolicitudComponent implements OnInit {
     }
 
     asignar() {
-        this.profesional = this.prestacionSeleccionada.solicitud.profesional ? this.prestacionSeleccionada.solicitud.profesional : null;
+        this.profesional = this._prestacionSeleccionada.solicitud.profesional ? this._prestacionSeleccionada.solicitud.profesional : null;
         this.solicitudAsignada = true;
         this.estadoSolicitud.id = 1;
         this.estadoSolicitud.nombre = 'Asignar';
@@ -99,7 +103,7 @@ export class AuditarSolicitudComponent implements OnInit {
     responder() {
         this.servicioReglas.get({
             organizacionOrigen: this.auth.organizacion.id,
-            prestacionOrigen: this.prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId
+            prestacionOrigen: this._prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId
         })
             .subscribe(
                 res => {
@@ -115,7 +119,7 @@ export class AuditarSolicitudComponent implements OnInit {
     referir() {
         this.servicioReglas.get({
             organizacionOrigen: this.auth.organizacion.id,
-            prestacionOrigen: this.prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId
+            prestacionOrigen: this._prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId
         })
             .subscribe(
                 res => {
@@ -167,7 +171,7 @@ export class AuditarSolicitudComponent implements OnInit {
             }
 
             if (this.estadoSolicitud.id === 2) {
-                data.organizacionContrarreferida = this.prestacionSeleccionada.solicitud.historial[this.prestacionSeleccionada.solicitud?.historial?.length - 1].organizacion;
+                data.organizacionContrarreferida = this._prestacionSeleccionada.solicitud.historial[this._prestacionSeleccionada.solicitud?.historial?.length - 1].organizacion;
             }
 
             this.returnAuditoria.emit(data);
@@ -180,7 +184,7 @@ export class AuditarSolicitudComponent implements OnInit {
     // Verifica si la regla para ver si la solicitud es auditable
     esRemisionAuditable() {
         const regla = this.reglasTOP.find(rule => rule.destino.prestacion.conceptId === this.tipoPrestacionDestino.id);
-        const regla2 = regla.origen.prestaciones.find(rule => rule.prestacion.conceptId === this.prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId);
+        const regla2 = regla.origen.prestaciones.find(rule => rule.prestacion.conceptId === this._prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId);
         return regla2.auditable;
     }
 
@@ -232,9 +236,9 @@ export class AuditarSolicitudComponent implements OnInit {
     onSelectOrganizacionDestino() {
         if (this.organizacionDestino) {
             this.servicioReglas.get({
-                organizacionOrigen: this.prestacionSeleccionada.solicitud.organizacion.id,
+                organizacionOrigen: this._prestacionSeleccionada.solicitud.organizacion.id,
                 organizacionDestino: this.organizacionDestino.id,
-                prestacionOrigen: this.prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId
+                prestacionOrigen: this._prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId
             }).subscribe(res => {
                 this.reglasTOP = res;
                 this.tipoPrestacionesDestino = res.map(e => e.destino.prestacion);
@@ -248,7 +252,7 @@ export class AuditarSolicitudComponent implements OnInit {
     }
 
     get documentos() {
-        const solicitudRegistros = this.prestacionSeleccionada.solicitud.registros;
+        const solicitudRegistros = this._prestacionSeleccionada.solicitud.registros;
         if (solicitudRegistros.some(reg => reg.valor.documentos)) {
             return solicitudRegistros[0].valor.documentos.map((doc) => {
                 doc.url = this.createUrl(doc);

@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ReglaService } from '../../../services/top/reglas.service';
-import { OrganizacionService } from '../../../services/organizacion.service';
 import { IRegla } from '../../../interfaces/IRegla';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
@@ -15,7 +14,7 @@ import { Auth } from '@andes/auth';
 })
 export class ListaReglasComponent implements OnInit {
     @Input()
-    esParametrizado = false;
+        esParametrizado = false;
     /**
      * Organización ingresada en el filtro de organización origen
      * @type {IOrganizacion}

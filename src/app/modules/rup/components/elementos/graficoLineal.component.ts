@@ -1,7 +1,8 @@
+import moment from 'moment';
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
-import * as moment from 'moment';
 import { RupElement } from '.';
+import { ChartConfiguration, TooltipItem } from 'chart.js';
 
 @Component({
     selector: 'rup-grafico-lineal',
@@ -9,16 +10,15 @@ import { RupElement } from '.';
 })
 @RupElement('GraficoLinealComponent')
 export class GraficoLinealComponent extends RUPComponent implements OnInit {
-    // variables para guardar los datosLineales de las prestaciones
-    public datosLineales: any[] = [];
 
     // opciones para el grafico
-    public barChartOptions: any = {};
+    public lineChartData: ChartConfiguration<'line'>['data'] = {
+        labels: [],
+        datasets: []
+    };
     public barChartLabels: any[];
-    public barChartType = 'line';
-    public barChartLegend = false;
-    public barChartData: any[] = [];
-    barChartDates: any[] = [];
+    public lineChartOptions: ChartConfiguration<'line'>['options'];
+
 
     ngOnInit() {
         moment.locale('es');
@@ -37,31 +37,33 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
                         return dateA > dateB ? 1 : -1;
                     });
 
-                    this.barChartDates.push(
-                        prestaciones.filter(y => y.registro.valor !== null && typeof (y.registro.valor) == 'number').map(p => ({ fecha: p.fecha })),
-
-                    );
-
                     // asignamos los datosLineales al data para el chart
-                    this.barChartData.push(
-                        { data: prestaciones.map(p => p.registro.valor).filter(y => y !== null && typeof (y) == 'number'), label: param.label, fill: false },
-                    );
+                    this.lineChartData.datasets.push({
+                        data: prestaciones.map(p => p.registro.valor).filter(v => v !== null && typeof v === 'number'),
+                        label: param.label,
+                        fill: false,
+                        type: 'line',
+                        tension: 0.35,
+                        cubicInterpolationMode: 'monotone',
+                        pointRadius: 2
+                    });
 
                     // agregamos las leyendas del eje x
-                    this.barChartLabels = prestaciones.map(p => moment(p.fecha).format('DD-MM-YYYY'));
+                    this.lineChartData.labels = prestaciones.map(p =>
+                        moment(p.fecha).format('DD-MM-YYYY')
+                    );
+
                     // set options charts
                     this.setChartOptions(prestaciones);
 
                     if (prestaciones.length > 1) {
-                        this.barChartOptions.title.text += ' desde ' + this.barChartLabels[0] + ' hasta ' + this.barChartLabels[this.barChartLabels.length - 1];
+                        this.lineChartOptions.plugins.title.text += ' desde ' + this.lineChartData.labels[0] + ' hasta ' + this.lineChartData.labels[this.lineChartData.labels.length - 1];
                     } else {
-                        this.barChartOptions.title.text += ' al ' + this.barChartLabels[0];
+                        this.lineChartOptions.plugins.title.text += ' al ' + this.lineChartData.labels[0];
                     }
-
                 }
             });
         });
-
     }
 
     /**
@@ -72,49 +74,44 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
      * @memberof SeguimientoDelPesoComponent
      */
     private setChartOptions(data): void {
-        this.barChartOptions = {
-            scaleShowVerticalLines: true,
+
+        this.lineChartOptions = {
             responsive: true,
             maintainAspectRatio: true,
-            title: {
-                display: true,
-                text: `Curva de ${this.elementoRUP.params.map(x => x.label).join(' y ')}`
-            },
-            scales: {
-                yAxes: [{
-                    scaleLabel: {
-                        fontSize: 9,
-                        display: true,
-                        labelString: `${this.elementoRUP.params.map(x => x.label).join(' y ')} (${this.elementoRUP.params.map(x => x.unidad).join(' / ')})`
-                    },
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }],
-                xAxes: [
-                    {
-                        ticks: {
-                            suggestedMin: 1,
-                            suggestedMax: 31
+
+            plugins: {
+                title: {
+                    display: true,
+                    text: `Curva de ${this.elementoRUP.params.map(x => x.label).join(' y ')}`
+                },
+                tooltip: {
+                    callbacks: {
+                        footer: (tooltipItems: TooltipItem<'line'>[]) => {
+                            const text: string[] = [];
+                            tooltipItems.forEach(item => {
+                                const i = item.dataIndex;
+                                text.push('Profesional: ' + data[i].profesional.nombreCompleto);
+                                text.push('Prestación: ' + data[i].tipoPrestacion.term);
+                            });
+                            return text;
                         }
                     }
-                ]
+                },
+                legend: { display: false }
             },
-            tooltips: {
-                callbacks: {
-                    // Use the footer callback to display the sum of the items showing in the tooltip
-                    footer: function (tooltipItems, _data) {
-                        const text = [];
-                        tooltipItems.forEach((tooltipItem) => {
-                            text.push('Profesional: ' + data[tooltipItem.index].profesional.nombreCompleto);
-                            text.push('Prestación: ' + data[tooltipItem.index].tipoPrestacion.term);
-                        });
 
-                        return text;
-                    },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: `${this.elementoRUP.params.map(x => x.label).join(' y ')} (${this.elementoRUP.params.map(x => x.unidad).join(' / ')})`,
+                        font: { size: 9 }
+                    }
                 }
             }
         };
+
     }
 
     // Chart events (chartHover)

@@ -7,6 +7,7 @@ import { DocumentosService } from '../../services/documentos.service';
 import { SugerenciasService } from '../../services/sendmailsugerencias.service';
 import { ObraSocialService } from './../../services/obraSocial.service';
 import { ProfeService } from './../../services/profe.service';
+import moment from 'moment';
 
 @Component({
     selector: 'puco',
@@ -66,10 +67,10 @@ export class PucoComponent implements OnInit, OnDestroy {
             opcional: false
         }
     ];
-    @Input() autofocus: Boolean = true;
+    @Input() autofocus = true;
 
     // termino a buscar ..
-    public searchTerm: String = '';
+    public searchTerm = '';
 
     // ultima request que se almacena con el subscribe
     private lastRequest: Subscription;

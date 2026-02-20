@@ -13,11 +13,9 @@ export class ArbolPermisosComponent {
     @Input() permisos = [];
     @Input() userPermissions = [];
 
-    @Output() change = new EventEmitter();
+    @Output() changed = new EventEmitter();
 
     constructor() { }
-
-
 
     public getPermisos() {
         let permisos = [];
@@ -28,7 +26,7 @@ export class ArbolPermisosComponent {
     }
 
     public onChange() {
-        this.change.emit();
+        this.changed.emit();
     }
 }
 

@@ -1,7 +1,7 @@
 export interface IMatricula {
-    numero: Number;
-    descripcion: String;
-    activo: Boolean;
+    numero: number;
+    descripcion: string;
+    activo: boolean;
     fechaInicio: Date;
     fechaVencimiento: Date;
 }

@@ -1,6 +1,6 @@
+import moment from 'moment';
 import { OrganizacionService } from './../../../../services/organizacion.service';
 import { ZonaSanitariaService } from './../../../../services/zonaSanitaria.service';
-import * as moment from 'moment';
 import { Component, HostBinding, EventEmitter, Output, SimpleChanges, SimpleChange, OnChanges, OnInit } from '@angular/core';
 import { ProfesionalService } from '../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
@@ -34,7 +34,7 @@ export class FiltrosComponent implements OnInit, OnChanges {
     // Permisos
     public verProfesionales;
     @Output() filter = new EventEmitter();
-    @Output() onDisplayChange = new EventEmitter();
+    @Output() displayChange = new EventEmitter();
 
     public seleccion: any = {
         tipoDeFiltro: { id: 'turnos', nombre: 'Turnos' },
@@ -73,7 +73,7 @@ export class FiltrosComponent implements OnInit, OnChanges {
 
     changeTablaGrafico() {
         this.esTablaGrafico = !this.esTablaGrafico;
-        this.onDisplayChange.emit(this.esTablaGrafico);
+        this.displayChange.emit(this.esTablaGrafico);
     }
 
     loadProfesionales(event) {

@@ -8,20 +8,24 @@ import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.s
 })
 
 export class DetalleInscripcionComponent implements OnInit {
-    public inscripcion: any;
+    public _inscripcion: any;
     public gruposPoblacionales: any[];
     public profesionalCertificado: any;
 
-    @Input('inscripcion')
-    set _inscripcion(value) {
-        this.inscripcion = value;
-        if (this.inscripcion.idPrestacionCertificado) {
-            this.getProfesional(this.inscripcion.idPrestacionCertificado);
+    @Input()
+    set inscripcion(value) {
+        this._inscripcion = value;
+        if (this._inscripcion.idPrestacionCertificado) {
+            this.getProfesional(this._inscripcion.idPrestacionCertificado);
         }
     }
+    get inscripcion() {
+        return this._inscripcion;
+    }
 
-    constructor(private gruposService: GrupoPoblacionalService,
-                public servicioPrestacion: PrestacionesService) { }
+    constructor(
+        private gruposService: GrupoPoblacionalService,
+        public servicioPrestacion: PrestacionesService) { }
 
     ngOnInit() {
         this.gruposService.search().subscribe(resp => {
