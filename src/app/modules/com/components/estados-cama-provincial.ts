@@ -1,9 +1,8 @@
-import { Auth } from '@andes/auth';
 import { Component, OnInit } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
-import { OrganizacionService } from '../../../services/organizacion.service';
 import { EstadosCamaProvincialService } from './../services/estados-cama-provincial.service';
+import moment from 'moment';
 
 @Component({
     selector: 'estados-cama-provincial',
