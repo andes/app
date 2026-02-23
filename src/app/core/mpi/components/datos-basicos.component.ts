@@ -44,6 +44,7 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     public disableRegistro = false;
     public nombrePattern: string;
     public patronDocumento = /^[1-9]{1}[0-9]{4,7}$/;
+    public patronCUIL = /^\d{11}$/;
     public reportarError = false;
     public hoy: Date = new Date();
 
