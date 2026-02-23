@@ -122,6 +122,7 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
                     id: os.nombre || os.financiador,
                     label: (os.nombre || os.financiador) + (os.origen ? ` ${this.toBold('(' + os.origen + ')')}` : '')
                 })),
+                { id: 'Sin obra social', label: 'Sin obra social' },
                 { id: 'otras', label: 'Otras' }
             ];
 
@@ -170,11 +171,19 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
         if (nombreSeleccionado === 'otras') {
             this.showListado = true;
             this.busquedaFinanciador = undefined;
+        } else if (event.value === 'Sin obra social') {
+            this.busquedaFinanciador = { nombre: 'Sin obra social' };
+            this.numeroAfiliado = undefined;
+            this.guardarFinanciador();
         } else {
             const nombre = event.value;
 
             this.busquedaFinanciador = this.financiadoresPaciente.find(os => os.nombre === nombre || os.financiador === nombre);
-            this.numeroAfiliado = this.busquedaFinanciador.numeroAfiliado;
+            if (this.busquedaFinanciador) {
+                this.numeroAfiliado = this.busquedaFinanciador.numeroAfiliado;
+            } else {
+                this.numeroAfiliado = undefined;
+            }
 
 
             this.guardarFinanciador();
