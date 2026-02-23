@@ -108,7 +108,7 @@ export class VistaRecetaComponent implements OnInit {
     ngOnInit() {
         this.recetaPrincipal = this.registro.recetas.length>1?this.recetaService.getRecetaPrincipal(this.registro.recetas): this.registro.recetas[0];
         this.combinarDispensas();
-        this.historialRecetas = this.registro.recetas.filter(receta => receta.id !== this.recetaPrincipal.id && receta.fechaRegistro <= this.recetaPrincipal.fechaRegistro);
+        this.historialRecetas = this.registro.recetas.filter(receta => receta.id !== this.recetaPrincipal.id && receta.fechaRegistro <= this.recetaPrincipal.fechaRegistro && receta.estadoActual?.tipo !== 'eliminada');
     }
 
     combinarDispensas() {

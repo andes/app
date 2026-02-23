@@ -52,18 +52,48 @@ export class SuspenderMedicacionComponent implements AfterViewChecked {
 
         const medicamento = this.seleccionRecetas[0]?.medicamento?.concepto?.term || 'medicamento';
         this.plex.confirm(`¿Está seguro que desea suspender ${this.seleccionRecetas.length > 1 ? `las (${this.seleccionRecetas.length}) medicaciones seleccionadas` : `<br><b>"${medicamento}"</b>`}?`, 'Atención').then(confirmacion => {
-            if (confirmacion) {
-                const recetaIds = this.seleccionRecetas.map(receta => receta.id).filter(id => id != null);
-                this.recetasService.suspender(recetaIds, this.profesional, this.motivoSelector?.nombre || 'Sin motivo', this.observacion).subscribe({
-                    next: () => {
-                        this.reset.emit();
-                        this.plex.toast('success', 'Medicaciones suspendidas correctamente');
-                    },
-                    error: () => {
-                        this.plex.toast('danger', 'Error al suspender las medicaciones');
-                    }
+            const recetasASuspender = this.filtrarRecetasUnicas(this.seleccionRecetas);
+            if (confirmacion && recetasASuspender.length > 0) {
+                let completadas = 0;
+                let errores = 0;
+                const total = recetasASuspender.length;
+
+                recetasASuspender.forEach(receta => {
+                    this.recetasService.suspenderReceta(receta.id, this.profesional, this.motivoSelector?.nombre || 'Sin motivo', this.observacion).subscribe({
+                        next: () => {
+                            completadas++;
+                            if (completadas + errores === total) {
+                                this.reset.emit();
+                                if (errores === 0) {
+                                    this.plex.toast('success', 'Medicaciones suspendidas correctamente');
+                                } else {
+                                    this.plex.toast('warning', `${completadas} medicaciones suspendidas, ${errores} fallaron`);
+                                }
+                            }
+                        },
+                        error: () => {
+                            errores++;
+                            if (completadas + errores === total) {
+                                if (completadas > 0) {
+                                    this.plex.toast('warning', `${completadas} medicaciones suspendidas, ${errores} fallaron`);
+                                } else {
+                                    this.plex.toast('danger', 'Error al suspender las medicaciones');
+                                }
+                            }
+                        }
+                    });
                 });
             }
+        });
+    }
+
+    filtrarRecetasUnicas(recetas: any[]): any[] {
+        const seen = new Set();
+        return recetas.filter(receta => {
+            const key = `${receta.idRegistro}-${receta.medicamento.concepto.conceptId}`;
+            if (seen.has(key)) {return false;}
+            seen.add(key);
+            return true;
         });
     }
 
