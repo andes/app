@@ -23,8 +23,6 @@
                              placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre"
                              [required]="true" grow="full">
                 </plex-select>
-                <dispositivo [modelo]="modelo" [tipo]="oxigeno" grow="full"></dispositivo>
-                <tipo-traslado [derivacion]="modelo" grow="full"></tipo-traslado>
                 <plex-select [(ngModel)]="modelo.condicion" name="condicion" label="Condición"
                              placeholder="Seleccione una condición" [data]="condiciones" [required]="true" grow="full">
 
@@ -35,6 +33,9 @@
                 <plex-text [(ngModel)]="modelo.motivoDerivacion" label="Motivo de la derivación" name="motivo"
                            [required]="true" grow="full">
                 </plex-text>
+                <dispositivo [modelo]="modelo" [tipo]="oxigeno" grow="full"></dispositivo>
+                <tipo-traslado [derivacion]="modelo" grow="full"></tipo-traslado>
+
             </plex-wrapper>
             <plex-title titulo="Datos diagnóstico"></plex-title>
             <plex-wrapper>
