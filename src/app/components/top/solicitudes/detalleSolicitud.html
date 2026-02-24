@@ -26,6 +26,9 @@
         <plex-label *ngIf="prestacionSeleccionada.solicitud.organizacion?.nombre" titulo="Organización destino"
                     subtitulo="{{prestacionSeleccionada.solicitud.organizacion?.nombre}}">
         </plex-label>
+
+        <plex-label titulo="Vencimiento" subtitulo="{{ tiempoVigencia }} días">
+        </plex-label>
         <plex-label *ngIf="prestacionSeleccionada.solicitud.profesional" titulo="Profesional de destino" subtitulo="{{ prestacionSeleccionada.solicitud.profesional?.nombre }} {{
                     prestacionSeleccionada.solicitud.profesional?.apellido
                     }}">
