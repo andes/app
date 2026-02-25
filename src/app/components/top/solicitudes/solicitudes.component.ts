@@ -6,7 +6,7 @@ import { Unsubscribe } from '@andes/shared';
 import { Location } from '@angular/common';
 import { Component, ElementRef, HostBinding, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, concatWith, map, switchMap } from 'rxjs';
+import { catchError, concatWith, map, switchMap, from, filter, NEVER } from 'rxjs';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { IMotivoAcceso } from 'src/app/modules/rup/interfaces/IMotivoAcceso';
 import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
@@ -812,21 +812,41 @@ export class SolicitudesComponent implements OnInit {
     }
 
     volverAuditoria() {
-        this.plex.confirm('¿Realmente quiere volver al estado Auditoría?', 'Atención').then(confirmar => {
-            if (confirmar) {
-                const cambioEstado: any = {
-                    op: 'estadoPush',
-                    estado: { tipo: 'auditoria', observaciones: 'La solicitud pasó a estado Auditoría' }
-                };
-                this.servicioPrestacion.patch(this.prestacionSeleccionada.id, cambioEstado).subscribe({
-                    complete: () => {
-                        this.plex.toast('info', 'Prestación nuevamente en Auditoría');
-                        this.cargarSolicitudes();
-                    },
-                    error: () => this.plex.toast('danger', 'ERROR: No es posible cambiar el estado de la prestación')
-                });
-            }
-        });
+        this.servicioPrestacion.getById(this.prestacionSeleccionada._id)
+            .pipe(
+                switchMap(prestacion => {
+                    const tieneTurnoInvalido =
+                        prestacion.solicitud.turno &&
+                        prestacion.estadoActual.tipo !== 'validada' &&
+                        prestacion.estadoActual.tipo !== 'ejecucion';
+
+                    if (tieneTurnoInvalido) {
+                        this.plex.info(
+                            'warning',
+                            'La solicitud ya tiene un turno asignado.'
+                        ).then(() => {
+                            window.location.reload();
+                        });
+                        return NEVER;
+                    }
+                    return from(this.plex.confirm('¿Realmente quiere volver al estado Auditoría?', 'Atención'));
+                }),
+                filter(confirmar => confirmar === true),
+                switchMap(() => {
+                    const cambioEstado: any = {
+                        op: 'estadoPush',
+                        estado: { tipo: 'auditoria', observaciones: 'La solicitud pasó a estado Auditoría' }
+                    };
+                    return this.servicioPrestacion.patch(this.prestacionSeleccionada.id, cambioEstado);
+                })
+            )
+            .subscribe({
+                complete: () => {
+                    this.plex.toast('info', 'Prestación nuevamente en Auditoría');
+                    this.cargarSolicitudes();
+                },
+                error: () => this.plex.toast('danger', 'ERROR: No es posible cambiar el estado de la prestación')
+            });
     }
 
     onDarTurno() {
