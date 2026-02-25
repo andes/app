@@ -20,7 +20,9 @@ export class BotonesSolicitudPipe implements PipeTransform {
             verHuds: false,
             devolverDeshacer: false,
             cancelar: false,
-            comunicacionPaciente: false
+            comunicacionPaciente: false,
+            resolver: false,
+            deshacerResolver: false
         };
         if (prestacion?.paciente) {
             if (prestacion.estadoActual.tipo === 'asignada') {
@@ -37,12 +39,18 @@ export class BotonesSolicitudPipe implements PipeTransform {
             if (prestacion.estadoActual.tipo === 'rechazada') {
                 botones.referir = true;
             }
+            if (prestacion.estadoActual.tipo === 'resuelta') {
+                if (this.esEfectorDestino(prestacion)) {
+                    botones.deshacerResolver = true;
+                }
+            }
             if (!prestacion.solicitud.turno) {
                 if (prestacion.estadoActual.tipo === 'pendiente') {
                     if (this.esEfectorDestino(prestacion)) {
                         botones.darTurno = true;
                         botones.anular = true;
                         botones.volverAuditoria = true;
+                        botones.resolver = true;
                     }
                     if (prestacion.solicitud.historial.length) {
                         botones.comunicacionPaciente = true;
@@ -55,6 +63,7 @@ export class BotonesSolicitudPipe implements PipeTransform {
                 if ((this.esEfectorDestino(prestacion) && prestacion.estadoActual.tipo === 'auditoria')) {
                     botones.anular = true;
                     botones.auditar = true;
+                    botones.resolver = true;
                 }
             }
         }
