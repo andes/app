@@ -30,6 +30,7 @@ export class SolicitudesComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @ViewChild('modalDevolver', { static: true }) modalDevolver: PlexModalComponent;
     @ViewChild('modalIniciar', { static: true }) modalIniciar: PlexModalComponent;
+    @ViewChild('modalResolver', { static: true }) modalResolver: PlexModalComponent;
     @ViewChild('helpIniciar', { static: false }) helpIniciar: PlexHelpComponent;
     @ViewChild('helpAnular', { static: false }) helpAnular: PlexHelpComponent;
     @ViewChild('helpCitar', { static: false }) helpCitar: PlexHelpComponent;
@@ -76,14 +77,22 @@ export class SolicitudesComponent implements OnInit {
         { id: 'turnoDado', nombre: 'TURNO DADO' },
         { id: 'registroHUDS', nombre: 'REGISTRO EN HUDS' },
         { id: 'anulada', nombre: 'ANULADA' },
-        { id: 'vencida', nombre: 'VENCIDA' }
+        { id: 'vencida', nombre: 'VENCIDA' },
+        { id: 'resuelta', nombre: 'RESUELTA' }
     ];
 
     public prioridad;
     public prioridades = [
         { id: 'prioritario', nombre: 'PRIORITARIO' },
     ];
-    prestacionSeleccionada: any;
+    public prestacionSeleccionada: any;
+    public motivosResolucion = [
+        { id: 'turno_en_efector', nombre: 'Con turno programado en el efector' },
+        { id: 'turno_otro_efector', nombre: 'Con turno programado en otro efector' },
+        { id: 'no_requiere', nombre: 'Ya no requiere turno' },
+        { id: 'fallecido', nombre: 'Paciente fallecido' }
+    ];
+    public motivoResolucionSeleccionado: any;
     public showModalMotivo = false;
     public motivoVerContinuarPrestacion = 'Continuidad del cuidado del paciente';
     public routeToParams = [];
@@ -367,6 +376,50 @@ export class SolicitudesComponent implements OnInit {
             this.observacionesAnular = '';
         }
     }
+
+    onResolver() {
+        if (this.prestacionSeleccionada.estados?.length && this.motivoResolucionSeleccionado) {
+            const patch = {
+                op: 'estadoPush',
+                estado: {
+                    tipo: 'resuelta',
+                    observaciones: this.motivoResolucionSeleccionado.nombre
+                }
+            };
+            this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
+                () => {
+                    this.cargarSolicitudes();
+                    this.plex.toast('success', 'Solicitud resuelta exitosamente');
+                }
+            );
+            this.hideModal('resolver');
+            this.closeSidebar();
+        }
+    }
+
+    onDeshacerResolver() {
+        this.closeSidebar();
+        let estadoPrevio = 'pendiente';
+        if (this.prestacionSeleccionada.estados?.length > 1) {
+            const prev = this.prestacionSeleccionada.estados[this.prestacionSeleccionada.estados.length - 2];
+            estadoPrevio = prev.tipo;
+        }
+
+        const patch = {
+            op: 'estadoPush',
+            estado: {
+                tipo: estadoPrevio,
+                observaciones: 'Reversión de estado resuelto'
+            }
+        };
+        this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
+            () => {
+                this.cargarSolicitudes();
+                this.plex.toast('success', 'Se deshizo la resolución de la solicitud');
+            }
+        );
+    }
+
     citar() {
         if (this.prestacionSeleccionada.estados?.length) {
             const patch = {
@@ -437,7 +490,8 @@ export class SolicitudesComponent implements OnInit {
                 'validada',
                 'ejecucion',
                 'asignada',
-                'referir'
+                'referir',
+                'resuelta'
             ]
         };
         if (this.tipoSolicitud === 'entrada') {
@@ -949,6 +1003,8 @@ export class SolicitudesComponent implements OnInit {
                 break;
             case 'devolver': this.modalDevolver.showed = true;
                 break;
+            case 'resolver': this.modalResolver.showed = true;
+                break;
         }
     }
 
@@ -960,6 +1016,10 @@ export class SolicitudesComponent implements OnInit {
             case 'devolver':
                 this.modalDevolver.showed = false;
                 this.motivoRespuesta = '';
+                break;
+            case 'resolver':
+                this.modalResolver.showed = false;
+                this.motivoResolucionSeleccionado = null;
                 break;
         }
     }
