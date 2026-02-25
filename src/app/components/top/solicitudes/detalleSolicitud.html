@@ -27,7 +27,9 @@
                     subtitulo="{{prestacionSeleccionada.solicitud.organizacion?.nombre}}">
         </plex-label>
 
-        <plex-label titulo="Vencimiento" subtitulo="{{ tiempoVigencia }} días">
+        <plex-label titulo="Vencimiento"
+                    [subtitulo]="estaVencida ? (fechaVencimiento | date: 'dd/MM/yyyy') : (fechaVencimiento | date: 'dd/MM/yyyy')"
+                    [type]="estaVencida ? 'danger' : ''">
         </plex-label>
         <plex-label *ngIf="prestacionSeleccionada.solicitud.profesional" titulo="Profesional de destino" subtitulo="{{ prestacionSeleccionada.solicitud.profesional?.nombre }} {{
                     prestacionSeleccionada.solicitud.profesional?.apellido

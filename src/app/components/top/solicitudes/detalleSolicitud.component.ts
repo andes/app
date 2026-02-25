@@ -24,6 +24,12 @@ export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
     public tiempoVigencia: number;
     public fechaVencimiento: Date;
 
+    get estaVencida(): boolean {
+        if (!this.fechaVencimiento) { return false; }
+        const estadoTipo = this.prestacionSeleccionada?.estadoActual?.tipo;
+        if (estadoTipo === 'vencida' || estadoTipo === 'anulada' || estadoTipo === 'validada') { return false; }
+        return this.fechaVencimiento < new Date();
+    }
 
     public items = [
         { key: 'solicitud', label: 'SOLICITUD' },
