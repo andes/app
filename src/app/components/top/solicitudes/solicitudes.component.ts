@@ -18,6 +18,7 @@ import { TurnoService } from '../../../services/turnos/turno.service';
 import { ConstantesService } from 'src/app/services/constantes.service';
 import { SnomedService } from 'src/app/apps/mitos';
 import { ECLQueriesService } from 'src/app/services/eclqueries.service';
+import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 
 
 @Component({
@@ -131,6 +132,7 @@ export class SolicitudesComponent implements OnInit {
     public check;
     public collapse = false;
     public loader = true;
+    private vigenciasMap: { [conceptId: string]: number } = {};
     public columns = [
         {
             key: 'fecha',
@@ -178,12 +180,20 @@ export class SolicitudesComponent implements OnInit {
         public motivosHudsService: MotivosHudsService,
         public constantesService: ConstantesService,
         public snomedService: SnomedService,
-        public eclqueriesServicies: ECLQueriesService
+        public eclqueriesServicies: ECLQueriesService,
+        private conceptosTurneablesService: ConceptosTurneablesService
     ) {
     }
 
     ngOnInit() {
         this.initFechas();
+
+        // Precarga el mapa de tiempoVigencia por conceptId (con caché)
+        this.conceptosTurneablesService.getAll().subscribe((conceptos: any[]) => {
+            conceptos.forEach(c => {
+                this.vigenciasMap[c.conceptId] = c.tiempoVigencia || 365;
+            });
+        });
 
         if (!this.auth.getPermissions('solicitudes:?').length) {
             this.router.navigate([this.auth.profesional ? '/solicitudes/asignadas' : 'inicio']);
@@ -465,7 +475,12 @@ export class SolicitudesComponent implements OnInit {
                 } else if (this.estadoEntrada.id === 'registroHUDS') {
                     params['estados'] = ['validada'];
                 } else {
-                    params['estados'] = [this.estadoEntrada.id];
+                    if (this.estadoEntrada.id === 'vencida') {
+                        // Traer pendiente+auditoria+vencida para filtrar client-side
+                        params['estados'] = ['vencida', 'pendiente', 'auditoria'];
+                    } else {
+                        params['estados'] = [this.estadoEntrada.id];
+                    }
                     if (this.estadoEntrada.id === 'pendiente') {
                         params['tieneTurno'] = false;
                     }
@@ -511,7 +526,12 @@ export class SolicitudesComponent implements OnInit {
                 } else if (this.estadoSalida.id === 'registroHUDS') {
                     params['estados'] = ['validada'];
                 } else {
-                    params['estados'] = [this.estadoSalida.id];
+                    if (this.estadoSalida.id === 'vencida') {
+                        // Traer pendiente+auditoria+vencida para filtrar client-side
+                        params['estados'] = ['vencida', 'pendiente', 'auditoria'];
+                    } else {
+                        params['estados'] = [this.estadoSalida.id];
+                    }
                     if (this.estadoSalida.id === 'pendiente') {
                         params['tieneTurno'] = false;
                     }
@@ -566,8 +586,20 @@ export class SolicitudesComponent implements OnInit {
 
     @Unsubscribe()
     buscarSolicitudes() {
+        const estadoFiltro = this.tipoSolicitud === 'entrada' ? this.estadoEntrada?.id : this.estadoSalida?.id;
         return this.servicioPrestacion.getSolicitudes(this.getParams())
-            .pipe(map((resultado) => resultado.filter((solicitud) => !this.esPacienteRestringido(solicitud.paciente))))
+            .pipe(
+                map((resultado) => resultado.filter((solicitud) => !this.esPacienteRestringido(solicitud.paciente))),
+                map((resultado) => {
+                    if (estadoFiltro === 'vencida') {
+                        return resultado.filter(s => s.estadoActual.tipo === 'vencida' || this.estaVencidaEnListado(s));
+                    }
+                    if (estadoFiltro) {
+                        return resultado.filter(s => !this.estaVencidaEnListado(s));
+                    }
+                    return resultado;
+                })
+            )
             .subscribe(resultado => {
                 if (this.tipoSolicitud === 'entrada') {
                     this.prestacionesEntrada = this.prestacionesEntrada.concat(resultado);
@@ -757,6 +789,17 @@ export class SolicitudesComponent implements OnInit {
             this.showSidebar = false;
             this.showNuevaSolicitud = false;
         }
+    }
+
+    estaVencidaEnListado(prestacion: any): boolean {
+        if (!prestacion?.solicitud?.fecha) { return false; }
+        const estadoTipo = prestacion.estadoActual?.tipo;
+        if (estadoTipo === 'vencida' || estadoTipo === 'anulada' || estadoTipo === 'validada') { return false; }
+        const conceptId = prestacion.solicitud.tipoPrestacion?.conceptId;
+        const vigencia = this.vigenciasMap[conceptId] ?? 365;
+        const fechaVenc = new Date(prestacion.solicitud.fecha);
+        fechaVenc.setDate(fechaVenc.getDate() + vigencia);
+        return fechaVenc < new Date();
     }
 
     onChange() {
