@@ -6,20 +6,23 @@
 
         <plex-grid size="sm" type="auto" cols="4">
             <plex-datetime type="date" [(ngModel)]="fecha" name="fecha" label="Fecha" (change)="resetCenso()"
-                        [debounce]="600">
+                           [debounce]="600">
             </plex-datetime>
-            <plex-select *ngIf="unidadesOranizativas.length" label="Unidad Organizativa" [(ngModel)]="selectedUnidadOranizativa" name="sectores"
-                        [data]="unidadesOranizativas" [required]="true" (change)="resetCenso()">
+            <plex-select *ngIf="unidadesOranizativas.length" label="Unidad Organizativa"
+                         [(ngModel)]="selectedUnidadOranizativa" name="sectores" [data]="unidadesOranizativas"
+                         [required]="true" (change)="resetCenso()">
             </plex-select>
             <div class="d-flex align-items-end">
-                <plex-button class="mr-1" [disabled]="!fecha || !selectedUnidadOranizativa" label="GENERAR CENSO" type="primary"
-                            (click)="generarCensoDiario()">
+                <plex-button class="mr-1" [disabled]="!fecha || !selectedUnidadOranizativa" label="GENERAR CENSO"
+                             type="primary" (click)="generarCensoDiario()">
                 </plex-button>
                 <plex-button class="mr-1" [disabled]="!censoPacientes.length" label="PDF" icon="download"
-                            [tooltip]="(!censo) ? 'Debe generar el censo para descargarlo' : 'Descargar censo diario'"
-                            type="warning" (click)="descargarCenso()">
+                             [tooltip]="(!censo) ? 'Debe generar el censo para descargarlo' : 'Descargar censo diario'"
+                             type="warning" (click)="descargarCenso()">
                 </plex-button>
-                <plex-button [disabled]="!censoPacientes.length" icon="download" label="CSV" type="success" [tooltip]="(!censo) ? 'Debe generar el censo para descargarlo' : 'Descargar censo diario'" (click)="descargarCsv()">
+                <plex-button [disabled]="!censoPacientes.length" icon="download" label="CSV" type="success"
+                             [tooltip]="(!censo) ? 'Debe generar el censo para descargarlo' : 'Descargar censo diario'"
+                             (click)="descargarCsv()">
                 </plex-button>
             </div>
         </plex-grid>
@@ -40,19 +43,31 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let censoP of censoPacientes">
-                        <td>{{censoP.datos.paciente | nombre}} |
-                            {{censoP.datos.paciente | documento}} </td>
-                        <td>{{censoP.datos.cama.nombre}},
-                            {{censoP.datos.cama.sectores[censoP.datos.cama.sectores.length -1].nombre}}
-                        </td>
-                        <td>{{censoP.ingreso}}</td>
-                        <td>{{censoP.paseDe}}</td>
-                        <td>{{censoP.egreso}}</td>
-                        <td>{{censoP.paseA}}</td>
                         <td>
-                            <span *ngIf="censoP.fechaIngreso">{{ censoP.fechaIngreso | fecha }}</span>
+                            {{ censoP?.datos?.paciente | nombre }} |
+                            {{ censoP?.datos?.paciente | documento }}
                         </td>
-                        <td>{{censoP.diasEstada}}</td>
+
+                        <td>
+                            {{ censoP?.datos?.cama?.nombre || '-' }},
+                            {{
+                            censoP?.datos?.cama?.sectores?.length
+                            ? censoP.datos.cama.sectores[censoP.datos.cama.sectores.length - 1]?.nombre
+                            : '-'
+                            }}
+                        </td>
+
+                        <td>{{ censoP?.ingreso || '-' }}</td>
+                        <td>{{ censoP?.paseDe || '-' }}</td>
+                        <td>{{ censoP?.egreso || '-' }}</td>
+                        <td>{{ censoP?.paseA || '-' }}</td>
+
+                        <td>
+                            <span *ngIf="censoP?.fechaIngreso">{{ censoP.fechaIngreso | fecha }}</span>
+                            <span *ngIf="!censoP?.fechaIngreso">-</span>
+                        </td>
+
+                        <td>{{ censoP?.diasEstada || 0 }}</td>
                     </tr>
                 </tbody>
             </table>
