@@ -36,11 +36,7 @@ export class EstadosCamaProvincialComponent implements OnInit {
 
     ngOnInit() {
         this.camasEstados$ = this.estadosCamaProvincialService.camasEstados$.pipe(
-            map(camas =>
-                [...camas].sort((a, b) =>
-                    a.organizacion?.nombre.localeCompare(b.organizacion?.nombre)
-                )
-            )
+            map(camas => camas.sort((a, b) => a.organizacion?.nombre.localeCompare(b.organizacion?.nombre)))
         );
         this.cargaUnidadesOrganizativas();
         this.filtrar();
