@@ -2,7 +2,7 @@
     <plex-title *ngIf="registro?.concepto"
                 titulo="{{ registro.concepto.term[0].toUpperCase() + registro.concepto.term.slice(1) }}" size="lg">
         <div class="titulo-badges">
-            <plex-badge type="danger">
+            <plex-badge type="danger" *ngIf="registro?.privacy === 'private'">
                 Registro Privado
             </plex-badge>
             <plex-badge type="{{ !registro.esSolicitud ? registro.concepto.semanticTag : 'solicitud' }}">
