@@ -1,5 +1,6 @@
 import * as moment from 'moment';
 import { EstadoCalendarioDia } from './enums';
+import { IBloque } from 'src/app/interfaces/turnos/IBloque';
 
 export class CalendarioDia {
     public estadoAgenda: any;
@@ -58,13 +59,14 @@ export class CalendarioDia {
                             this.turnosDisponibles += unBloque.restantesProgramados + unBloque.restantesDelDia;
                         });
 
-                        /* Quedan en estado 'disponible' (Para mostrarse en el calendario) las agendas que ..
-                           - Sean exclusivas de gestión y tengan turnos disponibles
+                        /* Quedan en estado 'disponible' (Para mostrarse en el calendario) los bloques que ..
+                           - Sean exclusivos de gestión y tengan turnos disponibles
                            - Tengan turnos del dia o programados disponibles
                         */
-                        if (this.esExclusivoGestion(unaAgenda)) {
-                            this.estado = (unaAgenda.turnosRestantesGestion > 0) ? 'disponible' : 'ocupado';
-                            this.turnosDisponibles = unaAgenda.turnosRestantesGestion;
+                        const exclusivosGestion = this.bloquesExclusivosGestion(unaAgenda);
+                        if (!!exclusivosGestion) {
+                            this.estado = (exclusivosGestion.some(bloque => bloque.restantesGestion > 0) ? 'disponible' : 'ocupado');
+                            this.turnosDisponibles += exclusivosGestion.map(bloque => bloque.restantesGestion).reduce((a, b) => a + b, 0);
                         } else {
                             this.estado = (this.delDiaDisponibles > 0 && this.gestionDisponibles === 0) ? 'disponible' : 'ocupado';
                         }
@@ -152,8 +154,8 @@ export class CalendarioDia {
         }
     }
 
-    // retorna true si todos los bloques de la agenda son de gestión
-    esExclusivoGestion(agenda: any): boolean {
-        return agenda.bloques.every(bloque => bloque.reservadoGestion > 0 && bloque.accesoDirectoDelDia === 0 && bloque.accesoDirectoProgramado === 0 && bloque.reservadoProfesional === 0);
+    // retorna solo los bloques de la agenda que son de gestión
+    bloquesExclusivosGestion(agenda: any): IBloque[] {
+        return agenda.bloques.filter(bloque => bloque.reservadoGestion > 0 && bloque.accesoDirectoDelDia === 0 && bloque.accesoDirectoProgramado === 0);
     }
 }
