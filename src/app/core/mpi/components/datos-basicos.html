@@ -179,8 +179,8 @@
                                  required="true" placeholder="Seleccione..." [readonly]="validado"
                                  (change)="mapeoGenero();checkDisableValidar()" grow="4">
                     </plex-select>
-                    <plex-text *ngIf="!noPoseeDNI" class="mr-3" label="CUIL" [(ngModel)]="paciente.cuil" name="cuil" [pattern]="patronCUIL" grow="4"
-                                 [required]="true">
+                    <plex-text *ngIf="!noPoseeDNI" class="mr-3" label="CUIL" [(ngModel)]="paciente.cuil" name="cuil"
+                               [pattern]="patronCUIL" grow="4" [required]="false">
                     </plex-text>
 
                     <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="validado"
