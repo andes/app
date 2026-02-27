@@ -37,6 +37,8 @@ export class MapaCamasService {
     public pacienteText = new BehaviorSubject<string>(null);
     public estadoSelected = new BehaviorSubject<string>(null);
     public equipamientoSelected = new BehaviorSubject<ISnomedConcept[]>(null);
+    public mostrarTodasCamas = new BehaviorSubject<boolean>(false);
+    public censableSelected = new BehaviorSubject<any>(null);
 
     public pacienteAux = new BehaviorSubject<any>({} as any);
 
@@ -428,13 +430,10 @@ export class MapaCamasService {
             });
         }
 
-        if (esCensable) {
-            if (esCensable.id === 0) {
-                camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => !snap.esCensable);
-            } else if (esCensable.id === 1) {
-                camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => snap.esCensable);
-            }
-        }
+        camasFiltradas = (esCensable === 0 || esCensable === 1)
+            ? camasFiltradas.filter(snap => esCensable === 1 ? snap.esCensable : !snap.esCensable)
+            : camasFiltradas;
+
 
         return camasFiltradas;
     }
