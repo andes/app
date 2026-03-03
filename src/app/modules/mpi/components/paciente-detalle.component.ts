@@ -164,12 +164,12 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
                 const isPopulated = referencia?.id || referencia?._id;
                 return {
                     id: isPopulated ? (referencia.id || referencia._id) : referencia,
-                    apellido: isPopulated ? referencia.apellido : rel.apellido,
-                    nombre: isPopulated ? referencia.nombre : rel.nombre,
-                    documento: isPopulated ? referencia.documento : rel.documento,
-                    numeroIdentificacion: isPopulated ? referencia.numeroIdentificacion : rel.numeroIdentificacion,
+                    apellido: isPopulated ? referencia.apellido : (rel as any).apellido,
+                    nombre: isPopulated ? referencia.nombre : (rel as any).nombre,
+                    documento: isPopulated ? referencia.documento : (rel as any).documento,
+                    numeroIdentificacion: isPopulated ? referencia.numeroIdentificacion : (rel as any).numeroIdentificacion,
                     parentesco: (rel.relacion) ? rel.relacion.nombre : 'Relación S/D',
-                    fotoId: isPopulated ? referencia.fotoId : rel.fotoId
+                    fotoId: isPopulated ? referencia.fotoId : (rel as any).fotoId
                 };
             });
         } else {

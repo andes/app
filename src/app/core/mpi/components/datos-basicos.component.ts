@@ -56,8 +56,7 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     searchClear = true;
     relacionBebe: IPacienteRelacion = {
         relacion: null,
-        referencia: '',
-        activo: true
+        referencia: null
     };
     pacienteFallecido: any;
     fechaFallecimientoTemporal: Date = null;
@@ -278,8 +277,7 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
                 // Relacionamos al bebe con su progenitor/a
                 this.relacionBebe = {
                     referencia: paciente,
-                    relacion: this.parentescoModel.find(elem => elem.nombre === 'progenitor/a'),
-                    activo: true
+                    relacion: this.parentescoModel.find(elem => elem.nombre === 'progenitor/a')
                 };
                 this.paciente.relaciones = [this.relacionBebe];
 

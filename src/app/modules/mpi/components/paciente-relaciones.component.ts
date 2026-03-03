@@ -28,14 +28,9 @@ export class PacienteRelacionesComponent {
      */
     @Input()
     set relaciones(value: IPacienteRelacion[]) {
-        this._relaciones = value?.filter(rel => {
-            return (rel.hasOwnProperty('activo')) ? rel.activo : true;
-        });
-        if (this._relaciones?.length) {
-            this.listado = this._relaciones as IPacienteRelacion[];
-        } else {
-            this.listado = [];
-        }
+        // La API ya normaliza relaciones: solo vienen { relacion, referencia } con referencia populada
+        this._relaciones = value?.filter(rel => rel.referencia) || [];
+        this.listado = this._relaciones;
     }
 
     // Evento que se emite cuando se selecciona un paciente (click en la listado)
@@ -47,13 +42,9 @@ export class PacienteRelacionesComponent {
     ) { }
 
     public seleccionarRelacion(relacionado: IPacienteRelacion) {
-        const id = relacionado.referencia?.id || relacionado.referencia?._id || relacionado.referencia;
-        if (id) {
-            let pacienteRel: IPaciente;
-            this.pacienteService.getById(id).subscribe(result => {
-                pacienteRel = result;
-                (pacienteRel) ? this.selected.emit(pacienteRel) : this.selected.emit(null);
-            });
+        // La referencia ya viene populada: emitimos directamente sin fetch extra
+        if (relacionado.referencia) {
+            this.selected.emit(relacionado.referencia as any);
         }
     }
 }

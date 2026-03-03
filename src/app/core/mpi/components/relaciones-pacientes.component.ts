@@ -21,9 +21,17 @@ export class RelacionesPacientesComponent implements OnInit {
         this._paciente = valor;
         // Se guarda estado de las relaciones al comenzar la edición
         if (valor.relaciones) {
-            this.relacionesIniciales = valor.relaciones.slice(0, valor.relaciones.length);
+            // Normalizar a formato limpio: solo { relacion, referencia }
+            this.relacionesIniciales = valor.relaciones
+                .filter(rel => rel.referencia)
+                .map(rel => ({
+                    relacion: rel.relacion,
+                    referencia: rel.referencia
+                }));
+            this.paciente.relaciones = [...this.relacionesIniciales];
+
             this.idPacientesRelacionados = this.relacionesIniciales.map(rel => {
-                return { id: rel.referencia?.id || rel.referencia?._id || rel.referencia };
+                return { id: rel.referencia?.id || rel.referencia?._id };
             });
         }
     }
@@ -47,6 +55,7 @@ export class RelacionesPacientesComponent implements OnInit {
     searchClear = true; // true si el campo de búsqueda se encuentra vacío
 
     public nombrePattern: string;
+    public relacionTipo: any;
     public esConviviente = false;
 
     constructor(
@@ -97,11 +106,13 @@ export class RelacionesPacientesComponent implements OnInit {
     }
 
     seleccionarRelacionEntrante(data: any) {
-        if (data.referencia) {
-            this.esConviviente = data.relacion.esConviviente;
-            // creamos una copia del objeto relacion para no editarla directamente
-            this.relacionEntrante = [Object.assign({}, data)];
-        } else if (data.id) {
+        // Si viene con referencia populada (relacion existente), extraemos la referencia
+        if (data.referencia && typeof data.referencia === 'object') {
+            this.esConviviente = data.relacion?.esConviviente;
+            this.relacionEntrante = [Object.assign({}, data.referencia)];
+            this.relacionTipo = data.relacion;
+        } else {
+            // Es un paciente directo (seleccionado desde la búsqueda)
             this.relacionEntrante = [data];
         }
         this.onSearchClear();
@@ -113,18 +124,17 @@ export class RelacionesPacientesComponent implements OnInit {
         if (unaRelacion.referencia) {
             unaRelacion.relacion.esConviviente !== undefined ? unaRelacion.relacion.esConviviente = this.esConviviente : unaRelacion.relacion['esConviviente'] = this.esConviviente;
             // Se la agrega al array de relaciones nuevas/editadas
-            let index = this.relacionesEdit.findIndex(rel => (rel.referencia?.id || rel.referencia?._id || rel.referencia) === idReferencia);
+            let index = this.relacionesEdit.findIndex(rel => (rel.referencia?.id || rel.referencia?._id) === idReferencia);
             index >= 0 ? this.relacionesEdit[index] = unaRelacion : this.relacionesEdit.push(unaRelacion);
             // Se actualiza el array de relaciones del paciente para que impacte en las vistas
-            index = this.paciente.relaciones.findIndex(rel => (rel.referencia?.id || rel.referencia?._id || rel.referencia) === idReferencia);
+            index = this.paciente.relaciones.findIndex(rel => (rel.referencia?.id || rel.referencia?._id) === idReferencia);
             this.paciente.relaciones[index] = unaRelacion;
         } else {
-            // relacion inexistente, construimos una nueva
+            // relacion inexistente, construimos una nueva con formato { relacion, referencia: objeto }
             this.buscarPacRel = '';
             const nuevaRelacion: IPacienteRelacion = {
                 referencia: unaRelacion,
-                relacion: unaRelacion.relacion,
-                activo: true
+                relacion: this.relacionTipo || unaRelacion.relacion
             };
             nuevaRelacion.relacion['esConviviente'] = this.esConviviente;
 
@@ -135,12 +145,12 @@ export class RelacionesPacientesComponent implements OnInit {
                 this.paciente.relaciones = [nuevaRelacion];
             }
             // Se inserta en el array de relaciones nuevas/editadas
-            let index = this.relacionesEdit.findIndex(rel => (rel.referencia?.id || rel.referencia?._id || rel.referencia) === (nuevaRelacion.referencia?.id || nuevaRelacion.referencia?._id || nuevaRelacion.referencia));
+            let index = this.relacionesEdit.findIndex(rel => (rel.referencia?.id || rel.referencia?._id) === (nuevaRelacion.referencia?.id || nuevaRelacion.referencia?._id));
             index >= 0 ? this.relacionesEdit[index] = nuevaRelacion : this.relacionesEdit.push(nuevaRelacion);
-            this.idPacientesRelacionados.push({ id: nuevaRelacion.referencia.id || nuevaRelacion.referencia });
+            this.idPacientesRelacionados.push({ id: nuevaRelacion.referencia.id || nuevaRelacion.referencia._id });
 
             // Si esta relación fue borrada anteriormente en esta edición, se quita del arreglo 'relacionesBorradas'
-            index = this.relacionesBorradas.findIndex(rel => (rel.referencia?.id || rel.referencia?._id || rel.referencia) === (nuevaRelacion.referencia?.id || nuevaRelacion.referencia?._id || nuevaRelacion.referencia));
+            index = this.relacionesBorradas.findIndex(rel => (rel.referencia?.id || rel.referencia?._id) === (nuevaRelacion.referencia?.id || nuevaRelacion.referencia?._id));
             if (index >= 0) {
                 this.relacionesBorradas.splice(index, 1);
             }

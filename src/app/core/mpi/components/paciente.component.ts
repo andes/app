@@ -508,7 +508,7 @@ export class PacienteComponent implements OnInit {
                                     return { ...r, referencia: r.referencia.id || r.referencia._id };
                                 }
                                 return r;
-                            });
+                            }) as any[];
                             return pac;
                         }),
                         mergeMap(pac => {
@@ -546,7 +546,7 @@ export class PacienteComponent implements OnInit {
                                     return { ...r, referencia: r.referencia.id || r.referencia._id };
                                 }
                                 return r;
-                            });
+                            }) as any[];
                             return pac;
                         }),
                         mergeMap(pac => {
