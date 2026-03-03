@@ -529,13 +529,12 @@ export class DarTurnosComponent implements OnInit {
         }
     }
 
-    // retorna true si algun bloque de la agenda es exclusivo de gestión
+    // retorna true si algun bloque de la agenda es exclusivo de gestión (llave y/o profesional)
     contieneExclusivoGestion(agenda: IAgenda): boolean {
         return agenda.bloques.some(bloque =>
             bloque.reservadoGestion > 0 &&
             bloque.accesoDirectoDelDia === 0 &&
-            bloque.accesoDirectoProgramado === 0 &&
-            bloque.reservadoProfesional === 0);
+            bloque.accesoDirectoProgramado === 0);
     }
 
     hayTurnosEnHorario(agenda) {
