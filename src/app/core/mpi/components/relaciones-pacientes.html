@@ -28,8 +28,8 @@
              [ngClass]="{'img-fallecido' : unaRel.fechaFallecimiento}"
              [mpiFotoPaciente]="{id: unaRel.id, fotoId: unaRel.fotoId}" alt="">
 
-        <plex-label titulo="{{ unaRel | nombre }}"
-                    subtitulo="{{ (unaRel.documento || unaRel.referencia?.documento | number) || 'Sin DNI' }}">
+        <plex-label titulo="{{ (unaRel.referencia ? unaRel.referencia : unaRel) | nombre }}"
+                    subtitulo="{{ (unaRel.referencia ? unaRel.referencia : unaRel) | documento }}">
         </plex-label>
 
         <plex-label *ngIf="unaRel.fechaNacimiento || unaRel.referencia?.fechaNacimiento"
@@ -58,7 +58,7 @@
                      (click)="addRelacion(unaRel)">
         </plex-button>
 
-        <plex-button type="danger" size="sm" icon="close" tooltip="Borrar" (click)="relacionEntrante=[]">
+        <plex-button type="danger" size="sm" icon="close" tooltip="Cerrar" (click)="relacionEntrante=[]">
         </plex-button>
         <div style="align-items: center;">
             <plex-bool type="slide" name="conviviente" [(ngModel)]="esConviviente" label="Es conviviente"></plex-bool>

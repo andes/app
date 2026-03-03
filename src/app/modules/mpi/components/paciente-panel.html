@@ -60,13 +60,13 @@
                  [mpiFotoPaciente]="{ id: relacionado.referencia?.id || relacionado.referencia, fotoId: relacionado.fotoId || relacionado.referencia?.fotoId}" />
 
             <plex-label *ngIf="!(relacionado.numeroIdentificacion || relacionado.referencia?.numeroIdentificacion)"
-                        titulo="{{ relacionado | nombre }}"
-                        subtitulo="{{ (relacionado.documento || relacionado.referencia?.documento | number) || 'Sin DNI' }}">
+                        titulo="{{ (relacionado.referencia ? relacionado.referencia : relacionado) | nombre }}"
+                        subtitulo="{{ (relacionado.referencia ? relacionado.referencia : relacionado) | documento }}">
             </plex-label>
 
             <plex-label *ngIf="relacionado.numeroIdentificacion || relacionado.referencia?.numeroIdentificacion"
-                        titulo="{{ relacionado | nombre }}"
-                        subtitulo="{{ relacionado.numeroIdentificacion || relacionado.referencia?.numeroIdentificacion }}">
+                        titulo="{{ (relacionado.referencia ? relacionado.referencia : relacionado) | nombre }}"
+                        subtitulo="{{ (relacionado.referencia ? relacionado.referencia : relacionado) | documento }}">
             </plex-label>
             
             <plex-badge type="info">{{ relacionado?.relacion?.nombre }}
