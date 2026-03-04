@@ -1,3 +1,12 @@
+## [5.170.2](https://github.com/andes/app/compare/v5.170.1...v5.170.2) (2026-03-04)
+
+
+### Bug Fixes
+
+* **CIT:** bloques con turno con llave en calendario de top ([#3304](https://github.com/andes/app/issues/3304)) ([c2b3fb9](https://github.com/andes/app/commit/c2b3fb9279b3276ba36bccf8dfe92830e23c220a))
+* **MPI:** cuil no requerido ([#3308](https://github.com/andes/app/issues/3308)) ([585e26e](https://github.com/andes/app/commit/585e26e17d866909ca54a183d31c7b860afcf648))
+* **TOP-211:** Listado: Error de visualización datos del paciente ([#3296](https://github.com/andes/app/issues/3296)) ([19e5ce7](https://github.com/andes/app/commit/19e5ce7cc493c18ccf3d58cea3eb345f64a68716))
+
 ## [5.170.1](https://github.com/andes/app/compare/v5.170.0...v5.170.1) (2026-02-18)
 
 
