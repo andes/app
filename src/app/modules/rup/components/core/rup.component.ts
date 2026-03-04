@@ -94,7 +94,17 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
         }
 
         // Cargamos el componente
-        const component = ElementosRUPRegister.get(this.elementoRUP.componente).component;
+        if (!this.elementoRUP) {
+            return;
+        }
+
+        const rupItem = ElementosRUPRegister.get(this.elementoRUP.componente);
+        if (!rupItem) {
+            // El componente RUP no está registrado en este bundle/módulo
+            return;
+        }
+
+        const component = rupItem.component;
         const componentFactory = this.componentFactoryResolver.resolveComponentFactory(component as any);
         const componentReference = this.viewContainerRef.createComponent(componentFactory);
 
