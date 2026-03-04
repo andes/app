@@ -12,6 +12,7 @@ import { DriveService } from 'src/app/services/drive.service';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { ProfesionalService } from 'src/app/services/profesional.service';
 import { DerivacionesService } from './../../../../services/com/derivaciones.service';
+import { EstrategiaAtencionService } from './../../../../services/com/estrategiaAtencion.service';
 import { AdjuntosService } from './../../../rup/services/adjuntos.service';
 
 @Component({
@@ -54,6 +55,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         obraSocial: null,
         historial: [],
         motivoDerivacion: '',
+        estrategiaAtencion: '',
         diagnosticoActual: '',
         estadoClinico: '',
         diagnosticoBase: '',
@@ -78,6 +80,8 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         { id: 'rehabilitacion', nombre: 'Rehabilitación' },
     ];
 
+    public estrategiasAtencion = [];
+
     constructor(
         private plex: Plex,
         private auth: Auth,
@@ -92,7 +96,8 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         private router: Router,
         private driveService: DriveService,
         private elementoRupService: ElementosRUPService,
-        private servicioPrestacion: PrestacionesService
+        private servicioPrestacion: PrestacionesService,
+        private estrategiaAtencionService: EstrategiaAtencionService
     ) { }
 
     ngOnInit() {
@@ -125,6 +130,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
 
         this.cargarDestinos();
         this.cargarTipoTraslados();
+        this.cargarEstrategiasAtencion();
     }
 
     ngOnDestroy() {
@@ -173,6 +179,12 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
     cargarTipoTraslados() {
         this.tipoTrasladoService.search().subscribe(resultado => {
             this.tipoTraslados = resultado;
+        });
+    }
+
+    cargarEstrategiasAtencion() {
+        this.estrategiaAtencionService.search().subscribe(resultado => {
+            this.estrategiasAtencion = resultado;
         });
     }
 
@@ -234,6 +246,12 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         });
         this.modelo.condicion = this.modelo.condicion.nombre;
         this.modelo.necesidad = this.modelo.necesidad.nombre;
+        if (this.modelo.estrategiaAtencion) {
+            this.modelo.estrategiaAtencion = {
+                id: this.modelo.estrategiaAtencion.id || this.modelo.estrategiaAtencion._id,
+                nombre: this.modelo.estrategiaAtencion.nombre
+            };
+        }
         this.modelo.adjuntos = this.adjuntos;
         return this.derivacionesService.create(this.modelo);
     }
