@@ -1,7 +1,7 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, OnDestroy, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
-import { combineLatest, Observable, of, Subscription } from 'rxjs';
+import { combineLatest, forkJoin, Observable, of, Subscription } from 'rxjs';
 import { auditTime, filter, map, switchMap, take } from 'rxjs/operators';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
@@ -25,6 +25,7 @@ import { cache } from '@andes/shared';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 import { ListadoInternacionCapasService } from '../../views/listado-internacion-capas/listado-internacion-capas.service';
 import { IObraSocial } from 'src/app/interfaces/IObraSocial';
+import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -94,6 +95,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     private subscription2: Subscription;
     public selectedOS = false;
     public financiador;
+    public edicionFinanciador = false;
     public selectorFinanciadores: IObraSocial[] = [];
     public obrasSociales: IObraSocial[] = [];
     public OSPrivada = false;
@@ -107,6 +109,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         private organizacionService: OrganizacionService,
         private servicioPrestacion: PrestacionesService,
         public mapaCamasService: MapaCamasService,
+        private camasHTTP: MapaCamasHTTP,
         private listadoInternacionService: ListadoInternacionService,
         private historialInternacionService: ListadoInternacionCapasService,
         private auth: Auth,
@@ -472,25 +475,39 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     // Sincroniza las fechas editadas entre la cama y elresumen/prestacion
     private sincronizarCamaInternacion(idInternacion, fechaIngresoOriginal, fechaIngreso): Observable<IResumenInternacion> {
-        return this.mapaCamasService.snapshot(this.fechaIngresoOriginal, idInternacion).pipe(
-            switchMap(snapshot => {
-                const primeraCama = snapshot[0];
-                return this.mapaCamasService.changeTime(primeraCama, fechaIngresoOriginal, fechaIngreso, idInternacion);
-            }),
+        const obs$ = (fechaIngresoOriginal.getTime() !== fechaIngreso.getTime()) ?
+            this.mapaCamasService.snapshot(this.fechaIngresoOriginal, idInternacion).pipe(
+                switchMap(snapshot => {
+                    const primeraCama = snapshot[0];
+                    return this.mapaCamasService.changeTime(primeraCama, fechaIngresoOriginal, fechaIngreso, idInternacion);
+                })
+            ) : of(this.cama);
+
+        return obs$.pipe(
             switchMap(cama => {
-                if (!cama.id) {
+                if (!cama?.id) {
                     // algun error en changeTime
                     throw new Error();
                 }
-                if (this.capa === 'estadistica') {
-                    return of(null);
-                }
                 this.cama = cama;
-                // Prestacion creada por capa estadistica-v2. Puede estar siendo actualizada por medica/enfermeria
-                return this.internacionResumenService.update(cama.idInternacion, {
-                    idPrestacion: this.prestacion?.id,
-                    fechaIngreso: this.informeIngreso.fechaIngreso
-                });
+
+                const nextOps$: Observable<any>[] = [];
+                if (this.capa === 'estadistica' && this.edicionFinanciador) {
+                    nextOps$.push(this.camasHTTP.updateEstados(this.mapaCamasService.ambito, this.capa, this.informeIngreso.fechaIngreso, this.cama, { edicionFinanciador: true }));
+                }
+
+                if (this.capa !== 'estadistica') {
+                    // Prestacion creada por capa estadistica-v2. Puede estar siendo actualizada por medica/enfermeria
+                    nextOps$.push(this.internacionResumenService.update(cama.idInternacion, {
+                        idPrestacion: this.prestacion?.id,
+                        fechaIngreso: this.informeIngreso.fechaIngreso
+                    }));
+                }
+
+                if (nextOps$.length > 0) {
+                    return forkJoin(nextOps$).pipe(map(() => cama));
+                }
+                return of(cama);
             })
         ) as Observable<IResumenInternacion>;
     }
@@ -510,7 +527,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         if (this.prestacion && this.poseeMovimientos) {
             // Se actualiza fecha y hora en camas
             this.cama.idInternacion = idInternacion;
-            if (this.informeIngreso.fechaIngreso.getTime() !== this.fechaIngresoOriginal.getTime()) {
+            const fechaChange = this.informeIngreso.fechaIngreso.getTime() !== this.fechaIngresoOriginal.getTime();
+            const financiadorChange = this.capa === 'estadistica' && this.edicionFinanciador;
+
+            if (fechaChange || financiadorChange) {
                 // Recuperamos snapshot inicial, por si hay un cambio de cama
                 this.sincronizarCamaInternacion(idInternacion, this.fechaIngresoOriginal, this.informeIngreso.fechaIngreso).subscribe(() => {
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
@@ -895,5 +915,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 financiador: financiadorSeleccionado.financiador
             };
         }
+        this.edicionFinanciador = true;
     }
 }
