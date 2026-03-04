@@ -43,6 +43,9 @@
         <plex-label *ngIf='derivacion.dispositivo' titulo="Dispositivo de soporte de oxígeno"
                     subtitulo="{{derivacion.dispositivo.nombre}}: {{derivacion.dispositivo.descripcion}}">
         </plex-label>
+        <plex-label *ngIf='derivacion.estrategiaAtencion' titulo="Estrategia de atención"
+                    subtitulo="{{derivacion.estrategiaAtencion.nombre}}">
+        </plex-label>
         <plex-label titulo="Creada por" subtitulo="{{derivacion.createdBy | nombre}}">
         </plex-label>
         <plex-label titulo="Ultima actualización" subtitulo="{{derivacion.updatedAt
