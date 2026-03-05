@@ -1,6 +1,10 @@
 <plex-wrapper>
     <plex-text (change)="filtrar()" [(ngModel)]="filtros.paciente" label="paciente">
     </plex-text>
+    <plex-select [(ngModel)]="filtros.unidadOrganizativa" name="unidadOrganizativa" (change)="filtrar()"
+                 label="Unidad Organizativa" [data]="unidadesOrganizativas$ | async" idField="conceptId"
+                 labelField="term">
+    </plex-select>
     <plex-datetime type="date" (change)="filtrarFecha()" [(ngModel)]="filtros.fechaIngresoDesde"
                    name="fechaIngresoDesde" label="Ingreso desde" [max]="filtros.fechaIngresoHasta" [debounce]="600" >
     </plex-datetime>

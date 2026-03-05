@@ -47,7 +47,10 @@
                                 {{ internacion.fechaEgreso | hora }}
                             </span>
                         </td>
-                    </tr>
+                        <td *plTableCol="'unidadOrganizativa'">
+                            {{ (internacion.idPrestacion?.unidadOrganizativa?.term) ||
+                            (internacion.estadosCama[0]?.estados[0]?.unidadOrganizativa?.term) }}
+                        </td>
                 </plex-table>
             </ng-container>
         </ng-container>

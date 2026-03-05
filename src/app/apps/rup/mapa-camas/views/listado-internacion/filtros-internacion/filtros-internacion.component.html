@@ -3,6 +3,10 @@
         <plex-text name="paciente" [(ngModel)]="filtros.paciente" label="paciente"></plex-text>
         <div>
             <div class="fechas-container">
+                <plex-select [(ngModel)]="filtros.unidadOrganizativa" name="unidadOrganizativa"
+                             label="Unidad Organizativa" [data]="unidadesOrganizativas$ | async" idField="conceptId"
+                             labelField="term" [required]="isRequired('unidadOrganizativa')">
+                </plex-select>
                 <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoDesde" name="fechaIngresoDesde"
                                label="Ingreso desde" [max]="mapaCamasService.fechaActual$ | async" [debounce]="600"
                                [required]="isRequired('fechaIngresoDesde')">
