@@ -67,6 +67,11 @@ export class ComPuntoInicioComponent implements OnInit {
     public fechaDesde;
     public fechaHasta;
     public hoy = new Date();
+    public rangoEtario: any;
+    public opcionesRangoEtario = [
+        { id: 'pediatrico', nombre: 'Pediátrico' },
+        { id: 'adultos', nombre: 'Adolescentes y Adultos' }
+    ];
 
     constructor(
         private derivacionesService: DerivacionesService,
@@ -159,6 +164,9 @@ export class ComPuntoInicioComponent implements OnInit {
         if (this.paciente) {
             query.paciente = `^${this.paciente}`;
         }
+        if (this.rangoEtario) {
+            query.rangoEtario = this.rangoEtario.id;
+        }
 
         let rangoFecha;
         let desde;
@@ -237,6 +245,7 @@ export class ComPuntoInicioComponent implements OnInit {
             this.organizacionOrigen = null;
             this.organizacionDestino = null;
             this.paciente = null;
+            this.rangoEtario = null;
             this.tabIndex = index;
             this.ocultarSidebars();
             this.cargarDerivaciones();
