@@ -362,7 +362,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
                     id: os.nombre || os.financiador,
                     label: os.nombre || os.financiador
                 })),
-                { id: 'otras', label: 'Otras' }
+                { id: 'otras', label: 'Otras' },
+                { id: 'Sin obra social', label: 'Sin obra social' }
             ];
         } else {
             this.showSelector = false;
@@ -389,6 +390,19 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
         if (event.value === 'otras') {
             this.showListado = true;
             this.numeroAfiliado = undefined;
+        } else if (event.value === 'Sin obra social') {
+            if (this.prestacion?.paciente) {
+                this.numeroAfiliado = '';
+                this.prestacion.paciente.obraSocial = <IObraSocial>{
+                    id: null,
+                    nombre: 'Sin obra social',
+                    financiador: 'Sin obra social',
+                    codigoPuco: null,
+                    numeroAfiliado: '',
+                    prepaga: false,
+                    origen: 'ANDES'
+                };
+            }
         } else {
             const nombre = event.value;
             const obraSocialSeleccionada = this.financiadoresPaciente.find(
@@ -447,7 +461,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
                     id: os.nombre || os.financiador,
                     label: os.nombre || os.financiador
                 })),
-                { id: 'otras', label: 'Otras' }
+                { id: 'otras', label: 'Otras' },
+                { id: 'Sin obra social', label: 'Sin obra social' }
             ];
 
             this.showListado = false;
