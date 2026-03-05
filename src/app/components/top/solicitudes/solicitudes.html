@@ -158,7 +158,8 @@
                             <plex-badge *ngIf="prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado"
                                         type="danger">AUTOCITADO
                             </plex-badge>
-                            <plex-badge *ngIf="prestacion.estadoActual.tipo === 'vencida'" type="danger">
+                            <plex-badge *ngIf="prestacion.estadoActual.tipo === 'vencida' || estaVencidaEnListado(prestacion)"
+                                        type="danger">
                                 VENCIDA
                             </plex-badge>
                             <plex-badge type="danger"
@@ -166,7 +167,7 @@
                                 {{prestacion.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}
                             </plex-badge>
                             <plex-badge type="{{prestacion | estadoPrestacion}}"
-                                        *ngIf="prestacion.estadoActual.tipo !== 'rechazada' && prestacion.estadoActual.tipo !== 'auditoria' && prestacion.estadoActual.tipo !== 'validada' && prestacion.estadoActual.tipo !== 'vencida'">
+                                        *ngIf="prestacion.estadoActual.tipo !== 'rechazada' && prestacion.estadoActual.tipo !== 'auditoria' && prestacion.estadoActual.tipo !== 'validada' && prestacion.estadoActual.tipo !== 'vencida' && !estaVencidaEnListado(prestacion)">
                                 {{ prestacion | estadoSolicitud}}
 
                             </plex-badge>
@@ -312,7 +313,11 @@
                             <plex-badge *ngIf="prestacion.estadoActual.tipo === 'rechazada'"
                                         type="{{prestacion | estadoPrestacion}}">
                                 CONTRARREFERIDA</plex-badge>
-                            <plex-badge *ngIf="prestacion.estadoActual.tipo !== 'rechazada' && !prestacion.solicitud.turno"
+                            <plex-badge *ngIf="prestacion.estadoActual.tipo === 'vencida' || estaVencidaEnListado(prestacion)"
+                                        type="danger">
+                                VENCIDA
+                            </plex-badge>
+                            <plex-badge *ngIf="prestacion.estadoActual.tipo !== 'rechazada' && prestacion.estadoActual.tipo !== 'vencida' && !estaVencidaEnListado(prestacion) && !prestacion.solicitud.turno"
                                         type="{{prestacion | estadoPrestacion}}">
                                 {{prestacion.estadoActual.tipo}}
                             </plex-badge>
