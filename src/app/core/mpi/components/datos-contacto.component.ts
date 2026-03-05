@@ -92,6 +92,7 @@ export class DatosContactoComponent implements OnInit {
 
     patronContactoNumerico = /^[0-9]{3,4}[0-9]{6}$/;
     patronContactoAlfabetico = /^[-\w.%+]{1,61}@[a-z]+(.[a-z]+)+$/;
+    patronContactoCelularExtranjero = /^\+[1-9][0-9]{3,14}$/;
 
 
     constructor(
@@ -167,6 +168,11 @@ export class DatosContactoComponent implements OnInit {
     contactoTelefonico(index) {
         const tipoContacto = this.paciente.contacto[index].tipo;
         return tipoContacto === 'fijo' || tipoContacto?.id === 'fijo' || tipoContacto === 'celular' || tipoContacto?.id === 'celular';
+    }
+
+    isCelularExtranjero(index) {
+        const tipoContacto = this.paciente.contacto[index].tipo;
+        return tipoContacto === 'extranjero' || tipoContacto?.id === 'extranjero';
     }
 
     public checkForm() {
