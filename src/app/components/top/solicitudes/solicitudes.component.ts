@@ -593,11 +593,9 @@ export class SolicitudesComponent implements OnInit {
                 map((resultado) => {
                     if (estadoFiltro === 'vencida') {
                         return resultado.filter(s => s.estadoActual.tipo === 'vencida' || this.estaVencidaEnListado(s));
+                    } else {
+                        return resultado.filter(s => s.estadoActual.tipo !== 'vencida' && !this.estaVencidaEnListado(s));
                     }
-                    if (estadoFiltro) {
-                        return resultado.filter(s => !this.estaVencidaEnListado(s));
-                    }
-                    return resultado;
                 })
             )
             .subscribe(resultado => {
