@@ -12,8 +12,7 @@
             <plex-tab label="DERIVACIONES ENTRANTES">
                 <plex-wrapper>
                     <plex-datetime type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Fecha desde"
-                                   class="fechas" (change)="cargarDerivaciones()" debounce="800"
-                                   [max]="maxFechaDesde">
+                                   class="fechas" (change)="cargarDerivaciones()" debounce="800" [max]="maxFechaDesde">
                     </plex-datetime>
                     <plex-datetime type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Fecha hasta"
                                    class="fechas" (change)="cargarDerivaciones()" debounce="800" [min]="minFechaHasta"
@@ -27,7 +26,13 @@
                                label="Buscar paciente" debounce="400"></plex-text>
                     <plex-select [(ngModel)]="estrategia" (change)="cargarDerivaciones()" [data]="estrategiasAtencion"
                                  name="estrategia" label="Estrategia de atención"
-                                 placeholder="Seleccione una estrategia">
+                                 placeholder="Seleccione una estrategia"></plex-select>
+
+                    <plex-select [(ngModel)]="rangoEtario" name="rangoEtario" [data]="opcionesRangoEtario"
+                                 label="Rango Etario" placeholder="Todos" (change)="cargarDerivaciones()">
+                    </plex-select>
+                    <plex-select [(ngModel)]="estado" (change)="cargarDerivaciones()" [data]="estados" name="estado"
+                                 label="Estado">
                     </plex-select>
                     <plex-select [(ngModel)]="estado" (change)="cargarDerivaciones()" [data]="estados" name="estado"
                                  label="Estado">
@@ -129,8 +134,7 @@
             <plex-tab label="DERIVACIONES SOLICITADAS">
                 <plex-wrapper>
                     <plex-datetime type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Fecha desde"
-                                   class="fechas" (change)="cargarDerivaciones()" debounce="800"
-                                   [max]="maxFechaDesde">
+                                   class="fechas" (change)="cargarDerivaciones()" debounce="800" [max]="maxFechaDesde">
                     </plex-datetime>
                     <plex-datetime type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Fecha hasta"
                                    class="fechas" (change)="cargarDerivaciones()" debounce="800" [min]="minFechaHasta"
@@ -144,7 +148,10 @@
                                label="Buscar paciente" debounce="400"></plex-text>
                     <plex-select [(ngModel)]="estrategia" (change)="cargarDerivaciones()" [data]="estrategiasAtencion"
                                  name="estrategia" label="Estrategia de atención"
-                                 placeholder="Seleccione una estrategia">
+                                 placeholder="Seleccione una estrategia"></plex-select>
+
+                    <plex-select [(ngModel)]="rangoEtario" name="rangoEtario" [data]="opcionesRangoEtario"
+                                 label="Rango Etario" placeholder="Todos" (change)="cargarDerivaciones()">
                     </plex-select>
                     <plex-select [(ngModel)]="estado" (change)="cargarDerivaciones()" [data]="estados" name="estado"
                                  label="Estado">

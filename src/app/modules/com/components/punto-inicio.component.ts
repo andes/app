@@ -79,6 +79,12 @@ export class ComPuntoInicioComponent implements OnInit {
         return this.fechaDesde ? moment(this.fechaDesde).startOf('day').toDate() : null;
     }
 
+    public rangoEtario: any;
+    public opcionesRangoEtario = [
+        { id: 'pediatrico', nombre: 'Pediátrico' },
+        { id: 'adultos', nombre: 'Adolescentes y Adultos' }
+    ];
+
     constructor(
         private derivacionesService: DerivacionesService,
         private organizacionService: OrganizacionService,
@@ -169,15 +175,21 @@ export class ComPuntoInicioComponent implements OnInit {
                 query.organizacionDestino = this.organizacionDestino.id;
             }
         }
+
         if (this.paciente) {
             query.paciente = `^${this.paciente}`;
         }
+
         if (this.estrategia) {
             if (this.estrategia.id === 'null') {
                 query.estrategiaAtencion = 'null';
             } else {
                 query.estrategiaAtencion = this.estrategia.id || this.estrategia._id;
             }
+        }
+
+        if (this.rangoEtario) {
+            query.rangoEtario = this.rangoEtario.id;
         }
 
         let rangoFecha;
@@ -255,6 +267,7 @@ export class ComPuntoInicioComponent implements OnInit {
             this.organizacionOrigen = null;
             this.organizacionDestino = null;
             this.paciente = null;
+            this.rangoEtario = null;
             this.tabIndex = index;
             this.ocultarSidebars();
             this.cargarDerivaciones();
