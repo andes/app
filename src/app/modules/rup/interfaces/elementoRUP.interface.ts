@@ -65,5 +65,6 @@ export interface IElementoRUPRequeridos {
     };
     // Indica parámetros para la instancia del elementoRUP en formato {key: value}
     params: { [key: string]: any };
+    esSolicitud?: boolean;
     sexo: string;
 }
