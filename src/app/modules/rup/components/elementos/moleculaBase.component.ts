@@ -17,6 +17,9 @@ export class MoleculaBaseComponent extends RUPComponent implements OnInit {
     ];
     public consultaTrastornoOriginal: any;
     public evoluciones;
+    public organizaciones: any[] = [];
+    public reglasMatch = [];
+    public reglaSelected = null;
 
     ngOnInit() {
         if (this.registro.concepto.semanticTag === 'trastorno') {
@@ -67,6 +70,56 @@ export class MoleculaBaseComponent extends RUPComponent implements OnInit {
             this.contentLoaded = true;
         }
         this.createRules();
+
+        if (this.elementoRUP.esSolicitud) {
+
+            if (!this.registro.valor) {
+                this.registro.valor = {
+                    solicitudPrestacion: {}
+                };
+                this.registro.valor.solicitudPrestacion['autocitado'] = false;
+                this.registro.valor.solicitudPrestacion['prestacionSolicitada'] = this.registro.concepto;
+            }
+
+            this.servicioReglas.get({
+                organizacionOrigen: this.auth.organizacion.id,
+                prestacionOrigen: this.prestacion?.solicitud?.tipoPrestacion.conceptId,
+                prestacionDestino: this.registro.concepto?.conceptId
+            }).subscribe(reglas => {
+                this.reglasMatch = reglas;
+                this.organizaciones = reglas.map(elem => {
+                    return {
+                        id: elem.destino.organizacion.id,
+                        nombre: elem.destino.organizacion.nombre
+                    };
+                });
+
+                if (this.organizaciones.length === 1) {
+                    this.registro.valor.solicitudPrestacion.organizacionDestino = this.organizaciones[0];
+                    this.onOrganizacionChange();
+                }
+            });
+        }
+    }
+
+    onOrganizacionChange() {
+        const org = this.registro.valor.solicitudPrestacion.organizacionDestino;
+        if (org) {
+            this.reglaSelected = this.reglasMatch.find(r => r.destino.organizacion.id === org.id);
+
+            if (this.reglaSelected) {
+                this.reglaSelected.destino.informe = this.reglaSelected.destino.informe || 'none';
+
+                if (this.reglaSelected.destino.informe === 'required') {
+                    this.registro.valor.solicitudPrestacion.informe = true;
+                }
+
+                this.registro.valor.solicitudPrestacion.reglaID = this.reglaSelected.id;
+                if (this.reglaSelected.destino.formulario) {
+                    this.registro.valor.template = this.reglaSelected.destino.formulario;
+                }
+            }
+        }
     }
 
     onChange(value) {
