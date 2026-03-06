@@ -33,6 +33,7 @@ import { ConceptObserverService } from './../../services/conceptObserver.service
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { RecetaService } from '../../../../services/receta.service';
+import { InsumosService } from 'src/app/services/insumos.service';
 import { ECLQueriesService } from './../../../../services/eclqueries.service';
 import { ObraSocialService } from 'src/app/services/obraSocial.service';
 
@@ -161,8 +162,10 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
         public constantesService: ConstantesService,
         public recetasService: RecetaService,
         public obraSocialService: ObraSocialService,
+        public insumosService: InsumosService,
         @Optional() public ejecucionService: RupEjecucionService,
-        public eclqueriesServicies: ECLQueriesService
+        public eclqueriesServicies: ECLQueriesService,
+        public recetaService: RecetaService
     ) {
     }
 
