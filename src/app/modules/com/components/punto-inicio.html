@@ -23,6 +23,9 @@
                     </plex-select>
                     <plex-text [(ngModel)]="paciente" name="paciente" (change)="cargarDerivaciones()"
                         label="Buscar paciente" debounce="400"></plex-text>
+                    <plex-select [(ngModel)]="rangoEtario" name="rangoEtario" [data]="opcionesRangoEtario"
+                        label="Rango Etario" placeholder="Todos" (change)="cargarDerivaciones()">
+                    </plex-select>
                     <plex-select [(ngModel)]="estado" (change)="cargarDerivaciones()" [data]="estados" name="estado"
                         label="Estado">
                     </plex-select>
@@ -134,6 +137,9 @@
                     </plex-select>
                     <plex-text [(ngModel)]="paciente" name="paciente" (change)="cargarDerivaciones()"
                         label="Buscar paciente" debounce="400"></plex-text>
+                    <plex-select [(ngModel)]="rangoEtario" name="rangoEtario" [data]="opcionesRangoEtario"
+                        label="Rango Etario" placeholder="Todos" (change)="cargarDerivaciones()">
+                    </plex-select>
                     <plex-select [(ngModel)]="estado" (change)="cargarDerivaciones()" [data]="estados" name="estado"
                         label="Estado">
                     </plex-select>
@@ -197,11 +203,11 @@
                                         <div>
                                             <plex-label *ngIf="derivacion.prioridad && esCOM"
                                                 titulo="{{ derivacion.paciente | nombre }}"
-                                                subtitulo="{{ derivacion | documento }}">
+                                                subtitulo="{{ derivacion.paciente | documento }}">
                                             </plex-label>
                                             <plex-label *ngIf="!esCOM || !derivacion.prioridad"
                                                 titulo="{{ derivacion.paciente | nombre }}"
-                                                subtitulo="{{ derivacion | documento }}">
+                                                subtitulo="{{ derivacion.paciente | documento }}">
                                             </plex-label>
                                         </div>
                                         <plex-button *ngIf="derivacion.estado === 'solicitada'" type="danger" size="sm"
