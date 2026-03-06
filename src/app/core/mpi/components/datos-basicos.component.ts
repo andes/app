@@ -56,24 +56,8 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     showBuscador = true;
     searchClear = true;
     relacionBebe: IPacienteRelacion = {
-        id: null,
-        relacion: {
-            id: '',
-            nombre: '',
-            opuesto: ''
-        },
-        referencia: '',
-        nombre: '',
-        alias: '',
-        genero: '',
-        numeroIdentificacion: '',
-        apellido: '',
-        documento: '',
-        fechaNacimiento: null,
-        fechaFallecimiento: null,
-        sexo: '',
-        foto: null,
-        fotoId: null
+        relacion: null,
+        referencia: null
     };
     pacienteFallecido: any;
     fechaFallecimientoTemporal: Date = null;
@@ -292,23 +276,10 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
         if (pacienteSelected) {
             this.pacienteService.getById(pacienteSelected.id).subscribe(paciente => {
                 // Relacionamos al bebe con su progenitor/a
-                this.relacionBebe.apellido = paciente.apellido;
-                this.relacionBebe.nombre = paciente.nombre;
-                this.relacionBebe.alias = paciente.alias;
-                this.relacionBebe.genero = paciente.genero;
-                this.relacionBebe.documento = paciente.documento;
-                this.relacionBebe.numeroIdentificacion = paciente.numeroIdentificacion;
-                this.relacionBebe.fechaNacimiento = paciente.fechaNacimiento;
-                this.relacionBebe.fechaFallecimiento = paciente.fechaFallecimiento;
-                this.relacionBebe.sexo = paciente.sexo;
-                this.relacionBebe.fotoId = paciente.fotoId ? paciente.fotoId : null;
-                this.relacionBebe.referencia = paciente.id;
-                const rel = this.parentescoModel.find((elem) => {
-                    if (elem.nombre === 'progenitor/a') {
-                        return elem;
-                    }
-                });
-                this.relacionBebe.relacion = rel;
+                this.relacionBebe = {
+                    referencia: paciente,
+                    relacion: this.parentescoModel.find(elem => elem.nombre === 'progenitor/a')
+                };
                 this.paciente.relaciones = [this.relacionBebe];
 
                 /* Si no se cargó ninguna dirección, tomamos el dato de la madre/padre/tutor */

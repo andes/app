@@ -160,14 +160,16 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     private doRelaciones() {
         if (this.paciente?.relaciones?.length) {
             this.relaciones = this.paciente.relaciones.map(rel => {
+                const referencia = rel.referencia;
+                const isPopulated = referencia?.id || referencia?._id;
                 return {
-                    id: rel.referencia,
-                    apellido: rel.apellido,
-                    nombre: rel.nombre,
-                    documento: rel.documento,
-                    numeroIdentificacion: rel.numeroIdentificacion,
+                    id: isPopulated ? (referencia.id || referencia._id) : referencia,
+                    apellido: isPopulated ? referencia.apellido : (rel as any).apellido,
+                    nombre: isPopulated ? referencia.nombre : (rel as any).nombre,
+                    documento: isPopulated ? referencia.documento : (rel as any).documento,
+                    numeroIdentificacion: isPopulated ? referencia.numeroIdentificacion : (rel as any).numeroIdentificacion,
                     parentesco: (rel.relacion) ? rel.relacion.nombre : 'Relación S/D',
-                    fotoId: rel.fotoId
+                    fotoId: isPopulated ? referencia.fotoId : (rel as any).fotoId
                 };
             });
         } else {
