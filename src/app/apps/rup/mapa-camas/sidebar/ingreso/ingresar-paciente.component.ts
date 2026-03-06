@@ -25,6 +25,7 @@ import { cache } from '@andes/shared';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 import { ListadoInternacionCapasService } from '../../views/listado-internacion-capas/listado-internacion-capas.service';
 import { IObraSocial } from 'src/app/interfaces/IObraSocial';
+import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -94,6 +95,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     private subscription2: Subscription;
     public selectedOS = false;
     public financiador;
+    public edicionFinanciador = false;
     public selectorFinanciadores: IObraSocial[] = [];
     public obrasSociales: IObraSocial[] = [];
     public OSPrivada = false;
@@ -107,6 +109,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         private organizacionService: OrganizacionService,
         private servicioPrestacion: PrestacionesService,
         public mapaCamasService: MapaCamasService,
+        private camasHTTP: MapaCamasHTTP,
         private listadoInternacionService: ListadoInternacionService,
         private historialInternacionService: ListadoInternacionCapasService,
         private auth: Auth,
@@ -627,6 +630,13 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         } else {
             this.crearPrestacion(paciente);
         }
+        if (this.edicionFinanciador) {
+            if (!this.cama.extras) {
+                this.cama.extras = {};
+            }
+            this.cama.extras.edicionFinanciador = true;
+            this.camasHTTP.updateEstados(this.mapaCamasService.ambito, this.capa, this.informeIngreso.fechaIngreso, this.cama).subscribe();
+        }
     }
 
     actualizarPrestacion(paciente) {
@@ -895,5 +905,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 financiador: financiadorSeleccionado.financiador
             };
         }
+        this.edicionFinanciador =true;
     }
 }
