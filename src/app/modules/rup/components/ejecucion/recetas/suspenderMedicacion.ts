@@ -1,5 +1,5 @@
 import { Plex } from '@andes/plex';
-import { Component, EventEmitter, Input, Output, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectorRef, AfterViewChecked, ViewChild, OnInit } from '@angular/core';
 import { RecetaService } from 'src/app/services/receta.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { RecetaService } from 'src/app/services/receta.service';
     styleUrls: ['suspenderMedicacion.scss']
 })
 
-export class SuspenderMedicacionComponent implements AfterViewChecked {
+export class SuspenderMedicacionComponent implements AfterViewChecked, OnInit {
     constructor(
         public plex: Plex,
         private recetasService: RecetaService,
@@ -23,6 +23,14 @@ export class SuspenderMedicacionComponent implements AfterViewChecked {
 
     public motivoSelector: any;
     public observacion: string;
+
+    @ViewChild('modal', { static: true }) modal: any;
+
+    ngOnInit() {
+        if (this.modal) {
+            setTimeout(() => this.modal.show());
+        }
+    }
 
     get groupedMedicamentos() {
         if (!this.seleccionRecetas || !Array.isArray(this.seleccionRecetas)) {
@@ -50,8 +58,12 @@ export class SuspenderMedicacionComponent implements AfterViewChecked {
             return;
         }
 
+        const count = this.seleccionRecetas.length;
         const medicamento = this.seleccionRecetas[0]?.medicamento?.concepto?.term || 'medicamento';
-        this.plex.confirm(`¿Está seguro que desea suspender ${this.seleccionRecetas.length > 1 ? `las (${this.seleccionRecetas.length}) medicaciones seleccionadas` : `<br><b>"${medicamento}"</b>`}?`, 'Atención').then(confirmacion => {
+        const msg = count === 1
+            ? `¿Está seguro que desea suspender <br><b>"${medicamento}"</b>?`
+            : `¿Está seguro que desea suspender las <b>${count} medicaciones seleccionadas</b>?`;
+        this.plex.confirm(msg, 'Atención').then(confirmacion => {
             const recetasASuspender = this.filtrarRecetasUnicas(this.seleccionRecetas);
             if (confirmacion && recetasASuspender.length > 0) {
                 let completadas = 0;
@@ -64,6 +76,7 @@ export class SuspenderMedicacionComponent implements AfterViewChecked {
                             completadas++;
                             if (completadas + errores === total) {
                                 this.reset.emit();
+                                if (this.modal) {this.modal.close();}
                                 if (errores === 0) {
                                     this.plex.toast('success', 'Medicaciones suspendidas correctamente');
                                 } else {
@@ -95,6 +108,13 @@ export class SuspenderMedicacionComponent implements AfterViewChecked {
             seen.add(key);
             return true;
         });
+    }
+
+    cancelar() {
+        if (this.modal) {
+            this.modal.close();
+        }
+        this.reset.emit();
     }
 
     ngAfterViewChecked() {

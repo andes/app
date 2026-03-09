@@ -29,6 +29,10 @@ export class RecetaService {
         return this.server.patch(`${this.url}`, { op: 'suspender', recetaId, motivo, observacion, profesional });
     }
 
+    renovar(recetasIds: string[], profesional: any, organizacion: any) {
+        return this.server.post(`${this.url}/renovar`, { recetasIds, profesional, organizacion });
+    }
+
     getRecetaPrincipal(recetas) {
         if (recetas.length === 1) {
             return recetas[0];
