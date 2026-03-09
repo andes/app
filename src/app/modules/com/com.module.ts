@@ -23,7 +23,7 @@ import { HistorialDerivacionComponent } from './components/historial-derivacion.
 import { NuevaDerivacionComponent } from './components/nueva-derivacion/nueva-derivacion.component';
 import { ComPuntoInicioComponent } from './components/punto-inicio.component';
 import { TipoTrasladoComponent } from './components/tipo-traslado/tipo-traslado';
-import { PuntoInicioService } from './services/punto-inicio.service';
+import { PuntoInicioService } from 'src/app/services/puntoInicio/punto-inicio.service';
 
 
 export const COM_COMPONENTS = [
