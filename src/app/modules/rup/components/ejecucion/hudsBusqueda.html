@@ -21,22 +21,43 @@
         </div>
     </div>
     <div class="menu-titulo mt-1">
+        <ng-container *ngIf="!mostrarConfirmacion">
+            <h6 class="titulo-filtro {{filtroActual}}">{{ getTitulo(filtroActual) | uppercase }}</h6>
 
-        <h6 class="titulo-filtro {{filtroActual}}">{{ getTitulo(filtroActual) | uppercase }}</h6>
+            <div *ngIf="filtroActual === 'laboratorios'" justify="end">
+                <plex-button class="mr-1" icon="refresh" type="primary" size="sm" tooltip="Actualizar listado"
+                    [autodisabled]="true" (click)="refreshLaboratorios(token)">
+                </plex-button>
+                <plex-button icon="database-search" type="success" size="sm" tooltipPosition="left"
+                    tooltip="Buscar nuevos registros" [disabled]="disabledBtnCDA" (click)="regenerarCDA()">
+                </plex-button>
+            </div>
 
-        <div *ngIf="filtroActual === 'laboratorios'" justify="end">
-            <plex-button class="mr-1" icon="refresh" type="primary" size="sm" tooltip="Actualizar listado"
-                [autodisabled]="true" (click)="refreshLaboratorios(token)">
-            </plex-button>
-            <plex-button icon="database-search" type="success" size="sm" tooltipPosition="left"
-                tooltip="Buscar nuevos registros" [disabled]="disabledBtnCDA" (click)="regenerarCDA()">
-            </plex-button>
-        </div>
-
-        <suspender-medicacion *ngIf="filtroActual==='recetas' && seleccionRecetas.length > 0"
-            [seleccionRecetas]="seleccionSuspender" [motivoSelector]="motivoSuspensionSelector"
-            [motivosSuspension]="motivosSuspension" [profesional]="profesional" (reset)="resetSeleccionRecetas()">
-        </suspender-medicacion>
+            <div *ngIf="filtroActual === 'recetas'" class="d-flex w-100 justify-content-end mb-1">
+                <ng-container *ngIf="!accionRecetas">
+                    <plex-button type="info" size="sm" class="mr-1" [class.active]="accionRecetas === 'renovar'"
+                        (click)="setAccionRecetas('renovar')">
+                        <plex-icon name="refresh"></plex-icon> Renovar
+                    </plex-button>
+                    <plex-button type="danger" size="sm" [class.active]="accionRecetas === 'suspender'"
+                        (click)="setAccionRecetas('suspender')">
+                        <plex-icon name="stop"></plex-icon> Suspender
+                    </plex-button>
+                </ng-container>
+                <ng-container *ngIf="accionRecetas">
+                    <renovar-medicacion *ngIf="accionRecetas === 'renovar' && seleccionBotonesAccion.length > 0"
+                        [seleccionRecetas]="seleccionBotonesAccion" [profesional]="profesional"
+                        (reset)="setAccionRecetas(null)"></renovar-medicacion>
+                    <suspender-medicacion *ngIf="accionRecetas === 'suspender' && seleccionBotonesAccion.length > 0"
+                        [seleccionRecetas]="seleccionBotonesAccion" [motivoSelector]="motivoSuspensionSelector"
+                        [motivosSuspension]="motivosSuspension" [profesional]="profesional"
+                        (reset)="setAccionRecetas(null)"></suspender-medicacion>
+                    <plex-button type="danger" size="sm" class="ml-1" (click)="setAccionRecetas(null)">
+                        <plex-icon name="arrow-left"></plex-icon>
+                    </plex-button>
+                </ng-container>
+            </div>
+        </ng-container>
     </div>
     <div class="grow" *ngIf="filtroActual === 'planes'">
         <plex-options class="filtros-ambitos" (activated)='setAmbitoOrigen($event)' [items]="filtrosAmbitos">
@@ -75,67 +96,73 @@
             <ul *ngIf="busquedaRecetas.length" class="hover listado list-unstyled">
                 <ng-container *ngFor="let grupo of busquedaRecetas; let iReceta = index">
                     <li>
-                        <plex-bool [readonly]="!esRecetaSeleccionable(grupo?.recetaVisible)"
+                        <plex-bool *ngIf="accionRecetas"
+                            [readonly]="!esRecetaSeleccionable(grupo?.recetaVisible)"
                             [ngModel]="seleccionRecetas[iReceta]" name="seleccionada" type="checkbox"
                             (change)="seleccionarReceta($event, grupo.recetas, iReceta)">
                         </plex-bool>
-                        <div class="total">
-                            <div class="row vista-badges"
-                                *ngIf="grupo.recetaVisible?.medicamento?.tratamientoProlongado">
-                                <span class="pl-2 pr-2 mr-3 upTag" [ngClass]="{'active': huds.isOpen(grupo, 'receta')}">
-                                    Tratamiento prolongado: {{ (grupo.recetaVisible?.medicamento?.ordenTratamiento !==
-                                    null && grupo.recetaVisible?.medicamento?.ordenTratamiento !== undefined) ?
-                                    (grupo.recetaVisible.medicamento.ordenTratamiento + 1) : 0 }} de
-                                    {{grupo.recetaVisible?.medicamento.tiempoTratamiento?.id}}</span>
-                            </div>
-                            <div class="rup-card mini recetas total"
-                                [ngClass]="{'active': huds.isOpen(grupo, 'receta')}"
-                                (click)="emitTabs(grupo, 'receta', iReceta)">
-                                <div class="rup-header">
-                                    <div class="rup-border rup-border-recetas"
+                            <div class="total">
+                                <div class="row vista-badges"
+                                    *ngIf="grupo.recetaVisible?.medicamento?.tratamientoProlongado">
+                                    <span class="pl-2 pr-2 mr-3 upTag"
                                         [ngClass]="{'active': huds.isOpen(grupo, 'receta')}">
-                                        <div class="row p-0 m-0 border-secondary border-left-0">
-                                            <div class="col-9 p-0 m-0">
-                                                <div class="row m-0 p-0">
-                                                    <div class="col-2 icon-rup drag-handle">
-                                                        <i class="adi adi-listado-receta"></i>
-                                                    </div>
-                                                    <div class="col p-0 pl-2 float-left">
-                                                        <div class="row p-0 m-0 titulo">
-                                                            {{ grupo.recetas[0].medicamento.concepto.term }}</div>
-                                                        <div class="row p-0 m-0">
-                                                            <div class="col-10 p-0 m-0">
-                                                                <div class="sugerido">
-                                                                    <small>Fecha de Registro:
-                                                                        {{ grupo.recetaVisible?.fechaRegistro |
-                                                                        date:'short' }}
-                                                                    </small>
-                                                                    <br>
-                                                                    <small>Profesional: {{
-                                                                        grupo.recetaVisible?.profesional.nombre }} {{
-                                                                        grupo.recetaVisible?.profesional.apellido }}
-                                                                    </small>
+                                        Tratamiento prolongado: {{ (grupo.recetaVisible?.medicamento?.ordenTratamiento
+                                        !==
+                                        null && grupo.recetaVisible?.medicamento?.ordenTratamiento !== undefined) ?
+                                        (grupo.recetaVisible.medicamento.ordenTratamiento + 1) : 0 }} de
+                                        {{grupo.recetaVisible?.medicamento.tiempoTratamiento?.id}}</span>
+                                </div>
+                                <div class="rup-card mini recetas total"
+                                    [ngClass]="{'active': huds.isOpen(grupo, 'receta')}"
+                                    (click)="emitTabs(grupo, 'receta', iReceta)">
+                                    <div class="rup-header">
+                                        <div class="rup-border rup-border-recetas"
+                                            [ngClass]="{'active': huds.isOpen(grupo, 'receta')}">
+                                            <div class="row p-0 m-0 border-secondary border-left-0">
+                                                <div class="col-9 p-0 m-0">
+                                                    <div class="row m-0 p-0">
+                                                        <div class="col-2 icon-rup drag-handle">
+                                                            <i class="adi adi-listado-receta"></i>
+                                                        </div>
+                                                        <div class="col p-0 pl-2 float-left">
+                                                            <div class="row p-0 m-0 titulo">
+                                                                {{ grupo.recetas[0].medicamento.concepto.term }}</div>
+                                                            <div class="row p-0 m-0">
+                                                                <div class="col-10 p-0 m-0">
+                                                                    <div class="sugerido">
+                                                                        <small>Fecha de Registro:
+                                                                            {{ grupo.recetaVisible?.fechaRegistro |
+                                                                            date:'short' }}
+                                                                        </small>
+                                                                        <br>
+                                                                        <small>Profesional: {{
+                                                                            grupo.recetaVisible?.profesional.nombre }}
+                                                                            {{
+                                                                            grupo.recetaVisible?.profesional.apellido }}
+                                                                        </small>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-3 p-0 m-0">
-                                                <div class="p-0 pt-1 pr-1 float-right">
-                                                    <div class="vista-badges">
-                                                        <plex-badge size="sm"
-                                                            [type]="estadoReceta[grupo.recetaVisible?.estadoActual.tipo]">
-                                                            {{ grupo.recetaVisible?.estadoActual?.tipo.replace('-', ' ')
-                                                            }}
-                                                        </plex-badge>
-                                                        <plex-badge size="sm"
-                                                            [type]="estadoDispensa[grupo.recetaVisible?.estadoDispensaActual.tipo]">
-                                                            {{
-                                                            grupo.recetaVisible?.estadoDispensaActual?.tipo.replace('-',
-                                                            ' ')
-                                                            }}
-                                                        </plex-badge>
+                                                <div class="col-3 p-0 m-0">
+                                                    <div class="p-0 pt-1 pr-1 float-right">
+                                                        <div class="vista-badges">
+                                                            <plex-badge size="sm"
+                                                                [type]="estadoReceta[grupo.recetaVisible?.estadoActual.tipo]">
+                                                                {{ grupo.recetaVisible?.estadoActual?.tipo.replace('-',
+                                                                ' ')
+                                                                }}
+                                                            </plex-badge>
+                                                            <plex-badge size="sm"
+                                                                [type]="estadoDispensa[grupo.recetaVisible?.estadoDispensaActual.tipo]">
+                                                                {{
+                                                                grupo.recetaVisible?.estadoDispensaActual?.tipo.replace('-',
+                                                                ' ')
+                                                                }}
+                                                            </plex-badge>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -143,7 +170,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
                     </li>
                 </ng-container>
             </ul>
@@ -215,16 +241,16 @@
                                             <div class="p-0 pt-1 pr-1 float-right">
                                                 <plex-badge *ngIf="registro.estadoActual" size="sm"
                                                     [type]="estadoRegistro(registro.estadoActual?.tipo)">
-                                                    {{ registro.estadoActual.tipo }}
-                                                    <plex-button *ngIf='registro.evoluciones' size="sm" type="info"
-                                                        icon="information-outline" title="Registrado por profesional"
-                                                        titlePosition="left">
-                                                    </plex-button>
-                                                    <plex-button *ngIf='!registro.evoluciones' size="sm" type="info"
-                                                        icon="information-outline" title="Registrado por gestión"
-                                                        titlePosition="left">
-                                                    </plex-button>
-                                                </plex-badge>
+                                                        {{ registro.estadoActual.tipo }}
+                                                        <plex-button *ngIf='registro.evoluciones' size="sm" type="info"
+                                                            icon="information-outline"
+                                                            title="Registrado por profesional" titlePosition="left">
+                                                        </plex-button>
+                                                        <plex-button *ngIf='!registro.evoluciones' size="sm" type="info"
+                                                            icon="information-outline" title="Registrado por gestión"
+                                                            titlePosition="left">
+                                                        </plex-button>
+                                                    </plex-badge>
                                             </div>
                                         </div>
                                     </div>
@@ -883,11 +909,11 @@
                 <ng-container *ngFor="let registro of derivaciones; let iDerivacion = index">
                     <li>
                         <div class="rup-card mini recc"
-                             [ngClass]="{'active': huds.isOpen(registro, 'recc'), 'recc': true}"
-                             (click)="clickDerivacion(registro, iDerivacion)">
+                            [ngClass]="{'active': huds.isOpen(registro, 'recc'), 'recc': true}"
+                            (click)="clickDerivacion(registro, iDerivacion)">
                             <div class="rup-header">
                                 <div class="rup-border rup-border-recc"
-                                     [ngClass]="{'active': huds.isOpen(registro, 'recc') , 'rup-border-recc': true}">
+                                    [ngClass]="{'active': huds.isOpen(registro, 'recc') , 'rup-border-recc': true}">
                                     <div class="row p-0 m-0 border-secondary border-left-0">
                                         <div class="col-10 p-0 m-0">
                                             <div class="row m-0 p-0">
@@ -908,12 +934,12 @@
                                                                 <br>
                                                                 <small>Profesional:
                                                                     <ng-container
-                                                                                  *ngIf='registro.profesionalSolicitante'>
+                                                                        *ngIf='registro.profesionalSolicitante'>
                                                                         {{ registro.profesionalSolicitante |
                                                                         nombre }}
                                                                     </ng-container>
                                                                     <ng-container
-                                                                                  *ngIf='!registro.profesionalSolicitante'>
+                                                                        *ngIf='!registro.profesionalSolicitante'>
                                                                         No existe
                                                                     </ng-container>
                                                                 </small>
@@ -934,7 +960,7 @@
                 <hr class="mt-0">
                 <div class="item-lista-vacia">
                     <plex-label size="sm" justify="center" icon="adi adi-mano-corazon"
-                                titulo="No hay derivaciones registradas">
+                        titulo="No hay derivaciones registradas">
                     </plex-label>
                 </div>
             </div>
