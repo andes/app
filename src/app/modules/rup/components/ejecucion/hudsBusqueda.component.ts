@@ -118,7 +118,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         elementoderegistro: ['elemento de registro'],
         laboratorios: ['laboratorios'],
         vacunas: ['vacunas'],
-        com: ['com']
+        recc: ['recc']
     };
     public prestacionesTotales;
     public registrosTotales = {
@@ -167,7 +167,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         { key: 'producto', titulo: 'productos', icono: 'pildoras' },
         { key: 'laboratorios', titulo: 'laboratorios', icono: 'recipiente' },
         { key: 'vacunas', titulo: 'vacunas', icono: 'vacuna' },
-        { key: 'com', titulo: 'com', icono: 'account-switch' }
+        { key: 'recc', titulo: 'recc', icono: 'account-switch' }
     ];
 
     public estadoReceta = {
@@ -408,10 +408,10 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 registro.tipo = 'solicitud';
                 registro.class = 'plan';
                 break;
-            case 'com':
+            case 'recc':
                 gtag('huds-open', tipo, registro.organizacionOrigen.nombre, index);
                 registro = registro;
-                registro.class = 'com';
+                registro.class = 'recc';
                 break;
             case 'ficha-epidemiologica':
                 gtag('huds-open', tipo, registro.prestacion.term, index);
@@ -748,7 +748,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 return this.laboratorios.length;
             case 'vacunas':
                 return this.vacunas.length;
-            case 'com':
+            case 'recc':
                 return this.derivaciones.length;
             case 'solicitudes':
                 return this.solicitudesMezcladas.length;
@@ -912,7 +912,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     }
 
     clickDerivacion(registro, index) {
-        this.emitTabs(registro, 'com', index);
+        this.emitTabs(registro, 'recc', index);
     }
 
     normalizarCadena(cadena) {

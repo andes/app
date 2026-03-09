@@ -98,8 +98,8 @@
                         <vista-cda [registro]="registro"></vista-cda>
                     </plex-tab>
 
-                    <plex-tab *ngIf="registro.tipo === 'com'" [allowClose]="true" label="COM" [class]="registro.class"
-                              color="com">
+                    <plex-tab *ngIf="registro.tipo === 'recc'" [allowClose]="true" label="recc" [class]="registro.class"
+                              color="recc">
                         <vista-derivacion [registro]="registro.data"></vista-derivacion>
                     </plex-tab>
 
