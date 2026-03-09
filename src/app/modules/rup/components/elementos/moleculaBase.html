@@ -1,3 +1,6 @@
+<div *ngIf="mostrarTituloSubmolecula" class="rup-submolecula-titulo mb-2">
+    <plex-title [titulo]="registro.nombre || registro.concepto.term" size="sm" [tituloBold]="true"></plex-title>
+</div>
 <ng-container *ngIf="registro.concepto.semanticTag === 'trastorno'">
     <form #form="ngForm" *ngIf="paciente">
         <div *ngIf="elementoRUP && registro">
