@@ -132,8 +132,8 @@
             @include card-estilo($vacuna);
         }
 
-        .com {
-            @include card-estilo($com);
+        .recc {
+            @include card-estilo($recc);
         }
 
         .dominios {
@@ -290,8 +290,8 @@
         color: $vacuna
     }
 
-    &.com {
-        color: $com
+    &.recc {
+        color: $recc
     }
 
     &.dominios {

@@ -22,7 +22,7 @@ export class VistaDerivacionComponent implements OnInit {
     public requestInProgress: boolean;
     public adjuntosUrl = [];
     fileToken: string = null;
-    historialDerivaciones = [];
+    fechaAceptada: string;
 
     constructor(
         public servicioTurnos: TurnoService,
@@ -44,9 +44,8 @@ export class VistaDerivacionComponent implements OnInit {
         this.organizacionOrigen = this.organizacionService.getById(this.registro.organizacionOrigen.id).subscribe(organizacion => {
             this.organizacionOrigen = organizacion;
 
-            this.historialDerivaciones = this.getHistorialDerivacion(this.organizacionOrigen, this.registro);
+            this.fechaAceptada = this.getFechaAceptada(this.registro);
         });
-
     }
 
     abrirSolicitud() {
@@ -60,19 +59,10 @@ export class VistaDerivacionComponent implements OnInit {
         this.documentosService.descargarHistorialDerivacion(this.registro._id, this.registro.paciente.apellido).subscribe(foo, foo);
     }
 
-    getHistorialDerivacion2() {
-        this.registro.historial.shift();
-        const organizacion = this.registro.organizacionOrigen;
-        let historial = organizacion.esCOM ? this.registro.historial : this.registro.historial.filter((h) => h.createdBy.organizacion.id === organizacion.id);
-        historial = historial.filter(h => !h.eliminado);
-        historial.forEach(h => {
-            h.fechaCreacion = moment(h.createdAt).locale('es').format('DD/MM/YYYY HH:mm');
-            h.reporteCOM = organizacion.esCOM;
-            h.esActualizacion = !h?.estado;
-        });
-        return historial.sort((a, b) => b.createdAt - a.createdAt);
+    getFechaAceptada(derivacion) {
+        const aceptada = derivacion.historial.find(h => h.estado === 'aceptada');
+        return aceptada ? aceptada.createdAt : null;
     }
-
     getHistorialDerivacion(organizacion, derivacion) {
         derivacion.historial.shift();
         let historial = organizacion.esCOM ? derivacion.historial : derivacion.historial.filter((h) => h.createdBy.organizacion.id === organizacion.id);
