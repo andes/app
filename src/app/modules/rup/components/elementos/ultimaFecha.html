@@ -4,9 +4,15 @@
             <plex-datetime *ngIf="!soloValores" [(ngModel)]="registro.valor" [label]="params.title ? params.title : registro.concepto.term" name="DateFormat" [type]="params.type ? params.type : 'date'"
                     placeholder="DD/MM/AAAA" (change)="onChange()"  [required]="params.required ? params.required : false" [min]="min" [max]="max">
             </plex-datetime>
-            <p *ngIf="soloValores && registro.valor" class="readonly">
-                <span>{{registro.concepto.term}}</span> {{DateFormat}}
-            </p>
+            <ng-template *ngIf="soloValores && registro.valor">
+                <div *ngIf="params?.title; else showTerm">
+                    <label class="text-capitalize">{{ params.title }}</label>
+                </div>
+                <ng-template #showTerm>
+                    <label class="text-capitalize">{{ registro.concepto.term }}</label>
+                </ng-template>
+                {{DateFormat}}
+            </ng-template>
             <p *ngIf="soloValores && !registro.valor" class="readonly">
                 <span>{{registro.concepto.term}}</span> sin valor
             </p>

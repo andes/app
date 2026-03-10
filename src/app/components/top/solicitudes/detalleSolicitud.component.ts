@@ -53,7 +53,6 @@ export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
     ) { }
 
     fotos: any[] = [];
-
     ngOnChanges(changes: SimpleChanges) {
         if (!changes.prestacionSeleccionada || !this.prestacionSeleccionada) {
             return;
@@ -95,6 +94,23 @@ export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
             });
         }
     }
+
+    private buildItems() {
+        const base = [
+            { key: 'solicitud', label: 'SOLICITUD' },
+            { key: 'historial', label: 'HISTORIAL' },
+            { key: 'turnos', label: 'TURNOS' }
+        ];
+
+        // Ejemplo de condición: agregar 'turnos' solo si se cumple permisoDetalle
+        // o si el tipo de solicitud es un valor específico. Ajusta aquí.
+        if (this.permisoDetalle) {
+            base.splice(1, 0, { key: 'pedido', label: 'PEDIDO' });
+        }
+
+        this.items = base;
+    }
+
 
     cambiarOpcion(opcion) {
         this.mostrar = opcion;
