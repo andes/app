@@ -1,6 +1,7 @@
 import { Input, Component, SimpleChanges, OnChanges, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'detalle-solicitud',
@@ -20,24 +21,23 @@ export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
 
     public internacion = null;
     public organizacionInternacion;
+    public permisoDetalle = false;
 
-    public items = [
-        { key: 'solicitud', label: 'SOLICITUD' },
-        { key: 'historial', label: 'HISTORIAL' },
-        { key: 'turnos', label: 'TURNOS' }
-    ];
+    public items = [];
+
     public mostrar = 'solicitud';
     public verIndicaciones = false;
 
     constructor(
         public adjuntosService: AdjuntosService,
-        private pacienteService: PacienteService
+        private pacienteService: PacienteService,
+        private auth: Auth
     ) { }
 
     fotos: any[] = [];
-
     ngOnChanges(changes: SimpleChanges) {
         if (changes.prestacionSeleccionada) {
+            this.permisoDetalle = this.auth.check('solicitudes:verDetalles');
             this.adjuntosService.token$.subscribe((payload) => {
                 const { token } = payload;
                 const solicitudRegistros = this.prestacionSeleccionada.solicitud.registros;
@@ -58,8 +58,26 @@ export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
                     this.internacionPaciente.emit(this.internacion);
                 });
             }
+            this.buildItems();
         }
     }
+
+    private buildItems() {
+        const base = [
+            { key: 'solicitud', label: 'SOLICITUD' },
+            { key: 'historial', label: 'HISTORIAL' },
+            { key: 'turnos', label: 'TURNOS' }
+        ];
+
+        // Ejemplo de condición: agregar 'turnos' solo si se cumple permisoDetalle
+        // o si el tipo de solicitud es un valor específico. Ajusta aquí.
+        if (this.permisoDetalle) {
+            base.splice(1, 0, { key: 'pedido', label: 'PEDIDO' });
+        }
+
+        this.items = base;
+    }
+
 
     cambiarOpcion(opcion) {
         this.mostrar = opcion;

@@ -14,13 +14,16 @@ import { TurnosSolicitudComponent } from './solicitudes/turnosSolicitud.componen
 import { VisualizacionReglasTopComponent } from './reglas/visualizacionReglasTop.component';
 import { RouterService } from 'src/app/services/router.service';
 import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
+import { DetallePedidoComponent } from './solicitudes/detallePedido.component';
+import { ElementosRUPModule } from 'src/app/modules/rup/elementos-rup.module';
 
 export const TOP_COMPONENTS = [
     VisualizacionReglasTopComponent,
     VisualizacionReglasComponent,
     HistorialSolicitudComponent,
     FormNuevaSolicitudComponent,
-    TurnosSolicitudComponent
+    TurnosSolicitudComponent,
+    DetallePedidoComponent
 ];
 
 export const TOP_PROVIDERS = [
@@ -35,13 +38,15 @@ export const TOP_PROVIDERS = [
         RouterModule,
         HttpClientModule,
         SharedModule,
-        DirectiveLibModule
+        DirectiveLibModule,
+        ElementosRUPModule
     ],
     declarations: [
         ...TOP_COMPONENTS
     ],
     providers: [
         MotivosHudsService,
+
         ...TOP_PROVIDERS
     ],
     exports: [
@@ -49,7 +54,8 @@ export const TOP_PROVIDERS = [
         VisualizacionReglasComponent,
         HistorialSolicitudComponent,
         FormNuevaSolicitudComponent,
-        TurnosSolicitudComponent
+        TurnosSolicitudComponent,
+        DetallePedidoComponent
     ],
 })
 export class TOPLibModule {
