@@ -17,9 +17,8 @@
                 <plex-datetime type="date" [(ngModel)]="fechaVencimiento" (change)="onEditarFechaVencimiento()"
                                tooltip="Agregar fecha" name="fechaVencimiento" [min]="hoy" [btnOnly]="true" size="sm">
                 </plex-datetime>
-                <plex-button icon="clock" type="danger" size="sm"
-                             (click)="fechaVencimiento = null; onEditarFechaVencimiento()" tooltip="Eliminar fecha"
-                             tooltipPosition="right"></plex-button>
+                <plex-button icon="clock" type="danger" size="sm" (click)="onEliminarFechaVencimiento()"
+                             tooltip="Eliminar fecha" tooltipPosition="right"></plex-button>
             </div>
             <ng-container *ngIf="user$ | async as user">
                 <gestor-usuarios-usuario-detalle [usuario]="user"></gestor-usuarios-usuario-detalle>

@@ -198,6 +198,10 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
         }
     }
 
+    onEliminarFechaVencimiento() {
+        this.fechaVencimiento = null;
+        this.onEditarFechaVencimiento();
+    }
     onEditarFechaVencimiento() {
         this.usuariosHttp.updateOrganizacion(this.userId, this.organizacionId, {
             id: this.organizacionId,
