@@ -69,13 +69,11 @@
                              placeholder="Seleccione la organización" labelField="nombre" [required]="true"
                              (change)="onOrganizacionChange()">
                 </plex-select>
-
             </div>
         </div>
-        <div class="row" *ngIf="!organizaciones.length">
+        <div class="row" *ngIf="!soloValores && !organizaciones.length">
             <div class="col-md">
-                <plex-label *ngIf="!organizaciones.length"
-                            titulo="Esta solicitud NO se regitrará en ninguna bandeja de entrada y no podrá ser resuelta desde el módulo de solicitudes"
+                <plex-label titulo="Esta solicitud NO se regitrará en ninguna bandeja de entrada y no podrá ser resuelta desde el módulo de solicitudes"
                             subtitulo="" type="warning" size="md" icon="alert"></plex-label>
             </div>
         </div>

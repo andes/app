@@ -120,6 +120,17 @@ export class Auth {
         return this.shiro.permissions(string);
     }
 
+    hasExactPermission(perm: string): boolean {
+        const parts = perm.split(':');
+        const last = parts.pop();
+
+        const query = [...parts, '?'].join(':');
+        const perms = this.shiro.permissions(query);
+
+        return perms.includes(last);
+
+    }
+
     loggedIn() {
         return this.estado === Estado.active;
     }
