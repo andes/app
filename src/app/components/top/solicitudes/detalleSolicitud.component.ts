@@ -37,7 +37,7 @@ export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
     fotos: any[] = [];
     ngOnChanges(changes: SimpleChanges) {
         if (changes.prestacionSeleccionada) {
-            this.permisoDetalle = this.auth.check('solicitudes:verDetalles');
+            this.permisoDetalle = this.auth.hasExactPermission('solicitudes:verDetalles');
             this.adjuntosService.token$.subscribe((payload) => {
                 const { token } = payload;
                 const solicitudRegistros = this.prestacionSeleccionada.solicitud.registros;

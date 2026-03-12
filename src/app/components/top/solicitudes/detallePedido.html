@@ -2,7 +2,7 @@
     <div class="row" *ngIf="prestacion && elementoRUPPrincipal && registroPrincipal">
         <div class="col-12">
             <rup #prescripcion [elementoRUP]="elementoRUPPrincipal" [registro]="registroPrincipal"
-                 [prestacion]="prestacion" [paciente]="prestacion.paciente" [soloValores]="true">
+                 [prestacion]="prestacion" [paciente]="prestacion.paciente" [soloValores]="true" [vistaHUDS]="false">
             </rup>
         </div>
     </div>
