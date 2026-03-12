@@ -9,6 +9,7 @@ import { ListaEsperaService } from '../../../services/turnos/listaEspera.service
 import { EstadosAgenda } from './../enums';
 import * as moment from 'moment';
 import { TurnoService } from 'src/app/services/turnos/turno.service';
+import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 
 @Component({
     selector: 'turnos',
@@ -102,7 +103,12 @@ export class TurnosComponent implements OnInit {
     public arrayDelDia = [];
     public sortBy: string;
     public sortOrder = 'desc';
+    public prestacionTurno = [];
+    puedeSuspenderLiberar = true;
+    validSuspensionLiberacion = false;
     botonera = true;
+    private validacionesPendientesSuspension = 0;
+    private turnosConPrestacionEnEjecucion = new Set<string>();
 
     public columns = [
         {
@@ -136,7 +142,8 @@ export class TurnosComponent implements OnInit {
         public serviceAgenda: AgendaService,
         public listaEsperaService: ListaEsperaService,
         public auth: Auth,
-        public serviceTurno: TurnoService) { }
+        public serviceTurno: TurnoService,
+        public prestacionService: PrestacionesService) { }
 
     ngOnInit() {
         const agendaActualizar = this.agenda;
@@ -147,17 +154,77 @@ export class TurnosComponent implements OnInit {
         this.showSeleccionarTodos = (this.bloqueSelected.turnos.length > 0);
     }
 
+    private getTurnoId(turno: any): string {
+        return String(turno?.id || turno?._id || '');
+    }
+
+    private actualizarEstadoSuspension() {
+        if (!this.turnosSeleccionados.length) {
+            this.puedeSuspenderLiberar = true;
+            return;
+        }
+        this.puedeSuspenderLiberar = this.turnosConPrestacionEnEjecucion.size === 0;
+    }
+
+    private validarPrestacionEnEjecucion(turno: any) {
+        const turnoId = this.getTurnoId(turno);
+        if (!turnoId) {
+            this.actualizarEstadoSuspension();
+            return;
+        }
+
+        this.validacionesPendientesSuspension++;
+        this.validSuspensionLiberacion = true;
+
+        const params: any = {
+            solicitudTurno: turno._id
+        };
+
+        this.prestacionService.getSolicitudes(params).subscribe({
+            next: resultado => {
+                const sigueSeleccionado = this.turnosSeleccionados.some(x => this.getTurnoId(x) === turnoId);
+                if (!sigueSeleccionado) {
+                    return;
+                }
+
+                const enEjecucion = resultado?.some(item => item?.estadoActual?.tipo === 'ejecucion');
+                if (enEjecucion) {
+                    this.turnosConPrestacionEnEjecucion.add(turnoId);
+                } else {
+                    this.turnosConPrestacionEnEjecucion.delete(turnoId);
+                }
+                this.actualizarEstadoSuspension();
+            },
+            error: () => {
+                const sigueSeleccionado = this.turnosSeleccionados.some(x => this.getTurnoId(x) === turnoId);
+                if (sigueSeleccionado) {
+                    this.puedeSuspenderLiberar = false;
+                }
+            },
+            complete: () => {
+                this.validacionesPendientesSuspension = Math.max(0, this.validacionesPendientesSuspension - 1);
+                this.validSuspensionLiberacion = this.validacionesPendientesSuspension > 0;
+            }
+        });
+    }
+
     seleccionarTurno(turno, multiple = false, sobreturno) {
         turno.sobreturno = sobreturno;
+        const turnoId = this.getTurnoId(turno);
+        const estabaSeleccionado = this.turnosSeleccionados.some(x => this.getTurnoId(x) === turnoId);
+
         if (!multiple) {
-            this.turnosSeleccionados = [];
-            this.turnosSeleccionados = [...this.turnosSeleccionados, turno];
+            this.turnosSeleccionados = [turno];
+            this.turnosConPrestacionEnEjecucion.clear();
+            this.validarPrestacionEnEjecucion(turno);
         } else {
-            if (this.turnosSeleccionados.find(x => x.id === turno._id)) {
-                this.turnosSeleccionados.splice(this.turnosSeleccionados.indexOf(turno), 1);
-                this.turnosSeleccionados = [... this.turnosSeleccionados];
+            if (estabaSeleccionado) {
+                this.turnosSeleccionados = this.turnosSeleccionados.filter(x => this.getTurnoId(x) !== turnoId);
+                this.turnosConPrestacionEnEjecucion.delete(turnoId);
+                this.actualizarEstadoSuspension();
             } else {
                 this.turnosSeleccionados = [... this.turnosSeleccionados, turno];
+                this.validarPrestacionEnEjecucion(turno);
             }
         }
 
@@ -437,5 +504,17 @@ export class TurnosComponent implements OnInit {
             return noDisponible && botones.cambiarDisponible;
         }
         return false;
+    }
+
+    puedeSuspenderTurno(botonSuspender) {
+        return botonSuspender && !this.validSuspensionLiberacion && this.puedeSuspenderLiberar;
+    }
+
+    puedeLiberarTurno(botonLiberar, turnoSeleccionado, turno) {
+        return botonLiberar && turnoSeleccionado?.id === turno.id && !this.validSuspensionLiberacion && this.puedeSuspenderLiberar;
+    }
+
+    puedeLiberarSobreturno(botonLiberar, turnoSeleccionado, sobreturno) {
+        return botonLiberar && turnoSeleccionado?.id === sobreturno.id && !this.validSuspensionLiberacion && this.puedeSuspenderLiberar;
     }
 }
