@@ -8,11 +8,23 @@ import { HUDSService } from '../../services/huds.service';
 })
 
 export class VistaSolicitudTopComponent implements OnInit {
-
     @Input() registro;
-    turno;
-    estado;
-    observaciones = '';
+    public normalizedRegistro: any;
+    public turno;
+    public estado;
+    public observaciones = '';
+
+    get isEnviadaTop() {
+        return this.registro.inicio === 'top';
+    }
+
+    get organizacionDestino() {
+        if (!this.isEnviadaTop) {
+            return 'Sin definir';
+        }
+        const registros = this.registro.solicitud?.registros || this.registro.evoluciones;
+        return this.registro.solicitud?.organizacion?.nombre || registros?.[0]?.valor?.solicitudPrestacion?.organizacionDestino?.nombre || 'Sin definir';
+    }
 
     public tipoEstado = {
         validada: 'success',
@@ -34,27 +46,29 @@ export class VistaSolicitudTopComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.estado = this.registro.estados[this.registro.estados.length - 1].tipo;
+        const lastState = this.registro.estados?.[this.registro.estados.length - 1];
 
-        if (this.registro.estados[this.registro.estados.length - 1].observaciones) {
-            this.observaciones = this.registro.estados[this.registro.estados.length - 1].observaciones;
-        } else if (this.registro.estados[this.registro.estados.length - 1].motivoRechazo) { // DEPRECADO
-            this.observaciones = this.registro.estados[this.registro.estados.length - 1].motivoRechazo;
+        if (lastState) {
+            this.estado = lastState.tipo;
+            this.observaciones = lastState.observaciones || lastState.motivoRechazo || '';
+        } else {
+            // Caso RUP
+            this.estado = 'validada';
+            const solicitudPrestacion = this.registro.evoluciones?.[0]?.valor?.solicitudPrestacion;
+            this.observaciones = solicitudPrestacion?.indicaciones || '';
         }
 
-        if (this.registro.solicitud.turno) {
-            const params = {
-                id: this.registro.solicitud.turno
-            };
-            this.servicioTurnos.getTurnos(params).subscribe(turnos => {
-                this.turno = turnos[0].bloques[0].turnos[0];
+        const idTurno = this.registro.solicitud?.turno || this.registro.dataPrestacion?.solicitud?.turno;
+        if (idTurno) {
+            this.servicioTurnos.getTurnos({ id: idTurno }).subscribe(turnos => {
+                this.turno = turnos?.[0]?.bloques?.[0]?.turnos?.[0];
             });
-
         }
     }
 
     abrirSolicitud() {
         const tipo = 'rup';
-        this.huds.toogle(this.registro, tipo);
+        const registroToOpen = this.registro.dataPrestacion || (this.registro.solicitud?.id ? this.registro : { id: this.registro.idPrestacion });
+        this.huds.toogle(registroToOpen, tipo);
     }
 }
