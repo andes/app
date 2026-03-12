@@ -36,8 +36,9 @@
                     (saveAgregarNotaTurno)="saveAgregarNotaTurno()">
                 </agregar-nota-turno>
             </plex-help>
-            <plex-help *ngIf="botones.suspender" class="mr-1" btnType="danger" icon="stop" tooltip="Suspender turnos"
-                tooltipPosition="left">
+
+            <plex-help *ngIf="puedeSuspenderTurno(botones.suspender)" class="mr-1" btnType="danger" icon="stop"
+                tooltip="Suspender turnos" tooltipPosition="left">
                 <suspender-turno [agenda]="agenda" [accion]="'suspenderTurno'"
                     [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="saveSuspenderTurno()"
                     (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)">
@@ -225,7 +226,7 @@
                             (cancelarCarpetaEmit)="afterComponenteCarpeta($event)">
                         </carpeta-paciente>
                     </plex-help>
-                    <plex-help *ngIf="botones.liberar && turnosSeleccionados[0]?.id === turno.id"
+                    <plex-help *ngIf="puedeLiberarTurno(botones.liberar, turnosSeleccionados[0], turno)"
                         class="help-liberar-turnos" type="info" btnType="danger" icon="account-off"
                         tooltip="Liberar turnos" tooltipPosition="left">
                         <liberar-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados"
@@ -311,7 +312,7 @@
                             (cancelarCarpetaEmit)="afterComponenteCarpeta($event)">
                         </carpeta-paciente>
                     </plex-help>
-                    <plex-help *ngIf="botones.liberar && turnosSeleccionados[0]?.id === sobreturno.id"
+                    <plex-help *ngIf="puedeLiberarSobreturno(botones.liberar, turnosSeleccionados[0], sobreturno)"
                         class="help-liberar-turnos" type="info" btnType="danger" icon="account-off"
                         tooltip="Liberar turnos" tooltipPosition="left">
                         <liberar-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados"
