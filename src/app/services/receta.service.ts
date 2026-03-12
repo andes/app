@@ -21,6 +21,10 @@ export class RecetaService {
         return this.server.get(this.url, { params });
     }
 
+    getInsumos(params): Observable<any[]> {
+        return this.server.get('/modules/insumos', { params });
+    }
+
     getMotivosSuspension() {
         return this.server.get(`${this.url}/motivos`);
     }

@@ -27,6 +27,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
         tiempoTratamiento: null,
         serie: null,
         numero: null,
+        esMagistral: false,
         dosisDiaria: {
             dosis: null,
             frecuencia: null,
@@ -118,15 +119,37 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     @Unsubscribe()
     loadMedicamentoGenerico(event) {
         const input = event.query;
-        if (input && input.length > 2 && this.eclMedicamentos) {
-            const query: any = {
-                expression: this.eclMedicamentos.valor,
-                search: input
-            };
-            this.snomedService.get(query).subscribe(event.callback);
+        if (input && input.length > 2) {
+            if (this.medicamento.esMagistral) {
+                this.recetasService.getInsumos({ termino: input }).subscribe(insumos => {
+                    const mappedInsumos = insumos.map(i => {
+                        return {
+                            ...i,
+                            term: i.nombre,
+                            conceptId: i.id
+                        };
+                    });
+                    event.callback(mappedInsumos);
+                });
+            } else if (this.eclMedicamentos) {
+                const query = {
+                    expression: this.eclMedicamentos.valor,
+                    search: input
+                };
+                this.snomedService.get(query).subscribe(event.callback);
+            } else {
+                event.callback([]);
+            }
         } else {
             event.callback([]);
         }
+    }
+
+    onChangeMagistral() {
+        this.medicamento.generico = null;
+        this.medicamento.presentacion = null;
+        this.unidades = [];
+        this.deshacerCantidadManual();
     }
 
     loadRegistros() {
@@ -142,9 +165,16 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     loadPresentaciones() {
         this.deshacerCantidadManual();
         this.loading = true;
-        this.medicamento.cantidad = null;
         this.medicamento.presentacion = null;
         this.medicamento.cantEnvases = null;
+
+        if (this.medicamento.esMagistral) {
+            this.unidades = [];
+            this.ingresoCantidadManual = true;
+            this.loading = false;
+            return;
+        }
+
         if (this.medicamento.generico && this.eclPresentaciones && this.eclMedicamentosComerciales) {
             const queryPresentacion: any = {
                 expression: this.eclPresentaciones.valor.replace('#MG#', this.medicamento.generico.conceptId),
@@ -279,6 +309,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
             tiempoTratamiento: null,
             serie: null,
             numero: null,
+            esMagistral: false,
             dosisDiaria: {
                 frecuencia: null,
                 dias: null,
