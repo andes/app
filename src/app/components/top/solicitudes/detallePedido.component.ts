@@ -16,6 +16,7 @@ export class DetallePedidoComponent implements OnDestroy {
     itemsHistorial = [];
     registroPrincipal = null;
     elementoRUPPrincipal = null;
+    mostrarRup = true;
     private destroy$ = new Subject<void>();
 
     @Input('prestacion')
@@ -31,7 +32,20 @@ export class DetallePedidoComponent implements OnDestroy {
 
 
     cargarDetalle() {
-        if (!this.prestacion) { return; }
+        if (!this.prestacion) {
+            // Si no hay prestacion, ocultamos <rup> para que no quede el anterior montado
+            this.mostrarRup = false;
+            this.elementoRUPPrincipal = null;
+            this.registroPrincipal = null;
+            this.cd.detectChanges();
+            return;
+        }
+
+        // Forzamos desmontaje temporal del <rup> para evitar que quede la instancia anterior
+        this.mostrarRup = false;
+        this.elementoRUPPrincipal = null;
+        this.registroPrincipal = null;
+        this.cd.detectChanges();
 
         // Esperar a que el servicio esté listo y luego usarlo (una sola vez)
         this.elementosRUPService.ready.pipe(
@@ -40,22 +54,22 @@ export class DetallePedidoComponent implements OnDestroy {
             takeUntil(this.destroy$)
         ).subscribe({
             next: () => {
-                try {
-                    this.registroPrincipal = this.prestacion.solicitud?.registros?.[0] || null;
-                    if (!this.registroPrincipal) {
-                        console.warn('DetallePedido: no hay registroPrincipal en la prestacion', this.prestacion);
-                        this.elementoRUPPrincipal = null;
-                        this.cd.detectChanges();
-                        return;
-                    }
-                    this.elementoRUPPrincipal = this.elementosRUPService.buscarElemento(this.registroPrincipal.concepto, true);
-                    // Forzar detección para que Angular renderice el <rup>
+                this.registroPrincipal = this.prestacion.solicitud?.registros?.[0] || null;
+                if (!this.registroPrincipal) {
+                    console.warn('DetallePedido: no hay registroPrincipal en la prestacion', this.prestacion);
+                    this.elementoRUPPrincipal = null;
+                    // restaurar flag (no mostrar)
+                    this.mostrarRup = false;
                     this.cd.detectChanges();
-                } catch (err) {
-                    console.error('DetallePedido: error al cargar elementoRUPPrincipal', err);
+                    return;
                 }
-            },
-            error: (err) => console.error('DetallePedido: error en ready', err)
+                this.elementoRUPPrincipal = this.elementosRUPService.buscarElemento(this.registroPrincipal.concepto, true);
+                // Restauramos flag para volver a montar <rup> con los nuevos inputs
+                this.mostrarRup = true;
+                // Forzar detección para que Angular renderice el <rup>
+                this.cd.detectChanges();
+
+            }
         });
 
     }
