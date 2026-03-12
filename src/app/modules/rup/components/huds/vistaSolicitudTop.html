@@ -1,11 +1,12 @@
-<ng-container *ngIf="registro?.solicitud">
-    <plex-title titulo="{{ registro.solicitud.tipoPrestacion.term }}" size="lg">
+<ng-container *ngIf="registro">
+    <plex-title titulo="{{ registro.solicitud?.tipoPrestacion?.term || registro.concepto?.term }}" size="lg">
         <div class="titulo-badges">
             <plex-badge type="{{ tipoEstado[estado] }}">
                 {{ estado }}
             </plex-badge>
-            <plex-badge type="{{ registro.solicitud.tipoPrestacion.semanticTag || 'solicitud' }}">
-                {{ registro.solicitud.tipoPrestacion.semanticTag || 'solicitud' }}
+            <plex-badge
+                type="{{ registro.solicitud?.tipoPrestacion?.semanticTag || registro.concepto?.semanticTag || 'solicitud' }}">
+                {{ registro.solicitud?.tipoPrestacion?.semanticTag || registro.concepto?.semanticTag || 'solicitud' }}
             </plex-badge>
         </div>
     </plex-title>
@@ -17,49 +18,72 @@
                 <plex-badge type="xs" type="info">
                     Registros
                 </plex-badge>
-                <plex-button size="sm" type="info" tooltip="Registros de la solicitud"
-                             *ngIf="registro.estadoActual?.tipo === 'validada'" (click)="abrirSolicitud()">
+                <plex-button size="sm" type="info" tooltip="Registros de la solicitud" *ngIf="estado === 'validada'"
+                    (click)="abrirSolicitud()">
                     <plex-icon name="mano-corazon"></plex-icon>
                 </plex-button>
             </div>
             <div>
-                <div *ngIf="registro.solicitud.organizacionOrigen">
+                <div *ngIf="registro.solicitud?.tipoPrestacionOrigen || registro.evoluciones?.[0]?.tipoPrestacion">
                     <b>Tipo de Prestación Origen</b>
                     <p class="texto-detalle">
-                        {{registro.solicitud.tipoPrestacionOrigen.term}}</p>
+                        {{ registro.solicitud?.tipoPrestacionOrigen?.term || registro.evoluciones?.[0]?.tipoPrestacion
+                        }}
+                    </p>
                 </div>
-                <div *ngIf="registro.solicitud.organizacionOrigen">
+                <div *ngIf="registro.solicitud?.organizacionOrigen || registro.evoluciones?.[0]?.organizacion">
                     <b>Organización de origen</b>
                     <p class="texto-detalle">
-                        {{registro.solicitud.organizacionOrigen.nombre}}</p>
+                        {{ registro.solicitud?.organizacionOrigen?.nombre || registro.evoluciones?.[0]?.organizacion }}
+                    </p>
                 </div>
             </div>
         </plex-grid>
     </div>
     <div class="mt-4">
-        <div><b>Diagnóstico / Motivo</b>
-            <p>{{registro.solicitud.registros[0].valor.solicitudPrestacion.motivo || 'Sin diagnóstico o motivo'}}</p>
+        <div>
+            <b>Diagnóstico / Motivo</b>
+            <p>
+                {{ (registro.solicitud?.registros?.[0]?.valor?.solicitudPrestacion?.conceptoAsociado?.term ||
+                registro.evoluciones?.[0]?.valor?.solicitudPrestacion?.conceptoAsociado?.term) ?
+                ((registro.solicitud?.registros?.[0]?.valor?.solicitudPrestacion?.conceptoAsociado?.term ||
+                registro.evoluciones?.[0]?.valor?.solicitudPrestacion?.conceptoAsociado?.term) + ' - ') : ''
+                }}
+                {{ registro.solicitud?.registros?.[0]?.valor?.solicitudPrestacion?.motivo ||
+                registro.evoluciones?.[0]?.valor?.solicitudPrestacion?.motivo || 'Sin diagnóstico o motivo' }}
+            </p>
         </div>
         <div>
-            <b>Observaciones</b>
-            <p>{{observaciones || 'Sin observaciones'}}</p>
+            <b>Observaciones / Indicaciones</b>
+            <p [innerHTML]="observaciones || 'Sin observaciones'"></p>
         </div>
-        <div *ngIf="registro.solicitud.organizacionOrigen">
+        <div>
+            <b>Organización destino</b>
+            <p>{{ organizacionDestino }}</p>
+        </div>
+        <div
+            *ngIf="(registro.solicitud?.registros?.[0]?.valor?.documentos || registro.evoluciones?.[0]?.valor?.solicitudPrestacion?.documentos)?.length">
             <b>Archivos adjuntos</b>
             <br />
-            <rup-adjuntar-documento *ngIf="registro?.solicitud?.registros[0].valor.documentos?.length"
-                                    [permiteCarga]="false" [parametroRegistro]="registro.solicitud.registros[0]">
+            <rup-adjuntar-documento [permiteCarga]="false"
+                [parametroRegistro]="{ valor: { documentos: (registro.solicitud?.registros?.[0]?.valor?.documentos || registro.evoluciones?.[0]?.valor?.solicitudPrestacion?.documentos) } }">
             </rup-adjuntar-documento>
-            <small *ngIf="!registro?.solicitud?.registros[0].valor.documentos?.length">(Sin documentos
-                adjuntos)</small>
         </div>
     </div>
     <div class="mt-3 w-100">
-        <div class="subtitulo" size="sm">Historial de la solicitud</div>
-        <plex-wrapper>
-            <div collapse>
-                <historial-solicitud class="w-100" [prestacion]="registro" [turno]='turno'></historial-solicitud>
+        <ng-container *ngIf="isEnviadaTop">
+            <div class="subtitulo" size="sm">Historial de la solicitud</div>
+            <plex-wrapper>
+                <historial-solicitud class="w-100" [prestacion]="registro.dataPrestacion || registro" [turno]='turno'>
+                </historial-solicitud>
+            </plex-wrapper>
+        </ng-container>
+        <ng-container *ngIf="!isEnviadaTop">
+            <div class="mt-3">
+                <plex-label icon="magnify" size="lg" type="info" direction="column" [titulo]="'Sin historial'"
+                    subtitulo="Esta solicitud no está disponible para seguimiento en módulo solicitudes">
+                </plex-label>
             </div>
-        </plex-wrapper>
+        </ng-container>
     </div>
 </ng-container>

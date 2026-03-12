@@ -278,8 +278,13 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
                 gtag('huds-open', tipo, registro.concepto.term, index);
                 registro.class = getSemanticClass(registro.concepto, false);
                 if (registro.esSolicitud) {
+                    tipo = 'solicitud';
                     registro.tipo = 'solicitud';
                     registro.class = 'plan';
+                    if (!registro.solicitud) {
+                        registro.solicitud = { tipoPrestacion: registro.concepto };
+                    }
+                    registro.id = registro.idRegistro;
                 }
                 break;
             case 'rup-group':
