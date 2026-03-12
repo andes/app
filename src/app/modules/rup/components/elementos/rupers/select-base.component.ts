@@ -61,7 +61,14 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
             this.params = {};
         }
         if (this.registro && this.registro.valor) {
+
             const value = this.registro.valor;
+
+            if (!value || (Array.isArray(value) && value.length === 0)) {
+                this.otherEnabled = true;
+                this.otherText = 'S/D';
+            }
+
             if (Array.isArray(value)) {
                 this.itemSelected = value;
             } else {
