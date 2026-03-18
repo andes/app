@@ -2,15 +2,17 @@
     <plex-title size="sm" titulo="Número y organización" *ngIf="carpetaEfectores?.length">
     </plex-title>
     <plex-wrapper class="w-100 align-items-center" *ngFor="let carpeta of carpetaEfectores">
-        <plex-label grow="4" size="md" icon="folder-account" type="info"
-                    titulo="{{carpeta.nroCarpeta || '(Sin número asignado)'}}"
-                    subtitulo="{{carpeta.organizacion.nombre}}">
-        </plex-label>
-        <plex-button grow="auto" size="sm"
-                     *ngIf="idOrganizacion === carpeta.organizacion._id && !showEdit && autorizado" type="warning"
-                     tooltipPosition="left" tooltip="Editar" icon="pencil" (click)="editar()"
-                     class="d-flex align-self-center ml-2">
-        </plex-button>
+        <div class="row">
+            <plex-label class="col-10" size="md" icon="folder-account" type="info"
+                        titulo="{{carpeta.nroCarpeta || '(Sin número asignado)'}}"
+                        subtitulo="{{carpeta.organizacion.nombre}}">
+            </plex-label>
+            <plex-button class="col-2" size="sm"
+                         *ngIf="idOrganizacion === carpeta.organizacion._id && !showEdit && autorizado" type="warning"
+                         tooltipPosition="left" tooltip="Editar" icon="pencil" (click)="editar()"
+                         class="d-flex align-self-center ml-2">
+            </plex-button>
+        </div>
 
         <form #carpetaEdit="ngForm" class="row ml-4"
               *ngIf="idOrganizacion === carpeta.organizacion._id && showEdit && autorizado">
