@@ -708,7 +708,11 @@ export class PacienteComponent implements OnInit {
                                 this.pacienteModel.fechaNacimiento = moment(resultado.fechaNacimiento).toDate();
                                 this.pacienteModel.foto = resultado.foto;
                                 this.pacienteModel.fotoId = resultado.fotoId;
-
+                                if (resultado.errorData) {
+                                    this.pacienteModel.nombreCorrectoReportado = resultado.nombre;
+                                    this.pacienteModel.apellidoCorrectoReportado = resultado.apellido;
+                                    this.pacienteModel.reportarError = true;
+                                }
                                 // agregamos en identificadores la validación
                                 const resIdentificadores = resultado.identificadores;
                                 if (this.pacienteModel.identificadores?.length) {
@@ -779,7 +783,11 @@ export class PacienteComponent implements OnInit {
         this.pacienteModel.foto = this.backUpDatos['foto'];
         this.pacienteModel.fotoId = this.backUpDatos['fotoId'];
         this.pacienteModel.identificadores = this.backUpDatos['identificadores'];
-
+        if (this.pacienteModel.reportarError) {
+            this.pacienteModel.reportarError = false;
+            delete this.pacienteModel.nombreCorrectoReportado;
+            delete this.pacienteModel.apellidoCorrectoReportado;
+        }
         this.conservarDatos();
         this.disableValidar = false;
         this.pacientesSimilares = [];
