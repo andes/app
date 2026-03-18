@@ -15,7 +15,7 @@
                          [(ngModel)]="selectedUnidadOranizativa" name="sectores" [data]="unidadesOranizativas"
                          [required]="true" idField="conceptId" labelField="term" (change)="resetCenso()">
             </plex-select>
-            <div class="d-flex align-items-end">
+            <div class="d-flex align-items-end mb-2">
                 <plex-button class="mr-1" [disabled]="!fechaDesde || !fechaHasta || !selectedUnidadOranizativa"
                              label="GENERAR CENSO" type="primary" (click)="generarCensoMensual()">
                 </plex-button>
@@ -38,7 +38,8 @@
         <div *ngIf="inicio" justify="center" class="h-50">
             <plex-label titulo="Comience completando los filtros" direction="column"
                         subtitulo="Elija las opciones de filtrado y luego haga click en el botón 'Generar Censo'"
-                        type="info" size="xl" icon="magnify"></plex-label>
+                        type="info" size="xl" icon="magnify">
+            </plex-label>
         </div>
 
         <ng-container *ngIf="censo.length">
