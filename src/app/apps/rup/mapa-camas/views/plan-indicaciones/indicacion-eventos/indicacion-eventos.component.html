@@ -17,11 +17,14 @@
         <plex-icon *ngIf="indicacion.seccion.term === ' - sin sección -'" name="documento" class="icon--noSeccion">
         </plex-icon>
         <plex-icon *ngIf="indicacion.seccion.term === 'sección: indicaciones de alimentación parenteral'"
-                   name="docuemento-manzana" class="icon--alimentacion"></plex-icon>
+                   name="docuemento-manzana" class="icon--alimentacion">
+        </plex-icon>
         <plex-icon *ngIf="indicacion.seccion.term === 'sección: indicaciones de hidratación'" name="mano-gota"
-                   class="icon--hidratacion"></plex-icon>
+                   class="icon--hidratacion">
+        </plex-icon>
         <plex-icon *ngIf="indicacion.seccion.term === 'sección: indicaciones de medicación'" name="pildoras"
-                   class="icon--producto"></plex-icon>
+                   class="icon--producto">
+        </plex-icon>
         <plex-icon *ngIf="indicacion.seccion.term === 'sección: otras indicaciones'" name="documento-termometro"
                    class="icon--procedimiento">
         </plex-icon>
@@ -43,7 +46,8 @@
         <plex-select [data]="estadoItems" [(ngModel)]="estado" (change)="onInputChange($event)" name="estado"
                      label="Estado" [required]="true">
         </plex-select>
-        <plex-label class="font-weight-bold"> {{labelEstado}} <h3 *ngIf="labelEstado=='Motivo'" class="asteriscoRojo"> *
+        <plex-label class="font-weight-bold"> {{labelEstado}} <h3 *ngIf="labelEstado==='Motivo'" class="asteriscoRojo">
+                *
             </h3>
         </plex-label>
         <plex-text [(ngModel)]="observaciones" name="observaciones" [required]="labelEstado==='Motivo'">
