@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { AfterContentInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Optional, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Optional, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
 import { LaboratorioService } from 'src/app/services/laboratorio.service';
 import { RecetaService } from 'src/app/services/receta.service';
@@ -42,7 +42,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     public token: string;
     public secondsToUpdate = 0;
     private intervalUpdate: any;
-
+    private cantidadRegistros;
 
     solicitudesMezcladas = [];
 
@@ -327,10 +327,11 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
     regenerarCDA() {
         this.disabledBtnCDA = true;
+        this.cantidadRegistros = Number(this.laboratorios.lenght);
 
         this.cdaService.regenerarCDA(this.paciente).subscribe(
             () => {
-                this.plex.toast('success', 'CDA regenerado correctamente', 'TIEMPO DE ESPERA 15 SEGUNDOS');
+                this.plex.toast('success', 'Esta acción requiere algunos segundos de espera.', 'BUSCANDO NUEVOS REGISTROS', 5000);
                 this.secondsToUpdate = 15;
                 if (this.intervalUpdate) {
                     clearInterval(this.intervalUpdate);
@@ -339,8 +340,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                     this.secondsToUpdate--;
                     if (this.secondsToUpdate <= 0) {
                         clearInterval(this.intervalUpdate);
-                        this.buscarCDAPacientes(this.token);
-                        this.disabledBtnCDA = false;
+                        this.refreshLaboratorios(this.token);
                     }
                 }, 1000);
             },
@@ -699,6 +699,11 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
                 // 🔹 Orden especial de laboratorios
                 this.laboratorios = this.ordenarLaboratorios(this.laboratorios, protocolos);
+
+                const nuevosRegistros = this.laboratorios.length - this.cantidadRegistros;
+                const notificacion = nuevosRegistros > 0 ? 'Se encontraron ' + nuevosRegistros + ' nuevos registros.' : 'No se encontraron nuevos registros. Puede intentar regenerar/actualizar el listado nuevamente en unos minutos.';
+                this.plex.toast('info', notificacion, 'Información', 6000);
+                this.disabledBtnCDA = false;
             }
         });
     }

@@ -20,12 +20,24 @@
             </plex-card>
         </div>
     </div>
-    <div class="menu-titulo">
+    <div class="menu-titulo mt-1">
+
         <h6 class="titulo-filtro {{filtroActual}}">{{ getTitulo(filtroActual) | uppercase }}</h6>
+
+        <div *ngIf="filtroActual === 'laboratorios'" justify="end">
+            <plex-button class="mr-1" icon="refresh" type="primary" size="sm" tooltip="Actualizar listado"
+                         [autodisabled]="true" (click)="refreshLaboratorios(token)">
+            </plex-button>
+            <plex-button icon="database-search" type="success" size="sm" tooltipPosition="left"
+                         tooltip="Buscar nuevos registros" [disabled]="disabledBtnCDA" (click)="regenerarCDA()">
+            </plex-button>
+        </div>
+
         <suspender-medicacion *ngIf="filtroActual==='recetas' && seleccionRecetas.length > 0"
                               [seleccionRecetas]="seleccionSuspender" [motivoSelector]="motivoSuspensionSelector"
                               [motivosSuspension]="motivosSuspension" [profesional]="profesional"
-                              (reset)="resetSeleccionRecetas()"></suspender-medicacion>
+                              (reset)="resetSeleccionRecetas()">
+        </suspender-medicacion>
     </div>
     <div class="grow" *ngIf="filtroActual === 'planes'">
         <plex-options class="filtros-ambitos" (activated)='setAmbitoOrigen($event)' [items]="filtrosAmbitos">
@@ -734,16 +746,11 @@
 
         <!-- Vista: LABORATORIOS -->
         <ng-container *ngIf="filtroActual === 'laboratorios'">
-            <plex-title titulo="Registros del paciente" size="sm" main>
-                <plex-button label="Refrescar laboratorios" style="margin-right: 7px;" type="primary" size="sm"
-                             [autodisabled]="true" (click)="refreshLaboratorios(token)">
-                </plex-button>
-                <plex-button icon="refresh" type="success" size="sm" tooltipPosition="left" tooltip="Regenerar"
-                             [disabled]="disabledBtnCDA" (click)="regenerarCDA()">
-                </plex-button>
-            </plex-title>
-            <div *ngIf="laboratorios.length" class="conceptos hover list-unstyled">
-                <ul class="listado list-unstyled">
+            <plex-loader *ngIf="disabledBtnCDA" class="sidebar-loader" type="ball-pulse"></plex-loader>
+
+            <div *ngIf="laboratorios.length" class="conceptos hover list-unstyled mt-1">
+
+                <ul class="listado list-unstyled" [ngClass]="{ 'opacity-35' : disabledBtnCDA }">
                     <ng-container *ngFor="let laboratorio of laboratorios; let iLaboratorio = index">
                         <li>
                             <div class="rup-card mini laboratorio"
