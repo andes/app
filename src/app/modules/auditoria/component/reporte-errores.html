@@ -1,15 +1,15 @@
-<plex-text [(ngModel)]="filtroPaciente" (change)="filtrarPaciente()" name='filtrarPaciente' [debounce]="500"
-           placeholder="Escriba un documento / apellido / nombre">
-    <plex-icon name="account-search" left></plex-icon>
-</plex-text>
+<plex-text [(ngModel)]="filtroPaciente" (ngModelChange)="filtrarPaciente()" ...></plex-text>
 
-<div *ngIf="pacientes.length">
+<div *ngIf="pacientes.length" class="flex-grow-1">
     <auditoria-listado [pacientes]="pacientes" [registroReportes]="reportes" [autoselect]="false" [errorTab]="true"
-                       (selected)="onSelect($event)">
+                       (selected)="onSelect($event)" (scrolled)="onScroll()">
     </auditoria-listado>
-</div>
 
-<div *ngIf="!pacientes.length" class="alert alert-default">
+    <div *ngIf="loading" class="loading-overlay">
+        <plex-loader type="ball-pulse"></plex-loader>
+    </div>
+</div>
+<div *ngIf="!loading && !pacientes.length" class="alert alert-default">
     <plex-icon name="emoticon-happy"></plex-icon> No se encontraron pacientes con datos reportados.
 </div>
 

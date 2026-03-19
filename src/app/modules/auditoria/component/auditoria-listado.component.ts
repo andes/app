@@ -16,7 +16,7 @@ export class ListadoAuditoriaComponent {
     // Indica si se esta listando desde la seccion de reporte de errores, ya que tiene atributos de interés distintos
     @Input() errorTab = false;
     // Reportes de errores traidos de LogPaciente, ordenados por id de paciente
-    @Input() registroReportes = [];
+    @Input() registroReportes: any;
 
     // Evento que se emite al seleccionar un paciente de la lista
     @Output() selected: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
