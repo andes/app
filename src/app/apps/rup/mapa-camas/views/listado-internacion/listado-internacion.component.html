@@ -63,9 +63,11 @@
                             <td *plTableCol="'obraSocial'">
                                 {{ internacion.paciente.obraSocial?.nombre }}
                             </td>
-                            <td *plTableCol="'unidadOrganizativa'">
-                                {{ internacion.unidadOrganizativa?.term }}
-                            </td>
+                            <ng-container *ngIf="mapaCamasService.capa !== 'estadistica' && mapaCamasService.capa !== 'estadistica-v2'">
+                                <td *plTableCol="'unidadOrganizativa'">
+                                    {{ internacion.unidadOrganizativa?.term }}
+                                </td>
+                            </ng-container>
                             <td *plTableCol="'estado'">
                                 {{internacion.estadoActual.tipo }}
                             </td>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as enumerados from '../../../../../../utils/enumerados';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
 import { ListadoInternacionCapasService } from '../listado-internacion-capas.service';
+import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { Observable } from 'rxjs';
@@ -26,6 +27,7 @@ export class FiltrosListadoCapasComponent implements OnInit {
     constructor(
         private listadoInternacionService: ListadoInternacionCapasService,
         public permisosMapaCamasService: PermisosMapaCamasService,
+        public mapaCamasService: MapaCamasService,
         private auth: Auth,
         private organizacionService: OrganizacionService
     ) { }

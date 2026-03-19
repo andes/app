@@ -47,10 +47,12 @@
                                 {{ internacion.fechaEgreso | hora }}
                             </span>
                         </td>
-                        <td *plTableCol="'unidadOrganizativa'">
-                            {{ (internacion.idPrestacion?.unidadOrganizativa?.term) ||
-                            (internacion.estadosCama[0]?.estados[0]?.unidadOrganizativa?.term) }}
-                        </td>
+                        <ng-container *ngIf="mapaCamasService.capa !== 'estadistica' && mapaCamasService.capa !== 'estadistica-v2'">
+                            <td *plTableCol="'unidadOrganizativa'">
+                                {{ (internacion.idPrestacion?.unidadOrganizativa?.term) ||
+                                (internacion.estadosCama[0]?.estados[0]?.unidadOrganizativa?.term) }}
+                            </td>
+                        </ng-container>
                 </plex-table>
             </ng-container>
         </ng-container>
