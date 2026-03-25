@@ -20,12 +20,24 @@
             </plex-card>
         </div>
     </div>
-    <div class="menu-titulo">
+    <div class="menu-titulo mt-1">
+
         <h6 class="titulo-filtro {{filtroActual}}">{{ getTitulo(filtroActual) | uppercase }}</h6>
+
+        <div *ngIf="filtroActual === 'laboratorios'" justify="end">
+            <plex-button class="mr-1" icon="refresh" type="primary" size="sm" tooltip="Actualizar listado"
+                         [autodisabled]="true" (click)="refreshLaboratorios(token)">
+            </plex-button>
+            <plex-button icon="database-search" type="success" size="sm" tooltipPosition="left"
+                         tooltip="Buscar nuevos registros" [disabled]="disabledBtnCDA" (click)="regenerarCDA()">
+            </plex-button>
+        </div>
+
         <suspender-medicacion *ngIf="filtroActual==='recetas' && seleccionRecetas.length > 0"
                               [seleccionRecetas]="seleccionSuspender" [motivoSelector]="motivoSuspensionSelector"
                               [motivosSuspension]="motivosSuspension" [profesional]="profesional"
-                              (reset)="resetSeleccionRecetas()"></suspender-medicacion>
+                              (reset)="resetSeleccionRecetas()">
+        </suspender-medicacion>
     </div>
     <div class="grow" *ngIf="filtroActual === 'planes'">
         <plex-options class="filtros-ambitos" (activated)='setAmbitoOrigen($event)' [items]="filtrosAmbitos">
@@ -38,6 +50,8 @@
         </div>
     </div>
 </div>
+
+
 <ng-container
               *ngIf="filtroActual !== 'solicitudes' && filtroActual !== 'planes' && filtroActual !== 'laboratorios' && filtroActual !== 'vacunas' && filtroActual !== 'dominios'">
     <div *ngIf="hasRegistrosTotales(filtroActual)" class="mb-2">
@@ -67,15 +81,18 @@
                                    (change)="seleccionarReceta($event, grupo.recetas, iReceta)">
                         </plex-bool>
                         <div class="total">
-                           <div class="row vista-badges" *ngIf="grupo.recetaVisible?.medicamento?.tratamientoProlongado">
-                               <span class="pl-2 pr-2 mr-3 upTag" [ngClass]="{'active': huds.isOpen(grupo, 'receta')}">
-                                   Tratamiento prolongado: {{ (grupo.recetaVisible?.medicamento?.ordenTratamiento !== null && grupo.recetaVisible?.medicamento?.ordenTratamiento !== undefined) ? (grupo.recetaVisible.medicamento.ordenTratamiento + 1) : 0 }} de {{grupo.recetaVisible?.medicamento.tiempoTratamiento?.id}}</span>
-                           </div>
-                            <div class="rup-card mini recetas total" [ngClass]="{'active': huds.isOpen(grupo, 'receta')}"
-                                (click)="emitTabs(grupo, 'receta', iReceta)">
+                            <div class="row vista-badges"
+                                 *ngIf="grupo.recetaVisible?.medicamento?.tratamientoProlongado">
+                                <span class="pl-2 pr-2 mr-3 upTag" [ngClass]="{'active': huds.isOpen(grupo, 'receta')}">
+                                    {{ textoTratamientoProlongado(grupo) }}
+                                </span>
+                            </div>
+                            <div class="rup-card mini recetas total"
+                                 [ngClass]="{'active': huds.isOpen(grupo, 'receta')}"
+                                 (click)="emitTabs(grupo, 'receta', iReceta)">
                                 <div class="rup-header">
                                     <div class="rup-border rup-border-recetas"
-                                        [ngClass]="{'active': huds.isOpen(grupo, 'receta')}">
+                                         [ngClass]="{'active': huds.isOpen(grupo, 'receta')}">
                                         <div class="row p-0 m-0 border-secondary border-left-0">
                                             <div class="col-9 p-0 m-0">
                                                 <div class="row m-0 p-0">
@@ -89,13 +106,14 @@
                                                             <div class="col-10 p-0 m-0">
                                                                 <div class="sugerido">
                                                                     <small>Fecha de Registro:
-                                                                       {{ grupo.recetaVisible?.fechaRegistro | date:'short' }}
-                                                                   </small>
-                                                                   <br>
-                                                                   <small>Profesional: {{
-                                                                      grupo.recetaVisible?.profesional.nombre }} {{
-                                                                       grupo.recetaVisible?.profesional.apellido }}
-                                                                   </small>
+                                                                        {{ grupo.recetaVisible?.fechaRegistro |
+                                                                        date:'short' }}
+                                                                    </small>
+                                                                    <br>
+                                                                    <small>Profesional: {{
+                                                                        grupo.recetaVisible?.profesional.nombre }} {{
+                                                                        grupo.recetaVisible?.profesional.apellido }}
+                                                                    </small>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -105,15 +123,18 @@
                                             <div class="col-3 p-0 m-0">
                                                 <div class="p-0 pt-1 pr-1 float-right">
                                                     <div class="vista-badges">
-                                                       <plex-badge  size="sm"
-                                                                   [type]="estadoReceta[grupo.recetaVisible?.estadoActual.tipo]">
-                                                           {{ grupo.recetaVisible?.estadoActual?.tipo.replace('-', ' ') }}
-                                                       </plex-badge>
-                                                       <plex-badge  size="sm"
-                                                                   [type]="estadoDispensa[grupo.recetaVisible?.estadoDispensaActual.tipo]">
-                                                           {{ grupo.recetaVisible?.estadoDispensaActual?.tipo.replace('-', ' ')
-                                                           }}
-                                                       </plex-badge>
+                                                        <plex-badge size="sm"
+                                                                    [type]="estadoReceta[grupo.recetaVisible?.estadoActual.tipo]">
+                                                            {{ grupo.recetaVisible?.estadoActual?.tipo.replace('-', ' ')
+                                                            }}
+                                                        </plex-badge>
+                                                        <plex-badge size="sm"
+                                                                    [type]="estadoDispensa[grupo.recetaVisible?.estadoDispensaActual.tipo]">
+                                                            {{
+                                                            grupo.recetaVisible?.estadoDispensaActual?.tipo.replace('-',
+                                                            ' ')
+                                                            }}
+                                                        </plex-badge>
                                                     </div>
                                                 </div>
                                             </div>
@@ -725,8 +746,11 @@
 
         <!-- Vista: LABORATORIOS -->
         <ng-container *ngIf="filtroActual === 'laboratorios'">
-            <div *ngIf="laboratorios.length" class="conceptos hover list-unstyled">
-                <ul class="listado list-unstyled">
+            <plex-loader *ngIf="disabledBtnCDA" class="sidebar-loader" type="ball-pulse"></plex-loader>
+
+            <div *ngIf="laboratorios.length" class="conceptos hover list-unstyled mt-1">
+
+                <ul class="listado list-unstyled" [ngClass]="{ 'opacity-35' : disabledBtnCDA }">
                     <ng-container *ngFor="let laboratorio of laboratorios; let iLaboratorio = index">
                         <li>
                             <div class="rup-card mini laboratorio"
