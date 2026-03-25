@@ -85,14 +85,14 @@ export class MapaCamasHTTP {
     }
 
     // [TODO] ver interfaz e ID
-    updateEstados(ambito: string, capa: string, fecha: Date, data): Observable<ICama> {
-        const params = {
+    updateEstados(ambito: string, capa: string, fecha: Date, data, options: any = {}): Observable<ICama> {
+        const body = {
             ...data,
             ambito: ambito,
             capa: capa,
             fecha
         };
-        return this.server.patch(`${this.url}/camaEstados/${data._id}`, params);
+        return this.server.patch(`${this.url}/camaEstados/${data._id}`, body, { params: options });
     }
 
     deshacerInternacion(ambito: string, capa: string, idInternacion: string, completo: boolean): Observable<{ status: boolean }> {
