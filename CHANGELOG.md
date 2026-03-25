@@ -1,3 +1,10 @@
+## [5.170.3](https://github.com/andes/app/compare/v5.170.2...v5.170.3) (2026-03-25)
+
+
+### Bug Fixes
+
+* **validacion:** agrega reporte error a validacion con caracteres incorrectos ([#3322](https://github.com/andes/app/issues/3322)) ([dd5d1e7](https://github.com/andes/app/commit/dd5d1e766b3e05fa76f16b72278550a5015779f1))
+
 ## [5.170.2](https://github.com/andes/app/compare/v5.170.1...v5.170.2) (2026-03-04)
 
 
