@@ -167,99 +167,73 @@
                                 <!-- BOTONERA -->
                                 <td class="column-right my-3 d-flex align-items-center">
                                     <plex-badge class="mr-1"
-                                        *ngIf="prestacion.solicitud.registros[0]?.valor.solicitudPrestacion?.conceptoAsociado"
-                                        type="warning">
+                                                *ngIf="prestacion.solicitud.registros[0]?.valor.solicitudPrestacion?.conceptoAsociado"
+                                                type="warning">
                                         <plex-icon name="alert-decagram" size="md"></plex-icon>
                                     </plex-badge>
+
                                     <plex-badge *ngIf="prestacion | linkTurnoRemoto | async | isNotEmpty" type="info"
-                                        tooltip="Agenda Virtual" tooltipPosition="top">
+                                                tooltip="Agenda Virtual" tooltipPosition="top">
                                         <plex-icon name="monitor" size="md"></plex-icon>
                                     </plex-badge>
 
                                     <plex-badge *ngIf="existeNotificacion(prestacion)" type="info"
-                                        tooltip="Paciente notificado">
+                                                tooltip="Paciente notificado">
                                         <plex-icon name="telefono" size="sm"></plex-icon>
                                     </plex-badge>
 
-                                    <plex-badge
-                                        *ngIf="prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado"
-                                        type="danger">AUTOCITADO
-                            </plex-badge>
-                            <plex-badge *ngIf="prestacion.estadoActual.tipo === 'vencida' || estaVencidaEnListado(prestacion)"
-                                        type="danger">
-                                VENCIDA
-                            </plex-badge>
-                            <plex-badge type="danger"
-                                        *ngIf="prestacion.solicitud.registros[0]?.valor.solicitudPrestacion.prioridad === 'prioritario'">
-                                {{prestacion.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}
-                            </plex-badge>
-                            <plex-badge type="{{prestacion | estadoPrestacion}}"
-                                        *ngIf="prestacion.estadoActual.tipo !== 'rechazada' && prestacion.estadoActual.tipo !== 'auditoria' && prestacion.estadoActual.tipo !== 'validada' && prestacion.estadoActual.tipo !== 'vencida' && !estaVencidaEnListado(prestacion)">
-                                {{ prestacion | estadoSolicitud}}
-
+                                    <plex-badge *ngIf="prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado"
+                                                type="danger">AUTOCITADO
                                     </plex-badge>
-                                    <plex-badge type="{{prestacion | estadoPrestacion}}"
-                                        *ngIf="!prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'validada'">
-                                        Registro en HUDS</plex-badge>
-                                    <ng-container ngProjectAs="plex-button"
-                                        *ngIf="prestacion | estadoSolicitud as estado">
+
+                                    <plex-badge *ngIf="prestacion.estadoActual.tipo === 'vencida' || estaVencidaEnListado(prestacion)"
+                                                type="danger">
+                                        VENCIDA
+                                    </plex-badge>
+
+                                    <plex-badge type="danger"
+                                                *ngIf="prestacion.solicitud.registros[0]?.valor.solicitudPrestacion.prioridad === 'prioritario'">
+                                        {{prestacion.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}
+                                    </plex-badge>
+
+                                    <ng-container ngProjectAs="plex-button" *ngIf="prestacion | estadoSolicitud as estado">
                                         <plex-badge type="{{prestacion | estadoPrestacion}}"
-                                            *ngIf="!prestacion.solicitud.turno && estado === 'rechazada'">
+                                                    *ngIf="prestacion.estadoActual.tipo !== 'rechazada' && prestacion.estadoActual.tipo !== 'auditoria' && prestacion.estadoActual.tipo !== 'validada' && prestacion.estadoActual.tipo !== 'vencida' && !estaVencidaEnListado(prestacion)">
+                                            {{ estado }}
+                                        </plex-badge>
+
+                                        <plex-badge type="{{prestacion | estadoPrestacion}}"
+                                                    *ngIf="!prestacion.solicitud.turno && estado === 'rechazada'">
                                             CONTRARREFERIDA
                                         </plex-badge>
 
-                                        <plex-badge *ngIf="existeNotificacion(prestacion)" type="info"
-                                                    tooltip="Paciente notificado">
-                                            <plex-icon name="telefono" size="sm"></plex-icon>
-                                        </plex-badge>
-
-                                        <plex-badge *ngIf="prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado"
-                                                    type="danger">AUTOCITADO
-                                        </plex-badge>
-                                        <plex-badge *ngIf="prestacion.estadoActual.tipo === 'vencida'" type="danger">
-                                            VENCIDA
-                                        </plex-badge>
-                                        <plex-badge type="danger"
-                                                    *ngIf="prestacion.solicitud.registros[0]?.valor.solicitudPrestacion.prioridad === 'prioritario'">
-                                            {{prestacion.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}
-                                        </plex-badge>
-                                        <plex-badge type="{{prestacion | estadoPrestacion}}"
-                                                    *ngIf="prestacion.estadoActual.tipo !== 'rechazada' && prestacion.estadoActual.tipo !== 'auditoria' && prestacion.estadoActual.tipo !== 'validada' && prestacion.estadoActual.tipo !== 'vencida'">
-                                            {{ prestacion | estadoSolicitud}}
-
-                                        </plex-badge>
                                         <plex-badge type="{{prestacion | estadoPrestacion}}"
                                                     *ngIf="!prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'validada'">
                                             Registro en HUDS</plex-badge>
-                                        <ng-container ngProjectAs="plex-button"
-                                                      *ngIf="prestacion | estadoSolicitud as estado">
-                                            <plex-badge type="{{prestacion | estadoPrestacion}}"
-                                                        *ngIf="!prestacion.solicitud.turno && estado === 'rechazada'">
-                                                CONTRARREFERIDA
-                                            </plex-badge>
 
-                                            <ng-container
-                                                          *ngIf="!prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'auditoria'">
-                                                <plex-badge type="info" class="mr-0">
-                                                    {{prestacion | estadoSolicitud}}
-                                                </plex-badge>
-                                                <plex-badge type="info bg-info" class="ml-0"
-                                                            *ngIf="prestacion | auditoriasSolicitud as auditorias">
-                                                    <span class="text-white">
-                                                        <strong>{{auditorias}}</strong>
-                                                    </span>
-                                                </plex-badge>
-                                            </ng-container>
-                                            <plex-badge *ngIf="prestacion.solicitud.turno && !prestacion.estadoActual.tipo === 'ejecucion' "
-                                                        type="success">Turno dado</plex-badge>
-                                            <plex-badge *ngIf="prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'validada'"
-                                                        type="success">
-                                                Registro en HUDS</plex-badge>
-                                            <plex-badge *ngIf="estado === 'referida'" type="warning">
-                                                REFERIDA
+                                        <ng-container *ngIf="!prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'auditoria'">
+                                            <plex-badge type="info" class="mr-0">
+                                                {{ estado }}
+                                            </plex-badge>
+                                            <plex-badge type="info bg-info" class="ml-0"
+                                                        *ngIf="prestacion | auditoriasSolicitud as auditorias">
+                                                <span class="text-white">
+                                                    <strong>{{auditorias}}</strong>
+                                                </span>
                                             </plex-badge>
                                         </ng-container>
-                                    </div>
+
+                                        <plex-badge *ngIf="prestacion.solicitud.turno && prestacion.estadoActual.tipo !== 'ejecucion' "
+                                                    type="success">Turno dado</plex-badge>
+
+                                        <plex-badge *ngIf="prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'validada'"
+                                                    type="success">
+                                            Registro en HUDS</plex-badge>
+
+                                        <plex-badge *ngIf="estado === 'referida'" type="warning">
+                                            REFERIDA
+                                        </plex-badge>
+                                    </ng-container>
                                 </td>
                             </tr>
                         </tbody>

@@ -24,7 +24,7 @@
             </plex-select>
             <div class="mr-4 mb-3" *ngIf="tiempoVigenciaPrestacion" justify="start">
                 <span hint="Esta prestación tiene un tiempo de vigencia de {{tiempoVigenciaPrestacion}} días."
-                      hintType="warning" hintIcon="informacion" detach="top">
+                      hintType="info" hintIcon="informacion" detach="top">
                 </span>
             </div>
             <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.organizacionOrigen" name="organizacionOrigen"
