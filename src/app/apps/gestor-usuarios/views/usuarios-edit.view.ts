@@ -13,9 +13,9 @@ import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'gestor-usarios-usuarios-edit',
-    templateUrl: 'usuarios-edit.view.html',
-    styleUrls: ['usuarios-edit.view.scss']
+    templateUrl: 'usuarios-edit.view.html'
 })
+
 export class UsuariosEditComponent implements OnInit, OnDestroy {
     destroy$: Subject<boolean> = new Subject<boolean>();
 
@@ -33,7 +33,7 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
     public habilitados = {};
     public fechaVencimiento: Date;
     public canEditAccount = this.auth.check('usuarios:cuenta');
-    public hoy = new Date();
+    public hoy = moment().startOf('day').toDate();
     public get isExpired() {
         if (!this.fechaVencimiento) {
             return false;
@@ -199,9 +199,14 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
     }
 
     onEliminarFechaVencimiento() {
-        this.fechaVencimiento = null;
-        this.onEditarFechaVencimiento();
+        this.plex.confirm('¿Está seguro que desea eliminar la fecha de vencimiento?').then(respuesta => {
+            if (respuesta) {
+                this.fechaVencimiento = null;
+                this.onEditarFechaVencimiento();
+            }
+        });
     }
+
     onEditarFechaVencimiento() {
         this.usuariosHttp.updateOrganizacion(this.userId, this.organizacionId, {
             id: this.organizacionId,

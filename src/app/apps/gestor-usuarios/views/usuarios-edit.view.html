@@ -1,30 +1,36 @@
 <plex-layout [main]="4">
     <plex-layout-main>
         <header>
-
             <plex-title [titulo]="orgName" size="md">
                 <plex-button label="VOLVER" (click)="volver()" type="danger"></plex-button>
             </plex-title>
+            <hr class="mt-1 mb-2">
 
-            <div class="fecha-vencimiento" *ngIf="canEditAccount">
-                <plex-badge size="sm" [type]="isExpired ? 'danger' : 'warning'">
-                    VENCIMIENTO
-                    <span dato>
+            <ng-container *ngIf="canEditAccount">
+                <plex-title titulo="Vencimiento" size="sm">
+
+                    <plex-badge class="mr-1" size="sm" [type]="isExpired ? 'danger' : 'warning'">
                         {{ (fechaVencimiento | date: 'dd/MM/yyyy') || 'Sin fecha' }}
-                    </span>
-                </plex-badge>
+                    </plex-badge>
 
-                <plex-datetime type="date" [(ngModel)]="fechaVencimiento" (change)="onEditarFechaVencimiento()"
-                               tooltip="Agregar fecha" name="fechaVencimiento" [min]="hoy" [btnOnly]="true" size="sm">
-                </plex-datetime>
-                <plex-button icon="clock" type="danger" size="sm" (click)="onEliminarFechaVencimiento()"
-                             tooltip="Eliminar fecha" tooltipPosition="right"></plex-button>
-            </div>
+                    <plex-datetime class="mr-1" type="date" [(ngModel)]="fechaVencimiento"
+                                   (change)="onEditarFechaVencimiento()" tooltip="Modificar fecha"
+                                   name="fechaVencimiento" [min]="hoy" [btnOnly]="true" size="sm">
+                    </plex-datetime>
+                    <plex-button class="mr-1" icon="delete" type="danger" size="sm"
+                                 (click)="onEliminarFechaVencimiento()" tooltip="Eliminar fecha"
+                                 [disabled]="!fechaVencimiento">
+                    </plex-button>
+                </plex-title>
+                <hr class="mt-1 mb-2">
+            </ng-container>
+
             <ng-container *ngIf="user$ | async as user">
                 <gestor-usuarios-usuario-detalle [usuario]="user"></gestor-usuarios-usuario-detalle>
 
             </ng-container>
         </header>
+
         <ng-container *ngIf="arbolPermisos.length && perfiles.length">
             <plex-title titulo="Perfiles habilitados"></plex-title>
             <div class="list-group mt-2">
