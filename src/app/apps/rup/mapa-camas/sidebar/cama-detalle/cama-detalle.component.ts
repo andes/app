@@ -167,7 +167,7 @@ export class CamaDetalleComponent implements OnInit, AfterViewChecked, OnDestroy
     }
 
     cambiarTab(index) {
-        if (!this.editNota) {
+        if (typeof (index) === 'number' && !this.editNota) {
             this.mapaCamasService.resetView();
             this.tabIndex = index;
         }
