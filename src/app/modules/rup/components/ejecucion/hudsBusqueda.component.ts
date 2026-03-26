@@ -588,7 +588,10 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         };
 
         this.puntoInicioService.get(query).subscribe((data) => {
-            this.derivaciones = data;
+
+            if (data.length > 0) {
+                this.derivaciones = data.filter(d => d.estado === 'finalizada');
+            }
         });
     }
 
