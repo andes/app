@@ -5,11 +5,11 @@
             <div class="info-registro">
                 <div class="vista-badges">
                     <plex-badge *ngIf="recetaPrincipal.estadoActual" size="sm"
-                        [type]="estadoReceta[recetaPrincipal.estadoActual.tipo]">
+                                [type]="estadoReceta[recetaPrincipal.estadoActual.tipo]">
                         {{ recetaPrincipal.estadoActual.tipo.replace('-', ' ') }}
                     </plex-badge>
                     <plex-badge *ngIf="recetaPrincipal.estadoDispensaActual" size="sm"
-                        [type]="estadoDispensa[recetaPrincipal.estadoDispensaActual.tipo]">
+                                [type]="estadoDispensa[recetaPrincipal.estadoDispensaActual.tipo]">
                         {{ recetaPrincipal.estadoDispensaActual.tipo.replace('-', ' ') }}
                     </plex-badge>
                     <plex-badge *ngIf="checkDispensaAnticipada(recetaPrincipal)" size="sm" type="warning">
@@ -50,6 +50,14 @@
                 <p class="texto-detalle">{{recetaPrincipal.diagnostico.term || recetaPrincipal.diagnostico.descripcion}}
                 </p>
             </div>
+            <div *ngIf="recetaPrincipal.medicamento.dosisDiaria?.notaMedica">
+                <b>Indicación para el paciente</b>
+                <p class="texto-detalle">{{recetaPrincipal.medicamento.dosisDiaria.notaMedica}}</p>
+            </div>
+            <div *ngIf="recetaPrincipal.medicamento.dosisDiaria?.notaFarmacia">
+                <b>Indicación para la farmacia</b>
+                <p class="texto-detalle">{{recetaPrincipal.medicamento.dosisDiaria.notaFarmacia}}</p>
+            </div>
             <ng-container *ngIf="recetaPrincipal.medicamento.tipoReceta === 'triplicado'">
                 <div>
                     <b>Serie</b>
@@ -80,16 +88,18 @@
         <plex-panel class="lista-panel" [active]="true" #panelHistorial>
             <div plex-accordion-title>
                 <div class="titulo">Historial de medicamento</div>
-                <plex-button disabled type="info" size="sm" [icon]="panelHistorial.active ? 'chevron-up' : 'chevron-down'" class="float-right">
+                <plex-button disabled type="info" size="sm"
+                             [icon]="panelHistorial.active ? 'chevron-up' : 'chevron-down'" class="float-right">
                 </plex-button>
             </div>
             <plex-label class="mt-3" *ngIf="!historialRecetas.length" size="sm" justify="center"
-                icon="adi adi-listado-receta" titulo="No hay elementos registrados">
+                        icon="adi adi-listado-receta" titulo="No hay elementos registrados">
             </plex-label>
             <plex-table *ngIf="historialRecetas.length" [columns]="columns" #table="plTable" style="width:100%">
                 <plex-table-columns>
                 </plex-table-columns>
-                <tr *ngFor="let receta of historialRecetas; let i = index" [ngClass]="{'suspendida': receta.estadoActual.tipo === 'suspendida'}">
+                <tr *ngFor="let receta of historialRecetas; let i = index"
+                    [ngClass]="{'suspendida': receta.estadoActual.tipo === 'suspendida'}">
                     <td *plTableCol="'fecha'">
                         {{ receta.fechaRegistro | date:'dd/MM/yyyy HH:mm' }}
                     </td>
@@ -113,7 +123,8 @@
                         </div>
                     </td>
                     <td *plTableCol="'acciones'">
-                        <plex-button class="w-10" label="" size="sm" type="danger" icon="delete" (click)="deleteAccion(i)">
+                        <plex-button class="w-10" label="" size="sm" type="danger" icon="delete"
+                                     (click)="deleteAccion(i)">
                         </plex-button>
                     </td>
                 </tr>
@@ -123,11 +134,13 @@
         <plex-panel class="lista-panel" *ngIf="listadoDispensas.length > 0" #panelDispensa>
             <div plex-accordion-title>
                 <div class="titulo">Detalle dispensa</div>
-                <plex-button disabled type="info" size="sm" [icon]="panelDispensa.active ? 'chevron-up' : 'chevron-down'" class="float-right">
+                <plex-button disabled type="info" size="sm"
+                             [icon]="panelDispensa.active ? 'chevron-up' : 'chevron-down'" class="float-right">
                 </plex-button>
             </div>
             <div class="mt-2" *ngIf="recetaPrincipal.estadosDispensa.length > 0">
-                <plex-table *ngIf="listadoDispensas.length" [columns]="columnsDetalleDispensa" #table="plTable" style="width:100%">
+                <plex-table *ngIf="listadoDispensas.length" [columns]="columnsDetalleDispensa" #table="plTable"
+                            style="width:100%">
                     <plex-table-columns>
                     </plex-table-columns>
                     <tr *ngFor="let estadoDispensa of listadoDispensas; let i = index">
@@ -159,21 +172,24 @@
         <plex-panel class="lista-panel" *ngIf="recetaPrincipal.estadoActual.tipo === 'suspendida'" #panelSuspension>
             <div plex-accordion-title>
                 <div class="titulo">Motivo de suspensión</div>
-                <plex-button disabled type="info" size="sm" [icon]="panelSuspension.active ? 'chevron-up' : 'chevron-down'" class="float-right">
+                <plex-button disabled type="info" size="sm"
+                             [icon]="panelSuspension.active ? 'chevron-up' : 'chevron-down'" class="float-right">
                 </plex-button>
             </div>
             <div class="info-solicitud suspendida mt-4">
                 <div class="data">
                     <div>
                         <b>Fecha</b>
-                        <p class="texto-detalle">{{recetaPrincipal.estadoActual.createdAt | date:'dd/MM/yyyy HH:mm'}}</p>
+                        <p class="texto-detalle">{{recetaPrincipal.estadoActual.createdAt | date:'dd/MM/yyyy HH:mm'}}
+                        </p>
                     </div>
                     <div>
                         <b>Profesional</b>
                         <p class="texto-detalle" *ngIf="recetaPrincipal.estadoActual.profesional">
                             {{recetaPrincipal.estadoActual.profesional?.apellido}},
                             {{recetaPrincipal.estadoActual.profesional?.nombre}}</p>
-                        <p class="texto-detalle" *ngIf="!recetaPrincipal.estadoActual.profesional">- Sin profesional -</p>
+                        <p class="texto-detalle" *ngIf="!recetaPrincipal.estadoActual.profesional">- Sin profesional -
+                        </p>
                     </div>
                     <div>
                         <b>Motivo</b>
@@ -181,7 +197,8 @@
                     </div>
                     <div>
                         <b>Observación</b>
-                        <p class="texto-detalle">{{recetaPrincipal.estadoActual.observacion || "- Sin especificar -"}}</p>
+                        <p class="texto-detalle">{{recetaPrincipal.estadoActual.observacion || "- Sin especificar -"}}
+                        </p>
                     </div>
                 </div>
             </div>

@@ -31,7 +31,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
             dosis: null,
             frecuencia: null,
             dias: null,
-            notaMedica: null
+            notaMedica: null,
+            notaFarmacia: null
         }
     };
     public horas = [];
@@ -266,7 +267,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
             dosisDiaria: {
                 frecuencia: null,
                 dias: null,
-                notaMedica: null
+                notaMedica: null,
+                notaFarmacia: null
             }
         };
 
