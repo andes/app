@@ -439,7 +439,7 @@ export class SolicitudesComponent implements OnInit {
         this.buscarSolicitudes();
     }
 
-    sortTable(event: string) {
+    sortTable(event: string, sortOrder: string = null) {
         const column = this.columns.find(p => p.key === event);
         if (!column?.sorteable) {
             return;
@@ -448,7 +448,7 @@ export class SolicitudesComponent implements OnInit {
             this.sortOrder = (this.sortOrder === 'asc') ? 'desc' : 'asc';
         } else {
             this.sortBy = event;
-            this.sortOrder = 'desc';
+            this.sortOrder = sortOrder || 'desc';
         }
         this.sort = this.sortBy + (this.sortOrder === 'asc' ? 'Asc' : 'Desc');
         this.cargarSolicitudes();
@@ -799,7 +799,7 @@ export class SolicitudesComponent implements OnInit {
     onChange() {
         this.actualizacion = !this.actualizacion;
         this.loader = true;
-        this.cargarSolicitudes();
+        !!this.actualizacion ? this.sortTable('actualizacion', 'asc') : this.sortTable('fechaSolicitud', 'asc');
     }
 
     actualizarFechas() {
