@@ -26,7 +26,8 @@
                         </span><b *ngIf="protocolo.data.tipoMuestra">{{protocolo.data.tipoMuestra}}</b></div>
                     <div class="datos"><span>Prácticas solicitadas:
                         </span><b
-                           *ngIf="protocolo.data.practicasSolicitadas">{{protocolo.data.practicasSolicitadas}}</b></div>
+                            *ngIf="protocolo.data.practicasSolicitadas">{{protocolo.data.practicasSolicitadas}}</b>
+                    </div>
                 </plex-grid>
             </div>
         </div>
@@ -34,12 +35,18 @@
     <div class="w-100 mt-2">
         <plex-title titulo="Resultados" size="md">
             <plex-button [disabled]="areasLaboratorio.length === 0" type="info" size="sm" icon="download mdi-18px"
-                         tooltip="Descargar" (click)="descargarLab()"></plex-button>
+                tooltip="Descargar" (click)="descargarLab()"></plex-button>
         </plex-title>
 
         <ng-container *ngIf="areasLaboratorio?.length">
             <ng-container *ngFor="let area of areasLaboratorio">
                 <div class="titulo-grupo">{{area.area}}</div>
+                <div class="table-header-row">
+                    <div class="table-header-col"></div>
+                    <div class="table-header-col text-center"><b>Resultado</b></div>
+                    <div class="table-header-col text-center"><b>Valor Referencia</b></div>
+                    <div class="table-header-col text-center"><b>Firma</b></div>
+                </div>
                 <ng-container *ngFor="let unGrupo of area.grupos">
                     <span *ngIf="unGrupo.items.length > 1"><b>{{unGrupo.grupo}}</b></span>
                     <ng-container>
