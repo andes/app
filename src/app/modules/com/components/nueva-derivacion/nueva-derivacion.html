@@ -36,11 +36,7 @@
                 <dispositivo [modelo]="modelo" [tipo]="oxigeno" grow="full"></dispositivo>
                 <tipo-traslado [derivacion]="modelo" grow="full"></tipo-traslado>
 
-                <plex-select [(ngModel)]="modelo.estrategiaAtencion" name="estrategiaAtencion"
-                             label="Estrategia de atención" placeholder="Seleccione una estrategia de atención"
-                             [data]="estrategiasAtencion" grow="full">
-
-                </plex-select>
+               
             </plex-wrapper>
             <plex-title titulo="Datos diagnóstico"></plex-title>
             <plex-wrapper>
