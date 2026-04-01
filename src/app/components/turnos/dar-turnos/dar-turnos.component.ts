@@ -259,7 +259,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     cargarTurnos() {
-        if (this._paciente?.id) {
+        if (this._paciente?.id && this._solicitudPrestacion?.inicio === 'top') {
             this.serviceTurno.getHistorial({ pacienteId: this._paciente.id }).subscribe(turnos => {
                 const turnosFiltrados = turnos.filter(t => t.estado !== 'liberado' && moment(t.horaInicio).isSameOrAfter(this.todaysdate, 'day'));
                 this.turnosPaciente = turnosFiltrados.sort((a, b) => {
@@ -977,7 +977,7 @@ export class DarTurnosComponent implements OnInit {
      * DAR TURNO
      */
     buscarTurnosFuturos() {
-        if (this.turnoTipoPrestacion) {
+        if (this.turnoTipoPrestacion && this._solicitudPrestacion?.inicio === 'top') {
             this.serviceTurno.getHistorial({ pacienteId: this.paciente.id }).subscribe(turnos => {
                 // Filtrar los turnos que cumplen con la condición
                 const fechaHoy = moment();
