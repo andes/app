@@ -1,3 +1,11 @@
+## [5.170.4](https://github.com/andes/app/compare/v5.170.3...v5.170.4) (2026-04-01)
+
+
+### Bug Fixes
+
+* **CIT:** visualizacion de turnos ([#3310](https://github.com/andes/app/issues/3310)) ([abf8ec2](https://github.com/andes/app/commit/abf8ec2c0104e5738661d1074951370355236b63))
+* **IN:** se rompe sidebar a causa de select ([#3309](https://github.com/andes/app/issues/3309)) ([0fedfd3](https://github.com/andes/app/commit/0fedfd373749bf1191f1a9cb296ce69e6db7b306))
+
 ## [5.170.3](https://github.com/andes/app/compare/v5.170.2...v5.170.3) (2026-03-25)
 
 
