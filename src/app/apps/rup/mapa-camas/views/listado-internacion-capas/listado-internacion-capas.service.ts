@@ -96,9 +96,13 @@ export class ListadoInternacionCapasService {
         }
 
         if (unidad) {
+            const unidadId = unidad?.conceptId || unidad;
             listaInternacionFiltrada = listaInternacionFiltrada.filter(
-                (internacion: IResumenInternacion) =>
-                    (internacion as any).idPrestacion?.unidadOrganizativa?.conceptId === (unidad?.conceptId || unidad)
+                (internacion: any) => {
+                    const uoIngreso = internacion.idPrestacion?.unidadOrganizativa?.conceptId;
+                    const uoMovimiento = internacion.estadosCama?.[0]?.estados?.[0]?.unidadOrganizativa?.conceptId;
+                    return uoIngreso === unidadId || uoMovimiento === unidadId;
+                }
             );
         }
         return listaInternacionFiltrada;
