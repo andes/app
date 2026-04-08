@@ -1,4 +1,4 @@
-<plex-list height="{{ errorTab ? '85%' : '80%'}}" [striped]="true" (scrolled)="onScroll()">
+<plex-list [height]="errorTab ? '100%' : '80%'" [striped]="true" (scrolled)="onScroll()">
     <plex-heading *ngIf="errorTab" [sticky]="true">
         <b label>Paciente</b>
         <b label>Edad</b>
@@ -41,16 +41,16 @@
             </plex-dropdown>
 
             <!-- Exclusivo tab reporte de errores -->
-            <plex-label *ngIf="errorTab && registroReportes.length"
-                        titulo="{{ registroReportes[paciente.id][0]?.createdBy.nombreCompleto || 'Sin datos'}}"
-                        subtitulo="{{ registroReportes[paciente.id][0]?.createdBy.organizacion.nombre || ''}}">
+            <plex-label *ngIf="errorTab && registroReportes && registroReportes[paciente.id] && registroReportes[paciente.id].length > 0"
+                        titulo="{{ registroReportes[paciente.id][0]?.createdBy?.nombreCompleto || 'Sin datos'}}"
+                        subtitulo="{{ registroReportes[paciente.id][0]?.createdBy?.organizacion?.nombre || ''}}">
             </plex-label>
 
             <plex-badge *ngIf="errorTab && !paciente.reportarError" type="success">
                 Corregido
             </plex-badge>
 
-            <plex-badge *ngIf="errorTab && registroReportes.length" type="info">
+            <plex-badge *ngIf="errorTab && registroReportes && registroReportes[paciente.id]" type="info">
                 {{ registroReportes[paciente.id][0]?.createdAt | fecha:'utc'}}
             </plex-badge>
 
