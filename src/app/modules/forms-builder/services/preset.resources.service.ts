@@ -16,6 +16,7 @@ export class FormPresetResourcesService extends ResourceBaseHttp<Event> {
     }
 
     setResource(resource, seccion, paciente) {
+        debugger;
         switch (resource) {
             case 'usuario':
                 seccion.fields['organizacion'] = { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre };
@@ -36,6 +37,7 @@ export class FormPresetResourcesService extends ResourceBaseHttp<Event> {
             case 'mpi':
                 seccion.fields['nacionalidad'] = paciente.direccion[1]?.ubicacion.pais ? paciente.direccion[1].ubicacion.pais : '';
                 seccion.fields['direccioncaso'] = paciente.direccion[0]?.valor ? paciente.direccion[0].valor : '';
+                seccion.fields['telefonocaso'] = paciente.contacto.find(c => c.tipo === 'celular')?.valor ? paciente.contacto.find(c => c.tipo === 'telefono').valor : '';
                 seccion.fields['lugarresidencia'] = paciente.direccion[0]?.ubicacion.provincia ? paciente.direccion[0].ubicacion.provincia : '';
                 seccion.fields['localidadresidencia'] = paciente.direccion[0]?.ubicacion.localidad ? paciente.direccion[0].ubicacion.localidad : '';
                 break;

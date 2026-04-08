@@ -318,6 +318,7 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
         }
         this.contactoCorrecto = false;
     }
+
     deleteContacto(contacto) {
         const index = this.contactosEstrechos.findIndex(item => item.documento === contacto.documento);
         if (index >= 0) {
@@ -332,6 +333,7 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
     showNuevoContacto() {
         this.nuevoContacto = true;
     }
+    
     setOrganizacion(seccion, organizacion) {
         const idOrganizacion = organizacion.value ? organizacion.value.id : organizacion;
         this.organizacionService.getById(idOrganizacion).subscribe(res => {
