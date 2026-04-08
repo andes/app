@@ -132,6 +132,10 @@
             @include card-estilo($vacuna);
         }
 
+        .recc {
+            @include card-estilo($recc);
+        }
+
         .dominios {
             @include card-estilo($dominiosNac);
         }
@@ -284,6 +288,10 @@
 
     &.vacunas {
         color: $vacuna
+    }
+
+    &.recc {
+        color: $recc
     }
 
     &.dominios {
