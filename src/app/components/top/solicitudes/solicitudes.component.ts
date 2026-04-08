@@ -133,7 +133,7 @@ export class SolicitudesComponent implements OnInit {
     public collapse = false;
     public loader = true;
     public sort = 'fechaSolicitudAsc';
-    public sortBy = 'fechaSolicitud';
+    public sortBy = null;
     public sortOrder = 'asc';
     private vigenciasMap: { [conceptId: string]: number } = {};
     public columns = [
