@@ -90,8 +90,7 @@ export class SolicitudesComponent implements OnInit {
     ];
     public prestacionSeleccionada: any;
     public motivosResolucion = [
-        { id: 'turno_en_efector', nombre: 'Con turno programado en el efector' },
-        { id: 'turno_otro_efector', nombre: 'Con turno programado en otro efector' },
+        { id: 'turno_en_efector', nombre: 'Con turno programado' },
         { id: 'no_requiere', nombre: 'Ya no requiere turno' },
         { id: 'fallecido', nombre: 'Paciente fallecido' }
     ];
