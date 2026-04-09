@@ -19,6 +19,9 @@ export const SECCION_CONTACTOS_ESTRECHOS = 'Contactos Estrechos';
 export const SECCION_USUARIO = 'Usuario';
 export const SECCION_LABORATORIO = 'Laboratorio';
 export const FIELD_PRC = 'identificadorpcr';
+export const SECCION_ESTRATEGIA = 'Definición de estratégia de vigilancia';
+export const SECCION_SIGNOS_SINTOMAS = 'Signos y Sintomas';
+
 
 export const TYPE_FICHA = Object.freeze({
     UMA: 'UMA',
