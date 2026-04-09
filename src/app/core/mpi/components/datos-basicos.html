@@ -222,8 +222,9 @@
                 </plex-wrapper>
             </ng-container>
         </form>
-        <ng-container *ngIf="(paciente?.id || pacienteFallecido) && !paciente?.fechaFallecimiento">
-            <plex-bool name="fallecido" type="slide" label="Paciente fallecido" [(ngModel)]="pacienteFallecido">
+        <ng-container *ngIf="paciente?.id || pacienteFallecido">
+            <plex-bool name="fallecido" type="slide" label="Paciente fallecido" [(ngModel)]="pacienteFallecido"
+                       (change)="onFallecidoChange()">
             </plex-bool>
 
             <div *ngIf="pacienteFallecido">
@@ -234,6 +235,7 @@
                                    name="fechaFallecimientoTemporal" [required]="pacienteFallecido" [max]="hoy"
                                    [min]="paciente?.fechaNacimiento" type="date">
                     </plex-datetime>
+
                     <plex-button type="success" icon="check" class="align-self-end" style="width: 50px;"
                                  (click)="guardarFallecimiento()"
                                  [disabled]="!fechaFallecimientoTemporal || fechaFallecimientoTemporal > hoy"
@@ -241,6 +243,7 @@
                     </plex-button>
                 </plex-grid>
             </div>
+
         </ng-container>
 
         <!-- Reporte de error en datos -->
