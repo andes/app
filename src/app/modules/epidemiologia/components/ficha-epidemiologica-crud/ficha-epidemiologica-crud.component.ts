@@ -5,7 +5,7 @@ import { NgForm } from '@angular/forms';
 import { Plex } from '@andes/plex';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
 import { FormPresetResourcesService } from 'src/app/modules/forms-builder/services/preset.resources.service';
-import { SECCION_CONTACTOS_ESTRECHOS, SECCION_OPERACIONES, SECCION_USUARIO } from '../../constantes';
+import { SECCION_CONTACTOS_ESTRECHOS, SECCION_OPERACIONES, SECCION_USUARIO, SECCION_ESTRATEGIA, SECCION_SIGNOS_SINTOMAS } from '../../constantes';
 import { Observable } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
@@ -168,7 +168,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             this.ngForm.control.markAllAsTouched();
         } else {
             this.getValues();
-            this.buildFieldIndex();
+            this.obtenerDatosClasificacion();
             this.setFicha();
         }
     }
@@ -289,29 +289,53 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         return res;
     }
 
+    getField(fields: any[], key: string) {
+        const item = fields.find(f => key in f);
+        return item ? item[key] : undefined;
+    }
+
     /**
      *  Indexa todos los campos del formulario por su key para búsquedas rápidas.
      */
-    buildFieldIndex(): Map<string, any> {
-        debugger
-        const map = new Map<string, any>();
+    obtenerDatosClasificacion(): any {
+        debugger;
+        let organizacion = null;
+        let internado = false;
+        let previos10dias = false;
+        let derivado = false;
+        let internado14dias = false;
+        let inicioSintomas = false;
+        let sintomas: string[] = [];
 
-        function walkSections(sections?: any[]) {
-            if (!sections) { return; }
-            for (const s of sections) {
-                if (s.fields && s.fields.length) {
-                    for (const f of s.fields) {
-                        if (f && f.key) {
-                            map.set(f.key, f);
-                        }
-                    }
-                }
+        for (const section of this.ficha) {
+            if (section.name === SECCION_USUARIO) {
+                organizacion = this.getField(section.fields, "organizacion");
             }
-        }
 
-        walkSections(this.ficha);
-        console.log(':::::MAP:::::', map);
-        return map;
+            this.Clasificacion = organizacion?.nombre === 'HOSPITAL ZAPALA' ? 'Monitoreo de Sarv-cov2, influenza y vrs en ambulatorios ' : '';
+
+            if (section.name === SECCION_ESTRATEGIA) {
+                const val = this.getField(section.fields, "internado");
+                internado = val?.nombre === "SI";
+                previos10dias = this.getField(section.fields, "previos10dias");
+                derivado = this.getField(section.fields, "derivado");
+                internado14dias = this.getField(section.fields, "internado14dias");
+                inicioSintomas = this.getField(section.fields, "iniciosintomas");
+            }
+
+            if (section.name === SECCION_SIGNOS_SINTOMAS) {
+                this.getField(section.fields, "fiebre")?.nombre === "SI" ? sintomas.push('fiebre') : null;
+                this.getField(section.fields, "tos")?.nombre === "SI" ? sintomas.push('tos') : null;
+                this.getField(section.fields, "disnea")?.nombre === "SI" ? sintomas.push('disnea') : null;
+                this.getField(section.fields, "sepsis")?.nombre === "SI" ? sintomas.push('sepsis') : null;
+                this.getField(section.fields, "apneas")?.nombre === "SI" ? sintomas.push('apneas') : null;
+
+            }
+
+
+
+
+        }
     }
 
     checkClasificacion() {
