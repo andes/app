@@ -184,7 +184,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
 
     cargarEstrategiasAtencion() {
         this.estrategiaAtencionService.search().subscribe(resultado => {
-            this.estrategiasAtencion = resultado;
+            this.estrategiasAtencion = [{ id: 'null', nombre: 'NINGUNO' }, ...resultado];
         });
     }
 
@@ -247,10 +247,14 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         this.modelo.condicion = this.modelo.condicion?.nombre;
         this.modelo.necesidad = this.modelo.necesidad?.nombre;
         if (this.modelo.estrategiaAtencion) {
-            this.modelo.estrategiaAtencion = {
-                id: this.modelo.estrategiaAtencion.id || this.modelo.estrategiaAtencion._id,
-                nombre: this.modelo.estrategiaAtencion.nombre
-            };
+            if (this.modelo.estrategiaAtencion.id === 'null') {
+                this.modelo.estrategiaAtencion = null;
+            } else {
+                this.modelo.estrategiaAtencion = {
+                    id: this.modelo.estrategiaAtencion.id || this.modelo.estrategiaAtencion._id,
+                    nombre: this.modelo.estrategiaAtencion.nombre
+                };
+            }
         } else {
             this.modelo.estrategiaAtencion = null;
         }

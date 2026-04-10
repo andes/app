@@ -71,6 +71,14 @@ export class ComPuntoInicioComponent implements OnInit {
     public estrategia;
     public hoy = moment().endOf('day').toDate();
 
+    public get maxFechaDesde() {
+        return this.fechaHasta ? moment(this.fechaHasta).endOf('day').toDate() : this.hoy;
+    }
+
+    public get minFechaHasta() {
+        return this.fechaDesde ? moment(this.fechaDesde).startOf('day').toDate() : null;
+    }
+
     constructor(
         private derivacionesService: DerivacionesService,
         private organizacionService: OrganizacionService,
@@ -168,7 +176,7 @@ export class ComPuntoInicioComponent implements OnInit {
             if (this.estrategia.id === 'null') {
                 query.estrategiaAtencion = 'null';
             } else {
-                query.estrategiaAtencion = this.estrategia.id;
+                query.estrategiaAtencion = this.estrategia.id || this.estrategia._id;
             }
         }
 
@@ -176,7 +184,7 @@ export class ComPuntoInicioComponent implements OnInit {
         let desde;
         let hasta;
         if (this.fechaDesde) {
-            desde = moment(this.fechaDesde).format('YYYY-MM-DD HH:mm:ss');
+            desde = moment(this.fechaDesde).startOf('day').format('YYYY-MM-DD HH:mm:ss');
             if (this.fechaHasta) {
                 hasta = moment(this.fechaHasta).endOf('day').format('YYYY-MM-DD HH:mm:ss');
                 rangoFecha = `${desde}|${hasta}`;
@@ -302,7 +310,7 @@ export class ComPuntoInicioComponent implements OnInit {
     }
 
     getColorPrioridad(prioridad) {
-        return prioridad ? this.opcionesSemaforo.find(x => x.label === prioridad)?.itemRowStyle : false;
+        return (prioridad && this.opcionesSemaforo) ? this.opcionesSemaforo.find(x => x.label === prioridad)?.itemRowStyle : false;
     }
 }
 

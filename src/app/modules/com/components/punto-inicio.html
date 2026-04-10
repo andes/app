@@ -13,10 +13,10 @@
                 <plex-wrapper>
                     <plex-datetime type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Fecha desde"
                                    class="fechas" (change)="cargarDerivaciones()" debounce="800"
-                                   [max]="fechaHasta || hoy">
+                                   [max]="maxFechaDesde">
                     </plex-datetime>
                     <plex-datetime type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Fecha hasta"
-                                   class="fechas" (change)="cargarDerivaciones()" debounce="800" [min]="fechaDesde"
+                                   class="fechas" (change)="cargarDerivaciones()" debounce="800" [min]="minFechaHasta"
                                    [max]="hoy">
                     </plex-datetime>
                     <plex-select [(ngModel)]="organizacionOrigen" name="orgOrigen" tmOrganizaciones
@@ -130,10 +130,10 @@
                 <plex-wrapper>
                     <plex-datetime type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Fecha desde"
                                    class="fechas" (change)="cargarDerivaciones()" debounce="800"
-                                   [max]="fechaHasta || hoy">
+                                   [max]="maxFechaDesde">
                     </plex-datetime>
                     <plex-datetime type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Fecha hasta"
-                                   class="fechas" (change)="cargarDerivaciones()" debounce="800" [min]="fechaDesde"
+                                   class="fechas" (change)="cargarDerivaciones()" debounce="800" [min]="minFechaHasta"
                                    [max]="hoy">
                     </plex-datetime>
                     <plex-select [(ngModel)]="organizacionDestino" name="orgDestino" tmOrganizaciones
