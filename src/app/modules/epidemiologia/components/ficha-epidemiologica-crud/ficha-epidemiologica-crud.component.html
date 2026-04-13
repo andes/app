@@ -35,7 +35,7 @@
                             </plex-select>
                             <plex-text *ngSwitchCase="'string'" [label]="field.label?field.label:field.key" grow="auto"
                                        name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                       [required]="field.required" [readonly]="!editFicha">
+                                       [required]="field.required" [readonly]="!editFicha || field.readonly">
                             </plex-text>
                             <plex-int *ngSwitchCase="'int'" [label]="field.label?field.label:field.key" grow="auto"
                                       name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
