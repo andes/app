@@ -162,13 +162,12 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     }
 
     registrarFicha() {
-        debugger;
+
         if (this.ngForm.invalid) {
             this.plex.info('warning', 'Hay campos obligatorios que no fueron completados', 'Atención');
             this.ngForm.control.markAllAsTouched();
         } else {
             this.getValues();
-            this.obtenerDatosClasificacion();
             this.setFicha();
         }
     }
@@ -245,28 +244,35 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             }
         };
 
-        if (this.fichaPaciente) {
-            this.formsEpidemiologiaService.update(this.fichaPaciente._id, fichaFinal).subscribe({
-                next: () => {
-                    this.plex.toast('success', 'Su ficha fue actualizada correctamente');
-                    this.volver.emit();
-                },
-                error: () => {
-                    this.plex.toast('danger', 'ERROR: La ficha fue actualizada correctamente');
+        this.obtenerDatosClasificacion();
+        this.plex.confirm('¿Desea continuar?', `La ficha se guardará y se abrirá en un evento en SNVS con la clasificación: <br/><b><i>${this.Clasificacion}</i></b>`).then((resultado) => {
+            if (resultado) {
+                if (this.fichaPaciente) {
+                    this.formsEpidemiologiaService.update(this.fichaPaciente._id, fichaFinal).subscribe({
+                        next: () => {
+                            this.plex.toast('success', 'Su ficha fue actualizada correctamente');
+                            this.volver.emit();
+                        },
+                        error: () => {
+                            this.plex.toast('danger', 'ERROR: La ficha fue actualizada correctamente');
+                        }
+                    });
+                } else {
+                    this.formsEpidemiologiaService.save(fichaFinal).subscribe({
+                        next: (fichaFinal) => {
+                            const msg = fichaFinal.configLaboratorio?.interopera ? `La ficha con el identificador: ${fichaFinal.configLaboratorio.nroIdentificacion} fue registrada correctamente` : 'La ficha fue generada correctamente';
+                            this.volver.emit();
+                            this.plex.info('success', msg);
+                        },
+                        error: () => {
+                            this.plex.toast('danger', 'ERROR: La ficha no pudo ser registrada');
+                        }
+                    });
                 }
-            });
-        } else {
-            this.formsEpidemiologiaService.save(fichaFinal).subscribe({
-                next: (fichaFinal) => {
-                    const msg = fichaFinal.configLaboratorio?.interopera ? `La ficha con el identificador: ${fichaFinal.configLaboratorio.nroIdentificacion} fue registrada correctamente` : 'La ficha fue generada correctamente';
-                    this.volver.emit();
-                    this.plex.info('success', msg);
-                },
-                error: () => {
-                    this.plex.toast('danger', 'ERROR: La ficha no pudo ser registrada');
-                }
-            });
-        }
+            }
+        });
+
+
     }
 
     checkDependency(field) {
@@ -298,7 +304,6 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
      *  Indexa todos los campos del formulario por su key para búsquedas rápidas.
      */
     obtenerDatosClasificacion(): any {
-        debugger;
         let organizacion = null;
         let internado = false;
         let previos10dias = false;
@@ -306,13 +311,13 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         let internado14dias = false;
         let inicioSintomas = false;
         let sintomas: string[] = [];
+        let edad = this.paciente.fechaNacimiento ? Math.floor((new Date().getTime() - new Date(this.paciente.fechaNacimiento).getTime()) / 1000 / 60 / 60 / 24 / 365) : null;
+        let edadMeses = this.paciente.fechaNacimiento ? Math.floor((new Date().getTime() - new Date(this.paciente.fechaNacimiento).getTime()) / 1000 / 60 / 60 / 24 / 30) : null;
 
         for (const section of this.ficha) {
             if (section.name === SECCION_USUARIO) {
                 organizacion = this.getField(section.fields, "organizacion");
             }
-
-            this.Clasificacion = organizacion?.nombre === 'HOSPITAL ZAPALA' ? 'Monitoreo de Sarv-cov2, influenza y vrs en ambulatorios ' : '';
 
             if (section.name === SECCION_ESTRATEGIA) {
                 const val = this.getField(section.fields, "internado");
@@ -331,44 +336,31 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                 this.getField(section.fields, "apneas")?.nombre === "SI" ? sintomas.push('apneas') : null;
 
             }
-
-
-
-
         }
+
+        if (!internado) {
+            this.Clasificacion = organizacion?.nombre === 'HTAL ZAPALA - DR JUAN J POSE' ? 'Monitoreo de SARS-CoV2, influenza y VSR en ambulatorios ' : 'COVID-19, influenza y OVR en ambulatorio';
+        } else {
+            this.Clasificacion = 'Internado y/o fallecido por COVID-19 o IRA';
+            if (organizacion?.nombre === 'HTAL ZAPALA - DR JUAN J POSE') {
+                if (previos10dias && sintomas.includes('fiebre') && sintomas.includes('tos') && !derivado && !internado14dias && !inicioSintomas) {
+                    this.Clasificacion = 'Unidad centinela de infección respiratoria aguda grave (UC-IRAG)';
+                } else {
+                    if (!sintomas.includes('fiebre') && (sintomas.includes('disnea') || sintomas.includes('tos')) && (edad >= 60 || edad <= 2) && !derivado && !internado14dias && !inicioSintomas) {
+                        this.Clasificacion = 'Unidad centinela de infección respiratoria aguda grave (UC-IRAG)';
+                    } else {
+                        if (!sintomas.includes('fiebre') && !sintomas.includes('disnea') && !sintomas.includes('tos') && (edad <= 0) && (edadMeses <= 6) && (sintomas.includes('sepsis') || sintomas.includes('apneas')) && !derivado && !internado14dias && !inicioSintomas) {
+                            this.Clasificacion = 'Unidad centinela de infección respiratoria aguda grave (UC-IRAG)';
+                        }
+                    }
+                }
+
+            }
+        }
+
+        return this.Clasificacion;
+
     }
-
-    checkClasificacion() {
-
-        /*     this.secciones.map(seccion => {
-                 seccion.fields.forEach(field => {
-     
-                     if (seccion.name === SECCION_USUARIO && field.key === 'organizacion') {
-     
-     
-                     }
-     
-                 });
-             });
-             // obtener organizacion
-             const dataEfector = this.secciones.find(seccion => seccion.name === SECCION_USUARIO)?.fields.map(field => { field.key === 'organizacion' ? field : null; }).filter(field => field)[0];
-             // CASO: Paciente ambulatorio
-             const pacienteInternado = this.secciones.reduce((acc, seccion) => {
-                 if (seccion.fields['internacion']) {
-                     acc = true;
-                 }
-                 return acc;
-             }, false);
-     
-             if (!pacienteInternado) {
-                 this.Clasificacion = 'casoLeve';
-             } else {
-                 this.Clasificacion = '';
-             }
-             this.secciones.find(seccion => seccion.fields['internacion']);
-             */
-    }
-
 
 
     toBack() {
