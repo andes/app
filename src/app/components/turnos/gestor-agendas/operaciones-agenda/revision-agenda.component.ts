@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -26,8 +26,6 @@ import { Unsubscribe } from '@andes/shared';
 export class RevisionAgendaComponent implements OnInit, OnDestroy {
     private lastRequest: Subscription;
     private _agenda: any;
-    private estadoPendienteAuditoria;
-    private estadoCodificado;
     public agenda: any;
     public cantidadTurnosAsignados: number;
     public indiceReparo: any;
@@ -52,6 +50,9 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     public loading = false;
     public pacienteDetalle;
     public prestacionAuditable;
+    public financiador;
+    public showSidebar = false;
+    public numeroAfiliado;
 
     constructor(
         private pacienteCache: PacienteCacheService,
@@ -133,12 +134,16 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
             this.turnoSeleccionado.paciente = pacienteTurno;
             this.turnoSeleccionado.estado = estado;
         }
+        if (this.financiador) {
+            this.turnoSeleccionado.paciente.obraSocial = this.financiador;
+        }
     }
 
     seleccionarTurno(turno, bloque) {
         if (this.lastRequest) {
             this.lastRequest.unsubscribe();
         }
+        this.showSidebar = (this.turnoSeleccionado !== turno) ? true : false;
         this.pacienteDetalle = null;
         this.existeCodificacionProfesional = false;
         this.diagnosticos = [];
@@ -173,7 +178,9 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         if (this.turnoSeleccionado && this.turnoSeleccionado.asistencia) {
             this.turnoSeleccionado.asistencia = asistencia.id;
         }
-        this.onSave();
+        if (this.turnoTipoPrestacion) {
+            this.turnoSeleccionado.tipoPrestacion = this.turnoTipoPrestacion;
+        }
     }
 
     asistenciaSeleccionada(asistencia) {
@@ -199,7 +206,6 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         };
         nuevoDiagnostico.codificacionAuditoria = diagnostico;
         this.diagnosticos.push(nuevoDiagnostico);
-        this.onSave();
     }
 
     borrarDiagnostico(index) {
@@ -211,7 +217,6 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         if (index === 0) {
             this.plex.toast('warning', 'Información', 'El diagnostico principal fue eliminado');
         }
-        this.onSave();
     }
 
     aprobar(index) {
@@ -222,7 +227,6 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
                 this.diagnosticos[j].codificacionAuditoria = this.diagnosticos[j].codificacionProfesional.cie10;
             }
         }
-        this.onSave();
     }
     /**
      * Verifica si cada turno tiene la asistencia verificada y modifica el estado de la agenda.
@@ -285,12 +289,14 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
                     };
                     label = 'Pendiente Asistencia';
                 } else {
+                    // Solo modificamos el turno, no la agenda por completo. Ej: la obra social.
+                    this.plex.toast('success', 'El turno de la agenda fue actualizado');
                     patchear = false;
                 }
             }
         }
         if (patchear) {
-            this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
+            this.serviceAgenda.patch(this._agenda.id, patch).subscribe(() => {
                 this.plex.toast('success', 'El estado de la agenda fue actualizado', label);
             });
         }
@@ -322,7 +328,9 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         return turno?.asistencia && turno?.asistencia === 'asistio' && !turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo && !turno?.diagnostico?.codificaciones[0]?.codificacionProfesional?.snomed?.term && turno.tipoPrestacion?.auditable === true;
     }
 
-    cancelar() {
+    guardar() {
+        this.onSave();
+        this.showSidebar = false;
         this.turnoSeleccionado = null;
     }
 
@@ -330,6 +338,8 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         // Se guarda el turno seleccionado
         if (this.paciente) {
             this.asignarPaciente(this.paciente);
+        } else {
+            this.turnoSeleccionado.paciente.obraSocial = this.financiador;
         }
         if (this.turnoTipoPrestacion) {
             this.turnoSeleccionado.tipoPrestacion = this.turnoTipoPrestacion;
@@ -355,9 +365,8 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
                 turno: this.turnoSeleccionado
             };
         }
-
         if (this.turnoSeleccionado.tipoPrestacion) {
-            this.serviceTurno.put(datosTurno).subscribe(resultado => {
+            this.serviceTurno.put(datosTurno).subscribe(() => {
                 this.cerrarAsistencia();
             });
         } else {
@@ -404,18 +413,11 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
             this.diagnosticos[this.indiceReparo].codificacionAuditoria = reparo;
             this.showReparo = false;
         }
-        this.onSave();
     }
 
     borrarReparo(index) {
         this.diagnosticos[index].codificacionAuditoria = null;
         this.showReparo = false;
-        this.onSave();
-    }
-
-    volverRevision() {
-        this.refresh();
-        this.cerrarAsistencia();
     }
 
     // -------------- SOBRE BUSCADOR PACIENTES ----------------
@@ -444,6 +446,16 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     onSearchClear() {
         this.resultadoBusqueda = null;
         this.paciente = null;
+    }
+
+    public setFinanciador(financiador) {
+        this.financiador = financiador;
+    }
+
+    cerrar() {
+        this.showSidebar = false;
+        this.showRegistrosTurno = false;
+        this.turnoSeleccionado = null;
     }
 
     // ----------------------------------
