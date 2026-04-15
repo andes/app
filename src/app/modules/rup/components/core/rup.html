@@ -8,9 +8,15 @@
     </div>
 </div>
 
+<div *ngIf="mostrarTituloSubmolecula" class="rup-submolecula-titulo mb-2" style="margin-top: 10px;">
+    <span class="text-bold text-capitalize" style="font-size: 1.0rem;color:#00a8e0">{{ params?.titulo || registro?.nombre || elementoRUP?.conceptos[0]?.term }}</span>
+    <hr style="border: none; height: 1px; background-color: #4a4a4a; opacity: 1;">
+</div>
 
-<!-- Moléculas -->
-<ng-container *ngIf="contentLoaded && elementoRUP.requeridos && elementoRUP.requeridos.length">
+<ng-container #componentContainer></ng-container>
+
+<!-- Moléculas (Fallback para cuando no hay componente específico o para renderizado recursivo) -->
+<ng-container *ngIf="!rupInstance && contentLoaded && elementoRUP.requeridos && elementoRUP.requeridos.length">
     <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
         <ng-container *ngFor="let item of requeridos; let i = index">
             <div *ngIf="item.elementoRUP"

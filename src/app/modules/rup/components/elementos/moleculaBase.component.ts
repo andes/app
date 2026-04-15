@@ -11,7 +11,6 @@ export class MoleculaBaseComponent extends RUPComponent implements OnInit {
     public contentLoaded = false;
     public ultimaConsulta;
     public validacion = false;
-    mostrarTituloSubmolecula = false;
     public estados = [
         { id: 'resuelto', nombre: 'Resuelto' },
         { id: 'activo', nombre: 'Activo' }
@@ -20,10 +19,6 @@ export class MoleculaBaseComponent extends RUPComponent implements OnInit {
     public evoluciones;
 
     ngOnInit() {
-        if (this.params?.mostrarTituloSubmolecula) {
-        }
-
-        this.mostrarTituloSubmolecula = this.params?.mostrarTituloSubmolecula || false;
         if (this.registro.concepto.semanticTag === 'trastorno') {
             if (!this.registro.valor) {
                 this.registro.valor = { estado: 'activo' };

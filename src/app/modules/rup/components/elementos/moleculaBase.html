@@ -1,7 +1,3 @@
-<div *ngIf="mostrarTituloSubmolecula" class="rup-submolecula-titulo mb-2" style="margin-top: 10px;">
-    <span class="text-bold text-capitalize" style="font-size: 1.0rem;color:#00a8e0">{{registro.nombre ||
-        registro.concepto.term}}</span>
-</div>
 <ng-container *ngIf="registro.concepto.semanticTag === 'trastorno'">
     <form #form="ngForm" *ngIf="paciente">
         <div *ngIf="elementoRUP && registro">
@@ -60,5 +56,3 @@
         </div>
     </ng-container>
 </ng-container>
-
-<hr *ngIf="mostrarTituloSubmolecula" style="height:2px; border:none; background-color:#727070a2;">
