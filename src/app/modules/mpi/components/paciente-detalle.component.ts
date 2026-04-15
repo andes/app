@@ -25,6 +25,7 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     @Input() showDocumentos = false;
     @Input() accesoHuds = false;
     @Input() puedeEditar = false;
+    @Input() returnOrigen: string;
 
     obraSocial: IObraSocial;
     token$: Observable<string>;
@@ -256,10 +257,11 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     editar() {
         if (this.puedeEditar && this.auth.check('mpi:paciente')) {
             this.pacienteCache.setPaciente(this.paciente);
+            const origen = this.returnOrigen || 'huds';
             if ((this.paciente.numeroIdentificacion || this.paciente.tipoIdentificacion) && !this.paciente.documento) {
-                this.router.navigate(['apps/mpi/paciente/extranjero/huds']); // abre formulario paciente extranjero
+                this.router.navigate(['apps/mpi/paciente/extranjero', origen]);
             } else {
-                this.router.navigate(['apps/mpi/paciente/con-dni/huds']); // abre formulario paciente con/sin-dni
+                this.router.navigate(['apps/mpi/paciente/con-dni', origen]);
             }
         }
     }

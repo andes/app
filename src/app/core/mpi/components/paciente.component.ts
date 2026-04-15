@@ -475,7 +475,12 @@ export class PacienteComponent implements OnInit {
                 this._router.navigate(['huds/paciente', id]);
                 break;
             default:
-                this._router.navigate(['apps/mpi/busqueda']);
+                if (this.origen && this.origen.startsWith('rup-')) {
+                    const idPrestacion = this.origen.split('-')[1];
+                    this._router.navigate(['rup/ejecucion', idPrestacion]);
+                } else {
+                    this._router.navigate(['apps/mpi/busqueda']);
+                }
                 break;
         }
     }
