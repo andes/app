@@ -52,11 +52,12 @@ export class TurnosSolicitudComponent implements OnInit {
         return this._paciente;
     }
 
+
     cargarTurnos() {
         const pacienteId = this._paciente?.id || (this._paciente as any)?._id;
         if (pacienteId) {
-            this.serviceTurno.getHistorial({ pacienteId }).subscribe(turnos => {
-                const turnosFiltrados = turnos.filter(t => t.estado !== 'liberado' && moment(t.horaInicio).isSameOrAfter(this.todaysdate, 'day'));
+            this.serviceTurno.getTurnosFuturos({ pacienteId }).subscribe(turnos => {
+                const turnosFiltrados = turnos.filter(t => t.estado !== 'liberado' && moment(t.horaInicio).isSameOrAfter(moment(), 'day'));
                 this.turnosPaciente = turnosFiltrados.sort((a, b) => {
                     const inia = a.horaInicio ? new Date(a.horaInicio) : null;
                     const inib = b.horaInicio ? new Date(b.horaInicio) : null;

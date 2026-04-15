@@ -978,19 +978,9 @@ export class DarTurnosComponent implements OnInit {
      */
     buscarTurnosFuturos() {
         if (this.turnoTipoPrestacion) {
-            this.serviceTurno.getHistorial({ pacienteId: this.paciente.id }).subscribe(turnos => {
-                // Filtrar los turnos que cumplen con la condición
-                const fechaHoy = moment();
+            this.serviceTurno.getTurnosFuturos({ pacienteId: this.paciente.id }).subscribe(turnos => {
                 this.turnosFuturos = turnos
-                    .filter(turno => {
-                        const fechaTurno = moment(turno.horaInicio);
-                        const cumpleCondiciones =
-                            turno.tipoPrestacion?._id === this.turnoTipoPrestacion['_id'] &&
-                            turno.estado === 'asignado' &&
-                            fechaTurno.isAfter(fechaHoy);
-
-                        return cumpleCondiciones;
-                    })
+                    .filter(turno => turno.tipoPrestacion?._id === this.turnoTipoPrestacion['_id'])
                     .map(turno => (
                         {
                             horaInicio: turno.horaInicio,
