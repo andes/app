@@ -1093,4 +1093,14 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         return this.recetasService.getRecetaPrincipal(recetas);
 
     }
+
+    estadoRegistro(estado) {
+        if (estado === 'validada') {
+            return 'success';
+        } else if (estado === 'anulada' || estado === 'vencida' || estado === 'rechazada') {
+            return 'danger';
+        } else {
+            return 'info';
+        }
+    }
 }
