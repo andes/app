@@ -42,7 +42,7 @@ import { ObraSocialService } from 'src/app/services/obraSocial.service';
     template: `
         <div *ngIf="mostrarTituloSubmolecula" class="rup-submolecula-titulo mb-2" style="margin-top: 10px;">
             <span class="text-bold text-capitalize" style="font-size: 1.0rem;color:#00a8e0">{{ params?.titulo || registro?.nombre || elementoRUP?.conceptos[0]?.term }}</span>
-            <hr style="border: none; height: 1px; background-color: #4a4a4a; opacity: 1;">
+            <hr style="border: none;width: 100%; height: 1px; background-color: #4a4a4a; opacity: 1;">
         </div>
         <ng-container #componentContainer></ng-container>
     `
@@ -70,7 +70,8 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
     private rulesEngine: Engine;
     private rulesEvent = new Subject<{ type: string; params: any }>();
     private rulesEvent$ = this.rulesEvent.asObservable();
-    public mostrarTituloSubmolecula = false;
+    @Input() public mostrarTituloSubmolecula = null;
+
     /**
      * Determina si un elemento RUP es valido. Se setea apartir de reglas.
      */
@@ -178,8 +179,11 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
 
     ngOnInit() {
         this.loadComponent();
-        this.mostrarTituloSubmolecula = !!this.params?.mostrarTituloSubmolecula;
+        if (this.mostrarTituloSubmolecula === null) {
+            this.mostrarTituloSubmolecula = !!this.params?.mostrarTituloSubmolecula;
+        }
     }
+
 
     ngOnDestroy() {
         this.onDestroy();
