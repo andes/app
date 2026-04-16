@@ -1,4 +1,4 @@
-<ng-container *ngIf="prestacion && paciente">
-    <paciente-detalle [paciente]="paciente" orientacion="horizontal" [puedeEditar]="true" [returnOrigen]="'rup-' + prestacion?.id"></paciente-detalle>
+<ng-container *ngIf="paciente">
+    <paciente-detalle [paciente]="paciente" orientacion="horizontal" [puedeEditar]="true" [returnOrigen]="prestacion ? ('rup-' + prestacion.id) : 'huds'"></paciente-detalle>
     <hr>
 </ng-container>
