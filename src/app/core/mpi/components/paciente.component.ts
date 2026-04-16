@@ -473,7 +473,7 @@ export class PacienteComponent implements OnInit {
                 break;
             case 'huds':
                 if (id) {
-                    this._router.navigate(['huds/paciente', id]);
+                    this._router.navigate(['huds/paciente', id], { replaceUrl: true });
                 } else {
                     this._router.navigate(['apps/mpi/busqueda']);
                 }
@@ -482,7 +482,7 @@ export class PacienteComponent implements OnInit {
                 if (this.origen && this.origen.startsWith('rup-')) {
                     const idPrestacion = this.origen.split('-')[1];
                     if (idPrestacion && idPrestacion !== 'undefined') {
-                        this._router.navigate(['rup/ejecucion', idPrestacion]);
+                        this._router.navigate(['rup/ejecucion', idPrestacion], { replaceUrl: true });
                     } else {
                         this._router.navigate(['rup']);
                     }
