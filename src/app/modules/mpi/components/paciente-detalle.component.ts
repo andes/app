@@ -249,7 +249,7 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     showMotivoAcceso() {
         this.motivoAccesoService.showMotivos(this.paciente).subscribe(motivo => {
             if (motivo) {
-                this.router.navigate(['/huds/paciente/', this.paciente.id]);
+                this.router.navigate(['/huds/paciente/', this.paciente.id], { queryParams: { origen: 'mpi' } });
             }
         });
     }
