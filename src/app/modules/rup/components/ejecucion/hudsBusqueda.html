@@ -772,12 +772,16 @@
                                                                     laboratorio?.prestacion?.term}}</span>
                                                                 <span *ngIf="laboratorio?.idProtocolo">Informe de
                                                                     laboratorio:
-                                                                    <b>Protocolo {{laboratorio?.numero}}</b>
+                                                                    <b> {{laboratorio?.TipoServicio}}</b>
                                                                 </span>
                                                             </small>
                                                         </div>
                                                         <div class="row p-0 m-0">
                                                             <div class="col-10 p-0 m-0">
+                                                                <div>
+                                                                    <small>Protocolo:
+                                                                        <b>{{laboratorio?.numero}}</b></small>
+                                                                </div>
                                                                 <div *ngIf="laboratorio?.documento">
                                                                     <small>Paciente: <b>{{ laboratorio?.apellido
                                                                             }}, {{
