@@ -101,7 +101,7 @@
             <ul *ngIf="busquedaRecetas?.length" class="hover listado list-unstyled">
                 <ng-container *ngFor="let grupo of busquedaRecetas; let iReceta = index">
                     <li>
-                        <plex-bool [readonly]="!esRecetaSeleccionable(grupo?.recetaVisible)"
+                        <plex-bool *ngIf="profesionalValido" [readonly]="!esRecetaSeleccionable(grupo?.recetaVisible)"
                                    [ngModel]="seleccionRecetas[iReceta]" name="seleccionada" type="checkbox"
                                    (change)="seleccionarReceta($event, grupo.recetas, iReceta)">
                         </plex-bool>
