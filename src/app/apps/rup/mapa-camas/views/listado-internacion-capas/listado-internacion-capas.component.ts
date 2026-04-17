@@ -77,8 +77,8 @@ export class ListadoInternacionCapasComponent implements OnInit, OnDestroy {
             sorteable: true,
             opcional: true,
             sort: (a: any, b: any) => {
-                const nameA = a.idPrestacion?.unidadOrganizativa?.term || a.estadosCama?.[0]?.estados?.[0]?.unidadOrganizativa?.term || '';
-                const nameB = b.idPrestacion?.unidadOrganizativa?.term || b.estadosCama?.[0]?.estados?.[0]?.unidadOrganizativa?.term || '';
+                const nameA = this.getUltimaUnidadOrganizativa(a) || '';
+                const nameB = this.getUltimaUnidadOrganizativa(b) || '';
                 return nameA.localeCompare(nameB);
             }
         }
@@ -142,6 +142,46 @@ export class ListadoInternacionCapasComponent implements OnInit, OnDestroy {
 
     volver() {
         this.location.back();
+    }
+
+    getUltimaUnidadOrganizativa(internacion: any): string {
+        const estadosCama = internacion.estadosCama;
+        if (!estadosCama?.length) {
+            return internacion.idPrestacion?.unidadOrganizativa?.term;
+        }
+        let ultimoEstadoConPaciente: any = null;
+        for (const cama of estadosCama) {
+            if (cama.estados && cama.estados.length > 0) {
+                for (const estado of cama.estados) {
+                    if (estado.paciente) {
+                        if (!ultimoEstadoConPaciente || new Date(estado.fecha) > new Date(ultimoEstadoConPaciente.fecha)) {
+                            ultimoEstadoConPaciente = estado;
+                        }
+                    }
+                }
+            }
+        }
+        return ultimoEstadoConPaciente?.unidadOrganizativa?.term || internacion.idPrestacion?.unidadOrganizativa?.term;
+    }
+
+    getUltimaUnidadOrganizativaConceptId(internacion: any): string {
+        const estadosCama = internacion.estadosCama;
+        if (!estadosCama?.length) {
+            return internacion.idPrestacion?.unidadOrganizativa?.conceptId;
+        }
+        let ultimoEstadoConPaciente: any = null;
+        for (const cama of estadosCama) {
+            if (cama.estados && cama.estados.length > 0) {
+                for (const estado of cama.estados) {
+                    if (estado.paciente) {
+                        if (!ultimoEstadoConPaciente || new Date(estado.fecha) > new Date(ultimoEstadoConPaciente.fecha)) {
+                            ultimoEstadoConPaciente = estado;
+                        }
+                    }
+                }
+            }
+        }
+        return ultimoEstadoConPaciente?.unidadOrganizativa?.conceptId || internacion.idPrestacion?.unidadOrganizativa?.conceptId;
     }
 
     cancelar() {
