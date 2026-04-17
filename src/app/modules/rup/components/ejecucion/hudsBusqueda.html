@@ -75,7 +75,7 @@
             <ul *ngIf="busquedaRecetas.length" class="hover listado list-unstyled">
                 <ng-container *ngFor="let grupo of busquedaRecetas; let iReceta = index">
                     <li>
-                        <plex-bool [readonly]="!esRecetaSeleccionable(grupo?.recetaVisible)"
+                        <plex-bool *ngIf="profesionalValido" [readonly]="!esRecetaSeleccionable(grupo?.recetaVisible)"
                             [ngModel]="seleccionRecetas[iReceta]" name="seleccionada" type="checkbox"
                             (change)="seleccionarReceta($event, grupo.recetas, iReceta)">
                         </plex-bool>
@@ -883,11 +883,11 @@
                 <ng-container *ngFor="let registro of derivaciones; let iDerivacion = index">
                     <li>
                         <div class="rup-card mini recc"
-                             [ngClass]="{'active': huds.isOpen(registro, 'recc'), 'recc': true}"
-                             (click)="clickDerivacion(registro, iDerivacion)">
+                            [ngClass]="{'active': huds.isOpen(registro, 'recc'), 'recc': true}"
+                            (click)="clickDerivacion(registro, iDerivacion)">
                             <div class="rup-header">
                                 <div class="rup-border rup-border-recc"
-                                     [ngClass]="{'active': huds.isOpen(registro, 'recc') , 'rup-border-recc': true}">
+                                    [ngClass]="{'active': huds.isOpen(registro, 'recc') , 'rup-border-recc': true}">
                                     <div class="row p-0 m-0 border-secondary border-left-0">
                                         <div class="col-10 p-0 m-0">
                                             <div class="row m-0 p-0">
@@ -908,12 +908,12 @@
                                                                 <br>
                                                                 <small>Profesional:
                                                                     <ng-container
-                                                                                  *ngIf='registro.profesionalSolicitante'>
+                                                                        *ngIf='registro.profesionalSolicitante'>
                                                                         {{ registro.profesionalSolicitante |
                                                                         nombre }}
                                                                     </ng-container>
                                                                     <ng-container
-                                                                                  *ngIf='!registro.profesionalSolicitante'>
+                                                                        *ngIf='!registro.profesionalSolicitante'>
                                                                         No existe
                                                                     </ng-container>
                                                                 </small>
@@ -934,7 +934,7 @@
                 <hr class="mt-0">
                 <div class="item-lista-vacia">
                     <plex-label size="sm" justify="center" icon="adi adi-mano-corazon"
-                                titulo="No hay derivaciones registradas">
+                        titulo="No hay derivaciones registradas">
                     </plex-label>
                 </div>
             </div>
