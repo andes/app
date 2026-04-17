@@ -69,8 +69,8 @@
         </ng-container>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
-        <plex-title *ngIf="paciente" titulo="Paciente" size="sm"></plex-title>
-        <ng-container *ngIf="paciente">
+        <plex-title *ngIf="paciente && estadoT === 'noSeleccionada'" titulo="Paciente" size="sm"></plex-title>
+        <ng-container *ngIf="paciente && estadoT === 'noSeleccionada'">
             <paciente-detalle [paciente]="paciente" orientacion="horizontal" [fields]="pacienteFields">
             </paciente-detalle>
         </ng-container>
