@@ -5,7 +5,7 @@ import { NgForm } from '@angular/forms';
 import { Plex } from '@andes/plex';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
 import { FormPresetResourcesService } from 'src/app/modules/forms-builder/services/preset.resources.service';
-import { SECCION_CONTACTOS_ESTRECHOS, SECCION_OPERACIONES, SECCION_USUARIO, SECCION_ESTRATEGIA, SECCION_SIGNOS_SINTOMAS } from '../../constantes';
+import { SECCION_CONTACTOS_ESTRECHOS, SECCION_OPERACIONES, SECCION_USUARIO, SECCION_ESTRATEGIA, SECCION_SIGNOS_SINTOMAS, SECCION_CLASIFICACION, CLASIFICACIONESVSR } from '../../constantes';
 import { Observable } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
@@ -29,52 +29,8 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     public ficha = [];
     public secciones;
     public descripcion: string;
-    public contactosEstrechos = [];
-    public Clasificacion = "";
-    public contacto = {
-        apellidoNombre: '',
-        documento: '',
-        telefono: '',
-        domicilio: '',
-        fechaUltimoContacto: '',
-        tipoContacto: ''
-    };
-    public columns = [
-        {
-            key: 'apellidoNombre',
-            label: 'Apellido y Nombre'
-        },
-        {
-            key: 'documento',
-            label: 'documento'
-        },
-        {
-            key: 'telefono',
-            label: 'Teléfono'
-        },
-        {
-            key: 'domicilio',
-            label: 'Domicilio'
-        },
-        {
-            key: 'fechaContacto',
-            label: 'Fecha último contacto'
-        },
-        {
-            key: 'tipoContacto',
-            label: 'Tipo de contacto'
-        },
-        {
-            key: 'acciones',
-            label: 'Acciones'
-        }
-    ];
-    public tipoContacto = [
-        { id: 'conviviente', nombre: 'Conviviente' },
-        { id: 'laboral', nombre: 'Laboral' },
-        { id: 'social', nombre: 'Social' },
-        { id: 'noConviviente', nombre: 'Familiar no conviviente' }
-    ];
+    public Clasificacion = null;
+
     public nuevoContacto = false;
     public organizaciones$: Observable<any>;
     public asintomatico = false;
@@ -107,13 +63,9 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                         const buscado = this.secciones.findIndex(seccion => seccion.name === sec.name);
                         if (buscado !== -1) {
                             if (sec.name === SECCION_USUARIO && this.editFicha) {
-
                                 this.organizaciones$ = this.auth.organizaciones();
                                 sec.fields.map(field => {
                                     switch (Object.keys(field)[0]) {
-                                        case 'responsable':
-                                            this.secciones[buscado].fields[Object.keys(field)[0]] = this.auth.usuario.nombreCompleto;
-                                            break;
                                         case 'organizacion':
                                             this.secciones[buscado].fields[Object.keys(field)[0]] = { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre };
                                             this.setOrganizacion(this.secciones[buscado], this.auth.organizacion.id);
@@ -121,12 +73,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                                         case 'fechanotificacion':
                                             this.secciones[buscado].fields['fechanotificacion'] = Object.values(field)[0];
                                             break;
-                                        case 'funcionusuario':
-                                            this.secciones[buscado].fields['funcionusuario'] = Object.values(field)[0];
-                                            break;
-                                        case 'email':
-                                            this.secciones[buscado].fields['email'] = Object.values(field)[0];
-                                            break;
+
                                     }
                                 });
                             } else {
@@ -145,8 +92,6 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                     } else {
                         if (sec.name === SECCION_OPERACIONES) {
                             this.operaciones = sec.fields;
-                        } else {
-                            this.contactosEstrechos = sec.fields;
                         }
                     }
                 });
@@ -188,6 +133,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                             valor = numeroPcr;
                         }
                     }
+
                     if (valor !== undefined && valor !== null) {
                         params[key] = valor;
                         if (valor instanceof Date) {
@@ -245,7 +191,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         };
 
         this.obtenerDatosClasificacion();
-        this.plex.confirm('¿Desea continuar?', `La ficha se guardará y se abrirá en un evento en SNVS con la clasificación: <br/><b><i>${this.Clasificacion}</i></b>`).then((resultado) => {
+        this.plex.confirm('¿Desea continuar?', `La ficha se guardará y se abrirá en un evento en SNVS con la clasificación: <br/><b><i>${this.Clasificacion.nombre}</i></b>`).then((resultado) => {
             if (resultado) {
                 if (this.fichaPaciente) {
                     this.formsEpidemiologiaService.update(this.fichaPaciente._id, fichaFinal).subscribe({
@@ -304,110 +250,86 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
      *  Indexa todos los campos del formulario por su key para búsquedas rápidas.
      */
     obtenerDatosClasificacion(): any {
+
         let organizacion = null;
         let internado = false;
         let previos10dias = false;
         let derivado = false;
         let internado14dias = false;
         let inicioSintomas = false;
-        let sintomas: string[] = [];
-        let edad = this.paciente.fechaNacimiento ? Math.floor((new Date().getTime() - new Date(this.paciente.fechaNacimiento).getTime()) / 1000 / 60 / 60 / 24 / 365) : null;
-        let edadMeses = this.paciente.fechaNacimiento ? Math.floor((new Date().getTime() - new Date(this.paciente.fechaNacimiento).getTime()) / 1000 / 60 / 60 / 24 / 30) : null;
+        const sintomas: string[] = [];
+        const edad = this.paciente.fechaNacimiento ? Math.floor((new Date().getTime() - new Date(this.paciente.fechaNacimiento).getTime()) / 1000 / 60 / 60 / 24 / 365) : null;
+        const edadMeses = this.paciente.fechaNacimiento ? Math.floor((new Date().getTime() - new Date(this.paciente.fechaNacimiento).getTime()) / 1000 / 60 / 60 / 24 / 30) : null;
 
         for (const section of this.ficha) {
             if (section.name === SECCION_USUARIO) {
-                organizacion = this.getField(section.fields, "organizacion");
+                organizacion = this.getField(section.fields, 'organizacion');
             }
 
             if (section.name === SECCION_ESTRATEGIA) {
-                const val = this.getField(section.fields, "internado");
-                internado = val?.nombre === "SI";
-                previos10dias = this.getField(section.fields, "previos10dias");
-                derivado = this.getField(section.fields, "derivado");
-                internado14dias = this.getField(section.fields, "internado14dias");
-                inicioSintomas = this.getField(section.fields, "iniciosintomas");
+                const val = this.getField(section.fields, 'internado');
+                internado = val?.nombre === 'SI';
+                previos10dias = this.getField(section.fields, 'previos10dias');
+                derivado = this.getField(section.fields, 'derivado');
+                internado14dias = this.getField(section.fields, 'internado14dias');
+                inicioSintomas = this.getField(section.fields, 'iniciosintomas');
             }
 
             if (section.name === SECCION_SIGNOS_SINTOMAS) {
-                this.getField(section.fields, "fiebre")?.nombre === "SI" ? sintomas.push('fiebre') : null;
-                this.getField(section.fields, "tos")?.nombre === "SI" ? sintomas.push('tos') : null;
-                this.getField(section.fields, "disnea")?.nombre === "SI" ? sintomas.push('disnea') : null;
-                this.getField(section.fields, "sepsis")?.nombre === "SI" ? sintomas.push('sepsis') : null;
-                this.getField(section.fields, "apneas")?.nombre === "SI" ? sintomas.push('apneas') : null;
+                this.getField(section.fields, 'fiebre')?.nombre === 'SI' ? sintomas.push('fiebre') : null;
+                this.getField(section.fields, 'tos')?.nombre === 'SI' ? sintomas.push('tos') : null;
+                this.getField(section.fields, 'disnea')?.nombre === 'SI' ? sintomas.push('disnea') : null;
+                this.getField(section.fields, 'sepsis')?.nombre === 'SI' ? sintomas.push('sepsis') : null;
+                this.getField(section.fields, 'apneas')?.nombre === 'SI' ? sintomas.push('apneas') : null;
 
             }
         }
 
         if (!internado) {
-            this.Clasificacion = organizacion?.nombre === 'HTAL ZAPALA - DR JUAN J POSE' ? 'Monitoreo de SARS-CoV2, influenza y VSR en ambulatorios ' : 'COVID-19, influenza y OVR en ambulatorio';
+            this.Clasificacion = organizacion?.nombre === 'HTAL ZAPALA - DR JUAN J POSE' ? CLASIFICACIONESVSR[2] : CLASIFICACIONESVSR[3];
         } else {
-            this.Clasificacion = 'Internado y/o fallecido por COVID-19 o IRA';
+            this.Clasificacion = CLASIFICACIONESVSR[0];
             if (organizacion?.nombre === 'HTAL ZAPALA - DR JUAN J POSE') {
                 if (previos10dias && sintomas.includes('fiebre') && sintomas.includes('tos') && !derivado && !internado14dias && !inicioSintomas) {
-                    this.Clasificacion = 'Unidad centinela de infección respiratoria aguda grave (UC-IRAG)';
+                    this.Clasificacion = CLASIFICACIONESVSR[1];
                 } else {
                     if (!sintomas.includes('fiebre') && (sintomas.includes('disnea') || sintomas.includes('tos')) && (edad >= 60 || edad <= 2) && !derivado && !internado14dias && !inicioSintomas) {
-                        this.Clasificacion = 'Unidad centinela de infección respiratoria aguda grave (UC-IRAG)';
+                        this.Clasificacion = CLASIFICACIONESVSR[1];
                     } else {
                         if (!sintomas.includes('fiebre') && !sintomas.includes('disnea') && !sintomas.includes('tos') && (edad <= 0) && (edadMeses <= 6) && (sintomas.includes('sepsis') || sintomas.includes('apneas')) && !derivado && !internado14dias && !inicioSintomas) {
-                            this.Clasificacion = 'Unidad centinela de infección respiratoria aguda grave (UC-IRAG)';
+                            this.Clasificacion = CLASIFICACIONESVSR[1];
                         }
                     }
                 }
-
             }
         }
 
+        this.ficha.map(section => {
+            if (section.name === SECCION_CLASIFICACION) {
+                section.fields.push({ clasificacionfinal: this.Clasificacion });
+            }
+        });
         return this.Clasificacion;
-
     }
-
 
     toBack() {
         this.volver.emit();
     }
 
-    addContacto() {
-        this.contactoCorrecto = !!(this.contacto.apellidoNombre && this.contacto.documento && this.contacto.telefono
-            && this.contacto.domicilio && this.contacto.fechaUltimoContacto && this.contacto.tipoContacto);
-
-        if (this.contactoCorrecto) {
-            const documentoCorrecto = this.patronDocumento.test(this.contacto.documento);
-            const telefonoCorrecto = this.patronContactoNumerico.test(this.contacto.telefono);
-            if (documentoCorrecto && telefonoCorrecto) {
-                this.contactosEstrechos.push(this.contacto);
-                this.contacto = {
-                    apellidoNombre: '',
-                    documento: '',
-                    telefono: '',
-                    domicilio: '',
-                    fechaUltimoContacto: '',
-                    tipoContacto: ''
-                };
-                this.plex.toast('success', 'El contacto estrecho se ha agregado satisfactoriamente!');
-            } else {
-                this.plex.info('danger', 'Revise los datos ingresados');
+    setSemanaEpidemiologica(event) {
+        const primerSintoma = moment(event.value);
+        const primerDomingo = moment(primerSintoma).startOf('year').startOf('week').weekday(-1);
+        if (primerDomingo.format('YYYY') < moment().format('YYYY')) {
+            primerDomingo.add(7, 'days');
+        }
+        this.secciones.map(seccion => {
+            if (seccion.id === 'informacionClinica') {
+                const resultado = Math.trunc((primerSintoma.diff(primerDomingo, 'days') / 7)) + 1;
+                seccion.fields['semanaepidemiologica'] = resultado ? resultado : '';
             }
+        });
+    }
 
-        } else {
-            this.plex.info('danger', 'Debe completar los datos requeridos');
-        }
-        this.contactoCorrecto = false;
-    }
-    deleteContacto(contacto) {
-        const index = this.contactosEstrechos.findIndex(item => item.documento === contacto.documento);
-        if (index >= 0) {
-            this.contactosEstrechos.splice(index, 1);
-            this.contactosEstrechos = [...this.contactosEstrechos];
-        }
-        if (!this.contactosEstrechos?.length) {
-            this.nuevoContacto = false;
-        }
-        this.plex.toast('success', 'Contacto eliminado exitosamente!');
-    }
-    showNuevoContacto() {
-        this.nuevoContacto = true;
-    }
     setOrganizacion(seccion, organizacion) {
         const idOrganizacion = organizacion.value ? organizacion.value.id : organizacion;
         this.organizacionService.getById(idOrganizacion).subscribe(res => {

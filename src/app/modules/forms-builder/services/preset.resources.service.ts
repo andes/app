@@ -16,7 +16,6 @@ export class FormPresetResourcesService extends ResourceBaseHttp<Event> {
     }
 
     setResource(resource, seccion, paciente) {
-        debugger;
         switch (resource) {
             case 'usuario':
                 seccion.fields['organizacion'] = { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre };
