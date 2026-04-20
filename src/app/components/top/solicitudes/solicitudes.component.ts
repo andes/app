@@ -756,13 +756,21 @@ export class SolicitudesComponent implements OnInit {
             tipoPrestacion: this.prestacionSeleccionada.solicitud.historial[this.prestacionSeleccionada.solicitud.historial.length - 1].tipoPrestacion,
             fechaNotificacion: this.fechaNotificacion
         };
-        this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(() => {
-            this.plex.toast('success', 'Paciente notificado con éxito.');
-            this.cargarSolicitudes();
-        }, error => {
-            this.plex.toast('danger', 'Ha ocurrido un error al notificar al paciente.');
+        this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe({
+            next: () => {
+                this.plex.toast('success', 'Paciente notificado con éxito.');
+                this.cargarSolicitudes();
+                this.descripcionNotificacion = '';
+            },
+            error: () => {
+                this.plex.toast('danger', 'Ha ocurrido un error al notificar al paciente.');
+            }
         });
         this.closeSidebar();
+    }
+
+    onCloseComunicacion() {
+        this.descripcionNotificacion = '';
     }
 
     onScroll(event: any) {

@@ -10,39 +10,40 @@
     </plex-title>
     <plex-grid cols="3" size="md" direction="row">
         <plex-label *ngIf="prestacionSeleccionada.solicitud.tipoPrestacionOrigen?.term"
-                    titulo="Tipo de prestación origen"
-                    subtitulo="{{prestacionSeleccionada.solicitud.tipoPrestacionOrigen?.term}}">
+            titulo="Tipo de prestación origen"
+            subtitulo="{{prestacionSeleccionada.solicitud.tipoPrestacionOrigen?.term}}">
         </plex-label>
         <plex-label *ngIf="prestacionSeleccionada.solicitud.organizacionOrigen?.nombre" titulo="Organización origen"
-                    subtitulo="{{prestacionSeleccionada.solicitud.organizacionOrigen?.nombre}}">
+            subtitulo="{{prestacionSeleccionada.solicitud.organizacionOrigen?.nombre}}">
         </plex-label>
         <plex-label *ngIf="prestacionSeleccionada.solicitud.profesionalOrigen" titulo="Profesional de origen" subtitulo="{{ prestacionSeleccionada.solicitud.profesionalOrigen?.nombre }} {{
                     prestacionSeleccionada.solicitud.profesionalOrigen?.apellido
                     }}">
         </plex-label>
         <plex-label *ngIf="prestacionSeleccionada.solicitud.tipoPrestacion?.term" titulo="Tipo de prestación destino"
-                    subtitulo="{{prestacionSeleccionada.solicitud.tipoPrestacion?.term}}">
+            subtitulo="{{prestacionSeleccionada.solicitud.tipoPrestacion?.term}}">
         </plex-label>
         <plex-label *ngIf="prestacionSeleccionada.solicitud.organizacion?.nombre" titulo="Organización destino"
-                    subtitulo="{{prestacionSeleccionada.solicitud.organizacion?.nombre}}">
+            subtitulo="{{prestacionSeleccionada.solicitud.organizacion?.nombre}}">
         </plex-label>
         <plex-label *ngIf="prestacionSeleccionada.solicitud.profesional" titulo="Profesional de destino" subtitulo="{{ prestacionSeleccionada.solicitud.profesional?.nombre }} {{
                     prestacionSeleccionada.solicitud.profesional?.apellido
                     }}">
         </plex-label>
         <plex-label *ngIf="turnoSeleccionado" titulo="Fecha de turno"
-                    subtitulo="{{ turnoSeleccionado.horaInicio | fecha }} - {{ turnoSeleccionado.horaInicio | date: 'HH:mm' }}">
+            subtitulo="{{ turnoSeleccionado.horaInicio | fecha }} - {{ turnoSeleccionado.horaInicio | date: 'HH:mm' }}">
         </plex-label>
         <plex-label *ngIf="prestacionSeleccionada.estadoActual.observaciones" titulo="Observaciones" subtitulo="
                 {{prestacionSeleccionada.estadoActual.observaciones}}">
         </plex-label>
-        <plex-label *ngIf="!prestacionSeleccionada.estadoActual.observaciones && prestacionSeleccionada.estadoActual.motivoRechazo"
-                    titulo="Observaciones" subtitulo="
+        <plex-label
+            *ngIf="!prestacionSeleccionada.estadoActual.observaciones && prestacionSeleccionada.estadoActual.motivoRechazo"
+            titulo="Observaciones" subtitulo="
                 {{prestacionSeleccionada.estadoActual.motivoRechazo}}">
         </plex-label>
-        <plex-label *ngIf="prestacionSeleccionada.estadoActual.observaciones || prestacionSeleccionada.estadoActual.motivoRechazo"
-                    titulo="Usuario que responde"
-                    subtitulo="{{prestacionSeleccionada.estadoActual.createdBy | nombre}}">
+        <plex-label
+            *ngIf="prestacionSeleccionada.estadoActual.observaciones || prestacionSeleccionada.estadoActual.motivoRechazo"
+            titulo="Usuario que responde" subtitulo="{{prestacionSeleccionada.estadoActual.createdBy | nombre}}">
         </plex-label>
         <ng-container *ngIf="internacion">
             <div class="internacion-estado">
@@ -68,15 +69,39 @@
             <p>{{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.motivo}}</p>
 
             <plex-title size="sm" titulo="Indicaciones"
-                        *ngIf="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones">
+                *ngIf="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones">
                 <plex-button type="info" size="sm" label="Ver Indicaciones"
-                             [icon]="verIndicaciones ? 'chevron-up' : 'chevron-down'" (click)="toggleIndicaciones()">
+                    [icon]="verIndicaciones ? 'chevron-up' : 'chevron-down'" (click)="toggleIndicaciones()">
                 </plex-button>
             </plex-title>
             <div *ngIf="verIndicaciones">
                 <span
-                      [innerHTML]="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones"></span>
+                    [innerHTML]="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones"></span>
             </div>
+        </div>
+        <div class="col-12">
+            <plex-title size="sm" titulo="Notificaciones"></plex-title>
+            <ng-container *ngIf="existeNotificaciones(prestacionSeleccionada.solicitud?.historial)">
+                <plex-table [columns]="columns" #table="plTable" [headOpacity]="10">
+                    <plex-table-columns>
+                    </plex-table-columns>
+
+                    <tr *ngFor="let notificacion of obtenerNotificaciones(prestacionSeleccionada.solicitud?.historial)">
+                        <td *plTableCol="'fecha'">{{notificacion.fechaDeNotificacion | date:'dd/MM/yyyy HH:mm'}}</td>
+                        <td *plTableCol="'notificadorPor'">{{notificacion.createdBy | nombre}}</td>
+                        <td *plTableCol="'observaciones'">{{notificacion.observaciones}}</td>
+                    </tr>
+                </plex-table>
+            </ng-container>
+            <ng-container *ngIf="!existeNotificaciones(prestacionSeleccionada.solicitud?.historial)">
+                <section>
+                    <div justify="center" class="mt-4" style="margin-bottom: 2em;">
+                        <plex-label class="flex-column" icon="informacion" size="md" direction="column"
+                            titulo="No existen notificaciones para esta solicitud.">
+                        </plex-label>
+                    </div>
+                </section>
+            </ng-container>
         </div>
     </div>
     <div class="row" *ngIf="prestacionSeleccionada.estadoActual.tipo === 'anulada'">
@@ -90,7 +115,7 @@
             <div class="row mb-3">
                 <div class="col-4">
                     <plex-label titulo="Anulada por"
-                                subtitulo="{{prestacionSeleccionada.estadoActual.createdBy | nombre}}">
+                        subtitulo="{{prestacionSeleccionada.estadoActual.createdBy | nombre}}">
                     </plex-label>
                 </div>
                 <div class="col-4">
