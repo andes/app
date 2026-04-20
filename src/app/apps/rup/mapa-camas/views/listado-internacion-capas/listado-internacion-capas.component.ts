@@ -164,26 +164,6 @@ export class ListadoInternacionCapasComponent implements OnInit, OnDestroy {
         return ultimoEstadoConPaciente?.unidadOrganizativa?.term || internacion.idPrestacion?.unidadOrganizativa?.term;
     }
 
-    getUltimaUnidadOrganizativaConceptId(internacion: any): string {
-        const estadosCama = internacion.estadosCama;
-        if (!estadosCama?.length) {
-            return internacion.idPrestacion?.unidadOrganizativa?.conceptId;
-        }
-        let ultimoEstadoConPaciente: any = null;
-        for (const cama of estadosCama) {
-            if (cama.estados && cama.estados.length > 0) {
-                for (const estado of cama.estados) {
-                    if (estado.paciente) {
-                        if (!ultimoEstadoConPaciente || new Date(estado.fecha) > new Date(ultimoEstadoConPaciente.fecha)) {
-                            ultimoEstadoConPaciente = estado;
-                        }
-                    }
-                }
-            }
-        }
-        return ultimoEstadoConPaciente?.unidadOrganizativa?.conceptId || internacion.idPrestacion?.unidadOrganizativa?.conceptId;
-    }
-
     cancelar() {
         this.mapaCamasService.selectResumen(null);
         this.mapaCamasService.selectPrestacion(null);

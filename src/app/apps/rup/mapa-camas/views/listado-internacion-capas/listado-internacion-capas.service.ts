@@ -114,7 +114,7 @@ export class ListadoInternacionCapasService {
         }
         let ultimoEstadoConPaciente: any = null;
         for (const cama of estadosCama) {
-            if (cama.estados && cama.estados.length > 0) {
+            if (cama.estados?.length) {
                 for (const estado of cama.estados) {
                     if (estado.paciente) {
                         if (!ultimoEstadoConPaciente || new Date(estado.fecha) > new Date(ultimoEstadoConPaciente.fecha)) {
