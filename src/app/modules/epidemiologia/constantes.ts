@@ -28,3 +28,22 @@ export const TYPE_FICHA = Object.freeze({
     COVID: 'covid19',
     HANTAVIRUS: 'Hantavirus'
 });
+
+export const CLASIFICACIONESVSR = [
+    {
+        'id': 'InternadoY_Ofallecid_COVID_IRA',
+        'nombre': 'Internado y/o fallecido por COVID-19 o IRA'
+    },
+    {
+        'id': 'Unidad_UC-IRAG',
+        'nombre': 'Unidad centinela de infección respiratoria aguda grave (UC-IRAG)'
+    },
+    {
+        'id': 'MonitoreoVSRAmbulatorio',
+        'nombre': 'Monitoreo de SARS-CoV2, influenza y VSR en ambulatorios'
+    },
+    {
+        'id': 'ControlAmbulatorio',
+        'nombre': 'COVID-19, influenza y OVR en ambulatorio'
+    }
+];
