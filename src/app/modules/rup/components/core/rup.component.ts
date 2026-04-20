@@ -42,7 +42,6 @@ import { ObraSocialService } from 'src/app/services/obraSocial.service';
     template: `
         <div *ngIf="mostrarTituloSubmolecula" class="rup-submolecula-titulo mb-2" style="margin-top: 10px;">
             <span class="text-bold text-capitalize" style="font-size: 1.0rem;color:#00a8e0">{{ params?.titulo || registro?.nombre || elementoRUP?.conceptos[0]?.term }}</span>
-            <hr style="border: none;width: 100%; height: 1px; background-color: #4a4a4a; opacity: 1;">
         </div>
         <ng-container #componentContainer></ng-container>
     `
