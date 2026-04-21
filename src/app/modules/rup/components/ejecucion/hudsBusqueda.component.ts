@@ -1347,14 +1347,14 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     }
 
     checkDispensaAnticipada(receta) {
-        if (receta.estadoDispensaActual && receta.estadoDispensaActual.fecha) {
+        if (receta?.estadoDispensaActual?.tipo && receta.estadoDispensaActual.tipo !== 'sin-dispensa' && receta.estadoDispensaActual.fecha) {
             const fechaDispensa = moment(receta.estadoDispensaActual.fecha);
             const fechaRegistro = moment(receta.fechaRegistro);
 
             if (fechaDispensa.isBefore(fechaRegistro)) {
-                if (receta.estadoActual.tipo === 'finalizada') {
+                if (receta.estadoActual?.tipo === 'finalizada') {
                     return 'dispensa anticipada';
-                } else if (receta.estadoActual.tipo === 'pendiente') {
+                } else if (receta.estadoActual?.tipo === 'pendiente') {
                     return 'dispensa parcial anticipada';
                 }
             }
