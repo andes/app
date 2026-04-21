@@ -1,7 +1,7 @@
-<plex-help size="sm" class="ml-2" btnType="danger" icon="stop" tooltip="Suspender" tooltipPosition="left" *ngIf="seleccionRecetas?.length > 0">
+<plex-help size="sm" class="ml-2" btnType="success" icon="check" tooltip="Confirmar suspensión" tooltipPosition="left">
     <plex-title titulo="Suspender Medicamento" size="sm">
         <plex-button type="success" icon="check" size="sm" tooltip="Confirmar" tooltipPosition="left"
-                     [disabled]="!formSuspension.valid" (click)="suspenderMedicacion()">
+            [disabled]="!formSuspension.valid" (click)="suspenderMedicacion()">
         </plex-button>
     </plex-title>
 
@@ -17,8 +17,7 @@
             <tr *ngFor="let medicamento of groupedMedicamentos">
                 <td>{{ medicamento.term }}</td>
                 <td>{{ medicamento.count }}</td>
-                <td>{{ medicamento?.profesional?.nombre }} {{ medicamento?.profesional?.apellido }}
-
+                <td>{{ medicamento?.profesional?.nombre }} {{ medicamento?.profesional?.apellido }}</td>
             </tr>
         </tbody>
     </table>
@@ -26,10 +25,10 @@
     </plex-label>
     <form #formSuspension="ngForm">
         <plex-select label="Motivo de suspensión" name="motivo" [(ngModel)]="motivoSelector" [data]="motivosSuspension"
-                     required>
+            required>
         </plex-select>
-        <plex-text label="Observación" name="observacion" [(ngModel)]="observacion" placeholder="Ingrese una observación"
-                   [required]="motivoSelector?.nombre === 'Otro'">
+        <plex-text label="Observación" name="observacion" [(ngModel)]="observacion"
+            placeholder="Ingrese una observación" [required]="motivoSelector?.nombre === 'Otro'">
         </plex-text>
     </form>
 </plex-help>
