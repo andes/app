@@ -391,6 +391,23 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     }
 
 
+    onFallecidoChange() {
+        if (!this.pacienteFallecido) {
+            this.paciente.fallecimientoManual = null;
+            this.fechaFallecimientoTemporal = null;
+            this.pacienteService.patch(this.paciente.id, {
+                fallecimientoManual: null
+            }).subscribe(() => {
+                this.plex.toast('success', 'Fallecimiento manual eliminado correctamente');
+            }, err => {
+                this.plex.toast('danger', 'Error al eliminar fallecimiento', err?.message || '');
+            });
+
+            this.changes.emit({ datosBasicos: true });
+        }
+    }
+
+
     guardarFallecimiento() {
         if (this.fechaFallecimientoTemporal) {
             const hoy = new Date();
