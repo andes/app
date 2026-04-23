@@ -410,7 +410,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 break;
             case 'recc':
                 gtag('huds-open', tipo, registro.organizacionOrigen.nombre, index);
-                registro = registro;
                 registro.class = 'recc';
                 break;
             case 'ficha-epidemiologica':
