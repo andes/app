@@ -12,6 +12,11 @@
                 <b>Tipo de egreso</b>
                 <p>{{resumen.tipo_egreso}}</p>
             </div>
+            <div class="col"
+                *ngIf="(resumen.tipo_egreso === 'traslado' || resumen.tipo_egreso === 'Traslado') && resumen.organizacionDestino?.nombre">
+                <b>Organización destino</b>
+                <p>{{resumen.organizacionDestino?.nombre}}</p>
+            </div>
         </div>
     </fieldset>
 </ng-container>
@@ -86,11 +91,11 @@
                 <!-- Procedimientos Quirurgicos -->
                 <fieldset>
                     <legend class="small"
-                            *ngIf="informeEgreso.procedimientosQuirurgicos && informeEgreso.procedimientosQuirurgicos.lenght > 0">
+                        *ngIf="informeEgreso.procedimientosQuirurgicos && informeEgreso.procedimientosQuirurgicos.lenght > 0">
                         Procedimientos Quirúrgicos y Obstétricos
                     </legend>
                     <div class="row"
-                         *ngIf="informeEgreso.procedimientosQuirurgicos && informeEgreso.procedimientosQuirurgicos.length > 0">
+                        *ngIf="informeEgreso.procedimientosQuirurgicos && informeEgreso.procedimientosQuirurgicos.length > 0">
                         <div class="col">
                             <b> Procedimientos Quirúrgicos </b>
                             <ul class="list-unstyled">
