@@ -16,7 +16,7 @@ export class PlanIndicacionEventoComponent implements OnChanges {
     @Input() evento;
     @Input() hora;
     @Input() fecha: Date;
-    labelEstado = 'Observaciones';
+    requiereMotivo = true;
     fechaHora: Date;
     editando: boolean;
     horaOrganizacion;
@@ -128,8 +128,12 @@ export class PlanIndicacionEventoComponent implements OnChanges {
         this.observaciones = this.evento[this.indice].observaciones;
     }
 
+    inputObservaciones(event) {
+        this.observaciones = event.value;
+    }
+
     onInputChange(value) {
-        (value.value?.id === 'realizado') ? this.labelEstado = 'Observaciones' : this.labelEstado = 'Motivo';
+        this.requiereMotivo = !!(value?.id !== 'realizado');
     }
     onGuardar() {
         if (this.evento) {

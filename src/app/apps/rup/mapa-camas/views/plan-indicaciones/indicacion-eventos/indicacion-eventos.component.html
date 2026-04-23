@@ -43,15 +43,19 @@
         <plex-datetime label="Fecha y Hora" [(ngModel)]="fechaHora" name="fechaHora" [min]="horaMin" [max]="horaMax"
                        [required]="true">
         </plex-datetime>
-        <plex-select [data]="estadoItems" [(ngModel)]="estado" (change)="onInputChange($event)" name="estado"
+        <plex-select [data]="estadoItems" [(ngModel)]="estado" (change)="onInputChange($event.value)" name="estado"
                      label="Estado" [required]="true">
         </plex-select>
-        <plex-label class="font-weight-bold"> {{labelEstado}} <h3 *ngIf="labelEstado==='Motivo'" class="asteriscoRojo">
+        <!-- <plex-label class="font-weight-bold"> 
+            <h3 *ngIf="requiereMotivo" class="asteriscoRojo">
                 *
             </h3>
-        </plex-label>
-        <plex-text [(ngModel)]="observaciones" name="observaciones" [required]="labelEstado==='Motivo'">
+        </plex-label> -->
+        <plex-text label="{{ requiereMotivo ? 'Observaciones' : 'Motivo' }}" [(ngModel)]="observaciones"
+                   name="observaciones" [required]="requiereMotivo" [html]="true" (change)="ngOnChanges()">
         </plex-text>
+        <!-- <div class="fondoBlancoText">
+        </div> -->
     </ng-container>
 </form>
 
