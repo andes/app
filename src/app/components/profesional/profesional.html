@@ -103,6 +103,14 @@
                     <plex-label titulo="Matrícula"
                                 subtitulo="{{formacionGrado.matriculacion[formacionGrado.matriculacion.length - 1].matriculaNumero}}"
                                 size="md"></plex-label>
+                    <plex-button *ngIf="puedeDeshacerMatricula"
+                                 type="warning"
+                                 icon="undo"
+                                 label="Deshacer número"
+                                 [disabled]="estadoDeshacer(formacionGrado)?.loading || !estadoDeshacer(formacionGrado)?.canUndo"
+                                 [tooltip]="estadoDeshacer(formacionGrado)?.reason || 'Deshacer número de matrícula'"
+                                 (click)="deshacerMatricula(formacionGrado)">
+                    </plex-button>
                 </plex-item>
             </plex-list>
         </ng-container>

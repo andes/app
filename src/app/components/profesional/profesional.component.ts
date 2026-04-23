@@ -6,6 +6,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
 import { Observable } from 'rxjs';
 @Component({
     selector: 'profesionales',
@@ -30,6 +31,8 @@ export class ProfesionalComponent implements OnInit {
     profesionalSelected: any = false;
     fotoProfesional: any;
     nuevoProfesional = false;
+    puedeDeshacerMatricula = false;
+    estadoDeshacerPorFormacion: { [formacionId: string]: any } = {};
 
     public listado$: Observable<any[]>;
 
@@ -83,7 +86,8 @@ export class ProfesionalComponent implements OnInit {
         private profesionalService: ProfesionalService,
         public sanitizer: DomSanitizer,
         private router: Router,
-        private auth: Auth,) { }
+        private auth: Auth,
+        private plex: Plex) { }
 
     ngOnInit() {
         if (this.auth.getPermissions('matriculaciones:profesionales:?').length < 1) {
@@ -115,12 +119,18 @@ export class ProfesionalComponent implements OnInit {
 
     seleccionarProfesional(profesional) {
         this.profesionalSelected = profesional;
+        this.puedeDeshacerMatricula = this.auth.getPermissions('matriculaciones:supervisor:aprobar').length > 0;
+        this.estadoDeshacerPorFormacion = {};
         if (this.profesionalSelected.validadoRenaper) {
             this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl(this.profesionalSelected.foto);
         } else {
             this.profesionalService.getFoto({ id: this.profesionalSelected.id }).subscribe(resp => {
                 this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp);
             });
+        }
+
+        if (this.puedeDeshacerMatricula) {
+            this.cargarEstadosDeshacer();
         }
     }
 
@@ -130,5 +140,70 @@ export class ProfesionalComponent implements OnInit {
 
     cerrar() {
         this.profesionalSelected = false;
+    }
+
+    cargarEstadosDeshacer() {
+        const formaciones = this.profesionalSelected?.formacionGrado || [];
+        formaciones.forEach((formacion) => {
+            const formacionId = formacion?._id;
+            if (!formacionId || !formacion?.matriculacion?.length) {
+                return;
+            }
+            this.estadoDeshacerPorFormacion[formacionId] = { loading: true, canUndo: false, reason: null };
+            this.profesionalService.canUndoMatriculaGrado(this.profesionalSelected.id, formacionId).subscribe(
+                (estado) => {
+                    this.estadoDeshacerPorFormacion[formacionId] = {
+                        loading: false,
+                        canUndo: !!estado?.canUndo,
+                        reason: estado?.reason || null
+                    };
+                },
+                () => {
+                    this.estadoDeshacerPorFormacion[formacionId] = {
+                        loading: false,
+                        canUndo: false,
+                        reason: 'no se pudo verificar el estado'
+                    };
+                }
+            );
+        });
+    }
+
+    estadoDeshacer(formacion: any) {
+        const formacionId = formacion?._id;
+        return formacionId ? this.estadoDeshacerPorFormacion[formacionId] : null;
+    }
+
+    deshacerMatricula(formacion: any) {
+        const estado = this.estadoDeshacer(formacion);
+        if (!estado?.canUndo || estado?.loading) {
+            return;
+        }
+        const ultimaMatricula = formacion.matriculacion[formacion.matriculacion.length - 1];
+        const mensaje = `${formacion.profesion?.nombre || 'Profesion'} - matrícula ${ultimaMatricula?.matriculaNumero}`;
+        this.plex.confirm(`¿Desea deshacer el número de matrícula?<br>${mensaje}`, 'Atención').then(confirmacion => {
+            if (!confirmacion) {
+                return;
+            }
+            this.profesionalService.undoMatriculaGrado(this.profesionalSelected.id, formacion._id).subscribe(
+                () => {
+                    this.plex.info('success', 'Número de matrícula deshecho correctamente.');
+                    this.profesionalService.get({ id: this.profesionalSelected.id }).subscribe(prof => {
+                        if (prof?.length) {
+                            this.seleccionarProfesional(prof[0]);
+                        }
+                    });
+                },
+                (error) => {
+                    const mensajeError = error?.error?.message || 'No fue posible deshacer la matrícula.';
+                    this.plex.info('warning', mensajeError);
+                    this.profesionalService.get({ id: this.profesionalSelected.id }).subscribe(prof => {
+                        if (prof?.length) {
+                            this.seleccionarProfesional(prof[0]);
+                        }
+                    });
+                }
+            );
+        });
     }
 }

@@ -116,4 +116,12 @@ export class ProfesionalService {
     actualizarProfesional(body, options?: Options): Observable<any> {
         return this.server.put(this.profesionalUrl + '/actualizar', body, options);
     }
+
+    canUndoMatriculaGrado(profesionalId: string, formacionId: string): Observable<any> {
+        return this.server.get(`${this.profesionalUrl}/${profesionalId}/formacionGrado/${formacionId}/deshacer-matricula`);
+    }
+
+    undoMatriculaGrado(profesionalId: string, formacionId: string): Observable<any> {
+        return this.server.post(`${this.profesionalUrl}/${profesionalId}/formacionGrado/${formacionId}/deshacer-matricula`, {});
+    }
 }
