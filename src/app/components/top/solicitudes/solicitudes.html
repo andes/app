@@ -519,7 +519,7 @@
 
 
                             <!-- AUDITAR SOLICITUD -->
-                            <plex-help class="mr-1" *ngIf="botones.auditar" icon="lock-alert" type="info"
+                            <plex-help class="mr-1" *ngIf="botones.auditar" icon="lock-alert" size="md" type="info"
                                        tooltip="Auditar Solicitud"
                                        [tooltipPosition]="prestacionSeleccionada.estadoActual.tipo === 'rechazada' ? 'left' : 'top'">
                                 <auditar-solicitud [prestacionSeleccionada]="prestacionSeleccionada" [showCitar]="false"
