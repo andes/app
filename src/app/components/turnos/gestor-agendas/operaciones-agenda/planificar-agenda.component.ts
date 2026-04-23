@@ -874,7 +874,8 @@ export class PlanificarAgendaComponent implements OnInit {
                 estado: 'disponible',
                 horaInicio: this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000)),
                 tipoTurno: undefined,
-                auditable: !bloque.tipoPrestaciones.some(p => !p.auditable)
+                auditable: !bloque.tipoPrestaciones.some(p => !p.auditable),
+                videoConferencia: bloque.tipoPrestaciones.some(p => p.videoConferencia === true)
             };
             if (bloque.pacienteSimultaneos) {
                 for (let j = 0; j < bloque.cantidadSimultaneos; j++) {
@@ -955,7 +956,8 @@ export class PlanificarAgendaComponent implements OnInit {
                 estado: 'disponible',
                 horaInicio: b.horaInicio,
                 tipoPrestacion: b.tipoPrestaciones[0],
-                tipoTurno: undefined
+                tipoTurno: undefined,
+                videoConferencia: b.tipoPrestaciones.some((p: any) => p.videoConferencia === true)
             }];
         });
     }
