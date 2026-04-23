@@ -20,7 +20,6 @@
                         titulo="Creado por {{ paciente.createdBy?.nombreCompleto?paciente.createdBy.nombreCompleto: 'S/D' }}"
                         subtitulo="DNI:{{ paciente.createdBy?.documento? paciente.createdBy.documento :'S/D'}} {{ paciente.createdBy?.organizacion?.nombre? ' | '+paciente.createdBy.organizacion.nombre : ' ' }}">
             </plex-label>
-            <plex-label titulo=" "></plex-label>
             <plex-badge *ngIf="!errorTab && paciente.fechaFallecimiento" type="danger">Fallecido:
                 {{ paciente.fechaFallecimiento | fecha:'utc'}}
             </plex-badge>
@@ -53,6 +52,13 @@
             <plex-badge *ngIf="errorTab && registroReportes && registroReportes[paciente.id]" type="info">
                 {{ registroReportes[paciente.id][0]?.createdAt | fecha:'utc'}}
             </plex-badge>
+
+            <plex-badge *ngIf="errorTab && !tieneDatosReportados(paciente)" size="sm" type="warning">
+                <plex-button size="sm" type="warning" label="Marcar como corregido"
+                             (click)="pacienteCorregido(paciente)">
+                </plex-button>
+            </plex-badge>
+
 
         </plex-item>
     </ng-container>

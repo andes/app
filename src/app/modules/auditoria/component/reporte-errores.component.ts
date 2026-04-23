@@ -134,6 +134,10 @@ export class ReporteErroresComponent implements OnInit {
         this.cargar(true);
     }
 
+    onResetReport(paciente: IPaciente) {
+        this.savePatient(paciente);
+    }
+
     savePatient(paciente: IPaciente) {
         // si el paciente no debe ser modificado (cancelar) entonces es paciente=null
         if (paciente) {

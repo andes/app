@@ -2,7 +2,7 @@
 
 <div *ngIf="pacientes.length" class="flex-grow-1">
     <auditoria-listado [pacientes]="pacientes" [registroReportes]="reportes" [autoselect]="false" [errorTab]="true"
-        (selected)="onSelect($event)" (scrolled)="onScroll()">
+        (selected)="onSelect($event)" (scrolled)="onScroll()" (resetReport)="onResetReport($event)">
     </auditoria-listado>
 
     <div *ngIf="loading" class="loading-overlay">

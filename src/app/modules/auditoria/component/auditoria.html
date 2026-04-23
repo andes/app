@@ -87,18 +87,25 @@
                     {{ listaReportes[0].createdAt | fecha:'utc' }}</plex-badge>
             </plex-title>
 
-            <plex-grid *ngIf="pacienteSelected.nombreCorrectoReportado || pacienteSelected.apellidoCorrectoReportado"
-                       [cols]="pacienteSelected.nombreCorrectoReportado && pacienteSelected.apellidoCorrectoReportado ? 3 : 2">
-                <plex-label *ngIf="pacienteSelected.nombreCorrectoReportado" titulo="Nombre correcto"
-                            subtitulo="{{ pacienteSelected.nombreCorrectoReportado }}">
-                </plex-label>
-                <plex-label *ngIf="pacienteSelected.apellidoCorrectoReportado" titulo="Apellido correcto"
-                            subtitulo="{{ pacienteSelected.apellidoCorrectoReportado }}">
-                </plex-label>
-                <plex-button *ngIf="permisoEdicion" class="pt-2 pb-4" label="corregir" justify="end" type="warning"
+            <div *ngIf="tieneDatosCorrectos()" class="d-flex justify-content-between align-items-center">
+                <plex-grid [cols]="(pacienteSelected.nombreCorrectoReportado ? 1 : 0) +
+                                    (pacienteSelected.apellidoCorrectoReportado ? 1 : 0) +
+                                    (pacienteSelected.fechaNacimientoCorrectoReportado ? 1 : 0)">
+                    <plex-label *ngIf="pacienteSelected.nombreCorrectoReportado" titulo="Nombre correcto"
+                                subtitulo="{{ pacienteSelected.nombreCorrectoReportado }}">
+                    </plex-label>
+                    <plex-label *ngIf="pacienteSelected.apellidoCorrectoReportado" titulo="Apellido correcto"
+                                subtitulo="{{ pacienteSelected.apellidoCorrectoReportado }}">
+                    </plex-label>
+                    <plex-label *ngIf="pacienteSelected.fechaNacimientoCorrectoReportado"
+                                titulo="Fecha de nacimiento correcta"
+                                subtitulo="{{ pacienteSelected.fechaNacimientoCorrectoReportado | fecha:'utc' }}">
+                    </plex-label>
+                </plex-grid>
+                <plex-button *ngIf="permisoEdicion" class="pt-2 pb-4" label="corregir" type="warning"
                              (click)="onSelectCorregir()">
                 </plex-button>
-            </plex-grid>
+            </div>
 
             <plex-label *ngIf="tieneNotaError()">{{pacienteSelected.notaError}}</plex-label>
             <plex-label *ngIf="noTieneNotaError()">No se ha encontrado alguna descripción del error</plex-label>
@@ -119,6 +126,9 @@
                                         subtitulo="{{ pacienteSelected.nombreCorrectoReportado}}"></plex-label>
                             <plex-label *ngIf="pacienteSelected.apellidoCorrectoReportado" titulo="Apellido correcto"
                                         subtitulo="{{ pacienteSelected.apellidoCorrectoReportado}}"></plex-label>
+                            <plex-label *ngIf="pacienteSelected.fechaNacimientoCorrectoReportado"
+                                        titulo="Fecha de nacimiento correcta"
+                                        subtitulo="{{ pacienteSelected.fechaNacimientoCorrectoReportado | fecha:'utc'}}"></plex-label>
                         </ng-container>
                     </plex-item>
                 </ng-container>

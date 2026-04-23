@@ -123,6 +123,7 @@ export class PacienteComponent implements OnInit {
         reportarError: false,
         nombreCorrectoReportado: '',
         apellidoCorrectoReportado: '',
+        fechaNacimientoCorrectoReportado: null,
         notaError: '',
         vinculos: null,
         documentos: [],
@@ -355,6 +356,10 @@ export class PacienteComponent implements OnInit {
             documentos: nuevoPaciente.documentos,
             relaciones: nuevoPaciente.relaciones,
             estado: nuevoPaciente.estado,
+            nombreCorrectoReportado: nuevoPaciente.nombreCorrectoReportado,
+            apellidoCorrectoReportado: nuevoPaciente.apellidoCorrectoReportado,
+            fechaNacimientoCorrectoReportado: nuevoPaciente.fechaNacimientoCorrectoReportado,
+            reportarError: nuevoPaciente.reportarError
         };
 
         return this.prepararPaciente(paciente, ignoreSuggestions);
@@ -430,12 +435,10 @@ export class PacienteComponent implements OnInit {
                 });
             }
         } else {
-            if (this.paciente?.nombreCorrectoReportado) {
-                this.pacienteModel.nombreCorrectoReportado = this.paciente.nombreCorrectoReportado;
-            }
-            if (this.paciente?.apellidoCorrectoReportado) {
-                this.pacienteModel.apellidoCorrectoReportado = this.paciente.apellidoCorrectoReportado;
-            }
+            this.pacienteModel.nombreCorrectoReportado = this.paciente.nombreCorrectoReportado;
+            this.pacienteModel.apellidoCorrectoReportado = this.paciente.apellidoCorrectoReportado;
+            this.pacienteModel.fechaNacimientoCorrectoReportado = this.paciente.fechaNacimientoCorrectoReportado;
+            this.pacienteModel.reportarError = this.paciente.reportarError;
             const paciente = this.prepararPaciente(this.mergePaciente(this.pacienteModel, this.pacienteExtranjero), ignoreSuggestions);
             if (paciente) {
                 this.guardarPaciente(paciente).subscribe((paciente) => {
@@ -604,16 +607,21 @@ export class PacienteComponent implements OnInit {
             this.disableGuardar = false;
         }
         if (data.pacienteError) {
-            this.nombreApellidoIgual = (data.pacienteError.nombre === this.paciente.nombre && data.pacienteError.apellido === this.paciente.apellido) ? true : false;
-            if (!this.nombreApellidoIgual) {
-                if (data.pacienteError.nombre !== this.paciente.nombre) {
-                    this.paciente.nombreCorrectoReportado = data.pacienteError.nombre;
-                }
-                if (data.pacienteError.apellido !== this.paciente.apellido) {
-                    this.paciente.apellidoCorrectoReportado = data.pacienteError.apellido;
-                }
-            }
+            const error = data.pacienteError;
+            const paciente = this.paciente;
+
+            paciente.nombreCorrectoReportado = (error?.nombre?.trim().toUpperCase() !== paciente.nombre?.trim().toUpperCase()) ? error.nombre : '';
+            paciente.apellidoCorrectoReportado = (error?.apellido?.trim().toUpperCase() !== paciente.apellido?.trim().toUpperCase()) ? error.apellido : '';
+
+            const fechaError = this.formatFecha(error.fechaNacimiento);
+            const fechaPaciente = this.formatFecha(paciente.fechaNacimiento);
+
+            paciente.fechaNacimientoCorrectoReportado = (fechaError !== fechaPaciente) ? error.fechaNacimiento : null;
+            paciente.reportarError = true;
         }
+    }
+    formatFecha(fecha: any): string {
+        return fecha ? moment(fecha).format('YYYY-MM-DD') : '';
     }
     documentos(documentosNew) {
         this.pacienteModel.documentos = documentosNew;
@@ -711,6 +719,7 @@ export class PacienteComponent implements OnInit {
                                 if (resultado.errorData) {
                                     this.pacienteModel.nombreCorrectoReportado = resultado.nombre;
                                     this.pacienteModel.apellidoCorrectoReportado = resultado.apellido;
+                                    this.pacienteModel.fechaNacimientoCorrectoReportado = resultado.fechaNacimiento;
                                     this.pacienteModel.reportarError = true;
                                 }
                                 // agregamos en identificadores la validación
@@ -787,6 +796,7 @@ export class PacienteComponent implements OnInit {
             this.pacienteModel.reportarError = false;
             delete this.pacienteModel.nombreCorrectoReportado;
             delete this.pacienteModel.apellidoCorrectoReportado;
+            delete this.pacienteModel.fechaNacimientoCorrectoReportado;
         }
         this.conservarDatos();
         this.disableValidar = false;

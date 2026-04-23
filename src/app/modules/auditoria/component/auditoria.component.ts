@@ -239,15 +239,25 @@ export class AuditoriaComponent implements OnInit {
         this.resultadoBusqueda = [];
     }
 
+    tieneDatosCorrectos() {
+        const p = this.pacienteSelected;
+
+        return !!(
+            p.nombreCorrectoReportado ||
+            p.apellidoCorrectoReportado ||
+            p.fechaNacimientoCorrectoReportado
+        );
+    }
+
     tieneNombreApellidoCorrecto() {
         return (this.pacienteSelected.nombreCorrectoReportado && !this.pacienteSelected.apellidoCorrectoReportado) || !this.pacienteSelected.nombreCorrectoReportado && this.pacienteSelected.apellidoCorrectoReportado;
     }
 
     tieneNotaError() {
-        return !this.pacienteSelected.nombreCorrectoReportado && !this.pacienteSelected.apellidoCorrectoReportado && this.pacienteSelected.notaError;
+        return !this.pacienteSelected.nombreCorrectoReportado && !this.pacienteSelected.apellidoCorrectoReportado && !this.pacienteSelected.fechaNacimientoCorrectoReportado && this.pacienteSelected.notaError;
     }
 
     noTieneNotaError() {
-        return !this.pacienteSelected.nombreCorrectoReportado && !this.pacienteSelected.apellidoCorrectoReportado && !this.pacienteSelected.notaError;
+        return !this.pacienteSelected.nombreCorrectoReportado && !this.pacienteSelected.apellidoCorrectoReportado && !this.pacienteSelected.fechaNacimientoCorrectoReportado && !this.pacienteSelected.notaError;
     }
 }
