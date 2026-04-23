@@ -52,12 +52,15 @@
                              preload="true" ambito="ambulatorio" [multiple]="true" [required]="true"
                              (change)="cambioPrestaciones()" [closeAfterSelect]="true">
                 </plex-select>
-                <div class="pt-1" [ngClass]="{'w-100 mt-3' : smallScreen(), 'w-50': !smallScreen()}">
-                    <plex-label class="float-left mr-2" titulo="Equipo de Salud"
+                <div class="pt-3" [ngClass]="{'w-100 mt-3' : smallScreen(), 'w-50': !smallScreen()}">
+                    <!-- <plex-label class="float-left mr-2" titulo="Equipo de Salud"
                                 hint="Si no encuentra el profesional en el listado, puede que no exista o no tenga permisos para las prestaciones seleccionadas"
                                 hintType="info" hintIcon="eye" detach="top">
-                    </plex-label>
-                    <plex-select [disabled]="!modelo.horaFin || !modelo.tipoPrestaciones?.length"
+                    </plex-label> -->
+                    <plex-select label="Equipo de Salud"
+                                 hint="Si no encuentra el profesional en el listado, puede que no exista o no tenga permisos para las prestaciones seleccionadas"
+                                 hintType="info" hintIcon="eye" detach="top"
+                                 [disabled]="!modelo.horaFin || !modelo.tipoPrestaciones?.length"
                                  [(ngModel)]="modelo.profesionales" name="modelo.profesionales"
                                  (getData)="loadProfesionales($event)" [multiple]="true"
                                  labelField="apellido + ' ' + nombre" (change)="verificarProfesional()"

@@ -1,7 +1,7 @@
 <form #form="ngForm">
     <plex-title titulo="Registrar evento" size="md">
         <plex-button *ngIf="editando || !evento" class="mr-1" type="success" size="sm" icon="check" tooltip="Guardar"
-                     [disabled]="!estado || labelEstado ==='Motivo' && !observaciones" (click)="onGuardar()">
+                     [disabled]="!estado || requiereMotivo && !observaciones?.length" (click)="onGuardar()">
         </plex-button>
         <plex-button *ngIf="!editando && evento && capa === 'enfermeria'" class="mr-1" type="warning" size="sm"
                      icon="pencil" (click)="onEdit()">
@@ -40,18 +40,19 @@
         <plex-datetime type="time" name="hora" label="Horario de inicio" [(ngModel)]="fechaHora" [min]="horaMin"
                        [max]="horaMax" [required]="true" span="2">
         </plex-datetime>
-        <plex-select [data]="estadoItems" [(ngModel)]="estado" (change)="onInputChange($event)" name="estado"
+        <plex-select [data]="estadoItems" [(ngModel)]="estado" (change)="onInputChange($event.value)" name="estado"
                      label="Estado" [required]="true">
         </plex-select>
-        <plex-label class="font-weight-bold"> {{labelEstado}} <h3 *ngIf="labelEstado==='Motivo'" class="asteriscoRojo">
+        <!-- <plex-label class="font-weight-bold"> 
+            <h3 *ngIf="requiereMotivo" class="asteriscoRojo">
                 *
             </h3>
-        </plex-label>
-        <div class="fondoBlancoText">
-            <plex-text [(ngModel)]="observaciones" name="observaciones" [required]="labelEstado==='Motivo'"
-                       [html]="true">
-            </plex-text>
-        </div>
+        </plex-label> -->
+        <plex-text label="{{ requiereMotivo ? 'Observaciones' : 'Motivo' }}" [(ngModel)]="observaciones"
+                   name="observaciones" [required]="requiereMotivo" [html]="true" (change)="ngOnChanges()">
+        </plex-text>
+        <!-- <div class="fondoBlancoText">
+        </div> -->
     </ng-container>
 </form>
 

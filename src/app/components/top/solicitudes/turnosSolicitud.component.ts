@@ -1,7 +1,7 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import * as moment from 'moment';
+import moment from 'moment';
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
@@ -41,7 +41,7 @@ export class TurnosSolicitudComponent implements OnInit {
     turnosPaciente: any;
     public _paciente: IPaciente;
 
-    @Input('paciente')
+    @Input()
     set paciente(value: any) {
         this._paciente = value;
         if (value) {
@@ -66,7 +66,7 @@ export class TurnosSolicitudComponent implements OnInit {
         }
     }
 
-    @Input('turnos')
+    @Input()
     set turnos(value: any) {
         if (value) {
             this._turnos = value;
@@ -86,8 +86,8 @@ export class TurnosSolicitudComponent implements OnInit {
         this.todaysdate = new Date();
         this.todaysdate.setHours(0, 0, 0, 0);
     }
-
-    ngOnInit() {
+    ngOnInit(): void {
+        throw new Error('Method not implemented.');
     }
 
     isToday(turno) {

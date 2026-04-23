@@ -19,6 +19,7 @@ import { ConstantesService } from 'src/app/services/constantes.service';
 import { SnomedService } from 'src/app/apps/mitos';
 import { ECLQueriesService } from 'src/app/services/eclqueries.service';
 import moment from 'moment';
+import { isNumber } from 'vis-util';
 
 @Component({
     selector: 'solicitudes',
@@ -298,6 +299,9 @@ export class SolicitudesComponent implements OnInit {
     }
 
     cambio(activeTab) {
+        if (!isNumber(activeTab)) {
+            activeTab = this.activeTab;
+        }
         if (activeTab !== this.activeTab) {
             this.actualizacion = false;
             this.check = false;
@@ -854,7 +858,7 @@ export class SolicitudesComponent implements OnInit {
     onChange() {
         this.actualizacion = !this.actualizacion;
         this.loader = true;
-        !!this.actualizacion ? this.sortTable('actualizacion', 'asc') : this.sortTable('fechaSolicitud', 'asc');
+        this.actualizacion ? this.sortTable('actualizacion', 'asc') : this.sortTable('fechaSolicitud', 'asc');
     }
 
     actualizarFechas() {

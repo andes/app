@@ -1,6 +1,6 @@
 {
     "name": "@andes/app",
-    "version": "5.152.0",
+    "version": "5.172.0",
     "description": "Aplicación web para ANDES",
     "angular-cli": {},
     "scripts": {
@@ -32,7 +32,7 @@
     "dependencies": {
         "@andes/icons": "^1.1.28",
         "@andes/match": "^1.1.12",
-        "@andes/plex": "^9.0.0-beta.3",
+        "@andes/plex": "^9.0.0-beta.4",
         "@angular/animations": "15.2.10",
         "@angular/cdk": "^15.2.9",
         "@angular/common": "15.2.10",
@@ -122,6 +122,9 @@
         "ng-recaptcha": {
             "@angular/core": "15.2.10"
         }
+    },
+    "engines": {
+        "node": ">=18.20 <19"
     },
     "release": {
         "branches": [
