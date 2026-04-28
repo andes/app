@@ -138,8 +138,12 @@ export class ListadoAuditoriaComponent {
     }
 
     pacienteCorregido(paciente: IPaciente) {
-        paciente.reportarError = false;
-        this.resetReport.emit(paciente);
+        this.plex.confirm('¿Desea marcar como corregido?', 'Confirmación').then(confirmar => {
+            if (confirmar) {
+                paciente.reportarError = false;
+                this.resetReport.emit(paciente);
+            }
+        });
     }
 
     tieneDatosReportados(paciente: IPaciente) {

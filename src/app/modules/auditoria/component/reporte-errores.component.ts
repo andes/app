@@ -16,6 +16,7 @@ export class ReporteErroresComponent implements OnInit {
 
     @ViewChild('modalCorreccion') modalCorreccion: ModalCorreccionPacienteComponent;
     @Output() selected = new EventEmitter<any>();
+    @Output() reset = new EventEmitter<any>();
 
     showSidebar = false;
     filtroPaciente: string;
@@ -157,6 +158,7 @@ export class ReporteErroresComponent implements OnInit {
                         this.plex.toast('success', 'Los datos se actualizaron correctamente!');
                         // recargamos la lista para reflejar el cambio
                         this.cargar();
+                        this.reset.emit();
                     }
 
                 } else {
