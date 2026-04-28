@@ -23,7 +23,7 @@
             </plex-tab>
 
             <plex-tab *ngIf="permisoEdicion" label="Errores reportados" icon="account-details">
-                <reporte-errores #erroresComponent (selected)="onSelectReportado($event)"></reporte-errores>
+                <reporte-errores #erroresComponent (selected)="onSelectReportado($event)" (reset)="closeSidebar()"></reporte-errores>
             </plex-tab>
         </plex-tabs>
 
