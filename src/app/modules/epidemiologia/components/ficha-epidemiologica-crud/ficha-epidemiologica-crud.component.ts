@@ -286,10 +286,10 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         }
 
         if (!internado) {
-            this.Clasificacion = organizacion?.nombre === 'HTAL ZAPALA - DR JUAN J POSE' ? CLASIFICACIONESVSR[2] : CLASIFICACIONESVSR[3];
+            this.Clasificacion = (organizacion?.nombre === 'HTAL ZAPALA - DR JUAN J POSE' || organizacion?.nombre === 'HTAL SAN MARTIN DE LOS ANDES - DR RAMON CARRILLO(NUEVO)HTAL SAN MARTIN DE LOS ANDES - DR RAMON CARRILLO (NUEVO)') ? CLASIFICACIONESVSR[2] : CLASIFICACIONESVSR[3];
         } else {
             this.Clasificacion = CLASIFICACIONESVSR[0];
-            if (organizacion?.nombre === 'HTAL ZAPALA - DR JUAN J POSE') {
+            if (organizacion?.nombre === 'HTAL ZAPALA - DR JUAN J POSE' || organizacion?.nombre === 'HTAL SAN MARTIN DE LOS ANDES - DR RAMON CARRILLO(NUEVO)HTAL SAN MARTIN DE LOS ANDES - DR RAMON CARRILLO (NUEVO)' || organizacion?.nombre === 'HTAL BOUQUET ROLDAN') {
                 if (previos10dias && sintomas.includes('fiebre') && sintomas.includes('tos') && !derivado && !internado14dias && !inicioSintomas) {
                     this.Clasificacion = CLASIFICACIONESVSR[1];
                 } else {
