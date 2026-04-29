@@ -29,6 +29,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     public internacione$: Observable<any[]>;
     public registros = [];
     public flagSeguimiento = false;
+    private origen: string;
 
     constructor(
         public elementosRUPService: ElementosRUPService,
@@ -117,9 +118,13 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
             });
         } else {
             this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
-            return true;
         }
+
+        this.route.queryParams.subscribe(params => {
+            this.origen = params['origen'];
+        });
     }
+
 
     ngOnDestroy() {
         this.huds.clear();
@@ -140,8 +145,13 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     * @param ruta
     */
     volver() {
-        this.location.back();
+        if (this.origen === 'mpi') {
+            this.router.navigate(['apps/mpi/busqueda']);
+        } else {
+            this.location.back();
+        }
     }
+
 
     evtCambiaPaciente() {
         this.cambiarPaciente.emit(true);
