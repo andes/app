@@ -55,4 +55,27 @@
             </ng-container>
         </div>
     </ng-container>
+    <ng-container *ngIf="elementoRUP.esSolicitud">
+        <div class="row">
+            <div class="col-md">
+                <hr />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md">
+                <plex-select *ngIf="organizaciones.length"
+                             [(ngModel)]="registro.valor.solicitudPrestacion.organizacionDestino"
+                             name="organizacionDestino" [data]="organizaciones" label="Organización destino"
+                             placeholder="Seleccione la organización" labelField="nombre" [required]="true"
+                             (change)="onOrganizacionChange()">
+                </plex-select>
+            </div>
+        </div>
+        <div class="row" *ngIf="!soloValores && !organizaciones.length">
+            <div class="col-md">
+                <plex-label titulo="Esta solicitud NO se regitrará en ninguna bandeja de entrada y no podrá ser resuelta desde el módulo de solicitudes"
+                            subtitulo="" type="warning" size="md" icon="alert"></plex-label>
+            </div>
+        </div>
+    </ng-container>
 </ng-container>
