@@ -8,16 +8,30 @@
     </div>
 </div>
 
+<div *ngIf="mostrarTituloSubmolecula" class="rup-submolecula-titulo mb-2 w-100" style="border-bottom: 4px solid #4a4a4a;">
+    <span class="text-bold text-capitalize" style="font-size: 1.0rem;color:#00a8e0">{{ params?.titulo || registro?.nombre || elementoRUP?.conceptos[0]?.term }}</span>
+</div>
 
-<!-- Moléculas -->
-<ng-container *ngIf="contentLoaded && elementoRUP.requeridos && elementoRUP.requeridos.length">
+<ng-container #componentContainer></ng-container>
+
+<!-- Moléculas (Fallback para cuando no hay componente específico o para renderizado recursivo) -->
+<ng-container *ngIf="!rupInstance && contentLoaded && elementoRUP.requeridos && elementoRUP.requeridos.length">
     <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
         <ng-container *ngFor="let item of requeridos; let i = index">
+            <!-- Si es una submolécula con título, lo forzamos a col-12 para que ocupe todo el ancho -->
+            <div *ngIf="item.elementoRUP && item.params?.mostrarTituloSubmolecula" class="col-12">
+                <div class="rup-submolecula-titulo mb-2 position-relative" style="margin-top: 10px;">
+                    <span class="text-bold text-capitalize"
+                          style="font-size: 1.0rem;color:#00a8e0">{{ item.params?.titulo || registro.registros[i]?.nombre || item.elementoRUP?.conceptos[0]?.term }}</span>
+                    <hr style="position: absolute; left: 0; right: 0; bottom: 0; border: none; height: 4px; background-color: #4a4a4a;">
+                </div>
+            </div>
             <div *ngIf="item.elementoRUP"
                  class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style.offset : '0' }}">
                 <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
                      [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores"
-                     [style]="item.style" (change)="emitChange($event)" [conceptosAsociados]="conceptosAsociados">
+                     [style]="item.style" (change)="emitChange($event)" [conceptosAsociados]="conceptosAsociados"
+                     [mostrarTituloSubmolecula]="false">
                 </rup>
             </div>
         </ng-container>
