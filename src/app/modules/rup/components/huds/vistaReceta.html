@@ -15,6 +15,9 @@
                     <plex-badge *ngIf="recetaPrincipal.medicamento" size="sm" type="default">
                         {{ recetaPrincipal.medicamento.tipoReceta }}
                     </plex-badge>
+                    <plex-badge *ngIf="recetaPrincipal.medicamento?.esMagistral" size="sm" type="info">
+                        Fórmula Magistral
+                    </plex-badge>
                 </div>
                 <div case="capitalize"><b>{{ recetaPrincipal.medicamento.concepto.term }}</b></div>
                 <p *ngIf="recetaPrincipal.medicamento.cantidad && recetaPrincipal.medicamento.cantEnvases "><small>
@@ -156,6 +159,9 @@
                         </plex-badge>
                         <plex-badge size="sm" [type]="estadoDispensa[receta.estadoDispensaActual.tipo]">
                             {{ receta.estadoDispensaActual.tipo.replace('-', ' ') }}
+                        </plex-badge>
+                        <plex-badge *ngIf="receta.medicamento?.esMagistral" size="sm" type="info">
+                            Fórmula Magistral
                         </plex-badge>
                     </div>
                 </td>
