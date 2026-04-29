@@ -29,6 +29,7 @@ export class FormNuevaSolicitudComponent implements OnInit {
     fecha: any;
     arrayReglasDestino = [];
     autocitado = false;
+    tiempoVigenciaPrestacion: number = null;
     prestacionDestino: any;
     prestacionOrigen: any;
     // Adjuntar Archivo
@@ -201,8 +202,12 @@ export class FormNuevaSolicitudComponent implements OnInit {
         this.dataOrganizacionesOrigen = [];
         this.modelo.solicitud.organizacionOrigen = null;
         this.dataTipoPrestacionesOrigen = [];
+        this.tiempoVigenciaPrestacion = null;
 
         if (this.modelo.solicitud && this.modelo.solicitud.tipoPrestacion) {
+            // Captura el tiempoVigencia del concepto seleccionado (365 días por defecto)
+            this.tiempoVigenciaPrestacion = this.modelo.solicitud.tipoPrestacion.tiempoVigencia || 365;
+
             this.servicioReglas.get({ organizacionDestino: this.auth.organizacion.id, prestacionDestino: this.modelo.solicitud.tipoPrestacion.conceptId })
                 .subscribe(
                     res => {
