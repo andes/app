@@ -29,6 +29,7 @@ export class ListadoAuditoriaComponent {
     @Output() hover: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
     // Evento que se emite cuando se scrollea en la lista
     @Output() scrolled: EventEmitter<null> = new EventEmitter<null>();
+    @Output() resetReport: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
     _pacientes: IPacienteMatch[] | IPaciente[];
     seleccionado: IPaciente;
@@ -58,8 +59,9 @@ export class ListadoAuditoriaComponent {
         }
     }
 
-    constructor(private plex: Plex,
-                private historialBusquedaService: HistorialBusquedaService) { }
+    constructor(
+        private plex: Plex,
+        private historialBusquedaService: HistorialBusquedaService) { }
 
 
     getCantidadVinculados(paciente: IPaciente) {
@@ -80,16 +82,22 @@ export class ListadoAuditoriaComponent {
             this.itemsDropdown = [];
 
             if (paciente.activo) {
-                this.itemsDropdown[0] = { label: 'VINCULAR', handler: () => {
-                    this.vincular(this.seleccionado);
-                } };
-                this.itemsDropdown[1] = { label: 'INACTIVAR', handler: () => {
-                    this.setActivo(this.seleccionado, false);
-                } };
+                this.itemsDropdown[0] = {
+                    label: 'VINCULAR', handler: () => {
+                        this.vincular(this.seleccionado);
+                    }
+                };
+                this.itemsDropdown[1] = {
+                    label: 'INACTIVAR', handler: () => {
+                        this.setActivo(this.seleccionado, false);
+                    }
+                };
             } else {
-                this.itemsDropdown[0] = { label: 'ACTIVAR', handler: () => {
-                    this.setActivo(this.seleccionado, true);
-                } };
+                this.itemsDropdown[0] = {
+                    label: 'ACTIVAR', handler: () => {
+                        this.setActivo(this.seleccionado, true);
+                    }
+                };
             }
         }
     }
@@ -127,5 +135,22 @@ export class ListadoAuditoriaComponent {
 
     public onScroll() {
         this.scrolled.emit();
+    }
+
+    pacienteCorregido(paciente: IPaciente) {
+        this.plex.confirm('¿Desea marcar como corregido?', 'Confirmación').then(confirmar => {
+            if (confirmar) {
+                paciente.reportarError = false;
+                this.resetReport.emit(paciente);
+            }
+        });
+    }
+
+    tieneDatosReportados(paciente: IPaciente) {
+        return !!(
+            paciente.nombreCorrectoReportado ||
+            paciente.apellidoCorrectoReportado ||
+            paciente.fechaNacimientoCorrectoReportado
+        );
     }
 }

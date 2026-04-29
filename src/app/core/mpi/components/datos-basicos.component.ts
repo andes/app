@@ -38,7 +38,7 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     noPoseeDNI = false;
     botonRegistroDNI = false;
     pacienteExtranjero: IPaciente;
-    pacienteEditado = { nombre: '', apellido: '' };
+    pacienteEditado = { nombre: '', apellido: '', fechaNacimiento: null as Date | null };
     public requiereGenero: boolean;
     public nuevoPaciente = false;
     public disableRegistro = false;
@@ -244,6 +244,7 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     registrarError() {
         this.pacienteEditado.nombre = this.paciente.nombre;
         this.pacienteEditado.apellido = this.paciente.apellido;
+        this.pacienteEditado.fechaNacimiento = this.paciente.fechaNacimiento;
         this.paciente.reportarError = true;
         this.changes.emit({ pacienteError: this.pacienteEditado });
     }
@@ -381,12 +382,9 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     }
 
     verificarNombreApellido(data) {
-        if (data.nombre) {
-            this.pacienteEditado.nombre = data.nombre;
-        }
-        if (data.apellido) {
-            this.pacienteEditado.apellido = data.apellido;
-        }
+        this.pacienteEditado.nombre = data.hasOwnProperty('nombre') ? data.nombre : this.pacienteEditado.nombre;
+        this.pacienteEditado.apellido = data.hasOwnProperty('apellido') ? data.apellido : this.pacienteEditado.apellido;
+        this.pacienteEditado.fechaNacimiento = data.hasOwnProperty('fechaNacimiento') ? data.fechaNacimiento : this.pacienteEditado.fechaNacimiento;
         this.changes.emit({ pacienteError: this.pacienteEditado });
     }
 

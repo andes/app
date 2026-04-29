@@ -262,6 +262,10 @@
                            [required]="true" [debounce]="500"
                            (change)="verificarNombreApellido({nombre: pacienteEditado.nombre})">
                 </plex-text>
+                <plex-datetime label="Ingrese fecha de nacimiento correcta" type="date" [required]="true"
+                               [debounce]="500" [(ngModel)]="pacienteEditado.fechaNacimiento" name="fechaError"
+                               (change)="verificarNombreApellido({fechaNacimiento: pacienteEditado.fechaNacimiento})">
+                </plex-datetime>
                 <br>
                 <plex-label size="md" titulo="Si hay un error en RENAPER, la persona deberá informar el
                                             problema en la delegación de RENAPER más cercana a su domicilio para corregir la situación de su
