@@ -108,7 +108,7 @@ export class CalendarioDia {
                         // Para enmarcar los días correspondientes en el calendario
                         if (unaAgenda.estado === 'disponible' || unaAgenda.estado === 'publicada') {
                             if (tipoTurno === 'gestion') {
-                                if (this.gestionDisponibles > 0 && !autocitado) {
+                                if ((this.gestionDisponibles > 0 || this.programadosDisponibles > 0) && !autocitado) {
                                     this.estado = 'disponible';
                                     hayTurnosDisponibles = true;
                                 } else if (this.profesionalDisponibles > 0 && autocitado) {
