@@ -117,11 +117,16 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
             this.financiadorSeleccionado = nombre || financiador;
             this.numeroAfiliado = numeroAfiliado;
 
-            this.datosFinanciadores = [
-                ...this.financiadoresPaciente.map((os: IObraSocial) => ({
+            const mappedFinanciadores = this.financiadoresPaciente
+                .filter((os: IObraSocial) => (os.nombre || os.financiador) !== 'Sin obra social' && (os.nombre || os.financiador) !== 'otras')
+                .map((os: IObraSocial) => ({
                     id: os.nombre || os.financiador,
                     label: (os.nombre || os.financiador) + (os.origen ? ` ${this.toBold('(' + os.origen + ')')}` : '')
-                })),
+                }));
+
+            this.datosFinanciadores = [
+                ...mappedFinanciadores,
+                { id: 'Sin obra social', label: 'Sin obra social' },
                 { id: 'otras', label: 'Otras' }
             ];
 
@@ -170,11 +175,19 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
         if (nombreSeleccionado === 'otras') {
             this.showListado = true;
             this.busquedaFinanciador = undefined;
+        } else if (event.value === 'Sin obra social') {
+            this.busquedaFinanciador = { nombre: 'Sin obra social' };
+            this.numeroAfiliado = undefined;
+            this.guardarFinanciador();
         } else {
             const nombre = event.value;
 
             this.busquedaFinanciador = this.financiadoresPaciente.find(os => os.nombre === nombre || os.financiador === nombre);
-            this.numeroAfiliado = this.busquedaFinanciador.numeroAfiliado;
+            if (this.busquedaFinanciador) {
+                this.numeroAfiliado = this.busquedaFinanciador.numeroAfiliado;
+            } else {
+                this.numeroAfiliado = undefined;
+            }
 
 
             this.guardarFinanciador();
@@ -186,13 +199,15 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
             this.busquedaFinanciador.numeroAfiliado = this.numeroAfiliado;
         }
 
-        const existeFinanciador = this.paciente.financiador?.some(
-            (financiador: any) => financiador.nombre === this.busquedaFinanciador.nombre
-        );
+        if (this.busquedaFinanciador && this.busquedaFinanciador.nombre !== 'Sin obra social') {
+            const existeFinanciador = this.paciente.financiador?.some(
+                (financiador: any) => financiador.nombre === this.busquedaFinanciador.nombre
+            );
 
-        if (!existeFinanciador) {
-            this.paciente.financiador?.push(this.busquedaFinanciador);
-            this.actualizarPaciente();
+            if (!existeFinanciador) {
+                this.paciente.financiador?.push(this.busquedaFinanciador);
+                this.actualizarPaciente();
+            }
         }
 
         this.setFinanciador.emit(this.busquedaFinanciador);
