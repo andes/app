@@ -1,3 +1,15 @@
+# [5.172.0](https://github.com/andes/app/compare/v5.171.0...v5.172.0) (2026-04-29)
+
+
+### Bug Fixes
+
+* **HUDS:** se corrige la visualización de los cdas en la huds ([#3346](https://github.com/andes/app/issues/3346)) ([134c596](https://github.com/andes/app/commit/134c596165c0cb8ae4144026c79b744f8b53b064))
+
+
+### Features
+
+* **RUP:** agregar opcion "sin obra social" para turnos y recetas ([#3302](https://github.com/andes/app/issues/3302)) ([619444a](https://github.com/andes/app/commit/619444a5bb28c85689e29945dfd1902089c67402))
+
 # [5.171.0](https://github.com/andes/app/compare/v5.170.4...v5.171.0) (2026-04-22)
 
 
