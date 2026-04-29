@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { ResourceBaseHttp, Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, EMPTY, Observable } from 'rxjs';
@@ -53,7 +54,7 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
                     params.paciente = '^' + (paciente as string).toUpperCase();
                 }
                 if (fechaProximoControl) {
-                    params.fechaProximoControl = moment(fechaProximoControl).format('YYYY-MM-DD');;
+                    params.fechaProximoControl = moment(fechaProximoControl).format('YYYY-MM-DD');
                 }
                 if (fechaUltimoControl) {
                     params.fechaUltimoControl = moment(fechaUltimoControl).format('YYYY-MM-DD');

@@ -24,9 +24,10 @@
     <div class="plex-body" *ngIf="hasItems() && !hidden">
         <div class="content">
             <div *ngFor="let child of root.hijos">
-                <sectores-item [root]="child" [actions]="actions"  [idOrganizacion]="idOrganizacion" (onSelect)="onSelectItem($event)"
-                               (onAdd)="onAdd.emit($event)" (onEdit)="onEdit.emit($event)"
-                               (onRemove)="removeChild($event)" [selected]="selected"></sectores-item>
+                <sectores-item [root]="child" [actions]="actions" [idOrganizacion]="idOrganizacion"
+                               (selectedNotify)="onSelectItem($event)" (onAdd)="onAdd.emit($event)"
+                               (onEdit)="onEdit.emit($event)" (onRemove)="removeChild($event)"
+                               [selected]="selected"></sectores-item>
             </div>
         </div>
     </div>

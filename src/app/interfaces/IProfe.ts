@@ -1,7 +1,7 @@
 export interface IProfe {
-    nombre: String;
-    tipoDocumento: String;
-    dni: Number;
+    nombre: string;
+    tipoDocumento: string;
+    dni: number;
     fechaAlta: Date;
     version: Date;
 }

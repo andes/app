@@ -1,11 +1,11 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { EstAgendasService } from '../../services/agenda.service';
 
 @Component({
     selector: 'tabla-2d',
     templateUrl: './tabla-2d.html'
 })
-export class Tabla2DComponent implements OnInit, OnChanges {
+export class Tabla2DComponent implements OnChanges {
 
     @Input() data: any;
     @Input() titulo: any;
@@ -68,10 +68,6 @@ export class Tabla2DComponent implements OnInit, OnChanges {
         sobreturno: 'Sobreturno',
         appMobile: 'App Mobile'
     };
-
-    ngOnInit() {
-
-    }
 
     ngOnChanges() {
         if (this.data) {

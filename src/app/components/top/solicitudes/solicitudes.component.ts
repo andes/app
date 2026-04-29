@@ -1,7 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PlexModalComponent, PlexHelpComponent } from '@andes/plex';
 import { Unsubscribe } from '@andes/shared';
 import { Location } from '@angular/common';
 import { Component, ElementRef, HostBinding, Input, OnInit, ViewChild } from '@angular/core';
@@ -19,7 +18,8 @@ import { TurnoService } from '../../../services/turnos/turno.service';
 import { ConstantesService } from 'src/app/services/constantes.service';
 import { SnomedService } from 'src/app/apps/mitos';
 import { ECLQueriesService } from 'src/app/services/eclqueries.service';
-
+import moment from 'moment';
+import { isNumber } from 'vis-util';
 
 @Component({
     selector: 'solicitudes',
@@ -102,7 +102,7 @@ export class SolicitudesComponent implements OnInit {
     public accesoHudsPrestacion = null;
     public accesoHudsPaciente = null;
     public accesoHudsTurno = null;
-    public motivoRespuesta: String;
+    public motivoRespuesta: string;
     public observacionesCitar;
     public observacionesAnular;
     public observacionesIniciarPrestacion;
@@ -299,6 +299,9 @@ export class SolicitudesComponent implements OnInit {
     }
 
     cambio(activeTab) {
+        if (!isNumber(activeTab)) {
+            activeTab = this.activeTab;
+        }
         if (activeTab !== this.activeTab) {
             this.actualizacion = false;
             this.check = false;
@@ -855,7 +858,7 @@ export class SolicitudesComponent implements OnInit {
     onChange() {
         this.actualizacion = !this.actualizacion;
         this.loader = true;
-        !!this.actualizacion ? this.sortTable('actualizacion', 'asc') : this.sortTable('fechaSolicitud', 'asc');
+        this.actualizacion ? this.sortTable('actualizacion', 'asc') : this.sortTable('fechaSolicitud', 'asc');
     }
 
     actualizarFechas() {

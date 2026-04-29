@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, LOCALE_ID, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import moment from 'moment';
 
 @Component({
     selector: 'calendario-novedades',

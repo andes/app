@@ -16,6 +16,7 @@ import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-ite
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { LaboratorioService } from 'src/app/services/laboratorio.service';
 import { PacienteCacheService } from 'src/app/core/mpi/services/pacienteCache.service';
+import moment from 'moment';
 
 @Component({
     selector: 'app-registros-huds-detalle',
@@ -29,7 +30,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     public id$ = new BehaviorSubject(null);
 
     public historial$: Observable<any>;
-    public historialFiltrado$: Observable<any> = of([]);;
+    public historialFiltrado$: Observable<any> = of([]);
     public estadoCama$: Observable<IMAQEstado>;
     public accionesEstado$: Observable<any>;
     public prestacionesList$: Observable<any>;
