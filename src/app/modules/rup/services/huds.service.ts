@@ -87,13 +87,13 @@ export class HUDSService {
                     case 'cda':
                     case 'dominio':
                     case 'solicitud':
-                    case 'recc':
-                        if (registro._id === _registro._id) {
+                    case 'ficha-epidemiologica':
+                        if (registro.id === _registro.id || registro.data?.id === _registro.id) {
                             return i;
                         }
                         break;
-                    case 'ficha-epidemiologica':
-                        if (registro.id === _registro.id || registro.data?.id === _registro.id) {
+                    case 'recc':
+                        if (registro._id === _registro._id) {
                             return i;
                         }
                         break;
