@@ -74,8 +74,8 @@
             <paciente-detalle [paciente]="paciente" orientacion="horizontal" [fields]="pacienteFields">
             </paciente-detalle>
         </ng-container>
-        <plex-title titulo="Turnos futuros" size="sm"></plex-title>
-        <plex-list *ngIf="turnosPaciente?.length">
+        <plex-title *ngIf="_solicitudPrestacion?.inicio === 'top' && estadoT === 'noSeleccionada'" titulo="Turnos futuros" size="sm"></plex-title>
+        <plex-list *ngIf="_solicitudPrestacion?.inicio === 'top' && estadoT === 'noSeleccionada' && turnosPaciente?.length">
             <plex-item *ngFor="let turno of turnosPaciente">
                 <plex-icon name="calendario" type="info" size="md"></plex-icon>
                 <div>
@@ -115,7 +115,7 @@
                 </div>
             </plex-item>
         </plex-list>
-        <div *ngIf="turnosPaciente && !turnosPaciente.length" justify="center" class="mt-4" style="margin-bottom: 2em;">
+        <div *ngIf="_solicitudPrestacion?.inicio === 'top' && estadoT === 'noSeleccionada' && turnosPaciente && !turnosPaciente.length" justify="center" class="mt-4" style="margin-bottom: 2em;">
             <plex-label class="flex-column" icon="informacion" size="md" direction="column"
                         titulo="No existen turnos futuros para este paciente">
             </plex-label>
