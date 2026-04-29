@@ -159,9 +159,4 @@ export class EstadisticasPacientesComponent implements OnInit {
         this.demandaCerrada.emit();
     }
 
-    motivoLiberado(turno) {
-        const fechaModificacion = turno.createdAt ? moment(turno.createdAt) : moment(turno.updatedAt);
-        const usuarioModificacion = turno.createdBy?.email ? turno.createdBy.nombre : turno.createdBy.nombreCompleto;
-        return `Por ${usuarioModificacion} el ${moment(fechaModificacion).format('DD/MM/YYYY')} a las ${moment(fechaModificacion).format('HH:mm')}`;
-    }
 }
