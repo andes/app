@@ -290,48 +290,7 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
         this.volver.emit();
     }
 
-    addContacto() {
 
-        this.contactoCorrecto = !!(this.contacto.apellidoNombre && this.contacto.documento && this.contacto.telefono
-            && this.contacto.domicilio && this.contacto.fechaUltimoContacto && this.contacto.tipoContacto);
-
-        if (this.contactoCorrecto) {
-            const documentoCorrecto = this.patronDocumento.test(this.contacto.documento);
-            const telefonoCorrecto = this.patronContactoNumerico.test(this.contacto.telefono);
-            if (documentoCorrecto && telefonoCorrecto) {
-                this.contactosEstrechos.push(this.contacto);
-                this.contacto = {
-                    apellidoNombre: '',
-                    documento: '',
-                    telefono: '',
-                    domicilio: '',
-                    fechaUltimoContacto: '',
-                    tipoContacto: ''
-                };
-                this.plex.toast('success', 'El contacto estrecho se ha agregado satisfactoriamente!');
-            } else {
-                this.plex.info('danger', 'Revise los datos ingresados');
-            }
-
-        } else {
-            this.plex.info('danger', 'Debe completar los datos requeridos');
-        }
-        this.contactoCorrecto = false;
-    }
-    deleteContacto(contacto) {
-        const index = this.contactosEstrechos.findIndex(item => item.documento === contacto.documento);
-        if (index >= 0) {
-            this.contactosEstrechos.splice(index, 1);
-            this.contactosEstrechos = [...this.contactosEstrechos];
-        }
-        if (!this.contactosEstrechos?.length) {
-            this.nuevoContacto = false;
-        }
-        this.plex.toast('success', 'Contacto eliminado exitosamente!');
-    }
-    showNuevoContacto() {
-        this.nuevoContacto = true;
-    }
     setOrganizacion(seccion, organizacion) {
         const idOrganizacion = organizacion.value ? organizacion.value.id : organizacion;
         this.organizacionService.getById(idOrganizacion).subscribe(res => {
