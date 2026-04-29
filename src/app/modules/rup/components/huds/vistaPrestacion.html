@@ -68,10 +68,14 @@
         </plex-button>
 
         <!-- Registros -->
-        <plex-title titulo="Registros de la consulta" size="sm"></plex-title>
+        <plex-title titulo="Registros de la consulta" size="sm">
+            <plex-button *ngIf="puedeDescargarInforme && tieneOdontograma" type="info" size="sm" icon="download" title="Descargar PDF"
+                         [disabled]="requestInProgress" (click)="descargarInforme()" titlePosition="left">
+            </plex-button>
+        </plex-title>
         <plex-wrapper>
             <ng-container *ngFor="let elemento of prestacion.ejecucion.registros">
-                <div class="rup-card {{ elemento | semanticClass }}">
+                <div class="rup-card {{ elemento | semanticClass }}" [attr.data-id]="elemento.id">
                     <div class="rup-header">
                         <div class="icon-rup">
                             <i class="adi {{ elemento | semanticIcon }}"></i>
