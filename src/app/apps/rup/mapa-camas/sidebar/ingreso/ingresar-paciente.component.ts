@@ -2,7 +2,7 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, OnDestroy, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
-import { auditTime, filter, map, switchMap, take } from 'rxjs/operators';
+import { auditTime, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { ObraSocialService } from 'src/app/services/obraSocial.service';
@@ -47,7 +47,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public situacionesLaborales = situacionesLaborales;
     public snomedIngreso = snomedIngreso;
     public expr = SnomedExpression;
-    public fechaMax = moment().toDate();
 
     // VARIABLES
     public esPrepaga = false;
@@ -92,12 +91,15 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public poseeMovimientos: Boolean;
     private subscription: Subscription;
     private subscription2: Subscription;
+    private subscriptionResumenInternacion: Subscription;
     public selectedOS = false;
     public financiador;
     public selectorFinanciadores: IObraSocial[] = [];
     public obrasSociales: IObraSocial[] = [];
     public OSPrivada = false;
     public esCensable = this.isCamaCensable();
+    public resumenInternacion$: Observable<IResumenInternacion>;
+    public fechaMax;
 
 
     constructor(
@@ -124,6 +126,9 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         if (this.subscription2) {
             this.subscription2.unsubscribe();
         }
+        if (this.subscriptionResumenInternacion) {
+            this.subscriptionResumenInternacion.unsubscribe();
+        }
     }
 
     onchange(event) {
@@ -146,6 +151,17 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         ) as Observable<string>;
     }
     ngOnInit() {
+        this.resumenInternacion$ = this.mapaCamasService.resumenInternacion$;
+        this.subscriptionResumenInternacion = this.resumenInternacion$.pipe(
+            filter(resumen => !!resumen?.id),
+            tap(resumen => this.mapaCamasService.setFecha(resumen.fechaIngreso)),
+            switchMap(resumen => this.mapaCamasService.historial('cama', resumen.fechaIngreso, moment().toDate()).pipe(
+                filter(historial => Array.isArray(historial) && historial.length > 0),
+                map(historial => moment(historial[historial.length - 1].fecha).toDate())
+            ))
+        ).subscribe((fechaMax) => {
+            this.fechaMax = fechaMax;
+        });
         this.view = this.mapaCamasService.view.getValue();
         this.fechaHasta = this.listadoInternacionService.fechaIngresoHasta.getValue();
         this.prepagas$ = this.obraSocialService.getPrepagas();
@@ -755,7 +771,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         const HOY = moment().toDate();
         this.mapaCamasService.historial('internacion', this.fechaIngresoOriginal, HOY).subscribe(h => {
             const movimientoEncontrado = h.filter((s: ISnapshot) => {
-                if (s.fecha.getTime() > this.fechaIngresoOriginal.getTime() && s.fecha.getTime() < this.informeIngreso.fechaIngreso.getTime()) {
+                if (s.fecha.getTime() > this.fechaIngresoOriginal.getTime() && s.fecha.getTime() < this.informeIngreso.fechaIngreso?.getTime()) {
                     return s;
                 }
             });
