@@ -65,7 +65,10 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
     private resetComponentState() {
         this.showSelector = false;
         this.showListado = false;
+        this.datosFinanciadores = [];
+        this.financiadorSeleccionado = undefined;
         this.otroFinanciadorSeleccionado = undefined;
+        this.busquedaFinanciador = undefined;
     }
 
     private cargarDatosModoEditable() {
@@ -91,9 +94,8 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
         if (!paciente) {
             return;
         } else {
-            this.financiadoresPaciente = paciente.financiador;
+            this.financiadoresPaciente = paciente.financiador || [];
         }
-
         this.showSelector = true;
 
         if (this.financiadoresPaciente?.length) {
@@ -108,7 +110,7 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
             }
 
             if (!financiadorParaSeleccion) {
-                financiadorParaSeleccion = this.paciente.obraSocial ? this.paciente.obraSocial : this.financiadoresPaciente[0];
+                financiadorParaSeleccion = paciente.obraSocial ? paciente.obraSocial : this.financiadoresPaciente[0];
             }
 
             const { financiador, nombre, numeroAfiliado } = financiadorParaSeleccion;
@@ -126,15 +128,14 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
             ];
 
         } else {
-            this.financiadorSeleccionado = this.paciente.obraSocial
-                ? this.paciente.obraSocial.nombre
+            this.financiadorSeleccionado = paciente.obraSocial
+                ? paciente.obraSocial.nombre
                 : undefined;
 
-            this.numeroAfiliado = this.paciente.obraSocial
-                ? this.paciente.obraSocial.numeroAfiliado
+            this.numeroAfiliado = paciente.obraSocial
+                ? paciente.obraSocial.numeroAfiliado
                 : '';
         }
-
         this.guardarFinanciador();
     }
 
@@ -170,6 +171,7 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
         if (nombreSeleccionado === 'otras') {
             this.showListado = true;
             this.busquedaFinanciador = undefined;
+            this.otroFinanciadorSeleccionado = null;
         } else {
             const nombre = event.value;
 
@@ -182,6 +184,11 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
     }
 
     public guardarFinanciador() {
+        if (!this.busquedaFinanciador) {
+            this.setFinanciador.emit(undefined);
+            return;
+        }
+
         if (this.busquedaFinanciador) {
             this.busquedaFinanciador.numeroAfiliado = this.numeroAfiliado;
         }
