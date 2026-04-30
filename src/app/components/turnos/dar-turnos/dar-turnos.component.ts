@@ -41,6 +41,7 @@ export class DarTurnosComponent implements OnInit {
     nroCarpetaOriginal: string;
     public lenNota = 140;
     public nota = '';
+    public videoConferencia = false;
     public link: String = '';
     public changeCarpeta = false;
     public financiador;
@@ -581,7 +582,6 @@ export class DarTurnosComponent implements OnInit {
                 this.plex.info('warning', 'Esta agenda ya no está disponible.');
                 return false;
             } else {
-
                 this.alternativas = [];
                 // Se filtran los bloques segun el filtro tipoPrestacion
 
@@ -767,8 +767,10 @@ export class DarTurnosComponent implements OnInit {
                 this.turno.tipoPrestacion = this.opciones.tipoPrestacion;
                 this.turnoTipoPrestacion = this.opciones.tipoPrestacion;
             }
+
             this.habilitarTurnoDoble();
             this.nota = this.turno.nota;
+            this.videoConferencia = this.turno.videoConferencia;
             this.buscarTurnosFuturos();
         } else {
             this.plex.info('warning', 'Debe seleccionar un paciente');
@@ -1083,6 +1085,7 @@ export class DarTurnosComponent implements OnInit {
                 idAgenda: this.agenda.id,
                 estadoFacturacion: this.estadoFacturacion,
                 emitidoPor: (this.turnoTelefonico) ? 'turno telefonico' : null,
+                videoConferencia: this.videoConferencia,
                 link: this.link
             };
             this.serviceTurno.saveDinamica(datosTurno).subscribe({
@@ -1123,6 +1126,7 @@ export class DarTurnosComponent implements OnInit {
                 motivoConsulta: this.motivoConsulta,
                 estadoFacturacion: this.estadoFacturacion,
                 emitidoPor: (this.turnoTelefonico) ? 'turno telefonico' : null,
+                videoConferencia: this.videoConferencia,
                 link: this.link
             };
 
