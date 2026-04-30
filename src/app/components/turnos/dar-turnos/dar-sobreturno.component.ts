@@ -130,19 +130,9 @@ export class DarSobreturnoComponent implements OnChanges {
 
     buscarTurnosFuturos() {
         if (this.tipoPrestacion) {
-            this.serviceTurno.getHistorial({ pacienteId: this.idPaciente }).subscribe(turnos => {
-                // Filtrar los turnos que cumplen con la condición
-                const fechaHoy = moment();
+            this.serviceTurno.getTurnosFuturos({ pacienteId: this.idPaciente }).subscribe(turnos => {
                 this.turnosFuturos = turnos
-                    .filter(turno => {
-                        const fechaTurno = moment(turno.horaInicio);
-                        const cumpleCondiciones =
-                            turno.tipoPrestacion?._id === this.tipoPrestacion['_id'] &&
-                            turno.estado === 'asignado' &&
-                            fechaTurno.isAfter(fechaHoy);
-
-                        return cumpleCondiciones;
-                    })
+                    .filter(turno => turno.tipoPrestacion?._id === this.tipoPrestacion['_id'])
                     .map(turno => (
                         {
                             horaInicio: turno.horaInicio,
