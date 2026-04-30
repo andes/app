@@ -79,7 +79,6 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
         if (!this.registro.valor.medicamentos) {
             this.registro.valor.medicamentos = [];
         }
-        this.registros = this.prestacion.ejecucion.registros.filter(reg => reg.id !== this.registro.id).map(reg => reg.concepto);
         this.intervalos$ = this.constantesService.search({ source: 'plan-indicaciones:frecuencia' });
         this.eclqueriesServicies.search({ key: '^receta' }).subscribe(query => {
             this.eclMedicamentos = query.find(q => q.key === 'receta:genericos');
@@ -87,7 +86,6 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
             this.eclMedicamentosComerciales = query.find(q => q.key === 'receta:medicamentoscomercialesporgenerico');
             this.eclUnidadesFiltro = query.find(q => q.key === 'receta:filtroUnidades');
         });
-        this.buscarDiagnosticosConTrastornos();
 
         // Cargar obras sociales del paciente
         setTimeout(() => {
@@ -102,6 +100,9 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
             if (numeroAfiliadoTemporal && !this.numeroAfiliado) {
                 this.numeroAfiliado = numeroAfiliadoTemporal;
             }
+            this.buscarDiagnosticosConTrastornos().subscribe(() => {
+                this.loadRegistros();
+            });
         });
 
         if (this.paciente) {
@@ -132,7 +133,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     loadRegistros() {
         this.registros = [
             ...this.prestacion.ejecucion.registros
-                .filter(reg => reg.concepto.conceptId !== this.registro.concepto.conceptId && (reg.concepto.semanticTag === 'procedimiento'
+                .filter(reg => !reg.hasSections && reg.concepto.conceptId !== this.registro.concepto.conceptId && (reg.concepto.semanticTag === 'procedimiento'
                     || reg.concepto.semanticTag === 'hallazgo' || reg.concepto.semanticTag === 'trastorno'))
                 .map(reg => reg.concepto),
             ...this.recetasConFiltros
@@ -241,19 +242,26 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
         });
     }
 
-    buscarDiagnosticosConTrastornos() {
+    buscarDiagnosticosConTrastornos(): Observable<any> {
+        this.recetasConFiltros = [];
         const fechaLimite = moment().subtract(6, 'months');
-        this.prestacionesService.getByPacienteTrastorno(this.paciente.id).subscribe((trastornos) => {
-            trastornos.forEach(trastorno => {
-                // las evoluciones de los trastornos estan ordenadas por fecha de carga, la primera es la mas reciente
-                const ultimaEvolucion = trastorno.evoluciones?.length ? moment(trastorno.evoluciones[0].fechaCarga) : null;
-                const esActivo = trastorno.evoluciones?.length && trastorno.evoluciones[0].estado === 'activo';
-                if (ultimaEvolucion?.isAfter(fechaLimite) && esActivo) {
-                    this.recetasConFiltros.push(trastorno.concepto);
-                }
+
+        return new Observable(observer => {
+            this.prestacionesService.getByPacienteTrastorno(this.paciente.id).subscribe((trastornos) => {
+                trastornos.forEach(trastorno => {
+                    // las evoluciones de los trastornos estan ordenadas por fecha de carga, la primera es la mas reciente
+                    const ultimaEvolucion = trastorno.evoluciones?.length ? moment(trastorno.evoluciones[0].fechaCarga) : null;
+                    const esActivo = trastorno.evoluciones?.length && trastorno.evoluciones[0].estado === 'activo';
+                    if (ultimaEvolucion?.isAfter(fechaLimite) && esActivo) {
+                        this.recetasConFiltros.push(trastorno.concepto);
+                    }
+                });
+                observer.next(this.recetasConFiltros);
+                observer.complete();
+            }, error => {
+                observer.error(error);
             });
         });
-
     }
 
     agregarMedicamento() {
