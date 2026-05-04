@@ -132,6 +132,10 @@
             @include card-estilo($vacuna);
         }
 
+        .guardias {
+            @include card-estilo($guardia);
+        }
+
         .recc {
             @include card-estilo($recc);
         }
@@ -288,6 +292,10 @@
 
     &.vacunas {
         color: $vacuna
+    }
+
+    &.guardias {
+        color: $guardia
     }
 
     &.recc {

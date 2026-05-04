@@ -11,6 +11,7 @@ export class ConceptosTurneablesService extends ResourceBaseHttp<ITipoPrestacion
     public static Laboratorio_SISA_CDA_ID = '3031000246109';
     public static Vacunas_CDA_ID = '33879002';
     public static VacunacionCovid_ID = '1821000246103';
+    public static Guardia_CDA_ID = '50849002';
 
     constructor(protected server: Server, protected auth: Auth) {
         super(server);
