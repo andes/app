@@ -54,7 +54,7 @@
 
 
 <ng-container
-              *ngIf="filtroActual !== 'solicitudes' && filtroActual !== 'planes' && filtroActual !== 'laboratorios' && filtroActual !== 'vacunas' && filtroActual !== 'dominios' && filtroActual !== 'guardias'">
+              *ngIf="mostrarBuscador()">
     <div *ngIf="hasRegistrosTotales(filtroActual)" class="mb-2">
         <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholder="Buscar registros..."
                    [autoFocus]="true">
@@ -912,7 +912,7 @@
         <ng-container *ngIf="filtroActual === 'guardias'">
             <plex-loader *ngIf="disabledBtnCDA" class="sidebar-loader" type="ball-pulse"></plex-loader>
 
-            <div *ngIf="guardias && guardias.length > 0" class="conceptos hover list-unstyled mt-1">
+            <div *ngIf="guardias?.length" class="conceptos hover list-unstyled mt-1">
                 <ul class="listado list-unstyled" [ngClass]="{ 'opacity-35' : disabledBtnCDA }">
                     <ng-container *ngFor="let guardia of guardias; let iGuardia = index">
                         <li>

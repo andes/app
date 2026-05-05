@@ -841,6 +841,11 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         return false;
     }
 
+    mostrarBuscador() {
+        const filtrosSinBuscador = ['solicitudes', 'planes', 'laboratorios', 'vacunas', 'dominios', 'guardias'];
+        return !filtrosSinBuscador.includes(this.filtroActual);
+    }
+
     filtrarTrastornos() {
         this.searchTerm = null;
 

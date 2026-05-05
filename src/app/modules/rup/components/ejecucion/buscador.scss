@@ -93,8 +93,13 @@
             align-items: center;
             justify-content: center;
 
-            .icon i {
+            .icon i,
+            i.icon {
                 font-size: 25px;
+
+                &.adi-hospital-building {
+                    font-size: 28px;
+                }
             }
 
             .contador {
