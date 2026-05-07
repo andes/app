@@ -309,7 +309,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             if (section.name === SECCION_ESTRATEGIA) {
                 internado = this.getField(section.fields, 'internado')?.nombre === 'SI';
                 fechaInternacion = this.getField(section.fields, 'fechainternacion');
-                derivado = this.getField(section.fields, 'derivado')?.nombre === 'SI';
+                derivado = this.getField(section.fields, 'derivado')?.nombre === 'SI, permaneció MÁS de 24hs';
                 internado14dias = this.getField(section.fields, 'internado14dias')?.nombre === 'SI';
                 inicioSintomas = this.getField(section.fields, 'inicioSintomas')?.nombre === 'SI';
             }
