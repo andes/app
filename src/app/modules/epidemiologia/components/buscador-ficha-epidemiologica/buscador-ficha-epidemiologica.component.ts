@@ -59,23 +59,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
         { id: 'noSISA', nombre: 'Sin registro SISA' },
         { id: 'SISA', nombre: 'Con registro SISA' },
     ];
-    public clasificacion = [
-        { id: 'casoSospechoso', nombre: 'Caso sospechoso' },
-        { id: 'contactoEstrecho', nombre: 'Contacto estrecho' },
-        { id: 'controlAlta', nombre: 'Control de alta' },
-        { id: 'casoAsintomatico', nombre: 'Caso asintomático estudiado en situaciones especiales' }
-    ];
-    public tipoConfirmacion = [
-        { id: 'antigeno', nombre: 'Antígeno' },
-        { id: 'pcr', nombre: 'PCR-RT' },
-        { id: 'lamp', nombre: 'LAMP(NeoKit)' }
-    ];
-    public clasificacionFinal = [
-        { id: 'Confirmado', nombre: 'Confirmado' },
-        { id: 'Sospechoso', nombre: 'Sospechoso' },
-        { id: 'Descartado', nombre: 'Descartado' },
-        { id: 'false', nombre: 'Sin Clasificación' }
-    ];
+
     public filtrarSISA;
     public permisoHuds = false;
     public columns = [
@@ -112,18 +96,6 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
             sort: (a: any, b: any) => a.type.name.localeCompare(b.type.name)
         },
         {
-            key: 'pcr',
-            label: 'PCR',
-            sorteable: false,
-            opcional: true
-        },
-        {
-            key: 'clasificacion',
-            label: 'Clasificación',
-            opcional: true,
-            sorteable: false
-        },
-        {
             key: 'acciones',
             label: 'Acciones',
             opcional: false,
@@ -147,11 +119,9 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
         'fecha': true,
         'documento': true,
         'paciente': true,
-        'tipo': false,
-        'clasificacion': false,
+        'tipo': true,
         'acciones': true,
         'sisa': true,
-        'pcr': true,
         'nroIdentificacion': true
     };
 
@@ -195,16 +165,10 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
             identificadorPcr: this.idPcr,
             tipoConfirmacion: this.idTipoConfirmacion?.id,
             zonaSanitaria: this.zonaSanitaria?._id,
-            clasificacionFinal: this.idClasificacionFinal?.id,
             nroIdentificacion: this.nroIdentificacion,
             skip: 0,
             limit: 15
         };
-
-
-        if (this.idClasificacion) {
-            this.query.clasificacion = this.idClasificacion.id;
-        }
 
         if (this.filtrarSISA) {
             this.query.codigoSisa = this.filtrarSISA.id === 'SISA';

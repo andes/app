@@ -73,8 +73,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                                 sec.fields.map(field => {
                                     switch (Object.keys(field)[0]) {
                                         case 'organizacion':
-                                            this.secciones[buscado].fields[Object.keys(field)[0]] = { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre };
-                                            this.setOrganizacion(this.secciones[buscado], this.auth.organizacion.id);
+                                            this.secciones[buscado].fields[Object.keys(field)[0]] = Object.values(field)[0];
                                             break;
                                         case 'fechanotificacion':
                                             this.secciones[buscado].fields['fechanotificacion'] = Object.values(field)[0];
@@ -86,9 +85,6 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                                 sec.fields.map(field => {
                                     if (!this.editFicha && Object.keys(field)[0] === 'organizacion') {
                                         this.organizaciones$ = this.organizacionService.getById(field.organizacion.id ? field.organizacion.id : field.organizacion);
-                                    }
-                                    if (Object.keys(field)[0] === 'clasificacion') {
-                                        this.asintomatico = field.clasificacion.id === 'casoAsintomatico' ? true : false;
                                     }
                                     const key = Object.keys(field);
                                     this.secciones[buscado].fields[key[0]] = field[key[0]];
@@ -208,33 +204,36 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         };
 
         this.Clasificacion = this.obtenerDatosClasificacion();
-        this.plex.confirm('¿Desea continuar?', `La ficha se guardará y se abrirá en un evento en SNVS con la clasificación: <br/><b><i>${this.Clasificacion.nombre}</i></b>`).then((resultado) => {
-            if (resultado) {
-                if (this.fichaPaciente) {
-                    this.formsEpidemiologiaService.update(this.fichaPaciente._id, fichaFinal).subscribe({
-                        next: () => {
-                            this.plex.toast('success', 'Su ficha fue actualizada correctamente');
-                            this.volver.emit();
-                        },
-                        error: () => {
-                            this.plex.toast('danger', 'ERROR: La ficha fue actualizada correctamente');
-                        }
-                    });
-                } else {
-                    this.formsEpidemiologiaService.save(fichaFinal).subscribe({
-                        next: (fichaFinal) => {
-                            const msg = fichaFinal.configLaboratorio?.interopera ? `La ficha con el identificador: ${fichaFinal.configLaboratorio.nroIdentificacion} fue registrada correctamente` : 'La ficha fue generada correctamente';
-                            this.volver.emit();
-                            this.plex.info('success', msg);
-                        },
-                        error: () => {
-                            this.plex.toast('danger', 'ERROR: La ficha no pudo ser registrada');
-                        }
-                    });
+        if (!this.Clasificacion) {
+            this.plex.toast('danger', 'ERROR: No se pudo obtener la clasificación de la ficha, revise que los datos ingresados sean correctos');
+        } else {
+            this.plex.confirm('¿Desea continuar?', `La ficha se guardará y se abrirá en un evento en SNVS con la clasificación: <br/><b><i>${this.Clasificacion.nombre}</i></b>`).then((resultado) => {
+                if (resultado) {
+                    if (this.fichaPaciente) {
+                        this.formsEpidemiologiaService.update(this.fichaPaciente._id, fichaFinal).subscribe({
+                            next: () => {
+                                this.plex.toast('success', 'Su ficha fue actualizada correctamente');
+                                this.volver.emit();
+                            },
+                            error: () => {
+                                this.plex.toast('danger', 'ERROR: La ficha fue actualizada correctamente');
+                            }
+                        });
+                    } else {
+                        this.formsEpidemiologiaService.save(fichaFinal).subscribe({
+                            next: (fichaFinal) => {
+                                const msg = fichaFinal.configLaboratorio?.interopera ? `La ficha con el identificador: ${fichaFinal.configLaboratorio.nroIdentificacion} fue registrada correctamente` : 'La ficha fue generada correctamente';
+                                this.volver.emit();
+                                this.plex.info('success', msg);
+                            },
+                            error: () => {
+                                this.plex.toast('danger', 'ERROR: La ficha no pudo ser registrada');
+                            }
+                        });
+                    }
                 }
-            }
-        });
-
+            });
+        }
 
     }
 
@@ -280,8 +279,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
      */
     obtenerDatosClasificacion(): any {
         if (!this.efectoresEstrategiaAmbulatorio || !this.efectoresEstrategiaInternacion) {
-            this.Clasificacion = null;
-            return;
+            return null;
         }
 
         let organizacion = null;
@@ -309,7 +307,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             if (section.name === SECCION_ESTRATEGIA) {
                 internado = this.getField(section.fields, 'internado')?.nombre === 'SI';
                 fechaInternacion = this.getField(section.fields, 'fechainternacion');
-                derivado = this.getField(section.fields, 'derivado')?.nombre === 'SI, permaneció MÁS de 24hs';
+                derivado = this.getField(section.fields, 'derivado')?.nombre === 'SI, permaneció MÁS de 24hs en esa institución';
                 internado14dias = this.getField(section.fields, 'internado14dias')?.nombre === 'SI';
                 inicioSintomas = this.getField(section.fields, 'inicioSintomas')?.nombre === 'SI';
             }
@@ -334,10 +332,10 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                 if (previos10dias && sintomas.includes('fiebre') && sintomas.includes('tos') && !derivado && !internado14dias && !inicioSintomas) {
                     clasificacion = CLASIFICACIONESVSR[1];
                 } else {
-                    if (!sintomas.includes('fiebre') && (sintomas.includes('disnea') || sintomas.includes('tos')) && (edad >= 60 || edad <= 2) && !derivado && !internado14dias && !inicioSintomas) {
+                    if ((sintomas.includes('disnea') || sintomas.includes('tos')) && (edad >= 60 || edad <= 2) && !derivado && !internado14dias && !inicioSintomas) {
                         clasificacion = CLASIFICACIONESVSR[1];
                     } else {
-                        if (!sintomas.includes('fiebre') && !sintomas.includes('disnea') && !sintomas.includes('tos') && (edad <= 0) && (edadMeses <= 6) && (sintomas.includes('sepsis') || sintomas.includes('apneas')) && !derivado && !internado14dias && !inicioSintomas) {
+                        if (!sintomas.includes('disnea') && !sintomas.includes('tos') && (edad <= 0) && (edadMeses <= 6) && (sintomas.includes('sepsis') || sintomas.includes('apneas')) && !derivado && !internado14dias && !inicioSintomas) {
                             clasificacion = CLASIFICACIONESVSR[1];
                         }
                     }
