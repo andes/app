@@ -240,14 +240,17 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     }
 
     ngOnInit() {
-        this.groupRecetas();
-        this.getProfesional();
         this.permisosCompletos = this.auth.check('huds:visualizacionHuds');
         this.permisosParciales = this.auth.check('huds:visualizacionParcialHuds:*');
         this.permisosLab = this.auth.check('huds:visualizacionParcialHuds:laboratorio');
         this.permisosVac = this.auth.check('huds:visualizacionParcialHuds:vacuna');
         this.permisosRec = this.auth.check('huds:visualizacionParcialHuds:receta');
         this.permisosGuardia = this.auth.check('huds:visualizacionParcialHuds:guardia');
+
+        if (this.permisosCompletos || this.permisosParciales || this.permisosRec) {
+            this.groupRecetas();
+        }
+        this.getProfesional();
 
         this.filtroActual = this.permisosCompletos ? 'trastorno' :
             (this.permisosParciales || this.permisosLab) ? 'laboratorios' :
@@ -669,6 +672,16 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     // Trae los cdas registrados para el paciente
     buscarCDAPacientes(token) {
         forkJoin({
+
+
+
+
+            // DEBERIA ARMAR ESTOS PARAMETROS SEGUN LOS PERMISOS O SUBSANAMOS ALGUNAS COSITAS QUE
+            // PUEDA TRAER DE MAS OCULTANDOLO EN LA VISTA?
+
+
+
+
             protocolos: this.laboratorioService.getProtocolos(this.paciente.id),
             cdaByPaciente: this.servicioPrestacion.getCDAByPaciente(this.paciente.id, token)
         }).subscribe({
