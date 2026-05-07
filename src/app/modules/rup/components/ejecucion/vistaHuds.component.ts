@@ -12,7 +12,6 @@ import { HUDSService } from '../../services/huds.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import * as moment from 'moment';
-import { RecetaService } from 'src/app/services/receta.service';
 
 @Component({
     selector: 'rup-vistaHuds',
@@ -45,8 +44,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         private conceptObserverService: ConceptObserverService,
         public huds: HUDSService,
         private location: Location,
-        private serviceMapaCamasHTTP: MapaCamasHTTP,
-        public recetaService: RecetaService
+        private serviceMapaCamasHTTP: MapaCamasHTTP
     ) { }
 
     /**
