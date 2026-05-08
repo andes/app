@@ -22,6 +22,8 @@ import { ConceptObserverService } from './../../services/conceptObserver.service
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { RecetaService } from 'src/app/services/receta.service';
+import { TurnoService } from '../../../../services/turnos/turno.service';
+import { ITurno } from '../../../../interfaces/turnos/ITurno';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -38,6 +40,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     // prestacion actual en ejecucion
     public prestacion: IPrestacion;
+    public turno: ITurno;
     public paciente: IPaciente;
     public elementoRUP: IElementoRUP;
     public prestacionesValidadas = [];
@@ -119,7 +122,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         public ps: PlantillasService,
         public ejecucionService: RupEjecucionService,
         public constantesService: ConstantesService,
-        public recetaService: RecetaService
+        public recetaService: RecetaService,
+        private turnoService: TurnoService,
     ) { }
 
     /**
@@ -250,6 +254,12 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                             }
                         }
 
+                        if (this.prestacion.solicitud.turno) {
+                            this.turnoService.get({ id: this.prestacion.solicitud.turno }).subscribe(turnos => {
+                                this.turno = turnos?.[0]?.bloques?.[0]?.turnos?.[0];
+                            });
+                        }
+
                         this.ejecucionService.actualizar('inicializar');
                     }, (err) => {
                         if (err) {
@@ -272,6 +282,37 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                 this.cargarNuevoRegistro(registro.concepto, registro.esSolicitud, registro.valor, null, registro.idEvolucion);
             }
         });
+    }
+
+    onVideoConferencia() {
+        if (this.turno?.webexLinks?.professionalLink) {
+            const identificador = this.meetingId;
+            const link = this.turno.webexLinks.professionalLink;
+            const message = `
+                <div class="text-center">
+                    <b>Datos de la videollamada:</b><br>
+                    <b>Enlace:</b> <a href="${link}" target="_blank">${link}</a><br>
+                    <b>Identificador:</b> ${identificador}
+                </div>
+                <br>
+                ¿Desea iniciar la videollamada ahora?
+            `;
+
+            this.plex.confirm(message, 'Acceso a Teleconsulta').then((resultado) => {
+                if (resultado) {
+                    window.open(link, '_blank');
+                }
+            });
+        }
+    }
+
+    get meetingId() {
+        const link = this.turno?.webexLinks?.professionalLink;
+        if (link) {
+            const parts = link.split('/');
+            return parts[parts.length - 1];
+        }
+        return null;
     }
 
     cargarPrestacionAsociada() {
