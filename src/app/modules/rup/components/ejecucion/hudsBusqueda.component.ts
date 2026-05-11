@@ -163,6 +163,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
     public filtros = [
         { key: 'planes', titulo: 'prestaciones', icono: 'clipboard-check-outline' },
+        { key: 'guardias', titulo: 'guardias', icono: 'hospital-building' },
         { key: 'solicitudes', titulo: 'solicitudes', icono: 'mano-corazon' },
         { key: 'hallazgo', titulo: 'hallazgos', icono: 'hallazgo' },
         { key: 'trastorno', titulo: 'trastornos', icono: 'trastorno' },
@@ -172,7 +173,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         { key: 'producto', titulo: 'productos', icono: 'pildoras' },
         { key: 'laboratorios', titulo: 'laboratorios', icono: 'recipiente' },
         { key: 'vacunas', titulo: 'vacunas', icono: 'vacuna' },
-        { key: 'guardias', titulo: 'guardias', icono: 'hospital-building' },
         { key: 'recc', titulo: 'recc', icono: 'account-switch' }
     ];
 
@@ -684,18 +684,18 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                     ...this.cdas.filter(cda => cda.prestacion.conceptId === ConceptosTurneablesService.Guardia_CDA_ID)
                 ];
                 this.laboratorios = this.cdas.filter(cda => cda.prestacion.conceptId === ConceptosTurneablesService.Laboratorio_CDA_ID
-                        || cda.prestacion.conceptId === ConceptosTurneablesService.Laboratorio_SISA_CDA_ID);
+                    || cda.prestacion.conceptId === ConceptosTurneablesService.Laboratorio_SISA_CDA_ID);
 
                 this.laboratorios = this.ordenarLaboratorios(this.laboratorios, protocolos);
 
                 // DEjamos el resto de los CDAS y los unimos a las prestaciones
                 const filtro = this.cdas.filter(cda => {
                     return cda.prestacion.conceptId !== ConceptosTurneablesService.Vacunas_CDA_ID
-                            && cda.prestacion.conceptId !== ConceptosTurneablesService.Laboratorio_CDA_ID
-                            && cda.prestacion.conceptId !== ConceptosTurneablesService.Laboratorio_SISA_CDA_ID
-                            && cda.prestacion.conceptId !== ConceptosTurneablesService.Guardia_CDA_ID;
+                        && cda.prestacion.conceptId !== ConceptosTurneablesService.Laboratorio_CDA_ID
+                        && cda.prestacion.conceptId !== ConceptosTurneablesService.Laboratorio_SISA_CDA_ID
+                        && cda.prestacion.conceptId !== ConceptosTurneablesService.Guardia_CDA_ID;
                 });
-                    // Filtramos por CDA para poder recargar los estudiosc
+                // Filtramos por CDA para poder recargar los estudiosc
                 this.prestaciones = [...this.prestaciones.filter(e => e.tipo !== 'cda'), ...filtro];
                 this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
                 this.prestacionesCopia = this.prestaciones.slice();

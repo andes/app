@@ -176,8 +176,10 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     }
 
     esGuardia(registro: any) {
-        return registro.tipo === 'rup' &&
-            registro.data?.solicitud?.tipoPrestacion?.term &&
-            registro.data.solicitud.tipoPrestacion.term.toLowerCase().includes('emergencia');
+        const term = (registro.tipo === 'rup') ?
+            registro.data?.solicitud?.tipoPrestacion?.term :
+            registro.data?.prestacion?.snomed?.term;
+        const isGuardia = term && term.toLowerCase().includes('emergencia');
+        return isGuardia;
     }
 }
