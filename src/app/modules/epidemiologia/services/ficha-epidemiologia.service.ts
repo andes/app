@@ -18,7 +18,7 @@ export class FormsEpidemiologiaService extends ResourceBaseHttp {
     getClasificacionFinal(ficha) {
         const seccionClasificacion = this.getSeccionClasifacionFinal(ficha);
         const clasificacionfinal = seccionClasificacion?.fields.find(f => f.clasificacionfinal)?.clasificacionfinal;
-        return clasificacionfinal ? clasificacionfinal : 'Sin clasificación';
+        return clasificacionfinal?.nombre ? clasificacionfinal.nombre : clasificacionfinal ? clasificacionfinal : 'Sin Clasificación';
     }
 
     // Devuelve una seccion entera de una ficha o un campo especifico

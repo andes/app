@@ -170,8 +170,8 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                 this.ficha.push({ name: seccion.name, fields: campos });
             }
         });
-
-        if (!this.ficha.includes(s => s.name === SECCION_CLASIFICACION)) {
+        const clasificacionExistente = this.ficha.find(s => s.name === SECCION_CLASIFICACION);
+        if (!clasificacionExistente) {
             this.ficha.push({ name: SECCION_CLASIFICACION, fields: [] });
         }
     }
