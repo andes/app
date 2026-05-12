@@ -21,6 +21,11 @@ interface PacienteEscaneado {
 })
 export class PacienteBuscarComponent implements OnInit, OnDestroy {
     public textoLibre: string = null;
+    public busquedaAvanzada = false;
+    public localidad: string = null;
+    public fechaNacimientoDesde: Date = null;
+    public fechaNacimientoHasta: Date = null;
+    public obraSocial: string = null;
     public autoFocus = 0;
     public routes;
     private pacienteRoute = '/apps/mpi/paciente';
@@ -64,18 +69,29 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
         }
     }
 
+    public toggleBusquedaAvanzada() {
+        this.busquedaAvanzada = !this.busquedaAvanzada;
+        if (!this.busquedaAvanzada) {
+            this.localidad = null;
+            this.fechaNacimientoDesde = null;
+            this.fechaNacimientoHasta = null;
+            this.obraSocial = null;
+            this.buscar({ type: null });
+        }
+    }
+
     /**
      * Busca paciente cada vez que el campo de busqueda cambia su valor
      */
     public buscar($event) {
         /* Error en Plex, ejecuta un change cuando el input pierde el foco porque detecta que cambia el valor */
-        if ($event.type) {
+        if ($event?.type) {
             return;
         }
         this.pacienteCache.clearPaciente();
         this.pacienteCache.clearScanState();
-        const textoLibre = (this.textoLibre && this.textoLibre.length) ? this.textoLibre.trim() : '';
-        if (textoLibre && textoLibre.length) {
+        const textoLibre = this.textoLibre?.length ? this.textoLibre.trim() : '';
+        if (textoLibre?.length) {
             // Controla el scanner
             if (!this.pacienteBuscar.controlarScanner(textoLibre)) {
                 this.plex.info('warning', 'El lector de código de barras no está configurado. Comuníquese con la Mesa de Ayuda de TICS');
@@ -85,7 +101,13 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                 this.searchSubscription.unsubscribe();
             }
             this.searchStart.emit();
-            this.pacienteBuscar.search(textoLibre, this.returnScannedPatient).subscribe(respuesta => {
+            const filtros = {
+                localidad: this.localidad?.length ? this.localidad.trim() : null,
+                fechaNacimientoDesde: this.fechaNacimientoDesde ? this.fechaNacimientoDesde : null,
+                fechaNacimientoHasta: this.fechaNacimientoHasta ? this.fechaNacimientoHasta : null,
+                obraSocial: this.obraSocial?.length ? this.obraSocial.trim() : null
+            };
+            this.pacienteBuscar.search(textoLibre, this.returnScannedPatient, filtros).subscribe(respuesta => {
                 if (respuesta) {
                     this.searchEnd.emit(respuesta);
                 }

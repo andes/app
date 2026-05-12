@@ -15,6 +15,7 @@ export interface PacienteEscaneado {
 @Injectable()
 export class PacienteBuscarService {
     private searchText;
+    private filtros: any = {};
     private skip = 0;
     private limit = 10;
     private scrollEnd = false;
@@ -143,10 +144,11 @@ export class PacienteBuscarService {
     /**
      * Busca paciente cada vez que el campo de busqueda cambia su valor
      */
-    public search(searchText: string, returnScannedPatient = false) {
+    public search(searchText: string, returnScannedPatient = false, filtros: any = {}) {
         // Inicia búsqueda
         if (searchText) {
             this.searchText = searchText;
+            this.filtros = filtros;
             this.skip = 0;
             this.scrollEnd = false;
             // Si matchea una expresión regular, busca inmediatamente el paciente
@@ -181,8 +183,26 @@ export class PacienteBuscarService {
         if (this.scrollEnd) {
             return EMPTY;
         }
+        const params: any = { search: this.searchText, activo: true, limit: this.limit, skip: this.skip };
+        if (this.filtros?.localidad) {
+            params.localidad = '^' + this.filtros.localidad;
+        }
+        if (this.filtros?.fechaNacimientoDesde || this.filtros?.fechaNacimientoHasta) {
+            let fechaRango = '';
+            if (this.filtros.fechaNacimientoDesde && this.filtros.fechaNacimientoHasta) {
+                fechaRango = `${moment(this.filtros.fechaNacimientoDesde).format('YYYY-MM-DD')}|${moment(this.filtros.fechaNacimientoHasta).format('YYYY-MM-DD')}`;
+            } else if (this.filtros.fechaNacimientoDesde) {
+                fechaRango = `>=${moment(this.filtros.fechaNacimientoDesde).format('YYYY-MM-DD')}`;
+            } else if (this.filtros.fechaNacimientoHasta) {
+                fechaRango = `<=${moment(this.filtros.fechaNacimientoHasta).format('YYYY-MM-DD')}`;
+            }
+            params.fechaNacimiento = fechaRango;
+        }
+        if (this.filtros?.obraSocial) {
+            params.obraSocial = '^' + this.filtros.obraSocial;
+        }
         // Busca por texto libre
-        return this.pacienteService.get({ search: this.searchText, activo: true, limit: this.limit, skip: this.skip }).pipe(
+        return this.pacienteService.get(params).pipe(
             map((resultado: any) => {
                 this.skip += resultado.length;
                 // si vienen menos resultado que {{ limit }} significa que ya se cargaron todos
