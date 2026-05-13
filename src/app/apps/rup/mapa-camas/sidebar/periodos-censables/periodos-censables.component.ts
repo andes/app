@@ -1,6 +1,9 @@
 import { Plex } from '@andes/plex';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { combineLatest, Observable, of } from 'rxjs';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
+import { InformeEstadisticaService } from 'src/app/modules/rup/services/informe-estadistica.service';
+import { IInformeEstadistica } from 'src/app/modules/rup/interfaces/informe-estadistica.interface';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 
 interface Periodo {
@@ -16,6 +19,8 @@ interface Periodo {
 
 export class PeriodosCensablesComponent implements OnInit {
     prestacion;
+    informeEstadistica: IInformeEstadistica;
+    capa: string;
     agregar = false;
     nuevoPeriodo: Periodo;
     periodos: Periodo[] = [];
@@ -28,17 +33,34 @@ export class PeriodosCensablesComponent implements OnInit {
     constructor(
         private mapaCamasService: MapaCamasService,
         private servicioPrestacion: PrestacionesService,
+        private informeEstadisticaService: InformeEstadisticaService,
         private plex: Plex
     ) { }
 
     ngOnInit() {
-        this.mapaCamasService.prestacion$.subscribe((prestacion) => {
+        combineLatest([
+            this.mapaCamasService.prestacion$,
+            this.mapaCamasService.informeEstadistica$,
+            this.mapaCamasService.capa2
+        ]).subscribe(([prestacion, informeEstadistica, capa]: [any, IInformeEstadistica, string]) => {
+            this.capa = capa;
             this.prestacion = prestacion;
+            this.informeEstadistica = informeEstadistica;
 
-            const primerRegistro = prestacion?.ejecucion?.registros[0];
-
-            if (!!primerRegistro?.esCensable) {
-                this.periodos = this.prestacion?.periodosCensables;
+            if (capa === 'estadistica-v2' || (capa === 'estadistica' && informeEstadistica)) {
+                if (informeEstadistica?.periodosCensables?.length) {
+                    this.periodos = informeEstadistica.periodosCensables.map(p => ({
+                        desde: moment(p.desde),
+                        hasta: p.hasta ? moment(p.hasta) : null
+                    }));
+                } else if (informeEstadistica?.informeIngreso?.esCensable) {
+                    this.periodos = [];
+                }
+            } else {
+                const primerRegistro = prestacion?.ejecucion?.registros[0];
+                if (!!primerRegistro?.esCensable) {
+                    this.periodos = prestacion?.periodosCensables || [];
+                }
             }
         });
 
@@ -102,22 +124,40 @@ export class PeriodosCensablesComponent implements OnInit {
         return superpuesto;
     }
 
-    private guardarPrestacion() {
-        const registros = this.prestacion.ejecucion.registros;
-
-        if (!!this.periodos?.length) {
-            registros[0].esCensable = true;
-        } else {
-            delete registros[0].esCensable;
+    private guardarPrestacion(): Observable<any> {
+        if (this.informeEstadistica) {
+            const patchData: any = {
+                periodosCensables: this.periodos.map(p => ({
+                    desde: moment(p.desde).toDate(),
+                    hasta: p.hasta ? moment(p.hasta).toDate() : null
+                })),
+                informeIngreso: {
+                    ...this.informeEstadistica.informeIngreso,
+                    esCensable: !!this.periodos?.length
+                }
+            };
+            return this.informeEstadisticaService.patch(this.informeEstadistica._id || this.informeEstadistica.id, patchData);
         }
 
-        const params: any = {
-            op: 'periodosCensables',
-            periodosCensables: this.periodos,
-            registros,
-        };
+        if (this.prestacion) {
+            const registros = this.prestacion.ejecucion?.registros;
 
-        return this.servicioPrestacion.patch(this.prestacion.id, params);
+            if (!!this.periodos?.length) {
+                registros[0].esCensable = true;
+            } else {
+                delete registros[0].esCensable;
+            }
+
+            const params: any = {
+                op: 'periodosCensables',
+                periodosCensables: this.periodos,
+                registros,
+            };
+
+            return this.servicioPrestacion.patch(this.prestacion.id, params);
+        }
+
+        return of(null);
     }
 
     private addPeriodoSinLimite(desde) {
