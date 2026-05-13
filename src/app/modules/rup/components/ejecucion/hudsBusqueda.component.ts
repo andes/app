@@ -215,34 +215,44 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
      * @memberof PrestacionEjecucionComponent
      */
     ngAfterContentInit() {
-        if (this.paciente) {
+        if (this.paciente && this.permisosCompletos) {
             this.listarInternaciones();
             this.listarPrestaciones();
             this.listarConceptos();
             this.listarDerivaciones();
         }
-        this.token = this.huds.getHudsToken();
         // Cuando se inicia una prestación debemos volver a consultar si hay CDA nuevos al ratito.
         // [TODO] Ser notificado via websockets
         setTimeout(() => {
-            this.buscarCDAPacientes(this.token);
+            this.refreshCdas();
         }, 1000 * 30);
     }
 
+    private refreshCdas() {
+        this.buscarCDAPacientes(this.huds.getHudsToken());
+    }
+
     ngOnInit() {
-        this.groupRecetas();
-        this.getProfesional();
         this.permisosCompletos = this.auth.check('huds:visualizacionHuds');
         this.permisosParciales = this.auth.check('huds:visualizacionParcialHuds:*');
         this.permisosLab = this.auth.check('huds:visualizacionParcialHuds:laboratorio');
         this.permisosVac = this.auth.check('huds:visualizacionParcialHuds:vacuna');
         this.permisosRec = this.auth.check('huds:visualizacionParcialHuds:receta');
 
+        if (this.permisosCompletos || this.permisosParciales || this.permisosRec) {
+            this.groupRecetas();
+        }
+        this.getProfesional();
+
         this.filtroActual = this.permisosCompletos ? 'trastorno' :
             (this.permisosParciales || this.permisosLab) ? 'laboratorios' :
-                this.permisosVac ? 'vacunas' :
+                this.permisosVac ? '' :
                     'recetas';
         this.pacienteSelected = this.paciente;
+
+        if (this.filtroActual !== 'trastorno') {
+            this.refreshCdas();
+        }
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -266,7 +276,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     }
 
     dragStart(e) {
-        this._onDragStart.emit(e);
     }
 
     dragEnd(e) {
@@ -620,6 +629,16 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     // Trae los cdas registrados para el paciente
     buscarCDAPacientes(token) {
         forkJoin({
+
+
+
+
+            // DEBERIA ARMAR ESTOS PARAMETROS SEGUN LOS PERMISOS O SUBSANAMOS ALGUNAS COSITAS QUE
+            // PUEDA TRAER DE MAS OCULTANDOLO EN LA VISTA?
+
+
+
+
             protocolos: this.laboratorioService.getProtocolos(this.paciente.id),
             cdaByPaciente: this.servicioPrestacion.getCDAByPaciente(this.paciente.id, token)
         }).subscribe({

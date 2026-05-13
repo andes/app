@@ -73,7 +73,7 @@
                    placeholder="Buscar recetas..." [autoFocus]="true">
         </plex-text>
         <div class="my-2">
-            <ul *ngIf="busquedaRecetas.length" class="hover listado list-unstyled">
+            <ul *ngIf="busquedaRecetas?.length" class="hover listado list-unstyled">
                 <ng-container *ngFor="let grupo of busquedaRecetas; let iReceta = index">
                     <li>
                         <plex-bool [readonly]="!esRecetaSeleccionable(grupo?.recetaVisible)"
@@ -148,7 +148,7 @@
             </ul>
         </div>
 
-        <div *ngIf="!busquedaRecetas.length">
+        <div *ngIf="!busquedaRecetas?.length">
             <hr class="mt-0">
             <div class="item-lista-vacia">
                 <plex-label size="sm" justify="center" icon="adi adi-listado-receta"
