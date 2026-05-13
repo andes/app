@@ -227,10 +227,20 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 this.paciente.obraSocial = this.prestacion.paciente.obraSocial;
                 this.changeTipoObraSocial();
             } else {
+                if (informeEstadistica?.informeIngreso) {
+                    this.informeIngreso = { ...this.informeIngreso, ...informeEstadistica.informeIngreso };
+                    this.fechaIngresoOriginal = new Date(informeEstadistica.informeIngreso.fechaIngreso);
+                    if (this.origenExterno) {
+                        this.check = typeof this.informeIngreso.organizacionOrigen === 'string'
+                            || typeof (this.informeIngreso.origen as any)?.organizacionOrigen === 'string';
+                    }
+                }
                 if (paciente.id) {
-                    const fechaIngresoInicial = resumen?.fechaIngreso || this.mapaCamasService.fecha;
-                    this.informeIngreso.fechaIngreso = new Date(fechaIngresoInicial);
-                    this.fechaIngresoOriginal = new Date(fechaIngresoInicial);
+                    if (!this.fechaIngresoOriginal) {
+                        const fechaIngresoInicial = resumen?.fechaIngreso || this.mapaCamasService.fecha;
+                        this.informeIngreso.fechaIngreso = new Date(fechaIngresoInicial);
+                        this.fechaIngresoOriginal = new Date(fechaIngresoInicial);
+                    }
                     if (this.backupObraSocial) {
                         this.paciente.obraSocial = {
                             nombre: this.backupObraSocial.financiador,
