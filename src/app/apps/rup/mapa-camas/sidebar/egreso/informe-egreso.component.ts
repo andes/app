@@ -36,16 +36,6 @@ export class InformeEgresoComponent implements OnInit {
             notNull(),
             map(informe => informe.informeEgreso || informe.informeEgreso)
         );
-        // this.informeEgreso$ = this.informe$.pipe(
-        //     notNull(),
-        //     tap(informe => {
-        //         console.log('📘 informe completo:', JSON.parse(JSON.stringify(informe)));
-        //     }),
-        //     map(informe => informe.informeEgreso || informe.informeEgreso),
-        //     tap(informeEgreso => {
-        //         console.log('informeEgreso:', JSON.parse(JSON.stringify(informeEgreso)));
-        //     })
-        // );
 
 
     }

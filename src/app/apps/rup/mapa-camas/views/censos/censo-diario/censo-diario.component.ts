@@ -60,8 +60,6 @@ export class CensosDiariosComponent implements OnInit {
         this.censo = {};
         this.mapaCamasService.censoDiario(moment(this.fecha).toDate(), this.selectedUnidadOranizativa.conceptId)
             .subscribe((censoDiario: any) => {
-                console.log('--- RESPUESTA COMPLETA DE LA API ---', censoDiario);
-                console.log('--- censoDiario.censo ES ---', censoDiario.censo);
                 this.censo = {
                     existencia0: censoDiario.censo.existenciaALas0,
                     ingresos: censoDiario.censo.ingresos,
@@ -75,13 +73,11 @@ export class CensosDiariosComponent implements OnInit {
                     diasEstada: censoDiario.censo.diasEstada,
                     disponibles24: censoDiario.censo.disponibles,
                 };
-                console.log('📦 CENSO DIARIO:', censoDiario);
 
                 Object.keys(censoDiario.pacientes).map(p => {
                     let delDiaAnterior = false;
                     let ingresoAServicio = false;
                     const censoPaciente = censoDiario.pacientes[p];
-                    console.log('🧩 PACIENTE:', p, censoPaciente);
 
                     censoPaciente.actividad.forEach((actividad: any, index) => {
                         const movimiento = {
