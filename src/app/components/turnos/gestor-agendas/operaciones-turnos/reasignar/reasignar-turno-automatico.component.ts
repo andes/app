@@ -1,7 +1,7 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import * as moment from 'moment';
 import { AgendaService } from '../../../../../services/turnos/agenda.service';
 import { SmsService } from '../../../../../services/turnos/sms.service';
 import { TurnoService } from '../../../../../services/turnos/turno.service';
@@ -14,11 +14,11 @@ import { ITurno } from './../../../../../interfaces/turnos/ITurno';
 })
 
 export class ReasignarTurnoAutomaticoComponent implements OnInit {
-    resultado: String;
+    resultado: string;
 
     private _agendaAReasignar: any;
 
-    @Input('agendaAReasignar')
+    @Input()
     set agendaAReasignar(value: any) {
         this._agendaAReasignar = value;
         this.actualizar();

@@ -1,7 +1,7 @@
 <plex-layout>
     <plex-layout-main>
         <div>
-            <turnos-filtros (filter)="filter($event)" (onDisplayChange)="displayChange($event)"></turnos-filtros>
+            <turnos-filtros (filter)="filter($event)" (displayChange)="displayChange($event)"></turnos-filtros>
         </div>
         <div *ngIf="!mensajeInicial">
             <div class="row">

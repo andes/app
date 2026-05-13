@@ -59,7 +59,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     public requiereIntervalo = false;
 
     // Propiedades para manejo de obras sociales
-    public financiadoresPaciente: IObraSocial[] = [];
+    public financiadoresPaciente: Partial<IObraSocial>[] = [];
     public datosFinanciadores = [];
     public financiadorSeleccionado;
     public otroFinanciadorSeleccionado;
@@ -337,13 +337,13 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     cargarObrasSocialesPaciente() {
         if (this.prestacion?.paciente?.obraSocial) {
             this.financiadoresPaciente = [{
+                id: this.prestacion.paciente.obraSocial.id || null,
                 nombre: this.prestacion.paciente.obraSocial.nombre || '',
                 codigoFinanciador: 0,
                 version: new Date(),
                 numeroAfiliado: this.prestacion.paciente.obraSocial.numeroAfiliado || '',
                 financiador: this.prestacion.paciente.obraSocial.financiador || null,
                 codigoPuco: this.prestacion.paciente.obraSocial.codigoPuco || null,
-                id: this.prestacion.paciente.obraSocial.id || null,
                 transmite: '',
                 prepaga: this.prestacion.paciente.obraSocial.prepaga || false,
                 origen: this.prestacion.paciente.obraSocial.origen || 'ANDES'

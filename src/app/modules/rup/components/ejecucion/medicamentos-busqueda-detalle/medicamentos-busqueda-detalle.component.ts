@@ -22,7 +22,7 @@ export class RUPMedicamentosBusquedaDetalleComponent {
     // 766939001
     // 766941000
 
-    @Output() select = new EventEmitter<ISnomedConcept>();
+    @Output() selected = new EventEmitter<ISnomedConcept>();
 
     constructor(
         private snomedService: SnomedService
@@ -31,7 +31,7 @@ export class RUPMedicamentosBusquedaDetalleComponent {
     }
 
     onClick(concepto: ISnomedConcept) {
-        this.select.emit(concepto);
+        this.selected.emit(concepto);
     }
 
     refreshListado() {

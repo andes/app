@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PlanIndicacionesServices } from '../../../services/plan-indicaciones.service';

@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Server, cache } from '@andes/shared';
-import { BehaviorSubject, zip } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { switchMap, distinctUntilChanged, map, tap, merge } from 'rxjs/operators';
-import { query } from '@angular/animations';
-
-const shiroTrie = require('shiro-trie');
+import ShiroTrie from 'shiro-trie';
 
 
 @Injectable()
@@ -88,13 +86,13 @@ export class PerfilesHttp {
     }
 
     validatePerfil(userPermisos, perfil) {
-        const shiro = shiroTrie.new();
+        const shiro = ShiroTrie.newTrie();
         shiro.add(userPermisos);
         return perfil.permisos.every(p => shiro.check(p));
     }
 
     validatePermiso(permisos, value) {
-        const shiro = shiroTrie.new();
+        const shiro = ShiroTrie.newTrie();
         shiro.add(permisos);
         return shiro.check(value);
     }

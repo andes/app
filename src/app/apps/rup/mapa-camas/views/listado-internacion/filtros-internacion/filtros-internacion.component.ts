@@ -2,7 +2,6 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import * as moment from 'moment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ObraSocialService } from 'src/app/services/obraSocial.service';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
@@ -11,6 +10,7 @@ import * as enumerados from '../../../../../../utils/enumerados';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
 import { ListadoInternacionService } from '../listado-internacion.service';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
+import moment from 'moment';
 
 @Component({
     selector: 'app-filtros-internacion',

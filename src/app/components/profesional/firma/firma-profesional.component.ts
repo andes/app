@@ -14,7 +14,7 @@ import { IMAGENES_EXT } from '@andes/shared';
     styleUrls: ['firma-profesional.scss']
 })
 export class FirmaProfesionalComponent {
-    @Input('profesional')
+    @Input()
     set profesional(value: IProfesional) {
         if (value) {
             this._profesional = value;
@@ -24,12 +24,12 @@ export class FirmaProfesionalComponent {
     get profesional() {
         return this._profesional;
     }
-    @Output() onFileUploaded = new EventEmitter();
+    @Output() fileUploaded = new EventEmitter();
     private _profesional = null;
     public binaryString = null;
     public urlFirma = null;
-    public base64textString: String = '';
-    public base64textStringAdmin: String = '';
+    public base64textString = '';
+    public base64textStringAdmin = '';
     public loading = false;
     public extensiones = IMAGENES_EXT;
     public disabledCargar = false;
@@ -84,7 +84,7 @@ export class FirmaProfesionalComponent {
                 // this.binaryString = readerEvt.target.result;
                 this.base64textString = btoa(compressedImg);
                 this.urlFirma = compressedImg; // this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + this.base64textString);
-                this.onFileUploaded.emit(this.base64textString);
+                this.fileUploaded.emit(this.base64textString);
             },
             () => {
                 this.plex.toast('danger', 'Ha ocurrido un error realizando la operación.');

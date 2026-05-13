@@ -1,7 +1,6 @@
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { environment } from '../../environments/environment';
 
 @Injectable()
 export class AppMobileService {
@@ -17,7 +16,7 @@ export class AppMobileService {
      * @param {object} contacto Email y telefono del paciente
      */
 
-    create(idPaciente: String, contacto: any): Observable<any> {
+    create(idPaciente: string, contacto: any): Observable<any> {
         return this.server.post(this.mobileUrl + 'create' + '/' + idPaciente, contacto);
     }
 
@@ -25,7 +24,7 @@ export class AppMobileService {
      * Chequea que un paciente tenga una cuenta mobile
      * @param {objectId} idPaciente
      */
-    check(idPaciente: String): Observable<any> {
+    check(idPaciente: string): Observable<any> {
         return this.server.get(this.mobileUrl + 'check' + '/' + idPaciente, {});
     }
 
@@ -33,7 +32,7 @@ export class AppMobileService {
      * Devuelve una cuenta segun email, en caso de que exista
      * @param {String} email
      */
-    getByEmail(email: String): Observable<any> {
+    getByEmail(email: string): Observable<any> {
         return this.server.get(this.mobileUrl + 'email/' + email, {});
     }
 

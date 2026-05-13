@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class SortBloquesPipe implements PipeTransform {
     transform(array: Array<IBloque>, args: IBloque): Array<IBloque> {
         array.sort((fecha1, fecha2): number => {
-            let indiceAux: Number;
+            let indiceAux: number;
             if (fecha1.horaInicio && fecha2.horaInicio) {
                 // if (fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime() > 0) {
                 //     indiceAux = fecha1.indice;

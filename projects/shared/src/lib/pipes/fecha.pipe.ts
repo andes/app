@@ -1,6 +1,5 @@
+import moment from 'moment';
 import { Pipe, PipeTransform } from '@angular/core';
-import * as moment_ from 'moment';
-const moment = moment_;
 
 @Pipe({ name: 'fecha' })
 export class FechaPipe implements PipeTransform {

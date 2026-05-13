@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import moment from 'moment';
 import { EstadoCalendarioDia } from './enums';
 import { IBloque } from 'src/app/interfaces/turnos/IBloque';
 

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
@@ -39,7 +40,7 @@ export class PlanIndicacionesComponent implements OnInit {
     public indicaciones = [];
     public selectedIndicacion = {};
     public loading = false;
-    public suspenderIndicacion: Boolean;
+    public suspenderIndicacion: boolean;
     public showSecciones = {};
     public showMotivoRechazo = false; // interconsultores
     public indicacionAVerificar; // interconsultores
@@ -72,7 +73,7 @@ export class PlanIndicacionesComponent implements OnInit {
             return indicaciones;
         })
     );
-    badgeFarmacia: String = 'Esperando control<br>de farmacia';
+    badgeFarmacia = 'Esperando control<br>de farmacia';
     eventoSeleccionado: any;
     indicacionSeleccionada: any = null;
 
@@ -159,10 +160,7 @@ export class PlanIndicacionesComponent implements OnInit {
             maquinas.forEach(m => {
                 if (m.planIndicaciones?.secciones) {
                     this.secciones.push(
-                        ...m.planIndicaciones?.secciones.map(s => ({
-                            ...s,
-                            capa: m.capa
-                        }))
+                        ...m.planIndicaciones?.secciones.map(s => ({ ...s, capa: m.capa })) || []
                     );
                 }
             });
@@ -325,7 +323,13 @@ export class PlanIndicacionesComponent implements OnInit {
 
     onIndicacionesCellClick(indicacion, hora) {
         const fechaHora = moment(this.fecha).startOf('day').add(hora < this.horaOrganizacion ? hora + 24 : hora, 'h');
-        if (this.permisosMapaCamasService.indicacionesEjecutar && indicacion.estado.tipo !== 'draft' && indicacion.estadoActual.verificacion?.estado !== 'rechazada' && (indicacion.estado.verificacion?.estado === 'aceptada' || indicacion.estado.tipo === 'bypass') && fechaHora.isSame(moment(), 'day')) {
+
+        if (this.permisosMapaCamasService.indicacionesEjecutar &&
+            indicacion.estado.tipo !== 'draft' &&
+            indicacion.estadoActual.verificacion?.estado !== 'rechazada' &&
+            (indicacion.estado.verificacion?.estado === 'aceptada' || indicacion.estado.tipo === 'bypass') &&
+            fechaHora.isSame(moment(), 'day')) {
+
             this.onIndicaciones(indicacion, hora);
         }
     }

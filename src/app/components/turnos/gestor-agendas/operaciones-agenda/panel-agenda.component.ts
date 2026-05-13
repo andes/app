@@ -17,12 +17,12 @@ import { forkJoin, map } from 'rxjs';
 
 export class PanelAgendaComponent implements OnInit {
 
-    showEditarAgenda: Boolean = false;
+    showEditarAgenda = false;
 
     private subscriptionID = null;
     private _editarAgendaPanel: any;
 
-    @Input('editaAgendaPanel')
+    @Input()
     set editaAgendaPanel(value: any) {
         this._editarAgendaPanel = value;
         if (value.otroEspacioFisico) {
@@ -40,10 +40,10 @@ export class PanelAgendaComponent implements OnInit {
 
     // Usados en tag <panel-agenda> en gestor-agendas.html
     @Output() actualizarEstadoEmit = new EventEmitter<boolean>();
-    @Output() showVistaTurnosEmit = new EventEmitter<Boolean>();
-    @Output() agendasSolapadas = new EventEmitter<Boolean>();
+    @Output() showVistaTurnosEmit = new EventEmitter<boolean>();
+    @Output() agendasSolapadas = new EventEmitter<boolean>();
 
-    showEditarAgendaPanel: Boolean = true;
+    showEditarAgendaPanel = true;
     public showMapa = false;
     public alertas: any[] = [];
     public espaciosList = [];

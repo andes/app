@@ -2,15 +2,17 @@
     <plex-title size="sm" titulo="Número y organización" *ngIf="carpetaEfectores?.length">
     </plex-title>
     <plex-wrapper class="w-100 align-items-center" *ngFor="let carpeta of carpetaEfectores">
-        <plex-label grow="4" size="md" icon="folder-account" type="info"
-                    titulo="{{carpeta.nroCarpeta || '(Sin número asignado)'}}"
-                    subtitulo="{{carpeta.organizacion.nombre}}">
-        </plex-label>
-        <plex-button grow="auto" size="sm"
-                     *ngIf="idOrganizacion === carpeta.organizacion._id && !showEdit && autorizado" type="warning"
-                     tooltipPosition="left" tooltip="Editar" icon="pencil" (click)="editar()"
-                     class="d-flex align-self-center ml-2">
-        </plex-button>
+        <div class="row">
+            <plex-label class="col-10" size="md" icon="folder-account" type="info"
+                        titulo="{{carpeta.nroCarpeta || '(Sin número asignado)'}}"
+                        subtitulo="{{carpeta.organizacion.nombre}}">
+            </plex-label>
+            <plex-button class="col-2" size="sm"
+                         *ngIf="idOrganizacion === carpeta.organizacion._id && !showEdit && autorizado" type="warning"
+                         tooltipPosition="left" tooltip="Editar" icon="pencil" (click)="editar()"
+                         class="d-flex align-self-center ml-2">
+            </plex-button>
+        </div>
 
         <form #carpetaEdit="ngForm" class="row ml-4"
               *ngIf="idOrganizacion === carpeta.organizacion._id && showEdit && autorizado">
@@ -35,9 +37,9 @@
     </plex-wrapper>
 </section>
 <ng-container *ngIf="showNuevaCarpeta">
-    <plex-title titulo="carpeta del paciente" size="sm">
-        <plex-button *ngIf="editarCarpeta" type="success" size="sm" label="registrar nueva carpeta"
-                     (click)="crearCarpetaPaciente()" tooltipPosition="left" tooltip="registrar número de carpeta">
+    <plex-title titulo="carpeta del paciente" size="sm" class="mt-2 mb-2">
+        <plex-button *ngIf="editarCarpeta" type="success" size="sm" label="registrar nueva"
+                     (click)="crearCarpetaPaciente()">
         </plex-button>
     </plex-title>
     <plex-badge *ngIf="showList" type="warning" size="block" class="my-4">
@@ -45,12 +47,11 @@
     </plex-badge>
 </ng-container>
 <plex-wrapper class="w-100" *ngIf="!showList">
-    <plex-text label="Nuevo número de Carpeta" name="nroCarpeta" [(ngModel)]="nuevoNroCarpeta">
+    <plex-text label="Nuevo número de Carpeta" size="sm" name="nroCarpeta" [(ngModel)]="nuevoNroCarpeta">
     </plex-text>
-    <plex-button size="md" type="danger" tooltipPosition="left" tooltip="Cancelar edición" (click)="cancelar()"
-                 icon="close">
+    <plex-button size="sm" type="danger" tooltipPosition="left" tooltip="Cancelar" (click)="cancelar()" icon="close">
     </plex-button>
-    <plex-button size="md" type="success" tooltipPosition="left" tooltip="Confirmar edición"
+    <plex-button size="sm" type="success" tooltipPosition="left" tooltip="Confirmar"
                  (click)="guardarCarpetaPaciente(true)" icon="check" class="ml-2">
     </plex-button>
 </plex-wrapper>

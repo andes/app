@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { cache } from '@andes/shared';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,7 +11,7 @@ import { Auth } from '@andes/auth';
 import { SemaforoService } from 'src/app/modules/semaforo-priorizacion/service/semaforo.service';
 import { estadosSeguimiento as estados } from '../../constantes';
 import { Plex } from '@andes/plex';
-import { PlexWrapperComponent } from '@andes/plex/src/lib/wrapper/wrapper.component';
+import { PlexWrapperComponent } from '@andes/plex';
 import { DocumentosService } from 'src/app/services/documentos.service';
 
 @Component({

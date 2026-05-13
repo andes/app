@@ -159,7 +159,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
         switch (operacion) {
             case 'darTurno':
-                // Si se seleccionó por error un paciente fallecido
+            // Si se seleccionó por error un paciente fallecido
                 this.servicePaciente.checkFallecido(paciente);
                 this.solicitudPrestacion = null;
                 this.showDashboard = false;
