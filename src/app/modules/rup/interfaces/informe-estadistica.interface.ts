@@ -113,7 +113,7 @@ export interface IInformeEstadistica {
     paciente: IPaciente;
     informeIngreso: IInformeIngreso;
     informeEgreso?: IInformeEgreso;
-    periodosCensables?: { desde: Date; hasta: Date }[];
+    periodosCensables?: { desde: Date; hasta?: Date | null }[];
     estados?: IInternacionEstado[];
     estadoActual?: IInternacionEstado;
     estado?: IInternacionEstado | string;
