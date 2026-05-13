@@ -158,7 +158,6 @@ export class InternacionListadoComponent implements OnInit {
             if (validar) {
                 if (seleccionarInforme) {
                     const id = seleccionarInforme._id;
-
                     const egresoExiste = seleccionarInforme.informeEgreso;
                     const ultimoEstado = seleccionarInforme.estados[seleccionarInforme.estados.length - 1].tipo;
                     if (egresoExiste && ultimoEstado !== 'validada') {
