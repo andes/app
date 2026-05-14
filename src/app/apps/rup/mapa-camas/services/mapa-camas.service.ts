@@ -293,7 +293,7 @@ export class MapaCamasService {
                 ]).pipe(
                     switchMap(([prestacion, resumen]) => {
                         const internacion = {
-                            id: this.capa === 'estadistica' ? prestacion.id : (resumen.id || resumen._id),
+                            id: this.capa === 'estadistica' ? (prestacion.id || resumen._id || resumen.id) : (resumen.id || resumen._id),
                             fecha: this.fecha
                         };
                         return this.camasHTTP.snapshot(this.ambito, this.capa, internacion.fecha, internacion.id).pipe(
@@ -658,7 +658,7 @@ export class MapaCamasService {
                             desde = selectedInformeEstadistica ? selectedInformeEstadistica.informeIngreso.fechaIngreso : selectedResumen.fechaIngreso;
 
                         }
-                        if (this.capa === 'estadistica' && selectedInformeEstadistica.id) {
+                        if ((this.capa === 'estadistica' || this.capa === 'estadistica-v2') && selectedInformeEstadistica.id) {
                             desde = [desde, selectedInformeEstadistica.informeIngreso.fechaIngreso].sort((a, b) => moment(a).diff(moment(b)))[0];
 
                             return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedInformeEstadistica.id);
@@ -666,6 +666,9 @@ export class MapaCamasService {
                         if (selectedResumen._id) {
                             desde = [desde, selectedResumen.fechaIngreso].sort((a, b) => moment(a).diff(moment(b)))[0];
                             return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedResumen._id);
+                        }
+                        if (selectedCama.idInternacion) {
+                            return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedCama.idInternacion);
                         }
                     }
                     return of([]);

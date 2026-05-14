@@ -113,7 +113,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public OSPrivada = false;
     public esCensable = this.isCamaCensable();
     public resumenInternacion$: Observable<IResumenInternacion>;
-    public fechaMax;
 
 
     constructor(
@@ -849,13 +848,13 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     setFecha() {
-        if (this.prestacion?.id || this.resumen?.id) { // Si se trata de un movimiento (Paciente ya ingresado)
+        if (this.prestacion?.id || this.resumen?.id || this.informeEstadistica?._id) { // Si se trata de un movimiento (Paciente ya ingresado)
             this.checkEstadoCama();
             this.checkMovimientos();
         }
 
         this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
-        if (!this.prestacion?.id && !this.resumen?.id) { // se trata de un ingreso nuevo
+        if (!this.prestacion?.id && !this.resumen?.id && !this.informeEstadistica?._id) { // se trata de un ingreso nuevo
             // chequeamos estado de la cama
 
             this.mapaCamasService.snapshot$.subscribe(camas => {
