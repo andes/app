@@ -1372,10 +1372,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 return true;
             });
         }
-        console.log('Prestaciones Copia:', this.prestacionesCopia);
-        console.log('Ambito buscado:', this.ambitoOrigen);
-        console.log('Fecha inicio:', this.fechaInicio);
-        console.log('Fecha fin:', this.fechaFin);
         if (this.ambitoOrigen) {
             this.prestaciones = this.prestaciones.filter(p => p.ambito === this.ambitoOrigen);
 
