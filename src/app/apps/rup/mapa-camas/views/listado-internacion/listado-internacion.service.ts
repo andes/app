@@ -108,6 +108,10 @@ export class ListadoInternacionService {
             listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IInformeEstadistica) =>
                 internacion.estados[internacion.estados.length - 1].tipo === estado
             );
+        } else {
+            listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IInformeEstadistica) =>
+                internacion.estados[internacion.estados.length - 1].tipo !== 'anulada'
+            );
         }
 
         if (obraSocial) {
@@ -157,7 +161,11 @@ export class ListadoInternacionService {
 
         if (estado) {
             listaFiltrada = listaFiltrada.filter((i) =>
-                i.estados?.[i.estados.length - 1]?.tipo === estado
+                (i.estadoActual?.tipo || i.estados?.[i.estados.length - 1]?.tipo) === estado
+            );
+        } else {
+            listaFiltrada = listaFiltrada.filter((i) =>
+                (i.estadoActual?.tipo || i.estados?.[i.estados.length - 1]?.tipo) !== 'anulada'
             );
         }
 
