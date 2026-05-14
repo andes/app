@@ -36,6 +36,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     public anular$: Observable<Boolean>;
     public capa;
     public inProgress;
+    public informeEstadistica: IInformeEstadistica;
 
     public items = [
         { key: 'ingreso', label: 'INGRESO' },
@@ -93,6 +94,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
         );
 
         this.mapaCamasService.informeEstadistica$.subscribe(informe => {
+            this.informeEstadistica = informe;
             this.estadoPrestacion = '';
             this.existeIngreso = false;
 
@@ -223,15 +225,21 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
                 ]).pipe(
                     take(1),
                     switchMap(([prestacion, resumen]) => {
-                        const idInternacion = resumen?._id ? resumen._id : prestacion.id;
+                        const idInternacion = this.informeEstadistica?._id || resumen?._id || prestacion.id;
                         return this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, idInternacion, completo).pipe(
                             switchMap(() => {
                                 // hasta acá borramos movimiento(s) y resumen pero no anulamos la prestación
+                                if (this.informeEstadistica) {
+                                    return this.informeEstadisticaService.anularInforme(this.informeEstadistica._id);
+                                }
                                 if (this.capa === 'medica') {
                                     return of(null);
                                 }
                                 // en el caso del resumen, si existe prestacion, esta viene populada en idPrestacion
                                 const idPrestacion = (resumen?.idPrestacion as any)?.id || prestacion?.id;
+                                if (!idPrestacion) {
+                                    return of(null);
+                                }
                                 const prestacionAux = {
                                     id: idPrestacion,
                                     solicitud: { turno: null }

@@ -68,13 +68,25 @@ export class CambiarCamaComponent implements OnInit {
             switchMap(movimientos => {
                 if (movimientos.length) {
                     const fechaUltimoMovimiento = movimientos[movimientos.length - 1].fecha;
-                    const fechaMasUnMinuto = moment(fechaUltimoMovimiento).add(1, 'm');
-                    return of(fechaMasUnMinuto.toDate());
-                } else {
-                    return this.camaSelectedSegunView$.pipe(
-                        map(cama => moment(cama?.fecha).add(1, 'm').toDate())
-                    );
+                    return of(moment(fechaUltimoMovimiento).add(1, 'm').toDate());
                 }
+                return this.mapaCamasService.selectedInformeEstadistica.pipe(
+                    take(1),
+                    switchMap(informe => {
+                        if (informe?.informeIngreso?.fechaIngreso) {
+                            return of(moment(informe.informeIngreso.fechaIngreso).toDate());
+                        }
+                        return this.camaSelectedSegunView$.pipe(
+                            map(cama => {
+                                const camaDate = cama?.fechaIngreso || cama?.fecha;
+                                if (camaDate) {
+                                    return moment(camaDate).toDate();
+                                }
+                                return moment().subtract(1, 'year').toDate();
+                            })
+                        );
+                    })
+                );
             })
         );
 
