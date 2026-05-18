@@ -8,6 +8,7 @@ import { TurnoService } from './../../../../services/turnos/turno.service';
 import { SmsService } from './../../../../services/turnos/sms.service';
 import { Auth } from '@andes/auth';
 import { mergeMap } from 'rxjs/operators';
+import { ConstantesService } from './../../../../services/constantes.service';
 
 @Component({
     selector: 'suspender-turno',
@@ -31,7 +32,7 @@ export class SuspenderTurnoComponent implements OnInit {
 
     public reasignar: any = {};
 
-    public motivoSuspension: any[];
+    public motivoSuspension: Array<{ key: string; nombre: string }> = [];
     public motivoSuspensionSelect = { select: null };
     public seleccionadosSMS = [];
     public avisoSuspension = 'no enviado';
@@ -43,7 +44,8 @@ export class SuspenderTurnoComponent implements OnInit {
         public listaEsperaService: ListaEsperaService,
         public serviceAgenda: AgendaService,
         public smsService: SmsService,
-        public turnosService: TurnoService
+        public turnosService: TurnoService,
+        public constantesService: ConstantesService
     ) { }
 
     ngOnInit() {
@@ -53,22 +55,10 @@ export class SuspenderTurnoComponent implements OnInit {
         }
 
         this.turnos = this.turnosSeleccionados;
-
-        this.motivoSuspension = [
-            {
-                id: 1,
-                nombre: 'edilicia'
-            }, {
-                id: 2,
-                nombre: 'profesional'
-            },
-            {
-                id: 3,
-                nombre: 'organizacion'
-            }
-        ];
-
-        this.motivoSuspensionSelect.select = this.motivoSuspension[1];
+        this.constantesService.search({ source: 'citas:motivos:suspension' }).subscribe((constantes) => {
+            this.motivoSuspension = constantes;
+            this.motivoSuspensionSelect.select = this.motivoSuspension[1] || this.motivoSuspension[0] || null;
+        });
     }
 
 
@@ -97,7 +87,7 @@ export class SuspenderTurnoComponent implements OnInit {
 
     suspenderTurno() {
 
-        if (this.motivoSuspensionSelect.select.nombre === null) {
+        if (!this.motivoSuspensionSelect.select?.nombre) {
             return;
         }
 
