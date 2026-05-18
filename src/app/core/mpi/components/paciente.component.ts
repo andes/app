@@ -456,10 +456,11 @@ export class PacienteComponent implements OnInit {
     }
 
     private redirect(resultadoSave?: any) {
+        const id = resultadoSave?.id || this.paciente?.id;
         switch (this.origen) {
             case 'puntoInicio':
-                if (resultadoSave) {
-                    this._router.navigate(['citas/punto-inicio/' + resultadoSave.id]);
+                if (id) {
+                    this._router.navigate(['citas/punto-inicio/' + id]);
                 } else {
                     this._router.navigate(['citas/punto-inicio/']);
                 }
@@ -471,11 +472,23 @@ export class PacienteComponent implements OnInit {
                 this._router.navigate(['citas/gestor_agendas']);
                 break;
             case 'huds':
-                const id = this.paciente.id;
-                this._router.navigate(['huds/paciente', id]);
+                if (id) {
+                    this._router.navigate(['huds/paciente', id], { replaceUrl: true });
+                } else {
+                    this._router.navigate(['apps/mpi/busqueda']);
+                }
                 break;
             default:
-                this._router.navigate(['apps/mpi/busqueda']);
+                if (this.origen && this.origen.startsWith('rup-')) {
+                    const idPrestacion = this.origen.split('-')[1];
+                    if (idPrestacion && idPrestacion !== 'undefined') {
+                        this._router.navigate(['rup/ejecucion', idPrestacion], { replaceUrl: true });
+                    } else {
+                        this._router.navigate(['rup']);
+                    }
+                } else {
+                    this._router.navigate(['apps/mpi/busqueda']);
+                }
                 break;
         }
     }
