@@ -42,7 +42,7 @@ export class DarTurnosComponent implements OnInit {
     public lenNota = 140;
     public nota = '';
     public videoConferencia = false;
-    public link: String = '';
+    public link = '';
     public changeCarpeta = false;
     public financiador;
     public todaysdate: Date;
