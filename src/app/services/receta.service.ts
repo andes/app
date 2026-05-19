@@ -26,7 +26,7 @@ export class RecetaService {
         return this.server.get('/modules/recetasInsumos', { params });
     }
 
-    getInsumos(params): Observable<any[]> {
+    getInsumos(params: { [key: string]: string }): Observable<any[]> {
         return this.server.get('/modules/insumos', { params });
     }
 
