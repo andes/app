@@ -72,7 +72,6 @@
         "ngx-infinite-scroll": "^15.0.0",
         "ngx-observe": "^7.0.0",
         "ngx-simple-text-editor": "^1.4.0",
-        "npm": "^11.5.2",
         "ol": "^5.3.3",
         "rxjs": "^7.0.0",
         "selectize": "^0.12.4",
