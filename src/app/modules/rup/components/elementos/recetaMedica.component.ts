@@ -121,7 +121,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
         const input = event.query;
         if (input && input.length > 2) {
             if (this.medicamento.esMagistral) {
-                this.recetasService.getInsumos({ termino: input }).subscribe(insumos => {
+                this.recetasService.getInsumos({ termino: input, tipo: 'magistral' }).subscribe(insumos => {
                     const mappedInsumos = insumos.map(i => {
                         return {
                             ...i,
