@@ -15,7 +15,7 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
     talla: any;
     registroTalla: any;
     registroPeso: any;
-    public alerta = '';
+    public alerta: string;
     private pesoConceptId = '27113001';
     private tallaConceptId = '14456009';
     registro: any = {};
@@ -25,7 +25,7 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
     termCapitalizado: string;
 
     ngOnInit() {
-
+        this.alerta = '';
         if (!this.soloValores) {
             // Observa cuando cambia la propiedad 'percentiloPeso' en otro elemento RUP
             this.conceptObserverService.observe(this.registro).subscribe((data) => {
