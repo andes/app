@@ -60,8 +60,13 @@
                     [disabled]="!unidades?.length || ingresoCantidadManual" (change)="onChange($event)">
                 </plex-select>
                 <ng-container *ngIf="medicamento?.generico && !unidades.length && !loading || ingresoCantidadManual">
-                    <plex-int class="formEditar" [ngClass]="{ 'w-100': !unidades.length }" name="comprimidos"
-                        label="Cantidad" [(ngModel)]="valorCantidadManual" required="true" min="1" max="90">
+                    <plex-float *ngIf="medicamento.generico?.unidadMedida" class="formEditar"
+                        [ngClass]="{ 'w-100': !unidades.length }" name="comprimidos" label="Cantidad"
+                        [(ngModel)]="valorCantidadManual" required="true" [suffix]="medicamento.generico.unidadMedida">
+                    </plex-float>
+                    <plex-int *ngIf="!medicamento.generico?.unidadMedida && !medicamento.esMagistral" class="formEditar"
+                        [ngClass]="{ 'w-100': !unidades.length }" name="comprimidos" label="Cantidad"
+                        [(ngModel)]="valorCantidadManual" required="true" min="1" max="90">
                     </plex-int>
                 </ng-container>
                 <plex-button *ngIf="ingresoCantidadManual && unidades.length" class="ml-1" name="deshacer"
@@ -153,8 +158,7 @@
         <plex-item *ngFor="let item of registro.valor.medicamentos">
             <plex-icon size="md" *ngIf="true" name="pildoras" class="icon icon--border--producto mr-2">
             </plex-icon>
-            <plex-label [tituloBold]="true" titulo="{{ item.generico.term  }}" subtitulo=" {{ item.cantEnvases}} envase(s) de {{ item.cantidad}} {{item.presentacion?.term }}(s)  {{ item.dosisDiaria.dosis? '| ' + item.dosisDiaria.dosis : '| ' }} {{ item.dosisDiaria.intervalo? ' cada ' + item.dosisDiaria.intervalo.nombre: '' }}  {{ item.dosisDiaria.dias? ' durante ' + item.dosisDiaria.dias + ' día(s)':'' }} 
-                        "></plex-label>
+            <plex-label [tituloBold]="true" titulo="{{ item.generico.term }}" subtitulo="{{ item.cantEnvases }} envase(s){{ item.cantidad ? ' de ' + item.cantidad + ' ' + (item.esMagistral ? (item.generico?.unidadMedida || '') : (item.presentacion?.term ? item.presentacion.term + '(s)' : '(s)')) : '' }}{{ item.dosisDiaria?.dosis || item.dosisDiaria?.intervalo || item.dosisDiaria?.dias ? ' | ' : '' }}{{ item.dosisDiaria?.dosis ? item.dosisDiaria.dosis : '' }}{{ item.dosisDiaria?.intervalo ? ' cada ' + item.dosisDiaria.intervalo.nombre : '' }}{{ item.dosisDiaria?.dias ? ' durante ' + item.dosisDiaria.dias + ' día(s)' : '' }}"></plex-label>
             <plex-badge *ngIf="item.diagnostico" size="sm" type="warning" hintType="warning">
                 {{ truncateDiagnostico(item.diagnostico.term) }}
             </plex-badge>
@@ -174,8 +178,7 @@
     <div *ngIf="soloValores && alerta" class="alerta">{{alerta}}</div>
     <plex-list size="md" *ngIf="registro.valor.medicamentos">
         <plex-item *ngFor="let item of registro.valor.medicamentos">
-            <plex-label [tituloBold]="true" titulo="{{ item.generico.term  }}" subtitulo=" {{ item.cantEnvases}} envase(s) de {{ item.cantidad}} {{item.presentacion?.term }}(s)  {{ item.dosisDiaria.dosis? '| ' + item.dosisDiaria.dosis : '| ' }}  {{ item.dosisDiaria.intervalo? ' cada ' + item.dosisDiaria.intervalo.nombre: '' }}  {{ item.dosisDiaria.dias ? ' durante ' + item.dosisDiaria.dias + ' día(s)':'' }} 
-                                    "></plex-label>
+            <plex-label [tituloBold]="true" titulo="{{ item.generico.term }}" subtitulo="{{ item.cantEnvases }} envase(s){{ item.cantidad ? ' de ' + item.cantidad + ' ' + (item.esMagistral ? (item.generico?.unidadMedida || '') : (item.presentacion?.term ? item.presentacion.term + '(s)' : '(s)')) : '' }}{{ item.dosisDiaria?.dosis || item.dosisDiaria?.intervalo || item.dosisDiaria?.dias ? ' | ' : '' }}{{ item.dosisDiaria?.dosis ? item.dosisDiaria.dosis : '' }}{{ item.dosisDiaria?.intervalo ? ' cada ' + item.dosisDiaria.intervalo.nombre : '' }}{{ item.dosisDiaria?.dias ? ' durante ' + item.dosisDiaria.dias + ' día(s)' : '' }}"></plex-label>
             <plex-badge *ngIf="item.diagnostico" size="sm" type="warning" hintType="warning">
                 {{ truncateDiagnostico(item.diagnostico.term) }}
             </plex-badge>
