@@ -86,6 +86,13 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     private prestacionesCopia: any = [];
     private internaciones;
 
+
+    set prestaciones(value) {
+        this._prestaciones = value.sort((a, b) => {
+            return moment(b.fecha).diff(a.fecha);
+        });
+    }
+
     get prestaciones() {
         return this._prestaciones;
     }
@@ -127,13 +134,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     onChangeTabLaboratorio(index) {
         this.tabIndexLaboratorio = index;
     }
-
-    set prestaciones(value) {
-        this._prestaciones = value.sort((a, b) => {
-            return moment(b.fecha).diff(a.fecha);
-        });
-    }
-
 
     public todos: any = [];
     public solicitudes: any = [];
