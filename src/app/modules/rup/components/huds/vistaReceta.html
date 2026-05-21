@@ -5,11 +5,11 @@
             <div class="info-registro">
                 <div class="vista-badges">
                     <plex-badge *ngIf="recetaPrincipal.estadoActual" size="sm"
-                                [type]="estadoReceta[recetaPrincipal.estadoActual.tipo]">
+                        [type]="estadoReceta[recetaPrincipal.estadoActual.tipo]">
                         {{ recetaPrincipal.estadoActual.tipo.replace('-', ' ') }}
                     </plex-badge>
                     <plex-badge *ngIf="recetaPrincipal.estadoDispensaActual" size="sm"
-                                [type]="estadoDispensa[recetaPrincipal.estadoDispensaActual.tipo]">
+                        [type]="estadoDispensa[recetaPrincipal.estadoDispensaActual.tipo]">
                         {{ recetaPrincipal.estadoDispensaActual.tipo.replace('-', ' ') }}
                     </plex-badge>
                     <plex-badge *ngIf="recetaPrincipal.medicamento" size="sm" type="default">
@@ -18,9 +18,10 @@
                 </div>
                 <div case="capitalize"><b>{{ recetaPrincipal.medicamento.concepto.term }}</b></div>
                 <p *ngIf="recetaPrincipal.medicamento.cantidad && recetaPrincipal.medicamento.cantEnvases "><small>
-                                    {{ recetaPrincipal.medicamento.cantEnvases}} envase(s) de {{ recetaPrincipal.medicamento.cantidad}} {{recetaPrincipal.medicamento.presentacion }}(s) 
+                        {{ recetaPrincipal.medicamento.cantEnvases}} envase(s) de {{
+                        recetaPrincipal.medicamento.cantidad}} {{recetaPrincipal.medicamento.presentacion }}(s)
 
-                </small></p>
+                    </small></p>
                 <p *ngIf="recetaPrincipal.medicamento.dosisDiaria.dosis"><small>{{
                         '|' +recetaPrincipal.medicamento.dosisDiaria.dias ? recetaPrincipal.medicamento.dosisDiaria.dias
                         + ' día(s)' : '' }} {{
@@ -44,6 +45,14 @@
                 <b>Diagnóstico</b>
                 <p class="texto-detalle">{{recetaPrincipal.diagnostico.term || recetaPrincipal.diagnostico.descripcion}}
                 </p>
+            </div>
+            <div *ngIf="recetaPrincipal.medicamento.dosisDiaria?.notaMedica">
+                <b>Indicación para el paciente</b>
+                <p class="texto-detalle">{{recetaPrincipal.medicamento.dosisDiaria.notaMedica}}</p>
+            </div>
+            <div *ngIf="recetaPrincipal.medicamento.dosisDiaria?.notaFarmacia">
+                <b>Indicación para la farmacia</b>
+                <p class="texto-detalle">{{recetaPrincipal.medicamento.dosisDiaria.notaFarmacia}}</p>
             </div>
             <ng-container *ngIf="recetaPrincipal.medicamento.tipoReceta === 'triplicado'">
                 <div>
@@ -88,7 +97,7 @@
                         <plex-badge *ngIf="estadoDispensa.dispensaDuplicada" size="sm" [type]="'warning'">
                             dispensa duplicada
                         </plex-badge>
-                        <plex-badge *ngIf="estadoDispensa.cancelada" size="sm" [type]="'danger'"  >
+                        <plex-badge *ngIf="estadoDispensa.cancelada" size="sm" [type]="'danger'">
                             dispensa cancelada {{(estadoDispensa.fechaCancelada | date: 'dd/MM/yyyy HH:mm')}}
                         </plex-badge>
                     </div>
@@ -130,7 +139,7 @@
 
     <div class="mt-4 mb-3 historial-recetas">
         <plex-label *ngIf="!historialRecetas.length" size="sm" justify="center" icon="adi adi-listado-receta"
-                    titulo="No hay elementos registrados">
+            titulo="No hay elementos registrados">
         </plex-label>
         <plex-table *ngIf="historialRecetas.length" [columns]="columns" #table="plTable">
             <plex-table-columns>

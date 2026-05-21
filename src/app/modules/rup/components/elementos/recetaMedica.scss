@@ -32,3 +32,7 @@
     text-align: center;
     margin-bottom: 10px;
 }
+
+:host ::ng-deep .multiline-subtitle small {
+    white-space: pre-wrap;
+}
