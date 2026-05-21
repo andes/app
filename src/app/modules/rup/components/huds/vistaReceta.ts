@@ -98,6 +98,7 @@ export class VistaRecetaComponent implements OnInit {
     public recetas;
     public recetaPrincipal: any;
     public historialRecetas: any[];
+    public recetasRestantes: any[] = [];
 
     constructor(
         public huds: HUDSService,
@@ -106,9 +107,66 @@ export class VistaRecetaComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.recetaPrincipal = this.registro.recetas.length>1?this.recetaService.getRecetaPrincipal(this.registro.recetas): this.registro.recetas[0];
+        this.recetaPrincipal = this.registro.recetas.length > 1 ? this.recetaService.getRecetaPrincipal(this.registro.recetas) : this.registro.recetas[0];
         this.combinarDispensas();
-        this.historialRecetas = this.registro.recetas.filter(receta => receta.id !== this.recetaPrincipal.id && receta.fechaRegistro <= this.recetaPrincipal.fechaRegistro && receta.estadoActual?.tipo !== 'eliminada');
+
+        const historialBase = this.registro.recetas.filter(receta => receta.id !== this.recetaPrincipal.id && receta.fechaRegistro <= this.recetaPrincipal.fechaRegistro && receta.estadoActual?.tipo !== 'eliminada');
+
+        this.recetasRestantes = this.registro.recetas.filter(r =>
+            r.id !== this.recetaPrincipal.id &&
+            r.idRegistro === this.recetaPrincipal.idRegistro &&
+            this.recetaPrincipal.medicamento.tratamientoProlongado &&
+            r.estadoActual?.tipo !== 'eliminada'
+        );
+        this.recetasRestantes.sort((a, b) => (a.medicamento.ordenTratamiento || 0) - (b.medicamento.ordenTratamiento || 0));
+
+        const historialExcluidoActual = historialBase.filter(r => {
+            if (this.recetaPrincipal.medicamento.tratamientoProlongado) {
+                if (r.idRegistro === this.recetaPrincipal.idRegistro) {
+                    return false;
+                }
+                if (r.medicamento.tratamientoProlongado && r.medicamento.concepto.conceptId === this.recetaPrincipal.medicamento.concepto.conceptId) {
+                    return false;
+                }
+            }
+            return true;
+        });
+
+        const grupos = {};
+        const result = [];
+
+        historialExcluidoActual.forEach(receta => {
+            if (receta.medicamento.tratamientoProlongado && receta.idRegistro) {
+                if (!grupos[receta.idRegistro]) {
+                    grupos[receta.idRegistro] = [];
+                }
+                grupos[receta.idRegistro].push(receta);
+            } else {
+                result.push(receta);
+            }
+        });
+
+        Object.keys(grupos).forEach(key => {
+            const recetasGrupo = grupos[key];
+            const todasFinalizadas = recetasGrupo.every(r => r.estadoActual?.tipo !== 'vigente');
+            if (todasFinalizadas) {
+                recetasGrupo.sort((a, b) => a.medicamento.ordenTratamiento - b.medicamento.ordenTratamiento);
+                result.push({
+                    esGrupo: true,
+                    expandido: false,
+                    fechaRegistro: recetasGrupo[0].fechaRegistro,
+                    organizacion: recetasGrupo[0].organizacion,
+                    profesional: recetasGrupo[0].profesional,
+                    diagnostico: recetasGrupo[0].diagnostico,
+                    recetas: recetasGrupo
+                });
+            } else {
+                result.push(...recetasGrupo);
+            }
+        });
+
+        result.sort((a, b) => new Date(b.fechaRegistro).getTime() - new Date(a.fechaRegistro).getTime());
+        this.historialRecetas = result;
     }
 
     combinarDispensas() {

@@ -5,11 +5,11 @@
             <div class="info-registro">
                 <div class="vista-badges">
                     <plex-badge *ngIf="recetaPrincipal.estadoActual" size="sm"
-                                [type]="estadoReceta[recetaPrincipal.estadoActual.tipo]">
+                        [type]="estadoReceta[recetaPrincipal.estadoActual.tipo]">
                         {{ recetaPrincipal.estadoActual.tipo.replace('-', ' ') }}
                     </plex-badge>
                     <plex-badge *ngIf="recetaPrincipal.estadoDispensaActual" size="sm"
-                                [type]="estadoDispensa[recetaPrincipal.estadoDispensaActual.tipo]">
+                        [type]="estadoDispensa[recetaPrincipal.estadoDispensaActual.tipo]">
                         {{ recetaPrincipal.estadoDispensaActual.tipo.replace('-', ' ') }}
                     </plex-badge>
                     <plex-badge *ngIf="recetaPrincipal.medicamento" size="sm" type="default">
@@ -18,9 +18,10 @@
                 </div>
                 <div case="capitalize"><b>{{ recetaPrincipal.medicamento.concepto.term }}</b></div>
                 <p *ngIf="recetaPrincipal.medicamento.cantidad && recetaPrincipal.medicamento.cantEnvases "><small>
-                                    {{ recetaPrincipal.medicamento.cantEnvases}} envase(s) de {{ recetaPrincipal.medicamento.cantidad}} {{recetaPrincipal.medicamento.presentacion }}(s) 
+                        {{ recetaPrincipal.medicamento.cantEnvases}} envase(s) de {{
+                        recetaPrincipal.medicamento.cantidad}} {{recetaPrincipal.medicamento.presentacion }}(s)
 
-                </small></p>
+                    </small></p>
                 <p *ngIf="recetaPrincipal.medicamento.dosisDiaria.dosis"><small>{{
                         '|' +recetaPrincipal.medicamento.dosisDiaria.dias ? recetaPrincipal.medicamento.dosisDiaria.dias
                         + ' día(s)' : '' }} {{
@@ -67,6 +68,31 @@
         </div>
     </div>
 
+
+    <div class="mt-4 mb-3 d-flex flex-column" *ngIf="recetasRestantes.length > 0">
+        <plex-title titulo="Tratamiento prolongado" size="sm" class="text-uppercase"></plex-title>
+        <div class="border mt-2 border-bottom-0 d-flex flex-column" style="gap: 5px;">
+            <div *ngFor="let receta of recetasRestantes; let last = last" class="tratamiento-item">
+                <div class="icon-wrapper">
+                    <plex-icon name="listado-receta" class="icon-info-detalle" size="md"></plex-icon>
+                </div>
+                <div style="flex-grow: 1;">
+                    <div case="capitalize"><b>{{ receta.medicamento.concepto.term }}</b></div>
+                    <p class="m-0"><small>Orden {{receta.medicamento.ordenTratamiento + 1}} de
+                            {{receta.medicamento.tiempoTratamiento?.id}}</small></p>
+                </div>
+                <div class="vista-badges ml-3 d-flex align-items-center justify-content-end" style="min-width: 20%">
+                    <plex-badge size="sm" [type]="estadoReceta[receta.estadoActual.tipo]" outline="true">
+                        {{ receta.estadoActual.tipo }}
+                    </plex-badge>
+                    <plex-badge size="sm" [type]="estadoDispensa[receta.estadoDispensaActual.tipo]" outline="true">
+                        {{ receta.estadoDispensaActual.tipo.replace('-', ' ') }}
+                    </plex-badge>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="mt-2 mb-2" *ngIf="listadoDispensas.length > 0">
         <plex-title titulo="Detalle dispensa" size="sm"></plex-title>
         <div class="info-solicitud dispensada mt-2" *ngIf="recetaPrincipal.estadosDispensa.length > 0">
@@ -88,7 +114,7 @@
                         <plex-badge *ngIf="estadoDispensa.dispensaDuplicada" size="sm" [type]="'warning'">
                             dispensa duplicada
                         </plex-badge>
-                        <plex-badge *ngIf="estadoDispensa.cancelada" size="sm" [type]="'danger'"  >
+                        <plex-badge *ngIf="estadoDispensa.cancelada" size="sm" [type]="'danger'">
                             dispensa cancelada {{(estadoDispensa.fechaCancelada | date: 'dd/MM/yyyy HH:mm')}}
                         </plex-badge>
                     </div>
@@ -130,36 +156,86 @@
 
     <div class="mt-4 mb-3 historial-recetas">
         <plex-label *ngIf="!historialRecetas.length" size="sm" justify="center" icon="adi adi-listado-receta"
-                    titulo="No hay elementos registrados">
+            titulo="No hay elementos registrados">
         </plex-label>
-        <plex-table *ngIf="historialRecetas.length" [columns]="columns" #table="plTable">
-            <plex-table-columns>
-            </plex-table-columns>
-            <tr *ngFor="let receta of historialRecetas"
-                [ngClass]="{'suspendida': receta.estadoActual.tipo === 'suspendida'}">
-                <td *plTableCol="'fecha'">
-                    {{ receta.fechaRegistro | date:'dd/MM/yyyy HH:mm' }}
-                </td>
-                <td *plTableCol="'organizacion'">
-                    {{ receta.organizacion.nombre }}
-                </td>
-                <td *plTableCol="'profesional'">
-                    {{ receta.profesional.nombre }} {{ receta.profesional.apellido }}
-                </td>
-                <td *plTableCol="'diagnostico'">
-                    {{ receta.diagnostico.term || receta.diagnostico.descripcion }}
-                </td>
-                <td *plTableCol="'estado'">
-                    <div class="vista-badges">
-                        <plex-badge size="sm" [type]="estadoReceta[receta.estadoActual.tipo]">
-                            {{ receta.estadoActual.tipo }}
-                        </plex-badge>
-                        <plex-badge size="sm" [type]="estadoDispensa[receta.estadoDispensaActual.tipo]">
-                            {{ receta.estadoDispensaActual.tipo.replace('-', ' ') }}
-                        </plex-badge>
-                    </div>
-                </td>
-            </tr>
-        </plex-table>
+        <div class="table-responsive" *ngIf="historialRecetas.length">
+            <table class="table table-striped table-historial">
+                <thead>
+                    <tr>
+                        <th *ngFor="let col of columns">{{col.label}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let item of historialRecetas">
+                        <tr [ngClass]="{
+                                'suspendida': !item.esGrupo && item.estadoActual?.tipo === 'suspendida',
+                                'grupo-header-expanded': item.esGrupo && item.expandido
+                            }">
+                            <td>
+                                {{ item.fechaRegistro | date:'dd/MM/yyyy' }}
+                            </td>
+                            <td>
+                                {{ item.organizacion?.nombre }}
+                            </td>
+                            <td>
+                                {{ item.profesional?.nombre }} {{ item.profesional?.apellido }}
+                            </td>
+                            <td>
+                                {{ item.diagnostico?.term || item.diagnostico?.descripcion }}
+                            </td>
+                            <td>
+                                <div class="vista-badges" *ngIf="!item.esGrupo">
+                                    <plex-badge size="sm" [type]="estadoReceta[item.estadoActual.tipo]" outline="true">
+                                        {{ item.estadoActual.tipo }}
+                                    </plex-badge>
+                                    <plex-badge size="sm" [type]="estadoDispensa[item.estadoDispensaActual.tipo]"
+                                        outline="true">
+                                        {{ item.estadoDispensaActual.tipo.replace('-', ' ') }}
+                                    </plex-badge>
+                                </div>
+                                <div class="d-flex justify-content-end align-items-center w-100" *ngIf="item.esGrupo">
+                                    <plex-badge type="info" size="sm" outline="true">
+                                        TRATAMIENTO PROLONGADO
+                                        <plex-button [icon]="item.expandido ? 'chevron-up' : 'chevron-down'" type="info"
+                                            (click)="item.expandido = !item.expandido"></plex-button>
+                                    </plex-badge>
+                                </div>
+                            </td>
+                        </tr>
+                        <ng-container *ngIf="item.esGrupo && item.expandido">
+                            <tr *ngFor="let receta of item.recetas; let last = last; let first = first"
+                                class="grupo-detalle-expanded"
+                                [ngClass]="{'ultimo-detalle': last, 'primer-detalle': first}">
+                                <td colspan="4" class="align-middle">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-wrapper">
+                                            <plex-icon name="listado-receta" class="icon-info-detalle"
+                                                size="md"></plex-icon>
+                                        </div>
+                                        <div style="flex-grow: 1;">
+                                            <div case="capitalize"><b>{{ receta.medicamento.concepto.term }}</b></div>
+                                            <p class="m-0"><small>Orden {{receta.medicamento.ordenTratamiento + 1}} de
+                                                    {{receta.medicamento.tiempoTratamiento?.id}}</small></p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="align-middle">
+                                    <div class="vista-badges justify-content-end">
+                                        <plex-badge size="sm" [type]="estadoReceta[receta.estadoActual.tipo]"
+                                            outline="true">
+                                            {{ receta.estadoActual.tipo }}
+                                        </plex-badge>
+                                        <plex-badge size="sm" [type]="estadoDispensa[receta.estadoDispensaActual.tipo]"
+                                            outline="true">
+                                            {{ receta.estadoDispensaActual.tipo.replace('-', ' ') }}
+                                        </plex-badge>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </ng-container>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

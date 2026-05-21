@@ -92,6 +92,13 @@
     .detalle-dispensa {
         margin-right: 1;
     }
+
+    .tratamiento-item {
+        display: flex;
+        padding: 10px 10px 10px 0px;
+        align-items: center;
+        border: 1px solid #999;
+    }
 }
 
 .historial-recetas {
@@ -244,4 +251,84 @@
             }
         }
     }
+}
+
+.table-historial {
+    border-collapse: collapse;
+
+    tr.grupo-header-expanded {
+        background-color: #f6fcff; // subtle blue background if needed
+
+        td {
+            border-top: 1px solid #00a8e0 !important;
+            box-shadow: inset 0 1px 0 0 #00a8e0;
+            border-bottom: none !important;
+
+            &:first-child {
+                border-left: 1px solid #00a8e0 !important;
+                box-shadow: inset 0 1px 0 0 #00a8e0, inset 1px 0 0 0 #00a8e0;
+            }
+
+            &:last-child {
+                border-right: 1px solid #00a8e0 !important;
+                box-shadow: inset 0 1px 0 0 #00a8e0, inset -1px 0 0 0 #00a8e0;
+            }
+        }
+    }
+
+    tr.grupo-detalle-expanded {
+        background-color: white;
+
+        td {
+            border-top: 1px solid #dee2e6 !important;
+            border-bottom: none !important;
+
+            &:first-child {
+                border-left: 1px solid #00a8e0 !important;
+                box-shadow: inset 1px 0 0 0 #00a8e0;
+            }
+
+            &:last-child {
+                border-right: 1px solid #00a8e0 !important;
+                box-shadow: inset -1px 0 0 0 #00a8e0;
+            }
+        }
+
+        &.ultimo-detalle td {
+            border-bottom: 1px solid #00a8e0 !important;
+            box-shadow: inset 0 -1px 0 0 #00a8e0;
+
+            &:first-child {
+                box-shadow: inset 1px -1px 0 0 #00a8e0;
+            }
+
+            &:last-child {
+                box-shadow: inset -1px -1px 0 0 #00a8e0;
+            }
+        }
+
+        /* ensure the first detail row does not have double top border since the header has a top border */
+        &.primer-detalle td {
+            border-top: none !important;
+        }
+    }
+}
+
+.icon-wrapper {
+    min-width: 80px;
+    display: flex;
+    justify-content: center;
+}
+
+.icon-info-detalle {
+    color: $recetas;
+    /* purple color mapped to $recetas */
+    padding: 8px;
+    border: 1px solid $recetas;
+    border-radius: 100%;
+    width: 45px;
+    height: 45px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
 }
