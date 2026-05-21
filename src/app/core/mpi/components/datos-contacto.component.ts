@@ -20,7 +20,6 @@ import { switchMap, map } from 'rxjs/operators';
 import { GeorrefMapComponent } from './georref-map.component';
 import { AppMobileService } from '../../../services/appMobile.service';
 import { PacienteService } from '../services/paciente.service';
-import { IPais } from 'src/app/interfaces/IPais';
 
 @Component({
     selector: 'datos-contacto',
@@ -54,8 +53,6 @@ export class DatosContactoComponent implements OnInit {
     public paises$: Observable<any>;
     public provincias$: Observable<any>;
     public localidades$: Observable<any>;
-    public localidadesNacimiento$: Observable<ILocalidad[]>;
-    public paisesNacimiento$: Observable<IPais[]>;
     public barrios$: Observable<any>;
     public ubicacion$: Observable<any>;
     public georeferencia$: Observable<any>;
@@ -80,15 +77,9 @@ export class DatosContactoComponent implements OnInit {
     provincias: IProvincia[] = [];
     localidades: ILocalidad[] = [];
 
-    paisActual = null;
     provinciaActual = null;
     localidadActual = null;
     organizacionActual = null;
-
-    // Lugar nacimiento
-    nacioLocActual = false;
-    nacioProvActual = false;
-    nacioPaisActual = false;
 
     patronContactoNumerico = /^[0-9]{3,4}[0-9]{6}$/;
     patronContactoAlfabetico = /^[-\w.%+]{1,61}@[a-z]+(.[a-z]+)+$/;
@@ -109,7 +100,6 @@ export class DatosContactoComponent implements OnInit {
 
 
     ngOnInit() {
-        this.loadPaisesNacimiento();
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.organizacion$ = this.organizacionService.getById(this.auth.organizacion.id).pipe(
             cache()
@@ -128,19 +118,13 @@ export class DatosContactoComponent implements OnInit {
             this.paises$,
             this.provincias$
         ]).pipe(
-            switchMap(([org, pais, provincias]) => {
+            switchMap(([org]) => {
                 this.organizacionActual = org;
-                this.paisActual = pais;
                 this.provinciaActual = org.direccion.ubicacion.provincia;
                 this.localidadActual = org.direccion.ubicacion.localidad;
                 const ubicacion = this.paciente.direccion[0].ubicacion;
                 this.viveProvActual = ubicacion.provincia && ubicacion.provincia.id === this.provinciaActual.id;
                 this.viveLocActual = ubicacion.localidad && ubicacion.localidad.id === this.localidadActual.id;
-
-                const lugarNac = this.paciente.lugarNacimiento;
-                this.nacioPaisActual = lugarNac.pais?.id === this.paisActual[0].id;
-                this.nacioProvActual = lugarNac.provincia?.id === this.provinciaActual.id;
-                this.nacioLocActual = lugarNac.localidad?.id === this.localidadActual.id;
 
                 let direccionCompleta;
 
@@ -307,37 +291,6 @@ export class DatosContactoComponent implements OnInit {
         }
     }
 
-    // -------------------- LUGAR NACIMIENTO -------------------
-
-    loadPaisesNacimiento() {
-        this.paisesNacimiento$ = this.paisService.get({}).pipe(
-            cache()
-        );
-    }
-
-    loadLocalidadesNacimiento(provincia) {
-        this.paciente.lugarNacimiento.localidad = null;
-        if (provincia && provincia.id) {
-            this.nacioProvActual = (provincia.id === this.provinciaActual.id);
-            this.localidadesNacimiento$ = this.localidadService.getXProvincia(provincia.id).pipe(
-                cache()
-            );
-        } else {
-            this.localidadesNacimiento$ = null;
-            this.nacioLocActual = false;
-            this.paciente.lugarNacimiento.provincia = null;
-            this.paciente.lugarNacimiento.localidad = null;
-        }
-    }
-
-    updateNacioLocalidadActual() {
-        const localidad = this.paciente.lugarNacimiento.localidad;
-        this.paciente.lugarNacimiento.lugar = null;
-        if (localidad && localidad.id) {
-            this.nacioLocActual = (localidad.id === this.localidadActual.id);
-        }
-    }
-
     /**
      * carga las localidades correspondientes a la provincia del actual
      * @param {any} event
@@ -370,77 +323,6 @@ export class DatosContactoComponent implements OnInit {
             this.paciente.direccion[0].ubicacion.localidad = null;
             this.paciente.direccion[0].ubicacion.barrio = null;
             this.loadLocalidades(this.paciente.direccion[0].ubicacion.provincia);
-        }
-    }
-
-    /**
-       * setea datos de acuerdo al pais de nacimiento elegido
-       * @param {any} event
-       */
-    loadPaisActualNacimiento() {
-        const pais = this.paciente.lugarNacimiento.pais;
-        if (pais && pais.id) {
-            this.nacioPaisActual = (pais.id === this.paisActual[0].id);
-            if (this.nacioPaisActual) {
-                this.paciente.lugarNacimiento.lugar = null;
-            }
-        }
-        this.paciente.lugarNacimiento.provincia = null;
-        this.paciente.lugarNacimiento.localidad = null;
-        this.localidades$ = null;
-    }
-
-    /**
-     * carga las provincias si nació en Argentina
-     * caso contrario se limpian los datos y se carga texto libre
-     */
-    changePaisActualNacimiento() {
-        if (this.nacioPaisActual) {
-
-            this.loadProvincia();
-            this.paciente.lugarNacimiento.pais = this.paisActual[0];
-            this.paciente.lugarNacimiento.lugar = null;
-        } else {
-
-            this.paciente.lugarNacimiento.pais = null;
-            this.paciente.lugarNacimiento.provincia = null;
-            this.paciente.lugarNacimiento.localidad = null;
-        }
-        this.localidades$ = null;
-        this.nacioLocActual = false;
-        this.nacioProvActual = false;
-    }
-
-    /**
-     * carga las localidades correspondientes a la provincia de nacimiento
-     * @param {any} event
-     */
-    changeProvActualNacimiento() {
-        if (this.nacioProvActual) {
-            this.paciente.lugarNacimiento.provincia = this.provinciaActual;
-            this.loadLocalidadesNacimiento(this.provinciaActual);
-        } else {
-            this.loadProvincia();
-            this.nacioLocActual = false;
-            this.localidades$ = null;
-            this.paciente.lugarNacimiento.provincia = null;
-            this.paciente.lugarNacimiento.localidad = null;
-        }
-    }
-
-    /**
-     * carga las localidades según la provincia de nacimiento
-     * @param {any} event
-     *
-     * @memberOf PacienteCreateUpdateComponent
-     */
-    changeLocalidadActualNacimiento() {
-        if (this.nacioLocActual) {
-            this.paciente.lugarNacimiento.localidad = this.localidadActual;
-        } else {
-            this.paciente.lugarNacimiento.localidad = null;
-            this.paciente.lugarNacimiento.lugar = null;
-            this.loadLocalidadesNacimiento(this.paciente.lugarNacimiento.provincia);
         }
     }
 
