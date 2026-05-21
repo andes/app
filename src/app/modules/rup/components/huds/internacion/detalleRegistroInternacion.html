@@ -99,7 +99,7 @@
     <div *ngIf="tipo === 'fueraDeInternacion' || tipo === 'registrosInternacion'">
         <div *ngFor="let prestacion of paginacion; let iPrestacion = index">
             <div class="lista-prestacion mt-2">
-                <plex-title titulo="{{prestacion.prestacion.term}}" size="md">
+                <plex-title titulo="{{prestacion?.prestacion?.term}}" size="md">
                     <plex-button *ngIf="puedeDescargarInforme" type="info" size="sm" icon="download"
                                  tooltip="Descargar PDF" [disabled]="requestInProgress"
                                  (click)="descargarInforme(prestacion.data)">
@@ -108,16 +108,16 @@
                 <div class="mt-1">
                     <div class="collapse-wrapper" (click)="colapsar(iPrestacion)">
                         <plex-label class="prestacion-label" size="md" case="capitalize" titulo="Fecha De Validación"
-                                    subtitulo="{{ prestacion.data.estadoActual.createdAt | date: 'EEE dd/MM/yyyy HH:mm' }}">
+                                    subtitulo="{{ prestacion.data?.estadoActual?.createdAt | date: 'EEE dd/MM/yyyy HH:mm' }}">
                         </plex-label>
                         <div class="prestacion-info">
                             <plex-label class="prestacion-label" size="md" case="capitalize"
                                         titulo="Profesional que valida"
-                                        subtitulo="{{ prestacion.data.solicitud.profesional | nombre }}">
+                                        subtitulo="{{ prestacion.data?.solicitud?.profesional | nombre }}">
                             </plex-label>
                             <plex-label *ngIf="tipo === 'registrosInternacion'" class="prestacion-label" size="md"
                                         case="capitalize" titulo="Unidad organizativa"
-                                        subtitulo="{{ prestacion.data.unidadOrganizativa?.term || 'Sin unidad organizativa' }}">
+                                        subtitulo="{{ prestacion.data?.unidadOrganizativa?.term || 'Sin unidad organizativa' }}">
                             </plex-label>
                         </div>
                         <plex-button class="collapse-button" type="primary" size="sm"
@@ -126,59 +126,66 @@
                     </div>
 
                     <div *ngIf="colapsable.includes(iPrestacion)" class="collapse-content">
-                        <ng-container *ngFor="let elemento of prestacion.data.ejecucion.registros; let i = index">
-                            <div class="rup-card {{ elemento | semanticClass }}">
-                                <div class="rup-header">
-                                    <div class="icon-rup">
-                                        <i class="adi {{ elemento | semanticIcon }}"></i>
-                                    </div>
-                                    <div class="title">
-                                        <ng-container *ngIf="elemento?.nombre">
-                                            {{ elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1) }}
-                                        </ng-container>
-                                        <div class="float-left"
-                                             *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 1">
-                                            <b class="clearfix">Relacionado con:</b>
-                                            <ng-container *ngFor="let relacionado of elemento?.relacionadoCon">
-                                                <plex-badge size="sm" type="info mr-1">
-                                                    {{ relacionado | relacionRUP }}
-                                                </plex-badge>
+                        <div *ngIf="prestacion.data?._esInformeEstadistico">
+                            <vista-informe-estadistico [informe]="prestacion.data?._informeEstadistico">
+                            </vista-informe-estadistico>
+                        </div>
+
+                        <ng-container *ngIf="!prestacion.data?._esInformeEstadistico">
+                            <ng-container *ngFor="let elemento of prestacion.data?.ejecucion?.registros; let i = index">
+                                <div class="rup-card {{ elemento | semanticClass }}">
+                                    <div class="rup-header">
+                                        <div class="icon-rup">
+                                            <i class="adi {{ elemento | semanticIcon }}"></i>
+                                        </div>
+                                        <div class="title">
+                                            <ng-container *ngIf="elemento?.nombre">
+                                                {{ elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1) }}
                                             </ng-container>
+                                            <div class="float-left"
+                                                 *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 1">
+                                                <b class="clearfix">Relacionado con:</b>
+                                                <ng-container *ngFor="let relacionado of elemento?.relacionadoCon">
+                                                    <plex-badge size="sm" type="info mr-1">
+                                                        {{ relacionado | relacionRUP }}
+                                                    </plex-badge>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                        <div class="actions">
+                                            <plex-badge *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length === 1"
+                                                        size="sm" type="info">
+                                                <b> Relacionado con: </b>
+                                                {{ elemento.relacionadoCon[0].concepto?.term[0].toUpperCase() +
+                                                elemento.relacionadoCon[0].concepto?.term.slice(1)}}
+                                            </plex-badge>
+                                            <plex-badge size="sm" type="info" *ngIf="elemento.esDiagnosticoPrincipal">
+                                                Procedimiento / diagnóstico principal
+                                            </plex-badge>
                                         </div>
                                     </div>
-                                    <div class="actions">
-                                        <plex-badge *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length === 1"
-                                                    size="sm" type="info">
-                                            <b> Relacionado con: </b>
-                                            {{ elemento.relacionadoCon[0].concepto?.term[0].toUpperCase() +
-                                            elemento.relacionadoCon[0].concepto?.term.slice(1)}}
-                                        </plex-badge>
-                                        <plex-badge size="sm" type="info" *ngIf="elemento.esDiagnosticoPrincipal">
-                                            Procedimiento / diagnóstico principal
-                                        </plex-badge>
-                                    </div>
-                                </div>
-                                <div class="rup-body">
-                                    <div class="legend">
-                                        <span>
-                                            {{ (elemento.esSolicitud) ? 'solicitud' :
-                                            elemento.concepto.semanticTag}}
-                                        </span>
-                                    </div>
-                                    <div class="content">
-                                        <div class="row" *ngIf="prestacion.data.paciente">
-                                            <div class="col-12">
-                                                <rup [elementoRUP]="elementosRUPService.elementoRegistro(elemento)"
-                                                     [params]="elementosRUPService.getParams(elemento)"
-                                                     [prestacion]="prestacion.data" [registro]="elemento"
-                                                     [paciente]="prestacion.data.paciente" [soloValores]="true"
-                                                     [vistaHUDS]="false">
-                                                </rup>
+                                    <div class="rup-body">
+                                        <div class="legend">
+                                            <span>
+                                                {{ (elemento.esSolicitud) ? 'solicitud' :
+                                                elemento.concepto.semanticTag}}
+                                            </span>
+                                        </div>
+                                        <div class="content">
+                                            <div class="row" *ngIf="prestacion.data?.paciente">
+                                                <div class="col-12">
+                                                    <rup [elementoRUP]="elementosRUPService.elementoRegistro(elemento)"
+                                                         [params]="elementosRUPService.getParams(elemento)"
+                                                         [prestacion]="prestacion.data" [registro]="elemento"
+                                                         [paciente]="prestacion.data?.paciente" [soloValores]="true"
+                                                         [vistaHUDS]="false">
+                                                    </rup>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </ng-container>
                         </ng-container>
                     </div>
                 </div>
