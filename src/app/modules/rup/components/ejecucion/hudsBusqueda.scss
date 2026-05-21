@@ -59,8 +59,14 @@
             align-items: center;
             justify-content: center;
 
-            .icon i {
+            .icon i,
+            i.icon {
                 font-size: 25px;
+
+                &.adi-hospital-building {
+                    font-size: 28px;
+                    color: #c1121f;
+                }
             }
 
             .contador {
@@ -130,6 +136,10 @@
 
         .vacunas {
             @include card-estilo($vacuna);
+        }
+
+        .guardias {
+            @include card-estilo($guardia);
         }
 
         .recc {
@@ -290,6 +300,10 @@
         color: $vacuna
     }
 
+    &.guardias {
+        color: $guardia
+    }
+
     &.recc {
         color: $recc
     }
@@ -335,6 +349,11 @@
 
         .icon-rup {
             max-width: 55px !important;
+
+            i.adi-hospital-building {
+                font-size: 2rem;
+                color: #c1121f;
+            }
         }
     }
 }
