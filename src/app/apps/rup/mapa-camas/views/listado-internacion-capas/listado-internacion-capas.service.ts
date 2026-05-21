@@ -96,12 +96,35 @@ export class ListadoInternacionCapasService {
         }
 
         if (unidad) {
+            const unidadId = unidad?.conceptId || unidad;
             listaInternacionFiltrada = listaInternacionFiltrada.filter(
-                (internacion: IResumenInternacion) =>
-                    (internacion as any).idPrestacion?.unidadOrganizativa?.conceptId === (unidad?.conceptId || unidad)
+                (internacion: any) => {
+                    const uoEfectiva = this.getUltimaUnidadOrganizativaConceptId(internacion);
+                    return uoEfectiva === unidadId;
+                }
             );
         }
         return listaInternacionFiltrada;
+    }
+
+    getUltimaUnidadOrganizativaConceptId(internacion: any): string {
+        const estadosCama = internacion.estadosCama;
+        if (!estadosCama?.length) {
+            return internacion.idPrestacion?.unidadOrganizativa?.conceptId;
+        }
+        let ultimoEstadoConPaciente: any = null;
+        for (const cama of estadosCama) {
+            if (cama.estados?.length) {
+                for (const estado of cama.estados) {
+                    if (estado.paciente) {
+                        if (!ultimoEstadoConPaciente || new Date(estado.fecha) > new Date(ultimoEstadoConPaciente.fecha)) {
+                            ultimoEstadoConPaciente = estado;
+                        }
+                    }
+                }
+            }
+        }
+        return ultimoEstadoConPaciente?.unidadOrganizativa?.conceptId || internacion.idPrestacion?.unidadOrganizativa?.conceptId;
     }
 
     setFechaHasta(fecha: Date) {
