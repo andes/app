@@ -292,6 +292,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                     return (profesional.id === this.auth.profesional);
                 }));
             });
+
         }
 
         // por tipo de prestación
