@@ -21,6 +21,10 @@ interface PacienteEscaneado {
 })
 export class PacienteBuscarComponent implements OnInit, OnDestroy {
     public textoLibre: string = null;
+    public busquedaAvanzada = false;
+    public localidad: string = null;
+    public fechaNacimiento: Date = null;
+    public obraSocial: string = null;
     public autoFocus = 0;
     public routes;
     private pacienteRoute = '/apps/mpi/paciente';
@@ -64,12 +68,22 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
         }
     }
 
+    public toggleBusquedaAvanzada() {
+        this.busquedaAvanzada = !this.busquedaAvanzada;
+        if (!this.busquedaAvanzada) {
+            this.localidad = null;
+            this.fechaNacimiento = null;
+            this.obraSocial = null;
+            this.buscar({ type: null });
+        }
+    }
+
     /**
      * Busca paciente cada vez que el campo de busqueda cambia su valor
      */
     public buscar($event) {
         /* Error en Plex, ejecuta un change cuando el input pierde el foco porque detecta que cambia el valor */
-        if ($event.type) {
+        if ($event && $event.type) {
             return;
         }
         this.pacienteCache.clearPaciente();
@@ -85,7 +99,12 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                 this.searchSubscription.unsubscribe();
             }
             this.searchStart.emit();
-            this.pacienteBuscar.search(textoLibre, this.returnScannedPatient).subscribe(respuesta => {
+            const filtros = {
+                localidad: (this.localidad && this.localidad.length) ? this.localidad.trim() : null,
+                fechaNacimiento: this.fechaNacimiento ? this.fechaNacimiento : null,
+                obraSocial: (this.obraSocial && this.obraSocial.length) ? this.obraSocial.trim() : null
+            };
+            this.pacienteBuscar.search(textoLibre, this.returnScannedPatient, filtros).subscribe(respuesta => {
                 if (respuesta) {
                     this.searchEnd.emit(respuesta);
                 }
