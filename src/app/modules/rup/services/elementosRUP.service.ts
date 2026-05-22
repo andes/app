@@ -183,6 +183,7 @@ export class ElementosRUPService {
         }
         elemento.requeridos.forEach((elem) => {
             if (!elem.elementoRUP) {
+                esSolicitud = elem.esSolicitud ?? esSolicitud;
                 elem.elementoRUP = this.buscarElemento(elem.concepto, esSolicitud);
                 elem.params = { ...elem.elementoRUP.params, ...(elem.params || {}) };
                 elem.style = { ...(elem.elementoRUP.style || {}), ...(elem.style || {}) } as any;
