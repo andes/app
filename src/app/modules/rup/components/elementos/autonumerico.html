@@ -1,0 +1,13 @@
+<div class="row">
+    <div class="col-12">
+        <div *ngIf="registro.valor">
+            <label class="d-block text-capitalize">{{ params.title ? params.title : registro.concepto.term }}</label>
+            <plex-badge type="info" size="lg">
+                {{ registro.valor }}
+            </plex-badge>
+        </div>
+        <plex-badge *ngIf="!registro.valor && !soloValores" type="info">
+            Generando número...
+        </plex-badge>
+    </div>
+</div>
