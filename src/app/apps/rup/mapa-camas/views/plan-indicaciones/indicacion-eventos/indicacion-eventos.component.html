@@ -1,12 +1,15 @@
 <form #form="ngForm">
     <plex-title titulo="Registrar evento" size="md">
-        <plex-button *ngIf="editando || !evento" class="mr-1" type="success" size="sm" icon="check" tooltip="Guardar"
-                     [disabled]="!estado || labelEstado=='Motivo' && !observaciones" (click)="onGuardar()">
+        <plex-button *ngIf="editando || addEvent" class="mr-1" type="success" size="sm" icon="check"
+                     [validateForm]="form"
+                     [disabled]="!estado || (labelEstado==='Motivo' && !observaciones) || !form.valid"
+                     (click)="onGuardar()" tooltip="Guardar">
         </plex-button>
-        <plex-button *ngIf="!editando && evento && capa === 'enfermeria'" class="mr-1" type="warning" size="sm"
-                     icon="pencil" (click)="onEdit()">
+        <plex-button *ngIf="!evento || !agregarEditarEvento || evento[0].estado === 'on-hold'" type="danger" size="sm"
+                     icon="close" (click)="onCancelar()" tooltip="Cancelar">
         </plex-button>
-        <plex-button type="danger" size="sm" icon="close" (click)="onCancelar()">
+        <plex-button *ngIf="agregarEditarEvento && evento && evento[0].estado !== 'on-hold'" type="danger" size="sm"
+                     icon="flecha-izquierda" (click)="onVolver()" tooltip="Volver">
         </plex-button>
     </plex-title>
 
@@ -33,9 +36,9 @@
         </div>
     </plex-detail>
 
-    <ng-container *ngIf="editando || !evento">
-        <plex-datetime type="time" name="hora" label="Horario de inicio" [(ngModel)]="fechaHora" [min]="horaMin"
-                       [max]="horaMax" [required]="true" span="2">
+    <ng-container *ngIf="editando || addEvent">
+        <plex-datetime label="Fecha y Hora" [(ngModel)]="fechaHora" name="fechaHora" [min]="horaMin" [max]="horaMax"
+                       [required]="true">
         </plex-datetime>
         <plex-select [data]="estadoItems" [(ngModel)]="estado" (change)="onInputChange($event)" name="estado"
                      label="Estado" [required]="true">
@@ -43,22 +46,36 @@
         <plex-label class="font-weight-bold"> {{labelEstado}} <h3 *ngIf="labelEstado=='Motivo'" class="asteriscoRojo"> *
             </h3>
         </plex-label>
-        <div class="fondoBlancoText">
-            <plex-text [(ngModel)]="observaciones" name="observaciones" [required]="labelEstado==='Motivo'"
-                       [html]="true">
-            </plex-text>
-        </div>
+        <plex-text [(ngModel)]="observaciones" name="observaciones" [required]="labelEstado==='Motivo'">
+        </plex-text>
     </ng-container>
 </form>
 
-<ng-container *ngIf="!editando && evento">
-    <plex-badge [type]="estadoType">{{ evento.estado }} a las {{ horarioEjecucion | date:'HH:mm' }}
-    </plex-badge>
-    <plex-label *ngIf="evento.createdBy" titulo="Creado por"
-                subtitulo="{{ evento.createdBy.nombreCompleto  || 'Automáticamente por prescripción'}}">
-    </plex-label>
-    <plex-label *ngIf="evento.updatedBy" titulo="Actualizado por" subtitulo="{{ evento.updatedBy?.nombreCompleto }}">
-    </plex-label>
-    <b>Observaciones</b><br>
-    <div [innerHtml]="observaciones"></div>
+<ng-container *ngIf="!editando && !addEvent && evento">
+    <plex-title titulo="Historial de eventos" size="md">
+        <plex-button class="mr-1" type="success" size="sm" icon="plus" tooltip="Agregar evento" tooltipPosition="left"
+                     (click)="agregarEvento()"></plex-button>
+        <plex-button *ngIf="eventSelected" type="warning" size="sm" icon="pencil" tooltip="Editar"
+                     tooltipPosition="left" (click)="onEdit()"></plex-button>
+    </plex-title>
+    <plex-table [columns]="eventos" #table="plTable" class="tabla-eventos">
+        <plex-table-columns>
+        </plex-table-columns>
+        <tr *ngFor="let event of evento; let i = index" [class.selectable]="true"
+            [class.selected]="eventSelected === event" (click)="selectedEvent(event, i)">
+            <td>
+                <plex-badge [type]="getTipoEstado(event.estado)">{{ event.estado }} a las {{event.fecha |
+                    date:'HH:mm'}}</plex-badge>
+            </td>
+            <td>
+                <plex-label>{{ event.createdBy.nombreCompleto || 'Automát. por prescripción'}}</plex-label>
+            </td>
+            <td>
+                <plex-label>{{ event.updatedBy?.nombreCompleto }}</plex-label>
+            </td>
+            <td>
+                <plex-label>{{event.observaciones}}</plex-label>
+            </td>
+        </tr>
+    </plex-table>
 </ng-container>
