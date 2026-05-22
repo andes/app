@@ -26,6 +26,13 @@ export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
         { key: 'historial', label: 'HISTORIAL' },
         { key: 'turnos', label: 'TURNOS' }
     ];
+
+    public columns = [
+        { key: 'fecha', label: 'Fecha' },
+        { key: 'notificadorPor', label: 'Notificado por' },
+        { key: 'observaciones', label: 'Observaciones' },
+    ];
+
     public mostrar = 'solicitud';
     public verIndicaciones = false;
 
@@ -71,5 +78,16 @@ export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
 
     ngOnDestroy() {
         this.internacion = null;
+    }
+
+    existeNotificaciones(notificaciones) {
+        if (notificaciones?.length === 0) {
+            return false;
+        }
+        return notificaciones?.some(notificacion => notificacion.accion === 'notificar');
+    }
+
+    obtenerNotificaciones(notificaciones) {
+        return (notificaciones || []).filter(notificacion => notificacion.accion === 'notificar');
     }
 }
