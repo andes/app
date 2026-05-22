@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { IFarmacia } from 'src/app/interfaces/IFarmacia';
 import { Plex } from '@andes/plex';
 import { FarmaciaService } from 'src/app/services/farmacia.service';
@@ -21,6 +22,7 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
 
     @Output() data = new EventEmitter();
     @Input() farmaciaSeleccionada: IFarmacia;
+    @ViewChild('formulario') formulario: NgForm;
 
     public farmacia: IFarmacia = {
         id: '',
@@ -54,6 +56,7 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
         expedientePapel: '',
         expedienteGDE: '',
         nroCaja: '',
+        tipoEstablecimiento: '',
         disposiciones: [],
         sancion: []
     };
@@ -64,6 +67,8 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
     public laboratorio = false;
     public tipoComunicacion;
     public asociado;
+    public establecimiento;
+    public horarioFarmacia;
     patronContactoCelular = /^[0-9]{3,4}[0-9]{6}$/;
     patronContactoFijo = /^[0-9]{7}$/;
     patronContactoAlfabetico = /^[-\w.%+]{1,61}@[a-z]+(.[a-z]+)+$/;
@@ -74,6 +79,16 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
         { id: 'farmacia', nombre: 'Farmacias Sociales' },
         { id: 'camara', nombre: 'Camara de Farmacéuticos' },
         { id: 'independiente', nombre: 'Independientes' }
+    ];
+
+    public arrayEstablecimiento = [
+        { id: 'tipoFarmacia', nombre: 'Farmacia' },
+        { id: 'tipoDrogueria', nombre: 'Droguería' },
+        { id: 'tipoBotiquin', nombre: 'Botiquín' },
+        { id: 'tipoDeposito', nombre: 'Depósito' },
+        { id: 'tipoDistribuidora', nombre: 'Distribuidora' },
+        { id: 'tipoVacunatorio', nombre: 'Vacunatorio' },
+        { id: 'tipoEsterilizacion', nombre: 'Esterilización' }
     ];
 
     constructor(
@@ -87,7 +102,17 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
     ngOnInit() {
         if (this.farmaciaSeleccionada) {
             this.farmacia = this.farmaciaSeleccionada;
-            this.asociado = { id: this.farmaciaSeleccionada.asociadoA, nombre: this.farmaciaSeleccionada.asociadoA };
+            this.asociado = this.arrayAsociado.find(a => a.nombre === this.farmaciaSeleccionada.asociadoA) || null;
+            this.establecimiento = this.arrayEstablecimiento.find(e => e.nombre === this.farmaciaSeleccionada.tipoEstablecimiento) || null;
+            this.horarioFarmacia = this.farmaciaSeleccionada.horarios.map(horario => {
+                if (typeof horario === 'string') {
+                    return { dia: horario };
+                }
+                return horario;
+            });
+            this.farmacia.horarios = this.horarioFarmacia;
+        } else {
+            this.farmacia.horarios = [{ dia: '' }];
         }
         this.provincias$ = this.provinciaService.get({}).pipe(
             cache()
@@ -101,23 +126,28 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
         this.data.emit();
     }
 
-    save() {
-        this.farmacia.asociadoA = this.asociado.nombre;
-        // si estamos editado una farmacia.
-        if (this.farmaciaSeleccionada) {
-            const farmaciaUpdate = Object.assign({}, this.farmacia);
-            this.farmaciaService.update(this.farmacia.id, farmaciaUpdate).subscribe({
-                next: () => this.plex.toast('success', 'Farmacia editada con éxito.'),
-                error: () => this.plex.toast('danger', 'Error al editar la farmacia.')
-            });
+    save(event) {
+        if (event.formValid) {
+            this.farmacia.asociadoA = this.asociado.nombre;
+            this.farmacia.tipoEstablecimiento = this.establecimiento.nombre;
+            // si estamos editado una farmacia.
+            if (this.farmaciaSeleccionada) {
+                const farmaciaUpdate = Object.assign({}, this.farmacia);
+                this.farmaciaService.update(this.farmacia.id, farmaciaUpdate).subscribe({
+                    next: () => this.plex.toast('success', 'Farmacia editada con éxito.'),
+                    error: () => this.plex.toast('danger', 'Error al editar la farmacia.')
+                });
+            } else {
+                // si estamos creando una farmacia nueva.
+                this.farmaciaService.create(this.farmacia).subscribe({
+                    next: () => this.plex.toast('success', 'Farmacia creada con éxito.'),
+                    error: () => this.plex.toast('danger', 'Error al crear la farmacia.')
+                });
+            }
+            this.volver();
         } else {
-            // si estamos creando una farmacia nueva.
-            this.farmaciaService.create(this.farmacia).subscribe({
-                next: () => this.plex.toast('success', 'Farmacia creada con éxito.'),
-                error: () => this.plex.toast('danger', 'Error al crear la farmacia.')
-            });
+            this.identificarCamposInvalidos();
         }
-        this.volver();
     }
 
     removeElement(tipo, i) {
@@ -205,5 +235,73 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
         }
 
         this.farmacia.cuit = cuit;
+    }
+
+    identificarCamposInvalidos() {
+        const camposInvalidos = [];
+
+        if (this.formulario) {
+            Object.keys(this.formulario.controls).forEach(key => {
+                const control = this.formulario.controls[key];
+                if (control.invalid) {
+                    control.markAsTouched();
+                    camposInvalidos.push(this.obtenerNombreLegible(key));
+                }
+            });
+        }
+
+        if (camposInvalidos.length > 0) {
+            this.plex.toast('danger', `Campos incompletos o inválidos: ${camposInvalidos.join(', ')}`);
+        }
+    }
+
+    obtenerNombreLegible(nombreCampo: string): string {
+        const mapeoNombres = {
+            'denominacionFarmacia': 'Denominación',
+            'razonSocialFarmacia': 'Razón Social',
+            'farmaciaCuit': 'CUIT',
+            'DTRespFarmacia': 'D.T Responsable',
+            'MatDTFarmacia': 'Matrícula D.T',
+            'dispAltaDTFarmacia': 'Disposición Alta D.T',
+            'asociado': 'Asociado',
+            'dispHabilitacion': 'Disposición Habilitación',
+            'fechaRenovacion': 'Fecha Renovación',
+            'vencimientoHabilitacion': 'Vencimiento Habilitación',
+            'expedientePapel': 'Expediente Papel',
+            'expedienteGDE': 'Expediente GDE',
+            'nroCaja': 'Número Caja',
+            'establecimiento': 'Tipo Establecimiento',
+            'provincia': 'Provincia',
+            'localidad': 'Localidad',
+            'domicilio': 'Dirección'
+        };
+
+        // Manejar campos dinámicos (auxiliares, contactos, horarios)
+        if (nombreCampo.startsWith('auxFarmaceutico-')) {
+            return 'Farmacéutico auxiliar';
+        }
+        if (nombreCampo.startsWith('auxMatricula-')) {
+            return 'Matrícula auxiliar';
+        }
+        if (nombreCampo.startsWith('auxDispAlta-')) {
+            return 'Disposición alta auxiliar';
+        }
+        if (nombreCampo.startsWith('diaHora-')) {
+            return 'Día y horario';
+        }
+        if (nombreCampo.startsWith('tipo-')) {
+            return 'Tipo contacto';
+        }
+        if (nombreCampo.startsWith('celular-')) {
+            return 'Celular';
+        }
+        if (nombreCampo.startsWith('fijo-')) {
+            return 'Teléfono fijo';
+        }
+        if (nombreCampo.startsWith('Direccion-')) {
+            return 'Email';
+        }
+
+        return mapeoNombres[nombreCampo] || nombreCampo;
     }
 }
