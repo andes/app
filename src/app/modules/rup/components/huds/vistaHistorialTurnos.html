@@ -1,5 +1,5 @@
-<fieldset *plTab>
-    <ul class="list-group">
+<ng-container>
+    <ul class="list-group" style="max-height: calc(100vh - 260px); overflow-y: auto;" (scroll)="onScroll($event)">
         <li *ngFor="let turno of historial" class="list-group-item" [appHover]="'active'">
             <div class="list-group-item-text">
                 <div>
@@ -35,4 +35,4 @@
             [titulo]="'No hay resultados'" subtitulo="No se ha registrado ningún turno para el paciente">
         </plex-label>
     </div>
-</fieldset>
+</ng-container>
