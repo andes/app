@@ -1,3 +1,16 @@
+# [5.173.0](https://github.com/andes/app/compare/v5.172.0...v5.173.0) (2026-05-27)
+
+
+### Bug Fixes
+
+* **CIT-415:** Ventanilla: No es posible dar turno del dia ([#3348](https://github.com/andes/app/issues/3348)) ([e2c7784](https://github.com/andes/app/commit/e2c77848e8d3859d9a9e0ea9f3ebd72391f38630))
+* **MPI:** chequea existencia de datos antes de asignar ([#3356](https://github.com/andes/app/issues/3356)) ([3042874](https://github.com/andes/app/commit/3042874c3c4502e71c468efa7dcac7f419fb71e3))
+
+
+### Features
+
+* **REC-168:** Modificaciones visuales en vista de recetas ([#3274](https://github.com/andes/app/issues/3274)) ([1a2651b](https://github.com/andes/app/commit/1a2651b49a477ab5ada7f837c2d517f9f0d3c019))
+
 # [5.172.0](https://github.com/andes/app/compare/v5.171.0...v5.172.0) (2026-04-29)
 
 
