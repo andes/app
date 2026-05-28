@@ -4,16 +4,6 @@ import { PacienteBuscarResultado } from '../interfaces/PacienteBuscarResultado.i
 import { PacienteBuscarService } from '../../../core/mpi/services/paciente-buscar.service';
 import { Subscription } from 'rxjs';
 import { PacienteCacheService } from 'src/app/core/mpi/services/pacienteCache.service';
-
-interface PacienteEscaneado {
-    documento: string;
-    apellido: string;
-    nombre: string;
-    sexo: string;
-    fechaNacimiento: Date;
-    scan: string;
-}
-
 @Component({
     selector: 'paciente-buscar',
     templateUrl: 'paciente-buscar.html',

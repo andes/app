@@ -86,13 +86,16 @@ export class PacienteBuscarService {
     public findByScan(pacienteEscaneado: PacienteEscaneado) {
         const textoLibre = pacienteEscaneado.scan;
         // 1. Busca por documento escaneado (simplequery)
-        return this.pacienteService.get({
+        const query: any = {
             apellido: pacienteEscaneado.apellido,
             nombre: pacienteEscaneado.nombre,
             documento: pacienteEscaneado.documento,
-            sexo: pacienteEscaneado.sexo,
             activo: true
-        }).pipe(
+        };
+        if (pacienteEscaneado.sexo) {
+            query.sexo = pacienteEscaneado.sexo;
+        }
+        return this.pacienteService.get(query).pipe(
             map(resultado => {
                 return resultado.length ? { scan: textoLibre, pacientes: resultado, err: null } : null;
             }),
@@ -103,13 +106,16 @@ export class PacienteBuscarService {
                 }
 
                 // 1.3. Si no encontró el paciente escaneado, busca uno similar (suggest)
-                return this.pacienteService.match({
+                const querySuggest: any = {
                     apellido: pacienteEscaneado.apellido,
                     nombre: pacienteEscaneado.nombre,
                     documento: pacienteEscaneado.documento,
-                    sexo: pacienteEscaneado.sexo,
                     fechaNacimiento: pacienteEscaneado.fechaNacimiento
-                }).pipe(
+                };
+                if (pacienteEscaneado.sexo) {
+                    querySuggest.sexo = pacienteEscaneado.sexo;
+                }
+                return this.pacienteService.match(querySuggest).pipe(
                     map((resultadoSuggest: any) => {
                         // 1.3.1. Si no encontró ninguno, retorna un array vacio
                         if (!resultadoSuggest.length) {
@@ -230,6 +236,17 @@ export const DocumentoEscaneados: DocumentoEscaneado[] = [
         grupoNombre: 2,
         grupoSexo: 3,
         grupoFechaNacimiento: 5
+    },
+
+    // DNI Argentino versión 2026 (sin sexo)
+    // Formato: NroTramite@Apellido@NombreCompleto@NroDni@Ejemplar@FechaNacimiento@FechaEmision@TokenValidacion
+    {
+        regEx: /([0-9]+)@([a-zA-ZñÑáéíóúÁÉÍÓÚÜü'\-\s]+)@([a-zA-ZñÑáéíóúÁÉÍÓÚÜü'\-\s]+)@([0-9]+)@([A-Z]+)@([0-9]{2}\/[0-9]{2}\/[0-9]{4})@([0-9]{2}\/[0-9]{2}\/[0-9]{4})@(.*)/i,
+        grupoNumeroDocumento: 4,
+        grupoApellido: 2,
+        grupoNombre: 3,
+        grupoSexo: 0,
+        grupoFechaNacimiento: 6
     },
 
     // QR ACTA DE NACIMIENTO
