@@ -25,12 +25,12 @@
                         recetaPrincipal.medicamento.cantidad}} {{recetaPrincipal.medicamento.presentacion }}(s)
 
                     </small></p>
-                <p *ngIf="recetaPrincipal.medicamento.dosisDiaria.dosis"><small>{{
-                        '|' +recetaPrincipal.medicamento.dosisDiaria.dias ? recetaPrincipal.medicamento.dosisDiaria.dias
+                <p *ngIf="recetaPrincipal.medicamento.dosisDiaria?.dosis"><small>{{
+                        '|' +recetaPrincipal.medicamento.dosisDiaria?.dias ? recetaPrincipal.medicamento.dosisDiaria?.dias
                         + ' día(s)' : '' }} {{
-                        recetaPrincipal.medicamento.dosisDiaria.dosis }} {{
+                        recetaPrincipal.medicamento.dosisDiaria?.dosis }} {{
                         recetaPrincipal.medicamento.presentacion }} cada {{
-                        recetaPrincipal.medicamento.dosisDiaria.intervalo?.nombre }}</small>
+                        recetaPrincipal.medicamento.dosisDiaria?.intervalo?.nombre }}</small>
 
                 </p>
             </div>
@@ -62,12 +62,16 @@
             </ng-container>
 
         </div>
-        <div class="data" *ngIf="recetaPrincipal.medicamento.tratamientoProlongado">
-            <div>
+        <div class="data" *ngIf="recetaPrincipal.medicamento.tratamientoProlongado || recetaPrincipal.medicamento.esMagistral === true">
+            <div *ngIf="recetaPrincipal.medicamento.tratamientoProlongado">
                 <b>Tratamiento Prolongado</b>
                 <p class="texto-detalle">{{recetaPrincipal.medicamento?.tiempoTratamiento?.nombre}} - orden: {{
                     recetaPrincipal.medicamento?.ordenTratamiento + 1 }} de
                     {{recetaPrincipal.medicamento?.tiempoTratamiento?.id}}</p>
+            </div>
+            <div *ngIf="recetaPrincipal.medicamento.esMagistral === true">
+                <b>Es Magistral</b>
+                <p class="texto-detalle">Sí</p>
             </div>
         </div>
     </div>
