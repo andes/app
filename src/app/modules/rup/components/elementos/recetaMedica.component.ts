@@ -207,6 +207,11 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
 
     preAgregarMedicamento(form) {
         if (form.formValid) {
+            if ((this.ingresoCantidadManual || this.medicamento.cantidad?.valor === 'Otro') && (!this.valorCantidadManual || Number(this.valorCantidadManual) <= 0)) {
+                this.plex.info('warning', 'Debe ingresar un valor numérico mayor a cero para la cantidad o seleccionar una opción válida.');
+                return;
+            }
+
             // si se ingresó una cantidad manualmente y no se seleccionó ninguna presentación comercial
             if (this.unidades.length && this.ingresoCantidadManual) {
                 this.showModalCantidadManual();
@@ -259,8 +264,10 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     agregarMedicamento() {
         if (this.medicamento.cantidad?.valor && this.medicamento.cantidad?.valor !== 'Otro') {
             this.medicamento.cantidad = Number(this.medicamento.cantidad.valor);
-        } else if (this.ingresoCantidadManual && this.valorCantidadManual) {
-            this.medicamento.cantidad = this.valorCantidadManual;
+        } else if (this.ingresoCantidadManual || this.medicamento.cantidad?.valor === 'Otro') {
+            this.medicamento.cantidad = this.valorCantidadManual ? Number(this.valorCantidadManual) : null;
+        } else if (this.medicamento.cantidad && typeof this.medicamento.cantidad === 'object') {
+            this.medicamento.cantidad = null;
         }
 
         this.registro.valor.medicamentos.push(this.medicamento);
