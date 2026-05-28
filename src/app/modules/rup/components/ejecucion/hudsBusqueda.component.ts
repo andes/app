@@ -3,7 +3,7 @@ import { Plex } from '@andes/plex';
 import { AfterContentInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Optional, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
 import { Observable, forkJoin } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { InternacionResumenHTTP } from 'src/app/apps/rup/mapa-camas/services/resumen-internacion.http';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
@@ -289,10 +289,10 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     public tiposPrescripcion = [
         { id: 'medicamento', nombre: 'Medicamento' },
         { id: 'insumo', nombre: 'Dispositivos / Insumos' },
-        { id: 'alimentacion', nombre: 'Alimentación' },
-        { id: 'magistral', nombre: 'Magistrales' }
+        { id: 'alimentacion', nombre: 'Alimentación' }
     ];
     public tipoPrescripcionSeleccionado = this.tiposPrescripcion[0];
+    private ultimoTipoCargado = 'medicamento';
     public fechaInicioRecetas;
     public fechaFinRecetas;
 
@@ -1019,9 +1019,16 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     }
 
     filtrarRecetas() {
+        const tipoActual = this.tipoPrescripcionSeleccionado?.id || null;
+        if (tipoActual !== this.ultimoTipoCargado) {
+            this.ultimoTipoCargado = tipoActual;
+            this.groupRecetas();
+            return;
+        }
+
         const searchTerm = this.searchRecetas?.toLowerCase() || '';
 
-        if (!searchTerm && !this.filtroRecetas && !this.tipoPrescripcionSeleccionado && !this.fechaInicioRecetas && !this.fechaFinRecetas) {
+        if (!searchTerm && !this.filtroRecetas && !this.fechaInicioRecetas && !this.fechaFinRecetas) {
             this.busquedaRecetas = this.busquedaRecetasOriginal;
             return;
         }
@@ -1050,31 +1057,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             });
         }
 
-        if (this.tipoPrescripcionSeleccionado) {
-            const tipo = this.tipoPrescripcionSeleccionado.id;
-            filteredRecetas = filteredRecetas.filter(group => {
-                const medicamento = group.recetaVisible.medicamento;
-                const concept = medicamento.concepto;
-                const semanticTag = concept.semanticTag;
-                const term = concept.term.toLowerCase();
-
-                switch (tipo) {
-                    case 'medicamento':
-                        return true;
-                    case 'insumo':
-                        return (semanticTag === 'objeto físico' || semanticTag === 'producto') && !term.includes('alimentacion') && !term.includes('fórmula');
-                    case 'alimentacion':
-                        // Assuming semantic tag is 'producto' but checking term for 'alimentacion' as heuristic
-                        return semanticTag === 'producto' && (term.includes('alimentacion') || term.includes('fórmula') || term.includes('leche'));
-                    case 'magistral':
-                        // Check if properties indicate magistral, currently no explicit property known, might be in concept term
-                        return term.includes('magistral');
-                    default:
-                        return true;
-                }
-            });
-        }
-
         if (this.filtroRecetas) {
             filteredRecetas = filteredRecetas.reduce((acc, receta) => {
                 const vigenteRecetas = receta.recetas.filter(r => r.estadoActual.tipo === 'vigente');
@@ -1099,13 +1081,82 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
     async groupRecetas() {
         const estadoDispensa = ['sin-dispensa', 'dispensada', 'dispensa-parcial'].toString();
-        const options = { pacienteId: this.paciente.id, estadoDispensa };
+        const options: any = { pacienteId: this.paciente.id, estadoDispensa };
 
         this.recetasService.getMotivosSuspension().subscribe((motivos) => {
             this.motivosSuspension = motivos.map(m => ({ id: m.id, nombre: m.label }));
         });
 
-        this.recetasService.getRecetas(options).subscribe((data) => {
+        const tipo = this.tipoPrescripcionSeleccionado?.id || null;
+
+        let request$: Observable<any[]>;
+        if (!tipo) {
+            const recetas$ = this.recetasService.getRecetas(options);
+            const insumos$ = this.recetasService.getRecetasInsumos(options).pipe(
+                map((data: any[]) => data.map(receta => ({
+                    ...receta,
+                    medicamento: {
+                        concepto: {
+                            term: receta.insumo?.nombre || receta.insumo?.concepto?.term || '',
+                            conceptId: receta.insumo?.id || receta.insumo?.concepto?.conceptId || '',
+                            semanticTag: 'producto'
+                        },
+                        tratamientoProlongado: receta.insumo?.tratamientoProlongado,
+                        tiempoTratamiento: receta.insumo?.tiempoTratamiento,
+                        cantidad: receta.insumo?.cantidad,
+                        ordenTratamiento: receta.insumo?.ordenTratamiento
+                    }
+                })))
+            );
+            request$ = forkJoin([recetas$, insumos$]).pipe(
+                map(([recetas, insumos]) => [...recetas, ...insumos])
+            );
+        } else if (tipo === 'medicamento') {
+            const recetas$ = this.recetasService.getRecetas(options);
+            const magistrales$ = this.recetasService.getRecetasInsumos({ ...options, tipo: 'magistral' }).pipe(
+                map((data: any[]) => data.map(receta => ({
+                    ...receta,
+                    medicamento: {
+                        concepto: {
+                            term: receta.insumo?.nombre || receta.insumo?.concepto?.term || '',
+                            conceptId: receta.insumo?.id || receta.insumo?.concepto?.conceptId || '',
+                            semanticTag: 'producto'
+                        },
+                        tratamientoProlongado: receta.insumo?.tratamientoProlongado,
+                        tiempoTratamiento: receta.insumo?.tiempoTratamiento,
+                        cantidad: receta.insumo?.cantidad,
+                        ordenTratamiento: receta.insumo?.ordenTratamiento
+                    }
+                })))
+            );
+            request$ = forkJoin([recetas$, magistrales$]).pipe(
+                map(([recetas, magistrales]) => [...recetas, ...magistrales])
+            );
+        } else {
+            let tipoInsumo = 'dispositivo';
+            if (tipo === 'alimentacion') {
+                tipoInsumo = 'nutricion';
+            }
+            options.tipo = tipoInsumo;
+            request$ = this.recetasService.getRecetasInsumos(options).pipe(
+                map((data: any[]) => data.map(receta => ({
+                    ...receta,
+                    medicamento: {
+                        concepto: {
+                            term: receta.insumo?.nombre || receta.insumo?.concepto?.term || '',
+                            conceptId: receta.insumo?.id || receta.insumo?.concepto?.conceptId || '',
+                            semanticTag: 'producto'
+                        },
+                        tratamientoProlongado: receta.insumo?.tratamientoProlongado,
+                        tiempoTratamiento: receta.insumo?.tiempoTratamiento,
+                        cantidad: receta.insumo?.cantidad,
+                        ordenTratamiento: receta.insumo?.ordenTratamiento
+                    }
+                })))
+            );
+        }
+
+        request$.subscribe((data) => {
             const grupoRecetas = data.reduce((acc, receta) => {
                 const conceptId = receta.medicamento.concepto.conceptId;
                 if (!acc[conceptId]) {
@@ -1120,10 +1171,10 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                     conceptId: key,
                     recetas: grupoRecetas[key],
                     recetaVisible: this.recetaVisible(grupoRecetas[key])
-
                 }))
             );
             this.busquedaRecetasOriginal = this.busquedaRecetas;
+            this.filtrarRecetas();
         });
     }
 
