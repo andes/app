@@ -211,7 +211,7 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy,
             nuevoRegistro.relacionadoCon = relaciones;
         }
 
-        if (snomedConcept.semanticTag === 'procedimiento' || snomedConcept.semanticTag === 'elemento de registro' || snomedConcept.semanticTag === 'régimen/tratamiento' || snomedConcept.semanticTag === 'situación') {
+        if (snomedConcept.semanticTag === 'procedimiento' || snomedConcept.semanticTag === 'elemento de registro' || snomedConcept.semanticTag === 'régimen/tratamiento' || snomedConcept.semanticTag === 'situación' || snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'evento') {
             this.plantillasService.get(snomedConcept.conceptId, esSolicitud).subscribe(() => { });
         }
         this.registro.registros.push(nuevoRegistro);
@@ -390,7 +390,7 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy,
     }
 
     checkPlantilla(registro) {
-        const checkSemtag = registro.concepto.semanticTag === 'procedimiento' || registro.concepto.semanticTag === 'elemento de registro' || registro.concepto.semanticTag === 'régimen/tratamiento';
+        const checkSemtag = registro.concepto.semanticTag === 'procedimiento' || registro.concepto.semanticTag === 'elemento de registro' || registro.concepto.semanticTag === 'régimen/tratamiento' || registro.concepto.semanticTag === 'situación' || registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'evento';
         return checkSemtag;
     }
 }
