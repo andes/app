@@ -64,7 +64,7 @@
                                     </ng-container>
                                 </div>
                                 <div class="actions">
-                                    <ng-container *ngIf="procedimiento.semanticTag === 'procedimiento' || procedimiento.semanticTag === 'régimen/tratamiento' || procedimiento.semanticTag === 'situación' || procedimiento.semanticTag === 'hallazgo' || procedimiento.semanticTag === 'evento'">
+                                    <ng-container *ngIf="permiteSolicitud">
                                         <plex-bool type="slide" label="es solicitud"
                                                    [(ngModel)]="plantilla.esSolicitud">
                                         </plex-bool>

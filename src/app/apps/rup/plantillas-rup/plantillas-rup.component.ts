@@ -306,4 +306,9 @@ export class PlantillasRUPComponent implements OnInit, OnDestroy {
         return this.procedimiento?.conceptId !== '33633005';
     }
 
+    get permiteSolicitud(): boolean {
+        const tagsPermitidos = ['procedimiento', 'régimen/tratamiento', 'situación', 'hallazgo', 'evento'];
+        return tagsPermitidos.includes(this.procedimiento?.semanticTag);
+    }
+
 }
