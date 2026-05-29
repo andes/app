@@ -10,4 +10,5 @@ export interface ITipoPrestacion {
     ambito?: Array<string>;
     queries?: String[];
     auditable?: Boolean;
+    videoConferencia?: boolean;
 }
