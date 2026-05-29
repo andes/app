@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import * as moment from 'moment';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { IAgenda } from '../../interfaces/turnos/IAgenda';
@@ -19,6 +20,15 @@ export class TurnoService {
     }
     getHistorial(params: any): Observable<any[]> {
         return this.server.get(this.turnoUrl + '/historial', { params: params, showError: true });
+    }
+
+    getTurnosFuturos(params: any): Observable<any[]> {
+        const query = {
+            ...params,
+            estado: 'asignado',
+            desde: moment().startOf('day').toISOString()
+        };
+        return this.getHistorial(query);
     }
 
     /* Devuelve la agenda actualizada */
