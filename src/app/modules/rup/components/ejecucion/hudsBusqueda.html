@@ -53,8 +53,7 @@
 </div>
 
 
-<ng-container
-              *ngIf="mostrarBuscador()">
+<ng-container *ngIf="mostrarBuscador()">
     <div *ngIf="hasRegistrosTotales(filtroActual)" class="mb-2">
         <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholder="Buscar registros..."
                    [autoFocus]="true">
@@ -74,8 +73,8 @@
             <div class="row">
                 <div class="col-12">
                     <plex-select [(ngModel)]="tipoPrescripcionSeleccionado" label="Tipo de prescripción"
-                                 [data]="tiposPrescripcion" idField="id" labelField="nombre" (change)="filtrarRecetas()"
-                                 [readonly]="true">
+                                 [data]="tiposPrescripcion" idField="id" labelField="nombre"
+                                 (change)="filtrarRecetas()">
                     </plex-select>
                 </div>
             </div>
