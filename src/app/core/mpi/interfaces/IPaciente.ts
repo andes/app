@@ -51,6 +51,7 @@ export interface IPaciente {
     reportarError: Boolean;
     nombreCorrectoReportado: String;
     apellidoCorrectoReportado: String;
+    fechaNacimientoCorrectoReportado: Date;
     notaError: string;
     carpetaEfectores?: [{
         organizacion: {

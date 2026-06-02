@@ -115,7 +115,11 @@
                                         titulo="Profesional que valida"
                                         subtitulo="{{ prestacion.data?.solicitud?.profesional | nombre }}">
                             </plex-label>
-                            <plex-label *ngIf="tipo === 'registrosInternacion'" class="prestacion-label" size="md"
+                            <plex-label class="prestacion-label" size="md" case="capitalize" titulo="Organización"
+                                        subtitulo="{{ prestacion.data.solicitud?.organizacion?.nombre || prestacion.data.ejecucion?.organizacion?.nombre || 'Sin organización' }}">
+                            </plex-label>
+
+                            <plex-label *ngIf="prestacion.data.unidadOrganizativa" class="prestacion-label" size="md"
                                         case="capitalize" titulo="Unidad organizativa"
                                         subtitulo="{{ prestacion.data?.unidadOrganizativa?.term || 'Sin unidad organizativa' }}">
                             </plex-label>

@@ -4,7 +4,7 @@
     .plex-box-content {
         padding-right: 0;
     }
-} 
+}
 
 //
 .prestacionActual {
@@ -172,6 +172,17 @@
         &.active {
             color: #ffffff !important;
             background-color: #7b2ff7 !important;
+        }
+    }
+}
+
+.nav-item-guardia {
+    a {
+        color: #c1121f !important;
+
+        &.active {
+            color: #ffffff !important;
+            background-color: #c1121f !important;
         }
     }
 }

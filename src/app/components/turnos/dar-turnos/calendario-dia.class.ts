@@ -63,11 +63,14 @@ export class CalendarioDia {
                            - Tengan turnos del dia o programados disponibles
                         */
                         const exclusivosGestion = this.bloquesExclusivosGestion(unaAgenda);
-                        if (exclusivosGestion.length) {
-                            this.estado = (exclusivosGestion.some(bloque => bloque.restantesGestion > 0) ? 'disponible' : 'ocupado');
+                        const tieneGestion = exclusivosGestion.some(bloque => bloque.restantesGestion > 0);
+                        if (exclusivosGestion.length && tieneGestion) {
+                            this.estado = 'disponible';
                             this.turnosDisponibles += exclusivosGestion.map(bloque => bloque.restantesGestion).reduce((a, b) => a + b, 0);
+                        } else if (this.delDiaDisponibles > 0) {
+                            this.estado = 'disponible';
                         } else {
-                            this.estado = (this.delDiaDisponibles > 0 && this.gestionDisponibles === 0) ? 'disponible' : 'ocupado';
+                            this.estado = 'ocupado';
                         }
 
                     } else {

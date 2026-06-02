@@ -12,6 +12,14 @@ import { IPaciente } from '../interfaces/IPaciente';
 import { PacienteService } from '../services/paciente.service';
 import { ConstantesService } from 'src/app/services/constantes.service';
 import { Auth } from 'projects/auth/src/lib/auth.service';
+import { OrganizacionService } from '../../../services/organizacion.service';
+import { PaisService } from '../../../services/pais.service';
+import { ProvinciaService } from '../../../services/provincia.service';
+import { LocalidadService } from '../../../services/localidad.service';
+import { IProvincia } from '../../../interfaces/IProvincia';
+import { ILocalidad } from '../../../interfaces/ILocalidad';
+import { IPais } from 'src/app/interfaces/IPais';
+import { cache } from '@andes/shared';
 @Component({
     selector: 'datos-basicos',
     templateUrl: 'datos-basicos.html',
@@ -38,7 +46,7 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     noPoseeDNI = false;
     botonRegistroDNI = false;
     pacienteExtranjero: IPaciente;
-    pacienteEditado = { nombre: '', apellido: '' };
+    pacienteEditado = { nombre: '', apellido: '', fechaNacimiento: null as Date | null };
     public requiereGenero: boolean;
     public nuevoPaciente = false;
     public disableRegistro = false;
@@ -47,6 +55,15 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     public patronCUIL = /^\d{11}$/;
     public reportarError = false;
     public hoy: Date = new Date();
+    public paisesNacimiento$: Observable<IPais[]>;
+    public provinciasNacimiento$: Observable<IProvincia[]>;
+    public localidadesNacimiento$: Observable<ILocalidad[]>;
+    public paisActual: IPais[] = null;
+    public provinciaActual = null;
+    public localidadActual = null;
+    public nacioLocActual = false;
+    public nacioProvActual = false;
+    public nacioPaisActual = false;
 
     // para registro de bebes
     busquedaTutor: IPacienteMatch[] | IPaciente[] = [];
@@ -87,6 +104,10 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
         private pacienteService: PacienteService,
         private parentescoService: ParentescoService,
         private constantesService: ConstantesService,
+        private organizacionService: OrganizacionService,
+        private paisService: PaisService,
+        private provinciaService: ProvinciaService,
+        private localidadService: LocalidadService,
         private auth: Auth
 
     ) {
@@ -158,6 +179,8 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
         this.generos = this.constantesService.search({ source: 'mpi:genero' }).pipe(
             map(res => res.map(g => ({ id: g.key, nombre: g.nombre })))
         );
+        this.loadPaisesNacimiento();
+        this.loadContextoLugarNacimiento();
         this.estadosCiviles = enumerados.getObjEstadoCivil();
         this.estados = enumerados.getEstados();
         this.parentescoService.get().subscribe(resultado => {
@@ -244,9 +267,142 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     registrarError() {
         this.pacienteEditado.nombre = this.paciente.nombre;
         this.pacienteEditado.apellido = this.paciente.apellido;
+        this.pacienteEditado.fechaNacimiento = this.paciente.fechaNacimiento;
         this.paciente.reportarError = true;
         this.changes.emit({ pacienteError: this.pacienteEditado });
     }
+
+    // -------------------- LUGAR NACIMIENTO -------------------
+
+    private loadContextoLugarNacimiento() {
+        this.organizacionService.getById(this.auth.organizacion.id).pipe(
+            cache()
+        ).subscribe(org => {
+            this.provinciaActual = org?.direccion?.ubicacion?.provincia;
+            this.localidadActual = org?.direccion?.ubicacion?.localidad;
+            this.updateLugarNacimientoActual();
+        });
+
+        this.paisService.get({ nombre: 'Argentina' }).pipe(
+            cache()
+        ).subscribe(pais => {
+            this.paisActual = pais;
+            this.updateLugarNacimientoActual();
+        });
+    }
+
+    private updateLugarNacimientoActual() {
+        const lugarNacimiento = this.paciente?.lugarNacimiento;
+        if (!lugarNacimiento || !this.paisActual?.[0] || !this.provinciaActual) {
+            return;
+        }
+
+        this.nacioPaisActual = lugarNacimiento.pais?.id === this.paisActual[0].id;
+        this.nacioProvActual = lugarNacimiento.provincia?.id === this.provinciaActual.id;
+        this.nacioLocActual = lugarNacimiento.localidad?.id === this.localidadActual?.id;
+
+        if (this.nacioPaisActual) {
+            this.loadProvinciaNacimiento();
+        }
+
+        if (this.nacioPaisActual && this.nacioProvActual && lugarNacimiento.provincia?.id) {
+            this.loadLocalidadesNacimiento(lugarNacimiento.provincia, false);
+        }
+    }
+
+    loadPaisesNacimiento() {
+        this.paisesNacimiento$ = this.paisService.get({}).pipe(
+            cache()
+        );
+    }
+
+    loadProvinciaNacimiento() {
+        this.provinciasNacimiento$ = this.provinciaService.get({}).pipe(
+            cache()
+        );
+    }
+
+    loadLocalidadesNacimiento(provincia, resetLocalidad = true) {
+        if (resetLocalidad) {
+            this.paciente.lugarNacimiento.localidad = null;
+        }
+
+        if (provincia && provincia.id) {
+            this.nacioProvActual = (provincia.id === this.provinciaActual?.id);
+            this.localidadesNacimiento$ = this.localidadService.getXProvincia(provincia.id).pipe(
+                cache()
+            );
+        } else {
+            this.localidadesNacimiento$ = null;
+            this.nacioLocActual = false;
+            this.paciente.lugarNacimiento.provincia = null;
+            this.paciente.lugarNacimiento.localidad = null;
+        }
+    }
+
+    updateNacioLocalidadActual() {
+        const localidad = this.paciente.lugarNacimiento.localidad;
+        this.paciente.lugarNacimiento.lugar = null;
+        if (localidad && localidad.id) {
+            this.nacioLocActual = (localidad.id === this.localidadActual?.id);
+        }
+    }
+
+    loadPaisActualNacimiento() {
+        const pais = this.paciente.lugarNacimiento.pais;
+        if (pais && pais.id) {
+            this.nacioPaisActual = (pais.id === this.paisActual?.[0]?.id);
+            if (this.nacioPaisActual) {
+                this.loadProvinciaNacimiento();
+                this.paciente.lugarNacimiento.lugar = null;
+            }
+        }
+        this.paciente.lugarNacimiento.provincia = null;
+        this.paciente.lugarNacimiento.localidad = null;
+        this.localidadesNacimiento$ = null;
+        this.nacioLocActual = false;
+        this.nacioProvActual = false;
+    }
+
+    changePaisActualNacimiento() {
+        if (this.nacioPaisActual) {
+            this.loadProvinciaNacimiento();
+            this.paciente.lugarNacimiento.pais = this.paisActual?.[0] || null;
+            this.paciente.lugarNacimiento.lugar = null;
+        } else {
+            this.paciente.lugarNacimiento.pais = null;
+            this.paciente.lugarNacimiento.provincia = null;
+            this.paciente.lugarNacimiento.localidad = null;
+        }
+        this.localidadesNacimiento$ = null;
+        this.nacioLocActual = false;
+        this.nacioProvActual = false;
+    }
+
+    changeProvActualNacimiento() {
+        if (this.nacioProvActual) {
+            this.paciente.lugarNacimiento.provincia = this.provinciaActual;
+            this.loadLocalidadesNacimiento(this.provinciaActual);
+        } else {
+            this.loadProvinciaNacimiento();
+            this.nacioLocActual = false;
+            this.localidadesNacimiento$ = null;
+            this.paciente.lugarNacimiento.provincia = null;
+            this.paciente.lugarNacimiento.localidad = null;
+        }
+    }
+
+    changeLocalidadActualNacimiento() {
+        if (this.nacioLocActual) {
+            this.paciente.lugarNacimiento.localidad = this.localidadActual;
+            this.paciente.lugarNacimiento.lugar = null;
+        } else {
+            this.paciente.lugarNacimiento.localidad = null;
+            this.paciente.lugarNacimiento.lugar = null;
+            this.loadLocalidadesNacimiento(this.paciente.lugarNacimiento.provincia);
+        }
+    }
+
     // --------------  PARA REGISTRO DE BEBES -----------------
 
     onSearchStart() {
@@ -381,12 +537,9 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     }
 
     verificarNombreApellido(data) {
-        if (data.nombre) {
-            this.pacienteEditado.nombre = data.nombre;
-        }
-        if (data.apellido) {
-            this.pacienteEditado.apellido = data.apellido;
-        }
+        this.pacienteEditado.nombre = data.hasOwnProperty('nombre') ? data.nombre : this.pacienteEditado.nombre;
+        this.pacienteEditado.apellido = data.hasOwnProperty('apellido') ? data.apellido : this.pacienteEditado.apellido;
+        this.pacienteEditado.fechaNacimiento = data.hasOwnProperty('fechaNacimiento') ? data.fechaNacimiento : this.pacienteEditado.fechaNacimiento;
         this.changes.emit({ pacienteError: this.pacienteEditado });
     }
 

@@ -28,6 +28,17 @@ plex-tab {
     }
 }
 
+.nav-item-guardia {
+    a {
+        color: #c1121f !important;
+
+        &.active {
+            color: #ffffff !important;
+            background-color: #c1121f !important;
+        }
+    }
+}
+
 form~form {
     border: none;
 }
