@@ -24,6 +24,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { RecetaService } from 'src/app/services/receta.service';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { ITurno } from '../../../../interfaces/turnos/ITurno';
+import { permitePlantilla } from '../../helpers/semantic-tags.helper';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -564,7 +565,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         const elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
         this.elementosRUPService.coleccionRetsetId[String(snomedConcept.conceptId)] = elementoRUP.params;
 
-        if (snomedConcept.semanticTag === 'procedimiento' || snomedConcept.semanticTag === 'elemento de registro' || snomedConcept.semanticTag === 'régimen/tratamiento' || snomedConcept.semanticTag === 'situación' || snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'evento') {
+        if (permitePlantilla(snomedConcept.semanticTag)) {
             this.ps.get(snomedConcept.conceptId, esSolicitud).subscribe(() => { });
         }
 
@@ -961,10 +962,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     }
 
     checkPlantilla(registro) {
-
-        const checkSemtag = registro.concepto.semanticTag === 'procedimiento' || registro.concepto.semanticTag === 'elemento de registro' || registro.concepto.semanticTag === 'régimen/tratamiento' || registro.concepto.semanticTag === 'situación' || registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'evento';
-
-        return checkSemtag;
+        return permitePlantilla(registro.concepto.semanticTag);
     }
 
     onPacs() {
