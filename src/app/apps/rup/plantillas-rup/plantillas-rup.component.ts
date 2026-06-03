@@ -10,6 +10,7 @@ import { PrestacionesService } from '../../../../app/modules/rup/services/presta
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
+import { SEMANTIC_TAGS_CON_PLANTILLA } from '../../../modules/rup/helpers/semantic-tags.helper';
 @Component({
     selector: 'app-plantillas-rup',
     templateUrl: './plantillas-rup.component.html',
@@ -155,7 +156,7 @@ export class PlantillasRUPComponent implements OnInit, OnDestroy {
 
         const query = {
             search: this.searchTerm.trim(),
-            semanticTag: ['procedimiento', 'elemento de registro', 'régimen/tratamiento', 'situación', 'hallazgo', 'evento']
+            semanticTag: SEMANTIC_TAGS_CON_PLANTILLA
         };
 
         this.snomedService.get(query)
@@ -182,7 +183,7 @@ export class PlantillasRUPComponent implements OnInit, OnDestroy {
     }
 
 
-    cargarPlantillas(procedimiento: any) {
+    cargarPlantillas(procedimiento: ISnomedConcept) {
         this.procedimiento = procedimiento;
         const elementoRUP = this.elementoRupService.buscarElemento(procedimiento);
 
