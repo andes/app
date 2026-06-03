@@ -196,7 +196,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     public permisosVac;
     public permisosRec;
     public permisosGuardia;
-    public pacienteSelected = null;
+    public pacienteSelected: IPaciente | null = null;
 
 
     constructor(
@@ -252,11 +252,13 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         }
         this.getProfesional();
 
+        // se setea el filtro inicial a visualizar en el sidebar
         this.filtroActual = this.permisosCompletos ? 'trastorno' :
-            (this.permisosParciales || this.permisosLab) ? 'laboratorios' :
-                (this.permisosVac) ? '' :
-                    (this.permisosGuardia) ? 'guardias' :
-                        'recetas';
+            (this.permisosGuardia) ? 'guardias' :
+                (this.permisosParciales || this.permisosRec) ? 'recetas' :
+                    (this.permisosLab) ? 'laboratorios' :
+                        'vacunas';
+
         this.pacienteSelected = this.paciente;
 
         if (this.filtroActual === 'recetas') {
@@ -658,7 +660,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             const fechaB = moment(b.fecha);
             return fechaB.diff(fechaA);
         });
-
     }
 
     private ordenarGuardias(guardias) {
@@ -672,16 +673,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     // Trae los cdas registrados para el paciente
     buscarCDAPacientes(token) {
         forkJoin({
-
-
-
-
-            // DEBERIA ARMAR ESTOS PARAMETROS SEGUN LOS PERMISOS O SUBSANAMOS ALGUNAS COSITAS QUE
-            // PUEDA TRAER DE MAS OCULTANDOLO EN LA VISTA?
-
-
-
-
             protocolos: this.laboratorioService.getProtocolos(this.paciente.id),
             cdaByPaciente: this.servicioPrestacion.getCDAByPaciente(this.paciente.id, token)
         }).subscribe({

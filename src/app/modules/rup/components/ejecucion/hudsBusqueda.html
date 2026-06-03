@@ -33,28 +33,29 @@
                          tooltip="Buscar nuevos registros" [disabled]="disabledBtnCDA" (click)="regenerarCDA()">
             </plex-button>
         </div>
-    </div>
-    <div class="grow d-flex w-100" *ngIf="filtroActual === 'planes' || filtroActual === 'recetas'">
-        <plex-options *ngIf="filtroActual === 'planes'" class="filtros-ambitos" (activated)='setAmbitoOrigen($event)'
-                      [items]="filtrosAmbitos">
-        </plex-options>
-        <div class="d-flex align-items-center justify-content-end">
-            <suspender-medicacion *ngIf="filtroActual==='recetas' && seleccionRecetas.length > 0"
-                                  [seleccionRecetas]="seleccionSuspender" [motivoSelector]="motivoSuspensionSelector"
-                                  [motivosSuspension]="motivosSuspension" [profesional]="profesional"
-                                  (reset)="resetSeleccionRecetas()">
-            </suspender-medicacion>
-            <plex-button type="info" size="sm" [icon]="showFiltros ? 'chevron-up' : 'chevron-down'"
-                         [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" class="float-right"
-                         tooltipPosition="left" (click)="toogleFiltros()">
-            </plex-button>
+
+        <div class="grow d-flex w-100" *ngIf="filtroActual === 'planes' || filtroActual === 'recetas'">
+            <plex-options *ngIf="filtroActual === 'planes'" class="filtros-ambitos"
+                          (activated)='setAmbitoOrigen($event)' [items]="filtrosAmbitos">
+            </plex-options>
+            <div class="d-flex align-items-center justify-content-end">
+                <suspender-medicacion *ngIf="filtroActual==='recetas' && seleccionRecetas.length > 0"
+                                      [seleccionRecetas]="seleccionSuspender"
+                                      [motivoSelector]="motivoSuspensionSelector"
+                                      [motivosSuspension]="motivosSuspension" [profesional]="profesional"
+                                      (reset)="resetSeleccionRecetas()">
+                </suspender-medicacion>
+                <plex-button type="info" size="sm" [icon]="showFiltros ? 'chevron-up' : 'chevron-down'"
+                             [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" class="float-right"
+                             tooltipPosition="left" (click)="toogleFiltros()">
+                </plex-button>
+            </div>
         </div>
     </div>
 </div>
 
 
-<ng-container
-              *ngIf="mostrarBuscador()">
+<ng-container *ngIf="mostrarBuscador()">
     <div *ngIf="hasRegistrosTotales(filtroActual)" class="mb-2">
         <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholder="Buscar registros..."
                    [autoFocus]="true">
@@ -70,6 +71,7 @@
 
     <!-- Vista Recetas -->
     <ng-container *ngIf="filtroActual === 'recetas'">
+        <hr class="mt-0 mb-0">
         <ng-container *ngIf="showFiltros">
             <div class="row">
                 <div class="col-12">
@@ -92,8 +94,8 @@
                 </div>
             </div>
         </ng-container>
-        <plex-text [(ngModel)]="searchRecetas" name="searchRecetas" (change)="filtrarRecetas()"
-                   placeholder="Buscar recetas..." [autoFocus]="true">
+        <plex-text *ngIf="busquedaRecetas?.length" [(ngModel)]="searchRecetas" name="searchRecetas"
+                   (change)="filtrarRecetas()" placeholder="Buscar recetas..." [autoFocus]="true">
         </plex-text>
         <div class="my-2">
             <ul *ngIf="busquedaRecetas?.length" class="hover listado list-unstyled">
@@ -172,16 +174,16 @@
         </div>
 
         <div *ngIf="!busquedaRecetas?.length">
-            <hr class="mt-0">
             <div class="item-lista-vacia">
                 <plex-label size="sm" justify="center" icon="adi adi-listado-receta"
                             titulo="No hay recetas registradas">
                 </plex-label>
             </div>
         </div>
-    </ng-container>
+    </ng-container> <!-- vista recetas -->
+</ng-container> <!-- buscador -->
 
-</ng-container>
+
 <div class="row huds-busqueda">
     <div class="col mb-0">
         <!-- Vista: SOLICITUDES -->
