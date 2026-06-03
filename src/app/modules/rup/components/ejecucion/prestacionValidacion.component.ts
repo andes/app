@@ -122,6 +122,28 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
     get profesionales() {
         let profesionales = [...(this.prestacion?.profesionalesRegistrantes || [])];
+
+        // si el backend no envía profesionalesRegistrantes, se computa
+        // a partir de los createdBy de cada registro en ejecución
+        if (profesionales.length === 0 && this.prestacion?.ejecucion?.registros) {
+            const map = new Map();
+            this.prestacion.ejecucion.registros.forEach(r => {
+                const cb = r.createdBy;
+                if (cb) {
+                    const key = cb.id || cb._id;
+                    if (!map.has(key)) {
+                        map.set(key, {
+                            id: cb.id || cb._id,
+                            nombre: cb.nombre,
+                            apellido: cb.apellido,
+                            documento: cb.documento
+                        });
+                    }
+                }
+            });
+            profesionales = Array.from(map.values());
+        }
+
         if (this.ultimoValidador) {
             const validador = this.ultimoValidador.createdBy;
             const index = profesionales.findIndex(p => (p.id || p._id) === (validador.id || validador._id) || String(p.documento) === String(validador.documento));
