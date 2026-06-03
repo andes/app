@@ -4,6 +4,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { RupElement } from '..';
 import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
 import { RUPComponent } from '../../core/rup.component';
+import { permitePlantilla } from '../../../helpers/semantic-tags.helper';
 
 /**
  * DEPRECADO
@@ -166,7 +167,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit,
             nuevoRegistro.relacionadoCon = relaciones;
         }
 
-        if (snomedConcept.semanticTag === 'procedimiento' || snomedConcept.semanticTag === 'elemento de registro' || snomedConcept.semanticTag === 'régimen/tratamiento' || snomedConcept.semanticTag === 'situación' || snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'evento') {
+        if (permitePlantilla(snomedConcept.semanticTag)) {
             this.plantillasService.get(snomedConcept.conceptId, esSolicitud).subscribe(() => { });
         }
         this.registro.registros.push(nuevoRegistro);
