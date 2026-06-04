@@ -83,6 +83,30 @@
                       [innerHTML]="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones"></span>
             </div>
         </div>
+        <div class="col-12">
+            <plex-title size="sm" titulo="Notificaciones"></plex-title>
+            <ng-container *ngIf="existeNotificaciones(prestacionSeleccionada.solicitud?.historial)">
+                <plex-table [columns]="columns" #table="plTable" [headOpacity]="10">
+                    <plex-table-columns>
+                    </plex-table-columns>
+
+                    <tr *ngFor="let notificacion of obtenerNotificaciones(prestacionSeleccionada.solicitud?.historial)">
+                        <td *plTableCol="'fecha'">{{notificacion.fechaDeNotificacion | date:'dd/MM/yyyy HH:mm'}}</td>
+                        <td *plTableCol="'notificadoPor'">{{notificacion.createdBy | nombre}}</td>
+                        <td *plTableCol="'observaciones'">{{notificacion.observaciones}}</td>
+                    </tr>
+                </plex-table>
+            </ng-container>
+            <ng-container *ngIf="!existeNotificaciones(prestacionSeleccionada.solicitud?.historial)">
+                <section>
+                    <div justify="center" class="mt-4" style="margin-bottom: 2em;">
+                        <plex-label class="flex-column" icon="informacion" size="md" direction="column"
+                                    titulo="No existen notificaciones para esta solicitud.">
+                        </plex-label>
+                    </div>
+                </section>
+            </ng-container>
+        </div>
     </div>
     <div class="row" *ngIf="prestacionSeleccionada.estadoActual.tipo === 'anulada'">
         <div class="col-12">
