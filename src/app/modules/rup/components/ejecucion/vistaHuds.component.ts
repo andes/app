@@ -26,6 +26,11 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     public paciente: IPaciente = null;
     public activeIndexPrestacion = 0;
     public activeIndexResumen = 0;
+    public tabsCargadas = {
+        registros: false,
+        historial: false
+    };
+    public internacionesLength = 0;
     public internacione$: Observable<any[]>;
     public registros = [];
     public flagSeguimiento = false;
@@ -113,6 +118,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                         idPaciente: id
                     };
                     this.internacione$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros);
+                    this.internacione$.subscribe(internaciones => this.internacionesLength = internaciones?.length || 0);
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                 });
             });
@@ -181,5 +187,25 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
             registro.data?.prestacion?.snomed?.term;
         const isGuardia = term && term.toLowerCase().includes('emergencia');
         return isGuardia;
+    }
+
+    get historialIndex() {
+        let index = 2; // 0: Accesos, 1: Registros
+        if (this.flagSeguimiento) {
+            index++;
+        }
+        if (this.internacionesLength > 0) {
+            index++;
+        }
+        return index;
+    }
+
+    cambioTabResumen(index: number) {
+        this.activeIndexResumen = index;
+        if (index === 1) {
+            this.tabsCargadas.registros = true;
+        } else if (index === this.historialIndex) {
+            this.tabsCargadas.historial = true;
+        }
     }
 }
