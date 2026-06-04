@@ -79,6 +79,10 @@
             <plex-badge [type]="estadoCama?.color">
                 {{estadoCama?.label}}
             </plex-badge>
+            <plex-badge *ngIf="cama.unidadOrganizativa?.id !== cama.unidadOrganizativaOriginal?.id"
+                        tooltip="Cama prestada" type="info" class="ml-1">
+                <plex-icon name="cama"></plex-icon>
+            </plex-badge>
             <plex-badge *ngIf="cama.sala" type="info" class="ml-1" tooltip="Sala común con varios pacientes">
                 <plex-icon name="paciente-medico"></plex-icon>
             </plex-badge>
