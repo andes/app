@@ -142,6 +142,28 @@ a.adjunto {
     flex-direction: column;
 }
 
+.solicitud-wrapper {
+    margin-top: 1rem;
+
+    ::ng-deep .plex-title {
+        background-color: #0070cc;
+        border-bottom: none;
+        background: var(--heading-background-color);
+
+
+    }
+
+    .info-solicitud {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        row-gap: 20px;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }
+}
+
 @-moz-keyframes parpadeo {
     0% {
         opacity: 1.0;
