@@ -1,65 +1,89 @@
-<ng-container *ngIf="prestacion$ | async as prestacion">
+<ng-container *ngIf="informeIngreso$ | async as informeIngreso">
     <plex-title titulo="INGRESO" size="md">
-        <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'">
-            <ng-content></ng-content>
+        <ng-container *ngIf="permisosMapaCamasService?.ingreso">
+            <plex-button tooltip="Editar ingreso" tooltipPosition="left" icon="pencil" type="warning" size="sm"
+                         (click)="toggleEdit()" class="mr-1">
+            </plex-button>
         </ng-container>
+
+        <ng-content></ng-content>
     </plex-title>
-    <ng-container *ngIf="informeIngreso$ | async as informeIngreso">
-        <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal" [fields]="pacienteFields"
-                          [accesoHuds]="true">
-            <plex-label *ngIf="informeIngreso.situacionLaboral" titulo="Situacion Laboral"
-                        [subtitulo]="informeIngreso.situacionLaboral">
-            </plex-label>
-            <plex-label *ngIf="informeIngreso.nivelInstruccion" titulo="Nivel de Instruccion"
-                        [subtitulo]="informeIngreso.nivelInstruccion">
-            </plex-label>
-            <plex-label *ngIf="informeIngreso.ocupacionHabitual" titulo="Ocupacion Habitual"
-                        [subtitulo]="informeIngreso.ocupacionHabitual?.nombre">
-            </plex-label>
-        </paciente-detalle>
-        <fieldset>
-            <plex-title size="sm" titulo="DATOS DE INTERNACION">
-                <plex-badge *ngIf="prestacion.ejecucion.registros[0].esCensable" type="info" size="sm">
-                    Censable
-                </plex-badge>
-            </plex-title>
-            <plex-grid cols="2">
-                <plex-label titulo="Fecha ingreso"
-                            subtitulo="{{ informeIngreso.fechaIngreso | date: 'dd/MM/yyyy HH:mm' }}">
-                </plex-label>
-                <plex-label titulo="Motivo" subtitulo="{{ informeIngreso.motivo }}">
-                </plex-label>
-                <plex-label titulo="Origen" subtitulo="{{ informeIngreso.origen }}">
-                </plex-label>
-                <plex-label *ngIf="informeIngreso.organizacionOrigen" titulo="Organización origen"
-                            subtitulo="{{ informeIngreso.organizacionOrigen.nombre || informeIngreso.organizacionOrigen }}">
-                </plex-label>
-                <plex-label titulo="Especialidad/es"
-                            subtitulo="{{ informeIngreso.especialidades | enumerar: ['term'] }}">
-                </plex-label>
-                <plex-label titulo="Profesional responsable" subtitulo="{{ informeIngreso.profesional | nombre }}">
-                </plex-label>
-            </plex-grid>
-        </fieldset>
 
-        <fieldset *ngIf="informeIngreso.asociado">
-            <plex-title size="sm" titulo="COBERTURA">
-            </plex-title>
-   <div class="row">
-                <div class="col-6">
-                     <plex-label titulo="Cobertura" [subtitulo]="informeIngreso.asociado">
-                    </plex-label>
-                </div>
-    
+    <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal" [fields]="pacienteFields"
+                      [accesoHuds]="true">
+        <plex-label *ngIf="informeIngreso.situacionLaboral" titulo="Situación laboral"
+                    [subtitulo]="informeIngreso.situacionLaboral?.nombre || informeIngreso.situacionLaboral">
+        </plex-label>
+
+        <plex-label *ngIf="informeIngreso.nivelInstruccion" titulo="Nivel de instrucción"
+                    [subtitulo]="informeIngreso.nivelInstruccion?.nombre || informeIngreso.nivelInstruccion">
+        </plex-label>
+<plex-label
+    *ngIf="informeIngreso?.ocupacionHabitual"
+    titulo="Ocupación habitual"
+    [subtitulo]="informeIngreso?.ocupacionHabitual?.nombre">
+</plex-label>
+       
+
+    </paciente-detalle>
+
+    <fieldset>
+        <plex-title size="sm" titulo="DATOS DE INTERNACIÓN">
+            <plex-badge *ngIf="informeIngreso.esCensable" type="info" size="sm">Censable</plex-badge>
+
+            <ng-container *ngIf="botonRegistroHabilitado$ | async as botonHabilitado">
+                <plex-button *ngIf="botonHabilitado" size="sm" class="mr-1" type="success" (click)="onNuevoRegistro()">
+                    NUEVO REGISTRO
+                </plex-button>
+            </ng-container>
+        </plex-title>
+
+        <plex-grid cols="2">
+            <plex-label titulo="Fecha ingreso" [subtitulo]="informeIngreso.fechaIngreso | date: 'dd/MM/yyyy HH:mm'">
+            </plex-label>
+
+            <plex-label titulo="Motivo" [subtitulo]="informeIngreso.motivo">
+            </plex-label>
+
+            <plex-label *ngIf="informeIngreso.origen?.tipo" titulo="Origen" [subtitulo]="informeIngreso.origen.tipo">
+            </plex-label>
 
 
-                <div *ngIf="informeIngreso.asociado === 'Plan de salud privado o Mutual'"
-                     class="col-6">
-                    <plex-label *ngIf="informeIngreso.obraSocial" titulo="Obra social"
-                                [subtitulo]="informeIngreso.obraSocial.nombre">
-                    </plex-label>
-                </div>
+            <plex-label *ngIf="informeIngreso.origen?.organizacionOrigen" titulo="Organización origen"
+                        [subtitulo]="informeIngreso.origen.organizacionOrigen?.nombre">
+            </plex-label>
+
+            <plex-label *ngIf="informeIngreso.origen?.otraOrganizacion" titulo="Otra organización"
+                        [subtitulo]="informeIngreso.origen.otraOrganizacion">
+            </plex-label>
+
+            <plex-label *ngIf="informeIngreso.organizacionOrigen" titulo="Organización origen"
+                        [subtitulo]="informeIngreso.organizacionOrigen.nombre || informeIngreso.organizacionOrigen">
+            </plex-label>
+
+            <plex-label titulo="Especialidad/es" [subtitulo]="informeIngreso.especialidades | enumerar: ['term']">
+            </plex-label>
+
+            <plex-label titulo="Profesional responsable" [subtitulo]="informeIngreso.profesional | nombre">
+            </plex-label>
+        </plex-grid>
+    </fieldset>
+
+    <!-- Cobertura -->
+    <fieldset *ngIf="informeIngreso.asociado || informeIngreso.cobertura?.obraSocial">
+
+        <plex-title size="sm" titulo="COBERTURA"></plex-title>
+
+        <div class="row">
+            <div class="col-6">
+                <plex-label titulo="Cobertura" [subtitulo]="informeIngreso.cobertura?.tipo || informeIngreso.asociado?.nombre || informeIngreso.asociado">
+                </plex-label>
             </div>
-        </fieldset>
-    </ng-container>
+            <div class="col-6">
+                <plex-label *ngIf="informeIngreso.cobertura?.obraSocial" titulo="Obra social"
+                            [subtitulo]="informeIngreso.cobertura.obraSocial?.nombre">
+                </plex-label>
+            </div>
+        </div>
+    </fieldset>
 </ng-container>

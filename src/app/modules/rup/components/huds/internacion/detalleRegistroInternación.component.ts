@@ -1,4 +1,3 @@
-
 import { Auth } from '@andes/auth';
 import { Component, Input, OnInit } from '@angular/core';
 import { PlanIndicacionesServices } from 'src/app/apps/rup/mapa-camas/services/plan-indicaciones.service';
@@ -65,7 +64,17 @@ export class DetalleRegistroInternacionComponent implements OnInit {
             this.getIndicaciones(this.registro.conceptId, idInternacion, fechaIngreso);
             this.getPrestacion(this.registro.idPrestacion);
         } else {
-            this.registro = Object.values(this.registro);
+            const esObjetoSimple = !this.registro.data || !this.registro.prestacion;
+
+            if (esObjetoSimple) {
+                if (this.registro.otras) {
+                    this.registro = Object.values(this.registro.otras);
+                } else {
+                    this.registro = Object.values(this.registro);
+                }
+            } else {
+                this.registro = [this.registro];
+            }
 
             if (idInternacion) {
                 this.tipo = 'registrosInternacion';
@@ -93,10 +102,12 @@ export class DetalleRegistroInternacionComponent implements OnInit {
         });
     }
 
+
+
     descargarInforme(prestacion) {
         this.requestInProgress = true;
-        const term = prestacion.solicitud.tipoPrestacion.term;
-        const informe = { idPrestacion: prestacion.id };
+        const term = prestacion.solicitud?.tipoPrestacion?.term || 'Internacion';
+        const informe = { idPrestacion: prestacion._id || prestacion.id };
 
         this.servicioDocumentos.descargarInformeRUP(informe, term).subscribe({
             complete: () => this.requestInProgress = false,
@@ -143,7 +154,6 @@ export class DetalleRegistroInternacionComponent implements OnInit {
     actualizarPaginacion() {
         const startIndex = (this.pagina - 1) * this.sizePagina;
         const endIndex = startIndex + this.sizePagina;
-
         this.paginacion = this.registro.slice(startIndex, endIndex);
     }
 
@@ -223,5 +233,3 @@ export class DetalleRegistroInternacionComponent implements OnInit {
         return concepto;
     }
 }
-
-
