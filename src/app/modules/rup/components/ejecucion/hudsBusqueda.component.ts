@@ -196,7 +196,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     public permisosVac;
     public permisosRec;
     public permisosGuardia;
-    public pacienteSelected = null;
+    public pacienteSelected: IPaciente | null = null;
 
 
     constructor(
@@ -222,23 +222,24 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
      * @memberof PrestacionEjecucionComponent
      */
     ngAfterContentInit() {
-        if (this.paciente) {
+        if (this.paciente && this.permisosCompletos) {
             this.listarInternaciones();
             this.listarPrestaciones();
             this.listarConceptos();
             this.listarDerivaciones();
         }
-        this.token = this.huds.getHudsToken();
         // Cuando se inicia una prestación debemos volver a consultar si hay CDA nuevos al ratito.
         // [TODO] Ser notificado via websockets
         setTimeout(() => {
-            this.buscarCDAPacientes(this.token);
+            this.refreshCdas();
         }, 1000 * 30);
     }
 
+    private refreshCdas() {
+        this.buscarCDAPacientes(this.huds.getHudsToken());
+    }
+
     ngOnInit() {
-        this.groupRecetas();
-        this.getProfesional();
         this.permisosCompletos = this.auth.check('huds:visualizacionHuds');
         this.permisosParciales = this.auth.check('huds:visualizacionParcialHuds:*');
         this.permisosLab = this.auth.check('huds:visualizacionParcialHuds:laboratorio');
@@ -246,15 +247,25 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         this.permisosRec = this.auth.check('huds:visualizacionParcialHuds:receta');
         this.permisosGuardia = this.auth.check('huds:visualizacionParcialHuds:guardia');
 
+        if (this.permisosCompletos || this.permisosParciales || this.permisosRec) {
+            this.groupRecetas();
+        }
+        this.getProfesional();
+
+        // se setea el filtro inicial a visualizar en el sidebar
         this.filtroActual = this.permisosCompletos ? 'trastorno' :
-            (this.permisosParciales || this.permisosLab) ? 'laboratorios' :
-                (this.permisosVac) ? 'vacunas' :
-                    (this.permisosGuardia) ? 'guardias' :
-                        'recetas';
+            (this.permisosGuardia) ? 'guardias' :
+                (this.permisosParciales || this.permisosRec) ? 'recetas' :
+                    (this.permisosLab) ? 'laboratorios' :
+                        'vacunas';
+
         this.pacienteSelected = this.paciente;
 
         if (this.filtroActual === 'recetas') {
             this.showFiltros = true;
+        }
+        if (this.filtroActual !== 'trastorno') {
+            this.refreshCdas();
         }
     }
 
@@ -279,7 +290,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     }
 
     dragStart(e) {
-        this._onDragStart.emit(e);
     }
 
     dragEnd(e) {
@@ -650,7 +660,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             const fechaB = moment(b.fecha);
             return fechaB.diff(fechaA);
         });
-
     }
 
     private ordenarGuardias(guardias) {
