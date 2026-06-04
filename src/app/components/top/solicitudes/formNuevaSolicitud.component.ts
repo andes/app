@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, ViewChildren, QueryList, OnInit, Input } from '@angular/core';
+import { Component, Output, EventEmitter, ViewChildren, QueryList, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { Auth } from '@andes/auth';
@@ -10,7 +10,9 @@ import { DriveService } from 'src/app/services/drive.service';
 import { ConstantesService } from './../../../services/constantes.service';
 import { SnomedService } from '../../../apps/mitos';
 import { ECLQueriesService } from 'src/app/services/eclqueries.service';
-import { switchMap } from 'rxjs';
+import { switchMap, filter, take } from 'rxjs';
+import { ElementosRUPService } from '../../../modules/rup/services/elementosRUP.service';
+import { IPrestacionRegistro } from '../../../modules/rup/interfaces/prestacion.registro.interface';
 
 @Component({
     selector: 'form-nueva-solicitud',
@@ -66,6 +68,7 @@ export class FormNuevaSolicitudComponent implements OnInit {
             registros: [],
             conceptoAsociado: null
         },
+        ejecucion: { registros: [] },
         estados: [],
         prestacionOrigen: null
     };
@@ -77,6 +80,12 @@ export class FormNuevaSolicitudComponent implements OnInit {
     dataTipoPrestacionesOrigen = [];
     dataReglasDestino = [];
     dataReglasOrigen: { id: any; nombre: any }[];
+
+    // RUP molecula para solicitud destino
+    elementoRUPSolicitud: any = null;
+    registroSolicitud: any = null;
+    mostrarRupSolicitud = false;
+    collapseRupSolicitud = true;
 
     public asociados: any[] = [];
     public conceptosEcl: any[] = [];
@@ -90,7 +99,9 @@ export class FormNuevaSolicitudComponent implements OnInit {
         private adjuntosService: AdjuntosService,
         private driveService: DriveService,
         private snomedService: SnomedService,
-        public eclqueriesServicies: ECLQueriesService
+        public eclqueriesServicies: ECLQueriesService,
+        private elementosRUPService: ElementosRUPService,
+        private cd: ChangeDetectorRef
     ) { }
 
     ngOnInit() {
@@ -213,9 +224,12 @@ export class FormNuevaSolicitudComponent implements OnInit {
                     }
                 );
         }
+        // Cargar molécula RUP si la prestación seleccionada tiene esSolicitud=true
+        this.cargarElementoRUPSolicitud();
     }
 
     onSelectPrestacionDestino() {
+
         if (this.modelo.solicitud.tipoPrestacionOrigen) {
             if (this.prestacionDestino) {
                 const regla = this.arrayReglasDestino.find(rule => {
@@ -227,7 +241,7 @@ export class FormNuevaSolicitudComponent implements OnInit {
                         return rule;
                     }
                 });
-                this.modelo.solicitud.tipoPrestacion = regla.destino.prestacion;
+                this.modelo.solicitud.tipoPrestacion = regla?.destino?.prestacion;
 
             } else {
                 const orgDestino = this.arrayReglasDestino.map(elem => {
@@ -238,7 +252,49 @@ export class FormNuevaSolicitudComponent implements OnInit {
                     this.dataReglasDestino = [];
                 }
             }
+        } else {
+            console.warn('[RUP-DEBUG] tipoPrestacionOrigen es null/undefined → tipoPrestacion NO se setea');
         }
+        this.cargarElementoRUPSolicitud();
+    }
+
+    cargarElementoRUPSolicitud() {
+        // Reset state
+        this.mostrarRupSolicitud = false;
+        this.elementoRUPSolicitud = null;
+        this.registroSolicitud = null;
+        this.cd.detectChanges();
+
+        const concepto = this.modelo.solicitud.tipoPrestacion;
+
+        if (!concepto) {
+            console.warn('[RUP-DEBUG] salida temprana → tipoPrestacion es null');
+            return;
+        }
+
+        this.elementosRUPService.ready.pipe(
+            filter(v => !!v),
+            take(1)
+        ).subscribe(() => {
+            const elementoRUP = this.elementosRUPService.buscarElemento(concepto, true);
+            // Verificamos si es una molécula específica o el default por semanticTag
+            const esEspecifico = elementoRUP?.conceptos?.some(c => c.conceptId === concepto.conceptId);
+            if (elementoRUP && esEspecifico) {
+                const prestacionCtx = { paciente: this.paciente } as any;
+                this.registroSolicitud = new IPrestacionRegistro(elementoRUP, concepto, prestacionCtx);
+                this.registroSolicitud.esSolicitud = true;
+                (this.registroSolicitud as any).tipo = 'solicitud';
+                this.elementoRUPSolicitud = elementoRUP;
+                this.mostrarRupSolicitud = true;
+                this.cd.detectChanges();
+            } else {
+                console.warn('[RUP-DEBUG] Se ignoró porque es default o no existe:', concepto);
+            }
+        });
+    }
+
+    toggleCollapseRupSolicitud() {
+        this.collapseRupSolicitud = !this.collapseRupSolicitud;
     }
 
     checkProfesional() {
@@ -321,10 +377,12 @@ export class FormNuevaSolicitudComponent implements OnInit {
                 this.modelo.estados = [{ tipo: 'pendiente' }];
             }
         }
+        const valorRUP = this.mostrarRupSolicitud && this.registroSolicitud ? this.registroSolicitud.valor : {};
         this.modelo.solicitud.registros.push({
             nombre: this.modelo.solicitud.tipoPrestacion.term,
             concepto: this.modelo.solicitud.tipoPrestacion,
             valor: {
+                ...valorRUP,
                 solicitudPrestacion: {
                     motivo: this.motivo,
                     autocitado: this.autocitado,
@@ -332,6 +390,7 @@ export class FormNuevaSolicitudComponent implements OnInit {
                 },
                 documentos: this.documentos
             },
+            esSolicitud: this.mostrarRupSolicitud ? true : undefined,
             tipo: 'solicitud'
         });
         this.modelo.paciente = {
