@@ -653,6 +653,14 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
     }
 
+    private ordenarGuardias(guardias) {
+        return guardias.sort((a, b) => {
+            const fechaA = moment(a.fecha);
+            const fechaB = moment(b.fecha);
+            return fechaB.diff(fechaA);
+        });
+    }
+
     // Trae los cdas registrados para el paciente
     buscarCDAPacientes(token) {
         forkJoin({
@@ -679,10 +687,10 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 this.prestaciones = this.prestacionesCopia;
                 // filtramos las vacunas y laboratorios por ahora para que se listan por separado
                 this.vacunas = this.cdas.filter(cda => cda.prestacion.conceptId === ConceptosTurneablesService.Vacunas_CDA_ID);
-                this.guardias = [
+                this.guardias = this.ordenarGuardias([
                     ...this.rupGuardias,
                     ...this.cdas.filter(cda => cda.prestacion.conceptId === ConceptosTurneablesService.Guardia_CDA_ID)
-                ];
+                ]);
                 this.laboratorios = this.cdas.filter(cda => cda.prestacion.conceptId === ConceptosTurneablesService.Laboratorio_CDA_ID
                     || cda.prestacion.conceptId === ConceptosTurneablesService.Laboratorio_SISA_CDA_ID);
 
@@ -764,12 +772,12 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 );
 
                 // 🔹 GUARDIAS
-                this.guardias = [
+                this.guardias = this.ordenarGuardias([
                     ...this.rupGuardias,
                     ...cdasMapeados.filter(cda =>
                         cda.prestacion.conceptId === ConceptosTurneablesService.Guardia_CDA_ID
                     )
-                ];
+                ]);
 
                 // 🔹 Orden especial de laboratorios
                 this.laboratorios = this.ordenarLaboratorios(this.laboratorios, protocolos);
