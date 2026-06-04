@@ -39,7 +39,7 @@ export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
 
     public columns = [
         { key: 'fecha', label: 'Fecha' },
-        { key: 'notificadorPor', label: 'Notificado por' },
+        { key: 'notificadoPor', label: 'Notificado por' },
         { key: 'observaciones', label: 'Observaciones' },
     ];
 
