@@ -19,6 +19,12 @@
                         </plex-help>
                     </ng-container>
 
+                    <plex-button *ngIf="activeIndex === 0 &&  turno?.videoConferencia" icon="monitor" type="success"
+                                 size="sm" title="Acceder a  Teleconsulta" titlePosition="left"
+                                 (click)="onVideoConferencia()">
+
+                    </plex-button>
+
                     <ng-container ngProjectAs="plex-button" *ngIf="activeIndex === 0">
                         <help-solicitud [solicitud]='prestacion.solicitud'></help-solicitud>
                     </ng-container>
@@ -141,7 +147,8 @@
 
                                             <plex-button *ngIf="!existe(registro.concepto);" size="sm" type="danger"
                                                          icon="delete"
-                                                         (click)="confirmarEliminarRegistro(registro, 'card')" [disabled]="!puedeEliminar(registro)">
+                                                         (click)="confirmarEliminarRegistro(registro, 'card')"
+                                                         [disabled]="!puedeEliminar(registro)">
                                             </plex-button>
                                         </div>
                                     </div>
@@ -308,9 +315,9 @@
                         </plex-tab>
 
                         <plex-tab *ngIf="registro.tipo === 'laboratorio'" [allowClose]="true"
-                              label="Informe de Laboratorio">
-                        <vista-laboratorio [protocolo]="registro"></vista-laboratorio>
-                    </plex-tab>
+                                  label="Informe de Laboratorio">
+                            <vista-laboratorio [protocolo]="registro"></vista-laboratorio>
+                        </plex-tab>
 
                         <plex-tab *ngIf="registro.tipo === 'receta'" color="receta" class="tab-receta"
                                   [allowClose]="true" [label]="recetaService.getLabel(registro.data.recetas)">

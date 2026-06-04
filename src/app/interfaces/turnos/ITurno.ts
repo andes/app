@@ -56,4 +56,9 @@ export interface ITurno {
         enum: ['pendiente', 'no enviado', 'enviado', 'fallido'];
     };
     notificar: boolean;
+    videoConferencia?: boolean;
+    webexLinks?: {
+        patientLink: string;
+        professionalLink: string;
+    };
 }
