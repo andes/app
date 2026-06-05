@@ -202,6 +202,9 @@ export class AppComponent {
                                 modulo.submodulos = modulo.submodulos.filter(x => this.auth.getPermissions(x.permisos[0]).length > 0);
                                 modulo.submodulos.forEach((submodulo, key) => {
                                     modulos.push(submodulo._id);
+                                    if (modulo.nombre === 'FACTURACIÓN' && submodulo.nombre === 'Nominali-<br>zadas') {
+                                        submodulo.linkAcceso = '/buscador/nominalizadas';
+                                    }
                                     const menuOptionSub = { id: key, label: `${modulo.nombre}: ${submodulo.nombre.replace(/<[^>]*>?/gm, ' ').replace('- ', '')}`, icon: `${submodulo.icono}`, route: submodulo.linkAcceso };
                                     if (this.menuList.findIndex(x => x.label === menuOptionSub.label) === -1) {
                                         this.menuList.push(menuOptionSub);
