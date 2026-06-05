@@ -120,6 +120,11 @@
                             </app-ficha-epidemiologica-generic>
                         </plex-tab>
 
+                        <plex-tab *ngIf="registro.tipo === 'recc'" [allowClose]="true" label="recc"
+                                  [class]="registro.class" color="recc">
+                            <vista-derivacion [registro]="registro.data"></vista-derivacion>
+                        </plex-tab>
+
                         <plex-tab *ngIf="registro.tipo === 'dominio'" [allowClose]="true" [label]="registro.data.name"
                                   [class]="registro.data.class">
                             <vista-ips [registro]="registro.data"></vista-ips>
