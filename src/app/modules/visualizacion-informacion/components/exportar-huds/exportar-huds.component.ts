@@ -1,7 +1,5 @@
 import { Plex } from '@andes/plex';
 import { Component, OnInit } from '@angular/core';
-import { Observable, EMPTY } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { ExportHudsService } from '../../services/export-huds.service';
 import { Auth } from '@andes/auth';
@@ -30,8 +28,6 @@ export class ExportarHudsComponent implements OnInit {
     public turnosPrestaciones = false;
     public excluirVacunas;
     public excluirLaboratorio;
-    public organizaciones$: Observable<any>;
-    public organizacion: any;
 
 
     constructor(
@@ -50,8 +46,6 @@ export class ExportarHudsComponent implements OnInit {
                 { route: '/', name: 'VISUALIZACIÓN DE INFORMACIÓN' },
                 { name: 'Exportar HUDS' }
             ]);
-            this.organizaciones$ = this.auth.organizaciones();
-            this.organizacion = this.auth.organizacion;
             this.descargasPendientes();
         }
     }
@@ -76,7 +70,6 @@ export class ExportarHudsComponent implements OnInit {
         this.fechaDesde = null;
         this.fechaHasta = null;
         this.prestacion = null;
-        this.organizacion = this.auth.organizacion;
     }
 
     esPacienteRestringido(paciente: IPaciente) {
@@ -116,20 +109,9 @@ export class ExportarHudsComponent implements OnInit {
             fechaDesde: this.fechaDesde,
             fechaHasta: this.fechaHasta,
             hudsCompleta: this.hudsCompleta,
-            organizacion: this.organizacion ? this.organizacion.id : null,
             excluye
         };
-        // verifica primero que exista historial antes de crear el pedido
-        this.exportHudsService.checkHistory(params).pipe(
-            switchMap((resCheck) => {
-                if (resCheck.hasHistory) {
-                    return this.exportHudsService.peticionHuds(params);
-                } else {
-                    this.plex.info('warning', 'No existen registros y/o historial con los filtros seleccionados ', 'Atención');
-                    return EMPTY;
-                }
-            })
-        ).subscribe((res) => {
+        this.exportHudsService.peticionHuds(params).subscribe((res) => {
             if (res) {
                 this.plex.toast('success', 'Su pedido esta siendo procesado', 'Información', 2000);
                 this.descargasPendientes();
