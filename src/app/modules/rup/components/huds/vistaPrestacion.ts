@@ -10,6 +10,7 @@ import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { populateRelaciones } from '../../operators/populate-relaciones';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
 import { PrestacionesService } from '../../services/prestaciones.service';
+import html2canvas from 'html2canvas';
 @Component({
     selector: 'vista-prestacion',
     templateUrl: 'vistaPrestacion.html',
@@ -87,10 +88,32 @@ export class VistaPrestacionComponent implements OnInit {
         return permisoExtra || this.prestacion.createdBy.id === this.auth.usuario.id;
     }
 
-    descargarInforme() {
+    async descargarInforme() {
         this.requestInProgress = true;
         const term = this.prestacion.solicitud.tipoPrestacion.term;
-        const informe = { idPrestacion: this.prestacion.id };
+        const informe: any = { idPrestacion: this.prestacion.id };
+
+        // Capturamos snapshots de los odontogramas si existen
+        const odontogramas = document.querySelectorAll('rup-OdontogramaRefset');
+        if (odontogramas.length > 0) {
+            const snapshots = {};
+            for (const el of Array.from(odontogramas)) {
+                const card = el.closest('.rup-card');
+                const registroId = card?.getAttribute('data-id');
+
+                if (registroId) {
+                    try {
+                        const canvas = await html2canvas(el as HTMLElement, {
+                            logging: false,
+                            backgroundColor: '#ffffff'
+                        });
+                        snapshots[registroId] = canvas.toDataURL('image/png');
+                    } catch (e) {
+                    }
+                }
+            }
+            informe.snapshots = snapshots;
+        }
 
         this.servicioDocumentos.descargarInformeRUP(informe, term).subscribe(
             () => this.requestInProgress = false,
@@ -109,6 +132,10 @@ export class VistaPrestacionComponent implements OnInit {
             ruta: this.router.url
         });
         this.router.navigate(['./rup/ejecucion', this.prestacion.id]);
+    }
+
+    get tieneOdontograma() {
+        return this.prestacion?.ejecucion?.registros?.some(r => r.concepto.conceptId === '3561000013109');
     }
 
 }
