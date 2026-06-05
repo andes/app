@@ -112,6 +112,49 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         return this.prestacion && this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada';
     }
 
+    get ultimoValidador() {
+        if (this.prestacion && this.prestacion.estados) {
+            const estados = [...this.prestacion.estados].reverse();
+            return estados.find(e => e.tipo === 'validada');
+        }
+        return null;
+    }
+
+    get profesionales() {
+        let profesionales = [...(this.prestacion?.profesionalesRegistrantes || [])];
+
+        // si el backend no envía profesionalesRegistrantes, se computa
+        // a partir de los createdBy de cada registro en ejecución
+        if (profesionales.length === 0 && this.prestacion?.ejecucion?.registros) {
+            const map = new Map();
+            this.prestacion.ejecucion.registros.forEach(r => {
+                const cb = r.createdBy;
+                if (cb) {
+                    const key = cb.id || cb._id;
+                    if (!map.has(key)) {
+                        map.set(key, {
+                            id: cb.id || cb._id,
+                            nombre: cb.nombre,
+                            apellido: cb.apellido,
+                            documento: cb.documento
+                        });
+                    }
+                }
+            });
+            profesionales = Array.from(map.values());
+        }
+
+        if (this.ultimoValidador) {
+            const validador = this.ultimoValidador.createdBy;
+            const index = profesionales.findIndex(p => (p.id || p._id) === (validador.id || validador._id) || String(p.documento) === String(validador.documento));
+            if (index > -1) {
+                const [v] = profesionales.splice(index, 1);
+                profesionales = [v, ...profesionales];
+            }
+        }
+        return profesionales;
+    }
+
     ngOnDestroy() {
         this.prestacionSubscription.unsubscribe();
     }
@@ -402,6 +445,14 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
     volver() {
         this.router.navigate(['rup/ejecucion/', this.prestacion.id]);
+    }
+
+    esValidador(profesional) {
+        if (!this.ultimoValidador) {
+            return false;
+        }
+        const validador = this.ultimoValidador.createdBy;
+        return (validador.id === profesional.id || validador.id === profesional._id || String(validador.documento) === String(profesional.documento));
     }
 
     volverInicio(ambito = 'ambulatorio', ruta = null) {
