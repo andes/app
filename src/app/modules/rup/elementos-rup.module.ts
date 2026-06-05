@@ -17,6 +17,7 @@ import { RUPMedicamentosBusquedaDetalleComponent } from './components/ejecucion/
 import { ModalSeleccionEmailComponent } from './components/ejecucion/modal-seleccion-email.component';
 import { AdjuntarDocumentoComponent } from './components/elementos/adjuntarDocumento.component';
 import { AutocitadoComponent } from './components/elementos/autocitado.component';
+import { AutonumericoComponent } from './components/elementos/autonumerico.component';
 import { CalculoDeBostonComponent } from './components/elementos/calculoDeBoston.component';
 import { RUPObservacionesModalComponent } from './components/elementos/components/observaciones-modal.component';
 import { ConsultaDeNinoSanoE2Y3AComponent } from './components/elementos/consultaDeNinoSanoE2Y3A.component';
@@ -80,6 +81,7 @@ const RUPComponentsArray = [
     RUPComponent,
     SelectPorRefsetComponent,
     AutocitadoComponent,
+    AutonumericoComponent,
     EvolucionProblemaDefaultComponent,
     FrecuenciaCardiacaComponent,
     FrecuenciaRespiratoriaComponent,
