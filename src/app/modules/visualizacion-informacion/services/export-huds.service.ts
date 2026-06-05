@@ -21,10 +21,6 @@ export class ExportHudsService {
         return this.server.post(this.exportHudsUrl, data, { responseType: 'blob' } as any);
     }
 
-    checkHistory(data): Observable<any> {
-        return this.server.post(this.exportHudsUrl + '/check-history', data);
-    }
-
     descargaHuds(params): Observable<any> {
         return this.server.post(this.exportHudsUrl + '/' + params.id, params, { responseType: 'blob' } as any).pipe(
             saveAs(params.name, 'zip')

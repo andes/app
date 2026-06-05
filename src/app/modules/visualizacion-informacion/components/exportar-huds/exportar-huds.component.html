@@ -53,9 +53,6 @@
                         <plex-bool type="checkbox" name="alergia" [(ngModel)]="excluirLaboratorio" label="Excluir Laboratorios">
                         </plex-bool>
                     </div>
-                    <plex-select [data]="organizaciones$ | async" label="Organización"
-                                 [(ngModel)]="organizacion" name="organizacion">
-                    </plex-select>
                     <plex-select grow="full" label="Prestaciones" name="prestacion" idField="conceptId"
                                  [(ngModel)]="prestacion" tmPrestaciones [preload]="true">
                     </plex-select>
