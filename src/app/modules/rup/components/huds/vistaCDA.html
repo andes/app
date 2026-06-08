@@ -1,11 +1,5 @@
 <ng-container *ngIf="registro?.data">
-    <plex-title titulo="{{ registro.data.prestacion.snomed.term }}" size="lg">
-        <div class="titulo-badges">
-            <plex-badge type="{{ registro.data.prestacion.snomed.semanticTag || 'solicitud' }}">
-                {{ registro.data.prestacion.snomed.semanticTag || 'solicitud' }}
-            </plex-badge>
-        </div>
-    </plex-title>
+    <plex-title titulo="{{ registro.data.prestacion.snomed.term }}" size="lg"></plex-title>
     <div class="mt-4">
         <plex-grid cols="2">
             <div class="registros">
@@ -23,20 +17,20 @@
                             <div class="d-flex align-items-end mb-1">
                                 <plex-badge type="info mr-1">PDF</plex-badge>
                                 <plex-button type="info" size="sm" icon="download mdi-18px" (click)="descargar(archivo)"
-                                             tooltip="Descargar PDF">
+                                    tooltip="Descargar PDF">
                                 </plex-button>
                             </div>
                         </ng-container>
                         <ng-container
-                                      *ngIf="!registro.data.adjuntos && registro?.data?.prestacion?.snomed?.conceptId !== '33879002'">
+                            *ngIf="!registro.data.adjuntos && registro?.data?.prestacion?.snomed?.conceptId !== '33879002'">
                             <div class="d-flex align-items-end mb-1">
                                 <plex-badge type="info mr-1">PDF</plex-badge>
                                 <plex-button type="info" size="sm" icon="download mdi-18px" tooltip="Descargar CDA"
-                                             (click)="descargarCDA(registro)">
+                                    (click)="descargarCDA(registro)">
                                 </plex-button>
 
                                 <plex-button type="info" size="sm" icon="download mdi-18px" (click)="descargar(archivo)"
-                                             tooltip="Descargar PDF">
+                                    tooltip="Descargar PDF">
                                 </plex-button>
                             </div>
                         </ng-container>

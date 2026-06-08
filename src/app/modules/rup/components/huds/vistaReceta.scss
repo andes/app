@@ -92,6 +92,30 @@
     .detalle-dispensa {
         margin-right: 1;
     }
+
+    plex-panel.lista-panel {
+        display: block;
+        margin-bottom: 0.2rem;
+        cursor: pointer;
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        .titulo {
+            font-size: 1rem;
+            color: $recetas;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        &[active="true"] {
+            border-left: 5px solid $recetas;
+
+            .titulo {
+                font-weight: 700;
+            }
+        }
+    }
 }
 
 .historial-recetas {

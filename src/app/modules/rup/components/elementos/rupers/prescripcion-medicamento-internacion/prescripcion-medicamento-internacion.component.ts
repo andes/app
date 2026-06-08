@@ -13,7 +13,6 @@ import { RUPComponent } from '../../../core/rup.component';
 export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPComponent implements OnInit, AfterViewInit {
 
     unidadesSnomed = '767525000 OR 258997004 OR 258684004 OR 258682000 OR 258685003 OR 258773002 OR 258989006 OR 439139003 OR 404218003';
-    viasSnomed = '764295003 OR 761829007 OR 738987007 OR 738986003 OR 738983006 OR 738956005 OR 738952007 OR 738948007 OR 255560000 OR 255559005 OR 421606006';
     formasFarmaceuticasSnomed = `732997007 OR 732994000 OR 732987003 OR 732986007 OR 732981002 OR 732978007 OR 732937005 OR 732936001 OR 
     739009002 OR 739006009 OR 738998008 OR 385099005 OR 739005008`;
     frecuencias$: Observable<any>;
@@ -24,6 +23,7 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
     fechaMax;
 
     public eclMedicamentos;
+    vias$: Observable<any[]>;
 
     ngAfterViewInit() {
         setTimeout(() => {
@@ -35,10 +35,11 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
         this.eclqueriesServicies.search({ key: '^receta' }).subscribe(query => {
             this.eclMedicamentos = query.find(q => q.key === 'receta:genericos');
         });
-
         this.fechaMin = moment().startOf('day').toDate();
         this.fechaMax = moment().endOf('day').toDate();
         this.frecuencias$ = this.constantesService.search({ source: 'plan-indicaciones:frecuencia' });
+        this.vias$ = this.constantesService.search({ source: 'plan-indicaciones:via' });
+
         if (!this.registro.valor) {
             this.registro.valor = {
                 nombre: '',
@@ -51,27 +52,35 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
                 frecuencias: [{
                     frecuencia: null,
                     horario: null,
-                    cantidad: null
+                    cantidad: null,
+                    velocidadValor: null,
+                    velocidadUnidad: null,
+                    velocidadOtra: null
                 }]
             };
         }
     }
 
-    addSustancia() {
-        this.registro.valor.sustancias.push({
-            ingrediente: null,
-            denominador: null,
-            numerador: null,
-            cantidad: null
-        });
-    }
+    unidadesVelocidad = [
+        { id: 'ml/h', nombre: 'ml/h' },
+        { id: 'gotas/min', nombre: 'gotas/min' },
+        { id: 'microgota/min', nombre: 'microgota/min' },
+        { id: 'otro', nombre: 'Otro' }
+    ];
 
-    deleteSustancia() {
-        if (this.registro.valor.sustancias.length > 1) {
-            this.registro.valor.sustancias.pop();
-        }
-    }
+    unidadesFrecuencia = [
+        { id: 'minutos', nombre: 'Minutos' },
+        { id: 'horas', nombre: 'Horas' },
+        { id: 'dias', nombre: 'Días' },
+        { id: 'otros', nombre: 'Otros' }
+    ];
 
+    frecuenciasEspeciales = [
+        { id: 'mañana', nombre: 'Mañana' },
+        { id: 'mediodia', nombre: 'Mediodía' },
+        { id: 'tarde', nombre: 'Tarde' },
+        { id: 'noche', nombre: 'Noche' }
+    ];
     valuesChange() {
         const nombre = this.registro.valor.sustancias.map(item => {
             return `${item.ingrediente?.term || ''}`;
@@ -79,20 +88,32 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
         this.registro.valor.nombre = nombre;
     }
 
-    onChangeUnicaVez(event) {
-        const frecuencias = this.registro.valor.frecuencias;
-        if (event.value) {
-            this.backUpFrecuencias = frecuencias.slice(0, frecuencias.length);
-            this.registro.valor.frecuencias = [{
-                horario: frecuencias[0].horario,
-                velocidad: frecuencias[0].velocidad
-            }];
-        } else {
-            delete this.registro.valor.motivoUnicaVez;
-            if (this.backUpFrecuencias.length) {
-                this.registro.valor.frecuencias = this.backUpFrecuencias;
-            }
+    onChangeUnidad(frecuencia) {
+        if (frecuencia.velocidadUnidad?.id !== 'otro') {
+            frecuencia.velocidadOtra = null;
         }
+        this.emitChange();
+    }
+    onChangeUnicaVez(event: any) {
+        const value = typeof event === 'object' ? event.value : event;
+        this.registro.valor.unicaVez = value;
+
+        if (value) {
+            this.registro.valor.sos = false;
+            this.backUpFrecuencias = this.registro.valor.frecuencias.slice(0);
+            this.registro.valor.frecuencias = [{
+                horario: this.backUpFrecuencias[0]?.horario || null,
+                velocidad: this.backUpFrecuencias[0]?.velocidad || null
+            }];
+
+            if (!this.registro.valor.motivoUnicaVez) {
+                this.registro.valor.motivoUnicaVez = this.registro.valor.motivo || '';
+            }
+        } else if (this.backUpFrecuencias.length) {
+            this.registro.valor.frecuencias = this.backUpFrecuencias;
+        }
+
+        this.emitChange();
     }
 
     @Unsubscribe()
@@ -132,16 +153,76 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
         });
     }
 
+    updateVelocidadFinal(frecuencia: any) {
+        const valor = frecuencia.velocidadValor;
+        const unidad = frecuencia.velocidadUnidad?.nombre || frecuencia.velocidadUnidad?.id || '';
+
+        if (valor && unidad) {
+            frecuencia.velocidadFinal = `${valor} ${unidad}`;
+        } else if (valor) {
+            frecuencia.velocidadFinal = `${valor}`;
+        } else {
+            frecuencia.velocidadFinal = '';
+        }
+    }
+
     isEmpty() {
         const value = this.registro.valor;
         return !value.indicaciones;
+    }
+
+    onUnidadChange(frecuencia) {
+        if (frecuencia.frecuenciaUnidad?.id === 'otros') {
+            frecuencia.frecuenciaValor = null;
+            frecuencia.min = null;
+            frecuencia.max = null;
+        } else {
+            frecuencia.frecuenciaEspecial = null;
+
+            switch (frecuencia.frecuenciaUnidad?.id) {
+                case 'minutos':
+                    frecuencia.min = 1;
+                    frecuencia.max = 60;
+                    break;
+                case 'horas':
+                    frecuencia.min = 1;
+                    frecuencia.max = 24;
+                    break;
+                case 'dias':
+                    frecuencia.min = 1;
+                    frecuencia.max = 7;
+                    break;
+                default:
+                    frecuencia.min = null;
+                    frecuencia.max = null;
+            }
+        }
+
+        this.emitChange();
     }
 
     onSelectMedicamentos(medicamento) {
         this.registro.valor.medicamento = medicamento;
         this.emitChange2();
     }
+    onChangeSos(event: any) {
+        const value = typeof event === 'object' ? event.value : event;
+        this.registro.valor.sos = value;
 
+        if (value) {
+            this.registro.valor.unicaVez = false;
+            this.registro.valor.frecuencias = [];
+        } else {
+            if (!this.registro.valor.frecuencias?.length) {
+                this.registro.valor.frecuencias = [{
+                    frecuencia: null,
+                    horario: null,
+                    cantidad: null
+                }];
+            }
+        }
+        this.emitChange();
+    }
     emitChange2() {
         this.emitChange();
         if (this.registro.valor.medicamento?.conceptId) {

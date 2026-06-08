@@ -6,7 +6,8 @@ import { Unsubscribe } from '@andes/shared';
 import { Location } from '@angular/common';
 import { Component, ElementRef, HostBinding, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, concatWith, map, switchMap } from 'rxjs';
+import { NgForm } from '@angular/forms';
+import { catchError, concatWith, map, switchMap, from, filter, NEVER } from 'rxjs';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { IMotivoAcceso } from 'src/app/modules/rup/interfaces/IMotivoAcceso';
 import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
@@ -17,6 +18,8 @@ import { PrestacionesService } from '../../../modules/rup/services/prestaciones.
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { ConstantesService } from 'src/app/services/constantes.service';
 import { SnomedService } from 'src/app/apps/mitos';
+import { ECLQueriesService } from 'src/app/services/eclqueries.service';
+import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 
 
 @Component({
@@ -29,6 +32,9 @@ export class SolicitudesComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @ViewChild('modalDevolver', { static: true }) modalDevolver: PlexModalComponent;
     @ViewChild('modalIniciar', { static: true }) modalIniciar: PlexModalComponent;
+    @ViewChild('modalResolver', { static: true }) modalResolver: PlexModalComponent;
+    @ViewChild('formDevolver', { static: false }) formDevolver: NgForm;
+    @ViewChild('formResolver', { static: false }) formResolver: NgForm;
     @ViewChild('helpIniciar', { static: false }) helpIniciar: PlexHelpComponent;
     @ViewChild('helpAnular', { static: false }) helpAnular: PlexHelpComponent;
     @ViewChild('helpCitar', { static: false }) helpCitar: PlexHelpComponent;
@@ -75,14 +81,21 @@ export class SolicitudesComponent implements OnInit {
         { id: 'turnoDado', nombre: 'TURNO DADO' },
         { id: 'registroHUDS', nombre: 'REGISTRO EN HUDS' },
         { id: 'anulada', nombre: 'ANULADA' },
-        { id: 'vencida', nombre: 'VENCIDA' }
+        { id: 'vencida', nombre: 'VENCIDA' },
+        { id: 'resuelta', nombre: 'RESUELTA' }
     ];
 
     public prioridad;
     public prioridades = [
         { id: 'prioritario', nombre: 'PRIORITARIO' },
     ];
-    prestacionSeleccionada: any;
+    public prestacionSeleccionada: any;
+    public motivosResolucion = [
+        { id: 'turno_en_efector', nombre: 'Con turno programado' },
+        { id: 'no_requiere', nombre: 'Ya no requiere turno' },
+        { id: 'fallecido', nombre: 'Paciente fallecido' }
+    ];
+    public motivoResolucionSeleccionado: any;
     public showModalMotivo = false;
     public motivoVerContinuarPrestacion = 'Continuidad del cuidado del paciente';
     public routeToParams = [];
@@ -130,14 +143,25 @@ export class SolicitudesComponent implements OnInit {
     public check;
     public collapse = false;
     public loader = true;
+    public sort = 'fechaSolicitudAsc';
+    public sortBy = null;
+    public sortOrder = 'asc';
+    private vigenciasMap: { [conceptId: string]: number } = {};
     public columns = [
         {
-            key: 'fecha',
-            label: 'Fecha',
+            key: 'fechaRegistro',
+            label: 'Fecha registro',
+            sorteable: true
+        },
+        {
+            key: 'fechaSolicitud',
+            label: 'Fecha Solicitud',
+            sorteable: true
         },
         {
             key: 'paciente',
             label: 'Paciente',
+            sorteable: false
         },
         {
             key: 'origen',
@@ -149,7 +173,8 @@ export class SolicitudesComponent implements OnInit {
         },
         {
             key: 'actualizacion',
-            label: 'actualización',
+            label: 'Actualización',
+            sorteable: true
         },
         {
             key: 'EstadoAcciones',
@@ -177,11 +202,20 @@ export class SolicitudesComponent implements OnInit {
         public motivosHudsService: MotivosHudsService,
         public constantesService: ConstantesService,
         public snomedService: SnomedService,
+        public eclqueriesServicies: ECLQueriesService,
+        private conceptosTurneablesService: ConceptosTurneablesService
     ) {
     }
 
     ngOnInit() {
         this.initFechas();
+
+        // Precarga el mapa de tiempoVigencia por conceptId (con caché)
+        this.conceptosTurneablesService.getAll().subscribe((conceptos: any[]) => {
+            conceptos.forEach(c => {
+                this.vigenciasMap[c.conceptId] = c.tiempoVigencia || 365;
+            });
+        });
 
         if (!this.auth.getPermissions('solicitudes:?').length) {
             this.router.navigate([this.auth.profesional ? '/solicitudes/asignadas' : 'inicio']);
@@ -214,7 +248,7 @@ export class SolicitudesComponent implements OnInit {
             this.fechaDesde = moment(this.fechaHasta).subtract(this.diasIntervalo, 'days').toDate();
             this.estadoEntrada = { id: 'asignada', nombre: 'ASIGNADA' };
         }
-
+        this.cargarConceptosAsociados();
         this.buscarSolicitudes();
     }
 
@@ -285,11 +319,11 @@ export class SolicitudesComponent implements OnInit {
     }
 
     closeSidebar() {
-        const tableCols = (this.columnas as any)?.columns$.source._value;
-        if (tableCols && !tableCols.some(col => col.key === 'paciente')) {
-            tableCols.splice(1, 0, { key: 'paciente', label: 'Paciente' });
+        if (this.columns && !this.columns.some(col => col.key === 'paciente')) {
+            this.columns.splice(2, 0, { key: 'paciente', label: 'Paciente', sorteable: false });
             this.showPacienteData = true;
         }
+
         this.showAuditar = false;
         this.showReferir = false;
         this.showSidebar = false;
@@ -307,9 +341,8 @@ export class SolicitudesComponent implements OnInit {
             this.closeSidebar();
         } else {
             this.prestacionSeleccionada = prestacion;
-            const tableCols = (this.columnas as any).columns$.source._value;
-            if (tableCols.some(col => col.key === 'paciente')) {
-                (this.columnas as any).columns$.source._value.splice(1, 1);
+            if (this.columns.some(col => col.key === 'paciente')) {
+                this.columns = this.columns.filter(col => col.key !== 'paciente');
                 this.showPacienteData = false;
             }
             (this.tipoSolicitud === 'entrada' ? this.prestacionesEntrada : this.prestacionesSalida).forEach(e => e.seleccionada = false);
@@ -365,6 +398,50 @@ export class SolicitudesComponent implements OnInit {
             this.observacionesAnular = '';
         }
     }
+
+    onResolver() {
+        if (this.prestacionSeleccionada.estados?.length && this.motivoResolucionSeleccionado) {
+            const patch = {
+                op: 'estadoPush',
+                estado: {
+                    tipo: 'resuelta',
+                    observaciones: this.motivoResolucionSeleccionado.nombre
+                }
+            };
+            this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
+                () => {
+                    this.cargarSolicitudes();
+                    this.plex.toast('success', 'Solicitud resuelta exitosamente');
+                }
+            );
+            this.hideModal('resolver');
+            this.closeSidebar();
+        }
+    }
+
+    onDeshacerResolver() {
+        this.closeSidebar();
+        let estadoPrevio = 'pendiente';
+        if (this.prestacionSeleccionada.estados?.length > 1) {
+            const prev = this.prestacionSeleccionada.estados[this.prestacionSeleccionada.estados.length - 2];
+            estadoPrevio = prev.tipo;
+        }
+
+        const patch = {
+            op: 'estadoPush',
+            estado: {
+                tipo: estadoPrevio,
+                observaciones: 'Reversión de estado resuelto'
+            }
+        };
+        this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
+            () => {
+                this.cargarSolicitudes();
+                this.plex.toast('success', 'Se deshizo la resolución de la solicitud');
+            }
+        );
+    }
+
     citar() {
         if (this.prestacionSeleccionada.estados?.length) {
             const patch = {
@@ -427,6 +504,21 @@ export class SolicitudesComponent implements OnInit {
         this.buscarSolicitudes();
     }
 
+    sortTable(event: string, sortOrder: string = null) {
+        const column = this.columns.find(p => p.key === event);
+        if (!column?.sorteable) {
+            return;
+        }
+        if (this.sortBy === event) {
+            this.sortOrder = (this.sortOrder === 'asc') ? 'desc' : 'asc';
+        } else {
+            this.sortBy = event;
+            this.sortOrder = sortOrder || 'desc';
+        }
+        this.sort = this.sortBy + (this.sortOrder === 'asc' ? 'Asc' : 'Desc');
+        this.cargarSolicitudes();
+    }
+
     getParams() {
         const params: any = {
             estados: [
@@ -435,7 +527,8 @@ export class SolicitudesComponent implements OnInit {
                 'validada',
                 'ejecucion',
                 'asignada',
-                'referir'
+                'referir',
+                'resuelta'
             ]
         };
         if (this.tipoSolicitud === 'entrada') {
@@ -446,7 +539,10 @@ export class SolicitudesComponent implements OnInit {
             } else {
                 params['solicitudDesdeActualizacion'] = this.fechaDesde;
                 params['solicitudHastaActualizacion'] = this.fechaHasta;
-                params['ordenFechaDescAct'] = true;
+                params['solicitudHastaActualizacion'] = this.fechaHasta;
+                if (!this.sort) {
+                    params['sortBy'] = 'fechaSolicitudDesc';
+                }
             }
             /*
                 TODO: Se remueve temporalmente la inclusión de referidas en la búsqueda de prestaciones.
@@ -464,7 +560,12 @@ export class SolicitudesComponent implements OnInit {
                 } else if (this.estadoEntrada.id === 'registroHUDS') {
                     params['estados'] = ['validada'];
                 } else {
-                    params['estados'] = [this.estadoEntrada.id];
+                    if (this.estadoEntrada.id === 'vencida') {
+                        // Traer pendiente+auditoria+vencida para filtrar client-side
+                        params['estados'] = ['vencida', 'pendiente', 'auditoria'];
+                    } else {
+                        params['estados'] = [this.estadoEntrada.id];
+                    }
                     if (this.estadoEntrada.id === 'pendiente') {
                         params['tieneTurno'] = false;
                     }
@@ -498,7 +599,10 @@ export class SolicitudesComponent implements OnInit {
             } else {
                 params['solicitudDesdeActualizacion'] = this.fechaDesde;
                 params['solicitudHastaActualizacion'] = this.fechaHasta;
-                params['ordenFechaDescAct'] = true;
+                params['solicitudHastaActualizacion'] = this.fechaHasta;
+                if (!this.sort) {
+                    params['sortBy'] = 'fechaSolicitudDesc';
+                }
             }
             if (this.asignadas) {
                 params['idProfesionalOrigen'] = this.auth.profesional;
@@ -510,7 +614,12 @@ export class SolicitudesComponent implements OnInit {
                 } else if (this.estadoSalida.id === 'registroHUDS') {
                     params['estados'] = ['validada'];
                 } else {
-                    params['estados'] = [this.estadoSalida.id];
+                    if (this.estadoSalida.id === 'vencida') {
+                        // Traer pendiente+auditoria+vencida para filtrar client-side
+                        params['estados'] = ['vencida', 'pendiente', 'auditoria'];
+                    } else {
+                        params['estados'] = [this.estadoSalida.id];
+                    }
                     if (this.estadoSalida.id === 'pendiente') {
                         params['tieneTurno'] = false;
                     }
@@ -537,6 +646,9 @@ export class SolicitudesComponent implements OnInit {
             }
         }
         this.setOrganizacionesParams(params);
+        if (this.sort) {
+            params['sortBy'] = this.sort;
+        }
         params['skip'] = this.skip;
         params['limit'] = this.limit;
         return params;
@@ -565,8 +677,18 @@ export class SolicitudesComponent implements OnInit {
 
     @Unsubscribe()
     buscarSolicitudes() {
+        const estadoFiltro = this.tipoSolicitud === 'entrada' ? this.estadoEntrada?.id : this.estadoSalida?.id;
         return this.servicioPrestacion.getSolicitudes(this.getParams())
-            .pipe(map((resultado) => resultado.filter((solicitud) => !this.esPacienteRestringido(solicitud.paciente))))
+            .pipe(
+                map((resultado) => resultado.filter((solicitud) => !this.esPacienteRestringido(solicitud.paciente))),
+                map((resultado) => {
+                    if (estadoFiltro === 'vencida') {
+                        return resultado.filter(s => s.estadoActual.tipo === 'vencida' || this.estaVencidaEnListado(s));
+                    } else {
+                        return resultado.filter(s => s.estadoActual.tipo !== 'vencida' && !this.estaVencidaEnListado(s));
+                    }
+                })
+            )
             .subscribe(resultado => {
                 if (this.tipoSolicitud === 'entrada') {
                     this.prestacionesEntrada = this.prestacionesEntrada.concat(resultado);
@@ -580,7 +702,6 @@ export class SolicitudesComponent implements OnInit {
                     this.scrollEnd = true;
                 }
                 this.loader = false;
-                this.cargarConceptosAsociados();
             });
     }
 
@@ -638,7 +759,7 @@ export class SolicitudesComponent implements OnInit {
         this.showAuditar = false;
         this.showReferir = false;
         this.showSidebar = false;
-        this.columns.splice(1, 0, { key: 'paciente', label: 'Paciente' });
+        this.columns.splice(2, 0, { key: 'paciente', label: 'Paciente', sorteable: false });
         if (event.status !== false) {
             if (event?.status !== this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados?.length) {
                 const patch = {
@@ -665,18 +786,28 @@ export class SolicitudesComponent implements OnInit {
             tipoPrestacion: this.prestacionSeleccionada.solicitud.historial[this.prestacionSeleccionada.solicitud.historial.length - 1].tipoPrestacion,
             fechaNotificacion: this.fechaNotificacion
         };
-        this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(() => {
-            this.plex.toast('success', 'Paciente notificado con éxito.');
-            this.cargarSolicitudes();
-        }, error => {
-            this.plex.toast('danger', 'Ha ocurrido un error al notificar al paciente.');
+        this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe({
+            next: () => {
+                this.plex.toast('success', 'Paciente notificado con éxito.');
+                this.cargarSolicitudes();
+                this.descripcionNotificacion = '';
+            },
+            error: () => {
+                this.plex.toast('danger', 'Ha ocurrido un error al notificar al paciente.');
+            }
         });
         this.closeSidebar();
     }
 
-    onScroll() {
-        if (!this.scrollEnd) {
-            this.buscarSolicitudes();
+    onCloseComunicacion() {
+        this.descripcionNotificacion = '';
+    }
+
+    onScroll(event: any) {
+        if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight - 50) {
+            if (!this.scrollEnd) {
+                this.buscarSolicitudes();
+            }
         }
     }
 
@@ -759,10 +890,21 @@ export class SolicitudesComponent implements OnInit {
         }
     }
 
+    estaVencidaEnListado(prestacion: any): boolean {
+        if (!prestacion?.solicitud?.fecha) { return false; }
+        const estadoTipo = prestacion.estadoActual?.tipo;
+        if (estadoTipo === 'vencida' || estadoTipo === 'anulada' || estadoTipo === 'validada') { return false; }
+        const conceptId = prestacion.solicitud.tipoPrestacion?.conceptId;
+        const vigencia = this.vigenciasMap[conceptId] ?? 365;
+        const fechaVenc = new Date(prestacion.solicitud.fecha);
+        fechaVenc.setDate(fechaVenc.getDate() + vigencia);
+        return fechaVenc < new Date();
+    }
+
     onChange() {
         this.actualizacion = !this.actualizacion;
         this.loader = true;
-        this.cargarSolicitudes();
+        !!this.actualizacion ? this.sortTable('actualizacion', 'asc') : this.sortTable('fechaSolicitud', 'asc');
     }
 
     actualizarFechas() {
@@ -811,21 +953,41 @@ export class SolicitudesComponent implements OnInit {
     }
 
     volverAuditoria() {
-        this.plex.confirm('¿Realmente quiere volver al estado Auditoría?', 'Atención').then(confirmar => {
-            if (confirmar) {
-                const cambioEstado: any = {
-                    op: 'estadoPush',
-                    estado: { tipo: 'auditoria', observaciones: 'La solicitud pasó a estado Auditoría' }
-                };
-                this.servicioPrestacion.patch(this.prestacionSeleccionada.id, cambioEstado).subscribe({
-                    complete: () => {
-                        this.plex.toast('info', 'Prestación nuevamente en Auditoría');
-                        this.cargarSolicitudes();
-                    },
-                    error: () => this.plex.toast('danger', 'ERROR: No es posible cambiar el estado de la prestación')
-                });
-            }
-        });
+        this.servicioPrestacion.getById(this.prestacionSeleccionada._id)
+            .pipe(
+                switchMap(prestacion => {
+                    const tieneTurnoInvalido =
+                        prestacion.solicitud.turno &&
+                        prestacion.estadoActual.tipo !== 'validada' &&
+                        prestacion.estadoActual.tipo !== 'ejecucion';
+
+                    if (tieneTurnoInvalido) {
+                        this.plex.info(
+                            'warning',
+                            'La solicitud ya tiene un turno asignado.'
+                        ).then(() => {
+                            window.location.reload();
+                        });
+                        return NEVER;
+                    }
+                    return from(this.plex.confirm('¿Realmente quiere volver al estado Auditoría?', 'Atención'));
+                }),
+                filter(confirmar => confirmar === true),
+                switchMap(() => {
+                    const cambioEstado: any = {
+                        op: 'estadoPush',
+                        estado: { tipo: 'auditoria', observaciones: 'La solicitud pasó a estado Auditoría' }
+                    };
+                    return this.servicioPrestacion.patch(this.prestacionSeleccionada.id, cambioEstado);
+                })
+            )
+            .subscribe({
+                complete: () => {
+                    this.plex.toast('info', 'Prestación nuevamente en Auditoría');
+                    this.cargarSolicitudes();
+                },
+                error: () => this.plex.toast('danger', 'ERROR: No es posible cambiar el estado de la prestación')
+            });
     }
 
     onDarTurno() {
@@ -926,7 +1088,13 @@ export class SolicitudesComponent implements OnInit {
             case 'iniciar':
                 this.modalIniciar.showed = true;
                 break;
-            case 'devolver': this.modalDevolver.showed = true;
+            case 'devolver':
+                this.modalDevolver.showed = true;
+                setTimeout(() => this.formDevolver?.resetForm({ motivoRespuesta: '' }), 0);
+                break;
+            case 'resolver':
+                this.modalResolver.showed = true;
+                setTimeout(() => this.formResolver?.resetForm({ motivoResolucion: null }), 0);
                 break;
         }
     }
@@ -937,8 +1105,14 @@ export class SolicitudesComponent implements OnInit {
                 this.modalIniciar.showed = false;
                 break;
             case 'devolver':
+                this.formDevolver?.resetForm({ motivoRespuesta: '' });
                 this.modalDevolver.showed = false;
                 this.motivoRespuesta = '';
+                break;
+            case 'resolver':
+                this.formResolver?.resetForm({ motivoResolucion: null });
+                this.modalResolver.showed = false;
+                this.motivoResolucionSeleccionado = null;
                 break;
         }
     }
@@ -951,19 +1125,24 @@ export class SolicitudesComponent implements OnInit {
     }
 
     setConceptoAsociado(event) {
-        this.conceptoAsociado = event.value?.id || null;
+        this.conceptoAsociado = event.value?.conceptId || null;
         this.cargarSolicitudes();
     }
 
     cargarConceptosAsociados() {
-        this.constantesService.search({ source: 'solicitud:conceptosAsociados' }).subscribe(async (constantes) => {
-            const query = constantes[0].query;
-
-            this.snomedService?.get({
-                search: query
-            }).subscribe((resultados) => {
-                this.listaConceptosAsociados = resultados.map(concepto => ({ id: concepto.conceptId, nombre: concepto.term }));
-            });
+        this.eclqueriesServicies.search({ key: 'conceptos-asociadosm' }).pipe(
+            switchMap(ecl => {
+                if (ecl?.length > 0) {
+                    const query: any = {
+                        expression: ecl[0].valor,
+                        search: ''
+                    };
+                    return this.snomedService.get(query); // Retorna el observable del segundo servicio
+                }
+                return []; // Retorna un observable vacío si no hay conceptos
+            })
+        ).subscribe((resultado) => {
+            this.listaConceptosAsociados = [...resultado];
         });
     }
 }

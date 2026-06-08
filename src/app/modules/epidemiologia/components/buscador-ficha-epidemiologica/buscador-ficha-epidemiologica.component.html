@@ -26,32 +26,21 @@
                     <plex-select grow="1" [(ngModel)]="typeFicha" label="Tipo de ficha" [data]="dataType$ | async"
                                  labelField="name" name="selectType">
                     </plex-select>
-                    <plex-select grow="1" name="localidades" [data]="localidades$ | async"
-                                 label="Localidad de Residencia" [(ngModel)]="localidad">
+                    <plex-select grow="1" name="organizacion" tmOrganizaciones label="Efectores"
+                                 [(ngModel)]="organizacion">
                     </plex-select>
+
                     <div collapse>
-                        <plex-select grow="1" name="organizacion" tmOrganizaciones label="Efectores"
-                                     [(ngModel)]="organizacion">
-                        </plex-select>
-                        <plex-select grow="1" name="zonaSanitaria" [data]="zonaSanitaria$ | async"
-                                     label="Zona Sanitaria Efector" [(ngModel)]="zonaSanitaria" labelField="nombre">
+                        <plex-select grow="1" name="localidades" [data]="localidades$ | async"
+                                     label="Localidad de Residencia" [(ngModel)]="localidad">
                         </plex-select>
                         <plex-text grow="1" label="Identificador PCR" name="idPcr" [(ngModel)]="idPcr">
                         </plex-text>
                         <plex-select grow="1" name="registroSisa" [data]="registroSisaOpts" label="Registrado en SISA"
                                      [(ngModel)]="filtrarSISA" labelField="nombre">
                         </plex-select>
-                        <plex-select grow="1" name="clasificacion" [data]="clasificacion" label="Clasificación"
-                                     [(ngModel)]="idClasificacion" labelField="nombre">
-                        </plex-select>
-                        <plex-select grow="1" name="tipoConfirmacion" [data]="tipoConfirmacion"
-                                     label="Tipo Confirmación" [(ngModel)]="idTipoConfirmacion" labelField="nombre">
-                        </plex-select>
-                        <plex-select grow="1" name="clasificacionFinal" [data]="clasificacionFinal"
-                                     label="Clasificación Final" [(ngModel)]="idClasificacionFinal" labelField="nombre">
-                        </plex-select>
-                        <plex-text grow="1" name="nroIdentificacion" label="Identificación Laboratorio" 
-                                    [(ngModel)]="nroIdentificacion" labelField="nombre">
+                        <plex-text grow="1" name="nroIdentificacion" label="Identificación Laboratorio"
+                                   [(ngModel)]="nroIdentificacion" labelField="nombre">
                         </plex-text>
                     </div>
                 </plex-wrapper>
@@ -68,8 +57,6 @@
                 <td *plTableCol="'documento'">{{ficha.paciente | documento}}</td>
                 <td *plTableCol="'paciente'">{{ficha.paciente | nombre}}</td>
                 <td *plTableCol="'tipo'">{{ficha.type.name}}</td>
-                <td *plTableCol="'pcr'">{{ficha.idPcr }}</td>
-                <td *plTableCol="'clasificacion'">{{ficha.secciones[2]?.fields[0]?.clasificacion.nombre}}</td>
                 <td *plTableCol="'acciones'">
                     <plex-button *ngIf="ficha | checkEdit | async" type="warning" icon="pencil" size="sm"
                                  tooltip="Editar" (click)="editarVerFicha(ficha,true)">
@@ -145,11 +132,11 @@
 </plex-layout>
 <plex-layout main="8" *ngIf="showFicha" resizable="true" min="1" max="4">
     <plex-layout-main>
-        <app-ficha-epidemiologica-crud *ngIf="showFicha === 'covid19'" [paciente]="paciente"
+        <app-ficha-epidemiologica-crud *ngIf="showFicha === 'virosis_respiratoria'" [paciente]="paciente"
                                        [fichaPaciente]="fichaPaciente" [editFicha]="editFicha" (volver)="volver()"
                                        [fichaName]="showFicha" [volverBuscador]=true>
         </app-ficha-epidemiologica-crud>
-        <app-ficha-epidemiologica-generic *ngIf="showFicha !== 'covid19'" [paciente]="paciente"
+        <app-ficha-epidemiologica-generic *ngIf="showFicha !== 'virosis_respiratoria'" [paciente]="paciente"
                                           [fichaPaciente]="fichaPaciente" [editFicha]="editFicha" (volver)="volver()"
                                           [fichaName]="showFicha" [volverBuscador]=true>
         </app-ficha-epidemiologica-generic>

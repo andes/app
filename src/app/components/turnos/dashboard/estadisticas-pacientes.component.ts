@@ -159,7 +159,4 @@ export class EstadisticasPacientesComponent implements OnInit {
         this.demandaCerrada.emit();
     }
 
-    motivoLiberado(turno) {
-        return `Por ${turno.updatedBy.nombreCompleto} el ${moment(turno.updatedAt).format('DD/MM/YYYY')} a las ${moment(turno.updatedAt).format('HH:mm')}`;
-    }
 }

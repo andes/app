@@ -67,11 +67,12 @@
     }
 }
 
+
+
 plex-badge.circle>span {
     border-radius: 50%;
     height: 100%;
 }
-
 
 // PUNTO
 .punto {
@@ -119,7 +120,11 @@ table.plan-indicaciones {
         text-align: center;
         font-weight: bolder;
     }
-
+td.item-indicacion.pointer.selected {
+    border: 0.5px solid #5bc0de !important;
+    background-color: #5bc0de15 !important;
+    transition: 0.2s ease all;
+}
     tr {
 
         td.pointer {
@@ -242,11 +247,6 @@ in-plan-indicacion {
                 font-weight: 500;
                 text-transform: capitalize;
                 color: darkslategray;
-
-                &:hover {
-                    font-weight: 600;
-                    color: $blue;
-                }
             }
 
             .item__subtitle {

@@ -13,6 +13,7 @@ import { ElementosRUPModule } from '../rup/elementos-rup.module';
 import { SemaforoModule } from '../semaforo-priorizacion/semaforo-priorizacion.module';
 import { ReglasDerivacionService } from './../../services/com/reglasDerivaciones.service';
 import { TipoTrasladoService } from './../../services/com/tipoTraslados.service';
+import { EstrategiaAtencionService } from './../../services/com/estrategiaAtencion.service';
 import { DispositivoService } from './../../services/dispositivo/dispositivo.service';
 import { DispositivoComponent } from './../dispositivo/dispositivo.component';
 import { COMRouting } from './com.routing';
@@ -23,7 +24,7 @@ import { HistorialDerivacionComponent } from './components/historial-derivacion.
 import { NuevaDerivacionComponent } from './components/nueva-derivacion/nueva-derivacion.component';
 import { ComPuntoInicioComponent } from './components/punto-inicio.component';
 import { TipoTrasladoComponent } from './components/tipo-traslado/tipo-traslado';
-import { PuntoInicioService } from './services/punto-inicio.service';
+import { PuntoInicioService } from 'src/app/services/puntoInicio/punto-inicio.service';
 
 
 export const COM_COMPONENTS = [
@@ -42,7 +43,8 @@ export const COM_PROVIDERS = [
     ReglasDerivacionService,
     TipoTrasladoService,
     PuntoInicioService,
-    DispositivoService
+    DispositivoService,
+    EstrategiaAtencionService
 ];
 
 @NgModule({

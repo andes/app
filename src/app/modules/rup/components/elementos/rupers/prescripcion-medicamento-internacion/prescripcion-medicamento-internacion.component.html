@@ -1,13 +1,4 @@
 <form #form="ngForm" (keydown.enter)="$event.preventDefault()" *ngIf="!soloValores">
-    <plex-title size="sm" titulo="Principio Activo">
-        <plex-button size="sm" icon="plus" type="info" (click)="addSustancia()" tooltip="Agregar nuevo item"
-                     tooltipPosition="left"> </plex-button>
-        <plex-button size="sm" icon="delete" type="danger" (click)="deleteSustancia()" tooltip="Eliminar último item"
-                     tooltipPosition="left" [disabled]="registro.valor.sustancias.length === 1" class="ml-1">
-        </plex-button>
-
-    </plex-title>
-
     <!-- PRINCIPIO ACTIVO -->
     <ng-container *ngFor="let sustancia of registro.valor.sustancias">
         <plex-select [(ngModel)]="sustancia.ingrediente" name="medicamento" (getData)="loadMedicamentoGenerico($event)"
@@ -17,7 +8,7 @@
     </ng-container>
 
     <plex-grid cols="4">
-        <plex-select [(ngModel)]="registro.valor.via" name="via" [snomedExpression]="viasSnomed" span="3"
+        <plex-select [(ngModel)]="registro.valor.via" name="via" [data]="vias$ | async" span="3"
                      (change)="valuesChange()" label="Vía de administración" [preload]="true">
         </plex-select>
         <plex-int label="Cantidad" [(ngModel)]="registro.valor.cantidad" name="cantidad" required span="1">
@@ -28,37 +19,60 @@
     </plex-text>
 
     <!-- FRECUENCIA -->
-    <plex-title size="sm" titulo="Frecuencia"></plex-title>
+    <plex-title size="sm" titulo="Frecuencia">
+        <div class="d-flex align-items-center">
+            <plex-bool type="slide" name="boolSos" label="Indicación SOS" [(ngModel)]="registro.valor.sos"
+                       [disabled]="registro.valor.unicaVez" (change)="onChangeSos($event)">
+            </plex-bool>
 
-    <plex-wrapper *ngFor="let frecuencia of registro.valor.frecuencias; let i = index">
-        <plex-grid cols="2">
-            <plex-select [(ngModel)]="frecuencia.frecuencia" name="frecuencia" [data]="frecuencias$ | async"
-                         label="Frecuencia" [preload]="true" [required]="!registro.valor.unicaVez"
-                         [disabled]="registro.valor.unicaVez" span="1">
+            <plex-bool class="unicaVez" type="slide" name="boolUnicaVez" justify="start" label="Única Vez"
+                       [(ngModel)]="registro.valor.unicaVez" [disabled]="registro.valor.sos"
+                       (change)="onChangeUnicaVez($event)">
+            </plex-bool>
+        </div>
+    </plex-title>
+
+    <plex-text *ngIf="registro.valor.sos || registro.valor.unicaVez" label="Motivo" name="motivo"
+               [(ngModel)]="registro.valor.motivo" [required]="registro.valor.sos || registro.valor.unicaVez">
+    </plex-text>
+
+    <div *ngIf="!registro.valor.sos">
+        <plex-wrapper *ngFor="let frecuencia of registro.valor.frecuencias; let i = index">
+            <plex-int label="Frecuencia" [(ngModel)]="frecuencia.frecuenciaValor" name="frecuenciaValor{{i}}"
+                      [required]="!registro.valor.unicaVez && frecuencia.frecuenciaUnidad?.id !== 'otros'"
+                      [disabled]="registro.valor.unicaVez || frecuencia.frecuenciaUnidad?.id === 'otros'"
+                      [min]="frecuencia.min" [max]="frecuencia.max" span="1">
+            </plex-int>
+            <plex-select label="Unidad de tiempo" [(ngModel)]="frecuencia.frecuenciaUnidad" name="frecuenciaUnidad{{i}}"
+                         [data]="unidadesFrecuencia" idField="id" labelField="nombre"
+                         [required]="!registro.valor.unicaVez" (change)="onUnidadChange(frecuencia)">
             </plex-select>
-            <plex-text label="Velocidad Infusión" [(ngModel)]="frecuencia.velocidad" name="velocidad"
-                       span="1"></plex-text>
-        </plex-grid>
 
-        <plex-grid *ngIf="i === 0" cols="2">
-            <plex-datetime type="time" name="hora" label="Horario" [(ngModel)]="frecuencia.horario"
-                           [required]="frecuencia.frecuencia?.type === 'number' || registro.valor.unicaVez"
+            <plex-select *ngIf="frecuencia.frecuenciaUnidad?.id === 'otros'" label="Frecuencia especial"
+                         [(ngModel)]="frecuencia.frecuenciaEspecial" name="frecuenciaEspecial{{i}}"
+                         [data]="frecuenciasEspeciales" idField="id" labelField="nombre" span="2">
+            </plex-select>
+            <plex-grid cols="2">
+                <plex-select label="Velocidad de Infusión: Unidad" [(ngModel)]="frecuencia.velocidadUnidad"
+                             name="velocidadUnidad{{i}}" [data]="unidadesVelocidad" idField="id" labelField="nombre"
+                             (change)="updateVelocidadFinal(frecuencia)" span="1">
+                </plex-select>
+
+                <plex-int label="Velocidad de Infusión: Valor" [(ngModel)]="frecuencia.velocidadValor"
+                          name="velocidadValor{{i}}" span="1" min="0"
+                          (ngModelChange)="updateVelocidadFinal(frecuencia)">
+                </plex-int>
+
+                <plex-text *ngIf="frecuencia.velocidadUnidad?.id === 'otro'" label="Especificar unidad"
+                           [(ngModel)]="frecuencia.velocidadOtra" name="velocidadOtra{{i}}" span="2">
+                </plex-text>
+            </plex-grid>
+            <plex-datetime type="time" name="hora" label="Horario de inicio" [(ngModel)]="frecuencia.horario"
                            [min]="fechaMin" [max]="fechaMax"
                            [disabled]="frecuencia.frecuencia && frecuencia.frecuencia.type !== 'number'" span="1">
             </plex-datetime>
-            <plex-bool class="unicaVez" type="slide" name="boolUnicaVez" justify="start" label="Única Vez"
-                       [(ngModel)]="registro.valor.unicaVez" (change)="onChangeUnicaVez($event)" span="1">
-            </plex-bool>
-        </plex-grid>
-
-        <plex-grid cols="1">
-            <plex-text label="Motivo" *ngIf="registro.valor.unicaVez" [multiline]="true"
-                       [(ngModel)]="registro.valor.motivoUnicaVez" name="indicaciones" span="1"
-                       placeholder="Motivo de la única vez">
-            </plex-text>
-        </plex-grid>
-    </plex-wrapper>
-
+        </plex-wrapper>
+    </div>
     <plex-title size="sm" titulo="Aclaraciones y/o Comentarios"></plex-title>
     <div class="mr-3 mt-2">
         <plex-text *ngIf="afterInit" [html]="true" height="100" [(ngModel)]="registro.valor.indicaciones"
@@ -78,26 +92,48 @@
         <plex-label *ngIf="registro.valor.cantidad" titulo="Cantidad"
                     [subtitulo]="registro.valor.cantidad || 'Sin especificar'">
         </plex-label>
+
+        <plex-label titulo="Preparación" *ngIf="registro.valor.preparacion" [subtitulo]="registro.valor.preparacion">
+        </plex-label>
     </plex-grid>
 
-    <plex-title size="sm" titulo="Frecuencia"></plex-title>
+    <plex-title size="sm" [titulo]="registro.valor.sos ? 'Frecuencia SOS' : 'Frecuencia'">
+    </plex-title>
+
+    <!-- Mostrar motivo solo si es SOS -->
+    <plex-label *ngIf="registro.valor.sos && registro.valor.motivo" titulo="Motivo" [subtitulo]="registro.valor.motivo">
+    </plex-label>
 
     <plex-grid cols="3" *ngFor="let frecuencia of registro.valor.frecuencias">
-        <plex-label titulo="Frecuencia"
-                    [subtitulo]="registro.valor.unicaVez ? 'Única vez' : frecuencia.frecuencia?.nombre || ''">
+
+        <plex-label *ngIf="(frecuencia.frecuencia?.nombre || frecuencia.frecuenciaUnidad?.nombre !== 'Otros') &&
+                    (frecuencia.frecuencia?.nombre || frecuencia.frecuenciaUnidad?.nombre || frecuencia.frecuenciaValor)"
+                    titulo="Frecuencia" [subtitulo]="
+                registro.valor.unicaVez
+                    ? 'Única vez'
+                    : (
+                        (frecuencia.frecuenciaValor ? frecuencia.frecuenciaValor + ' ' : '') +
+                        (frecuencia.frecuencia?.nombre || frecuencia.frecuenciaUnidad?.nombre || '')
+                      )
+            ">
         </plex-label>
-        <plex-label titulo="Velocidad Infusión" [subtitulo]="frecuencia.velocidad || 'Sin especificar'">
+
+        <plex-label *ngIf="!frecuencia.frecuencia?.nombre && frecuencia.frecuenciaEspecial?.nombre"
+                    titulo="Frecuencia Especial" [subtitulo]="frecuencia.frecuenciaEspecial?.nombre">
+        </plex-label>
+
+        <plex-label titulo="Velocidad Infusión" [subtitulo]="frecuencia.velocidadFinal || 'Sin especificar'">
         </plex-label>
         <plex-label *ngIf="frecuencia.horario" titulo="Horario"
                     [subtitulo]="frecuencia.horario ? (frecuencia.horario | hora) : frecuencia.frecuencia?.nombre">
         </plex-label>
-        <plex-label *ngIf="registro.valor.motivoUnicaVez" span="3" titulo="Motivo Única Vez" span="3"
-                    [subtitulo]="registro.valor.motivoUnicaVez">
+        <plex-label *ngIf="registro.valor.unicaVez && registro.valor.motivo" span="3" titulo="Motivo Única Vez"
+                    [subtitulo]="registro.valor.motivo">
         </plex-label>
+
     </plex-grid>
 
-    <plex-label titulo="Preparación" *ngIf="registro.valor.preparacion" [subtitulo]="registro.valor.preparacion">
-    </plex-label>
+
 
     <div *ngIf="registro.valor.indicaciones" class="mt-3">
         <plex-label titulo="Aclaraciones y/o Comentarios">

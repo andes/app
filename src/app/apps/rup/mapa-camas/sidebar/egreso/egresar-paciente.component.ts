@@ -406,10 +406,19 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         const saveInternacion = () => {
             if (this.capa !== 'estadistica' && !this.cama.sala) {
                 // estadistica-v2, medica, enfermeria (exceptuando salas)
-                return this.internacionResumenService.update(this.cama.idInternacion, {
+                const updateData: any = {
                     tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id,
                     fechaEgreso: this.registro.valor.InformeEgreso.fechaEgreso
-                });
+                };
+
+                if (updateData.tipo_egreso?.toLowerCase() === 'traslado') {
+                    updateData.organizacionDestino = {
+                        id: this.registro.valor.InformeEgreso.UnidadOrganizativaDestino.id,
+                        nombre: this.registro.valor.InformeEgreso.UnidadOrganizativaDestino.nombre
+                    };
+                }
+
+                return this.internacionResumenService.update(this.cama.idInternacion, updateData);
             }
             return of(null);
         };

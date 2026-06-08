@@ -96,11 +96,13 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public prestacionesPermisos = [];
     public puedeCrearAgenda: Boolean;
     public puedeRevisarAgendas: Boolean;
-    private scrollEnd = false;
     public enableQueries = false;
-    queries = [];
     public collapse = false;
+    public panelGeneral = true;
+    public showHistorialAgenda = false;
+    queries = [];
     loader = true;
+    private scrollEnd = false;
 
     // ultima request de profesionales que se almacena con el subscribe
     private lastRequestProf: Subscription;
@@ -132,7 +134,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         {
             key: 'seleccion',
             label: '',
-
         },
         {
             key: 'fecha',
@@ -207,7 +208,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             otroEspacioFisico: '',
             estado: '',
             skip: 0,
-            limit: 15
+            limit: 15,
+            teleConsulta: true
         };
         if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
             this.parametros['tipoPrestaciones'] = [...this.prestacionesPermisos];
@@ -594,7 +596,18 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         }
     }
 
-    verAgenda(agenda, multiple, e) {
+    verAgenda(agenda, multiple, ev) {
+
+        if (this.agendasSeleccionadas.length === 1 && this.agendasSeleccionadas[0].id === agenda.id) {
+            if (ev === 'checkbox') {
+                this.agendasSeleccionadas = [];
+            }
+            return;
+        }
+
+        if (this.showHistorialAgenda) {
+            this.cerrarHistorial();
+        }
 
         if (this.showElegirSobreTurno) {
             this.showSobreturno = false;
@@ -709,20 +722,41 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showGestorAgendas = false;
     }
 
-    actualizarEstado(estado) {
+    showHistorial() {
+        if (this.agendasSeleccionadas.length === 1) {
+            this.showHistorialAgenda = true;
+            this.panelGeneral = false;
+        }
+    }
 
+    cerrarHistorial() {
+        this.panelGeneral = true;
+        this.showHistorialAgenda = false;
+    }
+
+    actualizarEstado(estado) {
         switch (estado) {
             case 'publicada':
-                const existeAgendaDelPasado = this.agendasSeleccionadas.some(agenda => moment(agenda.horaInicio).isBefore(moment().startOf('day')));
+                const agendasDelPasado = this.agendasSeleccionadas.filter(
+                    agenda => moment(agenda.horaInicio).isBefore(moment().startOf('day'))
+                );
+                const cantidadAgendasDelPasado = agendasDelPasado.length;
                 let mensaje = '';
-                if (this.agendasSeleccionadas.length > 1 && existeAgendaDelPasado) {
-                    mensaje = 'Una o varias agendas pasarán a estado Auditada. ¿Desea publicar de todas formas?';
-                } else if (this.agendasSeleccionadas.length === 1 && existeAgendaDelPasado) {
-                    mensaje = 'La agenda seleccionada pasará a estado Auditada. ¿Desea publicar de todas formas?';
-                } else if (this.agendasSeleccionadas.length > 1) {
-                    mensaje = '¿Publicar las siguientes agendas?';
+                if (cantidadAgendasDelPasado > 0) {
+                    if (cantidadAgendasDelPasado === this.agendasSeleccionadas.length) {
+                        mensaje = 'Las agendas seleccionadas pasarán a estado Auditada. ¿Desea publicar de todas formas?';
+                        if (cantidadAgendasDelPasado === 1) {
+                            mensaje = 'La agenda seleccionada pasará a estado Auditada. ¿Desea publicar de todas formas?';
+                        }
+                    } else {
+                        mensaje = 'Existen una o varias agendas del pasado que pasarán a estado Auditada. ¿Desea publicar de todas formas?';
+                    }
                 } else {
-                    mensaje = '¿Publicar agenda?';
+                    if (this.agendasSeleccionadas.length > 1) {
+                        mensaje = '¿Publicar las siguientes agendas?';
+                    } else {
+                        mensaje = '¿Publicar agenda?';
+                    }
                 }
                 this.plex.confirm(mensaje).then((confirmado) => {
                     if (!confirmado) {
@@ -754,13 +788,26 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     confirmarEstado(estado) {
         let alertCount = 0;
         this.agendasSeleccionadas.forEach((agenda, index) => {
-            if (estado === 'publicada' && moment(agenda.horaInicio).isBefore(moment().startOf('day'))) {
-                estado = 'auditada';
-            }
+            const esAgendaDelPasado = moment(agenda.horaInicio).isBefore(moment().startOf('day'));
             const patch = {
                 'op': estado,
                 'estado': estado
             };
+            if ((estado === 'publicada' || estado === 'disponible') && esAgendaDelPasado) {
+                const tieneTurno = agenda.bloques.find(bloque =>
+                    bloque.turnos.some(turno => turno.estado === 'asignado')
+                );
+
+                if (tieneTurno) {
+                    patch.op = 'pendienteAuditoria';
+                    patch.estado = 'pendienteAuditoria';
+                } else {
+                    patch.op = 'auditada';
+                    patch.estado = 'auditada';
+                }
+
+            }
+
             this.serviceAgenda.patch(agenda.id, patch).subscribe((resultado: any) => {
                 // Si son múltiples, esperar a que todas se actualicen
                 agenda.estado = resultado.estado;
@@ -780,6 +827,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                     this.actualizarGestor(estado);
                 }
             });
+
         });
     }
 

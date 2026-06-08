@@ -1,0 +1,93 @@
+<ng-container *ngIf="registro">
+    <plex-title titulo=" DATOS DE DERIVACIÓN " size="lg">
+        <div class="titulo-badges">
+            <plex-button size="sm" class="pr-1" type="info" [icon]="'printer'" title="Imprimir histórico de derivación"
+                         [disabled]="requestInProgress" (click)="imprimirHistorial()">
+            </plex-button>
+            <plex-badge *ngIf="registro.estado === 'solicitada' || registro.estado === 'asignada' || registro.estado === 'finalizada' "
+                        type="info">
+                {{registro.estado}}
+            </plex-badge>
+            <plex-badge *ngIf="registro.estado === 'habilitada'|| registro.estado === 'aceptada' || registro.estado === 'encomendada'"
+                        type="success" class="pr-1">
+                {{registro.estado}}
+            </plex-badge>
+            <plex-badge *ngIf="registro.estado === 'inhabilitada' || registro.estado === 'rechazada'" type="danger">
+                {{registro.estado}}
+            </plex-badge>
+        </div>
+    </plex-title>
+
+    <plex-grid class="mt-4" type="full" cols="2">
+        <div>
+            <plex-label titulo="Fecha creación"
+                        subtitulo="{{registro.createdAt | fecha}} {{registro.createdAt | hora}}">
+            </plex-label>
+        </div>
+        <div>
+            <plex-label titulo="Creada por" subtitulo="{{registro.createdBy | nombre}}">
+            </plex-label>
+        </div>
+        <div>
+            <plex-label titulo="Organización destino" subtitulo="{{registro.organizacionDestino.nombre}}">
+            </plex-label>
+        </div>
+        <div *ngIf="fechaAceptada">
+            <plex-label titulo="Fecha aceptada"
+                        subtitulo="{{ (fechaAceptada | fecha) + ' ' + (fechaAceptada | hora)  }}">
+            </plex-label>
+        </div>
+        <div *ngIf="registro.motivoDerivacion">
+            <plex-label titulo="Motivo" subtitulo="{{ registro.motivoDerivacion }}">
+            </plex-label>
+        </div>
+        <div *ngIf="registro.diagnosticoActual">
+            <plex-label titulo="Diagnostico Actual" subtitulo="{{ registro.diagnosticoActual }}">
+            </plex-label>
+        </div>
+        <div *ngIf="registro.estadoClinico">
+            <plex-label titulo="Estado Clínico" subtitulo="{{ registro.estadoClinico }}">
+            </plex-label>
+        </div>
+        <div *ngIf="registro.condicion">
+            <plex-label titulo="Condición" subtitulo="{{ registro.condicion }}">
+            </plex-label>
+        </div>
+        <div *ngIf="registro.necesidad">
+            <plex-label titulo="Necesidad" subtitulo="{{ registro.necesidad }}">
+            </plex-label>
+        </div>
+    </plex-grid>
+
+    <ng-container *ngIf="registro.dispositivo">
+        <plex-title size="sm" titulo="Dispositivo"></plex-title>
+        <plex-grid class="mt-4" type="full" cols="3">
+            <div><plex-label titulo="Fecha creación"
+                            subtitulo="{{registro.dispositivo.createdAt | fecha}} {{registro.createdAt | hora}}">
+                </plex-label></div>
+            <div><plex-label titulo="Nombre" subtitulo="{{registro.dispositivo.nombre}}">
+                </plex-label></div>
+            <div><plex-label titulo="Tipo" subtitulo="{{registro.dispositivo.tipo}}">
+                </plex-label></div>
+        </plex-grid>
+    </ng-container>
+
+    <ng-container *ngIf="registro.tipoTraslado">
+        <plex-title size="sm" titulo="Tipo de Traslado"></plex-title>
+        <plex-grid class="mt-4" type="full" cols="3">
+            <div><plex-label titulo="Fecha creación"
+                            subtitulo="{{registro.tipoTraslado.createdAt | fecha}} {{registro.createdAt | hora}}">
+                </plex-label></div>
+            <div><plex-label titulo="Creada por" subtitulo="{{registro.tipoTraslado.createdBy | nombre}}">
+                </plex-label></div>
+            <div><plex-label titulo="Nombre" subtitulo="{{registro.tipoTraslado.nombre}}">
+                </plex-label></div>
+        </plex-grid>
+    </ng-container>
+    <plex-title size="sm" titulo="Nota"></plex-title>
+    <plex-grid type="full" cols="1">
+        {{registro.detalle}}
+    </plex-grid>
+    <shared-galeria-archivos [files]="adjuntosUrl" [readonly]="true">
+    </shared-galeria-archivos>
+</ng-container>

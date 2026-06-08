@@ -39,6 +39,9 @@ export class EstadoSolicitudPipe implements PipeTransform {
         if (prestacion.estadoActual.tipo === 'rechazada') {
             return 'rechazada';
         }
+        if (prestacion.estadoActual.tipo === 'resuelta') {
+            return 'resuelta';
+        }
 
     }
 }

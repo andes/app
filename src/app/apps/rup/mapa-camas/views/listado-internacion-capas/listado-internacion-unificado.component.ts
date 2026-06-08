@@ -167,6 +167,12 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
             if (index >= 0) {
                 this.columns.splice(index, 1);
             }
+        } else {
+            // En capa estadística se oculta la columna de Unidad Organizativa
+            const indexUO = this.columns.findIndex(col => col.key === 'unidadOrganizativa');
+            if (indexUO >= 0) {
+                this.columns.splice(indexUO, 1);
+            }
         }
 
         this.listaInternacion$ = this.listadoInternacionCapasService.listaInternacionFiltrada$.pipe(cache());

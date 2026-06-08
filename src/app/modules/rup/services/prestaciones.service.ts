@@ -482,7 +482,6 @@ export class PrestacionesService {
                 hudsToken: this.hudsService.getHudsToken()
             },
             options: {
-                // showError: true
             }
         };
 

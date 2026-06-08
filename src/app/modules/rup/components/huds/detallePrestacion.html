@@ -2,7 +2,7 @@
     <plex-title *ngIf="registro?.concepto"
                 titulo="{{ registro.concepto.term[0].toUpperCase() + registro.concepto.term.slice(1) }}" size="lg">
         <div class="titulo-badges">
-            <plex-badge type="danger">
+            <plex-badge type="danger" *ngIf="registro?.privacy === 'private'">
                 Registro Privado
             </plex-badge>
             <plex-badge type="{{ !registro.esSolicitud ? registro.concepto.semanticTag : 'solicitud' }}">
@@ -37,13 +37,21 @@
         </plex-grid>
     </div>
     <div class="mt-4">
-        <div><b>Diagnóstico / Motivo</b>
-            <p>{{registro.registros[indice].valor?.solicitudPrestacion?.motivo || 'Sin diagnóstico o motivo'}}</p>
+        <div *ngIf="!registro.esSolicitud">
+            <h5><b>Detalle del registro</b></h5>
+            <article [innerHTML]="registro.evoluciones[indice].valor">
+            </article>
         </div>
-        <div>
-            <b>Indicaciones</b>
-            <p>{{registro.registros[indice].valor?.solicitudPrestacion?.indicaciones || 'Sin indicación' | html}}</p>
-        </div>
+        <ng-container *ngIf="registro.esSolicitud">
+            <div><b>Diagnóstico / Motivo</b>
+                <p>{{registro.registros[indice].valor?.solicitudPrestacion?.motivo || 'Sin diagnóstico o motivo'}}</p>
+            </div>
+            <div>
+                <b>Indicaciones</b>
+                <p>{{registro.registros[indice].valor?.solicitudPrestacion?.indicaciones || 'Sin indicación' | html}}
+                </p>
+            </div>
+        </ng-container>
     </div>
 </div>
 <hr>

@@ -92,6 +92,11 @@ export class HUDSService {
                             return i;
                         }
                         break;
+                    case 'recc':
+                        if (registro._id === _registro._id) {
+                            return i;
+                        }
+                        break;
                     case 'internacion':
                         if (registro.id === _registro.id && registro.index === _registro.index) {
                             return i;

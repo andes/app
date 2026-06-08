@@ -9,6 +9,8 @@ import { FileObject, FILE_EXT, IMAGENES_EXT, VIDEO_EXT } from '@andes/shared';
 import { DriveService } from 'src/app/services/drive.service';
 import { ConstantesService } from './../../../services/constantes.service';
 import { SnomedService } from '../../../apps/mitos';
+import { ECLQueriesService } from 'src/app/services/eclqueries.service';
+import { switchMap } from 'rxjs';
 
 @Component({
     selector: 'form-nueva-solicitud',
@@ -27,6 +29,7 @@ export class FormNuevaSolicitudComponent implements OnInit {
     fecha: any;
     arrayReglasDestino = [];
     autocitado = false;
+    tiempoVigenciaPrestacion: number = null;
     prestacionDestino: any;
     prestacionOrigen: any;
     // Adjuntar Archivo
@@ -76,6 +79,9 @@ export class FormNuevaSolicitudComponent implements OnInit {
     dataReglasDestino = [];
     dataReglasOrigen: { id: any; nombre: any }[];
 
+    public asociados: any[] = [];
+    public conceptosEcl: any[] = [];
+
     constructor(
         private plex: Plex,
         private auth: Auth,
@@ -84,8 +90,8 @@ export class FormNuevaSolicitudComponent implements OnInit {
         private servicioReglas: ReglaService,
         private adjuntosService: AdjuntosService,
         private driveService: DriveService,
-        private constantesService: ConstantesService,
-        private snomedService: SnomedService
+        private snomedService: SnomedService,
+        public eclqueriesServicies: ECLQueriesService
     ) { }
 
     ngOnInit() {
@@ -98,14 +104,21 @@ export class FormNuevaSolicitudComponent implements OnInit {
         this.adjuntosService.token$.subscribe((data: any) => {
             this.fileToken = data.token;
         });
-        this.constantesService.search({ source: 'solicitud:conceptosAsociados' }).subscribe(async (constantes) => {
-            if (constantes?.length) {
-                this.snomedService.get({
-                    search: constantes[0].query
-                }).subscribe((resultados) => {
-                    this.conceptosAsociados = [...resultados];
-                });
-            }
+
+        this.eclqueriesServicies.search({ key: 'conceptos-asociadosm' }).pipe(
+            switchMap(ecl => {
+                this.conceptosEcl = ecl;
+                if (this.conceptosEcl?.length > 0) {
+                    const query: any = {
+                        expression: this.conceptosEcl[0].valor,
+                        search: ''
+                    };
+                    return this.snomedService.get(query); // Retorna el observable del segundo servicio
+                }
+                return []; // Retorna un observable vacío si no hay conceptos
+            })
+        ).subscribe((resultado) => {
+            this.conceptosAsociados = [...resultado];
         });
     }
 
@@ -189,8 +202,12 @@ export class FormNuevaSolicitudComponent implements OnInit {
         this.dataOrganizacionesOrigen = [];
         this.modelo.solicitud.organizacionOrigen = null;
         this.dataTipoPrestacionesOrigen = [];
+        this.tiempoVigenciaPrestacion = null;
 
         if (this.modelo.solicitud && this.modelo.solicitud.tipoPrestacion) {
+            // Captura el tiempoVigencia del concepto seleccionado (365 días por defecto)
+            this.tiempoVigenciaPrestacion = this.modelo.solicitud.tipoPrestacion.tiempoVigencia || 365;
+
             this.servicioReglas.get({ organizacionDestino: this.auth.organizacion.id, prestacionDestino: this.modelo.solicitud.tipoPrestacion.conceptId })
                 .subscribe(
                     res => {

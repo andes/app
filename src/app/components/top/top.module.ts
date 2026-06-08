@@ -10,6 +10,7 @@ import { DirectiveLibModule } from 'src/app/directives/directives.module';
 
 import { VisualizacionReglasComponent } from './reglas/visualizacionReglas.component';
 import { HistorialSolicitudComponent } from './solicitudes/historialSolicitud.component';
+import { TurnosSolicitudComponent } from './solicitudes/turnosSolicitud.component';
 import { VisualizacionReglasTopComponent } from './reglas/visualizacionReglasTop.component';
 import { RouterService } from 'src/app/services/router.service';
 import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
@@ -18,7 +19,8 @@ export const TOP_COMPONENTS = [
     VisualizacionReglasTopComponent,
     VisualizacionReglasComponent,
     HistorialSolicitudComponent,
-    FormNuevaSolicitudComponent
+    FormNuevaSolicitudComponent,
+    TurnosSolicitudComponent
 ];
 
 export const TOP_PROVIDERS = [
@@ -46,7 +48,8 @@ export const TOP_PROVIDERS = [
         VisualizacionReglasTopComponent,
         VisualizacionReglasComponent,
         HistorialSolicitudComponent,
-        FormNuevaSolicitudComponent
+        FormNuevaSolicitudComponent,
+        TurnosSolicitudComponent
     ],
 })
 export class TOPLibModule {

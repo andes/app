@@ -59,8 +59,14 @@
             align-items: center;
             justify-content: center;
 
-            .icon i {
+            .icon i,
+            i.icon {
                 font-size: 25px;
+
+                &.adi-hospital-building {
+                    font-size: 28px;
+                    color: #c1121f;
+                }
             }
 
             .contador {
@@ -130,6 +136,14 @@
 
         .vacunas {
             @include card-estilo($vacuna);
+        }
+
+        .guardias {
+            @include card-estilo($guardia);
+        }
+
+        .recc {
+            @include card-estilo($recc);
         }
 
         .dominios {
@@ -286,6 +300,14 @@
         color: $vacuna
     }
 
+    &.guardias {
+        color: $guardia
+    }
+
+    &.recc {
+        color: $recc
+    }
+
     &.dominios {
         color: $dominiosNac
     }
@@ -327,6 +349,11 @@
 
         .icon-rup {
             max-width: 55px !important;
+
+            i.adi-hospital-building {
+                font-size: 2rem;
+                color: #c1121f;
+            }
         }
     }
 }
@@ -349,10 +376,22 @@
     font-size: 80%;
 
 }
+
 .total {
     width: 100% !important;
 }
 
 .item-lista-vacia {
     margin-top: 10%
+}
+
+.sidebar-loader {
+    position: absolute;
+    top: 180px;
+    right: 45%;
+    z-index: 100;
+}
+
+.opacity-35 {
+    opacity: 0.35;
 }

@@ -192,11 +192,11 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 fechaHasta: moment(this.fecha).isValid() ? moment(this.fecha).endOf('day').toDate() : new Date(),
                 organizacion: this.auth.organizacion.id,
                 estados: ['disponible', 'publicada', 'pendienteAsistencia', 'pendienteAuditoria', 'auditada'],
-                tipoPrestaciones: this.tiposPrestacion.map(t => t.id)
+                tipoPrestaciones: this.tiposPrestacion.map(t => t.id),
+                teleConsulta: true
             }),
             // Prestaciones
             this.getPrestaciones(),
-
         ];
         if (this.permisoServicioIntermedio.length > 0) {
             requests.push(

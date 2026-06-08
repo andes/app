@@ -11,21 +11,38 @@
                    *ngIf="(derivaciones$ | async) as derivacionesOrdenadas">
             <plex-tab label="DERIVACIONES ENTRANTES">
                 <plex-wrapper>
+                    <plex-datetime type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Fecha desde"
+                                   class="fechas" (change)="cargarDerivaciones()" debounce="800" [max]="maxFechaDesde">
+                    </plex-datetime>
+                    <plex-datetime type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Fecha hasta"
+                                   class="fechas" (change)="cargarDerivaciones()" debounce="800" [min]="minFechaHasta"
+                                   [max]="hoy">
+                    </plex-datetime>
                     <plex-select [(ngModel)]="organizacionOrigen" name="orgOrigen" tmOrganizaciones
                                  label="Organización origen" placeholder="Seleccione la organización"
                                  (change)="cargarDerivaciones()">
                     </plex-select>
                     <plex-text [(ngModel)]="paciente" name="paciente" (change)="cargarDerivaciones()"
                                label="Buscar paciente" debounce="400"></plex-text>
+                    <plex-select [(ngModel)]="estrategia" (change)="cargarDerivaciones()" [data]="estrategiasAtencion"
+                                 name="estrategia" label="Estrategia de atención"
+                                 placeholder="Seleccione una estrategia"></plex-select>
+
+                    <plex-select [(ngModel)]="rangoEtario" name="rangoEtario" [data]="opcionesRangoEtario"
+                                 label="Rango Etario" placeholder="Todos" (change)="cargarDerivaciones()">
+                    </plex-select>
                     <plex-select [(ngModel)]="estado" (change)="cargarDerivaciones()" [data]="estados" name="estado"
                                  label="Estado">
                     </plex-select>
+                    <plex-select [(ngModel)]="estado" (change)="cargarDerivaciones()" [data]="estados" name="estado"
+                                 label="Estado">
+                    </plex-select>
+
                     <div *ngIf="esCOM">
                         <plex-label titulo="Ordenar por prioridad"></plex-label>
                         <plex-bool (change)="ordenarPrioridad()" [(ngModel)]="ordenarPorPrioridad" type="slide">
                         </plex-bool>
                     </div>
-
                 </plex-wrapper>
                 <div *ngIf="!derivacionesOrdenadas?.length && !loading" class="alert alert-default">
                     No hay resultados que coincidan con los filtros de búsqueda
@@ -116,12 +133,26 @@
             </plex-tab>
             <plex-tab label="DERIVACIONES SOLICITADAS">
                 <plex-wrapper>
+                    <plex-datetime type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Fecha desde"
+                                   class="fechas" (change)="cargarDerivaciones()" debounce="800" [max]="maxFechaDesde">
+                    </plex-datetime>
+                    <plex-datetime type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Fecha hasta"
+                                   class="fechas" (change)="cargarDerivaciones()" debounce="800" [min]="minFechaHasta"
+                                   [max]="hoy">
+                    </plex-datetime>
                     <plex-select [(ngModel)]="organizacionDestino" name="orgDestino" tmOrganizaciones
                                  label="Organización destino" placeholder="Seleccione la organización"
                                  (change)="cargarDerivaciones()">
                     </plex-select>
                     <plex-text [(ngModel)]="paciente" name="paciente" (change)="cargarDerivaciones()"
                                label="Buscar paciente" debounce="400"></plex-text>
+                    <plex-select [(ngModel)]="estrategia" (change)="cargarDerivaciones()" [data]="estrategiasAtencion"
+                                 name="estrategia" label="Estrategia de atención"
+                                 placeholder="Seleccione una estrategia"></plex-select>
+
+                    <plex-select [(ngModel)]="rangoEtario" name="rangoEtario" [data]="opcionesRangoEtario"
+                                 label="Rango Etario" placeholder="Todos" (change)="cargarDerivaciones()">
+                    </plex-select>
                     <plex-select [(ngModel)]="estado" (change)="cargarDerivaciones()" [data]="estados" name="estado"
                                  label="Estado">
                     </plex-select>

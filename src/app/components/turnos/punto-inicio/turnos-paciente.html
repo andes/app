@@ -91,7 +91,7 @@
                                              (click)="eventosTurno(turno,'sacarAsistencia')">
                                 </plex-button>
 
-                                <plex-button *ngIf="turno?.profesionales?.length > 0 && turno?.paciente.documento"
+                                <plex-button *ngIf="financiador?.nombre !== 'SUMAR' && turno?.profesionales?.length > 0 && turno?.paciente.documento"
                                              class="float-right mr-1" type="info" label="Recupero" size="sm"
                                              (click)="showArancelamiento(turno)">
                                 </plex-button>

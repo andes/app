@@ -1,9 +1,7 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { AfterContentInit, Component, EventEmitter, Input, OnInit, Optional, Output, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Optional, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
-import { LaboratorioService } from 'projects/portal/src/app/services/laboratorio.service';
-import { RecetaService } from 'projects/portal/src/app/services/receta.service';
 import { Observable, forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { InternacionResumenHTTP } from 'src/app/apps/rup/mapa-camas/services/resumen-internacion.http';
@@ -12,13 +10,18 @@ import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { SECCION_CLASIFICACION } from 'src/app/modules/epidemiologia/constantes';
 import { FormsEpidemiologiaService } from 'src/app/modules/epidemiologia/services/ficha-epidemiologia.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import { LaboratorioService } from 'src/app/services/laboratorio.service';
 import { ProfesionalService } from 'src/app/services/profesional.service';
+import { RecetaService } from 'src/app/services/receta.service';
 import { gtag } from '../../../../shared/services/analytics.service';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { getSemanticClass } from '../../pipes/semantic-class.pipes';
 import { EmitConcepto, RupEjecucionService } from '../../services/ejecucion.service';
 import { HUDSService } from '../../services/huds.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { CDAService } from '../../services/CDA.service';
+
+import { PuntoInicioService } from 'src/app/services/puntoInicio/punto-inicio.service';
 
 @Component({
     selector: 'rup-hudsBusqueda',
@@ -26,16 +29,24 @@ import { PrestacionesService } from './../../services/prestaciones.service';
     styleUrls: ['hudsBusqueda.scss', 'buscador.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class HudsBusquedaComponent implements AfterContentInit, OnInit {
+export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestroy, OnChanges {
     laboratoriosFS: any;
     laboratorios: any = [];
     vacunas: any = [];
+    guardias: any = [];
+    private rupGuardias: any[] = [];
+    derivaciones: any = [];
     ordenDesc = true;
     searchTerm: string;
     hallazgosCronicosAux: any[];
     hallazgosNoActivosAux: any;
     filtroActual;
     filtroTrastornos = true;
+    public disabledBtnCDA = false;
+    public token: string;
+    public secondsToUpdate = 0;
+    private intervalUpdate: any;
+    private cantidadRegistros;
 
     solicitudesMezcladas = [];
 
@@ -77,6 +88,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         });
     }
 
+
     public todos: any = [];
     public solicitudes: any = [];
     public solicitudesTOP: any = [];
@@ -109,6 +121,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         elementoderegistro: ['elemento de registro'],
         laboratorios: ['laboratorios'],
         vacunas: ['vacunas'],
+        guardias: ['guardias'],
+        recc: ['recc']
     };
     public prestacionesTotales;
     public registrosTotales = {
@@ -137,6 +151,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     public filtroRecetas;
     public searchRecetas;
     public busquedaRecetas;
+    public busquedaRecetasOriginal;
     public motivosSuspension;
     public motivoSuspensionSelector;
     public seleccionRecetas = [];
@@ -148,6 +163,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
 
     public filtros = [
         { key: 'planes', titulo: 'prestaciones', icono: 'clipboard-check-outline' },
+        { key: 'guardias', titulo: 'guardias', icono: 'hospital-building' },
         { key: 'solicitudes', titulo: 'solicitudes', icono: 'mano-corazon' },
         { key: 'hallazgo', titulo: 'hallazgos', icono: 'hallazgo' },
         { key: 'trastorno', titulo: 'trastornos', icono: 'trastorno' },
@@ -156,7 +172,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         { key: 'recetas', titulo: 'recetas', icono: 'listado-receta' },
         { key: 'producto', titulo: 'productos', icono: 'pildoras' },
         { key: 'laboratorios', titulo: 'laboratorios', icono: 'recipiente' },
-        { key: 'vacunas', titulo: 'vacunas', icono: 'vacuna' }
+        { key: 'vacunas', titulo: 'vacunas', icono: 'vacuna' },
+        { key: 'recc', titulo: 'recc', icono: 'account-switch' }
     ];
 
     public estadoReceta = {
@@ -178,6 +195,9 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     public permisosLab;
     public permisosVac;
     public permisosRec;
+    public permisosGuardia;
+    public pacienteSelected: IPaciente | null = null;
+
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -190,7 +210,9 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         private pacienteService: PacienteService,
         private laboratorioService: LaboratorioService,
         private recetasService: RecetaService,
+        private cdaService: CDAService,
         private profesionalService: ProfesionalService,
+        private puntoInicioService: PuntoInicioService
     ) {
     }
 
@@ -200,32 +222,67 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ngAfterContentInit() {
-        if (this.paciente) {
+        if (this.paciente && this.permisosCompletos) {
             this.listarInternaciones();
             this.listarPrestaciones();
             this.listarConceptos();
+            this.listarDerivaciones();
         }
-        const token = this.huds.getHudsToken();
         // Cuando se inicia una prestación debemos volver a consultar si hay CDA nuevos al ratito.
         // [TODO] Ser notificado via websockets
         setTimeout(() => {
-            this.buscarCDAPacientes(token);
+            this.refreshCdas();
         }, 1000 * 30);
     }
 
+    private refreshCdas() {
+        this.buscarCDAPacientes(this.huds.getHudsToken());
+    }
+
     ngOnInit() {
-        this.groupRecetas();
-        this.getProfesional();
         this.permisosCompletos = this.auth.check('huds:visualizacionHuds');
         this.permisosParciales = this.auth.check('huds:visualizacionParcialHuds:*');
         this.permisosLab = this.auth.check('huds:visualizacionParcialHuds:laboratorio');
         this.permisosVac = this.auth.check('huds:visualizacionParcialHuds:vacuna');
         this.permisosRec = this.auth.check('huds:visualizacionParcialHuds:receta');
+        this.permisosGuardia = this.auth.check('huds:visualizacionParcialHuds:guardia');
 
+        if (this.permisosCompletos || this.permisosParciales || this.permisosRec) {
+            this.groupRecetas();
+        }
+        this.getProfesional();
+
+        // se setea el filtro inicial a visualizar en el sidebar
         this.filtroActual = this.permisosCompletos ? 'trastorno' :
-            (this.permisosParciales || this.permisosLab) ? 'laboratorios' :
-                this.permisosVac ? 'vacunas' :
-                    'recetas';
+            (this.permisosGuardia) ? 'guardias' :
+                (this.permisosParciales || this.permisosRec) ? 'recetas' :
+                    (this.permisosLab) ? 'laboratorios' :
+                        'vacunas';
+
+        this.pacienteSelected = this.paciente;
+
+        if (this.filtroActual === 'recetas') {
+            this.showFiltros = true;
+        }
+        if (this.filtroActual !== 'trastorno') {
+            this.refreshCdas();
+        }
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.paciente?.currentValue) {
+            const pac = changes.paciente.currentValue;
+            if (pac.idPaciente) {
+                this.paciente = pac.idPaciente;
+            }
+            this.pacienteSelected = this.paciente;
+        }
+    }
+
+    ngOnDestroy() {
+        if (this.intervalUpdate) {
+            clearInterval(this.intervalUpdate);
+        }
     }
 
     getTitulo(filtroactual) {
@@ -233,18 +290,32 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     }
 
     dragStart(e) {
-        this._onDragStart.emit(e);
     }
 
     dragEnd(e) {
         this._onDragEnd.emit(e);
     }
 
+    public tiposPrescripcion = [
+        { id: 'medicamento', nombre: 'Medicamento' },
+        { id: 'insumo', nombre: 'Dispositivos / Insumos' },
+        { id: 'alimentacion', nombre: 'Alimentación' },
+        { id: 'magistral', nombre: 'Magistrales' }
+    ];
+    public tipoPrescripcionSeleccionado = this.tiposPrescripcion[0];
+    public fechaInicioRecetas;
+    public fechaFinRecetas;
+
     toogleFiltros() {
         this.showFiltros = !this.showFiltros;
         if (!this.showFiltros) {
             this.fechaInicio = this.fechaFin = this.prestacionSeleccionada = null;
+            this.fechaInicioRecetas = this.fechaFinRecetas = null;
+            this.tipoPrescripcionSeleccionado = this.tiposPrescripcion[0];
             this.filtrar();
+            if (this.filtroActual === 'recetas') {
+                this.filtrarRecetas();
+            }
         }
     }
 
@@ -259,6 +330,70 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
 
     }
 
+    textoTratamientoProlongado(grupo: any): string {
+        const medicamento = grupo?.recetaVisible?.medicamento;
+
+        if (!medicamento) {
+            return '';
+        }
+
+        const orden =
+            medicamento.ordenTratamiento != null
+                ? medicamento.ordenTratamiento + 1
+                : 0;
+
+        const tiempo = medicamento.tiempoTratamiento?.id ?? '';
+
+        return `Tratamiento prolongado: ${orden} de ${tiempo}`;
+    }
+
+    refreshCDA() {
+        forkJoin([
+            this.cdaService.getCDAList(this.pacienteSelected.id),
+            this.laboratorioService.getLaboratorios(this.pacienteSelected.id)
+        ]).subscribe(([cda, laboratorios]) => {
+            const listado = [];
+
+            cda.forEach(itemCda => {
+                const laboratorioCorrespondiente = laboratorios.find(
+                    laboratorio => laboratorio.id.toString() === itemCda.extras.id
+                );
+
+                listado.push({
+                    cda: itemCda,
+                    laboratorio: laboratorioCorrespondiente
+                });
+            });
+
+            this.cdas = listado;
+        });
+    }
+
+    regenerarCDA() {
+        this.disabledBtnCDA = true;
+        this.cantidadRegistros = this.filtroActual === 'guardias' ? this.guardias.length : this.laboratorios.length;
+
+        this.cdaService.regenerarCDA(this.paciente).subscribe(
+            () => {
+                this.plex.toast('success', 'Esta acción requiere algunos segundos de espera.', 'BUSCANDO NUEVOS REGISTROS', 5000);
+                this.secondsToUpdate = 15;
+                if (this.intervalUpdate) {
+                    clearInterval(this.intervalUpdate);
+                }
+                this.intervalUpdate = setInterval(() => {
+                    this.secondsToUpdate--;
+                    if (this.secondsToUpdate <= 0) {
+                        clearInterval(this.intervalUpdate);
+                        this.refreshLaboratorios(this.token);
+                    }
+                }, 1000);
+            },
+            (err) => {
+                this.plex.toast('danger', 'Error al regenerar CDA');
+                this.disabledBtnCDA = false;
+            }
+        );
+    }
     agregarRegistro(registro) {
         if (this.ejecucionService) {
             const data: EmitConcepto = {
@@ -310,6 +445,11 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
                 gtag('huds-open', tipo, registro.solicitud.registros[0].concepto.term, index);
                 registro.tipo = 'solicitud';
                 registro.class = 'plan';
+                break;
+            case 'recc':
+                gtag('huds-open', tipo, registro.organizacionOrigen.nombre, index);
+                registro = registro;
+                registro.class = 'recc';
                 break;
             case 'ficha-epidemiologica':
                 gtag('huds-open', tipo, registro.prestacion.term, index);
@@ -394,8 +534,12 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
             this.prestacionesTotales = prestaciones;
             const validadas = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
 
-            this.prestaciones = groupBy(validadas).map(p => {
+            const filtradas = validadas.filter(p => p.solicitud.tipoPrestacion.conceptId !== ConceptosTurneablesService.Guardia_CDA_ID);
+            const guardiasRUP = validadas.filter(p => p.solicitud.tipoPrestacion.conceptId === ConceptosTurneablesService.Guardia_CDA_ID);
+
+            const mapRUP = (p) => {
                 if (Array.isArray(p)) {
+                    p[0]._id = p[0]._id || p[0].id;
                     return {
                         data: p,
                         tipo: 'rup-group',
@@ -408,6 +552,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
                     };
                 } else {
                     const lastState = p.estados[p.estados.length - 1];
+                    p._id = p._id || p.id;
                     return {
                         data: p,
                         tipo: 'rup',
@@ -419,7 +564,10 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
                         organizacion: p.solicitud.organizacion.id
                     };
                 }
-            });
+            };
+
+            this.rupGuardias = groupBy(guardiasRUP).map(p => mapRUP(p));
+            this.prestaciones = groupBy(filtradas).map(p => mapRUP(p));
             this.prestacionesCopia = this.prestaciones.slice();
             this.setAmbitoOrigen('ambulatorio');
             this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
@@ -480,6 +628,19 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         });
     }
 
+    listarDerivaciones() {
+        const query = {
+            paciente: `^${this.paciente.documento}`
+        };
+
+        this.puntoInicioService.get(query).subscribe((data) => {
+
+            if (data.length > 0) {
+                this.derivaciones = data.filter(d => d.estado === 'finalizada');
+            }
+        });
+    }
+
     private cargarSolicitudesMezcladas() {
         this.solicitudesMezcladas = this.solicitudes.concat(this.solicitudesTOP);
 
@@ -499,7 +660,14 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
             const fechaB = moment(b.fecha);
             return fechaB.diff(fechaA);
         });
+    }
 
+    private ordenarGuardias(guardias) {
+        return guardias.sort((a, b) => {
+            const fechaA = moment(a.fecha);
+            const fechaB = moment(b.fecha);
+            return fechaB.diff(fechaA);
+        });
     }
 
     // Trae los cdas registrados para el paciente
@@ -510,45 +678,50 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         }).subscribe({
             next: (resultados) => {
                 const protocolos = resultados.protocolos || [];
-                this.servicioPrestacion.getCDAByPaciente(this.paciente.id, token).subscribe(registros => {
-                    this.cdas = registros.map(cda => {
-                        cda.id = cda.cda_id;
-                        return {
-                            data: cda,
-                            tipo: 'cda',
-                            prestacion: cda.prestacion.snomed,
-                            profesional: cda.profesional ? `${cda.profesional.apellido} ${cda.profesional.nombre}` : '',
-                            fecha: cda.fecha,
-                            estado: 'validada',
-                            ambito: 'ambulatorio',
-                            organizacion: cda.organizacion.id
-                        };
-                    });
-                    this.prestaciones = this.prestacionesCopia;
-                    // filtramos las vacunas y laboratorios por ahora para que se listan por separado
-                    this.vacunas = this.cdas.filter(cda => cda.prestacion.conceptId === ConceptosTurneablesService.Vacunas_CDA_ID);
-                    this.laboratorios = this.cdas.filter(cda => cda.prestacion.conceptId === ConceptosTurneablesService.Laboratorio_CDA_ID
-                        || cda.prestacion.conceptId === ConceptosTurneablesService.Laboratorio_SISA_CDA_ID);
-
-                    this.laboratorios = this.ordenarLaboratorios(this.laboratorios, protocolos);
-
-                    // DEjamos el resto de los CDAS y los unimos a las prestaciones
-                    const filtro = this.cdas.filter(cda => {
-                        return cda.prestacion.conceptId !== ConceptosTurneablesService.Vacunas_CDA_ID
-                            && cda.prestacion.conceptId !== ConceptosTurneablesService.Laboratorio_CDA_ID
-                            && cda.prestacion.conceptId !== ConceptosTurneablesService.Laboratorio_SISA_CDA_ID;
-                    });
-                    // Filtramos por CDA para poder recargar los estudiosc
-                    this.prestaciones = [...this.prestaciones.filter(e => e.tipo !== 'cda'), ...filtro];
-                    this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
-                    this.prestacionesCopia = this.prestaciones.slice();
-                    this.filtrar();
+                const registros = resultados.cdaByPaciente || [];
+                this.cdas = registros.map(cda => {
+                    cda.id = cda.cda_id;
+                    cda._id = cda.cda_id;
+                    return {
+                        data: cda,
+                        tipo: 'cda',
+                        prestacion: cda.prestacion.snomed,
+                        profesional: cda.profesional ? `${cda.profesional.apellido}, ${cda.profesional.nombre}` : '',
+                        fecha: cda.fecha,
+                        estado: 'validada',
+                        ambito: 'ambulatorio',
+                        organizacion: cda.organizacion.id
+                    };
                 });
+                this.prestaciones = this.prestacionesCopia;
+                // filtramos las vacunas y laboratorios por ahora para que se listan por separado
+                this.vacunas = this.cdas.filter(cda => cda.prestacion.conceptId === ConceptosTurneablesService.Vacunas_CDA_ID);
+                this.guardias = this.ordenarGuardias([
+                    ...this.rupGuardias,
+                    ...this.cdas.filter(cda => cda.prestacion.conceptId === ConceptosTurneablesService.Guardia_CDA_ID)
+                ]);
+                this.laboratorios = this.cdas.filter(cda => cda.prestacion.conceptId === ConceptosTurneablesService.Laboratorio_CDA_ID
+                    || cda.prestacion.conceptId === ConceptosTurneablesService.Laboratorio_SISA_CDA_ID);
+
+                this.laboratorios = this.ordenarLaboratorios(this.laboratorios, protocolos);
+
+                // DEjamos el resto de los CDAS y los unimos a las prestaciones
+                const filtro = this.cdas.filter(cda => {
+                    return cda.prestacion.conceptId !== ConceptosTurneablesService.Vacunas_CDA_ID
+                        && cda.prestacion.conceptId !== ConceptosTurneablesService.Laboratorio_CDA_ID
+                        && cda.prestacion.conceptId !== ConceptosTurneablesService.Laboratorio_SISA_CDA_ID
+                        && cda.prestacion.conceptId !== ConceptosTurneablesService.Guardia_CDA_ID;
+                });
+                // Filtramos por CDA para poder recargar los estudiosc
+                this.prestaciones = [...this.prestaciones.filter(e => e.tipo !== 'cda'), ...filtro];
+                this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
+                this.prestacionesCopia = this.prestaciones.slice();
+                this.filtrar();
             }
         });
     }
 
-    buscarFichasEpidemiologicas() {
+    private buscarFichasEpidemiologicas() {
         this.formEpidemiologiaService.search({ paciente: this.paciente.id }).subscribe(fichas => {
             if (fichas.length) {
                 const fichasEpidemiologia = fichas.map(f => {
@@ -576,6 +749,58 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         });
     }
 
+    refreshLaboratorios(token) {
+        forkJoin({
+            protocolos: this.laboratorioService.getProtocolos(this.paciente.id),
+            cdaByPaciente: this.servicioPrestacion.getCDAByPaciente(this.paciente.id, token)
+        }).subscribe({
+            next: ({ protocolos, cdaByPaciente }) => {
+
+                // Mapeamos igual que antes
+                const cdasMapeados = cdaByPaciente.map(cda => {
+                    cda.id = cda.cda_id;
+                    cda._id = cda.cda_id;
+                    return {
+                        data: cda,
+                        tipo: 'cda',
+                        prestacion: cda.prestacion.snomed,
+                        profesional: cda.profesional
+                            ? `${cda.profesional.apellido}, ${cda.profesional.nombre}`
+                            : '',
+                        fecha: cda.fecha,
+                        estado: 'validada',
+                        ambito: 'ambulatorio',
+                        organizacion: cda.organizacion.id
+                    };
+                });
+
+                // 🔹 SOLO LABORATORIOS
+                this.laboratorios = cdasMapeados.filter(cda =>
+                    cda.prestacion.conceptId === ConceptosTurneablesService.Laboratorio_CDA_ID ||
+                    cda.prestacion.conceptId === ConceptosTurneablesService.Laboratorio_SISA_CDA_ID
+                );
+
+                // 🔹 GUARDIAS
+                this.guardias = this.ordenarGuardias([
+                    ...this.rupGuardias,
+                    ...cdasMapeados.filter(cda =>
+                        cda.prestacion.conceptId === ConceptosTurneablesService.Guardia_CDA_ID
+                    )
+                ]);
+
+                // 🔹 Orden especial de laboratorios
+                this.laboratorios = this.ordenarLaboratorios(this.laboratorios, protocolos);
+
+                const countAfter = this.filtroActual === 'guardias' ? this.guardias.length : this.laboratorios.length;
+                const nuevosRegistros = countAfter - this.cantidadRegistros;
+                const notificacion = nuevosRegistros > 0 ? 'Se encontraron ' + nuevosRegistros + ' nuevos registros.' : 'No se encontraron nuevos registros. Puede intentar regenerar/actualizar el listado nuevamente en unos minutos.';
+                this.plex.toast('info', notificacion, 'Información', 6000);
+                this.disabledBtnCDA = false;
+            }
+        });
+    }
+
+
     getCantidadResultados(type: any) {
         switch (type) {
             case 'todos':
@@ -594,10 +819,14 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
                 return this.laboratorios.length;
             case 'vacunas':
                 return this.vacunas.length;
+            case 'guardias':
+                return this.guardias.length;
+            case 'recc':
+                return this.derivaciones.length;
             case 'solicitudes':
                 return this.solicitudesMezcladas.length;
             case 'recetas':
-                return this.busquedaRecetas?.length;
+                return this.busquedaRecetasOriginal?.length;
             case 'registro':
                 return this.registrosTotalesCopia.registro.length;
         }
@@ -609,6 +838,9 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         if (key === 'planes') {
             this.setAmbitoOrigen('ambulatorio');
         }
+        if (key === 'recetas') {
+            this.showFiltros = true;
+        }
     }
 
     mostrarItem(item) {
@@ -618,10 +850,17 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
             return true;
         } else if (item.key === 'vacunas' && (this.permisosVac || this.permisosParciales)) {
             return true;
+        } else if (item.key === 'guardias' && (this.permisosGuardia || this.permisosParciales || this.permisosCompletos)) {
+            return true;
         } else if (item.key === 'recetas' && (this.permisosRec || this.permisosParciales)) {
             return true;
         }
         return false;
+    }
+
+    mostrarBuscador() {
+        const filtrosSinBuscador = ['solicitudes', 'planes', 'laboratorios', 'vacunas', 'dominios', 'guardias'];
+        return !filtrosSinBuscador.includes(this.filtroActual);
     }
 
     filtrarTrastornos() {
@@ -654,20 +893,33 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
             !prestacionesEnInternacion.some(filtro => filtro.data.id === prestacion.data.id));
 
         const indiceRegistros = filtroPrestaciones.reduce((grupo, prestacion) => {
-            const { solicitud: { tipoPrestacion: { conceptId, term } }, id, createdAt: fecha } = prestacion.data;
-            const data = { conceptId, term, id, fecha };
+            const dataPrestacion = Array.isArray(prestacion.data) ? prestacion.data[0] : prestacion.data;
+            const { solicitud: { tipoPrestacion: { conceptId, term } }, id, createdAt: fecha } = dataPrestacion;
+            const unidadOrganizativa = dataPrestacion.unidadOrganizativa?.term;
+            const data = { conceptId, term, id, fecha, unidadOrganizativa };
 
             return ({
-                indices: { ...grupo.indices, ['otras']: { ...grupo.indices['otras'], [data.conceptId]: data } },
-                registros: { ...grupo.registros, ['otras']: { ...grupo.registros['otras'], [data.conceptId]: prestacion } }
+                indices: { ...grupo.indices, ['otras']: { ...grupo.indices['otras'], [data.id]: data } },
+                registros: { ...grupo.registros, ['otras']: { ...grupo.registros['otras'], [data.id]: prestacion } }
             });
         }, { indices: {}, registros: {} });
 
-        const fechas = filtroPrestaciones.map(({ data }) => data.estadoActual.createdAt);
+        const fechas = filtroPrestaciones.map(({ data }) => Array.isArray(data) ? data[0].estadoActual.createdAt : data.estadoActual.createdAt);
+        const dataFirst = filtroPrestaciones.length ? (Array.isArray(filtroPrestaciones[0].data) ? filtroPrestaciones[0].data[0] : filtroPrestaciones[0].data) : null;
+        const organizacion = dataFirst?.solicitud?.organizacion?.nombre;
+        const unidadOrganizativa = dataFirst?.unidadOrganizativa?.term;
+
         const fechaDesde = fechas[fechas.length - 1];
         const fechaHasta = fechas[0];
 
-        this.otrasPrestaciones = { fechaDesde, fechaHasta, indices: Object.values(indiceRegistros.indices), registros: Object.values(indiceRegistros.registros) };
+        this.otrasPrestaciones = {
+            fechaDesde,
+            fechaHasta,
+            indices: Object.values(indiceRegistros.indices),
+            registros: Object.values(indiceRegistros.registros),
+            organizacion,
+            unidadOrganizativa
+        };
     }
 
     filtrarPorInternacion(prestaciones) {
@@ -755,6 +1007,10 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         this.emitTabs(registro, (registro.evoluciones ? 'concepto' : 'solicitud'), index);
     }
 
+    clickDerivacion(registro, index) {
+        this.emitTabs(registro, 'recc', index);
+    }
+
     normalizarCadena(cadena) {
         return cadena
             .normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
@@ -782,12 +1038,12 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     filtrarRecetas() {
         const searchTerm = this.searchRecetas?.toLowerCase() || '';
 
-        if (!searchTerm && !this.filtroRecetas) {
-            this.groupRecetas();
+        if (!searchTerm && !this.filtroRecetas && !this.tipoPrescripcionSeleccionado && !this.fechaInicioRecetas && !this.fechaFinRecetas) {
+            this.busquedaRecetas = this.busquedaRecetasOriginal;
             return;
         }
 
-        let filteredRecetas = this.busquedaRecetas;
+        let filteredRecetas = this.busquedaRecetasOriginal;
 
         if (searchTerm) {
             filteredRecetas = filteredRecetas.filter(group => {
@@ -795,9 +1051,51 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
             });
         }
 
+        if (this.fechaInicioRecetas || this.fechaFinRecetas) {
+            const fechaInicio = this.fechaInicioRecetas ? moment(this.fechaInicioRecetas).startOf('day') : null;
+            const fechaFin = this.fechaFinRecetas ? moment(this.fechaFinRecetas).endOf('day') : null;
+
+            filteredRecetas = filteredRecetas.filter(group => {
+                const fecha = moment(group.recetaVisible.fechaRegistro);
+                if (fechaInicio && fecha.isBefore(fechaInicio)) {
+                    return false;
+                }
+                if (fechaFin && fecha.isAfter(fechaFin)) {
+                    return false;
+                }
+                return true;
+            });
+        }
+
+        if (this.tipoPrescripcionSeleccionado) {
+            const tipo = this.tipoPrescripcionSeleccionado.id;
+            filteredRecetas = filteredRecetas.filter(group => {
+                const medicamento = group.recetaVisible.medicamento;
+                const concept = medicamento.concepto;
+                const semanticTag = concept.semanticTag;
+                const term = concept.term.toLowerCase();
+
+                switch (tipo) {
+                    case 'medicamento':
+                        return true;
+                    case 'insumo':
+                        return (semanticTag === 'objeto físico' || semanticTag === 'producto') && !term.includes('alimentacion') && !term.includes('fórmula');
+                    case 'alimentacion':
+                        // Assuming semantic tag is 'producto' but checking term for 'alimentacion' as heuristic
+                        return semanticTag === 'producto' && (term.includes('alimentacion') || term.includes('fórmula') || term.includes('leche'));
+                    case 'magistral':
+                        // Check if properties indicate magistral, currently no explicit property known, might be in concept term
+                        return term.includes('magistral');
+                    default:
+                        return true;
+                }
+            });
+        }
+
         if (this.filtroRecetas) {
             filteredRecetas = filteredRecetas.reduce((acc, receta) => {
                 const vigenteRecetas = receta.recetas.filter(r => r.estadoActual.tipo === 'vigente');
+
                 if (vigenteRecetas.length > 0) {
                     acc.push({
                         conceptId: receta.conceptId,
@@ -842,6 +1140,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
 
                 }))
             );
+            this.busquedaRecetasOriginal = this.busquedaRecetas;
         });
     }
 
@@ -868,14 +1167,14 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
         const dispensasPermitidas = ['sin-dispensa', 'dispensa-parcial'];
         if (!receta.medicamento.tratamientoProlongado) {
             return (estadosPermitidos.includes(receta.estadoActual?.tipo)
-            && dispensasPermitidas.includes(receta.estadoDispensaActual?.tipo)) && this.profesionalValido;
+                && dispensasPermitidas.includes(receta.estadoDispensaActual?.tipo)) && this.profesionalValido;
         } else {
             const recetasMismoRegistro = this.busquedaRecetas?.flatMap(grupo =>
                 grupo.recetas.filter(r => r.idRegistro === receta.idRegistro && r.medicamento.concepto.conceptId === receta.medicamento.concepto.conceptId)
             ) || [];
             return recetasMismoRegistro.some(rec =>
                 (estadosPermitidos.includes(rec.estadoActual?.tipo)
-            && dispensasPermitidas.includes(rec.estadoDispensaActual?.tipo)) && this.profesionalValido);
+                    && dispensasPermitidas.includes(rec.estadoDispensaActual?.tipo)) && this.profesionalValido);
         }
     }
 
@@ -929,5 +1228,31 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit {
     recetaVisible(recetas) {
         return this.recetasService.getRecetaPrincipal(recetas);
 
+    }
+
+    estadoRegistro(estado) {
+        if (estado === 'validada') {
+            return 'success';
+        } else if (estado === 'anulada' || estado === 'vencida' || estado === 'rechazada') {
+            return 'danger';
+        } else {
+            return 'info';
+        }
+    }
+
+    checkDispensaAnticipada(receta) {
+        if (receta.estadoDispensaActual && receta.estadoDispensaActual.fecha) {
+            const fechaDispensa = moment(receta.estadoDispensaActual.fecha);
+            const fechaRegistro = moment(receta.fechaRegistro);
+
+            if (fechaDispensa.isBefore(fechaRegistro)) {
+                if (receta.estadoActual.tipo === 'finalizada') {
+                    return 'dispensa anticipada';
+                } else if (receta.estadoActual.tipo === 'pendiente') {
+                    return 'dispensa parcial anticipada';
+                }
+            }
+        }
+        return null;
     }
 }

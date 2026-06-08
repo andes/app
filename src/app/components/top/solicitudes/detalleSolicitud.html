@@ -26,6 +26,11 @@
         <plex-label *ngIf="prestacionSeleccionada.solicitud.organizacion?.nombre" titulo="Organización destino"
                     subtitulo="{{prestacionSeleccionada.solicitud.organizacion?.nombre}}">
         </plex-label>
+
+        <plex-label titulo="Vencimiento"
+                    [subtitulo]="estaVencida ? (fechaVencimiento | date: 'dd/MM/yyyy') : (fechaVencimiento | date: 'dd/MM/yyyy')"
+                    [type]="estaVencida ? 'danger' : ''">
+        </plex-label>
         <plex-label *ngIf="prestacionSeleccionada.solicitud.profesional" titulo="Profesional de destino" subtitulo="{{ prestacionSeleccionada.solicitud.profesional?.nombre }} {{
                     prestacionSeleccionada.solicitud.profesional?.apellido
                     }}">
@@ -78,6 +83,30 @@
                       [innerHTML]="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones"></span>
             </div>
         </div>
+        <div class="col-12">
+            <plex-title size="sm" titulo="Notificaciones"></plex-title>
+            <ng-container *ngIf="existeNotificaciones(prestacionSeleccionada.solicitud?.historial)">
+                <plex-table [columns]="columns" #table="plTable" [headOpacity]="10">
+                    <plex-table-columns>
+                    </plex-table-columns>
+
+                    <tr *ngFor="let notificacion of obtenerNotificaciones(prestacionSeleccionada.solicitud?.historial)">
+                        <td *plTableCol="'fecha'">{{notificacion.fechaDeNotificacion | date:'dd/MM/yyyy HH:mm'}}</td>
+                        <td *plTableCol="'notificadoPor'">{{notificacion.createdBy | nombre}}</td>
+                        <td *plTableCol="'observaciones'">{{notificacion.observaciones}}</td>
+                    </tr>
+                </plex-table>
+            </ng-container>
+            <ng-container *ngIf="!existeNotificaciones(prestacionSeleccionada.solicitud?.historial)">
+                <section>
+                    <div justify="center" class="mt-4" style="margin-bottom: 2em;">
+                        <plex-label class="flex-column" icon="informacion" size="md" direction="column"
+                                    titulo="No existen notificaciones para esta solicitud.">
+                        </plex-label>
+                    </div>
+                </section>
+            </ng-container>
+        </div>
     </div>
     <div class="row" *ngIf="prestacionSeleccionada.estadoActual.tipo === 'anulada'">
         <div class="col-12">
@@ -109,4 +138,8 @@
 <div *ngIf="mostrar === 'historial'" class="mt-3">
     <historial-solicitud [prestacion]="prestacionSeleccionada" [turno]='turnoSeleccionado'>
     </historial-solicitud>
+</div>
+<div *ngIf="mostrar === 'turnos'" class="mt-3">
+    <turnos-solicitud [prestacionSeleccionada]="prestacionSeleccionada" [turnoSeleccionado]="turnoSeleccionado">
+    </turnos-solicitud>
 </div>

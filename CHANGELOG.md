@@ -1,3 +1,85 @@
+# [5.173.0](https://github.com/andes/app/compare/v5.172.0...v5.173.0) (2026-05-27)
+
+
+### Bug Fixes
+
+* **CIT-415:** Ventanilla: No es posible dar turno del dia ([#3348](https://github.com/andes/app/issues/3348)) ([e2c7784](https://github.com/andes/app/commit/e2c77848e8d3859d9a9e0ea9f3ebd72391f38630))
+* **MPI:** chequea existencia de datos antes de asignar ([#3356](https://github.com/andes/app/issues/3356)) ([3042874](https://github.com/andes/app/commit/3042874c3c4502e71c468efa7dcac7f419fb71e3))
+
+
+### Features
+
+* **REC-168:** Modificaciones visuales en vista de recetas ([#3274](https://github.com/andes/app/issues/3274)) ([1a2651b](https://github.com/andes/app/commit/1a2651b49a477ab5ada7f837c2d517f9f0d3c019))
+
+# [5.172.0](https://github.com/andes/app/compare/v5.171.0...v5.172.0) (2026-04-29)
+
+
+### Bug Fixes
+
+* **HUDS:** se corrige la visualización de los cdas en la huds ([#3346](https://github.com/andes/app/issues/3346)) ([134c596](https://github.com/andes/app/commit/134c596165c0cb8ae4144026c79b744f8b53b064))
+
+
+### Features
+
+* **RUP:** agregar opcion "sin obra social" para turnos y recetas ([#3302](https://github.com/andes/app/issues/3302)) ([619444a](https://github.com/andes/app/commit/619444a5bb28c85689e29945dfd1902089c67402))
+
+# [5.171.0](https://github.com/andes/app/compare/v5.170.4...v5.171.0) (2026-04-22)
+
+
+### Features
+
+* **COM-115:** Agregar filtro por rango etario ([#3312](https://github.com/andes/app/issues/3312)) ([9d59380](https://github.com/andes/app/commit/9d593805ff5c0d01302cb23e908fafa4809e0538))
+
+## [5.170.4](https://github.com/andes/app/compare/v5.170.3...v5.170.4) (2026-04-01)
+
+
+### Bug Fixes
+
+* **CIT:** visualizacion de turnos ([#3310](https://github.com/andes/app/issues/3310)) ([abf8ec2](https://github.com/andes/app/commit/abf8ec2c0104e5738661d1074951370355236b63))
+* **IN:** se rompe sidebar a causa de select ([#3309](https://github.com/andes/app/issues/3309)) ([0fedfd3](https://github.com/andes/app/commit/0fedfd373749bf1191f1a9cb296ce69e6db7b306))
+
+## [5.170.3](https://github.com/andes/app/compare/v5.170.2...v5.170.3) (2026-03-25)
+
+
+### Bug Fixes
+
+* **validacion:** agrega reporte error a validacion con caracteres incorrectos ([#3322](https://github.com/andes/app/issues/3322)) ([dd5d1e7](https://github.com/andes/app/commit/dd5d1e766b3e05fa76f16b72278550a5015779f1))
+
+## [5.170.2](https://github.com/andes/app/compare/v5.170.1...v5.170.2) (2026-03-04)
+
+
+### Bug Fixes
+
+* **CIT:** bloques con turno con llave en calendario de top ([#3304](https://github.com/andes/app/issues/3304)) ([c2b3fb9](https://github.com/andes/app/commit/c2b3fb9279b3276ba36bccf8dfe92830e23c220a))
+* **MPI:** cuil no requerido ([#3308](https://github.com/andes/app/issues/3308)) ([585e26e](https://github.com/andes/app/commit/585e26e17d866909ca54a183d31c7b860afcf648))
+* **TOP-211:** Listado: Error de visualización datos del paciente ([#3296](https://github.com/andes/app/issues/3296)) ([19e5ce7](https://github.com/andes/app/commit/19e5ce7cc493c18ccf3d58cea3eb345f64a68716))
+
+## [5.170.1](https://github.com/andes/app/compare/v5.170.0...v5.170.1) (2026-02-18)
+
+
+### Bug Fixes
+
+* **TOP:** Se cambia el acceso a los conceptos asociados para una solicitud ([#3286](https://github.com/andes/app/issues/3286)) ([06b8456](https://github.com/andes/app/commit/06b8456ff948b01d01f0067a141088a4d977a304))
+
+# [5.170.0](https://github.com/andes/app/compare/v5.169.2...v5.170.0) (2025-12-17)
+
+
+### Bug Fixes
+
+* **MPI:** Corregir formato de fecha de nacimiento al cargar pacientes ([#3260](https://github.com/andes/app/issues/3260)) ([3e33d10](https://github.com/andes/app/commit/3e33d10f268ff08686471456c99f7f78527acacf))
+
+
+### Features
+
+* **IN-647:** "Plan de indicaciones" ([#3241](https://github.com/andes/app/issues/3241)) ([77543df](https://github.com/andes/app/commit/77543dfa2edaec061ada19ce765fc2730b171b7e))
+
+## [5.169.2](https://github.com/andes/app/compare/v5.169.1...v5.169.2) (2025-12-10)
+
+
+### Bug Fixes
+
+* **CITAS:** Se agrega informacion de liberacion de turno ([#3267](https://github.com/andes/app/issues/3267)) ([38cfb8c](https://github.com/andes/app/commit/38cfb8ca0c743a3d884f9d5784a40c3d4837e788))
+
 ## [5.169.1](https://github.com/andes/app/compare/v5.169.0...v5.169.1) (2025-11-05)
 
 

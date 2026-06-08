@@ -6,12 +6,13 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ReglasDerivacionService } from 'src/app/services/com/reglasDerivaciones.service';
 import { DocumentosService } from 'src/app/services/documentos.service';
+import { EstrategiaAtencionService } from 'src/app/services/com/estrategiaAtencion.service';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { SemaforoService } from '../../semaforo-priorizacion/service/semaforo.service';
 import { IDerivacion } from '../interfaces/IDerivacion.interface';
 import { DerivacionesService } from './../../../services/com/derivaciones.service';
-import { PuntoInicioService } from './../services/punto-inicio.service';
+import { PuntoInicioService } from './../../../services/puntoInicio/punto-inicio.service';
 
 @Component({
     selector: 'com-punto-inicio',
@@ -64,6 +65,25 @@ export class ComPuntoInicioComponent implements OnInit {
     public sortOrder = 'asc';
     public ordenarPorPrioridad = false;
     public opcionesSemaforo;
+    public fechaDesde;
+    public fechaHasta;
+    public estrategiasAtencion = [];
+    public estrategia;
+    public hoy = moment().endOf('day').toDate();
+
+    public get maxFechaDesde() {
+        return this.fechaHasta ? moment(this.fechaHasta).endOf('day').toDate() : this.hoy;
+    }
+
+    public get minFechaHasta() {
+        return this.fechaDesde ? moment(this.fechaDesde).startOf('day').toDate() : null;
+    }
+
+    public rangoEtario: any;
+    public opcionesRangoEtario = [
+        { id: 'pediatrico', nombre: 'Pediátrico' },
+        { id: 'adultos', nombre: 'Adolescentes y Adultos' }
+    ];
 
     constructor(
         private derivacionesService: DerivacionesService,
@@ -73,7 +93,8 @@ export class ComPuntoInicioComponent implements OnInit {
         private reglasDerivacionService: ReglasDerivacionService,
         private documentosService: DocumentosService,
         private puntoInicioService: PuntoInicioService,
-        private semaforoService: SemaforoService) { }
+        private semaforoService: SemaforoService,
+        private estrategiaAtencionService: EstrategiaAtencionService) { }
 
     ngOnInit() {
         if (!(this.auth.getPermissions('com:?').length > 0)) {
@@ -92,6 +113,7 @@ export class ComPuntoInicioComponent implements OnInit {
             this.cargarDerivaciones();
         });
         this.semaforoService.findByName('com').subscribe(res => this.opcionesSemaforo = res.options);
+        this.estrategiaAtencionService.search().subscribe(res => this.estrategiasAtencion = [{ id: 'null', nombre: 'NINGUNO' }, ...res]);
     }
 
     onScroll() {
@@ -153,10 +175,41 @@ export class ComPuntoInicioComponent implements OnInit {
                 query.organizacionDestino = this.organizacionDestino.id;
             }
         }
+
         if (this.paciente) {
             query.paciente = `^${this.paciente}`;
         }
 
+        if (this.estrategia) {
+            if (this.estrategia.id === 'null') {
+                query.estrategiaAtencion = 'null';
+            } else {
+                query.estrategiaAtencion = this.estrategia.id || this.estrategia._id;
+            }
+        }
+
+        if (this.rangoEtario) {
+            query.rangoEtario = this.rangoEtario.id;
+        }
+
+        let rangoFecha;
+        let desde;
+        let hasta;
+        if (this.fechaDesde) {
+            desde = moment(this.fechaDesde).startOf('day').format('YYYY-MM-DD HH:mm:ss');
+            if (this.fechaHasta) {
+                hasta = moment(this.fechaHasta).endOf('day').format('YYYY-MM-DD HH:mm:ss');
+                rangoFecha = `${desde}|${hasta}`;
+            } else {
+                rangoFecha = `>=${desde}`;
+            }
+        } else {
+            if (this.fechaHasta) {
+                hasta = moment(this.fechaHasta).endOf('day').format('YYYY-MM-DD HH:mm:ss');
+                rangoFecha = `<=${hasta}`;
+            }
+        }
+        query.fecha = rangoFecha;
         return query;
     }
 
@@ -214,6 +267,7 @@ export class ComPuntoInicioComponent implements OnInit {
             this.organizacionOrigen = null;
             this.organizacionDestino = null;
             this.paciente = null;
+            this.rangoEtario = null;
             this.tabIndex = index;
             this.ocultarSidebars();
             this.cargarDerivaciones();
@@ -269,7 +323,7 @@ export class ComPuntoInicioComponent implements OnInit {
     }
 
     getColorPrioridad(prioridad) {
-        return prioridad ? this.opcionesSemaforo.find(x => x.label === prioridad)?.itemRowStyle : false;
+        return (prioridad && this.opcionesSemaforo) ? this.opcionesSemaforo.find(x => x.label === prioridad)?.itemRowStyle : false;
     }
 }
 

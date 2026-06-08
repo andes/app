@@ -41,5 +41,8 @@ export interface IResumenInternacion {
     }[];
     _id: string;
     idPrestacion: string;
-
+    organizacionDestino?: {
+        nombre: string;
+        id: string;
+    };
 }

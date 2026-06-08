@@ -47,7 +47,9 @@
                                 {{ internacion.fechaEgreso | hora }}
                             </span>
                         </td>
-                    </tr>
+                        <td *plTableCol="'unidadOrganizativa'">
+                            {{ getUltimaUnidadOrganizativa(internacion) }}
+                        </td>
                 </plex-table>
             </ng-container>
         </ng-container>

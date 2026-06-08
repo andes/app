@@ -1,8 +1,8 @@
 <ng-container *ngIf="!soloValores">
     <form class="mt-1" #formMedicamento="ngForm">
         <plex-select [(ngModel)]="medicamento.diagnostico" hintType="info" label="Diagnóstico" [data]="registros"
-                     name="diagnostico" multiline="true" [required]="true" labelField="term" idField="conceptId"
-                     hint="Se listaran los conceptos registrados en esta consulta" hintType="info" hintIcon="eye">
+            name="diagnostico" multiline="true" [required]="true" labelField="term" idField="conceptId"
+            hint="Se listaran los conceptos registrados en esta consulta" hintType="info" hintIcon="eye">
         </plex-select>
 
         <!-- Sección de selección de obra social -->
@@ -10,7 +10,7 @@
             <div class="col-md-12">
                 <label class="form-label">Obra Social / Financiador</label>
                 <plex-radio name="financiador" [(ngModel)]="financiadorSeleccionado"
-                            (change)="seleccionarFinanciador($event)" [data]="datosFinanciadores">
+                    (change)="seleccionarFinanciador($event)" [data]="datosFinanciadores">
                 </plex-radio>
             </div>
         </div>
@@ -19,57 +19,59 @@
         <div class="row" *ngIf="showListado">
             <div class="col-md-12">
                 <label class="form-label">Seleccionar otro financiador</label>
-                <plex-select name="otroFinanciador" placeholder="Buscar financiador..." [(ngModel)]="otroFinanciadorSeleccionado" [data]="opcionesFinanciadores"
-                             labelField="nombre" (change)="seleccionarOtroFinanciador($event)">
+                <plex-select name="otroFinanciador" placeholder="Buscar financiador..."
+                    [(ngModel)]="otroFinanciadorSeleccionado" [data]="opcionesFinanciadores" labelField="nombre"
+                    (change)="seleccionarOtroFinanciador($event)">
                 </plex-select>
             </div>
         </div>
 
         <!-- Campo de número de afiliado -->
-        <div class="row" *ngIf="prestacion?.paciente?.obraSocial && showSelector">
+        <div class="row"
+            *ngIf="prestacion?.paciente?.obraSocial && showSelector && financiadorSeleccionado !== 'Sin obra social'">
             <div class="col-md-6">
                 <plex-text name="numeroAfiliado" label="Número de afiliado" [(ngModel)]="numeroAfiliado"
-                           placeholder="Ingrese número de afiliado" [pattern]="patronNumerico"
-                           (ngModelChange)="actualizarNumeroAfiliado()">
+                    placeholder="Ingrese número de afiliado" [pattern]="patronNumerico"
+                    (ngModelChange)="actualizarNumeroAfiliado()">
                 </plex-text>
             </div>
         </div>
 
         <plex-grid cols="2">
             <plex-select [(ngModel)]="medicamento.generico" name="generico" (getData)="loadMedicamentoGenerico($event)"
-                         placeholder="Medicamento genérico" label="Medicamento" idField="conceptId" labelField="term"
-                         (change)="loadPresentaciones()" required="true">
+                placeholder="Medicamento genérico" label="Medicamento" idField="conceptId" labelField="term"
+                (change)="loadPresentaciones()" required="true">
             </plex-select>
 
             <div grow="full">
                 <plex-select *ngIf="!medicamento.generico || unidades.length || loading" class="formEditar w-100"
-                             name="unidades" [(ngModel)]="medicamento.cantidad" [data]="unidades"
-                             placeholder="Seleccione una opción" label="Cantidad" labelField="valor" required="true"
-                             [disabled]="!unidades?.length || ingresoCantidadManual" (change)="onChange($event)">
+                    name="unidades" [(ngModel)]="medicamento.cantidad" [data]="unidades"
+                    placeholder="Seleccione una opción" label="Cantidad" labelField="valor" required="true"
+                    [disabled]="!unidades?.length || ingresoCantidadManual" (change)="onChange($event)">
                 </plex-select>
                 <ng-container *ngIf="medicamento?.generico && !unidades.length && !loading || ingresoCantidadManual">
                     <plex-int class="formEditar" [ngClass]="{ 'w-100': !unidades.length }" name="comprimidos"
-                              label="Cantidad" [(ngModel)]="valorCantidadManual" required="true" min="1" max="90">
+                        label="Cantidad" [(ngModel)]="valorCantidadManual" required="true" min="1" max="90">
                     </plex-int>
                 </ng-container>
                 <plex-button *ngIf="ingresoCantidadManual && unidades.length" class="ml-1" name="deshacer"
-                             type="warning" icon="undo" tooltip="Deshacer edición manual" size="md"
-                             (click)="deshacerCantidadManual()">
+                    type="warning" icon="undo" tooltip="Deshacer edición manual" size="md"
+                    (click)="deshacerCantidadManual()">
                 </plex-button>
             </div>
         </plex-grid>
 
         <plex-grid cols="2">
             <plex-int name="envases" label="Cantidad de envases" [(ngModel)]="medicamento.cantEnvases" required="true"
-                      min="1" max="90">
+                min="1" max="90">
             </plex-int>
 
             <plex-grid cols="2" class="grid-tratamiento">
                 <plex-bool [(ngModel)]="medicamento.tratamientoProlongado" name="tratamientoProlongado" type="slide"
-                           label="Tratamiento prolongado" [readonly]="medicamento.tipoReceta === 'triplicado'">
+                    label="Tratamiento prolongado" [readonly]="medicamento.tipoReceta === 'triplicado'">
                 </plex-bool>
                 <plex-select *ngIf="medicamento.tratamientoProlongado" [(ngModel)]="medicamento.tiempoTratamiento"
-                             name="tiempoTratamiento" [data]="tiemposTratamiento" required="true">
+                    name="tiempoTratamiento" [data]="tiemposTratamiento" required="true">
                 </plex-select>
             </plex-grid>
         </plex-grid>
@@ -77,48 +79,47 @@
         <div class="mt-2">
             <plex-title name="tipoReceta" titulo="Tipo de receta" size="sm"></plex-title>
             <plex-bool [(ngModel)]="esDuplicado" name="Duplicado" type="slide" label="Duplicado"
-                       (change)="onTipoRecetaChange('duplicado')">
+                (change)="onTipoRecetaChange('duplicado')">
             </plex-bool>
             <plex-bool [(ngModel)]="esTriplicado" name="triplicado" type="slide" label="Triplicado"
-                       (change)="onTipoRecetaChange('triplicado')">
+                (change)="onTipoRecetaChange('triplicado')">
             </plex-bool>
         </div>
 
         <div class="mb-2" *ngIf="medicamento.tipoReceta === 'triplicado'">
             <plex-label size="lg" icon="alert-outline" titulo="Atención" type="warning"
-                        subtitulo="Recuerde que sigue siendo obligatoria la entrega del formulario triplicado en papel">
+                subtitulo="Recuerde que sigue siendo obligatoria la entrega del formulario triplicado en papel">
             </plex-label>
             <plex-grid cols="2">
                 <plex-text [(ngModel)]="medicamento.serie" name="serie" label="Serie" [required]="true"
-                           [pattern]="'^[A-Za-z]$'" placeholder="Ingrese una letra">
+                    [pattern]="'^[A-Za-z]$'" placeholder="Ingrese una letra">
                 </plex-text>
                 <plex-int [(ngModel)]="medicamento.numero" name="numero" label="Número" [required]="true"
-                          placeholder="Ingrese un número">
+                    placeholder="Ingrese un número">
                 </plex-int>
             </plex-grid>
         </div>
 
         <plex-title titulo="Indicaciones diarias" size="sm">
             <plex-button name="botonCollapse" class="collapse-button" type="primary" size="sm"
-                         icon="{{ collapse ? 'chevron-down' : 'chevron-up'}}"
-                         title="{{ collapse ? 'Expandir' : 'Colapsar'}}" titlePosition="left" (click)="colapsar()">
+                icon="{{ collapse ? 'chevron-down' : 'chevron-up'}}" title="{{ collapse ? 'Expandir' : 'Colapsar'}}"
+                titlePosition="left" (click)="colapsar()">
             </plex-button>
         </plex-title>
         <plex-wrapper>
             <div [hidden]="collapse" class="w-100">
                 <div class="d-flex">
                     <plex-text name="dosis" label="Dosis" [(ngModel)]="medicamento.dosisDiaria.dosis"
-                               [required]="requiereDosis" (change)="changeDosisIntervalo()">
+                        [required]="requiereDosis" (change)="changeDosisIntervalo()">
                     </plex-text>
                     <plex-select name="frecuencia" label="Intervalo" [(ngModel)]="medicamento.dosisDiaria.intervalo"
-                                 [required]="requiereIntervalo" [data]="intervalos$ | async"
-                                 (change)="changeDosisIntervalo()">
+                        [required]="requiereIntervalo" [data]="intervalos$ | async" (change)="changeDosisIntervalo()">
                     </plex-select>
                     <plex-int name=" duracion" label="Duración (días)" [(ngModel)]="medicamento.dosisDiaria.dias"
-                              required="false" min="1" max="90">
+                        required="false" min="1" max="90">
                     </plex-int>
                     <plex-text name="notaMedica" label="Notas médicas" [(ngModel)]="medicamento.dosisDiaria.notaMedica"
-                               required="false" min="1" max="90">
+                        required="false" min="1" max="90">
                     </plex-text>
                 </div>
 
@@ -126,7 +127,7 @@
         </plex-wrapper>
         <div class="d-flex justify-content-center">
             <plex-button name="botonAgregar" type="info" [disabled]="!formMedicamento.valid"
-                         (click)="preAgregarMedicamento($event)" [validateForm]="formMedicamento">
+                (click)="preAgregarMedicamento($event)" [validateForm]="formMedicamento">
                 Agregar
             </plex-button>
         </div>
@@ -152,7 +153,7 @@
             <plex-badge *ngIf="item.tipoReceta?.length" type="info">{{item.tipoReceta}}
             </plex-badge>
             <plex-button type="danger" size="sm" (click)="borrarMedicamento(item)" icon="delete"
-                         tooltip="eliminar"></plex-button>
+                tooltip="eliminar"></plex-button>
         </plex-item>
     </plex-list>
 </ng-container>

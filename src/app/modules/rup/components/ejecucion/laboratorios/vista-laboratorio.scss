@@ -38,6 +38,31 @@ $lightblue: #d6f7ff;
     margin-bottom: 10px;
 }
 
+.table-header-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    padding: 10px 0;
+}
+
+.table-header-col {
+    font-size: small;
+    font-weight: 800;
+    padding: 5px;
+    word-break: break-word;
+    
+    &:nth-child(1) {
+        text-align: left;
+    }
+    
+    &:nth-child(2),
+    &:nth-child(3),
+    &:nth-child(4) {
+        text-align: center;
+        font-size: 1em;
+    }
+}
+
 .badge-protocolo {
     display: flex;
     gap: 4px;

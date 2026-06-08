@@ -12,7 +12,7 @@ import { HUDSService } from '../../services/huds.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import * as moment from 'moment';
-import { RecetaService } from 'projects/portal/src/app/services/receta.service';
+import { RecetaService } from 'src/app/services/receta.service';
 
 @Component({
     selector: 'rup-vistaHuds',
@@ -29,6 +29,12 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     public internacione$: Observable<any[]>;
     public registros = [];
     public flagSeguimiento = false;
+    public permisoHudsCompleta: boolean;
+    public permisoLaboratorios: boolean;
+    public permisoVacunas: boolean;
+    public permisoRecetas: boolean;
+    private fechaDesdeInternacion = moment('2016-01-01').toDate();
+    private origen: string;
 
     constructor(
         public elementosRUPService: ElementosRUPService,
@@ -57,17 +63,13 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
             name: 'Historia Única De Salud'
         }]);
 
-        const permisos = [
-            'huds:visualizacionHuds',
-            'huds:visualizacionParcialHuds:*',
-            'huds:visualizacionParcialHuds:laboratorio',
-            'huds:visualizacionParcialHuds:vacuna',
-            'huds:visualizacionParcialHuds:receta'
-        ];
-
-        if (!permisos.some(permiso => this.auth.check(permiso))) {
+        if (!this.auth.getPermissions('huds:?')?.length) {
             this.redirect('inicio');
         }
+        this.permisoHudsCompleta = this.auth.check('huds:visualizacionHuds');
+        this.permisoLaboratorios = this.permisoHudsCompleta || this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:laboratorio');
+        this.permisoVacunas = this.permisoHudsCompleta || this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:vacuna');
+        this.permisoRecetas = this.permisoHudsCompleta || this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:receta');
 
         // cargar las internaciones y armar un filtro en api .
         this.huds.registrosHUDS.subscribe((datos) => {
@@ -107,19 +109,25 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                 this.servicioPaciente.getById(id).subscribe(paciente => {
                     this.paciente = paciente;
 
-                    const filtros = {
-                        fechaIngresoDesde: moment('2016-01-01').toDate(),
-                        idPaciente: id
-                    };
-                    this.internacione$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros);
+                    if (this.permisoHudsCompleta) {
+                        const filtros = {
+                            fechaIngresoDesde: this.fechaDesdeInternacion,
+                            idPaciente: id
+                        };
+                        this.internacione$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros);
+                    }
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                 });
             });
         } else {
             this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
-            return true;
         }
+
+        this.route.queryParams.subscribe(params => {
+            this.origen = params['origen'];
+        });
     }
+
 
     ngOnDestroy() {
         this.huds.clear();
@@ -140,8 +148,13 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     * @param ruta
     */
     volver() {
-        this.location.back();
+        if (this.origen === 'mpi') {
+            this.router.navigate(['apps/mpi/busqueda']);
+        } else {
+            this.location.back();
+        }
     }
+
 
     evtCambiaPaciente() {
         this.cambiarPaciente.emit(true);
@@ -152,10 +165,24 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         this.router.navigate(['huds', 'timeline', this.paciente.id]);
     }
 
+    detalleRegistro(registro) {
+        return registro.data.class === 'situación' ||
+            registro.data.class === 'hallazgo' ||
+            registro.data.class === 'trastorno';
+    }
+
     prestacionVisible(registro) {
         return registro.data.class === 'plan' ||
             registro.data.class === 'regimen' ||
             registro.data.class === 'elementoderegistro' ||
             registro.data.class === 'producto';
+    }
+
+    esGuardia(registro: any) {
+        const term = (registro.tipo === 'rup') ?
+            registro.data?.solicitud?.tipoPrestacion?.term :
+            registro.data?.prestacion?.snomed?.term;
+        const isGuardia = term && term.toLowerCase().includes('emergencia');
+        return isGuardia;
     }
 }

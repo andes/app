@@ -1,5 +1,5 @@
 import { OnInit, Component, ViewChild, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { pluck, switchMap, tap, publishReplay, refCount, delay, takeUntil } from 'rxjs/operators';
 import { UsuariosHttp } from '../services/usuarios.http';
@@ -15,10 +15,12 @@ import { Auth } from '@andes/auth';
     selector: 'gestor-usarios-usuarios-edit',
     templateUrl: 'usuarios-edit.view.html'
 })
+
 export class UsuariosEditComponent implements OnInit, OnDestroy {
     destroy$: Subject<boolean> = new Subject<boolean>();
 
     @ViewChild(ArbolPermisosComponent, { static: true }) arbol: ArbolPermisosComponent;
+
     private userId = '';
     private _permisos = new BehaviorSubject([]);
 
@@ -29,6 +31,17 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
     public perfiles = [];
     public arbolPermisos = [];
     public habilitados = {};
+    public fechaVencimiento: Date;
+    public canEditAccount = this.auth.check('usuarios:cuenta');
+    public hoy = moment().startOf('day').toDate();
+    public get isExpired() {
+        if (!this.fechaVencimiento) {
+            return false;
+        }
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return new Date(this.fechaVencimiento) < today;
+    }
 
     get permisos() {
         return this._permisos.getValue();
@@ -39,11 +52,10 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
 
     constructor(
         private location: Location,
-        private router: Router,
         public plex: Plex,
-        private auth: Auth,
         private route: ActivatedRoute,
         public usuariosHttp: UsuariosHttp,
+        private auth: Auth,
         private organizacionService: OrganizacionService,
         public perfilesHttp: PerfilesHttp,
         public permisosService: PermisosService
@@ -100,6 +112,7 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
                         if (orgPermisos) {
                             this.orgName = orgPermisos.nombre;
                             this.permisos = orgPermisos.permisos;
+                            this.fechaVencimiento = orgPermisos.fechaVencimiento;
                         }
                     })
                 ),
@@ -122,27 +135,15 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
                     _id: p.id,
                     nombre: p.nombre
                 };
-            })
+            }),
+            fechaVencimiento: this.fechaVencimiento,
+            activo: !this.isExpired
         };
 
-        if (
-            body.permisos.includes('huds:visualizacionHuds') &&
-            (body.permisos.some(p => p.startsWith('huds:visualizacionParcialHuds:')) ||
-                body.permisos.includes('huds:visualizacionParcialHuds:*'))
-        ) {
-            this.plex.info('warning',
-                '<div style="text-align: left;">' +
-                'No se pueden tener activadas las siguientes opciones dentro del <b>Modulo HUDS</b>:<br><br>' +
-                '- <b>Ver HUDS completa</b> junto con <b>Visualización parcial de la HUDS.</b><br><br>' +
-                '- <b>Ver HUDS completa</b> junto con algunas opciones de <b>Visualización parcial de la HUDS.</b>' +
-                '</div>'
-                , 'Atención');
-        } else {
-            this.usuariosHttp.updateOrganizacion(this.userId, this.organizacionId, body).subscribe(() => {
-                this.plex.toast('success', 'Permisos grabados exitosamente!');
-                this.location.back();
-            });
-        }
+        this.usuariosHttp.updateOrganizacion(this.userId, this.organizacionId, body).subscribe(() => {
+            this.plex.toast('success', 'Permisos grabados exitosamente!');
+            this.location.back();
+        });
     }
 
     borrar() {
@@ -180,6 +181,25 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
                 .forEach(p => permisos.push(p));
             this.permisos = permisos;
         }
+    }
+
+    onEliminarFechaVencimiento() {
+        this.plex.confirm('¿Está seguro que desea eliminar la fecha de vencimiento?').then(respuesta => {
+            if (respuesta) {
+                this.fechaVencimiento = null;
+                this.onEditarFechaVencimiento();
+            }
+        });
+    }
+
+    onEditarFechaVencimiento() {
+        this.usuariosHttp.updateOrganizacion(this.userId, this.organizacionId, {
+            id: this.organizacionId,
+            fechaVencimiento: this.fechaVencimiento,
+            activo: !this.isExpired
+        }).subscribe(() => {
+            this.plex.toast('success', 'Usuario modificado exitosamente');
+        });
     }
 
     copy() {

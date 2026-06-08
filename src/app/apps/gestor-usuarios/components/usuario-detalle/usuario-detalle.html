@@ -9,8 +9,8 @@
             'MATRÍCULA N° '
             +profesional.formacionGrado[0].matriculacion[profesional.formacionGrado[0].matriculacion?.length
             -1].matriculaNumero:''):'NO MATRICULADO'}}</span>
-
     </plex-badge>
+
     <plex-badge *ngIf="profesional && !profesional.habilitado" type="danger">DESHABILITADO</plex-badge>
 
     <ng-template #notProfesional>
@@ -52,6 +52,7 @@
             </form>
         </plex-help>
         <plex-badge class="ml-1" type="info">tipo: {{(usuario.tipo === 'temporal' || usuario.authMethod === 'password' )
-            ?"andes":"one login"}}</plex-badge>
+            ?"andes":"one login"}}
+        </plex-badge>
     </div>
 </plex-detail>

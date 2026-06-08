@@ -64,6 +64,9 @@
                                         0}}
                                     </h2>
                                     <span class="small">Turnos <br><b>del día</b></span>
+                                    <span *ngIf="bloqueSelected.accesoDirectoDelDia && bloqueSelected.pacienteSimultaneos"
+                                          class="small"><br><b>({{bloqueSelected.cantidadSimultaneos}}
+                                            Simultaneos)</b></span>
                                 </span>
                             </div>
                             <div class="col d-flex align-items-start px-2">
@@ -73,6 +76,9 @@
                                         bloqueSelected.accesoDirectoProgramado : 0}}
                                     </h2>
                                     <span class="small">Turnos <br><b>programados</b></span>
+                                    <span *ngIf="bloqueSelected.accesoDirectoProgramado && bloqueSelected.pacienteSimultaneos"
+                                          class="small"><br><b>({{bloqueSelected.cantidadSimultaneos}}
+                                            Simultaneos)</b></span>
                                     <small *ngIf="bloqueSelected.cupoMobile"><br>
                                         &nbsp;({{bloqueSelected.cupoMobile}} virtuales)
                                     </small>
@@ -86,6 +92,9 @@
                                         0}}
                                     </h2>
                                     <span class="small">Turnos <br><b>profesional</b></span>
+                                    <span *ngIf="bloqueSelected.reservadoProfesional && bloqueSelected.pacienteSimultaneos"
+                                          class="small"><br><b>({{bloqueSelected.cantidadSimultaneos}}
+                                            Simultaneos)</b></span>
                                 </span>
                             </div>
                             <div class="col d-flex align-items-start px-2">
@@ -94,6 +103,9 @@
                                         {{bloqueSelected.reservadoGestion ? bloqueSelected.reservadoGestion : 0}}
                                     </h2>
                                     <span class="small">Turnos <br><b>con llave</b></span>
+                                    <span *ngIf="bloqueSelected.reservadoGestion && bloqueSelected.pacienteSimultaneos"
+                                          class="small"><br><b>({{bloqueSelected.cantidadSimultaneos}}
+                                            Simultaneos)</b></span>
                                 </span>
                             </div>
                         </div>
@@ -149,10 +161,13 @@
                             Suspendido</plex-badge>
                         <plex-badge *ngIf="!turno?.paciente?.id && turno?.estado === 'suspendido'" type="danger">
                             suspendido(sin paciente)</plex-badge>
-                        <plex-badge *ngIf="turno?.nota" size="sm" type="info" tooltip="{{turno.nota}}"
-                                    tooltipPosition="right">
-                            <plex-icon name="message"></plex-icon>
-                        </plex-badge>
+                        <plex-help *ngIf="turno?.nota" type="info" icon="message" tooltip="Ver nota"
+                                   tooltipPosition="right" size="sm" cardSize="half">
+                            <div class="nota-inline">
+                                {{ turno.nota }}
+                            </div>
+                        </plex-help>
+
                     </div>
                     <plex-label *ngIf="!agenda.dinamica && !turno?.paciente?.id" size="sm"
                                 titulo="{{ turno.horaInicio | date: 'HH:mm' }}hs">

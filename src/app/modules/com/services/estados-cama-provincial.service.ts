@@ -11,6 +11,7 @@ export class EstadosCamaProvincialService {
     public camasEstados$: Observable<any[]>;
     public organizacion = new BehaviorSubject<any>(null);
     public unidadOrganizativa = new BehaviorSubject<any>(null);
+    public capa = new BehaviorSubject<any>(null);
     public fecha = new BehaviorSubject<Date>(new Date());
 
     constructor(
@@ -19,15 +20,16 @@ export class EstadosCamaProvincialService {
         this.camasEstados$ = combineLatest([
             this.organizacion,
             this.unidadOrganizativa,
-            this.fecha
+            this.fecha,
+            this.capa
         ]).pipe(
             auditTime(0),
-            switchMap(([organizacion, unidadOrganizativa, fecha]) =>
+            switchMap(([organizacion, unidadOrganizativa, fecha, capa]) =>
                 this.mapaCamasHTTP.estadosCamas(
                     organizacion,
                     unidadOrganizativa,
                     'internacion',
-                    'medica',
+                    capa,
                     fecha
                 ).pipe(
                     map((resumen) => {
