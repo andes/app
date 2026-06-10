@@ -8,6 +8,7 @@ import { IRegla } from '../../../interfaces/IRegla';
 import { Observable, of, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 import { ReglaService } from '../../../services/top/reglas.service';
+import * as moment from 'moment';
 
 @Component({
     selector: 'visualizacion-reglas',
