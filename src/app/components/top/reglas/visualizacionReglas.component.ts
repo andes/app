@@ -25,6 +25,7 @@ import { ReglaService } from '../../../services/top/reglas.service';
 })
 export class VisualizacionReglasComponent implements OnInit {
     @Input() esParametrizado = false;
+    @Input() ocultarTitulo = false;
     @Input() prestacion: ISnomedConcept = null;
 
     @Output() addSolicitud = new EventEmitter<any>();
@@ -163,7 +164,7 @@ export class VisualizacionReglasComponent implements OnInit {
 
                             const fila = {
                                 organizacionOrigen: regla.origen.organizacion,
-                                prestacionOrigen: prestacionAux.prestacion,
+                                prestacionOrigen: { ...prestacionAux.prestacion, auditable: prestacionAux.auditable },
                                 organizacionDestino: regla.destino.organizacion,
                                 prestacionDestino: regla.destino.prestacion,
                             };
