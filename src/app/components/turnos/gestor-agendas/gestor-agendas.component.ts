@@ -485,6 +485,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showReasignarTurnoAutomatico = false;
         this.showListadoTurnos = false;
         this.showCarpetas = false;
+        this.showSuspenderAgenda = false;
         if (this.parametros) {
             this.parametros.skip = 0;
             this.parametros.limit = 15;
