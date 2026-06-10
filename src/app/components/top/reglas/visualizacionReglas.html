@@ -17,7 +17,7 @@
     <plex-select [(ngModel)]="prestacionDestino" name="prestDestino" tmPrestaciones preload="true"
                  label="Prestación destino" placeholder="Seleccione la prestación" (change)="refrescarFiltro()">
     </plex-select>
-    <plex-button type="success" label="Descargar" [disabled]="!hayFiltro || !filas?.length" (click)="descargarReglas()">
+    <plex-button type="success" label="Descargar" [disabled]="!hayFiltro" (click)="descargarReglas()">
     </plex-button>
 </plex-wrapper>
 
