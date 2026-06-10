@@ -1,4 +1,4 @@
-<plex-title titulo="Reglas Solicitudes" size="md">
+<plex-title titulo="Reglas Solicitudes" *ngIf="!ocultarTitulo" size="md">
     <plex-text class="mb-2" [(ngModel)]="search" [debounce]="600" name="search" (change)="onSearchStart($event)"
                placeholder=" Buscar ..." [autoFocus]="true">
     </plex-text>
