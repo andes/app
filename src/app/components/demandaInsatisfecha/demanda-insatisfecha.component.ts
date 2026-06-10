@@ -5,7 +5,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ILlamado } from 'src/app/interfaces/turnos/IListaEspera';
+import { IHistorialTurno } from 'src/app/interfaces/turnos/ITurno';
+import { IDemanda, ILlamado, IListaEspera } from 'src/app/interfaces/turnos/IListaEspera';
 import { ListaEsperaService } from 'src/app/services/turnos/listaEspera.service';
 import { TurnoService } from 'src/app/services/turnos/turno.service';
 
@@ -16,12 +17,12 @@ import { TurnoService } from 'src/app/services/turnos/turno.service';
 
 export class DemandaInsatisfechaComponent implements OnInit {
     public listaOrganizaciones = [];
-    public listaEspera = [];
+    public listaEspera: IListaEspera[] = [];
     public listado$: Observable<any[]>;
-    public listaLlamados = [];
-    public listaHistorial = [];
-    public listaDemandas = [];
-    public itemSelected = null;
+    public listaLlamados: ILlamado[] = [];
+    public listaHistorial: IHistorialTurno[] = [];
+    public listaDemandas: IDemanda[] = [];
+    public itemSelected: IListaEspera | null = null;
     public filtros: any = {};
     public selectorPrestacion;
     public selectorOrganizacion;
@@ -103,16 +104,20 @@ export class DemandaInsatisfechaComponent implements OnInit {
     public columnsDemandas = [
         {
             key: 'col-1',
-            label: 'Fecha',
+            label: 'Fecha'
         },
         {
             key: 'col-2',
-            label: 'Motivo',
+            label: 'Motivo'
         },
         {
             key: 'col-3',
-            label: 'Organizacion',
+            label: 'Organizacion'
         },
+        {
+            key: 'col-4',
+            label: 'Profesional'
+        }
     ];
 
     public max = 10;
@@ -145,7 +150,7 @@ export class DemandaInsatisfechaComponent implements OnInit {
 
     private getListaEsperas(filtros) {
         if (filtros.fechaDesde && filtros.organizacion) {
-            this.listaEsperaService.get({ ...filtros, estado: 'pendiente' }).subscribe((listaEspera: any[]) => {
+            this.listaEsperaService.get({ ...filtros, estado: 'pendiente' }).subscribe((listaEspera: IListaEspera[]) => {
                 this.listaEspera = listaEspera;
                 this.listaEspera.forEach(item => {
                     item.motivos = [...new Set(item.demandas.map(({ motivo }) => motivo))];
@@ -173,7 +178,7 @@ export class DemandaInsatisfechaComponent implements OnInit {
         this.tabIndex = value;
     }
 
-    public seleccionarDemanda(item) {
+    public seleccionarDemanda(item: IListaEspera) {
         this.itemSelected = item;
         this.listaDemandas = item.demandas.slice(0, this.max);
         this.listaHistorial = [];
@@ -245,7 +250,7 @@ export class DemandaInsatisfechaComponent implements OnInit {
         this.formLlamados.control.markAllAsTouched();
 
         if (this.formLlamados.form.valid) {
-            this.listaLlamados.push({ ...this.nuevoLlamado, createdBy: this.auth.usuario, createdAt: moment() });
+            this.listaLlamados.push({ ...this.nuevoLlamado, createdBy: this.auth.usuario, createdAt: moment().toDate() });
 
             this.listaEsperaService.patch(id, 'llamados', this.listaLlamados).subscribe({
                 next: (item) => {
