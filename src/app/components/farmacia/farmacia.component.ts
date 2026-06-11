@@ -152,7 +152,7 @@ export class FarmaciaComponent implements OnInit {
         this.farmaciaService.lastResults.next(null);
         this.farmaciaService.denominacion.next(this.filtros.denominacion);
         this.farmaciaService.razonSocial.next(this.filtros.razonSocial);
-        this.farmaciaService.cuit.next(this.filtros.cuit);
+        this.farmaciaService.cuit.next(this.filtros.cuit ? this.filtros.cuit.replace(/\D/g, '') : null);
         this.farmaciaService.DTResponsable.next(this.filtros.DTResponsable);
         this.farmaciaService.asociado.next(this.filtros.asociado);
     }
@@ -317,5 +317,12 @@ export class FarmaciaComponent implements OnInit {
         }
 
         this.filtros.cuit = cuit;
+    }
+
+    formatCuitDisplay(raw: string): string {
+        if (!raw) { return ''; }
+        const digits = raw.replace(/\D/g, '');
+        if (digits.length < 11) { return raw; }
+        return digits.slice(0, 2) + '-' + digits.slice(2, 10) + '-' + digits.slice(10);
     }
 }

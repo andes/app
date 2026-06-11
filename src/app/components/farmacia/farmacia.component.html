@@ -41,7 +41,7 @@
                     [class.selectable]="true">
                     <td *plTableCol="'denominacion'">{{farmacia.denominacion}}</td>
                     <td *plTableCol="'razonSocial'">{{farmacia.razonSocial}}</td>
-                    <td *plTableCol="'cuit'">{{farmacia.cuit}}</td>
+                    <td *plTableCol="'cuit'">{{formatCuitDisplay(farmacia.cuit)}}</td>
                     <td *plTableCol="'DTResponsable'">{{farmacia.DTResponsable}}</td>
                     <td *plTableCol="'matriculaDTR'">{{farmacia.matriculaDTResponsable}}</td>
                     <td *plTableCol="'disposicionAltaDT'">{{farmacia.disposicionAltaDT}}</td>
@@ -71,7 +71,7 @@
             <plex-detail [direction]="'column'" [justify]="'start'">
                 <plex-icon size="md" name="farmacia" type="info"></plex-icon>
                 <div title case="capitalize" title>{{farmaciaSelected.denominacion }}</div>
-                <div subtitle>{{ farmaciaSelected?.cuit}} </div>
+                <div subtitle>{{ formatCuitDisplay(farmaciaSelected?.cuit) }} </div>
                 <plex-label *ngIf="farmaciaSelected.razonSocial" titulo="Razón Social"
                             subtitulo="{{ farmaciaSelected.razonSocial}}">
                 </plex-label>
