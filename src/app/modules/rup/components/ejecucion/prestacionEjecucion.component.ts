@@ -103,7 +103,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     public alerta = 'Este registro no puede modificarse, si necesita cambiar una medicación prescripta puede suspender desde la HUDS y registrar una nueva.';
 
-    private soloValores = ['33633005']; // prescripción de medicamento
+    private soloValores = ['33633005', '313047003', '1217195001', '1217196000'];
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -512,10 +512,11 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        const esAsociado = this.prestacion.ejecucion.registros.some(r =>
-            r.valor?.medicamentos?.length && r.valor.medicamentos.some(m => m.diagnostico.conceptId === registro.concepto.conceptId)
-        );
-
+        const esAsociado = this.prestacion.ejecucion.registros.some(r => {
+            const medicamentoAsociado = r.valor?.medicamentos?.length && r.valor.medicamentos.some(m => m.diagnostico.conceptId === registro.concepto.conceptId);
+            const dispositivoAsociado = r.valor?.dispositivos?.length && r.valor.dispositivos.some(d => d.diagnostico.conceptId === registro.concepto.conceptId);
+            return medicamentoAsociado || dispositivoAsociado;
+        });
         return !esAsociado;
     }
 
@@ -959,8 +960,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     esSoloValores(registro: any): boolean {
         if (this.soloValores.includes(registro.concepto?.conceptId)) {
-            // Verificar si el registro ya existe en la prestación con medicamentos cargados
-            const registroExistente = registro.valor?.medicamentos?.length > 0;
+            // Verificar si el registro ya existe en la prestación con medicamentos o insumos cargados
+            const registroExistente = registro.valor?.medicamentos?.length > 0 || registro.valor?.insumos?.length > 0;
 
             if (!registroExistente) {
                 return false;
