@@ -8,6 +8,7 @@ import { TurnoService } from './../../../../services/turnos/turno.service';
 import { Auth } from '@andes/auth';
 import { forkJoin } from 'rxjs';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { ConstantesService } from './../../../../services/constantes.service';
 
 @Component({
     selector: 'suspender-agenda',
@@ -24,11 +25,18 @@ export class SuspenderAgendaComponent implements OnInit {
     @Output() cerrarSidebar = new EventEmitter<any>();
 
 
-    constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public smsService: SmsService, public turnosService: TurnoService, public pacienteService: PacienteService) { }
+    constructor(
+        public plex: Plex,
+        public auth: Auth,
+        public serviceAgenda: AgendaService,
+        public smsService: SmsService,
+        public turnosService: TurnoService,
+        public pacienteService: PacienteService,
+        public constantesService: ConstantesService) { }
 
     public mostrarHeaderCompleto = false; // Pongo false por defecto, estipo que arranca así. [Agregado para AOT]
     public motivoSuspensionSelect = { select: null };
-    public motivoSuspension: { id: number; nombre: string }[];
+    public motivoSuspension: Array<{ key: string; nombre: string }> = [];
     public estadosAgenda = EstadosAgenda;
     public ag;
     public showData = false;
@@ -42,20 +50,10 @@ export class SuspenderAgendaComponent implements OnInit {
      */
     public turnos = [];
     ngOnInit() {
-        this.motivoSuspension = [
-            {
-                id: 1,
-                nombre: 'edilicia'
-            },
-            {
-                id: 2,
-                nombre: 'profesional'
-            },
-            {
-                id: 3,
-                nombre: 'organizacion'
-            }];
-        this.motivoSuspensionSelect.select = this.motivoSuspension[1];
+        this.constantesService.search({ source: 'citas:motivos:suspension' }).subscribe((constantes) => {
+            this.motivoSuspension = constantes;
+            this.motivoSuspensionSelect.select = this.motivoSuspension[1] || this.motivoSuspension[0] || null;
+        });
         if (this.agenda.estado === 'suspendida') {
             let sinTelefono = [];
             this.agenda.bloques.forEach(bloque => {
@@ -114,7 +112,7 @@ export class SuspenderAgendaComponent implements OnInit {
     suspenderAgenda() {
         this.showConfirmar = false;
         this.showData = true;
-        if (this.motivoSuspensionSelect.select.nombre === null) {
+        if (!this.motivoSuspensionSelect.select?.nombre) {
             return;
         }
 
