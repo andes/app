@@ -87,6 +87,9 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
     ngOnInit() {
         if (this.farmaciaSeleccionada) {
             this.farmacia = this.farmaciaSeleccionada;
+            if (this.farmacia.cuit && this.farmacia.cuit.length === 11 && !this.farmacia.cuit.includes('-')) {
+                this.farmacia.cuit = this.farmacia.cuit.slice(0, 2) + '-' + this.farmacia.cuit.slice(2, 10) + '-' + this.farmacia.cuit.slice(10);
+            }
             this.asociado = { id: this.farmaciaSeleccionada.asociadoA, nombre: this.farmaciaSeleccionada.asociadoA };
         }
         this.provincias$ = this.provinciaService.get({}).pipe(
@@ -103,6 +106,7 @@ export class FarmaciaCreateUpdateComponent implements OnInit {
 
     save() {
         this.farmacia.asociadoA = this.asociado.nombre;
+        this.farmacia.cuit = this.farmacia.cuit ? this.farmacia.cuit.replace(/\D/g, '') : '';
         // si estamos editado una farmacia.
         if (this.farmaciaSeleccionada) {
             const farmaciaUpdate = Object.assign({}, this.farmacia);
