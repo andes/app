@@ -22,11 +22,13 @@
                 <plex-grid type="auto" cols="3" size="sm">
                     <div class="datos"><span>Laboratorio</span><b>{{protocolo.data.Laboratorio ||
                             protocolo.data.laboratorio}}</b></div>
-                    <div class="datos"><span>Tipo Muestra:
-                        </span><b *ngIf="protocolo.data.tipoMuestra">{{protocolo.data.tipoMuestra}}</b></div>
+                    <div *ngIf="protocolo.data.tipoMuestra && protocolo.data.tipoMuestra !== ''" class="datos">
+                        <span>Tipo Muestra:
+                        </span><b>{{protocolo.data.tipoMuestra}}</b>
+                    </div>
                     <div class="datos"><span>Prácticas solicitadas:
                         </span><b
-                            *ngIf="protocolo.data.practicasSolicitadas">{{protocolo.data.practicasSolicitadas}}</b>
+                           *ngIf="protocolo.data.practicasSolicitadas">{{protocolo.data.practicasSolicitadas}}</b>
                     </div>
                 </plex-grid>
             </div>
@@ -35,7 +37,7 @@
     <div class="w-100 mt-2">
         <plex-title titulo="Resultados" size="md">
             <plex-button [disabled]="areasLaboratorio.length === 0" type="info" size="sm" icon="download mdi-18px"
-                tooltip="Descargar" (click)="descargarLab()"></plex-button>
+                         tooltip="Descargar" (click)="descargarLab()"></plex-button>
         </plex-title>
 
         <ng-container *ngIf="areasLaboratorio?.length">
