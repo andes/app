@@ -2,6 +2,7 @@ export interface IPrestacionEstado {
     id: string;
     tipo: string;
     idOrigenModifica: string;
+    createdAt?: Date;
     createdBy: {
         id: string;
         nombre: string;
