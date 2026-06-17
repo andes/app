@@ -1,4 +1,5 @@
 export interface ITipoPrestacion {
+    _id?: String;
     id: String;
     conceptId: String;
     term: String;
