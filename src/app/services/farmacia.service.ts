@@ -12,6 +12,7 @@ export class FarmaciaService extends ResourceBaseHttp {
     public cuit = new BehaviorSubject<string>(null);
     public DTResponsable = new BehaviorSubject<string>(null);
     public asociado = new BehaviorSubject<any>(null);
+    public establecimiento = new BehaviorSubject<string>(null);
     public lastResults = new BehaviorSubject<any[]>(null);
     private limit = 20;
     private skip;
@@ -24,10 +25,11 @@ export class FarmaciaService extends ResourceBaseHttp {
             this.cuit,
             this.DTResponsable,
             this.asociado,
+            this.establecimiento,
             this.lastResults
         ]).pipe(
             auditTime(0),
-            switchMap(([denominacion, razonSocial, cuit, DTResponsable, asociado, lastResults]) => {
+            switchMap(([denominacion, razonSocial, cuit, DTResponsable, asociado, establecimiento, lastResults]) => {
                 if (!lastResults) {
                     this.skip = 0;
                 }
@@ -57,10 +59,14 @@ export class FarmaciaService extends ResourceBaseHttp {
                 if (DTResponsable) {
                     params.DTResponsable = '^' + (DTResponsable as string).toUpperCase();
                 }
+
                 if (asociado) {
                     params.asociadoA = asociado.nombre;
                 }
 
+                if (establecimiento) {
+                    params.tipoEstablecimiento = establecimiento;
+                }
                 return this.search(params).pipe(
                     map(resultados => {
                         const listaFarmacias = lastResults ? lastResults.concat(resultados) : resultados;
