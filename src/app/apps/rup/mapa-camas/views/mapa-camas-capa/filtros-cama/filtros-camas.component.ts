@@ -20,6 +20,7 @@ export class FiltrosCamasComponent implements OnInit {
     public collapse = true;
     mostrarTodasCamas = false;
     filtro: any = {};
+    private _externalUpdate = false;
     censables = [
         { id: 0, nombre: 'No censable' },
         { id: 1, nombre: 'Censable' }
@@ -51,6 +52,18 @@ export class FiltrosCamasComponent implements OnInit {
             map(estados => estados.map(e => ({ estado: e.estado })))
         );
 
+        this.mapaCamasService.censableSelected.subscribe(censable => {
+            this._externalUpdate = true;
+            this.filtro.censable = censable;
+            setTimeout(() => {
+                this._externalUpdate = false;
+            });
+        });
+
+        this.mapaCamasService.mostrarTodasCamas.subscribe(valor => {
+            this.mostrarTodasCamas = valor;
+        });
+
         this.checkSeleccion();
     }
 
@@ -70,6 +83,9 @@ export class FiltrosCamasComponent implements OnInit {
     }
 
     onCensableChange() {
+        if (this._externalUpdate) {
+            return;
+        }
         this.mapaCamasService.censableSelected.next(this.filtro.censable);
         let mostrarNoCensables = false;
 

@@ -43,7 +43,15 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
         });
         this.mapaCamasService.mostrarTodasCamas.subscribe(valor => {
             this.mostrarTodasCamas = valor;
-            this.filtrar();
+            if (valor) {
+                setTimeout(() => {
+                    this.filtro.censable = null;
+                    this.mapaCamasService.censableSelected.next(null);
+                    this.filtrar();
+                });
+            } else {
+                this.filtrar();
+            }
         });
         this.fecha$ = this.mapaCamasService.fecha2;
 
@@ -86,10 +94,13 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
     }
 
     filtrar() {
-        const censableId = this.filtro?.censable?.id ?? null;
         this.mapaCamasService.esCensable.next(
-            censableId ?? (this.mostrarTodasCamas ? null : 1)
+            this.mostrarTodasCamas ? null : (this.filtro?.censable?.id ?? 1)
         );
+    }
+
+    toggleMostrarTodasCamas() {
+        this.mapaCamasService.mostrarTodasCamas.next(this.mostrarTodasCamas);
     }
 
     onCensableChange() {
@@ -98,7 +109,7 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
         } else {
             this.mostrarTodasCamas = false;
         }
-        this.filtrar();
+        this.toggleMostrarTodasCamas();
     }
 
     colapsar() {
