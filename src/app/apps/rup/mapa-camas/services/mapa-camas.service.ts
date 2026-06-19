@@ -431,7 +431,7 @@ export class MapaCamasService {
         }
 
         camasFiltradas = (esCensable === 0 || esCensable === 1)
-            ? camasFiltradas.filter(snap => esCensable === 1 ? snap.esCensable : !snap.esCensable)
+            ? camasFiltradas.filter(snap => snap.sala || (esCensable === 1 ? snap.esCensable : !snap.esCensable))
             : camasFiltradas;
 
 
