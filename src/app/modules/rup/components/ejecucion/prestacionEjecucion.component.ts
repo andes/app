@@ -24,6 +24,8 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { RecetaService } from 'src/app/services/receta.service';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { ITurno } from '../../../../interfaces/turnos/ITurno';
+import { ECLQueriesService } from 'src/app/services/eclqueries.service';
+import { SnomedService } from 'src/app/apps/mitos';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -106,7 +108,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     public alerta = 'Este registro no puede modificarse, si necesita cambiar una medicación prescripta puede suspender desde la HUDS y registrar una nueva.';
 
-    private soloValores = ['33633005']; // prescripción de medicamento
+    private soloValores = []; // prescripción de medicamento
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -124,6 +126,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         public constantesService: ConstantesService,
         public recetaService: RecetaService,
         private turnoService: TurnoService,
+        public eclqueriesServicies: ECLQueriesService,
+        public snomedService: SnomedService
     ) { }
 
     /**
@@ -143,6 +147,21 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                 this.btnVolver = resp.nombre;
                 this.rutaVolver = resp.ruta;
             }
+        });
+
+        this.eclqueriesServicies.search({ key: 'prestacion:registroNoModificable' }).pipe(
+            switchMap(query => {
+                if (query && query.length > 0) {
+                    const snomedQuery: any = {
+                        expression: query[0].valor,
+                        search: ''
+                    };
+                    return this.snomedService.get(snomedQuery);
+                }
+                return of([]);
+            })
+        ).subscribe((resultado: any[]) => {
+            this.soloValores = resultado.map(item => item.conceptId);
         });
 
         this.huds.registrosHUDS.subscribe((datos) => {
@@ -1005,6 +1024,22 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
             if (!registroExistente) {
                 return false;
+            }
+
+            // Comparar fechas de validación con fecha de registro
+            const validaciones = this.prestacion?.estados?.filter(e => e.tipo === 'validada') || [];
+            if (validaciones.length > 0) {
+                const ultimaValidacion = validaciones[validaciones.length - 1];
+                if (!registro.createdAt) {
+                    // Es un registro nuevo sin guardar, se puede editar
+                    return false;
+                } else if (new Date(registro.createdAt) > new Date(ultimaValidacion.createdAt)) {
+                    // El registro fue creado después de la última validación, por lo tanto se puede editar
+                    return false;
+                } else {
+                    // Es un registro anterior a la validación rota, por lo que NO puede editarse
+                    return true;
+                }
             }
 
             const valido = this.ejecucionService.validarConcepto(registro.concepto);
