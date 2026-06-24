@@ -178,6 +178,10 @@ export class CamaMainComponent implements OnInit {
             this.plex.info('danger', 'Alguno de los datos ingresados es incorrecto o está incompleto');
             return;
         }
+        if (this.cama?.estado === 'ocupada') {
+            this.plex.info('warning', 'No es posible modificar una cama ocupada');
+            return;
+        }
         this.disabledAccion = true;
         let saveRequest;
         const datosCama: any = {
