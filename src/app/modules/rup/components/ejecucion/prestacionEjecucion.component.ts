@@ -106,7 +106,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     public alerta = 'Este registro no puede modificarse, si necesita cambiar una medicación prescripta puede suspender desde la HUDS y registrar una nueva.';
 
-    private soloValores = ['33633005']; // prescripción de medicamento
+    private soloValores = ['33633005'];
+    conceptoSeleccionadoId: string;
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -247,6 +248,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                                     } else if (registoExiste.id && registoExiste.valor) {
                                         // Expandir sólo si no tienen algún valor
                                         this.itemsRegistros[registoExiste.id].collapse = false;
+
                                     }
                                 }
                             }
@@ -792,11 +794,10 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         });
     }
 
-    cambiaValorCollapse(indice) {
+    cambiaValorCollapse(indice: string) {
         if (this.itemsRegistros[indice]) {
             this.itemsRegistros[indice].collapse = !this.itemsRegistros[indice].collapse;
         }
-        // this.registrosColapsados();
     }
 
     toggleCollapse() {
