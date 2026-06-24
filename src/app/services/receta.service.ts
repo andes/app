@@ -51,9 +51,12 @@ export class RecetaService {
                 receta.estadoDispensaActual?.tipo !== 'sin-dispensa' ||
                 receta.estadoActual.tipo !== 'pendiente'
             );
-            return recetasCandidatas.reduce((max, receta) =>
-                receta.fechaRegistro > max.fechaRegistro ? receta : max, recetasCandidatas[0]
-            );
+            return recetasCandidatas.reduce((max, receta) => {
+                if (receta.fechaPrestacion?.valueOf() === max.fechaPrestacion?.valueOf()) {
+                    return receta.fechaRegistro > max.fechaRegistro ? receta : max;
+                }
+                return receta.fechaPrestacion > max.fechaPrestacion ? receta : max;
+            }, recetasCandidatas[0]);
         }
         return recetaVigente;
     };
