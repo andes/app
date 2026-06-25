@@ -113,7 +113,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     }
 
     get ultimoValidador() {
-        if (this.prestacion && this.prestacion.estados) {
+        if (this.prestacion?.estados) {
             const estados = [...this.prestacion.estados].reverse();
             return estados.find(e => e.tipo === 'validada');
         }
