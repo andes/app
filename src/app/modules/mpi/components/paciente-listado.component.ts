@@ -127,8 +127,8 @@ export class PacienteListadoComponent {
             const relaciones = ['progenitor/a', 'tutor'];
             this.listadoRelaciones = paciente.relaciones.filter(rela => {
                 const relacionesTutor = rela?.relacion?.opuesto && relaciones.includes(rela.relacion.opuesto);
-                const cumpleEdad = rela?.fechaNacimiento && calcularEdad(rela.fechaNacimiento, 'y') < limiteEdad;
-                return (relacionesTutor && rela.activo && rela.fechaNacimiento && cumpleEdad);
+                const cumpleEdad = rela?.referencia?.fechaNacimiento && calcularEdad(rela.referencia.fechaNacimiento, 'y') < limiteEdad;
+                return (relacionesTutor && rela.referencia?.activo && rela.referencia?.fechaNacimiento && cumpleEdad);
             });
         }
         return this.listadoRelaciones.length;
