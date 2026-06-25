@@ -1,5 +1,5 @@
 import { arrayToSet } from '@andes/shared';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
@@ -21,6 +21,8 @@ export class FiltrosCamasComponent implements OnInit {
     public estadoList$: Observable<any[]>;
     public paciente = '';
     public collapse = true;
+
+    @Input() filtroCompleto = true;
 
     filtro: any = {};
     censables = [
