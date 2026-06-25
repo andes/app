@@ -1003,7 +1003,7 @@ export class DarTurnosComponent implements OnInit {
 
     darTurno() {
         if (this.turnoTipoPrestacion) {
-            this.turnoTipoPrestacion['_id'] = this.turnoTipoPrestacion.id;
+            this.turnoTipoPrestacion['_id'] = this.turnoTipoPrestacion._id;
             this.hideDarTurno = true; // ocultamos el boton confirmar para evitar efecto gatillo facil
             // Ver si cambió el estado de la agenda desde otro lado
             this.serviceAgenda.getById(this.agenda.id).subscribe(agd => {
