@@ -30,11 +30,6 @@
                             </rup-resumenPaciente-dinamico>
                         </plex-tab>
 
-                        <plex-tab label="Autocontroles del paciente" *ngIf="flagSeguimiento">
-                            <rup-seguimientoPaciente [paciente]="paciente">
-                            </rup-seguimientoPaciente>
-                        </plex-tab>
-
                         <ng-container *ngIf="internacione$ | async as internaciones">
                             <plex-tab *ngIf="internaciones.length" label="Listado Internacion" [allowClose]="false">
                                 <listado-internacion-huds [internaciones]="internaciones">

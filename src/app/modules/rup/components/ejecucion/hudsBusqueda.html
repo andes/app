@@ -35,9 +35,6 @@
         </div>
 
         <div class="grow d-flex w-100" *ngIf="filtroActual === 'planes' || filtroActual === 'recetas'">
-            <plex-options *ngIf="filtroActual === 'planes'" class="filtros-ambitos"
-                          (activated)='setAmbitoOrigen($event)' [items]="filtrosAmbitos">
-            </plex-options>
             <div class="d-flex align-items-center justify-content-end">
                 <suspender-medicacion *ngIf="filtroActual==='recetas' && seleccionRecetas.length > 0"
                                       [seleccionRecetas]="seleccionSuspender"
@@ -52,6 +49,11 @@
             </div>
         </div>
     </div>
+
+    <plex-options *ngIf="filtroActual === 'planes'" class="filtros-ambitos" (activated)='setAmbitoOrigen($event)'
+                  [items]="filtrosAmbitos">
+    </plex-options>
+
 </div>
 
 

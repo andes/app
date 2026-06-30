@@ -977,10 +977,17 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         }
 
         if (this.fechaInicio || this.fechaFin) {
-            this.fechaInicio = this.fechaInicio ? this.fechaInicio : new Date();
-            this.fechaFin = this.fechaFin ? this.fechaFin : new Date();
-            this.prestaciones = this.prestaciones.filter(p => p.fecha >= moment(this.fechaInicio).startOf('day').toDate() &&
-                p.fecha <= moment(this.fechaFin).endOf('day').toDate());
+            this.fechaInicio = this.fechaInicio ? moment(this.fechaInicio).startOf('day').toDate() : null;
+            this.fechaFin = this.fechaFin ? moment(this.fechaFin).endOf('day').toDate() : null;
+            this.prestaciones = this.prestaciones?.filter(p => {
+                if (this.fechaInicio && moment(p.fecha).isBefore(this.fechaInicio)) {
+                    return false;
+                }
+                if (this.fechaFin && moment(p.fecha).isAfter(this.fechaFin)) {
+                    return false;
+                }
+                return true;
+            });
         }
 
         if (this.ambitoOrigen) {

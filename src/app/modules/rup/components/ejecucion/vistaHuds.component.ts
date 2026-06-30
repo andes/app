@@ -33,7 +33,6 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     public internacionesLength = 0;
     public internacione$: Observable<any[]>;
     public registros = [];
-    public flagSeguimiento = false;
     public permisoHudsCompleta: boolean;
     public permisoLaboratorios: boolean;
     public permisoVacunas: boolean;
@@ -193,9 +192,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
 
     get historialIndex() {
         let index = 2; // 0: Accesos, 1: Registros
-        if (this.flagSeguimiento) {
-            index++;
-        }
+
         if (this.internacionesLength > 0) {
             index++;
         }
