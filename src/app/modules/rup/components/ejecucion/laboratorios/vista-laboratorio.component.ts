@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { LaboratorioService } from 'src/app/services/laboratorio.service';
 import { DocumentosService } from '../../../../../services/documentos.service';
 import { Auth } from '@andes/auth';
@@ -14,6 +14,7 @@ export class VistaLaboratorioComponent implements OnInit {
     constructor(
         private laboratorioService: LaboratorioService,
         private servicioDocumentos: DocumentosService,
+        private cd: ChangeDetectorRef,
         private auth: Auth) { }
 
     public areasLaboratorio = [];
@@ -34,6 +35,7 @@ export class VistaLaboratorioComponent implements OnInit {
             } else {
                 this.areasLaboratorio = [];
             }
+            this.cd.markForCheck();
         });
     }
 
