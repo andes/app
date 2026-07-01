@@ -179,7 +179,7 @@ export class CamaMainComponent implements OnInit {
             return;
         }
         if (this.cama?.estado === 'ocupada') {
-            this.plex.info('warning', 'No es posible modificar una cama ocupada');
+            this.plex.info('warning', 'No es posible modificar esta cama ya que se encuentra ocupada en alguna capa');
             return;
         }
         this.disabledAccion = true;
@@ -214,7 +214,7 @@ export class CamaMainComponent implements OnInit {
         }
         saveRequest.subscribe(() => {
             this.disabledAccion = false;
-            this.plex.info('success', 'La cama fue guardada', 'Cama guardada!');
+            this.plex.info('success', 'La cama fue guardada', 'Cama guardada');
             this.router.navigate([`/mapa-camas/${this.ambito}/${this.mapaCamasService.capa}`]);
         }, () => {
             this.plex.info('danger', 'ERROR: Ocurrio un problema al guardar la cama');
@@ -240,7 +240,7 @@ export class CamaMainComponent implements OnInit {
                 ).subscribe(response => {
                     if (response) {
                         this.disabledAccion = false;
-                        this.plex.info('success', 'La cama fue dada de baja', 'Baja exitosa!');
+                        this.plex.info('success', 'La cama fue dada de baja', 'Baja exitosa');
                         this.router.navigate([`/mapa-camas/${this.ambito}/${this.mapaCamasService.capa}`]);
                     }
                 }, (err) => {
