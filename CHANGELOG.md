@@ -1,3 +1,10 @@
+## [5.173.2](https://github.com/andes/app/compare/v5.173.1...v5.173.2) (2026-07-01)
+
+
+### Bug Fixes
+
+* TM CUIT farmacia ([#3370](https://github.com/andes/app/issues/3370)) ([3b051a7](https://github.com/andes/app/commit/3b051a785dd54f3d9349e7cdcbb2ebc317935ef6))
+
 ## [5.173.1](https://github.com/andes/app/compare/v5.173.0...v5.173.1) (2026-06-10)
 
 
