@@ -1,4 +1,4 @@
-<plex-layout *ngIf="!showTurnos" main="{{itemSelected ? '8' : '12'}}" [min]="4" [max]="5" [steps]="2">
+<plex-layout *ngIf="!showTurnos" [main]="itemSelected ? 8 : 12">
     <plex-layout-main>
         <plex-title main titulo="Demanda insatisfecha">
             <plex-button label="volver" type="danger" size="sm" position="left" routerLink='/inicio'></plex-button>
@@ -10,7 +10,7 @@
                 </plex-text>
                 <plex-select [(ngModel)]="selectorPrestacion" name="prestacion"
                              (change)="actualizarFiltros($event,'prestacion')" label="Prestación" tmPrestaciones
-                             preload="true" tipo="nominalizadas" [multiple]="true">
+                             [preload]="true" tipo="nominalizadas" [multiple]="true">
                 </plex-select>
                 <plex-datetime type="date" [(ngModel)]="selectorFechaDesde" name="fechaDesde" label="Desde"
                                class="fechas" [max]="filtros.fechaHasta"
@@ -96,6 +96,11 @@
                                 <td *plTableCol="'col-3'">
                                     <span><small>{{ demanda.organizacion.nombre }}</small></span>
                                 </td>
+                                <td *plTableCol="'col-4'">
+                                    <span *ngIf="demanda.profesional"><small>{{ demanda.profesional.apellido + ' ' +
+                                            demanda.profesional.nombre }}</small></span>
+                                    <span *ngIf="!demanda.profesional"><small>SIN PROFESIONAL</small></span>
+                                </td>
                             </tr>
                         </plex-table>
                     </ng-container>
@@ -122,7 +127,7 @@
                     </plex-title>
                     <ng-container>
                         <form #formLlamados="ngForm" *ngIf="verFormularioLlamado">
-                            <plex-wrapper justify>
+                            <plex-wrapper>
                                 <plex-select grow="full" label="Seleccione una opción"
                                              [(ngModel)]="selectorEstadoLlamado" name="estadoLlamado"
                                              [data]="estadosLlamado" [required]="true"
@@ -130,7 +135,7 @@
                                 </plex-select>
                                 <plex-text *ngIf="selectorEstadoLlamado?.id === 'otro'" grow="full" columns="6"
                                            label="Ingrese comentario" [(ngModel)]="nuevoLlamado.comentario" name="nota"
-                                           multiline=true required="true">
+                                           [multiline]="true" [required]="true">
                                 </plex-text>
                             </plex-wrapper>
                         </form>

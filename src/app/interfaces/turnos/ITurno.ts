@@ -62,3 +62,10 @@ export interface ITurno {
         professionalLink: string;
     };
 }
+
+export interface IHistorialTurno extends ITurno {
+    organizacion: {
+        id?: string;
+        nombre: string;
+    };
+}
