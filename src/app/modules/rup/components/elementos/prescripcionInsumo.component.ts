@@ -44,7 +44,10 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit 
         if (!this.registro.valor.insumos) {
             this.registro.valor.insumos = [];
         }
-        this.registros = this.prestacion.ejecucion.registros.filter(reg => reg.id !== this.registro.id).map(reg => reg.concepto);
+        const conceptosPrescripcion = ['16076005', '33633005', '313047003', '1217195001', '1217196000'];
+        this.registros = this.prestacion.ejecucion.registros
+            .filter(reg => reg.id !== this.registro.id && !conceptosPrescripcion.includes(reg.concepto.conceptId))
+            .map(reg => reg.concepto);
         this.buscarDiagnosticosConTrastornos();
 
         this.ejecucionService?.hasActualizacion().subscribe(async (estado) => {
@@ -84,9 +87,10 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit 
     }
 
     loadRegistros() {
+        const conceptosPrescripcion = ['16076005', '33633005', '313047003', '1217195001', '1217196000'];
         this.registros = [
             ...this.prestacion.ejecucion.registros
-                .filter(reg => reg.id !== this.registro.id && (reg.concepto.semanticTag === 'procedimiento'
+                .filter(reg => reg.id !== this.registro.id && !conceptosPrescripcion.includes(reg.concepto.conceptId) && (reg.concepto.semanticTag === 'procedimiento'
                     || reg.concepto.semanticTag === 'hallazgo' || reg.concepto.semanticTag === 'trastorno'))
                 .map(reg => reg.concepto),
             ...this.recetasConFiltros
