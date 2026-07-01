@@ -301,17 +301,18 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         { id: 'insumo', nombre: 'Dispositivos / Insumos' },
         { id: 'alimentacion', nombre: 'Alimentación' }
     ];
-    public tipoPrescripcionSeleccionado = this.tiposPrescripcion[0];
-    private ultimoTipoCargado = 'medicamento';
+    public tipoPrescripcionSeleccionado = null;
+    private ultimoTipoCargado = null;
     public fechaInicioRecetas;
     public fechaFinRecetas;
+    public cantidadTotalRecetas = 0;
 
     toogleFiltros() {
         this.showFiltros = !this.showFiltros;
         if (!this.showFiltros) {
             this.fechaInicio = this.fechaFin = this.prestacionSeleccionada = null;
             this.fechaInicioRecetas = this.fechaFinRecetas = null;
-            this.tipoPrescripcionSeleccionado = this.tiposPrescripcion[0];
+            this.tipoPrescripcionSeleccionado = null;
             this.filtrar();
             if (this.filtroActual === 'recetas') {
                 this.filtrarRecetas();
@@ -826,7 +827,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             case 'solicitudes':
                 return this.solicitudesMezcladas.length;
             case 'recetas':
-                return this.busquedaRecetasOriginal?.length;
+                return this.cantidadTotalRecetas;
             case 'registro':
                 return this.registrosTotalesCopia.registro.length;
         }
@@ -1125,6 +1126,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                             conceptId: receta.insumo?.id || receta.insumo?.concepto?.conceptId || '',
                             semanticTag: 'producto'
                         },
+                        tipoReceta: receta.tipoReceta || 'simple',
                         tratamientoProlongado: receta.insumo?.tratamientoProlongado,
                         tiempoTratamiento: receta.insumo?.tiempoTratamiento,
                         cantidad: receta.insumo?.cantidad,
@@ -1146,6 +1148,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                             conceptId: receta.insumo?.id || receta.insumo?.concepto?.conceptId || '',
                             semanticTag: 'producto'
                         },
+                        tipoReceta: receta.tipoReceta || 'simple',
                         tratamientoProlongado: receta.insumo?.tratamientoProlongado,
                         tiempoTratamiento: receta.insumo?.tiempoTratamiento,
                         cantidad: receta.insumo?.cantidad,
@@ -1171,6 +1174,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                             conceptId: receta.insumo?.id || receta.insumo?.concepto?.conceptId || '',
                             semanticTag: 'producto'
                         },
+                        tipoReceta: receta.tipoReceta || 'simple',
                         tratamientoProlongado: receta.insumo?.tratamientoProlongado,
                         tiempoTratamiento: receta.insumo?.tiempoTratamiento,
                         cantidad: receta.insumo?.cantidad,
@@ -1198,6 +1202,9 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 }))
             );
             this.busquedaRecetasOriginal = this.busquedaRecetas;
+            if (!tipo) {
+                this.cantidadTotalRecetas = this.busquedaRecetasOriginal.length;
+            }
             this.filtrarRecetas();
         });
     }
