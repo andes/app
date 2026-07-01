@@ -24,10 +24,7 @@ export class SelectExpressionDirective implements OnInit, OnChanges {
     constructor(
         private snomed: SnomedService,
         private plexSelect: PlexSelectComponent
-    ) {
-        this.plexSelect.idField = 'term';
-        this.plexSelect.labelField = 'term';
-    }
+    ) { }
 
     ngOnChanges(changes: SimpleChanges) {
         if (this.preload && changes['snomedExpression']) {
@@ -36,6 +33,12 @@ export class SelectExpressionDirective implements OnInit, OnChanges {
     }
 
     ngOnInit() {
+        if (this.plexSelect.idField === 'id') {
+            this.plexSelect.idField = 'term';
+        }
+        if (this.plexSelect.labelField === 'nombre') {
+            this.plexSelect.labelField = 'term';
+        }
         if (this.preload) {
             this.plexSelect.data = [];
             this.preloadData();
