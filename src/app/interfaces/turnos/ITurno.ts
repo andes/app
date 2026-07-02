@@ -56,4 +56,16 @@ export interface ITurno {
         enum: ['pendiente', 'no enviado', 'enviado', 'fallido'];
     };
     notificar: boolean;
+    videoConferencia?: boolean;
+    webexLinks?: {
+        patientLink: string;
+        professionalLink: string;
+    };
+}
+
+export interface IHistorialTurno extends ITurno {
+    organizacion: {
+        id?: string;
+        nombre: string;
+    };
 }

@@ -1,3 +1,5 @@
+import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
+
 export interface IDemanda {
     profesional: {
         id: String;
@@ -13,14 +15,18 @@ export interface IDemanda {
     origen: String;
 };
 
+export type IPacienteListaEspera = IPaciente & { _id?: string };
+
 export interface IListaEspera {
+    _id?: string;
     id?: String;
-    paciente: { id: string };
+    paciente: IPacienteListaEspera;
     tipoPrestacion: any;
     fecha: Date;
     vencimiento?: Date;
     estado: String;
-    demandas: [IDemanda];
+    motivos?: String[];
+    demandas: IDemanda[];
     resolucion: {
         fecha: Date;
         motivo: String;
@@ -45,4 +51,8 @@ export interface IListaEspera {
 export interface ILlamado {
     estado?: string;
     comentario?: string;
+    createdAt?: Date;
+    createdBy?: {
+        nombreCompleto?: string;
+    };
 }

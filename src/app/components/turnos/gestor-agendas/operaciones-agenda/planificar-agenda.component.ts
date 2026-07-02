@@ -611,7 +611,8 @@ export class PlanificarAgendaComponent implements OnInit {
                                 return agenda.id !== this.modelo.id || !this.modelo.id;
                             });
                             if (agds.length > 0) {
-                                this.alertaProfesional = 'El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario';
+                                this.alertaProfesional = 'El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda el día ' + moment(agds[0].horaInicio).format('DD/MM/YYYY')
+                                    + ' de ' + moment(agds[0].horaInicio).format('HH:mm') + ' a ' + moment(agds[0].horaFin).format('HH:mm') + ' en el efector ' + agds[0].organizacion.nombre;
                             }
                         });
                 });
@@ -633,7 +634,6 @@ export class PlanificarAgendaComponent implements OnInit {
                             return agenda.id !== this.modelo.id || !this.modelo.id;
                         });
                         if (agds.length > 0) {
-
                             let ef = this.modelo.espacioFisico.nombre;
                             if (this.modelo.espacioFisico.servicio && this.modelo.espacioFisico.servicio.nombre) {
                                 ef = ef + this.modelo.espacioFisico.servicio.nombre;
@@ -641,7 +641,8 @@ export class PlanificarAgendaComponent implements OnInit {
                             if (this.modelo.espacioFisico.edificio && this.modelo.espacioFisico.edificio.descripcion) {
                                 ef = ef + this.modelo.espacioFisico.edificio.descripcion;
                             }
-                            this.alertaEspacioFisico = 'El ' + ef + ' está asignado a otra agenda en ese rango horario';
+                            this.alertaEspacioFisico = 'El ' + ef + ' está asignado en otra agenda el día ' + moment(agds[0].horaInicio).format('DD/MM/YYYY') +
+                                ' de ' + moment(agds[0].horaInicio).format('HH:mm') + ' a ' + moment(agds[0].horaFin).format('HH:mm');
                         }
                     });
             }
@@ -874,7 +875,8 @@ export class PlanificarAgendaComponent implements OnInit {
                 estado: 'disponible',
                 horaInicio: this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000)),
                 tipoTurno: undefined,
-                auditable: !bloque.tipoPrestaciones.some(p => !p.auditable)
+                auditable: !bloque.tipoPrestaciones.some(p => !p.auditable),
+                videoConferencia: bloque.tipoPrestaciones.some(p => p.videoConferencia === true)
             };
             if (bloque.pacienteSimultaneos) {
                 for (let j = 0; j < bloque.cantidadSimultaneos; j++) {
@@ -955,7 +957,8 @@ export class PlanificarAgendaComponent implements OnInit {
                 estado: 'disponible',
                 horaInicio: b.horaInicio,
                 tipoPrestacion: b.tipoPrestaciones[0],
-                tipoTurno: undefined
+                tipoTurno: undefined,
+                videoConferencia: b.tipoPrestaciones.some((p: any) => p.videoConferencia === true)
             }];
         });
     }

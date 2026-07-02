@@ -1,3 +1,23 @@
+## [5.173.2](https://github.com/andes/app/compare/v5.173.1...v5.173.2) (2026-07-01)
+
+
+### Bug Fixes
+
+* TM CUIT farmacia ([#3370](https://github.com/andes/app/issues/3370)) ([3b051a7](https://github.com/andes/app/commit/3b051a785dd54f3d9349e7cdcbb2ebc317935ef6))
+
+## [5.173.1](https://github.com/andes/app/compare/v5.173.0...v5.173.1) (2026-06-10)
+
+
+### Bug Fixes
+
+* **HUDS:** corrige visualizacion de recetas y recc ([#3366](https://github.com/andes/app/issues/3366)) ([859e7b4](https://github.com/andes/app/commit/859e7b45cfe6c33541cf4ec9ed80fd897d3d43b0))
+* **RUP:** oculta alerta al cargar molecula de imc ([#3354](https://github.com/andes/app/issues/3354)) ([a0e57b5](https://github.com/andes/app/commit/a0e57b5603b40cff2158adbbae6c3cee9e715b25))
+
+
+### Reverts
+
+* Revert "HUDS - " Se agrega filtro de organización a EXPORTAR HUDS" (#3350)" (#3365) ([ec1b9e7](https://github.com/andes/app/commit/ec1b9e73e305aaa76f56b1e54922bdd76c08357a)), closes [#3350](https://github.com/andes/app/issues/3350) [#3365](https://github.com/andes/app/issues/3365)
+
 # [5.173.0](https://github.com/andes/app/compare/v5.172.0...v5.173.0) (2026-05-27)
 
 

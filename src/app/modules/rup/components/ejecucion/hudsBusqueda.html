@@ -35,9 +35,6 @@
         </div>
 
         <div class="grow d-flex w-100" *ngIf="filtroActual === 'planes' || filtroActual === 'recetas'">
-            <plex-options *ngIf="filtroActual === 'planes'" class="filtros-ambitos"
-                          (activated)='setAmbitoOrigen($event)' [items]="filtrosAmbitos">
-            </plex-options>
             <div class="d-flex align-items-center justify-content-end">
                 <suspender-medicacion *ngIf="filtroActual==='recetas' && seleccionRecetas.length > 0"
                                       [seleccionRecetas]="seleccionSuspender"
@@ -52,6 +49,11 @@
             </div>
         </div>
     </div>
+
+    <plex-options *ngIf="filtroActual === 'planes'" class="filtros-ambitos" (activated)='setAmbitoOrigen($event)'
+                  [items]="filtrosAmbitos">
+    </plex-options>
+
 </div>
 
 
@@ -76,8 +78,8 @@
             <div class="row">
                 <div class="col-12">
                     <plex-select [(ngModel)]="tipoPrescripcionSeleccionado" label="Tipo de prescripción"
-                                 [data]="tiposPrescripcion" idField="id" labelField="nombre" (change)="filtrarRecetas()"
-                                 [readonly]="true">
+                                 [data]="tiposPrescripcion" idField="id" labelField="nombre"
+                                 (change)="filtrarRecetas()">
                     </plex-select>
                 </div>
             </div>
@@ -101,7 +103,7 @@
             <ul *ngIf="busquedaRecetas?.length" class="hover listado list-unstyled">
                 <ng-container *ngFor="let grupo of busquedaRecetas; let iReceta = index">
                     <li>
-                        <plex-bool [readonly]="!esRecetaSeleccionable(grupo?.recetaVisible)"
+                        <plex-bool *ngIf="profesionalValido" [readonly]="!esRecetaSeleccionable(grupo?.recetaVisible)"
                                    [ngModel]="seleccionRecetas[iReceta]" name="seleccionada" type="checkbox"
                                    (change)="seleccionarReceta($event, grupo.recetas, iReceta)">
                         </plex-bool>
