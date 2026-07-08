@@ -749,6 +749,22 @@ export class PlanificarAgendaComponent implements OnInit {
                     }
                 });
             });
+
+            // Verifica que los bloques sean consecutivos sin horario libre entre ellos
+            if (bloques.length > 1) {
+                const bloquesOrdenados = [...bloques].sort((a, b) => this.compararFechas(a.horaInicio, b.horaInicio));
+                for (let i = 0; i < bloquesOrdenados.length - 1; i++) {
+                    const actual = bloquesOrdenados[i];
+                    const siguiente = bloquesOrdenados[i + 1];
+                    if (actual.horaFin && siguiente.horaInicio) {
+                        const finActual = this.combinarFechas(this.fecha, actual.horaFin);
+                        const iniSiguiente = this.combinarFechas(this.fecha, siguiente.horaInicio);
+                        if (this.compararFechas(finActual, iniSiguiente) !== 0) {
+                            this.alertas.push('El bloque 2 tiene que empezar exactamente cuando termina el bloque 1');
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -766,6 +782,11 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     onSave($event, clonar: Boolean) {
+        this.validarTodo();
+        if (this.alertas.length > 0) {
+            this.hideGuardar = false;
+            return;
+        }
         this.hideGuardar = true;
         if (this.dinamica) {
             this.modelo.dinamica = true;
