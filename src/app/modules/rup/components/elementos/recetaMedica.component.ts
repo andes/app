@@ -58,6 +58,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
 
     // Propiedades para manejo de obras sociales
     public financiadoresPaciente: IObraSocial[] = [];
+    public obraSocialOriginal: any = null;
     public datosFinanciadores = [];
     public financiadorSeleccionado;
     public otroFinanciadorSeleccionado;
@@ -76,6 +77,12 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
         }
         if (!this.registro.valor.medicamentos) {
             this.registro.valor.medicamentos = [];
+        } else {
+            this.registro.valor.medicamentos.forEach(med => {
+                if (med.obraSocial?.nombre === 'Sin obra social') {
+                    med.obraSocial = null;
+                }
+            });
         }
         this.registros = this.prestacion.ejecucion.registros.filter(reg => reg.id !== this.registro.id).map(reg => reg.concepto);
         this.intervalos$ = this.constantesService.search({ source: 'plan-indicaciones:frecuencia' });
@@ -247,10 +254,24 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
             this.medicamento.cantidad = this.valorCantidadManual;
         }
 
+        if (this.prestacion?.paciente?.obraSocial && this.prestacion.paciente.obraSocial.nombre !== 'Sin obra social') {
+            this.prestacion.paciente.obraSocial.numeroAfiliado = this.numeroAfiliado || '';
+            this.medicamento.obraSocial = JSON.parse(JSON.stringify(this.prestacion.paciente.obraSocial));
+        } else {
+            this.medicamento.obraSocial = null;
+            if (this.prestacion?.paciente) {
+                this.prestacion.paciente.obraSocial = null;
+            }
+        }
+
         this.registro.valor.medicamentos.push(this.medicamento);
         this.unidades = [];
 
         const numeroAfiliadoTemporal = this.numeroAfiliado;
+        const financiadorSeleccionadoTemporal = this.financiadorSeleccionado;
+        const otroFinanciadorSeleccionadoTemporal = this.otroFinanciadorSeleccionado;
+        const showListadoTemporal = this.showListado;
+        const obraSocialTemporal = (this.prestacion?.paciente?.obraSocial && this.prestacion.paciente.obraSocial.nombre !== 'Sin obra social') ? JSON.parse(JSON.stringify(this.prestacion.paciente.obraSocial)) : null;
 
         this.medicamento = {
             generico: null,
@@ -274,9 +295,15 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
         this.formMedicamento.form.markAsPristine();
         this.formMedicamento.form.markAsUntouched();
 
-        if (numeroAfiliadoTemporal) {
+        setTimeout(() => {
             this.numeroAfiliado = numeroAfiliadoTemporal;
-        }
+            this.financiadorSeleccionado = financiadorSeleccionadoTemporal;
+            this.otroFinanciadorSeleccionado = otroFinanciadorSeleccionadoTemporal;
+            this.showListado = showListadoTemporal;
+            if (this.prestacion?.paciente) {
+                this.prestacion.paciente.obraSocial = obraSocialTemporal;
+            }
+        });
     }
 
     borrarMedicamento(medicamento) {
@@ -300,8 +327,10 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     }
 
     public onValidate() {
-        if (this.prestacion?.paciente?.obraSocial) {
+        if (this.prestacion?.paciente?.obraSocial && this.prestacion.paciente.obraSocial.nombre !== 'Sin obra social') {
             this.prestacion.paciente.obraSocial.numeroAfiliado = this.numeroAfiliado || '';
+        } else if (this.prestacion?.paciente) {
+            this.prestacion.paciente.obraSocial = null;
         }
         return this.registro.valor.medicamentos && this.registro.valor.medicamentos.length > 0;
     }
@@ -319,7 +348,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     }
 
     cargarObrasSocialesPaciente() {
-        if (this.prestacion?.paciente?.obraSocial) {
+        if (this.prestacion?.paciente?.obraSocial && this.prestacion.paciente.obraSocial.nombre !== 'Sin obra social') {
+            this.obraSocialOriginal = JSON.parse(JSON.stringify(this.prestacion.paciente.obraSocial));
             this.financiadoresPaciente = [{
                 nombre: this.prestacion.paciente.obraSocial.nombre || '',
                 codigoFinanciador: 0,
@@ -350,8 +380,17 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
                 { id: 'Sin obra social', label: 'Sin obra social' }
             ];
         } else {
-            this.showSelector = false;
-            this.financiadorSeleccionado = undefined;
+            this.obraSocialOriginal = null;
+            this.financiadoresPaciente = [];
+            this.showSelector = true;
+            this.financiadorSeleccionado = 'Sin obra social';
+            this.datosFinanciadores = [
+                { id: 'otras', label: 'Otras' },
+                { id: 'Sin obra social', label: 'Sin obra social' }
+            ];
+            if (this.prestacion?.paciente) {
+                this.prestacion.paciente.obraSocial = null;
+            }
         }
         this.cargarOpcionesFinanciadores();
     }
@@ -377,15 +416,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
         } else if (event.value === 'Sin obra social') {
             if (this.prestacion?.paciente) {
                 this.numeroAfiliado = '';
-                this.prestacion.paciente.obraSocial = <IObraSocial>{
-                    id: null,
-                    nombre: 'Sin obra social',
-                    financiador: 'Sin obra social',
-                    codigoPuco: null,
-                    numeroAfiliado: '',
-                    prepaga: false,
-                    origen: 'ANDES'
-                };
+                this.prestacion.paciente.obraSocial = null;
             }
         } else {
             const nombre = event.value;
@@ -401,7 +432,6 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
                     codigoPuco: obraSocialSeleccionada.codigoPuco,
                     numeroAfiliado: obraSocialSeleccionada.numeroAfiliado || '',
                     prepaga: obraSocialSeleccionada.prepaga || false,
-                    origen: obraSocialSeleccionada.origen || 'ANDES'
                 };
             }
         }
@@ -431,12 +461,26 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
                 origen: 'ANDES'
             };
 
-            const yaExiste = this.financiadoresPaciente.find(os =>
-                (os.nombre === nombre || os.financiador === financiador)
-            );
-
-            if (!yaExiste) {
-                this.financiadoresPaciente.push(nuevaObraSocial);
+            if (this.obraSocialOriginal) {
+                if (this.obraSocialOriginal.nombre === nombre || this.obraSocialOriginal.financiador === financiador) {
+                    this.financiadoresPaciente = [this.obraSocialOriginal];
+                } else {
+                    const originalOS = {
+                        nombre: this.obraSocialOriginal.nombre || '',
+                        codigoFinanciador: 0,
+                        version: new Date(),
+                        numeroAfiliado: this.obraSocialOriginal.numeroAfiliado || '',
+                        financiador: this.obraSocialOriginal.financiador || null,
+                        codigoPuco: this.obraSocialOriginal.codigoPuco || null,
+                        id: this.obraSocialOriginal.id || null,
+                        transmite: '',
+                        prepaga: this.obraSocialOriginal.prepaga || false,
+                        origen: this.obraSocialOriginal.origen || 'ANDES'
+                    };
+                    this.financiadoresPaciente = [originalOS, nuevaObraSocial];
+                }
+            } else {
+                this.financiadoresPaciente = [nuevaObraSocial];
             }
 
             this.financiadorSeleccionado = nombre || financiador;
