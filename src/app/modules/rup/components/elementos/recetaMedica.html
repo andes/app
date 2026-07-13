@@ -10,7 +10,7 @@
             <div class="col-md-12">
                 <label class="form-label">Obra Social / Financiador</label>
                 <plex-radio name="financiador" [(ngModel)]="financiadorSeleccionado"
-                            (change)="seleccionarFinanciador($event)" [data]="datosFinanciadores">
+                            (change)="seleccionarFinanciador($event)" [data]="datosFinanciadores" [required]="true">
                 </plex-radio>
             </div>
         </div>
@@ -21,7 +21,7 @@
                 <label class="form-label">Seleccionar otro financiador</label>
                 <plex-select name="otroFinanciador" placeholder="Buscar financiador..."
                              [(ngModel)]="otroFinanciadorSeleccionado" [data]="opcionesFinanciadores"
-                             labelField="nombre" (change)="seleccionarOtroFinanciador($event)">
+                             labelField="nombre" (change)="seleccionarOtroFinanciador($event)" [required]="showListado">
                 </plex-select>
             </div>
         </div>
@@ -135,7 +135,7 @@
                               [required]="true" min="1" max="90">
                     </plex-int>
                     <plex-text name="notaMedica" label="Notas médicas" [(ngModel)]="medicamento.dosisDiaria.notaMedica"
-                               [required]="false" min="1" max="90">
+                               [required]="false">
                     </plex-text>
                 </div>
 
@@ -187,6 +187,10 @@
             </plex-badge>
             <plex-badge *ngIf="item.tipoReceta?.length" type="info">{{item.tipoReceta}}
             </plex-badge>
+            <plex-label size="md" [tituloBold]="false"
+                        titulo="{{ item.obraSocial ? (item.obraSocial.nombre || item.obraSocial.financiador) : 'Sin obra social' }}"
+                        subtitulo="{{ item.obraSocial?.numeroAfiliado ? 'Número de Afiliado: ' + item.obraSocial.numeroAfiliado : '' }}">
+            </plex-label>
             <plex-button type="danger" size="sm" (click)="borrarMedicamento(item)" icon="delete"
                          tooltip="eliminar"></plex-button>
         </plex-item>
@@ -209,6 +213,10 @@
             </plex-badge>
             <plex-badge *ngIf="item.tipoReceta?.length" type="info">{{item.tipoReceta}}
             </plex-badge>
+            <plex-label size="md" [tituloBold]="false"
+                        titulo="{{ item.obraSocial ? (item.obraSocial.nombre || item.obraSocial.financiador) : 'Sin obra social' }}"
+                        subtitulo="{{ item.obraSocial?.numeroAfiliado ? 'Número de Afiliado: ' + item.obraSocial.numeroAfiliado : '' }}">
+            </plex-label>
         </plex-item>
     </plex-list>
 </div>
