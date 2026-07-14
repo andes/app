@@ -176,18 +176,19 @@ export class TurnosComponent implements OnInit {
         this.validacionesPendientesSuspension++;
         this.validSuspensionLiberacion = true;
 
-        const params: any = {
-            solicitudTurno: turno._id
+        const params = {
+            estado: 'ejecucion',
+            turnos: [turnoId]
         };
 
-        this.prestacionService.getSolicitudes(params).subscribe({
+        this.prestacionService.get(params).subscribe({
             next: resultado => {
                 const sigueSeleccionado = this.turnosSeleccionados.some(x => this.getTurnoId(x) === turnoId);
                 if (!sigueSeleccionado) {
                     return;
                 }
 
-                const enEjecucion = resultado?.some(item => item?.estadoActual?.tipo === 'ejecucion');
+                const enEjecucion = resultado?.length > 0;
                 if (enEjecucion) {
                     this.turnosConPrestacionEnEjecucion.add(turnoId);
                 } else {
@@ -246,11 +247,13 @@ export class TurnosComponent implements OnInit {
 
     seleccionarTodos() {
         this.turnosSeleccionados = [];
+        this.turnosConPrestacionEnEjecucion.clear();
 
         this.bloqueSelected.turnos.map(turno => {
             if (!this.todos) {
                 turno.checked = true;
                 this.turnosSeleccionados = [...this.turnosSeleccionados, turno];
+                this.validarPrestacionEnEjecucion(turno);
             } else {
                 turno.checked = false;
             }
@@ -260,6 +263,7 @@ export class TurnosComponent implements OnInit {
             if (!this.todos) {
                 sobreturno.checked = true;
                 this.turnosSeleccionados = [...this.turnosSeleccionados, sobreturno];
+                this.validarPrestacionEnEjecucion(sobreturno);
             } else {
                 sobreturno.checked = false;
             }
@@ -267,6 +271,7 @@ export class TurnosComponent implements OnInit {
 
         this.todos = !this.todos;
         this.cantSel = this.turnosSeleccionados.length;
+        this.actualizarEstadoSuspension();
     }
 
     // retorna true si algun bloque de la agenda es exclusivo de gestión
