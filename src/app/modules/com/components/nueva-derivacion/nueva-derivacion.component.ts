@@ -14,6 +14,8 @@ import { ProfesionalService } from 'src/app/services/profesional.service';
 import { DerivacionesService } from './../../../../services/com/derivaciones.service';
 import { EstrategiaAtencionService } from './../../../../services/com/estrategiaAtencion.service';
 import { AdjuntosService } from './../../../rup/services/adjuntos.service';
+import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
+import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'nueva-solicitud',
@@ -23,7 +25,7 @@ import { AdjuntosService } from './../../../rup/services/adjuntos.service';
 export class NuevaDerivacionComponent implements OnInit, OnDestroy {
     @ViewChildren('upload') childsComponents: QueryList<any>;
     @Output() newDerivacionEmitter: EventEmitter<any> = new EventEmitter<any>();
-    paciente: any;
+    public paciente: IPaciente;
     organizacionDestino: any;
     detalle: '';
     // Adjuntar Archivo
@@ -78,9 +80,14 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         { id: 'mayorComplejidad', nombre: 'Mayor complejidad' },
         { id: 'menorComplejidad', nombre: 'Menor complejidad' },
         { id: 'rehabilitacion', nombre: 'Rehabilitación' },
+        { id: 'faltaDisponibilidad', nombre: 'Falta de disponibilidad de camas' },
+        { id: 'coberturaObraSocial', nombre: 'Cobertura de obra social' },
     ];
 
     public estrategiasAtencion = [];
+    public puedeVerHuds;
+    routeToParams: any;
+    financiador;
 
     constructor(
         private plex: Plex,
@@ -97,7 +104,8 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         private driveService: DriveService,
         private elementoRupService: ElementosRUPService,
         private servicioPrestacion: PrestacionesService,
-        private estrategiaAtencionService: EstrategiaAtencionService
+        private estrategiaAtencionService: EstrategiaAtencionService,
+        private motivoAccesoService: ModalMotivoAccesoHudsService
     ) { }
 
     ngOnInit() {
@@ -112,6 +120,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         }
         ]);
 
+        this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
         const paciente = this.route.snapshot.paramMap.get('paciente');
         if (paciente) {
             this.organizacionService.getById(this.auth.organizacion.id).subscribe(org => {
@@ -265,6 +274,18 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
 
     cancelar() {
         this.router.navigate(['/com']);
+    }
+
+    showMotivoAcceso() {
+        this.motivoAccesoService.showMotivos(this.paciente).subscribe(motivo => {
+            if (motivo) {
+                this.router.navigate(['/huds/paciente/', this.paciente.id], { queryParams: { origen: 'com' } });
+            }
+        });
+    }
+
+    public setFinanciador(financiador) {
+        this.financiador = financiador;
     }
 
     loadProfesionales(event) {
