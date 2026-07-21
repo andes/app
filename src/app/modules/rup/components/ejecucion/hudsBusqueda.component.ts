@@ -121,32 +121,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             return laboratorio.medicoSolicitante;
         }
 
-        const prof = laboratorio?.data?.profesional || laboratorio?.profesional;
-        if (!prof) {
-            return null;
-        }
-
-        if (typeof prof === 'string') {
-            if (prof.includes('NO INFORMADO') || prof === '-, ') {
-                return 'NO INFORMADO';
-            }
-            return prof;
-        }
-
-        if (prof.nombre === 'NO INFORMADO' || prof.apellido === 'NO INFORMADO') {
-            return 'NO INFORMADO';
-        }
-
-        const nombre = prof.nombre || '';
-        const apellido = prof.apellido || '';
-        if (nombre && apellido && apellido !== '-') {
-            return `${apellido}, ${nombre}`;
-        } else if (nombre) {
-            return nombre;
-        } else if (apellido && apellido !== '-') {
-            return apellido;
-        }
-
         return null;
     }
 

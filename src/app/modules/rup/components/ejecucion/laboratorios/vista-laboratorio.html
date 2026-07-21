@@ -6,11 +6,17 @@
                     <plex-badge type="info">
                         Protocolo {{protocolo.data.numero}}
                     </plex-badge>
-                    <plex-badge *ngIf="protocolo.data?.estado === 'EnProceso'" type="info">
+                    <plex-badge *ngIf="protocolo.data?.estado === 'EnProceso'" type="warning">
                         En Proceso
                     </plex-badge>
+                    <plex-badge *ngIf="protocolo.data?.estado === 'ConResultados'" type="info">
+                        Con resultados
+                    </plex-badge>
+                    <plex-badge *ngIf="protocolo.data?.estado === 'Terminado'" type="success">
+                        Terminado
+                    </plex-badge>
                 </div>
-                <b class="mt-1">{{protocolo.data.fecha | date: 'dd/MM/yyyy HH:mm'}}</b>
+                <b class="mt-1">{{protocolo.data?.fecha | date: 'dd/MM/yyyy HH:mm'}}</b>
             </div>
             <div>
                 <plex-grid type="full" cols="3" size="sm">
@@ -46,7 +52,10 @@
                 <div class="table-header-row">
                     <div class="table-header-col"></div>
                     <div class="table-header-col text-center"><b>Resultado</b></div>
+                    <div class="table-header-col text-center"><b>Unidad de Medida</b></div>
                     <div class="table-header-col text-center"><b>Valor Referencia</b></div>
+                    <div class="table-header-col text-center"><b>Método</b></div>
+                    <div class="table-header-col text-center"><b>Fecha y hora de validación</b></div>
                     <div class="table-header-col text-center"><b>Firma</b></div>
                 </div>
                 <ng-container *ngFor="let unGrupo of area.grupos">
@@ -56,12 +65,16 @@
                             <tbody>
                                 <tr *ngFor="let unItem of unGrupo.items">
                                     <td *ngIf="!unItem.esTitulo"><b>{{unItem.nombre}}</b></td>
-                                    <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.resultado}}
-                                        {{unItem.unidadMedida}}</td>
-                                    <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.valorReferencia}}{{
-                                        unItem.metodo ? '/' + unItem.metodo : '' }}</td>
+                                    <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.resultado}}</td>
+                                    <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.unidadMedida}}</td>
+                                    <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.valorReferencia}}
+                                    </td>
+                                    <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.metodo}}</td>
+                                    <td *ngIf="!unItem.esTitulo" class="text-center">
+                                        {{unItem.fechaHoraValida}}
+                                    </td>
                                     <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.firma}}</td>
-                                    <td class="esTitulo" *ngIf="unItem.esTitulo" colspan="5">
+                                    <td class="esTitulo" *ngIf="unItem.esTitulo" colspan="7">
                                         <b>{{unItem.nombre}}</b>
                                     </td>
                                 </tr>
