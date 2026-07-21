@@ -870,9 +870,12 @@
                                                      *ngIf="(laboratorio?.TipoServicio === 'LABORATORIO' || laboratorio?.TipoServicio === 'MICROBIOLOGIA' || laboratorio?.TipoServicio === 'laboratorio' || laboratorio?.TipoServicio === 'microbiologia') && (laboratorio?.estado || laboratorio?.Estado)">
                                                     <div class="p-0 pt-1 pr-1 float-right">
                                                         <plex-badge size="sm" type="warning"
-                                                                    *ngIf="(laboratorio.estado || laboratorio.Estado) === 'EnProceso' || (laboratorio.estado || laboratorio.Estado) === 'ConResultados'">
-                                                            {{ (laboratorio.estado || laboratorio.Estado) ===
-                                                            'EnProceso' ? 'En Proceso' : 'Con resultados' }}
+                                                                    *ngIf="(laboratorio.estado || laboratorio.Estado) === 'EnProceso'">
+                                                            En Proceso
+                                                        </plex-badge>
+                                                        <plex-badge size="sm" type="info"
+                                                                    *ngIf="(laboratorio.estado || laboratorio.Estado) === 'ConResultados'">
+                                                            Con resultados
                                                         </plex-badge>
                                                         <plex-badge size="sm" type="success"
                                                                     *ngIf="(laboratorio.estado || laboratorio.Estado) === 'Terminado'">
