@@ -118,8 +118,13 @@
                         <plex-label *ngIf="unBloque.horaInicio && unBloque.horaFin"
                                     titulo="{{unBloque.horaInicio | date: 'HH:mm'}} a {{unBloque.horaFin | date: 'HH:mm'}}"
                                     size="md"></plex-label>
-                        <plex-label *ngIf="unBloque.descripcion" titulo="{{unBloque.descripcion}}" size="md">
+                        <plex-label *ngIf="getPrestacionesActivas(unBloque)"
+                                    titulo="{{getPrestacionesActivas(unBloque)}}" size="md">
                         </plex-label>
+                        <plex-badge *ngIf="getPrestacionesActivas(unBloque)" type="info" size="sm">
+                            <plex-icon name="comment" size="sm" title="{{unBloque.descripcion || null}}"
+                                       titlePosition="right"></plex-icon>
+                        </plex-badge>
                         <plex-button *ngIf="!dinamica && modelo.bloques.length > 1" icon="delete" type="danger"
                                      size="sm" (click)="deleteBloque(i)">
                         </plex-button>

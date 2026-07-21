@@ -1023,6 +1023,14 @@ export class PlanificarAgendaComponent implements OnInit {
         this.showModal = false;
     }
 
+    getPrestacionesActivas(bloque): string {
+        if (!bloque.tipoPrestaciones) {
+            return '';
+        }
+        const activas = bloque.tipoPrestaciones.filter(p => p.activo);
+        return activas.map(p => p.nombre).join(', ');
+    }
+
     isMobile() {
         return this.breakpointObserver.isMatched('(max-width: 599px)');
     }
