@@ -69,7 +69,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         this.route.params.subscribe(params => {
             if (params && params['idAgenda']) {
                 this.serviceAgenda.getById(params['idAgenda']).subscribe(agenda => {
-                    this._agenda = agenda;
+                    this._agenda = this.clonarAgenda(agenda);
                     this.agenda = agenda;
                     this.getCantidadTurnosAsignados();
                     this.esAgendaOdonto = this._agenda.tipoPrestaciones[0].term.includes('odonto');
@@ -303,6 +303,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     }
 
     isRegistradoProfesional(turno) {
+        turno = this.obtenerTurnoGuardado(turno);
         let sinCodificaciones;
         let sinAuditorias;
         if (turno && turno.diagnostico && turno.diagnostico.codificaciones && turno.diagnostico.codificaciones.length) {
@@ -313,6 +314,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         return esCodificado;
     }
     isAuditado(turno) {
+        turno = this.obtenerTurnoGuardado(turno);
         let sinAuditorias;
         if (turno && turno.diagnostico && turno.diagnostico.codificaciones && turno.diagnostico.codificaciones.length) {
             sinAuditorias = turno.diagnostico.codificaciones.find(cod => !cod.codificacionAuditoria);
@@ -325,7 +327,38 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     }
 
     asistenciaVerificada(turno) {
-        return turno?.asistencia && turno?.asistencia === 'asistio' && !turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo && !turno?.diagnostico?.codificaciones[0]?.codificacionProfesional?.snomed?.term && turno.tipoPrestacion?.auditable === true;
+        turno = this.obtenerTurnoGuardado(turno);
+        return turno?.paciente && turno?.paciente.id && turno?.asistencia && turno?.asistencia === 'asistio' && !turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo && !turno?.diagnostico?.codificaciones[0]?.codificacionProfesional?.snomed?.term && turno.tipoPrestacion?.auditable === true;
+    }
+
+    asistenciaVerificadaSobreturno(turno) {
+        turno = this.obtenerTurnoGuardado(turno);
+        return turno?.asistencia === 'asistio' && !turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo;
+    }
+
+    sobreturnoAuditado(turno) {
+        turno = this.obtenerTurnoGuardado(turno);
+        return turno?.paciente?.id && (turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo || turno?.asistencia === 'noAsistio' || turno?.asistencia === 'sinDatos');
+    }
+
+    private obtenerTurnoGuardado(turno: any) {
+        if (!turno || !this._agenda) {
+            return null;
+        }
+
+        const bloques = this._agenda.bloques || [];
+        for (const bloque of bloques) {
+            const turnoGuardado = (bloque.turnos || []).find(t => t.id === turno.id);
+            if (turnoGuardado) {
+                return turnoGuardado;
+            }
+        }
+
+        return (this._agenda.sobreturnos || []).find(t => t.id === turno.id);
+    }
+
+    private clonarAgenda(agenda: any) {
+        return JSON.parse(JSON.stringify(agenda));
     }
 
     guardar() {
@@ -368,6 +401,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         if (this.turnoSeleccionado.tipoPrestacion) {
             this.serviceTurno.put(datosTurno).subscribe(() => {
                 this.cerrarAsistencia();
+                this._agenda = this.clonarAgenda(this.agenda);
             });
         } else {
             this.plex.info('warning', 'Debe seleccionar un tipo de Prestacion');
