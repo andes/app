@@ -173,10 +173,10 @@
                                 <i tooltip="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i>
                             </span>
                             <span [ngClass]="{'text-warning': true}"
-                                *ngIf="sobreturno?.asistencia && sobreturno?.asistencia == 'asistio' && !sobreturno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo">|
+                                *ngIf="asistenciaVerificadaSobreturno(sobreturno)">|
                                 Asistencia Verificada</span>
                             <span [ngClass]="{'text-success': true}"
-                                *ngIf="sobreturno?.paciente?.id && (sobreturno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo || (sobreturno?.asistencia && sobreturno.asistencia =='noAsistio'|| sobreturno.asistencia=='sinDatos'))">|
+                                *ngIf="sobreturnoAuditado(sobreturno)">|
                                 Auditado</span>
 
                         </td>
