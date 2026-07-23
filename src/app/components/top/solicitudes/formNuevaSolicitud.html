@@ -33,36 +33,59 @@
                          (change)="onSelectOrganizacionOrigen(); checkProfesional()" [required]="true">
             </plex-select>
         </plex-wrapper>
-        <plex-grid type="full" cols="4">
-            <plex-bool [(ngModel)]="autocitado" label="Autocitado" grow="1" name="autocitado">
-            </plex-bool>
-        </plex-grid>
-        <plex-grid type="full" cols="1">
+        <!-- SIN RUP: layout original -->
+        <ng-container *ngIf="!mostrarRupSolicitud">
+            <plex-grid type="full" cols="4">
+                <plex-bool [(ngModel)]="autocitado" label="Autocitado" grow="1" name="autocitado">
+                </plex-bool>
+            </plex-grid>
+            <plex-grid type="full" cols="1">
+                <plex-wrapper>
+                    <plex-select *ngIf="!autocitado" [(ngModel)]="prestacionOrigen" [data]="dataTipoPrestacionesOrigen"
+                                 name="tipoPrestacion" (change)="onSelect()" label="Tipos de Prestación Origen"
+                                 placeholder="Tipos de Prestación Origen" [required]="true" grow="full">
+                    </plex-select>
+                    <plex-select [(ngModel)]="modelo.solicitud.profesionalOrigen" name="profesionalOrigen"
+                                 (getData)="loadProfesionales($event)" label="Profesional solicitante"
+                                 placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre"
+                                 (change)="checkProfesional()" grow="full">
+                    </plex-select>
+                    <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.profesional"
+                                 label="Profesional destino" name="profesional" (getData)="loadProfesionales($event)"
+                                 (change)="checkProfesional()" placeholder="Escriba el apellido de un Profesional"
+                                 labelField="apellido + ' ' + nombre" grow="full">
+                    </plex-select>
+                </plex-wrapper>
+                <plex-wrapper>
+                    <plex-select *ngIf="conceptosAsociados.length" [(ngModel)]="modelo.solicitud.conceptoAsociado"
+                                 [data]="conceptosAsociados" label="Diagnóstico asociado" labelField="term"
+                                 idField="conceptId" name="conceptoAsociado">
+                    </plex-select>
+                    <plex-text [(ngModel)]="motivo" label="Notas / Diagnóstico / Motivo" name="motivo" [required]="true"
+                               multiline="true"></plex-text>
+                </plex-wrapper>
+            </plex-grid>
+        </ng-container>
+        <!-- CON RUP: layout simplificado -->
+        <ng-container *ngIf="mostrarRupSolicitud">
             <plex-wrapper>
-                <plex-select *ngIf="!autocitado" [(ngModel)]="prestacionOrigen" [data]="dataTipoPrestacionesOrigen"
-                             name="tipoPrestacion" (change)="onSelect()" label="Tipos de Prestación Origen"
+                <plex-select [(ngModel)]="prestacionOrigen" [data]="dataTipoPrestacionesOrigen" name="tipoPrestacion"
+                             (change)="onSelect()" label="Tipos de Prestación Origen"
                              placeholder="Tipos de Prestación Origen" [required]="true" grow="full">
                 </plex-select>
+            </plex-wrapper>
+            <plex-grid type="full" cols="2">
                 <plex-select [(ngModel)]="modelo.solicitud.profesionalOrigen" name="profesionalOrigen"
                              (getData)="loadProfesionales($event)" label="Profesional solicitante"
                              placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre"
-                             (change)="checkProfesional()" grow="full">
+                             (change)="checkProfesional()">
                 </plex-select>
-                <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.profesional" label="Profesional destino"
-                             name="profesional" (getData)="loadProfesionales($event)" (change)="checkProfesional()"
-                             placeholder="Escriba el apellido de un Profesional" labelField="apellido + ' ' + nombre"
-                             grow="full">
+                <plex-select [(ngModel)]="modelo.solicitud.profesional" label="Profesional destino" name="profesional"
+                             (getData)="loadProfesionales($event)" (change)="checkProfesional()"
+                             placeholder="Escriba el apellido de un Profesional" labelField="apellido + ' ' + nombre">
                 </plex-select>
-            </plex-wrapper>
-            <plex-wrapper>
-                <plex-select *ngIf="conceptosAsociados.length" [(ngModel)]="modelo.solicitud.conceptoAsociado"
-                             [data]="conceptosAsociados" label="Diagnóstico asociado" labelField="term"
-                             idField="conceptId" name="conceptoAsociado">
-                </plex-select>
-                <plex-text [(ngModel)]="motivo" label="Notas / Diagnóstico / Motivo" name="motivo" [required]="true"
-                           multiline="true"></plex-text>
-            </plex-wrapper>
-        </plex-grid>
+            </plex-grid>
+        </ng-container>
     </ng-container>
     <!-- /SOLICITUD ENTRADA -->
     <!-- SOLICITUD SALIDA -->
@@ -85,35 +108,65 @@
                          [data]="dataOrganizacionesDestino" [required]="true" (change)="onSelectOrganizacionDestino()">
             </plex-select>
         </plex-wrapper>
-        <plex-grid type="full" cols="1">
+        <!-- SIN RUP: layout original -->
+        <ng-container *ngIf="!mostrarRupSolicitud">
+            <plex-grid type="full" cols="1">
+                <plex-wrapper>
+                    <plex-select [(ngModel)]="modelo.solicitud.profesionalOrigen" name="profesionalOrigen"
+                                 (getData)="loadProfesionales($event)" label="Profesional solicitante"
+                                 placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre"
+                                 [required]="true" grow="full">
+                    </plex-select>
+                    <plex-select [(ngModel)]="prestacionDestino" name="tipoPrestacionDestino" [data]="dataReglasDestino"
+                                 label="Tipo de Prestación Solicitada" placeholder="Tipos de Prestación solicitada"
+                                 [required]="true" (change)="onSelectPrestacionDestino()" grow="full">
+                    </plex-select>
+                    <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.profesional"
+                                 label="Profesional destino" name="profesional" (getData)="loadProfesionales($event)"
+                                 placeholder="Escriba el apellido de un Profesional"
+                                 labelField="apellido + ' ' + nombre" grow="full">
+                    </plex-select>
+                    <plex-select *ngIf="conceptosAsociados.length" [(ngModel)]="modelo.solicitud.conceptoAsociado"
+                                 [data]="conceptosAsociados" label="Diagnóstico asociado" labelField="term"
+                                 idField="conceptId" name="conceptoAsociado">
+                    </plex-select>
+                    <plex-text [(ngModel)]="motivo" label="Notas / Diagnóstico / Motivo" name="motivo" [required]="true"
+                               multiline="true"></plex-text>
+                </plex-wrapper>
+            </plex-grid>
+        </ng-container>
+        <!-- CON RUP: layout simplificado -->
+        <ng-container *ngIf="mostrarRupSolicitud">
             <plex-wrapper>
-                <plex-select [(ngModel)]="modelo.solicitud.profesionalOrigen" name="profesionalOrigen"
-                             (getData)="loadProfesionales($event)" label="Profesional solicitante"
-                             placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre"
-                             [required]="true" grow="full">
-                </plex-select>
                 <plex-select [(ngModel)]="prestacionDestino" name="tipoPrestacionDestino" [data]="dataReglasDestino"
                              label="Tipo de Prestación Solicitada" placeholder="Tipos de Prestación solicitada"
                              [required]="true" (change)="onSelectPrestacionDestino()" grow="full">
                 </plex-select>
-                <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.profesional" label="Profesional destino"
-                             name="profesional" (getData)="loadProfesionales($event)"
-                             placeholder="Escriba el apellido de un Profesional" labelField="apellido + ' ' + nombre"
-                             grow="full">
-                </plex-select>
-                <plex-select *ngIf="conceptosAsociados.length" [(ngModel)]="modelo.solicitud.conceptoAsociado"
-                             [data]="conceptosAsociados" label="Diagnóstico asociado" labelField="term"
-                             idField="conceptId" name="conceptoAsociado">
-                </plex-select>
-                <plex-text [(ngModel)]="motivo" label="Notas / Diagnóstico / Motivo" name="motivo" [required]="true"
-                           multiline="true"></plex-text>
             </plex-wrapper>
-        </plex-grid>
+            <plex-grid type="full" cols="2">
+                <plex-select [(ngModel)]="modelo.solicitud.profesionalOrigen" name="profesionalOrigen"
+                             (getData)="loadProfesionales($event)" label="Profesional solicitante"
+                             placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre"
+                             [required]="true">
+                </plex-select>
+                <plex-select [(ngModel)]="modelo.solicitud.profesional" label="Profesional destino" name="profesional"
+                             (getData)="loadProfesionales($event)" placeholder="Escriba el apellido de un Profesional"
+                             labelField="apellido + ' ' + nombre">
+                </plex-select>
+            </plex-grid>
+        </ng-container>
     </ng-container>
+    <br *ngIf="mostrarRupSolicitud"><br *ngIf="mostrarRupSolicitud">
+
     <!-- /SOLICITUD SALIDA -->
     <!-- Adjuntar Archivos -->
-    <plex-title [size]="size? size : ''" titulo="Cargar adjuntos"></plex-title>
-    <plex-wrapper>
+    <plex-title [size]="size? size : ''" titulo="Cargar adjuntos">
+
+        <upload-file *ngIf="mostrarRupSolicitud" label="Adjuntar archivo" (onUpload)="onUpload($event)"
+                     [extensiones]="extensions" [modulo]="'top'">
+        </upload-file>
+    </plex-title>
+    <plex-wrapper *ngIf="!mostrarRupSolicitud">
         <upload-file label="Adjuntar archivo" (onUpload)="onUpload($event)" [extensiones]="extensions" [modulo]="'top'">
         </upload-file>
         <br><br>
@@ -122,6 +175,27 @@
                         detach="top" hintType="danger">Archivo inválido.</plex-badge>
         </span>
     </plex-wrapper>
+    <span *ngIf="mostrarRupSolicitud && errorExt">
+        <plex-badge type="danger" size="sm" hint="Estos son los archivos que podes subir: {{ extensions }}" detach="top"
+                    hintType="danger">Archivo inválido.</plex-badge>
+    </span>
     <shared-galeria-archivos [files]="documentosUrl" [loading]="waiting" (remove)="imageRemoved($event)">
     </shared-galeria-archivos>
+
+    <!-- Molécula RUP para la prestación solicitada -->
+    <ng-container *ngIf="mostrarRupSolicitud && elementoRUPSolicitud && registroSolicitud">
+        <div class="solicitud-wrapper" [class.mt-4]="mostrarRupSolicitud">
+            <plex-title titulo="{{ registroSolicitud.nombre }}" size="sm">
+                <plex-button (click)="toggleCollapseRupSolicitud()" size="sm" type="primary"
+                             icon="{{ collapseRupSolicitud ? 'chevron-down' : 'chevron-up'}}" class="collapse-card"
+                             title="{{ collapseRupSolicitud ? 'Expandir' : 'Colapsar'}}" titlePosition="left">
+                </plex-button>
+            </plex-title>
+            <div class="info-solicitud" [hidden]="collapseRupSolicitud">
+                <rup [elementoRUP]="elementoRUPSolicitud" [registro]="registroSolicitud" [prestacion]="modelo"
+                     [paciente]="paciente" [soloValores]="false">
+                </rup>
+            </div>
+        </div>
+    </ng-container>
 </form>
