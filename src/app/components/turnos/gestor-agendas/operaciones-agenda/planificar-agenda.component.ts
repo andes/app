@@ -318,7 +318,9 @@ export class PlanificarAgendaComponent implements OnInit {
                 'accesoDirectoProgramado': 0, 'accesoDirectoProgramadoPorc': 0,
                 'reservadoGestion': 0, 'reservadoGestionPorc': 0,
                 'reservadoProfesional': 0, 'reservadoProfesionalPorc': 0,
-                'tipoPrestaciones': []
+                'tipoPrestaciones': [],
+                'citasVirtuales': false,
+                'appMobile': false
             });
             this.activarBloque(longitud);
             this.inicializarPrestacionesBloques(this.elementoActivo);
@@ -582,6 +584,19 @@ export class PlanificarAgendaComponent implements OnInit {
         this.cambiaPorcentajeTipo('accesoDirectoProgramado');
         this.cambiaPorcentajeTipo('reservadoGestion');
         this.cambiaPorcentajeTipo('reservadoProfesional');
+    }
+
+    tieneTeleconsulta() {
+        if (!this.elementoActivo || !this.elementoActivo.tipoPrestaciones) {
+            return false;
+        }
+        return this.elementoActivo.tipoPrestaciones.some(p => p.activo && (
+            p.teleConsulta || p.teleconsulta ||
+            (p.nombre && p.nombre.toLowerCase().includes('telemedicina')) ||
+            (p.term && p.term.toLowerCase().includes('telemedicina')) ||
+            (p.nombre && p.nombre.toLowerCase().includes('teleconsulta')) ||
+            (p.term && p.term.toLowerCase().includes('teleconsulta'))
+        ));
     }
 
     aproximar(date: Date) {
@@ -996,6 +1011,8 @@ export class PlanificarAgendaComponent implements OnInit {
     onVentanillaVirtualChange($event) {
         if (!$event.value) {
             this.elementoActivo.cupoMobile = 0;
+            this.elementoActivo.citasVirtuales = false;
+            this.elementoActivo.appMobile = false;
         }
     }
     cerrarModal() {
