@@ -62,12 +62,15 @@
     <ng-container *ngIf="!derivacion.detalle">
         <plex-title size="sm" titulo="Datos de diagnóstico"></plex-title>
         <plex-grid type="full" cols="2">
-            <plex-label titulo="Motivo de la derivación" subtitulo="{{derivacion.motivoDerivacion}}"></plex-label>
             <plex-label titulo="Diagnóstico actual" subtitulo="{{derivacion.diagnosticoActual}}"></plex-label>
-            <plex-label titulo="Estado Clínico" subtitulo="{{derivacion.estadoClinico}}"></plex-label>
+
             <plex-label titulo="Diagnóstico base" subtitulo="{{derivacion.diagnosticoBase}}"></plex-label>
             <plex-label titulo="Comorbilidades" subtitulo="{{derivacion.comorbilidades}}"></plex-label>
         </plex-grid>
+        <div>
+            <plex-label titulo="Estado Clínico"></plex-label>
+            <div [innerHTML]="derivacion.estadoClinico"></div>
+        </div>
     </ng-container>
     <shared-galeria-archivos [files]="adjuntosUrl" [readonly]="true">
     </shared-galeria-archivos>

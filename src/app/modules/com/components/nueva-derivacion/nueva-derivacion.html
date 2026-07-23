@@ -1,6 +1,9 @@
 <plex-layout main="8">
     <plex-layout-main>
         <plex-title main titulo="NUEVA DERIVACIÓN">
+            <plex-button *ngIf="puedeVerHuds" type="info" icon="historial" (click)="showMotivoAcceso()" class="ml-1"
+                         tooltip="HUDS del paciente">
+            </plex-button>
             <plex-button position="right" type="danger" label="Cancelar" (click)="cancelar()">
             </plex-button>
             <plex-button position="right" type="success" label="Guardar" (click)="guardarDerivacion($event)"
@@ -27,14 +30,10 @@
                              placeholder="Seleccione una condición" [data]="condiciones" [required]="true" grow="full">
 
                 </plex-select>
-                <plex-select [(ngModel)]="modelo.necesidad" name="necesidad" label="Necesidad"
-                             placeholder="Seleccione una necesidad" [data]="necesidad" [required]="true" grow="full">
+                <plex-select [(ngModel)]="modelo.necesidad" name="necesidad" label="Motivo de derivación"
+                             placeholder="Seleccione un motivo de derivación" [data]="necesidad" [required]="true"
+                             grow="full">
                 </plex-select>
-                <plex-text [(ngModel)]="modelo.motivoDerivacion" label="Motivo de la derivación" name="motivo"
-                           [required]="true" grow="full">
-                </plex-text>
-                <dispositivo [modelo]="modelo" [tipo]="oxigeno" grow="full"></dispositivo>
-                <tipo-traslado [derivacion]="modelo" grow="full"></tipo-traslado>
                 <plex-select [(ngModel)]="modelo.estrategiaAtencion" name="estrategiaAtencion"
                              label="Estrategia de atención" placeholder="Seleccione una estrategia de atención"
                              [data]="estrategiasAtencion" grow="full">
@@ -42,20 +41,19 @@
                 </plex-select>
 
             </plex-wrapper>
+            <plex-title titulo="Cobertura Social"></plex-title>
+            <seleccionar-financiador [paciente]="paciente" (setFinanciador)="setFinanciador($event)"
+                                     grow="full"></seleccionar-financiador>
             <plex-title titulo="Datos diagnóstico"></plex-title>
             <plex-wrapper>
                 <plex-text [(ngModel)]="modelo.diagnosticoActual" label="Diagnóstico actual" name="diagnosticoActual"
                            [required]="true" grow="full"></plex-text>
                 <div style="position: relative; width: 100%;">
                     <plex-text [(ngModel)]="modelo.estadoClinico" label="Estado clínico resumido" name="estadoClinico"
-                               [required]="true" grow="full">
+                               [required]="true" [html]="true" grow="full">
                     </plex-text>
-                    <plex-icon name="information" size="lg" type="info"
-                               tooltip="SV, glasgow, TA, saturación, medicación en curso" tooltipPosition="right"
-                               style="margin-left: -15px;">
-                    </plex-icon>
                 </div>
-                <plex-text [(ngModel)]="modelo.diagnosticoBase" label="Diagnóstico de base" name="diagnosticoBase"
+                <plex-text [(ngModel)]="modelo.diagnosticoBase" label="Diagnóstico de ingreso" name="diagnosticoBase"
                            [required]="true" grow="full"></plex-text>
                 <plex-text [(ngModel)]="modelo.comorbilidades" label="Comorbilidades relevantes" name="comorbilidades"
                            [required]="true" grow="full"></plex-text>
