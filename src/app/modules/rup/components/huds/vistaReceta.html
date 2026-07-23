@@ -15,7 +15,7 @@
                     <plex-badge *ngIf="checkDispensaAnticipada(recetaPrincipal)" size="sm" type="warning">
                         {{ checkDispensaAnticipada(recetaPrincipal) }}
                     </plex-badge>
-                    <plex-badge *ngIf="recetaPrincipal.medicamento" size="sm" type="default">
+                    <plex-badge *ngIf="recetaPrincipal.medicamento?.tipoReceta && recetaPrincipal.insumo?.tipo !== 'dispositivo' && recetaPrincipal.insumo?.tipo !== 'nutricion'" size="sm" type="default">
                         {{ recetaPrincipal.medicamento.tipoReceta }}
                     </plex-badge>
                 </div>

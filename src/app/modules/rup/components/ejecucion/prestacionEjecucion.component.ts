@@ -104,7 +104,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     public conceptosAsociados;
 
-    public alerta = 'Este registro no puede modificarse, si necesita cambiar una medicación prescripta puede suspender desde la HUDS y registrar una nueva.';
+    public alerta = 'Este registro no puede modificarse, si necesita cambiar alguna prescripción puede suspenderla desde la HUDS y registrarla nuevamente.';
 
     private soloValores = ['33633005', '313047003', '1217195001', '1217196000'];
 
@@ -1008,7 +1008,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                 return false;
             }
 
-            const valido = this.ejecucionService.validarConcepto(registro.concepto);
+            const valido = this.ejecucionService.validarConcepto(registro.concepto, registro);
 
             return !valido;
         }
