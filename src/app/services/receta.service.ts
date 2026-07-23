@@ -30,8 +30,9 @@ export class RecetaService {
         return this.server.get(`${this.url}/motivos`);
     }
 
-    suspenderReceta(recetaId: string, profesional: IProfesional, motivo: string, observacion: string) {
-        return this.server.patch(`${this.url}`, { op: 'suspender', recetaId, motivo, observacion, profesional });
+    suspenderReceta(recetaId: string, profesional: IProfesional, motivo: string, observacion: string, esInsumo = false) {
+        const url = esInsumo ? '/modules/recetasInsumos' : this.url;
+        return this.server.patch(url, { op: 'suspender', recetaId, motivo, observacion, profesional });
     }
 
     getRecetaPrincipal(recetas) {
