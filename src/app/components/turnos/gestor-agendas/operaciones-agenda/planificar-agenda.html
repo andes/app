@@ -244,6 +244,28 @@
                         </plex-int>
                     </plex-grid>
 
+
+
+                    <!-- Canal de acceso para turnos virtuales de telemedicina -->
+                    <div *ngIf="elementoActivo.cupoMobile > 0 && elementoActivo.cupoMobile === elementoActivo.cantidadTurnos && tieneTeleconsulta()"
+                         class="disponibilidad-box mt-3">
+                        <label class="disponibilidad-box__title">¿POR DÓNDE SE DAN ESTOS TURNOS?</label>
+                        <div *ngIf="!elementoActivo.appMobile && !elementoActivo.citasVirtuales"
+                             class="alert alert-warning mt-2 py-1 px-2" role="alert"
+                             style="font-size:0.85em ; font-weight: bold; width: 50%;">
+                            <plex-icon name="alert" size="sm"></plex-icon>
+                            Seleccioná al menos un canal de acceso.
+                        </div>
+                        <plex-grid cols="2" type="full">
+                            <plex-bool [(ngModel)]="elementoActivo.appMobile" label="Mobile (App)" name="appMobile">
+                            </plex-bool>
+                            <plex-bool [(ngModel)]="elementoActivo.citasVirtuales" label="Ventanilla de citas"
+                                       name="citasVirtuales">
+                            </plex-bool>
+                        </plex-grid>
+                    </div>
+                    <hr *ngIf="elementoActivo.cupoMobile > 0 && elementoActivo.cupoMobile === elementoActivo.cantidadTurnos && tieneTeleconsulta()"
+                        style="border-color: rgba(255,255,255,0.3); margin: 0.5rem 0;">
                     <plex-grid responsive type="full" cols="3" colsSm="1" colsMd="3" colsLg="3">
                         <plex-bool *ngIf="!elementoActivo.citarPorBloque"
                                    [(ngModel)]="elementoActivo.pacienteSimultaneos" label="Pacientes simultáneos"

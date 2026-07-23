@@ -1,8 +1,44 @@
 .boton-mapa-container {
     display: flex;
     place-items: flex-end;
+
     plex-button {
         position: relative;
         top: -2px;
     }
+}
+
+.disponibilidad-box {
+    box-sizing: border-box;
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+    margin-top: 0.75rem;
+    min-width: 240px;
+    width: auto;
+    display: block;
+    margin-left: auto;
+    align-self: flex-start;
+}
+
+.disponibilidad-box__title {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 0.85rem;
+}
+
+.disponibilidad-box plex-grid {
+    margin-top: 0.25rem;
+}
+
+.disponibilidad-box plex-bool,
+.disponibilidad-box plex-bool *,
+.disponibilidad-box label,
+.disponibilidad-box span {
+    color: rgba(255, 255, 255, 0.9) !important;
 }
