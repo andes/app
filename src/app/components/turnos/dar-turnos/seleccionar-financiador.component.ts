@@ -34,6 +34,7 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
     public patronNumerico = '^[0-9]*$';
     private timeout: any;
     public busquedaFinanciador;
+    private _esSeleccionManual = false;
 
     @Input() paciente;
     @Input() editable = false;
@@ -49,6 +50,7 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.paciente?.currentValue?.id) {
+            this._esSeleccionManual = false;
             this.numeroAfiliado = this.paciente?.financiador?.length ? this.paciente.financiador[0]?.numeroAfiliado : undefined;
             this.resetComponentState();
 
@@ -57,18 +59,13 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
             } else {
                 this.cargarDatosModoLectura(changes.paciente.currentValue.id);
             }
-        } else if (changes.financiadorActual && this.paciente?.id) {
-            this.cargarOpcionesObraSocial(this.paciente);
         }
     }
 
     private resetComponentState() {
         this.showSelector = false;
         this.showListado = false;
-        this.datosFinanciadores = [];
-        this.financiadorSeleccionado = undefined;
         this.otroFinanciadorSeleccionado = undefined;
-        this.busquedaFinanciador = undefined;
     }
 
     private cargarDatosModoEditable() {
@@ -94,23 +91,28 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
         if (!paciente) {
             return;
         } else {
-            this.financiadoresPaciente = paciente.financiador || [];
+            this.financiadoresPaciente = paciente.financiador;
         }
+
         this.showSelector = true;
 
         if (this.financiadoresPaciente?.length) {
             let financiadorParaSeleccion;
 
             if (this.financiadorActual?.nombre) {
-                const nombreFinanciadorPrestacion = this.financiadorActual.nombre;
-
-                financiadorParaSeleccion = this.financiadoresPaciente.find(
-                    os => os.nombre === nombreFinanciadorPrestacion
-                );
+                if (this.financiadorActual.nombre === 'Sin obra social') {
+                    // Si el usuario ya eligió "Sin obra social", respetar esa selección
+                    financiadorParaSeleccion = { nombre: 'Sin obra social' };
+                } else {
+                    const nombreFinanciadorPrestacion = this.financiadorActual.nombre;
+                    financiadorParaSeleccion = this.financiadoresPaciente.find(
+                        os => os.nombre === nombreFinanciadorPrestacion
+                    );
+                }
             }
 
             if (!financiadorParaSeleccion) {
-                financiadorParaSeleccion = paciente.obraSocial ? paciente.obraSocial : this.financiadoresPaciente[0];
+                financiadorParaSeleccion = this.paciente.obraSocial ? this.paciente.obraSocial : this.financiadoresPaciente[0];
             }
 
             const { financiador, nombre, numeroAfiliado } = financiadorParaSeleccion;
@@ -133,12 +135,12 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
             ];
 
         } else {
-            this.financiadorSeleccionado = paciente.obraSocial
-                ? paciente.obraSocial.nombre
+            this.financiadorSeleccionado = this.paciente.obraSocial
+                ? this.paciente.obraSocial.nombre
                 : undefined;
 
-            this.numeroAfiliado = paciente.obraSocial
-                ? paciente.obraSocial.numeroAfiliado
+            this.numeroAfiliado = this.paciente.obraSocial
+                ? this.paciente.obraSocial.numeroAfiliado
                 : '';
         }
         this.guardarFinanciador();
@@ -170,13 +172,13 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
     }
 
     public seleccionarFinanciador(event) {
+        this._esSeleccionManual = true;
         this.showListado = false;
         const nombreSeleccionado = event.value;
 
         if (nombreSeleccionado === 'otras') {
             this.showListado = true;
             this.busquedaFinanciador = undefined;
-            this.otroFinanciadorSeleccionado = null;
         } else if (event.value === 'Sin obra social') {
             this.busquedaFinanciador = { nombre: 'Sin obra social' };
             this.numeroAfiliado = undefined;
@@ -197,11 +199,6 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
     }
 
     public guardarFinanciador() {
-        if (!this.busquedaFinanciador) {
-            this.setFinanciador.emit(undefined);
-            return;
-        }
-
         if (this.busquedaFinanciador) {
             this.busquedaFinanciador.numeroAfiliado = this.numeroAfiliado;
         }
@@ -217,10 +214,15 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
             }
         }
 
-        this.setFinanciador.emit(this.busquedaFinanciador);
+        // Solo emitir si fue una selección manual del usuario, no durante la carga inicial
+        if (this._esSeleccionManual) {
+            // Diferir la emisión al siguiente ciclo para evitar NG0100
+            setTimeout(() => this.setFinanciador.emit(this.busquedaFinanciador), 0);
+        }
     }
 
     public seleccionarOtro(event) {
+        this._esSeleccionManual = true;
         this.numeroAfiliado = undefined;
 
         if (event.value) {
@@ -257,9 +259,9 @@ export class SeleccionarFinanciadorComponent implements OnChanges {
         clearTimeout(this.timeout);
 
         this.timeout = setTimeout(() => {
+            this._esSeleccionManual = true;
             this.numeroAfiliado = value?.length ? value : undefined;
-
-            if (!this.editable) { this.guardarFinanciador(); }
+            if (!this.editable && this.numeroAfiliado?.length > 5) { this.guardarFinanciador(); }
         }, 500);
     }
 
