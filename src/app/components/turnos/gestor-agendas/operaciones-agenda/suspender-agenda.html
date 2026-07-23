@@ -336,7 +336,8 @@
     <form #formulario="ngForm">
         <plex-title titulo="Suspender Agenda" size="md"></plex-title>
         <plex-select [(ngModel)]="motivoSuspensionSelect.select" name="motivoSuspension" [data]="motivoSuspension"
-                     label="Motivos de Suspensión" placeholder="Seleccione un motivo de suspensión" [required]="true">
+                     label="Motivos de Suspensión" placeholder="Seleccione un motivo de suspensión" [required]="true"
+                     idField="key" labelField="nombre">
         </plex-select>
         <div class="mt-3 float-right">
             <plex-button type="danger" label="Cancelar" (click)="cancelar()">
