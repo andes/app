@@ -50,6 +50,12 @@
                 <p class="texto-detalle">{{recetaPrincipal.diagnostico.term || recetaPrincipal.diagnostico.descripcion}}
                 </p>
             </div>
+            <div *ngIf="recetaPrincipal.medicamento?.obraSocial && recetaPrincipal.medicamento.obraSocial.nombre !== 'Sin obra social'">
+                <b>Obra Social / Financiador</b>
+                <p class="texto-detalle">{{recetaPrincipal.medicamento.obraSocial.nombre || recetaPrincipal.medicamento.obraSocial.financiador}}
+                    <span *ngIf="recetaPrincipal.medicamento.obraSocial.numeroAfiliado"> (Afiliado: {{recetaPrincipal.medicamento.obraSocial.numeroAfiliado}})</span>
+                </p>
+            </div>
             <ng-container *ngIf="recetaPrincipal.medicamento.tipoReceta === 'triplicado'">
                 <div>
                     <b>Serie</b>
