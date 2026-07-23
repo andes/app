@@ -59,7 +59,8 @@ export class SuspenderMedicacionComponent implements AfterViewChecked {
                 const total = recetasASuspender.length;
 
                 recetasASuspender.forEach(receta => {
-                    this.recetasService.suspenderReceta(receta.id, this.profesional, this.motivoSelector?.nombre || 'Sin motivo', this.observacion).subscribe({
+                    const esInsumo = !!receta.insumo || receta.esInsumo;
+                    this.recetasService.suspenderReceta(receta.id, this.profesional, this.motivoSelector?.nombre || 'Sin motivo', this.observacion, esInsumo).subscribe({
                         next: () => {
                             completadas++;
                             if (completadas + errores === total) {
@@ -90,7 +91,8 @@ export class SuspenderMedicacionComponent implements AfterViewChecked {
     filtrarRecetasUnicas(recetas: any[]): any[] {
         const seen = new Set();
         return recetas.filter(receta => {
-            const key = `${receta.idRegistro}-${receta.medicamento.concepto.conceptId}`;
+            const conceptId = receta.medicamento?.concepto?.conceptId || receta.insumo?.id || receta.insumo?.concepto?.conceptId;
+            const key = `${receta.idRegistro}-${conceptId}`;
             if (seen.has(key)) {return false;}
             seen.add(key);
             return true;
