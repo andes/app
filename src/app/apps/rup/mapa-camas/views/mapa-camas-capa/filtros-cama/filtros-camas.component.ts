@@ -4,14 +4,11 @@ import { Observable, combineLatest } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 
-
-
 @Component({
     selector: 'app-filtros-camas',
     templateUrl: './filtros-camas.component.html',
     styleUrls: ['filtros-camas.scss']
 })
-
 export class FiltrosCamasComponent implements OnInit {
 
     public unidadOrganizativaList$: Observable<any[]>;
@@ -21,8 +18,9 @@ export class FiltrosCamasComponent implements OnInit {
     public estadoList$: Observable<any[]>;
     public paciente = '';
     public collapse = true;
-
+    mostrarTodasCamas = false;
     filtro: any = {};
+    private _externalUpdate = false;
     censables = [
         { id: 0, nombre: 'No censable' },
         { id: 1, nombre: 'Censable' }
@@ -40,6 +38,7 @@ export class FiltrosCamasComponent implements OnInit {
         this.sectorList$ = this.mapaCamasService.snapshotFiltrado$.pipe(
             map(cama => this.arraySectores(cama))
         );
+
         this.tipoCamaList$ = this.mapaCamasService.snapshotFiltrado$.pipe(
             map((camas) => arrayToSet(camas.filter(snap => !snap.sala), 'conceptId', (item) => item.tipoCama))
         );
@@ -53,6 +52,18 @@ export class FiltrosCamasComponent implements OnInit {
             map(estados => estados.map(e => ({ estado: e.estado })))
         );
 
+        this.mapaCamasService.censableSelected.subscribe(censable => {
+            this._externalUpdate = true;
+            this.filtro.censable = censable;
+            setTimeout(() => {
+                this._externalUpdate = false;
+            });
+        });
+
+        this.mapaCamasService.mostrarTodasCamas.subscribe(valor => {
+            this.mostrarTodasCamas = valor;
+        });
+
         this.checkSeleccion();
     }
 
@@ -61,28 +72,41 @@ export class FiltrosCamasComponent implements OnInit {
 
         combineLatest(filtros).pipe(
             filter(values => values.some(value => value !== null)),
-            tap(() => {
-                this.collapse = false;
-            })
-        ).subscribe();
+        ).subscribe(() => {
+            setTimeout(() => this.collapse = false);
+        });
     }
 
     colapsar() {
         this.collapse = !this.collapse;
     }
 
+    onCensableChange() {
+        if (this._externalUpdate) {
+            return;
+        }
+        this.mapaCamasService.censableSelected.next(this.filtro.censable);
+        let mostrarNoCensables = false;
+
+        if (this.filtro.censable?.id === 0) {
+            mostrarNoCensables = true;
+        }
+        this.mapaCamasService.mostrarTodasCamas.next(mostrarNoCensables);
+        this.filtrar();
+    }
     filtrar() {
         this.mapaCamasService.unidadOrganizativaSelected.next(this.filtro.unidadOrganizativa);
         this.mapaCamasService.sectorSelected.next(this.filtro.sector);
         this.mapaCamasService.tipoCamaSelected.next(this.filtro.tipoCama);
-        this.mapaCamasService.esCensable.next(this.filtro.censable);
         this.mapaCamasService.pacienteText.next(this.filtro.paciente);
-
         this.mapaCamasService.equipamientoSelected.next(this.filtro.equipamiento);
         this.mapaCamasService.estadoSelected.next(this.filtro.estado);
+        this.mapaCamasService.esCensable.next(
+            this.filtro.censable?.id ?? (this.mostrarTodasCamas ? null : 1)
+        );
     }
 
-    // Función que nos devuelve un array de jerarquía de sectores que no estan repetidos
+    // Devuelve un array de jerarquía de sectores sin repetidos
     arraySectores(camas) {
         const listado = [];
         camas.forEach(elem => {
