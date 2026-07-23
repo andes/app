@@ -3,6 +3,7 @@ import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { HUDSService } from '../../services/huds.service';
 import { RecetaService } from 'src/app/services/receta.service';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
+import { DocumentosService } from 'src/app/services/documentos.service';
 import * as moment from 'moment';
 
 @Component({
@@ -99,11 +100,13 @@ export class VistaRecetaComponent implements OnInit {
     public recetas;
     public recetaPrincipal: any;
     public historialRecetas: any[];
+    public requestInProgress = false;
 
     constructor(
         public huds: HUDSService,
         public recetaService: RecetaService,
-        public organizacionesService: OrganizacionService
+        public organizacionesService: OrganizacionService,
+        private documentosService: DocumentosService
     ) { }
 
     ngOnInit() {
@@ -158,5 +161,25 @@ export class VistaRecetaComponent implements OnInit {
         }
         return null;
     }
+
+    descargarPdf() {
+        if (this.recetaPrincipal) {
+            this.requestInProgress = true;
+            const term = this.recetaPrincipal.medicamento?.concepto?.term || 'Receta';
+            const params = {
+                idPrestacion: this.recetaPrincipal.idPrestacion,
+                idRegistro: this.recetaPrincipal.idRegistro
+            };
+            this.documentosService.descargarReceta(params, term).subscribe(
+                () => this.requestInProgress = false,
+                () => this.requestInProgress = false
+            );
+        }
+    }
+
+    verDecargarReceta() {
+        return this.recetaPrincipal?.estadoActual?.tipo === 'vigente' && this.recetaPrincipal?.estadoDispensaActual?.tipo === 'sin-dispensa';
+    }
+
 
 }
