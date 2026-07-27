@@ -7,6 +7,7 @@ import { HUDSService } from '../../services/huds.service';
 import { Location } from '@angular/common';
 import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 import { IMotivoAcceso } from '../../interfaces/IMotivoAcceso';
+import { PacientesConsentimientoService } from 'src/app/services/paciente-concentimiento.service';
 
 @Component({
     selector: 'rup-hudsBusquedaPaciente',
@@ -22,6 +23,8 @@ export class HudsBusquedaPacienteComponent implements OnInit {
     routeParams: any;
     showModalMotivo = false;
     pacienteSelected = null;
+    permisoProgramaMas65: boolean;
+    consentimientoEncontrado: boolean;
 
     constructor(
         private location: Location,
@@ -29,7 +32,8 @@ export class HudsBusquedaPacienteComponent implements OnInit {
         public auth: Auth,
         private router: Router,
         private hudsService: HUDSService,
-        private pacienteRestringido: PacienteRestringidoPipe
+        private pacienteRestringido: PacienteRestringidoPipe,
+        private pacientesConsentimientoService: PacientesConsentimientoService
     ) { }
 
     ngOnInit() {
@@ -54,6 +58,8 @@ export class HudsBusquedaPacienteComponent implements OnInit {
         if (!permisos.some(permiso => this.auth.check(permiso))) {
             this.router.navigate(['inicio']);
         }
+
+        this.permisoProgramaMas65 = this.auth.check('huds:programaMas65');
     }
 
     onCancel() {
@@ -86,10 +92,33 @@ export class HudsBusquedaPacienteComponent implements OnInit {
             if (this.esPacienteRestringido(paciente)) {
                 this.plex.info('warning', 'No tiene permiso para ingresar a este paciente.', 'Atención');
             } else {
-                this.pacienteSelected = paciente;
-                this.showModalMotivo = true;
+                if (this.permisoProgramaMas65) {
+                    this.programaMas65(paciente);
+                } else {
+                    this.pacienteSelected = paciente;
+                    this.showModalMotivo = true;
+                }
             }
         }
+    }
+
+    programaMas65(paciente: IPaciente) {
+        this.pacientesConsentimientoService.search({ pacienteId: paciente.id }).subscribe({
+            next: (consentimiento: any) => {
+                if (consentimiento.encontrado !== undefined && !consentimiento.encontrado) {
+                    this.plex.info('warning', 'Usted no posee permisos para visualizar la historia de ese paciente');
+                    return;
+                }
+
+                if (consentimiento.length > 0 && consentimiento[0].aceptacion) {
+                    this.pacienteSelected = paciente;
+                    this.showModalMotivo = true;
+                } else {
+                    this.plex.info('warning', 'Este paciente no tiene aceptación para ver la HUDS');
+                    return;
+                }
+            }
+        });
     }
 
     onConfirmSelect(motivoAccesoHuds: IMotivoAcceso) {
