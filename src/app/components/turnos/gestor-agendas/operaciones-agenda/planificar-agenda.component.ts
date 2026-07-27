@@ -599,6 +599,12 @@ export class PlanificarAgendaComponent implements OnInit {
         ));
     }
 
+    mostrarCanalAcceso(): boolean {
+        return this.elementoActivo.cupoMobile > 0
+            && this.elementoActivo.cupoMobile === this.elementoActivo.cantidadTurnos
+            && this.tieneTeleconsulta();
+    }
+
     aproximar(date: Date) {
         const m = date.getMinutes();
         const remaider = m % 5;

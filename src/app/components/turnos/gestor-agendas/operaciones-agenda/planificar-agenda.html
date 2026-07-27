@@ -244,11 +244,8 @@
                         </plex-int>
                     </plex-grid>
 
-
-
                     <!-- Canal de acceso para turnos virtuales de telemedicina -->
-                    <div *ngIf="elementoActivo.cupoMobile > 0 && elementoActivo.cupoMobile === elementoActivo.cantidadTurnos && tieneTeleconsulta()"
-                         class="disponibilidad-box mt-3">
+                    <div *ngIf="mostrarCanalAcceso()" class="disponibilidad-box mt-3">
                         <label class="disponibilidad-box__title">¿POR DÓNDE SE DAN ESTOS TURNOS?</label>
                         <div *ngIf="!elementoActivo.appMobile && !elementoActivo.citasVirtuales"
                              class="alert alert-warning mt-2 py-1 px-2" role="alert"

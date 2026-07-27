@@ -22,6 +22,17 @@
     align-self: flex-start;
 }
 
+.disponibilidad-box .alert-warning {
+    font-size: 0.85em;
+    font-weight: bold;
+    width: 50%;
+}
+
+.disponibilidad-box hr {
+    border-color: rgba(255, 255, 255, 0.3);
+    margin: 0.5rem 0;
+}
+
 .disponibilidad-box__title {
     display: block;
     margin-bottom: 0.5rem;
