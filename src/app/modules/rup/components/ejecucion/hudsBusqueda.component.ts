@@ -42,6 +42,14 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     hallazgosNoActivosAux: any;
     filtroActual;
     filtroTrastornos = true;
+    public tabIndexLaboratorio = 0;
+    public filtrosLaboratorio = [
+        { key: 0, label: 'Laboratorio' },
+        { key: 1, label: 'Microbiología' },
+        { key: 2, label: 'CDA' }
+    ];
+    public filtroTipoMuestra = '';
+    public filtroPracticaSolicitada = '';
     public disabledBtnCDA = false;
     public token: string;
     public secondsToUpdate = 0;
@@ -80,6 +88,44 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
     get prestaciones() {
         return this._prestaciones;
+    }
+
+    get laboratoriosFiltrados() {
+        if (!this.laboratorios) { return []; }
+
+        let filtrados = this.laboratorios.filter(lab => {
+            if (this.tabIndexLaboratorio === 0) {
+                return lab.TipoServicio === 'LABORATORIO';
+            } else if (this.tabIndexLaboratorio === 1) {
+                return lab.TipoServicio === 'MICROBIOLOGIA';
+            } else if (this.tabIndexLaboratorio === 2) {
+                return lab.tipo === 'cda';
+            }
+            return true;
+        });
+
+        if (this.tabIndexLaboratorio !== 2) {
+            if (this.tabIndexLaboratorio === 1 && this.filtroTipoMuestra && this.filtroTipoMuestra.length >= 5) {
+                filtrados = filtrados.filter(lab => lab.tipoMuestra && lab.tipoMuestra.toLowerCase().includes(this.filtroTipoMuestra.toLowerCase()));
+            }
+            if (this.filtroPracticaSolicitada && this.filtroPracticaSolicitada.length >= 5) {
+                filtrados = filtrados.filter(lab => lab.practicasSolicitadas && lab.practicasSolicitadas.toLowerCase().includes(this.filtroPracticaSolicitada.toLowerCase()));
+            }
+        }
+
+        return filtrados;
+    }
+
+    getMedicoSolicitante(laboratorio: any) {
+        if (laboratorio?.medicoSolicitante) {
+            return laboratorio.medicoSolicitante;
+        }
+
+        return null;
+    }
+
+    onChangeTabLaboratorio(index) {
+        this.tabIndexLaboratorio = index;
     }
 
     set prestaciones(value) {
@@ -312,6 +358,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             this.fechaInicio = this.fechaFin = this.prestacionSeleccionada = null;
             this.fechaInicioRecetas = this.fechaFinRecetas = null;
             this.tipoPrescripcionSeleccionado = this.tiposPrescripcion[0];
+            this.filtroTipoMuestra = '';
+            this.filtroPracticaSolicitada = '';
             this.filtrar();
             if (this.filtroActual === 'recetas') {
                 this.filtrarRecetas();

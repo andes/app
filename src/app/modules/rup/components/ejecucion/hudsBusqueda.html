@@ -25,12 +25,18 @@
 
         <h6 class="titulo-filtro {{filtroActual}}">{{ getTitulo(filtroActual) | uppercase }}</h6>
 
-        <div *ngIf="filtroActual === 'laboratorios' || filtroActual === 'guardias'" justify="end">
+        <div *ngIf="filtroActual === 'laboratorios' || filtroActual === 'guardias'" justify="end"
+             class="d-flex align-items-center">
             <plex-button class="mr-1" icon="refresh" type="primary" size="sm" tooltip="Actualizar listado"
                          [autodisabled]="true" (click)="refreshLaboratorios(token)">
             </plex-button>
             <plex-button icon="database-search" type="success" size="sm" tooltipPosition="left"
                          tooltip="Buscar nuevos registros" [disabled]="disabledBtnCDA" (click)="regenerarCDA()">
+            </plex-button>
+            <plex-button *ngIf="filtroActual === 'laboratorios' && tabIndexLaboratorio !== 2" type="info" size="sm"
+                         [icon]="showFiltros ? 'chevron-up' : 'chevron-down'"
+                         [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" class="ml-1" tooltipPosition="left"
+                         (click)="toogleFiltros()">
             </plex-button>
         </div>
 
@@ -774,78 +780,126 @@
         <ng-container *ngIf="filtroActual === 'laboratorios'">
             <plex-loader *ngIf="disabledBtnCDA" class="sidebar-loader" type="ball-pulse"></plex-loader>
 
-            <div *ngIf="laboratorios.length" class="conceptos hover list-unstyled mt-1">
+            <ng-container *ngIf="laboratorios.length">
+                <hr class="mt-0">
+                <plex-options class="mb-2 filtros-ambitos" (activated)="onChangeTabLaboratorio($event)"
+                              [items]="filtrosLaboratorio">
+                </plex-options>
 
-                <ul class="listado list-unstyled" [ngClass]="{ 'opacity-35' : disabledBtnCDA }">
-                    <ng-container *ngFor="let laboratorio of laboratorios; let iLaboratorio = index">
-                        <li>
-                            <div class="rup-card mini laboratorio"
-                                 [ngClass]="{'active': huds.isOpen(laboratorio.idProtocolo ? laboratorio : laboratorio.data,  laboratorio.idProtocolo ? 'laboratorio' : 'cda')}">
-                                <div class="rup-header">
-                                    <div class="rup-border rup-border-laboratorio">
-                                        <div class="row p-0 m-0 border-secondary border-left-0">
-                                            <div class="col-10 p-0 m-0">
-                                                <div class="row m-0 p-0">
-                                                    <ng-container>
-                                                        <div class="icon-rup">
-                                                            <i class="adi adi-recipiente"></i>
-                                                        </div>
-                                                    </ng-container>
-                                                    <div class="col p-0 pl-2 float-left"
-                                                         (click)="emitTabs(laboratorio, laboratorio.idProtocolo ? 'laboratorio' : 'cda', iLaboratorio)">
-                                                        <div>
-                                                            <small>
-                                                                <span *ngIf="laboratorio?.prestacion?.term">{{
-                                                                    laboratorio?.prestacion?.term}}</span>
-                                                                <span *ngIf="laboratorio?.idProtocolo">Informe de
-                                                                    laboratorio:
-                                                                    <b> {{laboratorio?.TipoServicio}}</b>
-                                                                </span>
-                                                            </small>
-                                                        </div>
-                                                        <div class="row p-0 m-0">
-                                                            <div class="col-10 p-0 m-0">
-                                                                <div>
-                                                                    <small>Protocolo:
-                                                                        <b>{{laboratorio?.numero}}</b></small>
-                                                                </div>
-                                                                <div *ngIf="laboratorio?.documento">
-                                                                    <small>Paciente: <b>{{ laboratorio?.apellido
-                                                                            }}, {{
-                                                                            laboratorio?.nombre }}</b></small>
-                                                                </div>
-                                                                <div>
-                                                                    <small>Organización: <b>{{
-                                                                            laboratorio?.data?.organizacion?.nombre ||
-                                                                            laboratorio?.efectorSolicitante
-                                                                            }}</b></small>
-                                                                </div>
-                                                                <div *ngIf="laboratorio?.fecha " class="text-xs">
-                                                                    <small>Fecha: <b>{{laboratorio?.fecha
-                                                                            | date:
-                                                                            'dd/MM/yyyy HH:mm'
-                                                                            }}</b></small>
-                                                                </div>
+                <ng-container *ngIf="tabIndexLaboratorio !== 2 && showFiltros">
+                    <div class="row mb-2" *ngIf="tabIndexLaboratorio === 1">
+                        <div class="col-12">
+                            <plex-text [(ngModel)]="filtroTipoMuestra" placeholder="Ingrese 5 caracteres o más..."
+                                       label="Tipo de muestra">
+                            </plex-text>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <plex-text [(ngModel)]="filtroPracticaSolicitada"
+                                       placeholder="Ingrese 5 caracteres o más..." label="Práctica solicitada">
+                            </plex-text>
+                        </div>
+                    </div>
+                </ng-container>
 
-                                                                <div *ngIf="laboratorio?.efectorSolicitante || laboratorio?.profesional"
-                                                                     class="text-sm">
-                                                                    <small>Médico solicitante: <b>{{
-                                                                            laboratorio?.medicoSolicitante ||
-                                                                            laboratorio?.profesional }}</b></small>
+                <div *ngIf="laboratoriosFiltrados.length" class="conceptos hover list-unstyled mt-1">
+
+                    <ul class="listado list-unstyled" [ngClass]="{ 'opacity-35' : disabledBtnCDA }">
+                        <ng-container *ngFor="let laboratorio of laboratoriosFiltrados; let iLaboratorio = index">
+                            <li>
+                                <div class="rup-card mini laboratorio"
+                                     [ngClass]="{'active': huds.isOpen(laboratorio.idProtocolo ? laboratorio : laboratorio.data,  laboratorio.idProtocolo ? 'laboratorio' : 'cda')}">
+                                    <div class="rup-header">
+                                        <div class="rup-border rup-border-laboratorio">
+                                            <div class="row p-0 m-0 border-secondary border-left-0">
+                                                <div class="col-10 p-0 m-0">
+                                                    <div class="row m-0 p-0">
+                                                        <ng-container>
+                                                            <div class="icon-rup">
+                                                                <i class="adi adi-recipiente"></i>
+                                                            </div>
+                                                        </ng-container>
+                                                        <div class="col p-0 pl-2 float-left"
+                                                             (click)="emitTabs(laboratorio, laboratorio.idProtocolo ? 'laboratorio' : 'cda', iLaboratorio)">
+
+                                                            <div class="row p-0 m-0">
+                                                                <div class="col-10 p-0 m-0">
+                                                                    <div
+                                                                         *ngIf="tabIndexLaboratorio !== 2 && laboratorio?.numero">
+                                                                        <small>Protocolo:
+                                                                            <b>{{laboratorio?.numero}}</b></small>
+                                                                    </div>
+                                                                    <div *ngIf="tabIndexLaboratorio === 2">
+                                                                        <small>Organización: <b>{{
+                                                                                laboratorio?.data?.organizacion?.nombre
+                                                                                ||
+                                                                                laboratorio?.Laboratorio
+                                                                                }}</b></small>
+                                                                    </div>
+                                                                    <div
+                                                                         *ngIf="tabIndexLaboratorio === 1 && laboratorio?.tipoMuestra">
+                                                                        <small>Tipo de Muestra: <b>{{
+                                                                                laboratorio?.tipoMuestra
+                                                                                }}</b></small>
+                                                                    </div>
+                                                                    <div
+                                                                         *ngIf="tabIndexLaboratorio !== 2 && laboratorio?.practicasSolicitadas">
+                                                                        <small>Práctica solicitada: <b>{{
+                                                                                laboratorio?.practicasSolicitadas
+                                                                                }}</b></small>
+                                                                    </div>
+                                                                    <div *ngIf="laboratorio?.fecha" class="text-xs">
+                                                                        <small>Fecha: <b>{{laboratorio?.fecha
+                                                                                | date:
+                                                                                'dd/MM/yyyy HH:mm'
+                                                                                }}</b></small>
+                                                                    </div>
+                                                                    <div *ngIf="tabIndexLaboratorio === 2 && getMedicoSolicitante(laboratorio)"
+                                                                         class="text-sm">
+                                                                        <small>Médico solicitante: <b>{{
+                                                                                getMedicoSolicitante(laboratorio)
+                                                                                }}</b></small>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2 p-0 m-0"
+                                                     *ngIf="(laboratorio?.TipoServicio === 'LABORATORIO' || laboratorio?.TipoServicio === 'MICROBIOLOGIA' || laboratorio?.TipoServicio === 'laboratorio' || laboratorio?.TipoServicio === 'microbiologia') && (laboratorio?.estado || laboratorio?.Estado)">
+                                                    <div class="p-0 pt-1 pr-1 float-right">
+                                                        <plex-badge size="sm" type="warning"
+                                                                    *ngIf="(laboratorio.estado || laboratorio.Estado) === 'EnProceso'">
+                                                            En Proceso
+                                                        </plex-badge>
+                                                        <plex-badge size="sm" type="info"
+                                                                    *ngIf="(laboratorio.estado || laboratorio.Estado) === 'ConResultados'">
+                                                            Con resultados
+                                                        </plex-badge>
+                                                        <plex-badge size="sm" type="success"
+                                                                    *ngIf="(laboratorio.estado || laboratorio.Estado) === 'Terminado'">
+                                                            {{ laboratorio.estado || laboratorio.Estado }}
+                                                        </plex-badge>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
-                    </ng-container>
-                </ul>
-            </div>
+                            </li>
+                        </ng-container>
+                    </ul>
+                </div>
+                <div *ngIf="!laboratoriosFiltrados.length">
+                    <hr class="mt-0">
+                    <div class="item-lista-vacia">
+                        <plex-label size="sm" justify="center" icon="adi adi-recipiente"
+                                    titulo="No hay resultados para esta búsqueda">
+                        </plex-label>
+                    </div>
+                </div>
+            </ng-container>
             <div *ngIf="!laboratorios.length">
                 <hr class="mt-0">
                 <div class="item-lista-vacia">
