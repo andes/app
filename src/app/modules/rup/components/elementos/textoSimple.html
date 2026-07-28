@@ -1,0 +1,30 @@
+<form #form="ngForm">
+    <div class="row flex-column">
+        <div class="col-12">
+            <ng-container *ngIf="!soloValores && params; else showSoloValores">
+                <plex-text [label]="params.title ? params.title : registro.concepto.term" name="textValue"
+                           [(ngModel)]="registro.valor" [required]="esRequerido"
+                           [placeholder]="params.placeholder ? params.placeholder : ''"
+                           (keydown)="onKeydown($event)" (paste)="onPaste($event)" (ngModelChange)="onChange()">
+                </plex-text>
+
+                <p *ngIf="mensaje?.texto">
+                    <plex-badge type="{{mensaje.type}}">
+                        {{mensaje.texto}}
+                    </plex-badge>
+                </p>
+            </ng-container>
+            <ng-template #showSoloValores>
+                <div *ngIf="params?.title; else showTerm">
+                    <label class="text-capitalize">{{ params.title }}</label>
+                </div>
+                <ng-template #showTerm>
+                    <label class="text-capitalize">{{ registro.concepto.term }}</label>
+                </ng-template>
+                <div *ngIf="params">
+                    {{registro.valor}}
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</form>
