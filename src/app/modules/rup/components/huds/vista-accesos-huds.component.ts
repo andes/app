@@ -14,7 +14,7 @@ export class VistaAccesosHudsComponent implements OnInit {
         private hudsService: HUDSService,
     ) { }
 
-    public accesosHuds = [];
+    public accesosHuds;
     public params;
     private scrollEnd = false;
 
@@ -31,6 +31,10 @@ export class VistaAccesosHudsComponent implements OnInit {
             key: 'motivo',
             label: 'Motivo',
 
+        },
+        {
+            key: 'modulo',
+            label: 'Módulo',
         },
         {
             key: 'organizacion',

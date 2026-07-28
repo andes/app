@@ -4,7 +4,7 @@
     <!-- No hay accesos -->
     <ng-container *ngIf="!accesosHuds?.length">
         <tr>
-            <td colspan="3">
+            <td colspan="5">
                 <i class="mdi mdi-emoticon-sad"></i> No hay accesos a la huds
             </td>
         </tr>
@@ -35,6 +35,9 @@
             <span *ngIf="acceso.motivoAcceso" class="text-secondary mr-2" hintIcon="message" detach="right"
                   [hint]="acceso.detalleMotivo ? 'Observación: ' + acceso.detalleMotivo : null">{{acceso.motivoAcceso}}
             </span>
+        </td>
+        <td *plTableCol="'modulo'">
+            {{acceso.modulo}}
         </td>
         <td *plTableCol="'organizacion'">
             <ng-container *ngIf="acceso.organizacion && acceso.organizacion.nombre">
