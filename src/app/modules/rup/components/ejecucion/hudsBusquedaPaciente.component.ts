@@ -114,7 +114,7 @@ export class HudsBusquedaPacienteComponent implements OnInit {
                     this.pacienteSelected = paciente;
                     this.showModalMotivo = true;
                 } else {
-                    this.plex.info('warning', 'Este paciente no tiene aceptación para ver la HUDS');
+                    this.plex.info('warning', 'Este paciente rechazo el programa "Cuidar + 65"');
                     return;
                 }
             }
