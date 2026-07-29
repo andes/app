@@ -105,12 +105,30 @@ export class HudsBusquedaPacienteComponent implements OnInit {
     programaMas65(paciente: IPaciente) {
         this.pacientesConsentimientoService.search({ pacienteId: paciente.id }).subscribe({
             next: (consentimiento: any) => {
-                if (consentimiento.encontrado !== undefined && !consentimiento.encontrado) {
+
+                if (!consentimiento || (consentimiento.encontrado !== undefined && !consentimiento.encontrado)) {
                     this.plex.info('warning', 'Usted no posee permisos para visualizar la historia de ese paciente');
                     return;
                 }
 
-                if (consentimiento.length > 0 && consentimiento[0].aceptacion) {
+                const listado = Array.isArray(consentimiento) ? consentimiento : [consentimiento];
+                const consentimientosCuidar65 = listado.filter((c: any) => c && c.programa === 'Cuidar65');
+
+                if (consentimientosCuidar65.length === 0) {
+                    this.plex.info('warning', 'Usted no posee permisos para visualizar la historia de ese paciente');
+                    return;
+                }
+
+                // Ordenar por fechaResp descendente (el más reciente primero)
+                consentimientosCuidar65.sort((a, b) => {
+                    const dateA = a.fechaResp ? new Date(a.fechaResp).getTime() : 0;
+                    const dateB = b.fechaResp ? new Date(b.fechaResp).getTime() : 0;
+                    return dateB - dateA;
+                });
+
+                const masReciente = consentimientosCuidar65[0];
+
+                if (masReciente.aceptacion) {
                     this.pacienteSelected = paciente;
                     this.showModalMotivo = true;
                 } else {

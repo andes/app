@@ -125,13 +125,32 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
     programaMas65(paciente: IPaciente): Observable<boolean> {
         return this.pacientesConsentimientoService.search({ pacienteId: paciente.id }).pipe(
             map((consentimiento: any) => {
-                if (consentimiento.encontrado !== undefined && !consentimiento.encontrado) {
+                if (!consentimiento || (consentimiento.encontrado !== undefined && !consentimiento.encontrado)) {
+                    this.plex.info('warning', 'Usted no posee permisos para visualizar la historia de ese paciente');
                     return false;
                 }
 
-                if (consentimiento.length > 0 && consentimiento[0].aceptacion) {
+                const listado = Array.isArray(consentimiento) ? consentimiento : [consentimiento];
+                const consentimientosCuidar65 = listado.filter((c: any) => c && c.programa === 'Cuidar65');
+
+                if (consentimientosCuidar65.length === 0) {
+                    this.plex.info('warning', 'Usted no posee permisos para visualizar la historia de ese paciente');
+                    return false;
+                }
+
+                // Ordenar por fechaResp descendente (el más reciente primero)
+                consentimientosCuidar65.sort((a, b) => {
+                    const dateA = a.fechaResp ? new Date(a.fechaResp).getTime() : 0;
+                    const dateB = b.fechaResp ? new Date(b.fechaResp).getTime() : 0;
+                    return dateB - dateA;
+                });
+
+                const masReciente = consentimientosCuidar65[0];
+
+                if (masReciente.aceptacion) {
                     return true;
                 } else {
+                    this.plex.info('warning', 'Este paciente rechazo el programa "Cuidar + 65"');
                     return false;
                 }
             })
@@ -387,18 +406,14 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
                             this.paciente = paciente;
                             this.resultadoBusqueda = [this.paciente];
                             this.darTurnoAutocitado();
-                        } else {
-                            this.plex.info('warning', 'No tiene permisos para acceder a este paciente.');
                         }
                     });
                 } else {
-
                     // Si se seleccionó por error un paciente fallecido
                     this.pacienteService.checkFallecido(paciente);
                     this.paciente = paciente;
                     this.resultadoBusqueda = [this.paciente];
                     this.darTurnoAutocitado();
-
                 }
             } else {
                 this.plex.info('warning', 'No tiene permisos para acceder a este paciente.');
