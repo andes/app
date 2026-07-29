@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
 import { RupElement } from '.';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'rup-texto-simple',
@@ -12,36 +13,42 @@ export class TextoSimpleComponent extends RUPComponent implements OnInit {
 
     ngOnInit() {
         if (!this.soloValores) {
-            this.conceptObserverService.observe(this.registro).subscribe((data) => {
-                if (this.registro.valor !== data.valor) {
-                    this.registro.valor = data.valor;
-                    this.emitChange(false);
-                }
-            });
+            this.conceptObserverService.observe(this.registro)
+                .pipe(
+                    takeUntil(this.onDestroy$)
+                )
+                .subscribe((data) => {
+                    if (this.registro.valor !== data.valor) {
+                        this.registro.valor = data.valor;
+                        this.emitChange(false);
+                    }
+                });
 
             this.addFact('value', this.registro.valor);
 
-            this.onRule('alert').subscribe(evento => {
-                const { params } = evento;
-                this.mensaje = {
-                    texto: params.message,
-                    type: params.type
-                };
-            });
+            this.onRule('alert')
+                .pipe(
+                    takeUntil(this.onDestroy$)
+                )
+                .subscribe(evento => {
+                    const { params } = evento;
+                    this.mensaje = {
+                        texto: params.message,
+                        type: params.type
+                    };
+                });
         }
-        if (this.params) {
-            this.esRequerido = this.params.required;
-        } else {
-            this.esRequerido = false;
-        }
+        this.esRequerido = this.params?.required ?? false;
     }
 
     onKeydown(event: KeyboardEvent) {
         const key = event.key;
 
-        const controlKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter',
-                             'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
-                             'Home', 'End', 'Shift', 'Control', 'Alt', 'Meta', 'CapsLock'];
+        const controlKeys = [
+            'Backspace', 'Delete', 'Tab', 'Escape', 'Enter',
+            'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+            'Home', 'End', 'Shift', 'Control', 'Alt', 'Meta', 'CapsLock'
+        ];
 
         if (controlKeys.includes(key) || event.ctrlKey || event.metaKey || event.altKey) {
             return;
