@@ -122,7 +122,7 @@
                                     titulo="{{getPrestacionesActivas(unBloque)}}" size="md">
                         </plex-label>
                         <plex-badge *ngIf="getPrestacionesActivas(unBloque)" type="info" size="sm">
-                            <plex-icon name="comment" size="sm" title="{{unBloque.descripcion || null}}"
+                            <plex-icon *ngIf="unBloque.descripcion" name="comment" size="sm" title="{{unBloque.descripcion}}"
                                        titlePosition="right"></plex-icon>
                         </plex-badge>
                         <plex-button *ngIf="!dinamica && modelo.bloques.length > 1" icon="delete" type="danger"
