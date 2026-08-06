@@ -11,8 +11,8 @@
 ::ng-deep {
 
     // Se quita scroll del padre del contenedor con scroll infinito
-    body>app>plex-app>div>gestor-agendas>form>section>div>div.col.h-100>plex-box>div>div {
+    gestor-agendas>div.plex-box-content.scrolbar,
+    gestor-agendas>div.plex-box-content {
         overflow-y: hidden !important;
-        padding-right: 0 !important;
     }
 }

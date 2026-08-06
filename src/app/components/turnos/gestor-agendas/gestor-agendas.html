@@ -81,7 +81,7 @@
             </ng-container>
         </plex-title>
         <plex-table *ngIf="agendas?.length" [columns]="columns" #table="plTable" (scroll)="onScroll()"
-                    [offset]="collapse?252:179">
+                    [offset]="collapse ? 272 : 189">
             <plex-table-columns>
             </plex-table-columns>
             <tr *ngFor="let agenda of agendas; let i=index" [class.selected]="estaSeleccionada(agenda) >= 0"
@@ -229,7 +229,7 @@
             </ng-container>
 
             <ng-container *ngIf="!enableQueries && !showSobreturno && !showElegirSobreTurno">
-                <div *ngIf="showTurnos && agendasSeleccionadas?.length == 1">
+                <div *ngIf="showTurnos && agendasSeleccionadas?.length === 1">
                     <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"
                             (recargarAgendas)="loadAgendas($event)" (cerrarSidebar)="cerrarSidebarAgendas()"></turnos>
                 </div>
