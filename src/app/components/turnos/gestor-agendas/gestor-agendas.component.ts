@@ -1018,7 +1018,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     changeCollapse(event) {
-        this.collapse = event;
+        this.collapse = event === true;
     }
 
     volver() {
