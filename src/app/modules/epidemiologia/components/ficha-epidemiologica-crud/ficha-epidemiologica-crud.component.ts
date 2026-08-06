@@ -332,10 +332,10 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                 if (previos10dias && sintomas.includes('fiebre') && sintomas.includes('tos') && !derivado && !internado14dias && !inicioSintomas) {
                     clasificacion = CLASIFICACIONESVSR[1];
                 } else {
-                    if ((sintomas.includes('disnea') || sintomas.includes('tos')) && (edad >= 60 || edad <= 2) && !derivado && !internado14dias && !inicioSintomas) {
+                    if ((sintomas.includes('disnea') || sintomas.includes('tos')) && (edad >= 60 || edad < 2) && !derivado && !internado14dias && !inicioSintomas) {
                         clasificacion = CLASIFICACIONESVSR[1];
                     } else {
-                        if (!sintomas.includes('disnea') && !sintomas.includes('tos') && (edad <= 0) && (edadMeses <= 6) && (sintomas.includes('sepsis') || sintomas.includes('apneas')) && !derivado && !internado14dias && !inicioSintomas) {
+                        if (!sintomas.includes('disnea') && !sintomas.includes('tos') && (edad <= 0) && (edadMeses < 6) && (sintomas.includes('sepsis') || sintomas.includes('apneas')) && !derivado && !internado14dias && !inicioSintomas) {
                             clasificacion = CLASIFICACIONESVSR[1];
                         }
                     }
