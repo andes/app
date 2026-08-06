@@ -14,4 +14,5 @@ export interface IPrestacionEstado {
             nombre: string;
         };
     };
+    createdAt?: Date;
 }

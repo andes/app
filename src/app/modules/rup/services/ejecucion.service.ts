@@ -85,9 +85,9 @@ export class RupEjecucionService {
         this.sugeridos.next(conceptos);
     }
 
-    public validarConcepto(concepto: ISnomedConcept): boolean {
+    public validarConcepto(concepto: ISnomedConcept, registro?: any): boolean {
         const registros = this.getPrestacionRegistro();
-        const conceptoExistente = registros.find(registro => registro.concepto.conceptId === concepto.conceptId);
+        const conceptoExistente = registros.find(r => r.concepto.conceptId === concepto.conceptId);
 
         if (!conceptoExistente) {
             return true;
@@ -96,13 +96,19 @@ export class RupEjecucionService {
         const validacionRota = this.checkValidacionRota();
 
         if (validacionRota) {
-            if (conceptoExistente) {
+            const validadaState = [...(this.prestacion.estados || [])]
+                .reverse()
+                .find(estado => estado.tipo === 'validada');
+
+            if (validadaState) {
+                if (registro) {
+                    if (registro.createdAt) {
+                        return new Date(registro.createdAt).getTime() > new Date(validadaState.createdAt).getTime();
+                    }
+                    return true;
+                }
                 return false;
             }
-        }
-
-        if (validacionRota && concepto.conceptId === '33633005') {
-            return false;
         }
 
         return true;
@@ -154,8 +160,11 @@ export class RupEjecucionService {
         const registros = this.getPrestacionRegistro();
         const registoExiste = registros.find(registro => registro.concepto.conceptId === concepto.conceptId);
         if (registoExiste) {
-            this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
-            return false;
+            const isEditable = this.validarConcepto(concepto, registoExiste);
+            if (isEditable) {
+                this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
+                return false;
+            }
         }
         return true;
     }
