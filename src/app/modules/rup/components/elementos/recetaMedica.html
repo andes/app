@@ -114,7 +114,7 @@
                     <plex-select name="frecuencia" label="Intervalo" [(ngModel)]="medicamento.dosisDiaria.intervalo"
                                  [required]="true" [data]="intervalos$ | async">
                     </plex-select>
-                    <plex-int name=" duracion" label="Duración (días)" [(ngModel)]="medicamento.dosisDiaria.dias"
+                    <plex-int name="duracion" label="Duración (días)" [(ngModel)]="medicamento.dosisDiaria.dias"
                               [required]="true" min="1" max="90">
                     </plex-int>
                     <plex-text name="notaMedica" label="Notas médicas" [(ngModel)]="medicamento.dosisDiaria.notaMedica"
