@@ -41,6 +41,20 @@ export class TextoSimpleComponent extends RUPComponent implements OnInit {
         this.esRequerido = this.params?.required ?? false;
     }
 
+    private truncateToMaxLength(currentVal: string, text: string): string {
+        if (!this.params?.maxLength) {
+            return text;
+        }
+
+        const remaining = this.params.maxLength - currentVal.length;
+
+        if (remaining <= 0) {
+            return '';
+        }
+
+        return text.slice(0, remaining);
+    }
+
     onKeydown(event: KeyboardEvent) {
         const key = event.key;
 
@@ -120,14 +134,17 @@ export class TextoSimpleComponent extends RUPComponent implements OnInit {
         }
         let cleaned = regex ? pasted.replace(regex, '') : pasted;
 
-        if (this.params.maxLength) {
-            const remaining = this.params.maxLength - currentVal.length;
-            if (remaining <= 0) {
-                this.mensaje = { texto: `Máximo ${this.params.maxLength} caracteres`, type: 'danger' };
+        const truncated = this.truncateToMaxLength(currentVal, cleaned);
+
+        if (this.params.maxLength && truncated.length !== cleaned.length) {
+            this.mensaje = { texto: `Máximo ${this.params.maxLength} caracteres`, type: 'danger' };
+
+            if (!truncated.length) {
                 return;
             }
-            cleaned = cleaned.slice(0, remaining);
         }
+
+        cleaned = truncated;
 
         this.registro.valor = currentVal + cleaned;
         this.onChange();
