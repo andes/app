@@ -586,11 +586,11 @@ export class PlanificarAgendaComponent implements OnInit {
         this.cambiaPorcentajeTipo('reservadoProfesional');
     }
 
-    tieneTeleconsulta() {
-        if (!this.elementoActivo || !this.elementoActivo.tipoPrestaciones) {
+    tieneTeleconsulta(bloque = this.elementoActivo) {
+        if (!bloque || !bloque.tipoPrestaciones) {
             return false;
         }
-        return this.elementoActivo.tipoPrestaciones.some(p => p.activo && (
+        return bloque.tipoPrestaciones.some(p => p.activo && (
             p.teleConsulta || p.teleconsulta ||
             (p.nombre && p.nombre.toLowerCase().includes('telemedicina')) ||
             (p.term && p.term.toLowerCase().includes('telemedicina')) ||
@@ -599,10 +599,10 @@ export class PlanificarAgendaComponent implements OnInit {
         ));
     }
 
-    mostrarCanalAcceso(): boolean {
-        return this.elementoActivo.cupoMobile > 0
-            && this.elementoActivo.cupoMobile === this.elementoActivo.cantidadTurnos
-            && this.tieneTeleconsulta();
+    mostrarCanalAcceso(bloque = this.elementoActivo): boolean {
+        return bloque.cupoMobile > 0
+            && bloque.cupoMobile === bloque.cantidadTurnos
+            && this.tieneTeleconsulta(bloque);
     }
 
     aproximar(date: Date) {
@@ -769,6 +769,11 @@ export class PlanificarAgendaComponent implements OnInit {
                         }
                     }
                 });
+
+                if (this.mostrarCanalAcceso(bloque) && !bloque.appMobile && !bloque.citasVirtuales) {
+                    alerta = 'Bloque ' + (bloque.indice + 1) + ': Debe seleccionar al menos un canal de acceso para los turnos virtuales.';
+                    this.alertas.push(alerta);
+                }
             });
         }
     }
@@ -787,6 +792,7 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     onSave($event, clonar: Boolean) {
+        this.validarTodo();
         this.hideGuardar = true;
         if (this.dinamica) {
             this.modelo.dinamica = true;
@@ -826,6 +832,7 @@ export class PlanificarAgendaComponent implements OnInit {
                 const prestacionesText = prestaciones.map(p => p.term).join(', ');
                 if ((!clonar || (clonar && incluyeAmbulatorio)) &&
                     $event.formValid &&
+                    this.alertas.length === 0 &&
                     this.verificarNoNominalizada() &&
                     bloqueConPrestActiva &&
                     arrayPrestaciones.length === this.modelo.tipoPrestaciones.length
@@ -924,7 +931,9 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     manejarErrores(incluyeAmbulatorio, prestacionesText, bloqueConPrestActiva, arrayPrestaciones) {
-        if (!this.verificarNoNominalizada()) {
+        if (this.alertas.length) {
+            this.plex.info('warning', this.alertas.join(' '));
+        } else if (!this.verificarNoNominalizada()) {
             this.plex.info('warning', 'Solo puede haber una prestación en las agendas no nominalizadas');
         } else if (!bloqueConPrestActiva) {
             this.plex.info('warning', 'Existe un bloque con todas sus prestaciones inactivas.');

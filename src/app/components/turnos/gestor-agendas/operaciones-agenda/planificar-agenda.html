@@ -254,10 +254,11 @@
                             Seleccioná al menos un canal de acceso.
                         </div>
                         <plex-grid cols="2" type="full">
-                            <plex-bool [(ngModel)]="elementoActivo.appMobile" label="Mobile (App)" name="appMobile">
+                            <plex-bool [(ngModel)]="elementoActivo.appMobile" label="Mobile (App)" name="appMobile"
+                                       (change)="validarTodo()">
                             </plex-bool>
                             <plex-bool [(ngModel)]="elementoActivo.citasVirtuales" label="Ventanilla de citas"
-                                       name="citasVirtuales">
+                                       name="citasVirtuales" (change)="validarTodo()">
                             </plex-bool>
                         </plex-grid>
                     </div>
