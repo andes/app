@@ -597,6 +597,13 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         this.prestacion.ejecucion.registros = [...this.prestacion.ejecucion.registros, nuevoRegistro];
         this.activeIndex = 0;
 
+        // Si el concepto agregado es una molécula/sección, la dejamos como sección activa para que los
+        // conceptos que se agreguen a continuación (consecuencia) se inserten dentro de ella.
+        const componentesSeccion = ['MoleculaBaseComponent', 'SeccionadoComponent', 'SeccionComponent'];
+        if (componentesSeccion.includes(elementoRUP?.componente)) {
+            this.ejecucionService.setSeccion(snomedConcept);
+        }
+
         this.ejecucionService.actualizar('cargar');
 
         return nuevoRegistro;
