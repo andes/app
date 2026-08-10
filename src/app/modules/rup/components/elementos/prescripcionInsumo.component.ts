@@ -2,6 +2,7 @@ import { Unsubscribe } from '@andes/shared';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { RupElement } from '.';
+import { IObraSocial } from '../../../../interfaces/IObraSocial';
 import { RUPComponent } from '../core/rup.component';
 @Component({
     selector: 'rup-prescripcion-insumo',
@@ -36,6 +37,17 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit 
         { id: '6', nombre: '6 meses' }
     ];
 
+    public financiadoresPaciente: IObraSocial[] = [];
+    public datosFinanciadores = [];
+    public financiadorSeleccionado;
+    public otroFinanciadorSeleccionado;
+    public showSelector = false;
+    public showListado = false;
+    public opcionesFinanciadores: any[] = [];
+    public numeroAfiliado = '';
+    public patronNumerico = '^[0-9]*$';
+    private timeout: any;
+
 
     ngOnInit() {
         if (!this.registro.valor) {
@@ -51,12 +63,24 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit 
         this.buscarDiagnosticosConTrastornos();
 
         this.ejecucionService?.hasActualizacion().subscribe(async (estado) => {
+            const numeroAfiliadoTemporal = this.numeroAfiliado;
             this.loadRegistros();
+            if (numeroAfiliadoTemporal && !this.numeroAfiliado) {
+                this.numeroAfiliado = numeroAfiliadoTemporal;
+            }
         });
 
         this.eclqueriesServicies.search({ key: '^receta' }).subscribe(query => {
             this.eclInsumos = query.filter(q => q.key === 'receta:dispositivos');
         });
+
+        setTimeout(() => {
+            this.cargarObrasSocialesPaciente();
+        }, 100);
+
+        if (this.paciente) {
+            this.cargarObrasSocialesPaciente();
+        }
     }
 
     @Unsubscribe()
@@ -165,5 +189,171 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit 
                 this.registro.valor.insumos.splice(index, 1);
             }
         });
+    }
+
+    public onValidate() {
+        if (this.prestacion?.paciente?.obraSocial) {
+            this.prestacion.paciente.obraSocial.numeroAfiliado = this.numeroAfiliado || '';
+        }
+        return this.registro.valor.insumos && this.registro.valor.insumos.length > 0;
+    }
+
+    cargarObrasSocialesPaciente() {
+        if (this.prestacion?.paciente?.obraSocial) {
+            this.financiadoresPaciente = [{
+                nombre: this.prestacion.paciente.obraSocial.nombre || '',
+                codigoFinanciador: 0,
+                version: new Date(),
+                numeroAfiliado: this.prestacion.paciente.obraSocial.numeroAfiliado || '',
+                financiador: this.prestacion.paciente.obraSocial.financiador || null,
+                codigoPuco: this.prestacion.paciente.obraSocial.codigoPuco || null,
+                id: this.prestacion.paciente.obraSocial.id || null,
+                transmite: '',
+                prepaga: this.prestacion.paciente.obraSocial.prepaga || false,
+                origen: this.prestacion.paciente.obraSocial.origen || 'ANDES'
+            }];
+            this.showSelector = true;
+
+            const { financiador, nombre } = this.financiadoresPaciente[0];
+
+            this.financiadorSeleccionado = nombre || financiador;
+
+            const numeroAfiliadoActual = this.numeroAfiliado;
+            const numeroAfiliadoPrestacion = this.prestacion.paciente.obraSocial.numeroAfiliado as string || '';
+            this.numeroAfiliado = numeroAfiliadoActual || numeroAfiliadoPrestacion;
+            this.datosFinanciadores = [
+                ...this.financiadoresPaciente.map((os: IObraSocial) => ({
+                    id: os.nombre || os.financiador,
+                    label: os.nombre || os.financiador
+                })),
+                { id: 'otras', label: 'Otras' },
+                { id: 'Sin obra social', label: 'Sin obra social' }
+            ];
+        } else {
+            this.showSelector = false;
+            this.financiadorSeleccionado = undefined;
+        }
+        this.cargarOpcionesFinanciadores();
+    }
+
+    private cargarOpcionesFinanciadores() {
+        this.obraSocialService.getListado({}).subscribe((financiadores: any[]) => {
+            const financiadoresExistentes = [
+                ...this.financiadoresPaciente.map((f) => f.nombre)
+            ];
+
+            this.opcionesFinanciadores = financiadores.filter(
+                (financiador) => !financiadoresExistentes.includes(financiador.nombre)
+            );
+        });
+    }
+
+    public seleccionarFinanciador(event) {
+        this.showListado = false;
+
+        if (event.value === 'otras') {
+            this.showListado = true;
+            this.numeroAfiliado = undefined;
+        } else if (event.value === 'Sin obra social') {
+            if (this.prestacion?.paciente) {
+                this.numeroAfiliado = '';
+                this.prestacion.paciente.obraSocial = <IObraSocial>{
+                    id: null,
+                    nombre: 'Sin obra social',
+                    financiador: 'Sin obra social',
+                    codigoPuco: null,
+                    numeroAfiliado: '',
+                    prepaga: false,
+                    origen: 'ANDES'
+                };
+            }
+        } else {
+            const nombre = event.value;
+            const obraSocialSeleccionada = this.financiadoresPaciente.find(
+                os => os.nombre === nombre || os.financiador === nombre
+            );
+
+            if (obraSocialSeleccionada && this.prestacion?.paciente) {
+                this.numeroAfiliado = obraSocialSeleccionada.numeroAfiliado as string || '';
+                this.prestacion.paciente.obraSocial = <IObraSocial>{
+                    nombre: obraSocialSeleccionada.nombre,
+                    financiador: obraSocialSeleccionada.financiador,
+                    codigoPuco: obraSocialSeleccionada.codigoPuco,
+                    numeroAfiliado: obraSocialSeleccionada.numeroAfiliado || '',
+                    prepaga: obraSocialSeleccionada.prepaga || false,
+                    origen: obraSocialSeleccionada.origen || 'ANDES'
+                };
+            }
+        }
+    }
+
+    public seleccionarOtroFinanciador(event) {
+        if (event.value && this.prestacion?.paciente) {
+            const { prepaga, nombre, financiador, codigoPuco } = event.value;
+
+            this.prestacion.paciente.obraSocial = {
+                id: null,
+                nombre,
+                financiador,
+                codigoPuco,
+                numeroAfiliado: this.numeroAfiliado || '',
+                prepaga: prepaga || false,
+                origen: 'ANDES'
+            };
+
+            const nuevaObraSocial = {
+                nombre,
+                numeroAfiliado: this.numeroAfiliado || '',
+                financiador,
+                codigoPuco,
+                id: null,
+                prepaga: prepaga || false,
+                origen: 'ANDES'
+            };
+
+            const yaExiste = this.financiadoresPaciente.find(os =>
+                (os.nombre === nombre || os.financiador === financiador)
+            );
+
+            if (!yaExiste) {
+                this.financiadoresPaciente.push(nuevaObraSocial);
+            }
+
+            this.financiadorSeleccionado = nombre || financiador;
+            this.datosFinanciadores = [
+                ...this.financiadoresPaciente.map((os: IObraSocial) => ({
+                    id: os.nombre || os.financiador,
+                    label: os.nombre || os.financiador
+                })),
+                { id: 'otras', label: 'Otras' },
+                { id: 'Sin obra social', label: 'Sin obra social' }
+            ];
+
+            this.showListado = false;
+        }
+    }
+
+    public actualizarNumeroAfiliado() {
+        if (!this.numeroAfiliado || this.numeroAfiliado.toString().trim() === '') {
+            return;
+        }
+
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+            if (this.prestacion?.paciente?.obraSocial && this.numeroAfiliado && this.numeroAfiliado.toString().trim() !== '') {
+                const obraSocialActual = this.financiadoresPaciente.find(os =>
+                    os.nombre === this.prestacion.paciente.obraSocial.nombre ||
+                    os.financiador === this.prestacion.paciente.obraSocial.financiador
+                );
+
+                if (obraSocialActual) {
+                    obraSocialActual.numeroAfiliado = this.numeroAfiliado;
+                }
+
+                if (this.financiadoresPaciente && this.financiadoresPaciente.length > 0) {
+                    this.financiadoresPaciente[0].numeroAfiliado = this.numeroAfiliado;
+                }
+            }
+        }, 500);
     }
 }
