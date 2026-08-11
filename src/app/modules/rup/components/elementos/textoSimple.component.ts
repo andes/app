@@ -89,10 +89,14 @@ export class TextoSimpleComponent extends RUPComponent implements OnInit {
                 soloTexto = 'números';
                 break;
             case 'alphanumeric':
-                regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9]$/;
-                soloTexto = 'letras y números';
+                regex = /^.$/;
+                soloTexto = 'caracteres especiales';
                 break;
+            default:
+                // No se restringe el ingreso de caracteres.
+                return;
         }
+
 
         if (regex && !regex.test(key)) {
             event.preventDefault();
