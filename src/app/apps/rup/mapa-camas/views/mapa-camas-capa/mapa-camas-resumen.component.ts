@@ -4,7 +4,7 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
@@ -13,7 +13,6 @@ import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
-import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-mapa-camas-resumen',
@@ -101,7 +100,7 @@ export class MapaCamasResumenComponent implements OnInit {
         this.mapaCamasService.setOrganizacion(idOrganizacion);
         this.permisosMapaCamasService.setAmbito(ambito);
         this.mapaCamasService.setCapa(capa);
-        this.capaActual = capa;
+        this.capaActual = capa === 'medica' ? 'ASISTENCIAL' : 'ESTADÍSTICA';
         this.fechaBusqueda = new Date();
 
 
