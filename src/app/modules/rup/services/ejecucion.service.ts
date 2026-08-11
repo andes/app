@@ -120,18 +120,6 @@ export class RupEjecucionService {
         } else {
             seccion = seccion || this.seccion.getValue();
         }
-
-        // Una molécula/sección siempre se agrega a nivel raíz (nunca dentro de otra sección activa).
-        // Si hay una sección activa, verificamos si el concepto agregado es una molécula y, en ese
-        // caso, la insertamos fuera; luego cargarNuevoRegistro la deja como nueva sección activa.
-        if (seccion) {
-            const componente = this.elementosRUPService.buscarElemento(concepto, esSolicitud)?.componente;
-            if (['MoleculaBaseComponent', 'SeccionadoComponent', 'SeccionComponent'].includes(componente)) {
-                this.clearSeccion();
-                seccion = null;
-            }
-        }
-
         this.conceptoBuffer.next({
             concepto,
             esSolicitud,

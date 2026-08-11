@@ -55,20 +55,4 @@
             </ng-container>
         </div>
     </ng-container>
-    <!-- Registros agregados dinámicamente dentro de la molécula -->
-    <ng-container *ngIf="contentLoaded && registrosDinamicos && registrosDinamicos.length">
-        <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
-            <ng-container *ngFor="let registroDin of registrosDinamicos; let i = index">
-                <div *ngIf="elementosRUPService.elementoRegistro(registroDin)"
-                     class="col-{{ elementosRUPService.elementoRegistro(registroDin).style.columns }} mr-{{ elementosRUPService.elementoRegistro(registroDin).style?.offset ? elementosRUPService.elementoRegistro(registroDin).style.offset : '0' }}">
-                    <rup [elementoRUP]="elementosRUPService.elementoRegistro(registroDin)" [paciente]="paciente"
-                         [params]="elementosRUPService.getParams(registroDin)" [prestacion]="prestacion"
-                         [registro]="registroDin" [soloValores]="soloValores"
-                         [style]="elementosRUPService.elementoRegistro(registroDin).style"
-                         (change)="emitChange($event)">
-                    </rup>
-                </div>
-            </ng-container>
-        </div>
-    </ng-container>
 </ng-container>
