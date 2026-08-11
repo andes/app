@@ -4,7 +4,6 @@ import { Unsubscribe } from '@andes/shared';
 import { Observable, of } from 'rxjs';
 import { RupElement } from '..';
 import { ISnomedConcept } from '../../../interfaces/snomed-concept.interface';
-import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
 
 /**
  * Params:
@@ -15,11 +14,6 @@ import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.int
  * allowOther: Permite elegir texto libre.
  * preload: Carga el plex-select al renderizar el componente.
  *          Ejecuta el request a la API con todos los datos.
- * addRegister: Agrega un registro por concepto seleccionado.
- * registerMapping: Listado de equivalencias entre el item seleccionado (conceptId o id de un select estático)
- *          y el concepto que se debe cargar. Cada entrada puede definir "inMolecule" para cargar el concepto
- *          dentro de la molécula actual.
- * addRegisterInMolecule: Si está activo, el concepto agregado se carga dentro de la molécula actual.
  */
 @Component({
     selector: 'rup-select',
@@ -110,20 +104,16 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
         if (!this.otherEnabled) {
             if (this.itemSelected) {
                 this.registro.valor = this.itemSelected;
-                const hasAddRegister = this.params.addRegister || this.params.addRegitry;
-                const inMoleculeGlobal = this.params.addRegisterInMolecule || this.params.addRegitryInMolecule;
-                if (hasAddRegister) {
+                if (this.params.addRegister) {
                     // verifico que no haya un listado de equivalencias para los conceptos
                     if (this.params.registerMapping) {
-                        // el item seleccionado puede ser un concepto snomed (conceptId) o un item de un select estático (id)
-                        const itemId = this.itemSelected.conceptId || this.itemSelected.id;
-                        const mappedRegister = this.params.registerMapping.find(e => e.itemSelected === itemId);
+                        const mappedRegister = this.params.registerMapping.find(e => e.itemSelected === this.itemSelected.conceptId);
                         if (mappedRegister) {
-                            this.addConcepto(mappedRegister.loadRegister, mappedRegister.inMolecule || inMoleculeGlobal);
+                            this.addConcepto(mappedRegister.loadRegister);
                         }
                     } else {
                         // se agrega un registro por concepto seleccionado
-                        this.addConcepto(this.itemSelected, inMoleculeGlobal);
+                        this.addConcepto(this.itemSelected);
                     }
                 }
             } else {
@@ -139,50 +129,8 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
         this.addFact('value', this.registro.valor);
     }
 
-    addConcepto(concepto: ISnomedConcept, inMolecule = false) {
-        const molecula = this.getMoleculeRegistro();
-        if (inMolecule && this.ejecucionService) {
-            if (molecula) {
-                this.ejecucionService.agregarConcepto(
-                    concepto,
-                    false,
-                    molecula.concepto
-                );
-                return;
-            }
-
-        }
-
-
+    addConcepto(concepto: ISnomedConcept) {
         this.ejecucionService.agregarConcepto(concepto);
-    }
-
-    private getMoleculeRegistro(): IPrestacionRegistro {
-        const esMolecula = (registro: IPrestacionRegistro): boolean => {
-            const elemento = registro.elementoRUP ? this.elementosRUPService.cacheById[registro.elementoRUP] : null;
-            return elemento?.componente === 'MoleculaBaseComponent';
-        };
-
-        // Recorre el árbol de registros de la prestación buscando el ancestro más
-        // cercano del select que sea una molécula (comparamos por ID y por referencia).
-        const recorrer = (registro: IPrestacionRegistro, ancestros: IPrestacionRegistro[]): IPrestacionRegistro => {
-            const hijos = registro.registros || [];
-            for (const sub of hijos) {
-                if (sub === this.registro || sub.id === this.registro.id) {
-                    // el select está dentro de `registro`; retornamos el ancestro molécula más cercano
-                    return esMolecula(registro) ? registro : ancestros.find(a => esMolecula(a)) || null;
-                }
-                const encontrado = recorrer(sub, [registro, ...ancestros]);
-                if (encontrado) { return encontrado; }
-            }
-            return null;
-        };
-
-        for (const registro of (this.prestacion?.ejecucion?.registros || [])) {
-            const encontrado = recorrer(registro, []);
-            if (encontrado) { return encontrado; }
-        }
-        return null;
     }
 
     @Unsubscribe()
