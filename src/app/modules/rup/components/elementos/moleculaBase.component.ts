@@ -1,8 +1,6 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
 import { RupElement } from '.';
-import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
-import { filter, takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'rup-molecula-base',
@@ -19,14 +17,6 @@ export class MoleculaBaseComponent extends RUPComponent implements OnInit {
     ];
     public consultaTrastornoOriginal: any;
     public evoluciones;
-
-    /**
-     * Registros agregados dinámicamente dentro de la molécula (los que no son átomos de "requeridos").
-     */
-    get registrosDinamicos() {
-        const idsRequeridos = (this.elementoRUP.requeridos || []).map(r => r.concepto.conceptId);
-        return (this.registro.registros || []).filter(r => !idsRequeridos.includes(r.concepto.conceptId));
-    }
 
     ngOnInit() {
         if (this.registro.concepto.semanticTag === 'trastorno') {
@@ -76,60 +66,7 @@ export class MoleculaBaseComponent extends RUPComponent implements OnInit {
         } else {
             this.contentLoaded = true;
         }
-        if (this.ejecucionService) {
-            this.ejecucionService.conceptosStream().pipe(
-                filter(r => r.seccion && r.seccion.conceptId === this.registro.concepto.conceptId),
-                takeUntil(this.onDestroy$)
-            ).subscribe((registro) => {
-                this.cargarNuevoRegistro(registro.concepto, registro.esSolicitud, registro.valor, null);
-            });
-        }
-
         this.createRules();
-    }
-
-    @HostListener('click')
-    activarSeccion() {
-        if (this.ejecucionService && !this.soloValores) {
-            const seccion = this.ejecucionService.getSeccionValue();
-            if (seccion?.conceptId === this.registro.concepto.conceptId) {
-                this.ejecucionService.clearSeccion();
-            } else {
-                this.ejecucionService.setSeccion(this.registro.concepto);
-            }
-        }
-    }
-
-    /**
-     * Desactiva la molécula si es la sección activa.
-     */
-    desactivarSeccion() {
-        if (this.ejecucionService) {
-            const seccion = this.ejecucionService.getSeccionValue();
-            if (seccion?.conceptId === this.registro.concepto.conceptId) {
-                this.ejecucionService.clearSeccion();
-            }
-        }
-    }
-
-    onDestroy() {
-        this.desactivarSeccion();
-    }
-
-    cargarNuevoRegistro(snomedConcept, esSolicitud = false, valor = null, relaciones = null) {
-        const elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
-        const nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept, this.prestacion);
-        if (esSolicitud) {
-            nuevoRegistro.esSolicitud = true;
-        }
-        nuevoRegistro.valor = valor;
-        if (relaciones) {
-            nuevoRegistro.relacionadoCon = relaciones;
-        }
-        if (snomedConcept.semanticTag === 'procedimiento' || snomedConcept.semanticTag === 'elemento de registro' || snomedConcept.semanticTag === 'régimen/tratamiento' || snomedConcept.semanticTag === 'situación') {
-            this.plantillasService.get(snomedConcept.conceptId, esSolicitud).subscribe(() => { });
-        }
-        this.registro.registros.push(nuevoRegistro);
     }
 
     onChange(value) {
