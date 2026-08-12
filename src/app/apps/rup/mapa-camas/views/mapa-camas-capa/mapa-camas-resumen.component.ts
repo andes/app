@@ -152,6 +152,10 @@ export class MapaCamasResumenComponent implements OnInit {
         }
     }
 
+    verListadoRecursos() {
+        this.listadoRecursos = this.listadoRecursos ? false : true;
+    }
+
     volver() {
         this.router.navigate([
             'com',

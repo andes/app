@@ -1,4 +1,4 @@
-<plex-layout main="12">
+<plex-layout main="9">
     <plex-layout-main>
         <header>
             <plex-title [titulo]="'Mapa de camas' + ' - ' + dataOrganizacion?.nombre">
@@ -22,7 +22,14 @@
             </ng-container>
 
             <app-filtros-camas [filtroCompleto]="false"></app-filtros-camas>
-            <div>
+
+            <plex-button size="sm" type="primary" (click)="verListadoRecursos()"
+                         [title]="!listadoRecursos ? 'Agrupar por sector' : 'Ver listado de camas'">
+                <plex-icon [name]="!listadoRecursos ? 'file-tree' : 'format-list-bulleted'"></plex-icon>
+            </plex-button>
+
+            <div *ngIf="!listadoRecursos">
+
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
@@ -81,7 +88,7 @@
                             </td>
                             <td>
                                 <span class="d-block">
-                                    {{ cama.sectorName }}
+                                    {{cama.sectores | enumerar: ['nombre']}}
                                 </span>
                             </td>
                             <td>
@@ -115,7 +122,16 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Listado de recursos (Agrupación por sector) -->
+            <ng-container *ngIf="listadoRecursos">
+                <app-recursos-listado [permisoIngreso]="false" [permisoBloqueo]="false"
+                                      (accionRecurso)='accionListadoRecurso($event)'>
+                </app-recursos-listado>
+            </ng-container>
         </ng-container>
     </plex-layout-main>
-
+    <plex-layout-sidebar type="invert" id="sidebarCamas">
+        <app-estado-servicio></app-estado-servicio>
+    </plex-layout-sidebar>
 </plex-layout>
