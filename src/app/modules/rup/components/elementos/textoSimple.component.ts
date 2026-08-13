@@ -81,11 +81,11 @@ export class TextoSimpleComponent extends RUPComponent implements OnInit {
         let soloTexto: string;
         switch (accept) {
             case 'letters':
-                regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]$/;
+                regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ ]$/;
                 soloTexto = 'letras';
                 break;
             case 'numbers':
-                regex = /^[0-9]$/;
+                regex = /^[0-9 ]$/;
                 soloTexto = 'números';
                 break;
             case 'alphanumeric':
@@ -125,16 +125,17 @@ export class TextoSimpleComponent extends RUPComponent implements OnInit {
         let regex: RegExp;
         switch (accept) {
             case 'letters':
-                regex = /[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]/g;
+                regex = /[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ ]/g;
                 break;
             case 'numbers':
-                regex = /[^0-9]/g;
+                regex = /[^0-9 ]/g;
                 break;
             case 'alphanumeric':
-                regex = /[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9]/g;
+                regex = /^.$/;
                 break;
             default:
-                regex = null;
+                // No se restringe el ingreso de caracteres.
+                return;
         }
         let cleaned = regex ? pasted.replace(regex, '') : pasted;
 
