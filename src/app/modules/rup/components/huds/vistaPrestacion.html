@@ -71,7 +71,8 @@
         <plex-title titulo="Registros de la consulta" size="sm"></plex-title>
         <plex-wrapper>
             <ng-container *ngFor="let elemento of prestacion.ejecucion.registros">
-                <div class="rup-card {{ elemento | semanticClass }}">
+                <div class="rup-card {{ elemento | semanticClass }}"
+                     *ngIf="!(elemento._origenMolecula || elemento.valor?.origen === 'molecula')">
                     <div class="rup-header">
                         <div class="icon-rup">
                             <i class="adi {{ elemento | semanticIcon }}"></i>
