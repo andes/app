@@ -76,6 +76,7 @@ import { SemanticIconPipe } from './pipes/semantic-icon.pipes';
 import { RUPSoloValorPipe } from './pipes/elemento-rup-valor.pipes';
 import { DirectiveLibModule } from '../../directives/directives.module';
 import { PrescripcionInsumoComponent } from './components/elementos/prescripcionInsumo.component';
+import { TextoSimpleComponent } from './components/elementos/textoSimple.component';
 
 const RUPComponentsArray = [
     RUPComponent,
@@ -132,7 +133,8 @@ const RUPComponentsArray = [
     VacunasComponent,
     SolicitudPrescripcionMedicamentoComponent,
     SolicitudPrescripcionMedicamentoInternacionComponent,
-    PrescripcionInsumoComponent
+    PrescripcionInsumoComponent,
+    TextoSimpleComponent
 
 ];
 
