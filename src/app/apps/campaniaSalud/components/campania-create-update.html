@@ -52,6 +52,6 @@
         <span *ngIf="errorFormato">
             <plex-badge type="danger"> Archivo inválido </plex-badge>
         </span>
-        <div *ngIf="!errorFormato" [innerHtml]="imagenSegura"></div>
+        <div *ngIf="imagenSvg && !errorFormato" [innerHtml]="imagenSegura"></div>
     </plex-wrapper>
 </form>

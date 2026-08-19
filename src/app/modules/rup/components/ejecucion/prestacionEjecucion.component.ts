@@ -200,7 +200,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                                     if (this.prestacion.groupId) {
                                         this.cargarPrestacionAsociada();
                                     }
-                                    this.ejecucionService.paciente = paciente; this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
+                                    this.ejecucionService.paciente = paciente;
+                                    this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                                 });
                             }
                             // Trae el elementoRUP que implementa esta Prestación

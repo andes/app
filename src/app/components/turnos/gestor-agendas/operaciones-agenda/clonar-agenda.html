@@ -11,8 +11,8 @@
             <tr *ngFor="let week of calendario">
                 <td *ngFor="let day of week" (click)="seleccionar(day)" [ngClass]="{
                     'weekend'             : day.weekend && !(day.estado === 'seleccionado'),
-                    'outline-primary'     : (day.estado === 'seleccionado') && (day.original == false),
-                    'outline-success'     : day.original == true,
+                    'outline-primary'     : (day.estado === 'seleccionado') && (day.original === false),
+                    'outline-success'     : day.original === true,
                     'outline-danger'     : day.estado === 'conflicto',
                     'hover'               : day.estado !== 'vacio' && day.fecha.getTime() >= today.getTime()
                 }">
@@ -22,11 +22,13 @@
             </tr>
         </table>
     </plex-layout-main>
-    <plex-layout-sidebar [type]="'invert'">
+    <plex-layout-sidebar type="invert">
         <plex-title titulo="Agenda original" size="md">
-            <plex-help type="info" size="sm" icon="information-variant" tooltip="Detalle de agenda">
+            <plex-help type="info" size="sm" icon="information-variant" titulo="Detalle de agenda"
+                       tooltip="Detalle de agenda">
                 <plex-label direction="row" titulo="Espacio Físico:"
-                            subtitulo="{{(agenda | espacioFisico) }}"></plex-label>
+                            subtitulo="{{(agenda | espacioFisico) || 'No asignado'}}">
+                </plex-label>
                 <plex-label direction="row" titulo="Bloques:"></plex-label>
 
                 <ng-template ngFor let-unBloque="$implicit" [ngForOf]="agenda.bloques" let-i="index">
