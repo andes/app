@@ -18,7 +18,7 @@
 
 <!-- lista de un único elemento -->
 <plex-list *ngIf="relacionEntrante.length">
-    <plex-item *ngFor="let unaRel of relacionEntrante" class="">
+    <plex-item *ngFor="let unaRel of relacionEntrante">
         <!-- caso paciente relacionado -->
         <img *ngIf="unaRel.referencia" [ngClass]="{'img-fallecido' : unaRel.fechaFallecimiento}"
              [mpiFotoPaciente]="{id: unaRel.referencia, fotoId: unaRel.fotoId}">
@@ -34,16 +34,14 @@
                     subtitulo="{{ (unaRel.fechaNacimiento | fecha:'utc') || 'Desconocida' }}">
         </plex-label>
 
-        <plex-grid size="sm" type="full">
-            <plex-select class="vinculo" [(ngModel)]="unaRel.relacion" name="nuevaRelacion" [data]="parentescoModel"
-                         [required]="true" placeholder="Seleccione vínculo...  ">
-            </plex-select>
-        </plex-grid>
+        <plex-select [(ngModel)]="unaRel.relacion" name="nuevaRelacion" [data]="parentescoModel" [required]="true"
+                     placeholder="Seleccione vínculo...  ">
+        </plex-select>
 
         <!-- Se muestra con un 'OR' porque no todas las relaciones guardan el genero -->
         <plex-badge type="info">{{ unaRel.genero || unaRel.sexo }}</plex-badge>
 
-        <plex-badge *ngIf="unaRel.estado" type="" class=""
+        <plex-badge *ngIf="unaRel.estado"
                     [ngClass]="{'text-success' : unaRel.estado === 'validado' , 'text-warning' : unaRel.estado === 'temporal'} ">
             {{ unaRel.estado }}
         </plex-badge>

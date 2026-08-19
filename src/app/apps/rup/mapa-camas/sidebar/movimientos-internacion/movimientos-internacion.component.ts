@@ -5,7 +5,7 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 import { IResumenInternacion } from '../../services/resumen-internacion.http';
-
+import moment from 'moment';
 @Component({
     selector: 'app-movimientos-internacion',
     templateUrl: './movimientos-internacion.component.html',

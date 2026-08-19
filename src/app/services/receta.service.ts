@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { IProfesional } from 'src/app/interfaces/IProfesional';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
-
+import moment from 'moment';
 
 @Injectable({
     providedIn: 'root',
@@ -65,7 +65,7 @@ export class RecetaService {
             }, recetasCandidatas[0]);
         }
         return recetaVigente;
-    };
+    }
 
     getUltimaReceta(recetas) {
         return recetas?.reduce((mostRecent, receta) => {
@@ -74,7 +74,7 @@ export class RecetaService {
 
             return recetaDate.isAfter(mostRecentDate) ? receta : mostRecent;
         });
-    };
+    }
 
     getLabel(recetas: any[]) {
         const receta = this.getUltimaReceta(recetas);

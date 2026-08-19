@@ -1,11 +1,11 @@
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { PerfilListComponent } from './views/perfiles-list.component';
 import { PerfilDetailComponent } from './components/perfiles-detail.component';
 import { UsuariosListComponent } from './views/usuarios-list.view';
 import { UsuariosEditComponent } from './views/usuarios-edit.view';
 
-const routes = [
+const routes: Routes = [
     {
         path: 'perfiles',
         component: PerfilListComponent,

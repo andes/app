@@ -35,7 +35,7 @@ export class AgregarPacienteComponent implements OnInit {
     public pacientes: any;
     public obraSocialPaciente: any[] = [];
     public prepagas: any[] = [];
-    public showListaPrepagas: Boolean = false;
+    public showListaPrepagas = false;
     public seleccion = null;
     public esEscaneado = false;
     public modelo: any = {

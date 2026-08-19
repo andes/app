@@ -1,10 +1,10 @@
+import moment from 'moment';
 import { CampaniaSaludService } from '../services/campaniaSalud.service';
 import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { ICampaniaSalud } from '../interfaces/ICampaniaSalud';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
-import * as moment from 'moment';
 @Component({
     selector: 'campaniaSalud',
     templateUrl: 'campaniaSalud.html'

@@ -1,10 +1,10 @@
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
 import { PantallasComponent } from './views/pantallas.component';
 import { PantallaDetalleComponent } from './views/pantalla-detalle.component';
 
-const routes = [
+const routes: Routes = [
     {
         path: '',
         component: PantallasComponent,

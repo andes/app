@@ -38,21 +38,21 @@ export class LoteComponent implements OnInit {
     ];
 
     public loteSelected =
-    {
-        codigo: '',
-        descripcion: '',
-        habilitado: true,
-        vacuna: null
-    };
+        {
+            codigo: '',
+            descripcion: '',
+            habilitado: true,
+            vacuna: null
+        };
 
     public dosisSelected =
-    {
-        codigo: null,
-        nombre: null,
-        vacuna: null,
-        esquema: null,
-        habilitado: true
-    };
+        {
+            codigo: null,
+            nombre: null,
+            vacuna: null,
+            esquema: null,
+            habilitado: true
+        };
 
     constructor(
         private vacunasService: VacunasService,

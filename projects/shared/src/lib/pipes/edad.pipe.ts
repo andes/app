@@ -1,6 +1,5 @@
+import moment from 'moment';
 import { Pipe, PipeTransform } from '@angular/core';
-import * as moment_ from 'moment';
-const moment = moment_;
 
 @Pipe({ name: 'edad', pure: false })
 // pure: false - Info: https://stackoverflow.com/questions/34456430/ngfor-doesnt-update-data-with-pipe-in-angular2

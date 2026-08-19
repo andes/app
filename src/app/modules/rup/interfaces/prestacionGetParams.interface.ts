@@ -12,8 +12,8 @@ export class IPrestacionGetParams {
     conceptsIdEjecucion?: any[];
     solicitudDesde?: Date;
     solicitudHasta?: Date;
-    tienePrestacionOrigen?: Boolean;
-    tieneTurno?: Boolean;
+    tienePrestacionOrigen?: boolean;
+    tieneTurno?: boolean;
     organizacion?: string;
     ordenFecha?: boolean;
     ordenFechaEjecucion?: boolean;

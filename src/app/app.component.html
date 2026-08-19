@@ -9,7 +9,7 @@
         <header-novedades></header-novedades>
     </div>
     <div *ngIf="usuario" class="user-profile">
-        <plex-detail size="sm">
+        <plex-detail size="md">
             <img *ngIf='tieneFoto' [src]="foto" class="img-circle" />
             <div title>{{ usuario.apellido }}, {{ usuario.nombre }}</div>
             <div subtitle>{{ usuario.documento }}</div>
@@ -73,6 +73,9 @@
                 </tr>
             </plex-table>
         </div>
+    </div>
+    <div main-menu>
+        <plex-menu [items]="menuList"></plex-menu>
     </div>
 
 </plex-app>

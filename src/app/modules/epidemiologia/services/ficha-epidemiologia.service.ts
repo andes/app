@@ -66,7 +66,7 @@ export class FormsEpidemiologiaService extends ResourceBaseHttp {
                 case 'pcr':
                     if (field.pcr.id === 'confirmado') {
                         conceptos.push(this.elementoRupService.getConceptoConfirmadoPcr());
-                    };
+                    }
                     break;
                 case 'antigeno':
                     if (field.antigeno.id === 'confirmado' && segundaClasificacionId !== 'ifi') {
@@ -78,7 +78,7 @@ export class FormsEpidemiologiaService extends ResourceBaseHttp {
                 case 'lamp':
                     if (field.lamp.id === 'confirmado') {
                         conceptos.push(this.elementoRupService.getConceptoEnfermedadCovid());
-                    };
+                    }
                     break;
             }
         });

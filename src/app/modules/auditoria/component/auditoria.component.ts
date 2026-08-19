@@ -37,8 +37,8 @@ export class AuditoriaComponent implements OnInit {
     scrollEnd = false;
     searchSubscription = new Subscription();
     // reporte de errores
-    permisoEdicion: Boolean;
-    permisoVincular: Boolean;
+    permisoEdicion: boolean;
+    permisoVincular: boolean;
     showReporteError = false; // se muestra en el sidebar datos del error reportado
     listaReportes = []; // historial de reportes del paciente
 

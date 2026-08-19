@@ -13,18 +13,18 @@ export interface ISectores {
     _id?: string;
     tipoSector: ISnomedConcept;
     unidadConcept?: ISnomedConcept;
-    nombre: String;
+    nombre: string;
     hijos?: ISectores[];
 }
 
 export interface IOrganizacion {
     id: string;
     codigo: {
-        sisa: String;
-        cuie: String;
-        remediar: String;
+        sisa: string;
+        cuie: string;
+        remediar: string;
     };
-    nombre: String;
+    nombre: string;
     tipoEstablecimiento: ITipoEstablecimiento;
     // direccion
     direccion: IDireccion;
@@ -32,13 +32,13 @@ export interface IOrganizacion {
     contacto: [IContacto];
 
     edificio: [{
-        id: String;
-        descripcion: String;
+        id: string;
+        descripcion: string;
         contacto: IContacto;
         direccion: IDireccion;
     }];
-    nivelComplejidad: Number;
-    activo: Boolean;
+    nivelComplejidad: number;
+    activo: boolean;
     fechaAlta: Date;
     fechaBaja: Date;
     servicios: [ISnomedConcept];

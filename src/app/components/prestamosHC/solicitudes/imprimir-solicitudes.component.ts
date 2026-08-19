@@ -1,7 +1,6 @@
-import { Component, Input, EventEmitter, Output, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Component, Input, EventEmitter, Output, HostBinding, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import * as moment from 'moment';
 
 @Component({
     selector: 'imprimir-solicitudes',
@@ -10,12 +9,12 @@ import * as moment from 'moment';
     encapsulation: ViewEncapsulation.None
 })
 
-export class ImprimirSolicitudesComponent implements OnInit {
+export class ImprimirSolicitudesComponent {
 
     public solicitudes;
     public idOrganizacion = this.auth.organizacion.id;
 
-    @Input('solicutudes')
+    @Input()
     set solicutudes(value: any) {
         this.solicitudes = value;
     }
@@ -32,10 +31,6 @@ export class ImprimirSolicitudesComponent implements OnInit {
     titulo = '';
 
     constructor(public plex: Plex, public auth: Auth) { }
-
-    ngOnInit() {
-        // this.autorizado = this.auth.getPermissions('turnos:agenda:puedeImprimir:').length > 0;
-    }
 
     imprimir() {
         window.print();

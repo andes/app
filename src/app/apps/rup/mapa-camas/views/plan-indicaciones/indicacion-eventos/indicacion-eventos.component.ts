@@ -1,10 +1,10 @@
+import moment from 'moment';
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { PlanIndicacionesEventosServices } from '../../../services/plan-indicaciones-eventos.service';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
 import { Auth } from '@andes/auth';
 import { tap } from 'rxjs/operators';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
-import * as moment from 'moment';
 import { Plex } from '@andes/plex';
 import { PlanIndicacionesServices } from '../../../services/plan-indicaciones.service';
 
@@ -17,7 +17,7 @@ export class PlanIndicacionEventoComponent implements OnChanges {
     @Input() evento;
     @Input() hora;
     @Input() fecha: Date;
-    labelEstado = 'Observaciones';
+    requiereMotivo = true;
     fechaHora: Date;
     editando: boolean;
     horaOrganizacion;
@@ -94,8 +94,12 @@ export class PlanIndicacionEventoComponent implements OnChanges {
         this.editando = true;
     }
 
+    inputObservaciones(event) {
+        this.observaciones = event.value;
+    }
+
     onInputChange(value) {
-        (value.value?.id === 'realizado') ? this.labelEstado = 'Observaciones' : this.labelEstado = 'Motivo';
+        this.requiereMotivo = !!(value?.id !== 'realizado');
     }
     onGuardar() {
         if (this.evento) {

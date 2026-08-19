@@ -16,7 +16,7 @@ export class EspacioFisicoService {
      * Metodo getById. Trae el objeto organizacion por su Id.
      * @param {String} id Busca por Id
      */
-    getById(id: String): Observable<IEspacioFisico> {
+    getById(id: string): Observable<IEspacioFisico> {
         return this.server.get(this.espacioFisicoUrl + '/' + id, null);
     }
 

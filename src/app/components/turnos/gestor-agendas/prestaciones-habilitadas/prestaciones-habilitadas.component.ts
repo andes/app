@@ -5,7 +5,7 @@ import { ProfesionalService } from 'src/app/services/profesional.service';
 @Component({
     selector: 'prestaciones-habilitadas',
     templateUrl: 'prestaciones-habilitadas.html',
-    styleUrls:['prestaciones-habilitadas.scss']
+    styleUrls: ['prestaciones-habilitadas.scss']
 })
 
 export class PrestacionesHabilitadasComponent implements OnInit {
@@ -19,7 +19,7 @@ export class PrestacionesHabilitadasComponent implements OnInit {
     }
 
     public crearNuevoAcceso = false;
-    public nuevoAcceso = {};
+    public nuevoAcceso: any = {};
     public diasSemana = [
         { id: 'lunes', label: 'Lunes' },
         { id: 'martes', label: 'Martes' },

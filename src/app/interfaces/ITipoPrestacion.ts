@@ -1,15 +1,15 @@
 export interface ITipoPrestacion {
-    id: String;
-    conceptId: String;
-    term: String;
-    fsn: String;
+    id: string;
+    conceptId: string;
+    term: string;
+    fsn: string;
     refsetIds: [];
-    semanticTag: String;
-    noNominalizada?: Boolean;
+    semanticTag: string;
+    noNominalizada?: boolean;
     agendaDinamica: boolean;
     ambito?: Array<string>;
-    queries?: String[];
-    auditable?: Boolean;
+    queries?: string[];
+    auditable?: boolean;
     tiempoVigencia?: number;
     videoConferencia?: boolean;
 }

@@ -19,8 +19,8 @@ export class PacienteListadoComponent {
     // Propiedades públicas
     public listado: IPaciente[]; // Contiene un listado plano de pacientes
     public listadoRelaciones: IPacienteRelacion[];
-    public desplegado: Boolean = false;
-    public selectedOn: Boolean = true;
+    public desplegado = false;
+    public selectedOn = true;
     public coloresItems = {
         impar: {
             border: '#00000000',

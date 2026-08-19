@@ -1,9 +1,11 @@
 <plex-layout main="{{profesionalSelected?'8':'12'}}" resizable="true" [min]="4" [max]="5" [steps]="2">
     <plex-layout-main>
         <plex-title main titulo="PROFESIONALES">
-            <plex-button label="volver" type="danger" position="left" routerLink='/inicio'></plex-button>
+            <plex-button class="mr-1" label="volver" size="sm" type="danger" position="left"
+                         routerLink='/inicio'></plex-button>
 
-            <plex-button label="Nuevo Profesional" type="success" position="right" routerLink='/tm/profesional/create'>
+            <plex-button label="Nuevo Profesional" size="sm" type="success" position="right"
+                         routerLink='/tm/profesional/create'>
             </plex-button>
         </plex-title>
         <plex-wrapper>
@@ -16,11 +18,11 @@
             <plex-text [(ngModel)]="filtros.nombre" name="nombre" label="Nombre" placeholder="Ingrese nombre"
                        (change)="filtrar()">
             </plex-text>
-            <plex-bool [(ngModel)]="filtros.estado" name="estado" label="Deshabilitados" (change)="filtrar()"
-                       type="slide">
+            <plex-bool class="mt-4 ml-4" [(ngModel)]="filtros.estado" name="estado" label="Deshabilitados"
+                       (change)="filtrar()" type="slide">
             </plex-bool>
-            <plex-bool class="bool-posicion" label="No matriculado" [(ngModel)]="filtros.noMatriculado" name="estado"
-                       type="slide" (change)="filtrar()">
+            <plex-bool class="bool-posicion mt-4" label="No matriculado" [(ngModel)]="filtros.noMatriculado"
+                       name="estado" type="slide" (change)="filtrar()">
             </plex-bool>
         </plex-wrapper>
         <div *ngIf="!(listado$ | async)?.length" class="mt-5">
@@ -70,7 +72,7 @@
                          [icon]="'pencil'" type="warning" size="sm"
                          (click)="routeTo('create', profesionalSelected.id)  ">
             </plex-button>
-            <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()"></plex-button>
+            <plex-button size="sm" tooltip="Cerrar" type="danger" [icon]="'close'" (click)="cerrar()"></plex-button>
 
         </plex-title>
         <plex-detail size="lg">
