@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { IProfesional } from 'src/app/interfaces/IProfesional';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
-
+import moment from 'moment';
 
 @Injectable({
     providedIn: 'root',
