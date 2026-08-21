@@ -303,8 +303,13 @@ export class PlanificarAgendaComponent implements OnInit {
 
     addBloque() {
         const longitud = this.modelo.bloques.length;
+        const ultimoBloque = longitud > 0 ? this.modelo.bloques[longitud - 1] : null;
+        // Solo se permite agregar un nuevo bloque si el último está completamente configurado
+        const ultimoCompleto = !ultimoBloque ||
+            (ultimoBloque.horaInicio && ultimoBloque.horaFin &&
+                (!this.modelo.nominalizada || ultimoBloque.cantidadTurnos > 0));
 
-        if (longitud === 0 || (this.modelo.bloques[longitud - 1].horaInicio && this.modelo.bloques[longitud - 1].horaFin)) {
+        if (ultimoCompleto) {
             this.modelo.bloques.push({
                 indice: longitud,
                 // 'descripcion': `Bloque {longitud + 1}°`,
@@ -322,6 +327,8 @@ export class PlanificarAgendaComponent implements OnInit {
             });
             this.activarBloque(longitud);
             this.inicializarPrestacionesBloques(this.elementoActivo);
+        } else {
+            this.plex.info('warning', 'Debe completar la configuración del último bloque antes de agregar uno nuevo');
         }
     }
 
@@ -697,6 +704,24 @@ export class PlanificarAgendaComponent implements OnInit {
                 const inicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 const fin = this.combinarFechas(this.fecha, bloque.horaFin);
 
+                // Verifica que el bloque tenga horario de inicio y de fin completos
+                if (!this.dinamica && !this.modelo.intercalar && (!bloque.horaInicio || !bloque.horaFin)) {
+                    alerta = 'Bloque ' + (index + 1) + ': debe completar la hora de inicio y la hora de fin';
+                    this.alertas.push(alerta);
+                }
+
+                // Verifica que el bloque tenga su configuración de turnos completa
+                if (!this.dinamica && this.modelo.nominalizada && (!bloque.cantidadTurnos || !bloque.duracionTurno)) {
+                    alerta = 'Bloque ' + (index + 1) + ': falta configurar la cantidad y la duración de los turnos';
+                    this.alertas.push(alerta);
+                }
+
+                // Verifica que el bloque no sea de duración nula (puede ocurrir por el redondeo de minutos)
+                if (inicio && fin && this.compararFechas(inicio, fin) === 0) {
+                    alerta = 'Bloque ' + (index + 1) + ': la hora de inicio es igual a la hora de fin';
+                    this.alertas.push(alerta);
+                }
+
                 if (bloque.cantidadTurnos && bloque.duracionTurno) {
                     totalBloques = totalBloques + (bloque.cantidadTurnos * bloque.duracionTurno);
                 }
@@ -722,32 +747,16 @@ export class PlanificarAgendaComponent implements OnInit {
                     this.alertas.push(alerta);
                 }
 
-                // Verifica que no se solape con ningún otro
-                const mapeo = bloques.map((obj) => {
-                    if (obj.indice !== bloque.indice) {
-                        const robj = {};
-                        robj['horaInicio'] = obj.horaInicio;
-                        robj['horaFin'] = obj.horaFin;
-                        return robj;
-                    } else {
-                        return null;
+                // Verifica que no se solape con ningún otro bloque (cada par se compara una sola vez)
+                for (let j = index + 1; j < bloques.length; j++) {
+                    const otroIni = this.combinarFechas(this.fecha, bloques[j].horaInicio);
+                    const otroFin = this.combinarFechas(this.fecha, bloques[j].horaFin);
+                    if (inicio && fin && otroIni && otroFin &&
+                        this.compararFechas(otroIni, fin) < 0 && this.compararFechas(inicio, otroFin) < 0) {
+                        alerta = 'El bloque ' + (index + 1) + ' se solapa con el ' + (j + 1);
+                        this.alertas.push(alerta);
                     }
-                });
-
-                mapeo.forEach((bloqueMap, index1) => {
-                    if (bloqueMap) {
-                        const bloqueMapIni = this.combinarFechas(this.fecha, bloqueMap.horaInicio);
-                        const bloqueMapFin = this.combinarFechas(this.fecha, bloqueMap.horaFin);
-                        // if (this.compararFechas(inicio, bloqueMapFin) < 0 && this.compararFechas(bloqueMapIni, inicio) < 0) {
-                        if (this.compararFechas(bloqueMapIni, fin) < 0 && this.compararFechas(inicio, bloqueMapFin) < 0) {
-                            alerta = 'El bloque ' + (bloque.indice + 1) + ' se solapa con el ' + (index1 + 1);
-                            const alertaOpuesta = 'El bloque ' + (index1 + 1) + ' se solapa con el ' + (bloque.indice + 1);
-                            if (this.alertas.indexOf(alertaOpuesta) < 0) {
-                                this.alertas.push(alerta);
-                            }
-                        }
-                    }
-                });
+                }
             });
 
             // Verifica que los bloques sean consecutivos sin horario libre entre ellos
@@ -760,7 +769,7 @@ export class PlanificarAgendaComponent implements OnInit {
                         const finActual = this.combinarFechas(this.fecha, actual.horaFin);
                         const iniSiguiente = this.combinarFechas(this.fecha, siguiente.horaInicio);
                         if (this.compararFechas(finActual, iniSiguiente) !== 0) {
-                            this.alertas.push('El bloque 2 tiene que empezar exactamente cuando termina el bloque 1');
+                            this.alertas.push('El bloque ' + (i + 2) + ' tiene que empezar exactamente cuando termina el bloque ' + (i + 1));
                         }
                     }
                 }
@@ -1021,6 +1030,19 @@ export class PlanificarAgendaComponent implements OnInit {
     }
     cerrarModal() {
         this.showModal = false;
+    }
+
+    /**
+     * Indica si un bloque no tiene completamente configurados sus horarios y turnos
+     * @memberof PlanificarAgendaComponent
+     */
+    estaIncompleto(bloque: any): boolean {
+        if (this.dinamica) {
+            return false;
+        }
+        const sinHorarios = !this.modelo.intercalar && (!bloque.horaInicio || !bloque.horaFin);
+        const sinTurnos = this.modelo.nominalizada && (!bloque.cantidadTurnos || !bloque.duracionTurno);
+        return sinHorarios || sinTurnos;
     }
 
     getPrestacionesActivas(bloque): string {

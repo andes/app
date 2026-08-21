@@ -121,6 +121,8 @@
                         <plex-label *ngIf="getPrestacionesActivas(unBloque)"
                                     titulo="{{getPrestacionesActivas(unBloque)}}" size="md">
                         </plex-label>
+                        <plex-badge *ngIf="estaIncompleto(unBloque)" type="danger" size="sm">Sin configurar
+                        </plex-badge>
                         <plex-badge *ngIf="getPrestacionesActivas(unBloque)" type="info" size="sm">
                             <plex-icon *ngIf="unBloque.descripcion" name="comment" size="sm" title="{{unBloque.descripcion}}"
                                        titlePosition="right"></plex-icon>
