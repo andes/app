@@ -350,6 +350,10 @@ export class MapaCamasService {
     }
 
     setCapa(capa: string) {
+        this.esCensable.next(null);
+        this.mostrarTodasCamas.next(false);
+        this.censableSelected.next(null);
+        
         this.capa2.next(capa);
         this.capa = capa;
     }
@@ -398,8 +402,13 @@ export class MapaCamasService {
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
                     snap.paciente.documento.includes(paciente) || snap.paciente.numeroIdentificacion?.includes(paciente));
             } else {
+<<<<<<< HEAD
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => (
                     snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+=======
+                camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
+                (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+>>>>>>> 98773c588 (Reset de filtros al entrar al componente)
                     snap.paciente.alias?.toLowerCase().includes(paciente.toLowerCase()) ||
                     snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase())
                 ));
