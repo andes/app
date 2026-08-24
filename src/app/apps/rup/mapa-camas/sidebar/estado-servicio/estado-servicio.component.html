@@ -85,16 +85,3 @@
         </plex-datetime>
     </form>
 </ng-container>
-<ng-container *ngIf="editaFecha">
-    <form #formulario="ngForm">
-        <plex-title titulo="Editar fecha" size="sm">
-            <plex-button type="danger" icon="close" size="sm" tooltip="Cancelar" (click)="cancelar()"></plex-button>
-            <plex-button *ngIf="puedeGuardar" class="ml-1" type="success" icon="check" size="sm" tooltip="Guardar"
-                         (click)="guardar()" [disabled]="formulario.invalid"></plex-button>
-        </plex-title>
-        <plex-datetime type="datetime" label="Fecha y hora del mapa de camas"
-                       [max]="mapaCamasService.fechaActual$ | async" name="fechaCambio" [debounce]="600"
-                       [(ngModel)]="fecha" (change)="onChange($event.value)" [required]="true">
-        </plex-datetime>
-    </form>
-</ng-container>
