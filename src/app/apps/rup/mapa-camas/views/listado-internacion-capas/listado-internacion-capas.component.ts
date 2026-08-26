@@ -154,7 +154,7 @@ export class ListadoInternacionCapasComponent implements OnInit, OnDestroy {
             if (cama.estados && cama.estados.length > 0) {
                 for (const estado of cama.estados) {
                     if (estado.paciente) {
-                        if (!ultimoEstadoConPaciente || new Date(estado.fecha) > new Date(ultimoEstadoConPaciente.fecha)) {
+                        if ((!estado.deletedAt || !estado.deletedBy) && (!ultimoEstadoConPaciente || new Date(estado.fecha) > new Date(ultimoEstadoConPaciente.fecha))) {
                             ultimoEstadoConPaciente = estado;
                         }
                     }
