@@ -164,14 +164,20 @@ export class BiQueriesComponent implements OnInit {
     descargar() {
         if (this.consultaSeleccionada) {
             const params = {};
-            this.argumentos.forEach(arg => {
-                const key = arg.key;
+            this.argumentos.map(arg => {
+                const key: string = arg.key;
                 const valor = this.argumentos[key];
                 params[key] = valor;
                 const idField = arg.idField || 'id';
 
                 if (valor instanceof Date) {
                     params[key] = valor;
+                    if (key.toLowerCase().includes('desde')) {
+                        params[key] = moment(valor).startOf('day').toDate();
+                    }
+                    if (key.toLowerCase().includes('hasta')) {
+                        params[key] = moment(valor).endOf('day').toDate();
+                    }
                 } else {
                     if (valor && valor[idField]) {
                         params[key] = valor[idField];
