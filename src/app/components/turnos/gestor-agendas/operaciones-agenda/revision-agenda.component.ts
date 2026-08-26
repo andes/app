@@ -133,6 +133,10 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         if (this.turnoSeleccionado) {
             this.turnoSeleccionado.paciente = pacienteTurno;
             this.turnoSeleccionado.estado = estado;
+            this.turnoSeleccionado.tipoTurno = 'delDia';
+            this.turnoSeleccionado.emitidoPor = 'Gestión de pacientes - auditoria';
+            this.turnoSeleccionado.fechaHoraDacion = new Date();
+            this.turnoSeleccionado.usuarioDacion = this.auth.usuario;
         }
         if (this.financiador) {
             this.turnoSeleccionado.paciente.obraSocial = this.financiador;

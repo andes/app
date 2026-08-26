@@ -6,11 +6,17 @@
                     <plex-badge type="info">
                         Protocolo {{protocolo.data.numero}}
                     </plex-badge>
-                    <plex-badge *ngIf="protocolo.data?.estado === 'EnProceso'" type="info">
+                    <plex-badge *ngIf="protocolo.data?.estado === 'EnProceso'" type="warning">
                         En Proceso
                     </plex-badge>
+                    <plex-badge *ngIf="protocolo.data?.estado === 'ConResultados'" type="info">
+                        Con resultados
+                    </plex-badge>
+                    <plex-badge *ngIf="protocolo.data?.estado === 'Terminado'" type="success">
+                        Terminado
+                    </plex-badge>
                 </div>
-                <b class="mt-1">{{protocolo.data.fecha | date: 'dd/MM/yyyy HH:mm'}}</b>
+                <b class="mt-1">{{protocolo.data?.fecha | date: 'dd/MM/yyyy HH:mm'}}</b>
             </div>
             <div>
                 <plex-grid type="full" cols="3" size="sm">
@@ -22,11 +28,13 @@
                 <plex-grid type="auto" cols="3" size="sm">
                     <div class="datos"><span>Laboratorio</span><b>{{protocolo.data.Laboratorio ||
                             protocolo.data.laboratorio}}</b></div>
-                    <div class="datos"><span>Tipo Muestra:
-                        </span><b *ngIf="protocolo.data.tipoMuestra">{{protocolo.data.tipoMuestra}}</b></div>
+                    <div *ngIf="protocolo.data.tipoMuestra && protocolo.data.tipoMuestra !== ''" class="datos">
+                        <span>Tipo Muestra:
+                        </span><b>{{protocolo.data.tipoMuestra}}</b>
+                    </div>
                     <div class="datos"><span>Prácticas solicitadas:
                         </span><b
-                            *ngIf="protocolo.data.practicasSolicitadas">{{protocolo.data.practicasSolicitadas}}</b>
+                           *ngIf="protocolo.data.practicasSolicitadas">{{protocolo.data.practicasSolicitadas}}</b>
                     </div>
                 </plex-grid>
             </div>
@@ -35,7 +43,7 @@
     <div class="w-100 mt-2">
         <plex-title titulo="Resultados" size="md">
             <plex-button [disabled]="areasLaboratorio.length === 0" type="info" size="sm" icon="download mdi-18px"
-                tooltip="Descargar" (click)="descargarLab()"></plex-button>
+                         tooltip="Descargar" (click)="descargarLab()"></plex-button>
         </plex-title>
 
         <ng-container *ngIf="areasLaboratorio?.length">
@@ -44,7 +52,10 @@
                 <div class="table-header-row">
                     <div class="table-header-col"></div>
                     <div class="table-header-col text-center"><b>Resultado</b></div>
+                    <div class="table-header-col text-center"><b>Unidad de Medida</b></div>
                     <div class="table-header-col text-center"><b>Valor Referencia</b></div>
+                    <div class="table-header-col text-center"><b>Método</b></div>
+                    <div class="table-header-col text-center"><b>Fecha y hora de validación</b></div>
                     <div class="table-header-col text-center"><b>Firma</b></div>
                 </div>
                 <ng-container *ngFor="let unGrupo of area.grupos">
@@ -54,12 +65,16 @@
                             <tbody>
                                 <tr *ngFor="let unItem of unGrupo.items">
                                     <td *ngIf="!unItem.esTitulo"><b>{{unItem.nombre}}</b></td>
-                                    <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.resultado}}
-                                        {{unItem.unidadMedida}}</td>
-                                    <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.valorReferencia}}{{
-                                        unItem.metodo ? '/' + unItem.metodo : '' }}</td>
+                                    <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.resultado}}</td>
+                                    <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.unidadMedida}}</td>
+                                    <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.valorReferencia}}
+                                    </td>
+                                    <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.metodo}}</td>
+                                    <td *ngIf="!unItem.esTitulo" class="text-center">
+                                        {{unItem.fechaHoraValida}}
+                                    </td>
                                     <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.firma}}</td>
-                                    <td class="esTitulo" *ngIf="unItem.esTitulo" colspan="5">
+                                    <td class="esTitulo" *ngIf="unItem.esTitulo" colspan="7">
                                         <b>{{unItem.nombre}}</b>
                                     </td>
                                 </tr>

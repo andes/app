@@ -42,6 +42,14 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     hallazgosNoActivosAux: any;
     filtroActual;
     filtroTrastornos = true;
+    public tabIndexLaboratorio = 0;
+    public filtrosLaboratorio = [
+        { key: 0, label: 'Laboratorio' },
+        { key: 1, label: 'Microbiología' },
+        { key: 2, label: 'CDA' }
+    ];
+    public filtroTipoMuestra = '';
+    public filtroPracticaSolicitada = '';
     public disabledBtnCDA = false;
     public token: string;
     public secondsToUpdate = 0;
@@ -80,6 +88,44 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
     get prestaciones() {
         return this._prestaciones;
+    }
+
+    get laboratoriosFiltrados() {
+        if (!this.laboratorios) { return []; }
+
+        let filtrados = this.laboratorios.filter(lab => {
+            if (this.tabIndexLaboratorio === 0) {
+                return lab.TipoServicio === 'LABORATORIO';
+            } else if (this.tabIndexLaboratorio === 1) {
+                return lab.TipoServicio === 'MICROBIOLOGIA';
+            } else if (this.tabIndexLaboratorio === 2) {
+                return lab.tipo === 'cda';
+            }
+            return true;
+        });
+
+        if (this.tabIndexLaboratorio !== 2) {
+            if (this.tabIndexLaboratorio === 1 && this.filtroTipoMuestra && this.filtroTipoMuestra.length >= 5) {
+                filtrados = filtrados.filter(lab => lab.tipoMuestra && lab.tipoMuestra.toLowerCase().includes(this.filtroTipoMuestra.toLowerCase()));
+            }
+            if (this.filtroPracticaSolicitada && this.filtroPracticaSolicitada.length >= 5) {
+                filtrados = filtrados.filter(lab => lab.practicasSolicitadas && lab.practicasSolicitadas.toLowerCase().includes(this.filtroPracticaSolicitada.toLowerCase()));
+            }
+        }
+
+        return filtrados;
+    }
+
+    getMedicoSolicitante(laboratorio: any) {
+        if (laboratorio?.medicoSolicitante) {
+            return laboratorio.medicoSolicitante;
+        }
+
+        return null;
+    }
+
+    onChangeTabLaboratorio(index) {
+        this.tabIndexLaboratorio = index;
     }
 
     set prestaciones(value) {
@@ -301,10 +347,11 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         { id: 'insumo', nombre: 'Dispositivos / Insumos' },
         { id: 'alimentacion', nombre: 'Alimentación' }
     ];
-    public tipoPrescripcionSeleccionado = this.tiposPrescripcion[0];
-    private ultimoTipoCargado = 'medicamento';
+    public tipoPrescripcionSeleccionado = null;
+    private ultimoTipoCargado = null;
     public fechaInicioRecetas;
     public fechaFinRecetas;
+    public cantidadTotalRecetas = 0;
 
     toogleFiltros() {
         this.showFiltros = !this.showFiltros;
@@ -312,6 +359,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             this.fechaInicio = this.fechaFin = this.prestacionSeleccionada = null;
             this.fechaInicioRecetas = this.fechaFinRecetas = null;
             this.tipoPrescripcionSeleccionado = this.tiposPrescripcion[0];
+            this.filtroTipoMuestra = '';
+            this.filtroPracticaSolicitada = '';
             this.filtrar();
             if (this.filtroActual === 'recetas') {
                 this.filtrarRecetas();
@@ -826,7 +875,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             case 'solicitudes':
                 return this.solicitudesMezcladas.length;
             case 'recetas':
-                return this.busquedaRecetasOriginal?.length;
+                return this.cantidadTotalRecetas;
             case 'registro':
                 return this.registrosTotalesCopia.registro.length;
         }
@@ -1125,6 +1174,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                             conceptId: receta.insumo?.id || receta.insumo?.concepto?.conceptId || '',
                             semanticTag: 'producto'
                         },
+                        tipoReceta: receta.tipoReceta || 'simple',
                         tratamientoProlongado: receta.insumo?.tratamientoProlongado,
                         tiempoTratamiento: receta.insumo?.tiempoTratamiento,
                         cantidad: receta.insumo?.cantidad,
@@ -1146,6 +1196,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                             conceptId: receta.insumo?.id || receta.insumo?.concepto?.conceptId || '',
                             semanticTag: 'producto'
                         },
+                        tipoReceta: receta.tipoReceta || 'simple',
                         tratamientoProlongado: receta.insumo?.tratamientoProlongado,
                         tiempoTratamiento: receta.insumo?.tiempoTratamiento,
                         cantidad: receta.insumo?.cantidad,
@@ -1171,6 +1222,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                             conceptId: receta.insumo?.id || receta.insumo?.concepto?.conceptId || '',
                             semanticTag: 'producto'
                         },
+                        tipoReceta: receta.tipoReceta || 'simple',
                         tratamientoProlongado: receta.insumo?.tratamientoProlongado,
                         tiempoTratamiento: receta.insumo?.tiempoTratamiento,
                         cantidad: receta.insumo?.cantidad,
@@ -1198,6 +1250,9 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 }))
             );
             this.busquedaRecetasOriginal = this.busquedaRecetas;
+            if (!tipo) {
+                this.cantidadTotalRecetas = this.busquedaRecetasOriginal.length;
+            }
             this.filtrarRecetas();
         });
     }

@@ -55,8 +55,6 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     public eclPresentaciones;
     public eclMedicamentosComerciales;
     public eclUnidadesFiltro;
-    public requiereDosis = false;
-    public requiereIntervalo = false;
 
     // Propiedades para manejo de obras sociales
     public financiadoresPaciente: IObraSocial[] = [];
@@ -180,11 +178,6 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
         if ($event?.value?.id === 'otro') {
             this.ingresoCantidadManual = true;
         }
-    }
-
-    changeDosisIntervalo() {
-        this.requiereDosis = !!this.medicamento?.dosisDiaria?.intervalo;
-        this.requiereIntervalo = !!this.medicamento?.dosisDiaria?.dosis;
     }
 
     deshacerCantidadManual() {

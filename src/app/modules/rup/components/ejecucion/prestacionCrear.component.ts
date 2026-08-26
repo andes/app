@@ -4,7 +4,7 @@ import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
-import { concat, forkJoin, switchMap } from 'rxjs';
+import { concat, forkJoin, map, Observable, switchMap } from 'rxjs';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
@@ -15,6 +15,7 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
+import { PacientesConsentimientoService } from 'src/app/services/paciente-concentimiento.service';
 
 @Component({
     selector: 'prestacion-crear',
@@ -48,6 +49,8 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
     public disableGuardar = false;
     public resultadoBusqueda = null;
     public tieneAccesoHUDS: Boolean;
+    public pacienteMas65: boolean;
+    public permisoProgramaMas65: boolean;
     /**
      * Indica si muestra el calendario para dar turno autocitado
      */
@@ -62,12 +65,14 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
         private pacienteService: PacienteService,
         private hudsService: HUDSService,
         private pacienteRestringido: PacienteRestringidoPipe,
-        public motivosHudsService: MotivosHudsService
+        public motivosHudsService: MotivosHudsService,
+        private pacientesConsentimientoService: PacientesConsentimientoService
 
     ) { }
 
     ngOnInit() {
         this.tieneAccesoHUDS = this.auth.check('huds:visualizacionHuds');
+        this.permisoProgramaMas65 = this.auth.check('huds:programaMas65');
 
         this.plex.updateTitle([{
             route: '/',
@@ -111,6 +116,45 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
             this.plex.info('warning', 'Debe seleccionar un paciente');
             return;
         }
+    }
+
+    habilitarIniciarPrestacion() {
+        return (!this.paciente?.id && !this.tipoPrestacionSeleccionada?.noNominalizada && this.permisoProgramaMas65);
+    }
+
+    programaMas65(paciente: IPaciente): Observable<boolean> {
+        return this.pacientesConsentimientoService.search({ pacienteId: paciente.id }).pipe(
+            map((consentimiento: any) => {
+                if (!consentimiento || (consentimiento.encontrado !== undefined && !consentimiento.encontrado)) {
+                    this.plex.info('warning', 'Usted no posee permisos para visualizar la historia de ese paciente');
+                    return false;
+                }
+
+                const listado = Array.isArray(consentimiento) ? consentimiento : [consentimiento];
+                const consentimientosCuidar65 = listado.filter((c: any) => c && c.programa === 'Cuidar65');
+
+                if (consentimientosCuidar65.length === 0) {
+                    this.plex.info('warning', 'Usted no posee permisos para visualizar la historia de ese paciente');
+                    return false;
+                }
+
+                // Ordenar por fechaResp descendente (el más reciente primero)
+                consentimientosCuidar65.sort((a, b) => {
+                    const dateA = a.fechaResp ? new Date(a.fechaResp).getTime() : 0;
+                    const dateB = b.fechaResp ? new Date(b.fechaResp).getTime() : 0;
+                    return dateB - dateA;
+                });
+
+                const masReciente = consentimientosCuidar65[0];
+
+                if (masReciente.aceptacion) {
+                    return true;
+                } else {
+                    this.plex.info('warning', 'Este paciente rechazo el programa "Cuidar + 65"');
+                    return false;
+                }
+            })
+        );
     }
 
     /**
@@ -354,11 +398,23 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
         // Es un paciente existente en ANDES??
         if (paciente && paciente.id) {
             if (!this.esPacienteRestringido(paciente)) {
-                // Si se seleccionó por error un paciente fallecido
-                this.pacienteService.checkFallecido(paciente);
-                this.paciente = paciente;
-                this.resultadoBusqueda = [this.paciente];
-                this.darTurnoAutocitado();
+                if (this.permisoProgramaMas65) {
+                    this.programaMas65(paciente).subscribe(esMas65 => {
+                        this.pacienteMas65 = esMas65;
+                        if (this.pacienteMas65) {
+                            this.pacienteService.checkFallecido(paciente);
+                            this.paciente = paciente;
+                            this.resultadoBusqueda = [this.paciente];
+                            this.darTurnoAutocitado();
+                        }
+                    });
+                } else {
+                    // Si se seleccionó por error un paciente fallecido
+                    this.pacienteService.checkFallecido(paciente);
+                    this.paciente = paciente;
+                    this.resultadoBusqueda = [this.paciente];
+                    this.darTurnoAutocitado();
+                }
             } else {
                 this.plex.info('warning', 'No tiene permisos para acceder a este paciente.');
             }

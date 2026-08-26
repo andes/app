@@ -1,3 +1,17 @@
+## [5.173.4](https://github.com/andes/app/compare/v5.173.3...v5.173.4) (2026-08-12)
+
+
+### Bug Fixes
+
+* **EP:** Cambia las condiciones por edad para clasificación ([#3391](https://github.com/andes/app/issues/3391)) ([32120e8](https://github.com/andes/app/commit/32120e86af70fb5df8a4a5deaac73cc83d89a765))
+
+## [5.173.3](https://github.com/andes/app/compare/v5.173.2...v5.173.3) (2026-07-29)
+
+
+### Bug Fixes
+
+* **REC-262:** correccion de suspencion en tp insumos ([#3385](https://github.com/andes/app/issues/3385)) ([35cd410](https://github.com/andes/app/commit/35cd410ade13b7f1090b95c875f1d9ac022f2875))
+
 ## [5.173.2](https://github.com/andes/app/compare/v5.173.1...v5.173.2) (2026-07-01)
 
 
