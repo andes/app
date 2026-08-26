@@ -163,7 +163,7 @@
                 <plex-grid responsive type="full" cols="2" colsSm="1" colsMd="2">
                     <div *ngFor="let unaPrestacion of elementoActivo.tipoPrestaciones; let i=index">
                         <plex-bool [(ngModel)]="elementoActivo.tipoPrestaciones[i].activo" [name]=" 'activo' +
-                               i" label="{{unaPrestacion.nombre}}" type="slide">
+                               i" label="{{unaPrestacion.nombre}}" type="slide" (change)="onCambioPrestacionBloque()">
                         </plex-bool>
                     </div>
                 </plex-grid>
@@ -175,12 +175,13 @@
                         <div direction="column">
                             <label>DEL DÍA</label>
                             <plex-grid responsive type="full" cols="2">
-                                <plex-int [(ngModel)]="elementoActivo.accesoDirectoDelDia" [min]="0" [required]="true"
-                                          (keyup)="cambiaCantTipo( 'accesoDirectoDelDia' )" name="accesoDirectoDelDia">
+                                <plex-int [(ngModel)]="elementoActivo.accesoDirectoDelDia" [min]="0" [type]="disabled"
+                                          (keyup)="cambiaCantTipo( 'accesoDirectoDelDia' )"
+                                          [disabled]="tieneTeleconsulta()" name="accesoDirectoDelDia">
                                 </plex-int>
                                 <plex-int [(ngModel)]="elementoActivo.accesoDirectoDelDiaPorc" [min]="0"
-                                          (keyup)="cambiaPorcentajeTipo( 'accesoDirectoDelDia' )"
-                                          name="accesoDirectoDelDiaPorc">
+                                          (keyup)="cambiaPorcentajeTipo( 'accesoDirectoDelDia' )" [type]="disabled"
+                                          [disabled]="tieneTeleconsulta()" name="accesoDirectoDelDiaPorc">
                                     <span right>%</span>
                                 </plex-int>
                             </plex-grid>
@@ -207,11 +208,12 @@
                             <label>CON LLAVE</label>
                             <plex-grid responsive type="full" cols="2">
                                 <plex-int [(ngModel)]="elementoActivo.reservadoGestion" [min]="0" [required]="true"
-                                          (keyup)="cambiaCantTipo( 'reservadoGestion')" name="reservadoGestion">
+                                          [disabled]="tieneTeleconsulta()" (keyup)="cambiaCantTipo('reservadoGestion')"
+                                          name="reservadoGestion">
                                 </plex-int>
                                 <plex-int [(ngModel)]="elementoActivo.reservadoGestionPorc" [min]="0"
-                                          (keyup)="cambiaPorcentajeTipo( 'reservadoGestion')"
-                                          name="reservadoGestionporc">
+                                          (keyup)="cambiaPorcentajeTipo('reservadoGestion')"
+                                          [disabled]="tieneTeleconsulta()" name="reservadoGestionporc">
                                     <span right>%</span>
                                 </plex-int>
                             </plex-grid>
@@ -220,11 +222,11 @@
                             <label>PARA PROFESIONAL</label>
                             <plex-grid responsive type="full" cols="2">
                                 <plex-int [(ngModel)]="elementoActivo.reservadoProfesional" [min]="0" [required]="true"
-                                          (keyup)="cambiaCantTipo( 'reservadoProfesional')" name="reservadoProfesional">
+                                          [disabled]="tieneTeleconsulta()" name="reservadoProfesional">
                                 </plex-int>
                                 <plex-int [(ngModel)]="elementoActivo.reservadoProfesionalPorc" [min]="0"
                                           (keyup)="cambiaPorcentajeTipo( 'reservadoProfesional')"
-                                          name="progReservadoPorc">
+                                          name="progReservadoPorc " [disabled]="tieneTeleconsulta()">
                                     <span right class="prueba">%</span>
                                 </plex-int>
                             </plex-grid>
@@ -248,10 +250,10 @@
                     <div *ngIf="mostrarCanalAcceso()" class="disponibilidad-box mt-3">
                         <label class="disponibilidad-box__title">¿POR DÓNDE SE DAN ESTOS TURNOS?</label>
                         <div *ngIf="!elementoActivo.appMobile && !elementoActivo.citasVirtuales"
-                             class="alert alert-warning mt-2 py-1 px-2" role="alert"
+                             class="alert alert-info mt-2 py-1 px-2" role="alert"
                              style="font-size:0.85em ; font-weight: bold; width: 50%;">
-                            <plex-icon name="alert" size="sm"></plex-icon>
-                            Seleccioná al menos un canal de acceso.
+                            <plex-icon name="information-circle" size="sm"></plex-icon>
+                            Elija dónde se pueden ver estos turnos (opcional).
                         </div>
                         <plex-grid cols="2" type="full">
                             <plex-bool [(ngModel)]="elementoActivo.appMobile" label="Mobile (App)" name="appMobile"

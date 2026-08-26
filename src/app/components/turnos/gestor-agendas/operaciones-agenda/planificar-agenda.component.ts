@@ -527,6 +527,7 @@ export class PlanificarAgendaComponent implements OnInit {
                     this.elementoActivo.reservadoProfesional = Math.floor((this.elementoActivo.reservadoProfesionalPorc * this.elementoActivo.cantidadTurnos) / 100);
                     break;
             }
+            this.verificarCanalAcceso();
         }
         this.validarTodo();
     }
@@ -590,13 +591,13 @@ export class PlanificarAgendaComponent implements OnInit {
         if (!bloque || !bloque.tipoPrestaciones) {
             return false;
         }
-        return bloque.tipoPrestaciones.some(p => p.activo && (
-            p.teleConsulta || p.teleconsulta ||
-            (p.nombre && p.nombre.toLowerCase().includes('telemedicina')) ||
-            (p.term && p.term.toLowerCase().includes('telemedicina')) ||
-            (p.nombre && p.nombre.toLowerCase().includes('teleconsulta')) ||
-            (p.term && p.term.toLowerCase().includes('teleconsulta'))
-        ));
+        return bloque.tipoPrestaciones.some(p => p.activo && this.esTelemedicinaAsincronica(p));
+    }
+
+    private esTelemedicinaAsincronica(prestacion: any): boolean {
+        const term = (prestacion.term || '').toLowerCase();
+        const nombre = (prestacion.nombre || '').toLowerCase();
+        return term.includes('telemedicina asincr') || nombre.includes('telemedicina asincr');
     }
 
     mostrarCanalAcceso(bloque = this.elementoActivo): boolean {
@@ -769,11 +770,6 @@ export class PlanificarAgendaComponent implements OnInit {
                         }
                     }
                 });
-
-                if (this.mostrarCanalAcceso(bloque) && !bloque.appMobile && !bloque.citasVirtuales) {
-                    alerta = 'Bloque ' + (bloque.indice + 1) + ': Debe seleccionar al menos un canal de acceso para los turnos virtuales.';
-                    this.alertas.push(alerta);
-                }
             });
         }
     }
@@ -1020,6 +1016,25 @@ export class PlanificarAgendaComponent implements OnInit {
             return true;
         } else {
             return (arrayTP.length === 1);
+        }
+    }
+
+    onCambioPrestacionBloque() {
+        if (this.tieneTeleconsulta()) {
+            this.elementoActivo.accesoDirectoDelDia = 0;
+            this.elementoActivo.accesoDirectoDelDiaPorc = 0;
+            this.elementoActivo.reservadoGestion = 0;
+            this.elementoActivo.reservadoGestionPorc = 0;
+            this.elementoActivo.reservadoProfesional = 0;
+            this.elementoActivo.reservadoProfesionalPorc = 0;
+            this.validarTodo();
+        }
+    }
+
+    verificarCanalAcceso() {
+        if (!this.mostrarCanalAcceso()) {
+            this.elementoActivo.appMobile = false;
+            this.elementoActivo.citasVirtuales = false;
         }
     }
 
