@@ -1,5 +1,6 @@
 import { Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';
 
@@ -21,7 +22,8 @@ export class HUDSService {
     private hudsUrl = '/modules/huds/accesos';
 
     constructor(
-        private server: Server
+        private server: Server,
+        private router: Router
     ) { }
 
     /**
@@ -131,7 +133,44 @@ export class HUDSService {
     * Genera un token para el acceso a la HUDS de un paciente
     */
     generateHudsToken(paramsToken) {
-        return this.server.post(this.hudsUrl + '/token', paramsToken);
+        return this.server.post(this.hudsUrl + '/token', {
+            ...paramsToken,
+            modulo: paramsToken.modulo || this.getModuloActual()
+        });
+    }
+
+    private getModuloActual(): string {
+        const url = this.router.url.split('?')[0];
+
+        if (url.startsWith('/mapa-camas') || url.startsWith('/internacion')) {
+            return 'Internación';
+        }
+        if (url.startsWith('/apps/mpi')) {
+            return 'MPI';
+        }
+        if (url.startsWith('/buscador')) {
+            return 'Turnos y prestaciones';
+        }
+        if (url.startsWith('/solicitudes')) {
+            return 'Solicitudes';
+        }
+        if (url.startsWith('/citas')) {
+            return 'CITAS';
+        }
+        if (url.startsWith('/rup')) {
+            return 'RUP';
+        }
+        if (url.startsWith('/huds')) {
+            return 'HUDS';
+        }
+        if (url.startsWith('/epidemiologia')) {
+            return 'Epidemiología';
+        }
+        if (url.startsWith('/visualizacion-informacion')) {
+            return 'Visualización de información';
+        }
+
+        return 'ANDES';
     }
 
     getTiempoRestante(params: any): Observable<any> {
@@ -170,4 +209,3 @@ export class HUDSService {
         return { relacionesOrdenadas, registrosDeep };
     }
 }
-
