@@ -1,5 +1,5 @@
 import { Unsubscribe } from '@andes/shared';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnChanges, OnInit, ViewChild, SimpleChanges } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { RupElement } from '.';
 import { IObraSocial } from '../../../../interfaces/IObraSocial';
@@ -12,7 +12,7 @@ import { RUPComponent } from '../core/rup.component';
 
 @RupElement('PrescripcionInsumoComponent')
 
-export class PrescripcionInsumoComponent extends RUPComponent implements OnInit {
+export class PrescripcionInsumoComponent extends RUPComponent implements OnInit, OnChanges {
     @ViewChild('formInsumo') formInsumo: NgForm;
 
     public insumo: any = {
@@ -74,11 +74,13 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit 
             this.eclInsumos = query.filter(q => q.key === 'receta:dispositivos');
         });
 
-        setTimeout(() => {
-            this.cargarObrasSocialesPaciente();
-        }, 100);
-
         if (this.paciente) {
+            this.cargarObrasSocialesPaciente();
+        }
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.paciente && changes.paciente.currentValue) {
             this.cargarObrasSocialesPaciente();
         }
     }
@@ -93,7 +95,7 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit 
                 'tipo': this.params.type || ''
             };
 
-            this.insumosService.getInsumos(query).subscribe(
+            return this.insumosService.getInsumos(query).subscribe(
                 event.callback);
 
         } else {
@@ -236,8 +238,9 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit 
         this.cargarOpcionesFinanciadores();
     }
 
+    @Unsubscribe()
     private cargarOpcionesFinanciadores() {
-        this.obraSocialService.getListado({}).subscribe((financiadores: any[]) => {
+        return this.obraSocialService.getListado({}).subscribe((financiadores: any[]) => {
             const financiadoresExistentes = [
                 ...this.financiadoresPaciente.map((f) => f.nombre)
             ];
