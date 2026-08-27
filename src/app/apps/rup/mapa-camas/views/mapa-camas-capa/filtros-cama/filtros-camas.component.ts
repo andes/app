@@ -11,6 +11,8 @@ import { MapaCamasService } from '../../../services/mapa-camas.service';
 })
 export class FiltrosCamasComponent implements OnInit {
 
+    @Input() filtroCompleto = true;
+
     public unidadOrganizativaList$: Observable<any[]>;
     public sectorList$: Observable<any[]>;
     public tipoCamaList$: Observable<any[]>;
