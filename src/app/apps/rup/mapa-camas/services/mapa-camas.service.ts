@@ -353,7 +353,6 @@ export class MapaCamasService {
         this.esCensable.next(null);
         this.mostrarTodasCamas.next(false);
         this.censableSelected.next(null);
-        
         this.capa2.next(capa);
         this.capa = capa;
     }
@@ -403,10 +402,9 @@ export class MapaCamasService {
                     snap.paciente.documento.includes(paciente) || snap.paciente.numeroIdentificacion?.includes(paciente));
             } else {
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
-                (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                    snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
                     snap.paciente.alias?.toLowerCase().includes(paciente.toLowerCase()) ||
-                    snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
-                );
+                    snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()));
             }
         }
 
