@@ -159,8 +159,8 @@
         <plex-item *ngFor="let item of registro.valor.medicamentos">
             <plex-icon size="md" *ngIf="true" name="pildoras" class="icon icon--border--producto mr-2">
             </plex-icon>
-            <plex-label [tituloBold]="true" titulo="{{ item.generico.term }}"
-                        subtitulo="{{ item.cantEnvases }} envase(s){{ item.cantidad ? ' de ' + item.cantidad + ' ' + (item.esMagistral ? (item.generico?.unidadMedida || '') : (item.presentacion?.term ? item.presentacion.term + '(s)' : '(s)')) : '' }}{{ item.dosisDiaria?.dosis || item.dosisDiaria?.intervalo || item.dosisDiaria?.dias ? ' | ' : '' }}{{ item.dosisDiaria?.dosis ? item.dosisDiaria.dosis : '' }}{{ item.dosisDiaria?.intervalo ? ' cada ' + item.dosisDiaria.intervalo.nombre : '' }}{{ item.dosisDiaria?.dias ? ' durante ' + item.dosisDiaria.dias + ' día(s)' : '' }}"></plex-label>
+            <plex-label [tituloBold]="true" titulo="{{ item.esMagistral ? (item.magistral?.nombre || item.generico?.nombre || item.generico?.term) : item.generico?.term }}"
+                        subtitulo="{{ item.cantEnvases }} envase(s){{ item.cantidad ? ' de ' + item.cantidad + ' ' + (item.esMagistral ? (item.magistral?.unidadMedida || item.generico?.unidadMedida || '') : (item.presentacion?.term ? item.presentacion.term + '(s)' : '(s)')) : '' }}{{ item.dosisDiaria?.dosis || item.dosisDiaria?.intervalo || item.dosisDiaria?.dias ? ' | ' : '' }}{{ item.dosisDiaria?.dosis ? item.dosisDiaria.dosis : '' }}{{ item.dosisDiaria?.intervalo ? ' cada ' + item.dosisDiaria.intervalo.nombre : '' }}{{ item.dosisDiaria?.dias ? ' durante ' + item.dosisDiaria.dias + ' día(s)' : '' }}"></plex-label>
             <plex-badge *ngIf="item.diagnostico" size="sm" type="warning" hintType="warning">
                 {{ item.diagnostico.term | truncate }}
             </plex-badge>
@@ -180,8 +180,8 @@
     <div *ngIf="soloValores && alerta" class="alerta">{{alerta}}</div>
     <plex-list size="md" *ngIf="registro.valor.medicamentos">
         <plex-item *ngFor="let item of registro.valor.medicamentos">
-            <plex-label [tituloBold]="true" titulo="{{ item.generico.term }}"
-                        subtitulo="{{ item.cantEnvases }} envase(s){{ item.cantidad ? ' de ' + item.cantidad + ' ' + (item.esMagistral ? (item.generico?.unidadMedida || '') : (item.presentacion?.term ? item.presentacion.term + '(s)' : '(s)')) : '' }}{{ item.dosisDiaria?.dosis || item.dosisDiaria?.intervalo || item.dosisDiaria?.dias ? ' | ' : '' }}{{ item.dosisDiaria?.dosis ? item.dosisDiaria.dosis : '' }}{{ item.dosisDiaria?.intervalo ? ' cada ' + item.dosisDiaria.intervalo.nombre : '' }}{{ item.dosisDiaria?.dias ? ' durante ' + item.dosisDiaria.dias + ' día(s)' : '' }}"></plex-label>
+            <plex-label [tituloBold]="true" titulo="{{ item.esMagistral ? (item.magistral?.nombre || item.generico?.nombre || item.generico?.term) : item.generico?.term }}"
+                        subtitulo="{{ item.cantEnvases }} envase(s){{ item.cantidad ? ' de ' + item.cantidad + ' ' + (item.esMagistral ? (item.magistral?.unidadMedida || item.generico?.unidadMedida || '') : (item.presentacion?.term ? item.presentacion.term + '(s)' : '(s)')) : '' }}{{ item.dosisDiaria?.dosis || item.dosisDiaria?.intervalo || item.dosisDiaria?.dias ? ' | ' : '' }}{{ item.dosisDiaria?.dosis ? item.dosisDiaria.dosis : '' }}{{ item.dosisDiaria?.intervalo ? ' cada ' + item.dosisDiaria.intervalo.nombre : '' }}{{ item.dosisDiaria?.dias ? ' durante ' + item.dosisDiaria.dias + ' día(s)' : '' }}"></plex-label>
             <plex-badge *ngIf="item.diagnostico" size="sm" type="warning" hintType="warning">
                 {{ item.diagnostico.term | truncate }}
             </plex-badge>

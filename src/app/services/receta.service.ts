@@ -83,7 +83,7 @@ export class RecetaService {
     getLabel(recetas: any[]) {
         const receta = this.getUltimaReceta(recetas);
 
-        let label = receta.medicamento.concepto.term;
+        let label = receta.medicamento.nombre || receta.medicamento.concepto?.term || '';
         if (label.length > 30) {
             label = label.substring(0, 30) + '...';
         }
