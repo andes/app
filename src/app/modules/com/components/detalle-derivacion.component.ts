@@ -10,6 +10,8 @@ import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { AdjuntosService } from '../../rup/services/adjuntos.service';
 import { PrestacionesService } from '../../rup/services/prestaciones.service';
 import { DerivacionesService } from './../../../services/com/derivaciones.service';
+import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
 @Component({
     selector: 'detalle-derivacion',
@@ -49,6 +51,11 @@ export class DetalleDerivacionComponent implements OnInit {
     set _derivacion(value) {
         this.derivacion = value;
         this.dispositivo = value.dispositivo;
+        this.financiador = value.paciente?.ObraSocial || value.paciente?.obraSocial || value.obraSocial || null;
+        this.financiadorActual = this.financiador;
+        if (value?.paciente?.id) {
+            this.pacienteService.getById(value.paciente.id).subscribe((pac: any) => this.paciente = pac);
+        }
         this.adjuntosService.generateToken().subscribe((data: any) => {
             this.fileToken = data.token;
             this.reglaSeleccionada = {};
@@ -78,6 +85,10 @@ export class DetalleDerivacionComponent implements OnInit {
     public nuevoEstado;
     public esCOM = false;
     requestInProgress;
+    public puedeVerHuds = false;
+    public financiador;
+    public financiadorActual;
+    public paciente: any;
 
     constructor(
         private servicioPrestacion: PrestacionesService,
@@ -89,11 +100,14 @@ export class DetalleDerivacionComponent implements OnInit {
         public driveService: DriveService,
         private adjuntosService: AdjuntosService,
         private documentosService: DocumentosService,
-        public router: Router
+        public router: Router,
+        private motivoAccesoService: ModalMotivoAccesoHudsService,
+        private pacienteService: PacienteService
     ) { }
 
     ngOnInit() {
         this.extensions = this.extensions.concat(this.imagenes);
+        this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
         this.getOrganizacionesDerivables();
     }
 
@@ -172,15 +186,14 @@ export class DetalleDerivacionComponent implements OnInit {
             if (!this.reglaSeleccionada.definePrioridad) {
                 delete this.nuevoEstado.prioridad;
             }
-            this.nuevoEstado.dispositivo = this.derivacion.dispositivo;
+            const obraSocialOrigen = this.financiadorActual || this.derivacion.paciente?.ObraSocial || this.derivacion.paciente?.obraSocial || this.derivacion.obraSocial || null;
+            if (JSON.stringify(this.financiador || null) !== JSON.stringify(obraSocialOrigen || null)) {
+                const valorOS = this.financiador?.nombre === 'Sin obra social' ? null : this.financiador;
+                this.nuevoEstado.ObraSocial = valorOS;
+                this.nuevoEstado.paciente = { ObraSocial: valorOS };
+            }
             this.derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
-            const body: any = {
-                estado: this.nuevoEstado,
-                trasladoEspecial: {
-                    tipoTraslado: this.derivacion.tipoTraslado,
-                    organizacionTraslado: this.derivacion.organizacionTraslado
-                }
-            };
+            const body: any = { estado: this.nuevoEstado };
 
             this.derivacionService.updateHistorial(this.derivacion._id, body).subscribe(() => {
                 this.plex.toast('success', 'La derivación fue actualizada exitosamente');
@@ -230,5 +243,17 @@ export class DetalleDerivacionComponent implements OnInit {
 
     cerrar() {
         this.returnDetalle.emit(false);
+    }
+
+    showMotivoAcceso() {
+        this.motivoAccesoService.showMotivos(this.derivacion.paciente).subscribe(motivo => {
+            if (motivo) {
+                this.router.navigate(['/huds/paciente/', this.derivacion.paciente.id], { queryParams: { origen: 'com' } });
+            }
+        });
+    }
+
+    setFinanciador(financiador) {
+        this.financiador = financiador;
     }
 }

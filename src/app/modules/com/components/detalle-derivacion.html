@@ -1,4 +1,7 @@
 <plex-title main titulo="Detalle de Derivación">
+    <plex-button *ngIf="puedeVerHuds" size="sm" class="pr-1" type="info" icon="historial" tooltip="HUDS del paciente"
+                 (click)="showMotivoAcceso()">
+    </plex-button>
     <plex-button size="sm" class="pr-1" type="info" [icon]="'printer'" title="Imprimir histórico de derivación"
                  [disabled]="requestInProgress" (click)="imprimirHistorial()">
     </plex-button>
@@ -34,17 +37,11 @@
         <plex-label *ngIf='derivacion.unidadDestino' titulo="Unidad destino"
                     subtitulo="{{derivacion.unidadDestino.term}}">
         </plex-label>
-        <plex-label *ngIf='derivacion.organizacionTraslado' titulo="Traslado"
-                    subtitulo="{{derivacion.organizacionTraslado.nombre}}">
-        </plex-label>
-        <plex-label *ngIf='derivacion.tipoTraslado' titulo="Tipo de traslado"
-                    subtitulo="{{derivacion.tipoTraslado.nombre}}">
-        </plex-label>
-        <plex-label *ngIf='derivacion.dispositivo' titulo="Dispositivo de soporte de oxígeno"
-                    subtitulo="{{derivacion.dispositivo.nombre}}: {{derivacion.dispositivo.descripcion}}">
-        </plex-label>
         <plex-label *ngIf='derivacion.estrategiaAtencion' titulo="Estrategia de atención"
                     subtitulo="{{derivacion.estrategiaAtencion.nombre}}">
+        </plex-label>
+        <plex-label *ngIf="derivacion.paciente?.ObraSocial " titulo="Cobertura"
+                    subtitulo="{{(derivacion.paciente?.ObraSocial ).nombre}}">
         </plex-label>
         <plex-label titulo="Creada por" subtitulo="{{derivacion.createdBy | nombre}}">
         </plex-label>
@@ -107,12 +104,13 @@
                              label="Unidad destino" idField="conceptId" placeholder="Seleccione la unidad destino"
                              labelField="term" grow="full" [disabled]="!unidadesDestino.length">
                 </plex-select>
-                <dispositivo [modelo]="derivacion" [tipo]="oxigeno" grow="full"></dispositivo>
-                <tipo-traslado *ngIf="reglaSeleccionada?.modificaDestino" [derivacion]="derivacion" grow="full">
-                </tipo-traslado>
-                <semaforo-priorizacion *ngIf="reglaSeleccionada?.definePrioridad" [name]="'com'"
+                <semaforo-priorizacion *ngIf="reglaSeleccionada?.definePrioridad" [name]="'recc'"
                                        [prioridad]="nuevoEstado.prioridad"
                                        (change)="nuevoEstado.prioridad = $event?.label"></semaforo-priorizacion>
+                <seleccionar-financiador *ngIf="paciente" [paciente]="paciente" [financiadorActual]="financiadorActual"
+                                         (setFinanciador)="setFinanciador($event)" grow="full">
+                </seleccionar-financiador>
+                <plex-loader *ngIf="!paciente" type="ball-pulse"></plex-loader>
                 <plex-text [(ngModel)]="nuevoEstado.observacion" label="Observacion" name="observacion" multiline="true"
                            grow="full">
                 </plex-text>
