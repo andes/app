@@ -10,6 +10,8 @@ import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { AdjuntosService } from '../../rup/services/adjuntos.service';
 import { PrestacionesService } from '../../rup/services/prestaciones.service';
 import { DerivacionesService } from './../../../services/com/derivaciones.service';
+import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
 @Component({
     selector: 'detalle-derivacion',
@@ -49,6 +51,11 @@ export class DetalleDerivacionComponent implements OnInit {
     set derivacion(value) {
         this._derivacion = value;
         this.dispositivo = value.dispositivo;
+        this.financiador = value.paciente?.ObraSocial || value.paciente?.obraSocial || value.obraSocial || null;
+        this.financiadorActual = this.financiador;
+        if (value?.paciente?.id) {
+            this.pacienteService.getById(value.paciente.id).subscribe((pac: any) => this.paciente = pac);
+        }
         this.adjuntosService.generateToken().subscribe((data: any) => {
             this.fileToken = data.token;
             this.reglaSeleccionada = {};
@@ -85,6 +92,10 @@ export class DetalleDerivacionComponent implements OnInit {
     public esCOM = false;
     public organizacionCOM = null;
     requestInProgress;
+    public puedeVerHuds = false;
+    public financiador;
+    public financiadorActual;
+    public paciente: any;
 
     constructor(
         private servicioPrestacion: PrestacionesService,
@@ -96,11 +107,14 @@ export class DetalleDerivacionComponent implements OnInit {
         public driveService: DriveService,
         private adjuntosService: AdjuntosService,
         private documentosService: DocumentosService,
-        public router: Router
+        public router: Router,
+        private motivoAccesoService: ModalMotivoAccesoHudsService,
+        private pacienteService: PacienteService
     ) { }
 
     ngOnInit() {
         this.extensions = this.extensions.concat(this.imagenes);
+        this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
         this.getOrganizacionesDerivables();
     }
 
@@ -264,5 +278,17 @@ export class DetalleDerivacionComponent implements OnInit {
 
     cerrar() {
         this.returnDetalle.emit(false);
+    }
+
+    showMotivoAcceso() {
+        this.motivoAccesoService.showMotivos(this.derivacion.paciente).subscribe(motivo => {
+            if (motivo) {
+                this.router.navigate(['/huds/paciente/', this.derivacion.paciente.id], { queryParams: { origen: 'com' } });
+            }
+        });
+    }
+
+    setFinanciador(financiador) {
+        this.financiador = financiador;
     }
 }
