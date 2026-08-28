@@ -5,6 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { DriveService } from 'src/app/services/drive.service';
 import { DerivacionesService } from './../../../services/com/derivaciones.service';
 import { AdjuntosService } from './../../rup/services/adjuntos.service';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
 @Component({
     selector: 'actualizar-estado',
@@ -13,7 +14,7 @@ import { AdjuntosService } from './../../rup/services/adjuntos.service';
 })
 export class ActualizarEstadoDerivacionComponent implements OnInit {
     @ViewChildren('upload') childsComponents: QueryList<any>;
-    public _derivacion;
+    public derivacion;
     // Adjuntar Archivo
     errorExt = false;
     waiting = false;
@@ -34,18 +35,23 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
         { id: 'especial', label: 'Especial' }
     ];
     @Input() esCOM = false;
-    @Input()
-    set derivacion(value) {
+    public financiador;
+    public financiadorActual;
+    public paciente: any;
+    @Input('derivacion')
+    set _derivacion(value) {
         this.nuevoEstado = {
             observacion: '',
             prioridad: value.prioridad
         };
         this.dispositivo = value.dispositivo;
+        this.financiador = value.paciente?.ObraSocial || value.paciente?.obraSocial || value.obraSocial || null;
+        this.financiadorActual = this.financiador;
         this.adjuntosEstado = [];
-        this._derivacion = value;
-    }
-    get derivacion() {
-        return this._derivacion;
+        this.derivacion = value;
+        if (value?.paciente?.id) {
+            this.pacienteService.getById(value.paciente.id).subscribe((pac: any) => this.paciente = pac);
+        }
     }
 
     @Output() returnEditarEstado: EventEmitter<any> = new EventEmitter<any>();
@@ -55,7 +61,8 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
         public sanitazer: DomSanitizer,
         private derivacionService: DerivacionesService,
         public plex: Plex,
-        private driveService: DriveService
+        private driveService: DriveService,
+        private pacienteService: PacienteService
     ) { }
 
     ngOnInit() {
@@ -73,10 +80,15 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
                 delete this.nuevoEstado.prioridad;
             }
 
-            this.nuevoEstado.dispositivo = this.derivacion.dispositivo;
+            const obraSocialOrigen = this.financiadorActual || this.derivacion.paciente?.ObraSocial || this.derivacion.paciente?.obraSocial || this.derivacion.obraSocial || null;
+            if (JSON.stringify(this.financiador || null) !== JSON.stringify(obraSocialOrigen || null)) {
+                const valorOS = this.financiador?.nombre === 'Sin obra social' ? null : this.financiador;
+                this.nuevoEstado.ObraSocial = valorOS;
+                this.nuevoEstado.obraSocial = valorOS;
+                this.nuevoEstado.paciente = { ObraSocial: valorOS, obraSocial: valorOS };
+            }
 
-            const body = { estado: this.nuevoEstado };
-
+            const body: any = { estado: this.nuevoEstado };
             this.derivacionService.updateHistorial(this.derivacion._id, body).subscribe(() => {
                 this.plex.toast('success', 'La derivación fue actualizada exitosamente');
                 this.returnEditarEstado.emit(true);
@@ -113,5 +125,9 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
 
     cerrar() {
         this.returnEditarEstado.emit(false);
+    }
+
+    setFinanciador(financiador) {
+        this.financiador = financiador;
     }
 }
