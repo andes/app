@@ -25,9 +25,12 @@
     <plex-title size="sm" titulo="Actualizar">
     </plex-title>
     <plex-wrapper>
-        <dispositivo [modelo]="derivacion" [tipo]="oxigeno" grow="full"></dispositivo>
         <semaforo-priorizacion *ngIf="esCOM && derivacion.prioridad" [name]="'recc'" [prioridad]="nuevoEstado.prioridad"
                                (change)="nuevoEstado.prioridad = $event?.label"></semaforo-priorizacion>
+        <seleccionar-financiador *ngIf="paciente" [paciente]="paciente" [financiadorActual]="financiadorActual"
+                                 (setFinanciador)="setFinanciador($event)" grow="full">
+        </seleccionar-financiador>
+        <plex-loader *ngIf="!paciente" type="ball-pulse"></plex-loader>
         <plex-text [(ngModel)]="nuevoEstado.observacion" label="Observacion" name="observacion" multiline="true"
                    grow="full" required="true">
         </plex-text>
