@@ -75,6 +75,7 @@
                                     <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
                                 </span>
                             </th>
+                            <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -117,6 +118,12 @@
                                 <plex-badge [type]="estadoCama[cama.estado]?.type || 'default'">
                                     <span class="d-block">{{cama.estado | uppercase}}</span>
                                 </plex-badge>
+                            </td>
+                            <td>
+                                <plex-button *ngIf="cama.paciente" class="ml-1" size="sm"
+                                             (click)="verHuds(cama.paciente)" tooltip="Ver HUDS" icon="historial"
+                                             type="info">
+                                </plex-button>
                             </td>
                         </tr>
                     </tbody>

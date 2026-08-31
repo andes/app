@@ -5,7 +5,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { WebSocketService } from 'src/app/services/websocket.service';
@@ -13,6 +13,8 @@ import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
+import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
+import { HUDSService } from 'src/app/modules/rup/services/huds.service';
 
 @Component({
     selector: 'app-mapa-camas-resumen',
@@ -55,6 +57,14 @@ export class MapaCamasResumenComponent implements OnInit {
     public isValidDate = true;
     public dataOrganizacion;
 
+    public showModalMotivo = false;
+    public motivoVerContinuarPrestacion = 'continuidad';
+    public routeToParams = [];
+    public accesoHudsPrestacion = null;
+    public prestacionNominalizada;
+    public accesoHudsPaciente = null;
+    public accesoHudsTurno = null;
+
     public columns = {
         fechaMovimiento: false,
         fechaIngreso: false,
@@ -87,7 +97,9 @@ export class MapaCamasResumenComponent implements OnInit {
         public permisosMapaCamasService: PermisosMapaCamasService,
         public elementoRUPService: ElementosRUPService,
         public ws: WebSocketService,
-        public organizacionService: OrganizacionService
+        public organizacionService: OrganizacionService,
+        public motivosHudsService: MotivosHudsService,
+        private hudsService: HUDSService,
 
     ) { }
 
@@ -162,5 +174,38 @@ export class MapaCamasResumenComponent implements OnInit {
             'estados-cama-provincial'
         ]);
     }
+
+
+
+    setRouteToParams(params) {
+        this.routeToParams = params;
+    }
+
+    verHuds(paciente) {
+        const token = this.motivosHudsService.getMotivo('com-mapa-camas').pipe(
+            switchMap(motivoH => {
+                const paramsToken = {
+                    usuario: this.auth.usuario,
+                    organizacion: this.auth.organizacion,
+                    paciente: paciente,
+                    motivo: motivoH[0].key,
+                    profesional: this.auth.profesional,
+                    idTurno: null,
+                    idPrestacion: null
+                };
+                return this.hudsService.generateHudsToken(paramsToken);
+            }));
+
+        token.subscribe((husdTokenRes) => {
+            if (husdTokenRes.token) {
+                window.sessionStorage.setItem('huds-token', husdTokenRes.token);
+                this.router.navigate(['huds', 'paciente', paciente.id]);
+            }
+        });
+
+        // this.router.navigate(['/huds/paciente/' + paciente.id]);
+    }
+
+
 
 }
