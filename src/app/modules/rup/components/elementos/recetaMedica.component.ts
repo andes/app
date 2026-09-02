@@ -2,6 +2,7 @@ import { Unsubscribe } from '@andes/shared';
 import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { forkJoin, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { RupElement } from '.';
 import { IObraSocial } from '../../../../interfaces/IObraSocial';
 import { RUPComponent } from './../core/rup.component';
@@ -77,7 +78,6 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
         if (!this.registro.valor.medicamentos) {
             this.registro.valor.medicamentos = [];
         }
-        this.registros = this.prestacion.ejecucion.registros.filter(reg => reg.id !== this.registro.id).map(reg => reg.concepto);
         this.intervalos$ = this.constantesService.search({ source: 'plan-indicaciones:frecuencia' });
         this.eclqueriesServicies.search({ key: '^receta' }).subscribe(query => {
             this.eclMedicamentos = query.find(q => q.key === 'receta:genericos');
@@ -85,7 +85,6 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
             this.eclMedicamentosComerciales = query.find(q => q.key === 'receta:medicamentoscomercialesporgenerico');
             this.eclUnidadesFiltro = query.find(q => q.key === 'receta:filtroUnidades');
         });
-        this.buscarDiagnosticosConTrastornos();
 
         // Cargar obras sociales del paciente
         setTimeout(() => {
@@ -100,6 +99,9 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
             if (numeroAfiliadoTemporal && !this.numeroAfiliado) {
                 this.numeroAfiliado = numeroAfiliadoTemporal;
             }
+            this.buscarDiagnosticosConTrastornos().subscribe(() => {
+                this.loadRegistros();
+            });
         });
 
         if (this.paciente) {
@@ -130,7 +132,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     loadRegistros() {
         this.registros = [
             ...this.prestacion.ejecucion.registros
-                .filter(reg => reg.concepto.conceptId !== this.registro.concepto.conceptId && (reg.concepto.semanticTag === 'procedimiento'
+                .filter(reg => !reg.hasSections && reg.concepto.conceptId !== this.registro.concepto.conceptId && (reg.concepto.semanticTag === 'procedimiento'
                     || reg.concepto.semanticTag === 'hallazgo' || reg.concepto.semanticTag === 'trastorno'))
                 .map(reg => reg.concepto),
             ...this.recetasConFiltros
@@ -235,9 +237,11 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     }
 
     buscarDiagnosticosConTrastornos() {
-        this.recetaService.buscarDiagnosticosConTrastornos(this.paciente).subscribe(diagnosticos => {
-            this.recetasConFiltros = diagnosticos;
-        });
+        return this.recetaService.buscarDiagnosticosConTrastornos(this.paciente).pipe(
+            tap(diagnosticos => {
+                this.recetasConFiltros = diagnosticos;
+            })
+        );
     }
 
     agregarMedicamento() {
