@@ -20,6 +20,7 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     @Input() datos = [];
     @Input() paciente: IPaciente;
     @Input() fields: string[] = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'telefono', 'direccion', 'lugarNacimiento'];
+    @Input() verMas = true;
     @Input() reload: Boolean = false;
     @Input() showRelaciones = false;
     @Input() showDocumentos = false;
@@ -36,28 +37,35 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
         return this.orientacion === 'vertical' ? 'center' : 'start';
     }
 
+    get camposVisibles() {
+        if (this.verMas) {
+            return this.fields;
+        }
+        return this.fields.filter((f) => f === 'edad' || f === 'fechaNacimiento');
+    }
+
     get showSexo() {
-        return this.fields.findIndex(i => i === 'sexo') >= 0;
+        return this.camposVisibles.findIndex(i => i === 'sexo') >= 0;
     }
 
     get showFechaNacimiento() {
-        return this.fields.findIndex(i => i === 'fechaNacimiento') >= 0;
+        return this.camposVisibles.findIndex(i => i === 'fechaNacimiento') >= 0;
     }
 
     get showEdad() {
-        return this.fields.findIndex(i => i === 'edad') >= 0;
+        return this.camposVisibles.findIndex(i => i === 'edad') >= 0;
     }
 
     get showCuil() {
-        return this.fields.findIndex(i => i === 'cuil') >= 0;
+        return this.camposVisibles.findIndex(i => i === 'cuil') >= 0;
     }
 
     get showFinanciador() {
-        return this.fields.findIndex(i => i === 'financiador') >= 0;
+        return this.camposVisibles.findIndex(i => i === 'financiador') >= 0;
     }
 
     get showNumeroAfiliado() {
-        return this.fields.findIndex(i => i === 'numeroAfiliado') >= 0;
+        return this.camposVisibles.findIndex(i => i === 'numeroAfiliado') >= 0;
     }
 
     get notasDestacadas() {
@@ -65,11 +73,11 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     }
 
     get showDireccion() {
-        return this.fields.findIndex(i => i === 'direccion') >= 0;
+        return this.camposVisibles.findIndex(i => i === 'direccion') >= 0;
     }
 
     get showTelefono() {
-        return this.fields.findIndex(i => i === 'telefono') >= 0;
+        return this.camposVisibles.findIndex(i => i === 'telefono') >= 0;
     }
 
     get estadoBadgeType() {
@@ -77,7 +85,7 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     }
 
     get showLugarNacimiento() {
-        return this.fields.findIndex(i => i === 'lugarNacimiento') >= 0;
+        return this.camposVisibles.findIndex(i => i === 'lugarNacimiento') >= 0;
     }
 
     get direccion() {
@@ -157,6 +165,7 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     }
 
     public relaciones: any[];
+    private _cargado = false;
 
     private doRelaciones() {
         if (this.paciente?.relaciones?.length) {
@@ -192,15 +201,20 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     }
 
 
-    ngOnChanges() {
-        const requiereReload = this.reload ||
-            !this.paciente?.financiador ||
-            !this.paciente?.direccion ||
-            !this.paciente?.contacto;
+    ngOnChanges(changes) {
+        const cambioPaciente = changes?.paciente &&
+            changes.paciente.previousValue &&
+            changes.paciente.currentValue?.id !== changes.paciente.previousValue?.id;
 
-        if (requiereReload && this.paciente?.id) {
+        if (cambioPaciente) {
+            this._cargado = false;
+        }
+
+        // Se recarga solo cuando el paciente cambia (o es la primera carga), no al alternar verMas/fields
+        if (this.paciente?.id && !this._cargado) {
             this.pacienteService.getById(this.paciente.id).subscribe(result => {
                 this.paciente = result;
+                this._cargado = true;
                 this.loadObraSocial();
                 this.doRelaciones();
             });

@@ -6,6 +6,11 @@ img {
     filter: grayscale(100%);
 }
 
+.plex-detail {
+    margin-top: -20px;
+    margin-bottom: -7px;
+}
+
 .title {
     font-size: 1.5em;
     -ms-flex-preferred-size: 0;
@@ -18,6 +23,7 @@ img {
     font-weight: 600;
     display: inline-grid;
 }
+
 .loading {
     position: absolute;
     width: 100%;
@@ -25,19 +31,23 @@ img {
     left: 0;
     top: 50%;
 }
+
 #detalleContenedor.loadMode {
     opacity: 0.3;
 }
 
 #detalleContenedor {
     display: grid;
-    
+
     &.vertical {
         grid-template-columns: 4fr 1fr;
         grid-template-rows: "img img" "div div" "div div" "div div" "div div";
-        .img-thumbnail, .full-col {
+
+        .img-thumbnail,
+        .full-col {
             grid-column: 1/3;
         }
+
         .img-thumbnail {
             display: flex;
             justify-self: center;
@@ -48,6 +58,7 @@ img {
         grid-template-columns: 150px repeat(3, 1fr);
         grid-template-rows: "img div div div" "img div div div" "img div div div";
         grid-gap: 20px;
+
         .img-thumbnail {
             display: flex;
             justify-self: flex-start;

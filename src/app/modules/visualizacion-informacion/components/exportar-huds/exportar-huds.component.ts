@@ -28,6 +28,8 @@ export class ExportarHudsComponent implements OnInit {
     public turnosPrestaciones = false;
     public excluirVacunas;
     public excluirLaboratorio;
+    public verMas = false;
+    public todosLosCampos = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'telefono', 'direccion', 'lugarNacimiento'];
 
 
     constructor(
@@ -47,6 +49,21 @@ export class ExportarHudsComponent implements OnInit {
                 { name: 'Exportar HUDS' }
             ]);
             this.descargasPendientes();
+        }
+    }
+    public opcionesSolicitud = [
+        { id: 'oficio_judicial', nombre: 'Oficio judicial' },
+        { id: 'pedido_particular', nombre: 'Pedido particular del paciente' },
+        { id: 'pedido_representante', nombre: 'Pedido de representante legal' }
+    ];
+
+    public motivoSolicitud: any = null;
+    public numeroReferencia: '';
+    public detalleSolicitud: '';
+
+    public onChangeMotivo() {
+        if (this.motivoSolicitud?.id !== 'oficio_judicial') {
+            this.numeroReferencia = '';
         }
     }
 
@@ -70,6 +87,9 @@ export class ExportarHudsComponent implements OnInit {
         this.fechaDesde = null;
         this.fechaHasta = null;
         this.prestacion = null;
+        this.motivoSolicitud = null;
+        this.numeroReferencia = '';
+        this.detalleSolicitud = '';
     }
 
     esPacienteRestringido(paciente: IPaciente) {
@@ -82,16 +102,8 @@ export class ExportarHudsComponent implements OnInit {
                 this.plex.info('warning', 'No tiene permiso para ingresar a este paciente.', 'Atención');
             } else {
                 this.pacienteSelected = paciente;
-                this.motivoAccesoService.showMotivos(this.pacienteSelected).subscribe((motivo) => {
-                    if (motivo) {
-                        this.modalAccepted = true;
-                        this.showLabel = false;
-                    }
-                },
-                // Si viene error, segundo callback
-                () => {
-                    this.pacienteSelected = '';
-                });
+                this.modalAccepted = true;
+                this.showLabel = false;
             }
         }
     }
@@ -102,21 +114,28 @@ export class ExportarHudsComponent implements OnInit {
         if (this.excluirLaboratorio) { excluye.push('4241000179101'); }
         if (this.excluirVacunas) { excluye.push('33879002'); }
 
-        const params = {
-            pacienteId: this.pacienteSelected.id,
-            pacienteNombre: this.pacienteSelected.nombreCompleto,
-            tipoPrestacion: this.prestacion ? this.prestacion.conceptId : null,
-            fechaDesde: this.fechaDesde,
-            fechaHasta: this.fechaHasta,
-            hudsCompleta: this.hudsCompleta,
-            excluye
-        };
-        this.exportHudsService.peticionHuds(params).subscribe((res) => {
-            if (res) {
-                this.plex.toast('success', 'Su pedido esta siendo procesado', 'Información', 2000);
-                this.descargasPendientes();
-                this.onSearchClear();
-            }
+        this.motivoAccesoService.generarTokenExportacion(
+            this.pacienteSelected,
+            this.motivoSolicitud,
+            this.numeroReferencia,
+            this.detalleSolicitud
+        ).subscribe(() => {
+            const params = {
+                pacienteId: this.pacienteSelected.id,
+                pacienteNombre: this.pacienteSelected.nombreCompleto,
+                tipoPrestacion: this.prestacion ? this.prestacion.conceptId : null,
+                fechaDesde: this.fechaDesde,
+                fechaHasta: this.fechaHasta,
+                hudsCompleta: this.hudsCompleta,
+                excluye
+            };
+            this.exportHudsService.peticionHuds(params).subscribe((res) => {
+                if (res) {
+                    this.plex.toast('success', 'Su pedido esta siendo procesado', 'Información', 2000);
+                    this.descargasPendientes();
+                    this.onSearchClear();
+                }
+            });
         });
     }
 
@@ -129,5 +148,9 @@ export class ExportarHudsComponent implements OnInit {
     cambiarHudsCompleta() {
         this.excluirLaboratorio = false;
         this.excluirVacunas = false;
+    }
+
+    toggleVerMas() {
+        this.verMas = !this.verMas;
     }
 }

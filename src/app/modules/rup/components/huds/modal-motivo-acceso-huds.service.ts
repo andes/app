@@ -6,6 +6,7 @@ import { HUDSService } from '../../services/huds.service';
 import { tap, switchMap, map } from 'rxjs/operators';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { IMotivoAcceso } from '../../interfaces/IMotivoAcceso';
+import { MotivosHudsService } from '../../../../services/motivosHuds.service';
 
 
 @Injectable({ providedIn: 'root' })
@@ -16,6 +17,7 @@ export class ModalMotivoAccesoHudsService {
         private injector: Injector,
         private auth: Auth,
         private hudsService: HUDSService,
+        private motivosHudsService: MotivosHudsService,
     ) { }
 
     private askForReason(): Observable<IMotivoAcceso> {
@@ -44,7 +46,7 @@ export class ModalMotivoAccesoHudsService {
         });
     }
 
-    private askForNewToken(paciente, motivo: string, turno?: string, prestacion?: string, detalle?: string) {
+    private askForNewToken(paciente, motivo: string, turno?: string, prestacion?: string, detalle?: string, datosAcceso?: any) {
         const paramsToken = {
             usuario: this.auth.usuario,
             organizacion: this.auth.organizacion,
@@ -53,7 +55,8 @@ export class ModalMotivoAccesoHudsService {
             profesional: this.auth.profesional,
             idTurno: turno,
             idPrestacion: prestacion,
-            detalleMotivo: detalle
+            detalleMotivo: detalle,
+            datosAcceso
         };
         return this.hudsService.generateHudsToken(paramsToken).pipe(
             tap((hudsToken) => {
@@ -96,6 +99,24 @@ export class ModalMotivoAccesoHudsService {
                     descripcionAcceso = motivoAcceso.textoObservacion ? motivoAcceso.textoObservacion : null;
                 }
                 return this.askForNewToken(paciente, textoMotivo, null, null, descripcionAcceso);
+            })
+        );
+    }
+
+    /** Genera un token de acceso a HUDS usando el motivo por defecto configurado para la exportación */
+    generarTokenExportacion(paciente: IPaciente, tipoSolicitud?: any, nroReferencia?: string, detalleSolicitud?: string) {
+        return this.motivosHudsService.getMotivo('exportar-huds').pipe(
+            switchMap(motivos => {
+                const motivoDefault = (motivos && motivos.length) ? motivos[0] : null;
+                const textoMotivo = motivoDefault?.key ? motivoDefault.key : 'exportacion-huds';
+                const nombreTipoSolicitud = tipoSolicitud?.nombre ? tipoSolicitud.nombre : '';
+                const detalleMotivo = [nombreTipoSolicitud, nroReferencia].filter(p => p).join(' - ');
+                const datosAcceso = {
+                    tipoSolicitud: nombreTipoSolicitud,
+                    nroReferencia: nroReferencia || null,
+                    detalleSolicitud: detalleSolicitud || null
+                };
+                return this.askForNewToken(paciente, textoMotivo, null, null, detalleMotivo, datosAcceso);
             })
         );
     }
