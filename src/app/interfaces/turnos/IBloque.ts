@@ -18,6 +18,8 @@ export interface IBloque {
     restantesProfesional: number;
     restantesMobile: number;
     cupoMobile: number;
+    citasVirtuales: Boolean;
+    appMobile: Boolean;
     pacienteSimultaneos: Boolean;
     cantidadSimultaneos: number;
     citarPorBloque: Boolean;

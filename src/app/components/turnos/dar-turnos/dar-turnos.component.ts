@@ -474,6 +474,14 @@ export class DarTurnosComponent implements OnInit {
             this.serviceAgenda.get(params).subscribe(agendas => {
                 // Filtrar agendas disponibles o publicadas
                 this.agendas = agendas.filter(data => {
+                    if (Array.isArray(data.bloques)) {
+                        data.bloques = data.bloques.filter(b =>
+                            !(b.cupoMobile > 0 && b.cupoMobile === b.cantidadTurnos && !b.citasVirtuales)
+                        );
+                    }
+                    if (!data.bloques || data.bloques.length === 0) {
+                        return false;
+                    }
                     if (data.turnosRestantesGestion > 0 && !(this.tipoTurno === 'gestion')) {
                         data.condicionLlave = this.condicionLlaveAgenda;
                     }

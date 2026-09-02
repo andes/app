@@ -323,7 +323,9 @@ export class PlanificarAgendaComponent implements OnInit {
                 'accesoDirectoProgramado': 0, 'accesoDirectoProgramadoPorc': 0,
                 'reservadoGestion': 0, 'reservadoGestionPorc': 0,
                 'reservadoProfesional': 0, 'reservadoProfesionalPorc': 0,
-                'tipoPrestaciones': []
+                'tipoPrestaciones': [],
+                'citasVirtuales': false,
+                'appMobile': false
             });
             this.activarBloque(longitud);
             this.inicializarPrestacionesBloques(this.elementoActivo);
@@ -532,6 +534,7 @@ export class PlanificarAgendaComponent implements OnInit {
                     this.elementoActivo.reservadoProfesional = Math.floor((this.elementoActivo.reservadoProfesionalPorc * this.elementoActivo.cantidadTurnos) / 100);
                     break;
             }
+            this.verificarCanalAcceso();
         }
         this.validarTodo();
     }
@@ -589,6 +592,25 @@ export class PlanificarAgendaComponent implements OnInit {
         this.cambiaPorcentajeTipo('accesoDirectoProgramado');
         this.cambiaPorcentajeTipo('reservadoGestion');
         this.cambiaPorcentajeTipo('reservadoProfesional');
+    }
+
+    tieneTeleconsulta(bloque = this.elementoActivo) {
+        if (!bloque || !bloque.tipoPrestaciones) {
+            return false;
+        }
+        return bloque.tipoPrestaciones.some(p => p.activo && this.esTelemedicinaAsincronica(p));
+    }
+
+    private esTelemedicinaAsincronica(prestacion: any): boolean {
+        const term = (prestacion.term || '').toLowerCase();
+        const nombre = (prestacion.nombre || '').toLowerCase();
+        return term.includes('telemedicina asincr') || nombre.includes('telemedicina asincr');
+    }
+
+    mostrarCanalAcceso(bloque = this.elementoActivo): boolean {
+        return bloque.cupoMobile > 0
+            && bloque.cupoMobile === bloque.cantidadTurnos
+            && this.tieneTeleconsulta(bloque);
     }
 
     aproximar(date: Date) {
@@ -835,6 +857,7 @@ export class PlanificarAgendaComponent implements OnInit {
                 const prestacionesText = prestaciones.map(p => p.term).join(', ');
                 if ((!clonar || (clonar && incluyeAmbulatorio)) &&
                     $event.formValid &&
+                    this.alertas.length === 0 &&
                     this.verificarNoNominalizada() &&
                     bloqueConPrestActiva &&
                     arrayPrestaciones.length === this.modelo.tipoPrestaciones.length
@@ -933,7 +956,9 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     manejarErrores(incluyeAmbulatorio, prestacionesText, bloqueConPrestActiva, arrayPrestaciones) {
-        if (!this.verificarNoNominalizada()) {
+        if (this.alertas.length) {
+            this.plex.info('warning', this.alertas.join(' '));
+        } else if (!this.verificarNoNominalizada()) {
             this.plex.info('warning', 'Solo puede haber una prestación en las agendas no nominalizadas');
         } else if (!bloqueConPrestActiva) {
             this.plex.info('warning', 'Existe un bloque con todas sus prestaciones inactivas.');
@@ -1023,9 +1048,30 @@ export class PlanificarAgendaComponent implements OnInit {
         }
     }
 
+    onCambioPrestacionBloque() {
+        if (this.tieneTeleconsulta()) {
+            this.elementoActivo.accesoDirectoDelDia = 0;
+            this.elementoActivo.accesoDirectoDelDiaPorc = 0;
+            this.elementoActivo.reservadoGestion = 0;
+            this.elementoActivo.reservadoGestionPorc = 0;
+            this.elementoActivo.reservadoProfesional = 0;
+            this.elementoActivo.reservadoProfesionalPorc = 0;
+            this.validarTodo();
+        }
+    }
+
+    verificarCanalAcceso() {
+        if (!this.mostrarCanalAcceso()) {
+            this.elementoActivo.appMobile = false;
+            this.elementoActivo.citasVirtuales = false;
+        }
+    }
+
     onVentanillaVirtualChange($event) {
         if (!$event.value) {
             this.elementoActivo.cupoMobile = 0;
+            this.elementoActivo.citasVirtuales = false;
+            this.elementoActivo.appMobile = false;
         }
     }
     cerrarModal() {
