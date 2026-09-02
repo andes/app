@@ -100,23 +100,27 @@
             <plex-badge *ngIf="prestacion?.idAgenda" size="md" type="success">En agenda</plex-badge>
         </div>
 
-        <div *ngIf="prestacion?.idPrestacion">
+        <div *ngIf="prestacion">
             <div class="row">
                 <div class="col">
-                    <div *ngIf="prestacion?.prestacion">
+                    <div *ngIf="prestacion">
                         <label>Tipo de prestación</label>{{prestacion.prestacion?.term}}
                     </div>
                 </div>
                 <div class="col">
                     <div *ngIf="prestacion?.actividad">
-                        <label>Actividad</label>{{prestacion.actividad}}{{prestacion.tematica && ' / ' +
-                        prestacion.tematica}}
+                        <label>Actividad</label>{{prestacion.actividad}}
+                    </div>
+                </div>
+                <div class="col">
+                    <div *ngIf="prestacion?.tematica">
+                        <label>Temática</label>{{prestacion.tematica}}
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
-                    <div *ngIf="prestacion?.profesionales">
+                    <div *ngIf="prestacion?.profesionales?.length">
                         <label>Profesionales</label>
                         <div *ngFor="let profesional of prestacion.profesionales let i = index">{{profesional |
                             nombre}}
