@@ -13,6 +13,7 @@ import { MapaCamasCapaComponent } from './views/mapa-camas-capa/mapa-camas-capa.
 import { ResumenInternacionComponent } from './views/resumen-internacion/resumen-internacion.component';
 import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
 import { TimelineMapaCamasComponent } from './views/timelinea-mapa-camas/timeline-mapa-camas.component';
+import { MapaCamasResumenComponent } from './views/mapa-camas-capa/mapa-camas-resumen.component';
 
 export const INTERNACION_ROUTES = [
 
@@ -52,8 +53,9 @@ export const INTERNACION_ROUTES = [
     },
 
     { path: ':ambito/:capa', component: MapaCamasCapaComponent, pathMatch: 'full' },
-
-    { path: '', redirectTo: 'internacion', pathMatch: 'full' }
+    { path: ':ambito/:capa/:idOrganizacion', component: MapaCamasCapaComponent, pathMatch: 'full' },
+    { path: ':ambito/resumen/:capa/:idOrganizacion', component: MapaCamasResumenComponent, pathMatch: 'full' },
+    { path: '', component: MapaCamasMainComponent }
 
 ];
 

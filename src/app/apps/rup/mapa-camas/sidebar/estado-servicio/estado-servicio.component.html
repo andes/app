@@ -18,20 +18,6 @@
     </div>
 </ng-container>
 <ng-container *ngIf="salas$ | async as salas">
-    <ng-container *ngIf="salas.length > 0">
-        <plex-title justify titulo="ESTADO SALAS"></plex-title>
-        <div class="container-resumen">
-            <app-icono-camita icono="adi adi-cama" class="subcontainer-resumen total" nombre="Camas Totales"
-                              [cantidad]="total">
-            </app-icono-camita>
-            <ng-container *ngFor="let estado of mapaCamasService.estado$ | async">
-                <app-icono-camita *ngIf="estado.key !== 'inactiva'" [icono]="estado.icon"
-                                  [nombre]="'Camas ' + estado.label + 's'" [color]="estado.color"
-                                  [cantidad]="camasXEstado[estado.key] ? camasXEstado[estado.key].length : 0">
-                </app-icono-camita>
-            </ng-container>
-        </div>
-    </ng-container>
     <ng-container *ngIf="salas$ | async as salas">
         <ng-container *ngIf="salas.length > 0">
             <plex-title justify titulo="ESTADO SALAS"></plex-title>

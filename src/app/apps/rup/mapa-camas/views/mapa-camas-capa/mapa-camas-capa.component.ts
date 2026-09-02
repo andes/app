@@ -113,7 +113,9 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         this.ws.connect();
         this.mapaCamasService.resetView();
         const ambito = this.route.snapshot.paramMap.get('ambito');
+        const idOrganizacion = this.route.snapshot.paramMap.get('idOrganizacion') ? this.route.snapshot.paramMap.get('idOrganizacion') : this.auth.organizacion.id;
         this.mapaCamasService.setAmbito(ambito);
+        this.mapaCamasService.setOrganizacion(idOrganizacion);
         this.permisosMapaCamasService.setAmbito(ambito);
         this.mainView$.subscribe(mainView => {
             this.registro = {
@@ -169,11 +171,11 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         );
 
         this.mapaCamasService.setFecha(new Date());
-        this.mapaCamasService.setOrganizacion(this.auth.organizacion.id);
+        // this.mapaCamasService.setOrganizacion(this.auth.organizacion.id);
         this.mapaCamasService.select(null);
 
         this.columns = this.mapaCamasService.columnsMapa.getValue();
-        this.organizacionService.usaCapasUnificadas(this.auth.organizacion.id).pipe(
+        this.organizacionService.usaCapasUnificadas(idOrganizacion).pipe(
             take(1),
             tap(resp => this.organizacionv2 = resp)
         ).subscribe();
@@ -189,6 +191,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         this.fechaSelector = moment();
         this.fechaInput = moment().format('DD/MM/YYYY HH:mm');
     }
+
     buscarArea(viewProtocolo) {
         this.laboratorioService.getProtocoloById(viewProtocolo.idProtocolo).subscribe((resultados) => {
 

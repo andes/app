@@ -14,11 +14,12 @@
                      [data]="estadoList$ | async" (change)="filtrar()">
         </plex-select>
 
-        <plex-button class="collapse-button" type="primary" size="sm" icon="{{ collapse ? 'chevron-down' : 'chevron-up'}}"
+        <plex-button *ngIf="filtroCompleto" class="collapse-button" type="primary" size="sm"
+                     icon="{{ collapse ? 'chevron-down' : 'chevron-up'}}"
                      title="{{ collapse ? 'Expandir' : 'Colapsar'}}" titlePosition="left" (click)="colapsar()">
         </plex-button>
 
-        <div [hidden]="collapse" class="w-100">
+        <div *ngIf="filtroCompleto" [hidden]="collapse" class="w-100">
             <div class="d-flex">
                 <plex-select name="tipo-cama" label="Tipo de Cama" [(ngModel)]="filtro.tipoCama" idField="conceptId"
                              labelField="term" (change)="filtrar()" [data]="tipoCamaList$ | async">
