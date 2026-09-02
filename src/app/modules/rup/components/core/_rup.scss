@@ -1,4 +1,8 @@
 @import "../variables";
+rup {
+    display: block;
+    width: 100%;
+}
 
 $rotate: -90deg;
 
@@ -770,4 +774,11 @@ plex-layout [type="invert"] {
     .readonly span {
         color: white;
     }
+}
+
+.hr-grueso {
+  border: none;
+  height: 4px;
+  background-color: #4a4a4a;
+  opacity: 1;
 }
