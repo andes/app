@@ -141,6 +141,12 @@ const appRoutes: Routes = [
         canActivate: [RoutingNavBar, RoutingGuard],
         runGuardsAndResolvers: 'always'
     },
+    {
+        path: 'andes-form',
+        loadChildren: () => import('./modules/andes-form/andes-form.module').then(m => m.AndesFormModule),
+        canActivate: [RoutingNavBar, RoutingGuard],
+        runGuardsAndResolvers: 'always'
+    },
     // Mapa de camas
     { path: 'internacion/inicio', component: PuntoInicioInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
