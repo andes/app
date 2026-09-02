@@ -28,6 +28,7 @@ import { RUPServicioIntermedioAltaComponent } from './components/servicio-interm
 import { ElementosRUPModule } from './elementos-rup.module';
 import { HUDSLibModule } from './huds-lib.module';
 import { RUPLibModule } from './rup-lib.module';
+import { HistorialComponent } from './components/elementos/historial.component';
 
 
 export const RUP_COMPONENTS = [
@@ -40,6 +41,7 @@ export const RUP_COMPONENTS = [
     RupAsignarTurnoComponent,
     AutocitarTurnoAgendasComponent,
     RupRelacionesComponent,
+    HistorialComponent,
     RUPServicioIntermedioAltaComponent
 ];
 
