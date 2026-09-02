@@ -2,6 +2,7 @@ import { Input, Component, SimpleChanges, OnChanges, OnDestroy, Output, EventEmi
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'detalle-solicitud',
@@ -23,6 +24,7 @@ export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
     public organizacionInternacion;
     public tiempoVigencia: number;
     public fechaVencimiento: Date;
+    public permisoDetalle = false;
 
     get estaVencida(): boolean {
         if (!this.fechaVencimiento) { return false; }
@@ -31,11 +33,7 @@ export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
         return this.fechaVencimiento < new Date();
     }
 
-    public items = [
-        { key: 'solicitud', label: 'SOLICITUD' },
-        { key: 'historial', label: 'HISTORIAL' },
-        { key: 'turnos', label: 'TURNOS' }
-    ];
+    public items = [];
 
     public columns = [
         { key: 'fecha', label: 'Fecha' },
@@ -49,18 +47,20 @@ export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
     constructor(
         public adjuntosService: AdjuntosService,
         private pacienteService: PacienteService,
-        private conceptosTurneablesService: ConceptosTurneablesService
+        private conceptosTurneablesService: ConceptosTurneablesService,
+        private auth: Auth
     ) { }
 
     fotos: any[] = [];
-
     ngOnChanges(changes: SimpleChanges) {
         if (!changes.prestacionSeleccionada || !this.prestacionSeleccionada) {
             return;
         }
-
+        this.permisoDetalle = this.auth.hasExactPermission('solicitudes:verDetalles');
+        this.buildItems();
         this.adjuntosService.token$.subscribe((payload) => {
             const { token } = payload;
+
             const solicitudRegistros = this.prestacionSeleccionada.solicitud.registros;
             const documentos = solicitudRegistros?.[0]?.valor?.documentos || [];
             this.fotos = documentos.map((doc) => {
@@ -95,6 +95,23 @@ export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
             });
         }
     }
+
+    private buildItems() {
+        const base = [
+            { key: 'solicitud', label: 'SOLICITUD' },
+            { key: 'historial', label: 'HISTORIAL' },
+            { key: 'turnos', label: 'TURNOS' }
+        ];
+
+        // Ejemplo de condición: agregar 'turnos' solo si se cumple permisoDetalle
+        // o si el tipo de solicitud es un valor específico. Ajusta aquí.
+        if (this.permisoDetalle) {
+            base.splice(1, 0, { key: 'pedido', label: 'PEDIDO' });
+        }
+
+        this.items = base;
+    }
+
 
     cambiarOpcion(opcion) {
         this.mostrar = opcion;
