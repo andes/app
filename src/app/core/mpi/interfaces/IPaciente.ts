@@ -47,6 +47,7 @@ export interface IPaciente {
     }];
     claveBlocking: [string];
     entidadesValidadoras?: [string];
+    fechaUltimaValidacion?: Date;
     scan: string;
     reportarError: Boolean;
     nombreCorrectoReportado: String;
