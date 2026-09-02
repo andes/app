@@ -13,8 +13,8 @@
         <plex-select name="estado" label="Estado" [(ngModel)]="filtro.estado" idField="estado" labelField="estado"
                      [data]="estadoList$ | async" (change)="filtrar()">
         </plex-select>
-
-        <plex-button class="collapse-button" type="primary" size="sm" icon="{{ collapse ? 'chevron-down' : 'chevron-up'}}"
+        <plex-button class="collapse-button" type="primary" size="sm"
+                     icon="{{ collapse ? 'chevron-down' : 'chevron-up'}}"
                      title="{{ collapse ? 'Expandir' : 'Colapsar'}}" titlePosition="left" (click)="colapsar()">
         </plex-button>
 
@@ -23,8 +23,8 @@
                 <plex-select name="tipo-cama" label="Tipo de Cama" [(ngModel)]="filtro.tipoCama" idField="conceptId"
                              labelField="term" (change)="filtrar()" [data]="tipoCamaList$ | async">
                 </plex-select>
-                <plex-select name="censable" label="Censable" [(ngModel)]="filtro.censable" (change)="filtrar()"
-                             [data]="censables">
+                <plex-select name="censable" label="Censable" [(ngModel)]="filtro.censable"
+                             (change)="onCensableChange()" [data]="censables">
                 </plex-select>
                 <plex-select name="equipamiento" label="Equipamiento" [(ngModel)]="filtro.equipamiento"
                              idField="conceptId" labelField="term" (change)="filtrar()"
