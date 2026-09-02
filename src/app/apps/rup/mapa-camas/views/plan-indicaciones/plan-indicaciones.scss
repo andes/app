@@ -74,6 +74,42 @@ plex-badge.circle>span {
     height: 100%;
 }
 
+td.pointer.realizado {
+    background-color: #8cc63f12 !important;
+    border: 2px solid #8cc63f !important;
+}
+
+td.pointer.no-realizado {
+    background-color: #dd4b3912 !important;
+    border: 2px solid #dd4b39 !important;
+}
+
+td.pointer.incompleto {
+    background-color: #ff8d2212 !important;
+    border: 2px solid #ff8d22 !important;
+}
+
+td.pointer {
+    position: relative;
+
+    .icon-alerta-celda {
+        position: absolute;
+        top: -15px;
+        left: 100%;
+        transform: translateX(-50%);
+        z-index: 10;
+        pointer-events: none;
+        background-color: #fff;
+        border-radius: 50%;
+        padding: 2px;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
 // PUNTO
 .punto {
     width: 16px;
@@ -120,11 +156,13 @@ table.plan-indicaciones {
         text-align: center;
         font-weight: bolder;
     }
-td.item-indicacion.pointer.selected {
-    border: 0.5px solid #5bc0de !important;
-    background-color: #5bc0de15 !important;
-    transition: 0.2s ease all;
-}
+
+    td.item-indicacion.pointer.selected {
+        border: 0.5px solid #5bc0de !important;
+        background-color: #5bc0de15 !important;
+        transition: 0.2s ease all;
+    }
+
     tr {
 
         td.pointer {
@@ -154,6 +192,14 @@ td.item-indicacion.pointer.selected {
         &.selected {
             background-color: #00a8e012;
             border: 2px solid $blue;
+        }
+    }
+}
+
+.tabla-eventos {
+    tr {
+        &.selected {
+            background-color: #edf8fd !important;
         }
     }
 }
