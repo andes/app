@@ -1110,7 +1110,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
         if (searchTerm) {
             filteredRecetas = filteredRecetas.filter(group => {
-                return group.recetas[0].medicamento.concepto.term.toLowerCase().includes(searchTerm);
+                const nombre = group.recetas[0]?.medicamento?.nombre || group.recetas[0]?.medicamento?.concepto?.term || '';
+                return nombre.toLowerCase().includes(searchTerm);
             });
         }
 
@@ -1234,7 +1235,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
         request$.subscribe((data) => {
             const grupoRecetas = data.reduce((acc, receta) => {
-                const conceptId = receta.medicamento.concepto.conceptId;
+                const conceptId = receta.medicamento?.concepto?.conceptId || receta.medicamento?.nombre || receta.medicamento?.magistral?.nombre || 'sin-concepto';
                 if (!acc[conceptId]) {
                     acc[conceptId] = [];
                 }
@@ -1283,7 +1284,11 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 && dispensasPermitidas.includes(receta.estadoDispensaActual?.tipo)) && this.profesionalValido;
         } else {
             const recetasMismoRegistro = this.busquedaRecetas?.flatMap(grupo =>
-                grupo.recetas.filter(r => r.idRegistro === receta.idRegistro && r.medicamento.concepto.conceptId === receta.medicamento.concepto.conceptId)
+                grupo.recetas.filter(r => {
+                    const rKey = r.medicamento?.concepto?.conceptId || r.medicamento?.nombre;
+                    const recKey = receta.medicamento?.concepto?.conceptId || receta.medicamento?.nombre;
+                    return r.idRegistro === receta.idRegistro && rKey === recKey;
+                })
             ) || [];
             return recetasMismoRegistro.some(rec =>
                 (estadosPermitidos.includes(rec.estadoActual?.tipo)

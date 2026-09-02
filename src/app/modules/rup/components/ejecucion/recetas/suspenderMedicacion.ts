@@ -28,9 +28,9 @@ export class SuspenderMedicacionComponent implements AfterViewChecked {
         if (!this.seleccionRecetas || !Array.isArray(this.seleccionRecetas)) {
             return [];
         }
-        const validRecetas = this.seleccionRecetas.filter(receta => receta && receta.medicamento && receta.medicamento.concepto);
+        const validRecetas = this.seleccionRecetas.filter(receta => receta && receta.medicamento && (receta.medicamento.nombre || receta.medicamento.concepto));
         const grouped = validRecetas.reduce((acc, receta) => {
-            const term = receta.medicamento.concepto.term;
+            const term = receta.medicamento.nombre || receta.medicamento.concepto?.term;
             if (!acc[term]) {
                 acc[term] = {
                     term: term,
@@ -50,7 +50,7 @@ export class SuspenderMedicacionComponent implements AfterViewChecked {
             return;
         }
 
-        const medicamento = this.seleccionRecetas[0]?.medicamento?.concepto?.term || 'medicamento';
+        const medicamento = this.seleccionRecetas[0]?.medicamento?.nombre || this.seleccionRecetas[0]?.medicamento?.concepto?.term || 'medicamento';
         this.plex.confirm(`¿Está seguro que desea suspender ${this.seleccionRecetas.length > 1 ? `las (${this.seleccionRecetas.length}) medicaciones seleccionadas` : `<br><b>"${medicamento}"</b>`}?`, 'Atención').then(confirmacion => {
             const recetasASuspender = this.filtrarRecetasUnicas(this.seleccionRecetas);
             if (confirmacion && recetasASuspender.length > 0) {
@@ -91,7 +91,7 @@ export class SuspenderMedicacionComponent implements AfterViewChecked {
     filtrarRecetasUnicas(recetas: any[]): any[] {
         const seen = new Set();
         return recetas.filter(receta => {
-            const conceptId = receta.medicamento?.concepto?.conceptId || receta.insumo?.id || receta.insumo?.concepto?.conceptId;
+            const conceptId = receta.medicamento?.concepto?.conceptId || receta.medicamento?.nombre || receta.insumo?.id || receta.insumo?.concepto?.conceptId;
             const key = `${receta.idRegistro}-${conceptId}`;
             if (seen.has(key)) {return false;}
             seen.add(key);
