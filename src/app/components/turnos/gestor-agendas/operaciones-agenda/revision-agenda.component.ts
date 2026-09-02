@@ -51,8 +51,6 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     public pacienteDetalle;
     public prestacionAuditable;
     public financiador;
-    public showSidebar = false;
-    public numeroAfiliado;
 
     constructor(
         private pacienteCache: PacienteCacheService,
@@ -138,16 +136,15 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
             this.turnoSeleccionado.fechaHoraDacion = new Date();
             this.turnoSeleccionado.usuarioDacion = this.auth.usuario;
         }
-        if (this.financiador) {
-            this.turnoSeleccionado.paciente.obraSocial = this.financiador;
-        }
     }
 
     seleccionarTurno(turno, bloque) {
         if (this.lastRequest) {
             this.lastRequest.unsubscribe();
         }
-        this.showSidebar = (this.turnoSeleccionado !== turno) ? true : false;
+        if (turno.paciente?.id) {
+            this.paciente = turno.paciente;
+        }
         this.pacienteDetalle = null;
         this.existeCodificacionProfesional = false;
         this.diagnosticos = [];
@@ -182,9 +179,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         if (this.turnoSeleccionado && this.turnoSeleccionado.asistencia) {
             this.turnoSeleccionado.asistencia = asistencia.id;
         }
-        if (this.turnoTipoPrestacion) {
-            this.turnoSeleccionado.tipoPrestacion = this.turnoTipoPrestacion;
-        }
+        this.onSave();
     }
 
     asistenciaSeleccionada(asistencia) {
@@ -210,6 +205,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         };
         nuevoDiagnostico.codificacionAuditoria = diagnostico;
         this.diagnosticos.push(nuevoDiagnostico);
+        this.onSave();
     }
 
     borrarDiagnostico(index) {
@@ -221,6 +217,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         if (index === 0) {
             this.plex.toast('warning', 'Información', 'El diagnostico principal fue eliminado');
         }
+        this.onSave();
     }
 
     aprobar(index) {
@@ -231,6 +228,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
                 this.diagnosticos[j].codificacionAuditoria = this.diagnosticos[j].codificacionProfesional.cie10;
             }
         }
+        this.onSave();
     }
     /**
      * Verifica si cada turno tiene la asistencia verificada y modifica el estado de la agenda.
@@ -300,7 +298,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
             }
         }
         if (patchear) {
-            this.serviceAgenda.patch(this._agenda.id, patch).subscribe(() => {
+            this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
                 this.plex.toast('success', 'El estado de la agenda fue actualizado', label);
             });
         }
@@ -332,9 +330,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         return turno?.asistencia && turno?.asistencia === 'asistio' && !turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo && !turno?.diagnostico?.codificaciones[0]?.codificacionProfesional?.snomed?.term && turno.tipoPrestacion?.auditable === true;
     }
 
-    guardar() {
-        this.onSave();
-        this.showSidebar = false;
+    cancelar() {
         this.turnoSeleccionado = null;
     }
 
@@ -417,11 +413,13 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
             this.diagnosticos[this.indiceReparo].codificacionAuditoria = reparo;
             this.showReparo = false;
         }
+        this.onSave();
     }
 
     borrarReparo(index) {
         this.diagnosticos[index].codificacionAuditoria = null;
         this.showReparo = false;
+        this.onSave();
     }
 
     // -------------- SOBRE BUSCADOR PACIENTES ----------------
@@ -454,12 +452,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
 
     public setFinanciador(financiador) {
         this.financiador = financiador;
-    }
-
-    cerrar() {
-        this.showSidebar = false;
-        this.showRegistrosTurno = false;
-        this.turnoSeleccionado = null;
+        this.onSave();
     }
 
     // ----------------------------------

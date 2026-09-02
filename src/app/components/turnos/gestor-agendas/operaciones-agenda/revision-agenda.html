@@ -1,4 +1,4 @@
-<plex-layout [main]="showSidebar ? 7 : 12">
+<plex-layout main="6">
     <plex-layout-main>
         <plex-title size="lg" titulo="Revisión de agenda">
             <plex-button class="mr-1" position="right" type="danger" label="" icon="arrow-left" (click)="volver()">
@@ -71,7 +71,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover"
-                        [ngClass]="{'bg-inverse text-white': turnoSeleccionado === turno}">
+                        [ngClass]="{'bg-inverse text-white': estaSeleccionado(bloque.turnos[i])}">
 
                         <td (click)="seleccionarTurno(bloque.turnos[i], bloque)">
                             <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
@@ -136,6 +136,11 @@
                     <!-- SOBRETURNOS -->
                     <tr *ngFor="let sobreturno of agenda.sobreturnos; let i=index" class="hover"
                         [ngClass]="{'bg-inverse text-white': estaSeleccionado(agenda.sobreturnos[i])}">
+                        <td (click)="seleccionarTurno(sobreturno, -1)">
+                            <i *ngIf="estaSeleccionado(agenda.sobreturnos[i])" class="mdi mdi-checkbox-marked"></i>
+                            <i *ngIf="!estaSeleccionado(agenda.sobreturnos[i])"
+                                class="mdi mdi-checkbox-blank-outline"></i>
+                        </td>
                         <td (click)="seleccionarTurno(agenda.sobreturnos[i], -1)">
                             <strong *ngIf="sobreturno">{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
                         </td>
@@ -149,14 +154,6 @@
                                 <span
                                     *ngIf="sobreturno.paciente && sobreturno.paciente.id && sobreturno.paciente.documento === ''"
                                     class="text-danger">| DNI: Sin documento (temporal)</span>
-                            </small>
-                            <small *ngIf="sobreturno.paciente">
-                                <span *ngIf="sobreturno.paciente.obraSocial">
-                                    | OBRA SOCIAL: {{ sobreturno.paciente.obraSocial.financiador}}
-                                </span>
-                                <span *ngIf="!sobreturno.paciente.obraSocial">
-                                    | SIN OBRA SOCIAL
-                                </span>
                             </small>
                             <small>
                                 <span *ngIf="sobreturno?.paciente?.carpetaEfectores?.length">
@@ -194,17 +191,10 @@
         </ng-container>
     </plex-layout-main>
 
-    <plex-layout-sidebar type="invert">
+    <plex-layout-sidebar>
         <!--REGISTRO DE ASISTENCIA-->
 
-        <plex-title size="md" titulo="REGISTROS DEL TURNO">
-            <plex-button *ngIf="turnoSeleccionado?.paciente || paciente" size="sm" type="success" [icon]="'check'"
-                (click)="guardar()" tooltip="Guardar">
-
-            </plex-button>
-            <plex-button class="ml-1" size="sm" type="danger" [icon]="'close'" (click)="cerrar()"
-                tooltip="Cerrar"></plex-button>
-        </plex-title>
+        <plex-title size="md" titulo="REGISTROS DEL TURNO"></plex-title>
         <ng-container
             *ngIf="turnoSeleccionado && turnoSeleccionado.estado !== 'suspendido' && turnoSeleccionado.estado !== 'turnoDoble'">
             <ng-container *ngIf="pacienteDetalle">
@@ -318,7 +308,7 @@
                                         <td>
                                             <plex-bool
                                                 *ngIf="!(diagnostico.codificacionProfesional?.snomed?.codigo || diagnostico.codificacionProfesional?.cie10?.codigo)"
-                                                [(ngModel)]='diagnostico.primeraVez'>
+                                                (change)="onSave()" [(ngModel)]='diagnostico.primeraVez'>
                                             </plex-bool>
                                             <!-- Muestro primera vez solo para diagnosticos de profesional -->
                                             <plex-badge type="success" *ngIf="(diagnostico.codificacionProfesional?.snomed?.codigo
@@ -511,7 +501,6 @@
                     </ng-container>
                 </ng-container>
                 <!--/ CODIFICACION-->
-
                 <!-- SELECCIÓN DE OBRA SOCIAL-->
                 <ng-container *ngIf="turnoSeleccionado.paciente || paciente">
                     <div class="mb-4">
