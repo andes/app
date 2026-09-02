@@ -56,14 +56,17 @@
                         <plex-badge *ngIf="!item.matriculacion" type="danger">NO POSEE MATRICULA</plex-badge>
                     </td>
                     <td>
-                        <plex-badge *ngIf="item.fechasDeAltas?.length" type="info" size="sm">
-                            {{ vencimientoAlta(item.fechasDeAltas[item.fechasDeAltas?.length-1]?.fecha) | date:
+                        <plex-badge *ngIf="item.matriculacion[item.matriculacion?.length-1]?.fechaAlta" type="info"
+                                    size="sm">
+                            {{ vencimientoAlta(item.matriculacion[item.matriculacion?.length-1]?.fechaAlta) | date:
                             'dd/MM/yyyy' }}
                         </plex-badge>
                     </td>
                     <td>
-                        <plex-badge *ngIf="item.matriculacion?.length" type="info" size="sm">{{
-                            item.matriculacion[item.matriculacion.length-1].fin | date:
+                        <plex-badge *ngIf="item.matriculacion[item.matriculacion?.length-1]?.periodos?.length"
+                                    type="info" size="sm">{{
+                            item.matriculacion[item.matriculacion.length-1].periodos[item.matriculacion[item.matriculacion.length-1].periodos.length-1].fin
+                            | date:
                             'dd/MM/yyyy'}}</plex-badge>
                     </td>
                     <td>

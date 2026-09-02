@@ -262,10 +262,11 @@ export class AppComponent {
     }
 
     esVigente(formacionPosgrado) {
-        const fechaUltimaAlta = new Date(formacionPosgrado.fechasDeAltas[formacionPosgrado.fechasDeAltas.length - 1].fecha);
+        const ultimaMatricula = formacionPosgrado.matriculacion[formacionPosgrado.matriculacion.length - 1];
+        const fechaUltimaAlta = new Date(ultimaMatricula.fechaAlta);
         fechaUltimaAlta.setFullYear(fechaUltimaAlta.getFullYear() + 5);
         if (fechaUltimaAlta < this.hoy) {
-            if (new Date(formacionPosgrado.matriculacion[formacionPosgrado.matriculacion.length - 1].fin) < this.hoy) {
+            if (new Date(ultimaMatricula.periodos[ultimaMatricula.periodos.length - 1].fin) < this.hoy) {
                 return false;
             }
         }
