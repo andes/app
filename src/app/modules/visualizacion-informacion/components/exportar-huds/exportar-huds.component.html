@@ -25,13 +25,8 @@
                 <plex-button type="link" icon="flecha-izquierda" (click)="onSearchClear()" tooltip="Volver">
                 </plex-button>
             </plex-title>
-            <div class="text-right mt-1" *ngIf="pacienteSelected">
-                <plex-button type="link" size="sm" (click)="toggleVerMas()">
-                    {{ verMas ? 'VER MENOS' : 'VER MÁS' }}
-                </plex-button>
-            </div>
             <paciente-detalle orientacion="horizontal" *ngIf="pacienteSelected" [paciente]="pacienteSelected"
-                              reload="true" [fields]="todosLosCampos" [verMas]="verMas">
+                              reload="true" [fields]="camposBasicos">
             </paciente-detalle>
             <plex-title titulo="Motivos"></plex-title>
             <form #formSolicitud="ngForm">

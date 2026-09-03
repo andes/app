@@ -28,8 +28,7 @@ export class ExportarHudsComponent implements OnInit {
     public turnosPrestaciones = false;
     public excluirVacunas;
     public excluirLaboratorio;
-    public verMas = false;
-    public todosLosCampos = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'telefono', 'direccion', 'lugarNacimiento'];
+    public camposBasicos = ['edad', 'fechaNacimiento'];
 
 
     constructor(
@@ -148,9 +147,5 @@ export class ExportarHudsComponent implements OnInit {
     cambiarHudsCompleta() {
         this.excluirLaboratorio = false;
         this.excluirVacunas = false;
-    }
-
-    toggleVerMas() {
-        this.verMas = !this.verMas;
     }
 }
