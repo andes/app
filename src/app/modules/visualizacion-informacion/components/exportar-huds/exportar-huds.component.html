@@ -26,8 +26,32 @@
                 </plex-button>
             </plex-title>
             <paciente-detalle orientacion="horizontal" *ngIf="pacienteSelected" [paciente]="pacienteSelected"
-                              reload="true">
+                              reload="true" [fields]="camposBasicos">
             </paciente-detalle>
+            <plex-title titulo="Motivos"></plex-title>
+            <form #formSolicitud="ngForm">
+                <div class="row">
+                    <div class="col-4">
+                        <plex-select [(ngModel)]="motivoSolicitud" name="motivoSolicitud" label="Tipo de solicitud"
+                                     [data]="opcionesSolicitud" idField="id" labelField="nombre"
+                                     (change)="onChangeMotivo($event)">
+                        </plex-select>
+                    </div>
+
+                    <div class="col-4" *ngIf="motivoSolicitud && motivoSolicitud.id === 'oficio_judicial'">
+                        <plex-text [(ngModel)]="numeroReferencia" name="numeroReferencia" label="N.º de referencia"
+                                   [required]="true">
+                        </plex-text>
+                    </div>
+
+                    <div class="col-12 mt-2">
+                        <plex-text [(ngModel)]="detalleSolicitud" name="detalleSolicitud"
+                                   label="Motivo / detalle de la solicitud" [required]="true" [multiline]="true"
+                                   [maxLength]="150">
+                        </plex-text>
+                    </div>
+                </div>
+            </form>
             <form #form="ngForm">
                 <plex-title titulo="Filtrar solicitud de exportación">
                     <plex-button size="sm" type="success" (click)="exportar()"
@@ -50,7 +74,8 @@
                     <div class="d-flex mt-3 {{ hudsCompleta ? 'disabled': '' }}">
                         <plex-bool type="checkbox" name="alergia" [(ngModel)]="excluirVacunas" label="Excluir vacunas">
                         </plex-bool>
-                        <plex-bool type="checkbox" name="alergia" [(ngModel)]="excluirLaboratorio" label="Excluir Laboratorios">
+                        <plex-bool type="checkbox" name="alergia" [(ngModel)]="excluirLaboratorio"
+                                   label="Excluir Laboratorios">
                         </plex-bool>
                     </div>
                     <plex-select grow="full" label="Prestaciones" name="prestacion" idField="conceptId"
