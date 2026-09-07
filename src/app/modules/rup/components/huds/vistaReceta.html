@@ -15,14 +15,22 @@
                     <plex-badge *ngIf="checkDispensaAnticipada(recetaPrincipal)" size="sm" type="warning">
                         {{ checkDispensaAnticipada(recetaPrincipal) }}
                     </plex-badge>
-                    <plex-badge *ngIf="recetaPrincipal.medicamento?.tipoReceta && recetaPrincipal.insumo?.tipo !== 'dispositivo' && recetaPrincipal.insumo?.tipo !== 'nutricion'" size="sm" type="default">
+                    <plex-badge *ngIf="recetaPrincipal.medicamento?.tipoReceta && recetaPrincipal.insumo?.tipo !== 'dispositivo' && recetaPrincipal.insumo?.tipo !== 'nutricion'"
+                                size="sm" type="default">
                         {{ recetaPrincipal.medicamento.tipoReceta }}
                     </plex-badge>
                     <plex-badge *ngIf="recetaPrincipal.medicamento?.esMagistral" size="sm" type="info">
                         Fórmula Magistral
                     </plex-badge>
+                    <div class="descargar-pdf">
+                        <plex-button *ngIf="verDescargarReceta()" type="info" size="sm" icon="download"
+                                     title="Descargar PDF" (click)="descargarPdf()" [disabled]="requestInProgress"
+                                     titlePosition="left">
+                        </plex-button>
+                    </div>
                 </div>
-                <div case="capitalize"><b>{{ recetaPrincipal.medicamento.nombre || recetaPrincipal.medicamento.concepto?.term }}</b></div>
+                <div case="capitalize"><b>{{ recetaPrincipal.medicamento.nombre ||
+                        recetaPrincipal.medicamento.concepto?.term }}</b></div>
                 <p *ngIf="recetaPrincipal.medicamento.cantidad && recetaPrincipal.medicamento.cantEnvases "><small>
                         {{ recetaPrincipal.medicamento.cantEnvases}} envase(s) de {{
                         recetaPrincipal.medicamento.cantidad}} {{recetaPrincipal.medicamento.presentacion }}(s)
