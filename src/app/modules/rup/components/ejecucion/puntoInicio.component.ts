@@ -225,7 +225,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             // buscamos las que estan fuera de agenda para poder listarlas:
             // son prestaciones sin turno creadas en la fecha seleccionada en el filtro
             this.fueraDeAgenda = this.prestaciones.filter(p => {
-                const puedeValidar = this.prestacionesValidacion.some(tt => tt === p.solicitud.tipoPrestacion.id);
+                const puedeValidar = this.tiposPrestacion.some(tp => tp.id === p.solicitud.tipoPrestacion?.id || tp.conceptId === p.solicitud.tipoPrestacion?.conceptId);
                 const estadoActual = p.estadoActual;
                 const creadaPorMi = estadoActual.createdBy.username === this.auth.usuario.username;
                 const esHoy = moment(p.ejecucion.fecha).isBetween(this.fecha, this.fecha, 'day', '[]');
@@ -606,9 +606,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
      * @memberof PuntoInicioComponent
      */
     tienePermisos(turno) {
-        const existe = this.tiposPrestacion.find(tp => tp.id === turno.tipoPrestacion?.id);
+        const existe = this.tiposPrestacion.find(tp => (tp.id === turno.tipoPrestacion?.id || tp.conceptId === turno.tipoPrestacion?.conceptId));
         if (turno.prestaciones[0]) {
-            const permisoValidar = this.prestacionesValidacion.some(tt => tt === turno.prestaciones[0].solicitud.tipoPrestacion.id);
+            const permisoValidar = this.tiposPrestacion.some(tt => (tt === turno.prestaciones[0].solicitud.tipoPrestacion.id || tt.conceptId === turno.prestaciones[0].solicitud.tipoPrestacion.conceptId));
             const estado = turno.prestaciones[0].estados[turno.prestaciones[0].estados.length - 1];
             if (estado.tipo !== 'pendiente' && !(estado.createdBy.username === this.auth.usuario.username || permisoValidar)) {
                 return false;
@@ -619,7 +619,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     checkPuedeValidar(prestacion) {
         const miPrestacion = prestacion.estadoActual.createdBy.username === this.auth.usuario.username;
-        const permisoValidar = this.prestacionesValidacion.some(tt => tt === prestacion.solicitud.tipoPrestacion.id);
+        const permisoValidar = this.tiposPrestacion.some(tt => (tt === prestacion.solicitud.tipoPrestacion.id || tt.conceptId === prestacion.solicitud.tipoPrestacion.conceptId));
         return miPrestacion || permisoValidar;
     }
 
