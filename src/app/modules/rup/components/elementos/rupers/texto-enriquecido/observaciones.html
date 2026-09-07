@@ -1,12 +1,12 @@
 <form #form="ngForm">
     <ng-container *ngIf="!soloValores">
-        <plex-text [label]="params.titulo" [html]="true" [(ngModel)]="registro.valor" name="observaciones"
+        <plex-text [label]="params.title" [html]="true" [(ngModel)]="registro.valor" name="observaciones"
                    [placeholder]="params.placeholder" (change)="emitChange()" [required]="params?.required"
                    *ngIf="afterInit" [qlToolbar]="qlToolbar"> </plex-text>
     </ng-container>
     <p *ngIf="soloValores" class="readonly">
-        <label for="observaciones" *ngIf="!params">
-            {{ params.titulo }}
+        <label for="observaciones" *ngIf="params">
+            {{ params.title }}
         </label>
         <ng-container *ngIf="registro?.evoluciones?.length">
             <span [innerHTML]="registro?.evoluciones[0].valor"></span>
@@ -16,6 +16,6 @@
         </ng-container>
     </p>
 </form>
-<rup-observaciones-modal *ngIf="fullscreen" [label]="params.titulo" [value]="registro.valor"
+<rup-observaciones-modal *ngIf="fullscreen" [label]="params.title" [value]="registro.valor"
                          [concepto]="registro.concepto" (close)="onCloseFullscreen($event)">
 </rup-observaciones-modal>
