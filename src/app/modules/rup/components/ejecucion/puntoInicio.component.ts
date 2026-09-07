@@ -225,7 +225,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             // buscamos las que estan fuera de agenda para poder listarlas:
             // son prestaciones sin turno creadas en la fecha seleccionada en el filtro
             this.fueraDeAgenda = this.prestaciones.filter(p => {
-                const puedeValidar = this.tiposPrestacion.some(tp => tp.id === p.solicitud.tipoPrestacion?.id || tp.conceptId === p.solicitud.tipoPrestacion?.conceptId);
+                const puedeValidar = this.prestacionesValidacion.some(tt => tt === p.solicitud.tipoPrestacion.id);
                 const estadoActual = p.estadoActual;
                 const creadaPorMi = estadoActual.createdBy.username === this.auth.usuario.username;
                 const esHoy = moment(p.ejecucion.fecha).isBetween(this.fecha, this.fecha, 'day', '[]');
