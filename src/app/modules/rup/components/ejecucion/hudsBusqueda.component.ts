@@ -1171,7 +1171,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                     medicamento: {
                         concepto: {
                             term: receta.insumo?.nombre || receta.insumo?.concepto?.term || '',
-                            conceptId: receta.insumo?.id || receta.insumo?.concepto?.conceptId || '',
+                            conceptId: receta.insumo?.codigo?.[0]?.valor || receta.insumo?.concepto?.conceptId || receta._id || '',
                             semanticTag: 'producto'
                         },
                         tipoReceta: receta.tipoReceta || 'simple',
@@ -1193,7 +1193,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                     medicamento: {
                         concepto: {
                             term: receta.insumo?.nombre || receta.insumo?.concepto?.term || '',
-                            conceptId: receta.insumo?.id || receta.insumo?.concepto?.conceptId || '',
+                            conceptId: receta.insumo?.codigo?.[0]?.valor || receta.insumo?.concepto?.conceptId || receta._id || '',
                             semanticTag: 'producto'
                         },
                         tipoReceta: receta.tipoReceta || 'simple',
@@ -1219,7 +1219,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                     medicamento: {
                         concepto: {
                             term: receta.insumo?.nombre || receta.insumo?.concepto?.term || '',
-                            conceptId: receta.insumo?.id || receta.insumo?.concepto?.conceptId || '',
+                            conceptId: receta.insumo?.codigo?.[0]?.valor || receta.insumo?.concepto?.conceptId || receta._id || '',
                             semanticTag: 'producto'
                         },
                         tipoReceta: receta.tipoReceta || 'simple',
@@ -1234,7 +1234,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
         request$.subscribe((data) => {
             const grupoRecetas = data.reduce((acc, receta) => {
-                const conceptId = receta.medicamento.concepto.conceptId;
+                const conceptId = receta.medicamento?.concepto?.conceptId || receta._id || '';
                 if (!acc[conceptId]) {
                     acc[conceptId] = [];
                 }
@@ -1283,7 +1283,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 && dispensasPermitidas.includes(receta.estadoDispensaActual?.tipo)) && this.profesionalValido;
         } else {
             const recetasMismoRegistro = this.busquedaRecetas?.flatMap(grupo =>
-                grupo.recetas.filter(r => r.idRegistro === receta.idRegistro && r.medicamento.concepto.conceptId === receta.medicamento.concepto.conceptId)
+                grupo.recetas.filter(r => r.idRegistro === receta.idRegistro && (r.medicamento?.concepto?.conceptId || r._id) === (receta.medicamento?.concepto?.conceptId || receta._id))
             ) || [];
             return recetasMismoRegistro.some(rec =>
                 (estadosPermitidos.includes(rec.estadoActual?.tipo)

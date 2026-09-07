@@ -212,21 +212,32 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
         const estadoDispensa = ['sin-dispensa', 'dispensa-parcial'].toString();
         const options = { pacienteId: this.paciente.id, estadoDispensa };
         this.recetasService.getRecetas(options).subscribe((data) => {
-            const duplicado = data.find(receta =>
-                this.medicamento.generico.conceptId === receta.medicamento.concepto.conceptId &&
-                (receta.estadoActual.tipo === 'vigente' || receta.estadoActual.tipo === 'pendiente') &&
-                (receta.estadoDispensaActual.tipo === 'sin-dispensa' || receta.estadoDispensaActual.tipo === 'dispensa-parcial')
-            );
-            const cargadoActual = this.registro.valor.medicamentos.find(medicamentoCargado =>
-                this.medicamento.generico.conceptId === medicamentoCargado.generico.conceptId
-            );
+            const duplicado = data.find(receta => {
+                const idReceta = receta.medicamento?.esMagistral
+                    ? receta.medicamento?.magistral?.codigo?.[0]?.valor
+                    : receta.medicamento?.concepto?.conceptId;
+                const idNuevo = this.medicamento.generico?.conceptId;
+                return idReceta && idNuevo && idReceta === idNuevo &&
+                    (receta.estadoActual.tipo === 'vigente' || receta.estadoActual.tipo === 'pendiente') &&
+                    (receta.estadoDispensaActual.tipo === 'sin-dispensa' || receta.estadoDispensaActual.tipo === 'dispensa-parcial');
+            });
+            const cargadoActual = this.registro.valor.medicamentos.find(medicamentoCargado => {
+                const idCargado = medicamentoCargado.esMagistral
+                    ? medicamentoCargado.magistral?.codigo?.[0]?.valor
+                    : medicamentoCargado.generico?.conceptId;
+                const idNuevo = this.medicamento.generico?.conceptId;
+                return idCargado && idNuevo && idCargado === idNuevo;
+            });
 
             if (!duplicado && !cargadoActual) {
                 return this.agregarMedicamento();
             } else {
                 if (duplicado) {
                     const fechaRegistro = new Date(duplicado.fechaRegistro).toLocaleString();
-                    this.plex.info('danger', `El medicamento "<b>${duplicado.medicamento.concepto.term}</b>" se encuentra vigente en otra receta.<br><small>Fecha de registro: ${fechaRegistro}</small>`);
+                    const nombreMedicamento = duplicado.medicamento?.esMagistral
+                        ? duplicado.medicamento?.magistral?.nombre
+                        : duplicado.medicamento?.concepto?.term;
+                    this.plex.info('danger', `El medicamento "<b>${nombreMedicamento}</b>" se encuentra vigente en otra receta.<br><small>Fecha de registro: ${fechaRegistro}</small>`);
                 } else {
                     this.plex.info('danger', `El medicamento "<b>${this.medicamento.generico.term}</b>" se encuentra cargado en la receta actual.`);
                 }
