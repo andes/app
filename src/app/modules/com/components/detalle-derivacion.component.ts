@@ -237,7 +237,6 @@ export class DetalleDerivacionComponent implements OnInit {
         });
     }
 
-    // Adjuntar archivo
     onUpload($event) {
         if ($event.status === 200) {
             this.adjuntosEstado.push({

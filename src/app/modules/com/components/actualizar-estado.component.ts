@@ -14,8 +14,7 @@ import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 })
 export class ActualizarEstadoDerivacionComponent implements OnInit {
     @ViewChildren('upload') childsComponents: QueryList<any>;
-    public derivacion;
-    // Adjuntar Archivo
+    private _derivacion;
     errorExt = false;
     waiting = false;
     fileToken: string = null;
@@ -38,8 +37,8 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
     public financiador;
     public financiadorActual;
     public paciente: any;
-    @Input('derivacion')
-    set _derivacion(value) {
+    @Input()
+    set derivacion(value) {
         this.nuevoEstado = {
             observacion: '',
             prioridad: value.prioridad
@@ -48,10 +47,14 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
         this.financiador = value.paciente?.ObraSocial || value.paciente?.obraSocial || value.obraSocial || null;
         this.financiadorActual = this.financiador;
         this.adjuntosEstado = [];
-        this.derivacion = value;
+        this._derivacion = value;
         if (value?.paciente?.id) {
             this.pacienteService.getById(value.paciente.id).subscribe((pac: any) => this.paciente = pac);
         }
+    }
+
+    get derivacion() {
+        return this._derivacion;
     }
 
     @Output() returnEditarEstado: EventEmitter<any> = new EventEmitter<any>();
@@ -81,18 +84,52 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
             }
 
             const obraSocialOrigen = this.financiadorActual || this.derivacion.paciente?.ObraSocial || this.derivacion.paciente?.obraSocial || this.derivacion.obraSocial || null;
-            if (JSON.stringify(this.financiador || null) !== JSON.stringify(obraSocialOrigen || null)) {
-                const valorOS = this.financiador?.nombre === 'Sin obra social' ? null : this.financiador;
+            const huboCambio = JSON.stringify(this.financiador || null) !== JSON.stringify(obraSocialOrigen || null);
+            let valorOS = null;
+            if (huboCambio) {
+                valorOS = this.financiador?.nombre === 'Sin obra social' ? null : this.financiador;
                 this.nuevoEstado.ObraSocial = valorOS;
                 this.nuevoEstado.obraSocial = valorOS;
                 this.nuevoEstado.paciente = { ObraSocial: valorOS, obraSocial: valorOS };
             }
 
             const body: any = { estado: this.nuevoEstado };
-            this.derivacionService.updateHistorial(this.derivacion._id, body).subscribe(() => {
+
+            const doHistorial = () => this.derivacionService.updateHistorial(this.derivacion._id, body).subscribe(() => {
                 this.plex.toast('success', 'La derivación fue actualizada exitosamente');
                 this.returnEditarEstado.emit(true);
             });
+
+            if (huboCambio && this.paciente?.id && !this.paciente?.fechaFallecimiento) {
+                // Lógica inline ex FinanciadorService.principal: mover a [0] sin duplicar por nombre
+                const previo: any[] = this.paciente.financiador ? [...this.paciente.financiador] : [];
+                const nuevo: any[] = [...previo];
+                if (valorOS) {
+                    const claveNuevo = ((valorOS as any).nombre || (valorOS as any).financiador || '').toString().trim().toLowerCase();
+                    const idx = previo.findIndex((f: any) => ((f?.nombre || f?.financiador || '').toString().trim().toLowerCase()) === claveNuevo);
+                    if (idx === -1) {
+                        nuevo.unshift({ ...(valorOS as any), fechaDeActualizacion: new Date() });
+                    } else {
+                        const actual = { ...previo[idx], ...(valorOS as any), fechaDeActualizacion: new Date() };
+                        nuevo.splice(idx, 1);
+                        nuevo.unshift(actual);
+                    }
+                }
+                if (JSON.stringify(nuevo) !== JSON.stringify(previo) || valorOS === null) {
+                    // patch MPI con financiador actualizado (obraSocial principal es nuevo[0])
+                    const patchData: any = { financiador: nuevo };
+                    if (valorOS !== undefined) { patchData.obraSocial = valorOS; }
+                    this.pacienteService.patch(this.paciente.id, patchData).subscribe({
+                        next: () => doHistorial(),
+                        error: () => {
+                            this.plex.info('danger', 'No se pudo actualizar la obra social del paciente. La derivación no se guardó.', 'Error');
+                        }
+                    });
+                    return;
+                }
+            }
+
+            doHistorial();
         }
     }
 
