@@ -4,10 +4,8 @@ import { Component, Input, OnInit, HostBinding, Output, EventEmitter } from '@an
     templateUrl: 'reporteC2.html',
 })
 
-export class ReporteC2Component implements OnInit {
-    ngOnInit(): void {
-        throw new Error('Method not implemented.');
-    }
+export class ReporteC2Component {
+
     private _diagnosticos;
     private diagnostico;
     public seleccionada = [];

@@ -11,7 +11,7 @@ import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.ser
     selector: 'app-desocupar-cama',
     templateUrl: 'desocupar-cama.component.html'
 })
-export class CamaDesocuparComponent implements OnDestroy {
+export class CamaDesocuparComponent {
     camasDisponibles$: Observable<any>;
 
     // EVENTOS
@@ -33,9 +33,6 @@ export class CamaDesocuparComponent implements OnDestroy {
         public mapaCamasService: MapaCamasService,
         public permisosMapaCamasService: PermisosMapaCamasService,
     ) { }
-    ngOnDestroy(): void {
-        throw new Error('Method not implemented.');
-    }
 
     public historial$: Observable<any[]>;
     public movimientoEgreso$: Observable<ISnapshot>;
