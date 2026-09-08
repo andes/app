@@ -55,10 +55,12 @@ export class PacientePanelComponent {
     }
 
     public editRelacion(relacion: any) {
-        this.changeRelacion.emit({ operacion: 'edit', idRelacionado: relacion.referencia });
+        const idRelacionado = relacion.referencia?.id || relacion.referencia?._id || relacion.referencia;
+        this.changeRelacion.emit({ operacion: 'edit', idRelacionado });
     }
 
     public removeRelacion(relacion: any) {
-        this.changeRelacion.emit({ operacion: 'remove', idRelacionado: relacion.referencia });
+        const idRelacionado = relacion.referencia?.id || relacion.referencia?._id || relacion.referencia;
+        this.changeRelacion.emit({ operacion: 'remove', idRelacionado });
     }
 }
