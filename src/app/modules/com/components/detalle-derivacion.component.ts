@@ -63,10 +63,16 @@ export class DetalleDerivacionComponent implements OnInit {
             this.cargarEstado();
         });
     }
+    get derivacion() {
+        return this._derivacion;
+    }
 
     @Input()
     set reglasDerivacion(value) {
         this._reglasDerivacion = value;
+    }
+    get reglasDerivacion() {
+        return this._reglasDerivacion;
     }
 
     @Output() returnDetalle: EventEmitter<any> = new EventEmitter<any>();
