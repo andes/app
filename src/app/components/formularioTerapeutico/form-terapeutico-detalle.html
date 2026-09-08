@@ -1,51 +1,24 @@
-<header>
-    <!--Busqueda de Pacientes-->
-    <div class="row">
-        <div class="clearfix col-12">
-            <div class="page-title"> Detalle Medicamento</div>
-        </div>
-    </div>
-</header>
-<div class="badgeContainer">
-    <plex-badge type="info" *ngIf="medicamento?.concepto?.term.split(', ').length >= 2">
-        {{ medicamento?.concepto?.term.split(', ')[1] }}</plex-badge>
-    <plex-badge type="success" *ngIf="medicamento?.concepto?.term.split(', ').length >= 3">
-        {{ medicamento?.concepto?.term.split(', ')[2] }}</plex-badge>
-</div>
-<div>
-    <div class="titulo-prefix">Medicamento</div>
-    <div class="titulo-principal md" *ngIf="medicamento?.concepto?.term.split(', ').length >= 1">
-        {{ medicamento?.concepto?.term.split(', ')[0] }}</div>
-    <div class="titulo-secundario" *ngIf="medicamento?.especialidades.length >= 0">{{medicamento?.especialidades}}</div>
-</div>
-<div>
-    <div *ngIf="medicamento?.indicaciones !== ''">
-        <div class="titulo-prefix">Indicaciones</div>
-        <div class="andes-texto">{{medicamento?.indicaciones}}</div>
-    </div>
-</div>
-<div>
-    <div *ngIf="medicamento.comentario && medicamento?.comentario !== ''">
-        <div class="titulo-prefix">Comentario</div>
-        <div class="andes-texto">{{medicamento?.comentario}}</div>
-    </div>
-</div>
-<div class="andes-container-secundario">
-    <div class="andes-container-bloque">
-        <div class="titulo-prefix">Carro de Emergencia</div>
-        <div class="andes-texto" *ngIf="medicamento?.carroEmergencia">Si</div>
-        <div class="andes-texto" *ngIf="medicamento?.carroEmergencia === ''">No</div>
-    </div>
-    <div class="andes-container-bloque">
-        <div *ngIf="medicamento?.nivelComplejidad !== ''">
-            <div class="titulo-prefix">Complejidad</div>
-            <div class="andes-texto">{{medicamento?.nivelComplejidad}}</div>
-        </div>
-    </div>
-</div>
-<div class="">
-    <div *ngIf="medicamento.requisitos  && medicamento?.requisitos !== ''">
-        <div class="titulo-prefix">Requisitos</div>
-        <div class="andes-texto"> {{medicamento?.requisitos}}</div>
-    </div>
-</div>
+
+<plex-title titulo="DETALLE" size="lg">
+<plex-button type="danger" tooltip="Eliminar" icon="delete" size="sm"></plex-button>
+<plex-button type="warning" tooltip="Editar" icon="pencil" size="sm" class="ml-1"></plex-button>
+<plex-button type="danger" tooltip="Cerrar" icon="close" size="sm" class="ml-1"></plex-button>
+</plex-title>
+
+<plex-detail size="md">
+    <plex-icon type="" name="pildoras"></plex-icon>
+       <plex-badge class="sistema-chip">SISTEMA GASTROINTESTINAL</plex-badge>
+     <div title>Nombre del medicamento</div>
+     <plex-label titulo="Función" subtitulo="Alteradores de la motilidad intestinal"></plex-label>
+     <plex-label titulo="Grupo farmacológico" subtitulo="Anticolinérgicos"></plex-label>
+     <plex-label titulo="Concepto snomed" subtitulo="317117001"></plex-label>
+     <plex-label titulo="Especialidad" subtitulo="MG"></plex-label>
+     <plex-label titulo="Carro de emergencia" subtitulo="Sin información"></plex-label>
+</plex-detail>
+
+<plex-title titulo="REQUISITO DE PRESCRIPCIÓN" size="sm"></plex-title>
+<!--SI NO HAY DATOS --> <p class="">Sin información</p>
+<plex-title titulo="INDICACIONES" size="sm"></plex-title>
+<!--SI NO HAY DATOS --> <p class="">Sin información</p>
+<plex-title titulo="RECOMENDACIÓN DE USO" size="sm"></plex-title>
+<!--SI NO HAY DATOS --> <p class="">Sin información</p>                  
