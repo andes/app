@@ -187,22 +187,51 @@ export class DetalleDerivacionComponent implements OnInit {
                 delete this.nuevoEstado.prioridad;
             }
             const obraSocialOrigen = this.financiadorActual || this.derivacion.paciente?.ObraSocial || this.derivacion.paciente?.obraSocial || this.derivacion.obraSocial || null;
-            if (JSON.stringify(this.financiador || null) !== JSON.stringify(obraSocialOrigen || null)) {
-                const valorOS = this.financiador?.nombre === 'Sin obra social' ? null : this.financiador;
+            const huboCambio = JSON.stringify(this.financiador || null) !== JSON.stringify(obraSocialOrigen || null);
+            let valorOS = null;
+            if (huboCambio) {
+                valorOS = this.financiador?.nombre === 'Sin obra social' ? null : this.financiador;
                 this.nuevoEstado.ObraSocial = valorOS;
-                this.nuevoEstado.paciente = { ObraSocial: valorOS };
+                this.nuevoEstado.obraSocial = valorOS;
+                this.nuevoEstado.paciente = { ObraSocial: valorOS, obraSocial: valorOS };
             }
             this.derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
             const body: any = { estado: this.nuevoEstado };
 
-            this.derivacionService.updateHistorial(this.derivacion._id, body).subscribe(() => {
+            const doHistorial = () => this.derivacionService.updateHistorial(this.derivacion._id, body).subscribe(() => {
                 this.plex.toast('success', 'La derivación fue actualizada exitosamente');
                 this.returnDetalle.emit(true);
             });
+
+            if (huboCambio && this.paciente?.id && !this.paciente?.fechaFallecimiento) {
+                const previo: any[] = this.paciente.financiador ? [...this.paciente.financiador] : [];
+                const nuevo: any[] = [...previo];
+                if (valorOS) {
+                    const claveNuevo = ((valorOS as any).nombre || (valorOS as any).financiador || '').toString().trim().toLowerCase();
+                    const idx = previo.findIndex((f: any) => ((f?.nombre || f?.financiador || '').toString().trim().toLowerCase()) === claveNuevo);
+                    if (idx === -1) {
+                        nuevo.unshift({ ...(valorOS as any), fechaDeActualizacion: new Date() });
+                    } else {
+                        const actual = { ...previo[idx], ...(valorOS as any), fechaDeActualizacion: new Date() };
+                        nuevo.splice(idx, 1);
+                        nuevo.unshift(actual);
+                    }
+                }
+                if (JSON.stringify(nuevo) !== JSON.stringify(previo) || valorOS === null) {
+                    this.pacienteService.patch(this.paciente.id, { financiador: nuevo }).subscribe({
+                        next: () => doHistorial(),
+                        error: () => this.plex.info('danger', 'No se pudo actualizar la obra social del paciente. La derivación no se guardó.', 'Error')
+                    });
+                    return;
+                }
+            } else if (huboCambio && this.paciente?.fechaFallecimiento) {
+                this.plex.info('warning', 'Paciente fallecido: la obra social del paciente no se modificará, solo la derivación.', 'Advertencia');
+            }
+
+            doHistorial();
         }
     }
 
-    // Adjuntar archivo
     onUpload($event) {
         if ($event.status === 200) {
             this.adjuntosEstado.push({

@@ -1,8 +1,8 @@
 <ng-container *ngIf="registro">
     <plex-title titulo=" DATOS DE DERIVACIÓN " size="lg">
         <div class="titulo-badges">
-            <plex-button size="sm" class="pr-1" type="info" [icon]="'printer'" title="Imprimir histórico de derivación"
-                         [disabled]="requestInProgress" (click)="imprimirHistorial()">
+            <plex-button size="sm" class="pr-1" type="info" icon="printer" [disabled]="requestInProgress"
+                         (click)="imprimirHistorial()">
             </plex-button>
             <plex-badge *ngIf="registro.estado === 'solicitada' || registro.estado === 'asignada' || registro.estado === 'finalizada' "
                         type="info">
