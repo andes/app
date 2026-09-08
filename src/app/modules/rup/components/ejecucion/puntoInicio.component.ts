@@ -264,7 +264,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     chequearMultiprestacion(id) {
-        const prestacion = this.tiposPrestacion.find(p => p.id === id);
+        const prestacion = this.tiposPrestacion.find(p => p.conceptId === id);
         if (prestacion?.multiprestacion?.length >= 1) {
             const prestacionHijo = this.tiposPrestacion.find(p => prestacion.multiprestacion.find(concepto => concepto.conceptId === p.conceptId));
             if (prestacionHijo) {
@@ -437,7 +437,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     iniciarPrestacion(turno) {
         const paciente = turno.paciente;
-        const snomedConcept = this.chequearMultiprestacion(turno.tipoPrestacion.id); // llamar a metodo y recorrer prestaciones;
+        const snomedConcept = this.chequearMultiprestacion(turno.tipoPrestacion.conceptId); // llamar a metodo y recorrer prestaciones;
         this.servicioPrestacion.get({
             organizacion: this.auth.organizacion.id,
             turnos: [turno.id],
@@ -608,7 +608,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     tienePermisos(turno) {
         const existe = this.tiposPrestacion.find(tp => (tp.id === turno.tipoPrestacion?.id || tp.conceptId === turno.tipoPrestacion?.conceptId));
         if (turno.prestaciones[0]) {
-            const permisoValidar = this.tiposPrestacion.some(tt => (tt === turno.prestaciones[0].solicitud.tipoPrestacion.id || tt.conceptId === turno.prestaciones[0].solicitud.tipoPrestacion.conceptId));
+            const permisoValidar = this.prestacionesValidacion.some(tt => tt === turno.prestaciones[0].solicitud.tipoPrestacion.id);
             const estado = turno.prestaciones[0].estados[turno.prestaciones[0].estados.length - 1];
             if (estado.tipo !== 'pendiente' && !(estado.createdBy.username === this.auth.usuario.username || permisoValidar)) {
                 return false;
@@ -619,7 +619,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     checkPuedeValidar(prestacion) {
         const miPrestacion = prestacion.estadoActual.createdBy.username === this.auth.usuario.username;
-        const permisoValidar = this.tiposPrestacion.some(tt => (tt === prestacion.solicitud.tipoPrestacion.id || tt.conceptId === prestacion.solicitud.tipoPrestacion.conceptId));
+        const permisoValidar = this.prestacionesValidacion.some(tt => tt === prestacion.solicitud.tipoPrestacion.id);
         return miPrestacion || permisoValidar;
     }
 
@@ -691,7 +691,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         const prestacion = this.tiposPrestacion.find(tipoPrestacion => tipoPrestacion.conceptId === turno.tipoPrestacion?.conceptId);
 
         if (prestacion && prestacion.multiprestacion) {
-            const prestacionHijo = this.chequearMultiprestacion(turno.tipoPrestacion.id);
+            const prestacionHijo = this.chequearMultiprestacion(turno.tipoPrestacion.conceptId);
             if (!prestacionHijo) {
                 return false;
             }
