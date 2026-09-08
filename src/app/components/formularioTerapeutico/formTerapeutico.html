@@ -1,39 +1,80 @@
-<section>
+<plex-layout [main]="8">
+    <plex-layout-main>
+        <header>
+            <plex-title titulo="FORMULARIO TERAPÉUTICO">
+               <plex-button label="CREAR NUEVO" type="success" size="sm"></plex-button>
+               <plex-button label="VOLVER" type="danger" size="sm" class="ml-1"></plex-button>
+            </plex-title>
+        </header>
+
+<div class="scroll-menu" aria-label="Filtros de sistema">
+    <ul class="menu-list">
+        <li class="menu-item" *ngFor="let s of sistemas">
+            <button type="button" class="icon-btn"
+                [class.active]="sistemaSeleccionado === s.id"
+                [style.--icon-color]="s.color"
+                [attr.aria-pressed]="sistemaSeleccionado === s.id"
+                (click)="seleccionarSistema(s)">
+                <plex-icon [name]="s.icon" size="xl"></plex-icon>
+            </button>
+        </li>
+    </ul>
+</div>
+
+        <plex-wrapper>
+            <plex-select label="Función" name="funcion" [data]="opciones" [(ngModel)]="funcion"></plex-select>
+            <plex-select label="Grupo farmacológico" name="grupoFarmacologico" [data]="grupos" [(ngModel)]="grupoFarmacologico"></plex-select>
+            <plex-text label="Medicamento*" name="medicamento" [(ngModel)]="medicamento"></plex-text>
+            <plex-text label="Concepto Snomed" name="conceptoSnomed" [(ngModel)]="conceptoSnomed"></plex-text>    
+        </plex-wrapper>
+
+        <plex-title titulo="Listado"></plex-title>
+
+<!-- <div class=""
+               <plex-label icon="notas-editar" type="info" size="lg" titulo="Bienvenido al formulario terapéutico"
+                subtitulo="Aquí podrás visualizar una guía para prescribir fármacos de manera segura y ordenada.">
+               </plex-label>
+      </div> -->
+<plex-table [columns]="columnas">
+<plex-table-columns>
+</plex-table-columns>       
+            <tr>
+                <td>Sistema gastrointestinal</td>
+                <td>Alteradores de la motilidad intestinal</td>
+                <td>anticolinérgicos</td>
+                <td>Hioscina N- Butilbromuro. 20 mg/mL. Ampolla x 1 mL.. IV/IM</td>
+                <td>317117001</td>
+            </tr>
+            <tr>
+                <td>Sistema gastrointestinal</td>
+                <td>Alteradores de la motilidad intestinal</td>
+                <td>Procinéticos</td>
+                <td>Metoclopramida 5 mg/mL. Ampolla x 2 mL.IV/IM.</td>
+                <td>322093006</td>
+            </tr>
+            <tr>
+                <td>Sistema gastrointestinal</td>
+                <td>Alteradores de la motilidad intestinal</td>
+                <td>Procinéticos</td>
+                <td>Metoclopramida 10 mg. Comprimido. V.O.</td>
+                <td>322093006</td>
+            </tr>
+            <tr>
+                <td>Sistema gastrointestinal</td>
+                <td>Alteradores de la motilidad intestinal</td>
+                <td>Laxantes</td>
+                <td>PICOSULFATO DE SODIO gotas 7,5 mg/ml 50 ml. V.O.</td>
+                <td>322093006</td>
+            </tr>
+        </plex-table>
+
+    </plex-layout-main>
+<plex-layout-sidebar type="invert">
+<ng-container>
+<form-terapeutico-detalle>
+</form-terapeutico-detalle>
+</ng-container>
+</plex-layout-sidebar>
 
 
-    <div class="row">
-        <div class="col">
-            <plex-box>
-                <header>
-                    <!--Busqueda de Pacientes-->
-                    <div class="row">
-                        <div class="clearfix col-10">
-                            <div class="page-title">ARBOL | FORMULARIO TERAPEUTICO</div>
-                        </div>
-                        <div class="col-2">
-                            <button (click)='plegar()' class="btn btn-info">Plegar arbol</button>
-                        </div>
-                    </div>
-                </header>
-                <div *ngFor="let indice of indices">
-                    <arbolItem [indice]="indice" #arbol [newMedicamento]='newMedicamento' (hijosOutPut)='recibeHijos($event)' (borradoOutPut)='borrar($event)' (enviarDetalle)="detallesMedicamento($event)"
-                        (enviarDatosMedicamento)='recibeMedicamenteAgregar($event)'
-                        [deep]="0"></arbolItem>
-                </div>
-            </plex-box>
-        </div>
-        <div class="col-4" *ngIf='detalleMedicamento'>
-            <plex-box>
-                <form-terapeutico-detalle [medicamento]='detalleMedicamento'></form-terapeutico-detalle>
-            </plex-box>
-        </div>
-        <div class="col-4" *ngIf='datosArbol'>
-            <plex-box>
-                <app-addFormTerapeutico (objNuevoMedicamento)="agregar($event)"></app-addFormTerapeutico>
-            </plex-box>
-        </div>
-    </div>
-
-
-
-</section>
+</plex-layout>
