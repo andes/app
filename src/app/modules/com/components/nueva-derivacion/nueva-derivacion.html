@@ -72,7 +72,7 @@
     <plex-layout-sidebar type="invert">
         <plex-title titulo="Detalle del paciente">
             <plex-button *ngIf="puedeVerHuds" type="info" icon="historial" (click)="showMotivoAcceso()" class="mr-1"
-                         tooltip="HUDS del paciente">
+                         tooltip="HUDS del paciente" tooltipPosition="left">
             </plex-button>
         </plex-title>
         <paciente-detalle *ngIf="paciente" [paciente]="paciente"></paciente-detalle>
