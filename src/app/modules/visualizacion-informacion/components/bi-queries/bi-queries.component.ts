@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -29,6 +31,9 @@ export class BiQueriesComponent implements OnInit {
     public inProgress = false;
     private idSubmoduloQueries = '60cce2a42e15361fe51b373d'; // coleccion modulos, mod. visualizacion, submodulo bi-queries
     public descripcion;
+    public restriccionRango;
+    public maxFechaHasta: Date;
+    public minFechaDesde: Date;
 
     constructor(
         private queryService: QueriesService,
@@ -38,6 +43,7 @@ export class BiQueriesComponent implements OnInit {
         private formsService: FormsService,
         private auth: Auth,
         private router: Router,
+        private plex: Plex,
         private organizacionService: OrganizacionService
     ) { }
 
@@ -99,6 +105,9 @@ export class BiQueriesComponent implements OnInit {
             this.organizacionesDestinoFiltradas = this.organizaciones;
             this.argumentos = this.consultaSeleccionada.argumentos;
             this.inProgress = false;
+            this.restriccionRango = this.consultaSeleccionada.restriccionRango || null;
+            this.maxFechaHasta = null;
+            this.minFechaDesde = null;
             this.descripcion = '<b> Descripción: </b> ' + this.consultaSeleccionada.descripcion;
         }
     }
@@ -161,8 +170,43 @@ export class BiQueriesComponent implements OnInit {
         this.formsService.search().subscribe(res => event.callback(res));
     }
 
+    cambiarFecha() {
+        if (!this.restriccionRango) {
+            return;
+        }
+        const desde = this.argumentos[this.restriccionRango.keyDesde];
+        const hasta = this.argumentos[this.restriccionRango.keyHasta];
+        this.maxFechaHasta = desde ? moment(desde).add(this.restriccionRango.cantidad, this.restriccionRango.unidad).toDate() : null;
+        this.minFechaDesde = hasta ? moment(hasta).subtract(this.restriccionRango.cantidad, this.restriccionRango.unidad).toDate() : null;
+    }
+
+    getMin(key): Date {
+        return this.restriccionRango && key === this.restriccionRango.keyDesde ? this.minFechaDesde : null;
+    }
+
+    getMax(key): Date {
+        return this.restriccionRango && key === this.restriccionRango.keyHasta ? this.maxFechaHasta : null;
+    }
+
+    rangoValido(): boolean {
+        if (!this.restriccionRango) {
+            return true;
+        }
+        const desde = this.argumentos[this.restriccionRango.keyDesde];
+        const hasta = this.argumentos[this.restriccionRango.keyHasta];
+        if (desde && hasta) {
+            const diff = moment(hasta).diff(moment(desde), 'months', true);
+            return diff <= this.restriccionRango.cantidad;
+        }
+        return true;
+    }
+
     descargar() {
         if (this.consultaSeleccionada) {
+            if (!this.rangoValido()) {
+                this.plex.info('warning', this.restriccionRango.mensaje || `El rango máximo entre las fechas es de ${this.restriccionRango.cantidad} ${this.restriccionRango.unidad}.`, 'Atención');
+                return;
+            }
             const params = {};
             this.argumentos.map(arg => {
                 const key: string = arg.key;
