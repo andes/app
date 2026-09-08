@@ -118,7 +118,11 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.constantesService.search({ source: 'prestacion:validacion' }).subscribe(constante => {
-            this.tiempoLimiteRomperValidacion = constante[0].key || 30; // días
+            if (constante && constante.length && constante[0]?.key) {
+                this.tiempoLimiteRomperValidacion = constante[0].key;
+            } else {
+                this.tiempoLimiteRomperValidacion = 30;
+            }
         });
         // consultamos desde que pagina se ingreso para poder volver a la misma
         this.btnVolver = 'Volver';
@@ -589,6 +593,12 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
     esDiagonisticoPrincipal(elemento) {
         return this.elementoRUP.requiereDiagnosticoPrincipal && this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado';
+    }
+
+
+    tieneAddRegister(elemento): boolean {
+        const elementoRUP = this.elementosRUPService?.elementoRegistro(elemento);
+        return !!elementoRUP?.requeridos?.some(requerido => requerido.params?.addRegister !== undefined);
     }
 
     estaVencida() {

@@ -49,6 +49,11 @@ export class IPrestacionRegistro {
     isSection: boolean;
     noIndex: boolean;
 
+    // Marca interna para identificar registros creados desde una molécula
+    _origenMolecula?: boolean;
+    // Identificador auxiliar usado en algunos lugares (p. ej. '_id' cuando se copia/serializa)
+    _id?: string;
+
     createdAt: Date;
 
     // Virtuales 🤷
