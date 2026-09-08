@@ -5,11 +5,11 @@
         </plex-button>
 
     </div>
-    <plex-accordion>
+    <plex-accordion class="d-flex flex-column">
         <ng-container *ngFor="let item of requeridos; let i = index">
             <plex-panel [class.alerta-campo]="!rupInstance.isValid" [active]="isActive(i)"
                         (toggle)="accordionSeleccionado(i, item.concepto)" class="hover">
-                <div plex-accordion-title justify>
+                <div plex-accordion-title justify class="p-2">
                     <span class="contenedor-icono" *ngIf="item.params.icon">
                         <plex-icon [prefix]="iconPrefix(item.params.icon)" [name]="iconName(item.params.icon)">
                         </plex-icon>

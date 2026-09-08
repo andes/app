@@ -11,14 +11,14 @@
         <div [class]="colForOptions" *ngIf="!soloValores && conceptosSeleccionar?.length > 0">
             <ng-container *ngFor=" let concepto of conceptosSeleccionar; let i=index">
                 <plex-bool *ngIf="!soloValores" [(ngModel)]="concepto.checked" (change)="seleccionarOpcion(concepto)"
-                           label="{{concepto.term}}" name="concepto-{{concepto.conceptId}}"></plex-bool>
+                    label="{{concepto.term}}" name="concepto-{{concepto.conceptId}}"></plex-bool>
             </ng-container>
 
         </div>
         <div [class]="colForText" *ngIf="!(conceptosSeleccionar?.length > 0) && params.showText">
             <plex-text [html]="true" *ngIf="!soloValores && afterInit" class="form-control" [(ngModel)]="registro.valor"
-                       name="descripcion" [required]="params.textRequired" rows="6" [height]="'200px'"
-                       placeholder="Describir tratamiento">
+                name="descripcion" [required]="params.textRequired" rows="6" [height]="'200px'"
+                placeholder="Describir tratamiento">
             </plex-text>
 
             <ng-container *ngIf="params.showText && soloValores">
@@ -26,133 +26,146 @@
             </ng-container>
 
         </div>
-        <!-- Area droppable del elemento -->
-        <div [class]="colForRegistros" class="mt-4" droppable [dropScope]="'registros-rup'"
-             [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)">
-            <div class="text-center" *ngIf="soloValores && registro?.registros?.length === 0">
-                No hay registros vinculados
+        <!-- Area droppable o RUP interno -->
+        <ng-container *ngIf="registro.elementoRUP">
+            <div [class]="colForRegistros" class="mt-4">
+                <rup [elementoRUP]="elementosRUPService.buscarElemento(this.registro.concepto, this.registro.esSolicitud, this.registro.esIndicacion)"
+                    [prestacion]="prestacion" [paciente]="paciente" [registro]="registro" [soloValores]="soloValores"
+                    [params]="elementosRUPService.getParams(registro)" #rupInstance>
+                </rup>
             </div>
-            <div class="text-center" *ngIf="!soloValores && !registro?.registros?.length && !ocultarPanel">
-                <p>
-                    <i class="mdi mdi-plus-circle"></i>
-                    <br> Agregar prestaciones
-                    <br>asociadas al tratamiento
-                </p>
-            </div>
-            <div *ngIf="registro?.registros?.length">
-                <ng-container *ngFor="let registro of registro.registros, let i = index">
-                    <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)"
-                         [dragOverClass]="'drag-target-border'" [ngClass]="{'relacionado': registro?.relacionadoCon}">
-                        <div class="branch"></div>
-                        <div class="rup-card {{ registro | semanticClass}}">
-                            <div class="rup-header">
-                                <div class="icon-rup drag-handle" draggable
-                                     [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
-                                     [dragClass]="'drag-target-border'" [dragData]="registro">
-                                    <i class="adi {{ registro | semanticIcon }}"></i>
-                                </div>
-                                <div class="title">
-                                    {{registro.nombre}}
+        </ng-container>
 
-                                    <div class="vinculadoCon"
-                                         *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))">
+        <ng-container *ngIf="!registro.elementoRUP">
+            <div [class]="colForRegistros" class="mt-4" droppable [dropScope]="'registros-rup'"
+                [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)">
+                <div class="text-center" *ngIf="soloValores && registro?.registros?.length === 0">
+                    No hay registros vinculados
+                </div>
+                <div class="text-center" *ngIf="!soloValores && !registro?.registros?.length && !ocultarPanel">
+                    <p>
+                        <i class="mdi mdi-plus-circle"></i>
+                        <br> Agregar prestaciones
+                        <br>asociadas al tratamiento
+                    </p>
+                </div>
+                <div *ngIf="registro?.registros?.length">
+                    <ng-container *ngFor="let registro of registro.registros, let i = index">
+                        <div droppable [dropScope]="'vincular-registros-rup'"
+                            (onDrop)="vincularRegistros($event, registro)" [dragOverClass]="'drag-target-border'"
+                            [ngClass]="{'relacionado': registro?.relacionadoCon}">
+                            <div class="branch"></div>
+                            <div class="rup-card {{ registro | semanticClass}}">
+                                <div class="rup-header">
+                                    <div class="icon-rup drag-handle" draggable
+                                        [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
+                                        [dragClass]="'drag-target-border'" [dragData]="registro">
+                                        <i class="adi {{ registro | semanticIcon }}"></i>
+                                    </div>
+                                    <div class="title">
+                                        {{registro.nombre}}
 
-                                        <plex-badge type="info">
-                                            {{registro.relacionadoCon[0].concepto.term }}
-                                        </plex-badge>
-                                        <button (click)="desvincular(registro, registro.relacionadoCon[0])"
+                                        <div class="vinculadoCon"
+                                            *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))">
+
+                                            <plex-badge type="info">
+                                                {{registro.relacionadoCon[0].concepto.term }}
+                                            </plex-badge>
+                                            <button (click)="desvincular(registro, registro.relacionadoCon[0])"
                                                 class="desvincular"
                                                 *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen && !soloValoresfact"
-                                                title="Desvincular"><plex-icon name="link-variant-off"></plex-icon> 
-                                                
-                                        </button>
+                                                title="Desvincular"><plex-icon name="link-variant-off"></plex-icon>
+
+                                            </button>
 
 
-                                    </div>
-                                </div>
-                                <div class="actions"
-                                     *ngIf="!confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i) )">
-                                    <ng-container *ngIf="registro?.privacy?.scope !== 'public'">
-                                        <plex-badge type="info">
-                                            Registro Privado
-                                        </plex-badge>
-                                    </ng-container>
-                                    <plex-badge [type]="registro | semanticClass">
-                                        {{ registro.esSolicitud ? 'solicitud': registro.concepto.semanticTag }}
-                                    </plex-badge>
-                                    <plex-badge type="info"
-                                                *ngIf='registro.esPrimeraVez && prestacion.estados && prestacion.estados[prestacion.estados.length - 1].tipo === "validada"'>
-                                        Es primera vez
-                                    </plex-badge>
-
-                                    <ng-container *ngIf="checkPlantilla(registro) && !soloValores">
-                                        <ng-container
-                                                      *ngIf="(plantillasService.plantillas(registro.concepto.conceptId,registro.esSolicitud) | async) as plantillas">
-                                            <plex-dropdown type="primary" class="dropdown-inline" [right]="true"
-                                                           icon="playlist-plus" [items]="plantillas"
-                                                           title="Seleccionar plantilla" titlePosition="left"
-                                                           *ngIf="plantillas.length > 0">
-                                            </plex-dropdown>
-                                        </ng-container>
-                                    </ng-container>
-
-                                    <plex-button size="sm" type="danger" icon="delete" *ngIf="!soloValores"
-                                                 title="Quitar de la consulta" titlePosition="left"
-                                                 (click)="confirmarEliminarRegistro(registro, 'card')">
-                                    </plex-button>
-
-                                    <rup-acciones-envio-informe [prestacion]="prestacion" [registro]="registro">
-                                    </rup-acciones-envio-informe>
-                                    <plex-button type="primary" size="sm"
-                                                 icon="{{ itemsRegistros[registro.id]?.collapse ? 'chevron-down' : 'chevron-up'}}"
-                                                 title="{{ itemsRegistros[registro.id]?.collapse ? 'Expandir' : 'Colapsar'}}"
-                                                 titlePosition="left" (click)="cambiaValorCollapse(registro.id)">
-                                    </plex-button>
-                                </div>
-                            </div>
-                            <div class="rup-body"
-                                 [hidden]="itemsRegistros[registro.id]?.collapse || (confirmarEliminar && indexEliminar === i) || confirmarDesvincular[registro.id]">
-                                <!-- ... Body -->
-                                <div class="content">
-                                    <rup [elementoRUP]="elementosRUPService.elementoRegistro(registro)"
-                                         [prestacion]="prestacion" [paciente]="paciente" [registro]="registro"
-                                         [soloValores]="soloValores" [params]="elementosRUPService.getParams(registro)">
-                                    </rup>
-                                </div>
-                            </div>
-                            <!-- ... Footer -->
-                            <div class="rup-footer" *ngIf="registro.relacionadoCon || confirmarEliminar">
-                                <!-- <div class="type"></div> -->
-                                <div class="text-center col"
-                                     *ngIf="registro.relacionadoCon && registro.relacionadoCon.length> 0 && confirmarDesvincular[registro.id]">
-                                    <div class="confirmarDesvincular"> ¿Confirmar desvinculación con
-                                        <b>{{registro.relacionadoCon[0].concepto.term}}</b>?
-                                        <div class="buttons">
-                                            <plex-button (click)="cancelarDesvincular(registro.id)" label="Cancelar"
-                                                         type="default"></plex-button>
-                                            <plex-button (click)="confirmarDesvinculacion(registro.id, i)"
-                                                         label="Desvincular" type="success"></plex-button>
                                         </div>
                                     </div>
+                                    <div class="actions"
+                                        *ngIf="!confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i) )">
+                                        <ng-container *ngIf="registro?.privacy?.scope !== 'public'">
+                                            <plex-badge type="info">
+                                                Registro Privado
+                                            </plex-badge>
+                                        </ng-container>
+                                        <plex-badge [type]="registro | semanticClass">
+                                            {{ registro.esSolicitud ? 'solicitud': registro.concepto.semanticTag }}
+                                        </plex-badge>
+                                        <plex-badge type="info"
+                                            *ngIf='registro.esPrimeraVez && prestacion.estados && prestacion.estados[prestacion.estados.length - 1].tipo === "validada"'>
+                                            Es primera vez
+                                        </plex-badge>
+
+                                        <ng-container *ngIf="checkPlantilla(registro) && !soloValores">
+                                            <ng-container
+                                                *ngIf="(plantillasService.plantillas(registro.concepto.conceptId,registro.esSolicitud) | async) as plantillas">
+                                                <plex-dropdown type="primary" class="dropdown-inline" [right]="true"
+                                                    icon="playlist-plus" [items]="plantillas"
+                                                    title="Seleccionar plantilla" titlePosition="left"
+                                                    *ngIf="plantillas.length > 0">
+                                                </plex-dropdown>
+                                            </ng-container>
+                                        </ng-container>
+
+                                        <plex-button size="sm" type="danger" icon="delete" *ngIf="!soloValores"
+                                            title="Quitar de la consulta" titlePosition="left"
+                                            (click)="confirmarEliminarRegistro(registro, 'card')">
+                                        </plex-button>
+
+                                        <rup-acciones-envio-informe [prestacion]="prestacion" [registro]="registro">
+                                        </rup-acciones-envio-informe>
+                                        <plex-button type="primary" size="sm"
+                                            icon="{{ itemsRegistros[registro.id]?.collapse ? 'chevron-down' : 'chevron-up'}}"
+                                            title="{{ itemsRegistros[registro.id]?.collapse ? 'Expandir' : 'Colapsar'}}"
+                                            titlePosition="left" (click)="cambiaValorCollapse(registro.id)">
+                                        </plex-button>
+                                    </div>
                                 </div>
-                                <div class="text-center col"
-                                     *ngIf="confirmarEliminar && scopeEliminar === 'card' && indexEliminar === i">
-                                    <div class="confirmarDesvincular">
-                                        <div>¿Quitar de esta consulta?</div>
-                                        <div class="buttons">
-                                            <plex-button type="danger" label="Cancelar"
-                                                         (click)="confirmarEliminar = false;" class="hover">
-                                            </plex-button>
-                                            <plex-button type="success" label="Confirmar" (click)="eliminarRegistro()"
-                                                         class="confirm hover"></plex-button>
+                                <div class="rup-body"
+                                    [hidden]="itemsRegistros[registro.id]?.collapse || (confirmarEliminar && indexEliminar === i) || confirmarDesvincular[registro.id]">
+                                    <!-- ... Body -->
+                                    <div class="content">
+                                        <rup [elementoRUP]="elementosRUPService.elementoRegistro(registro)"
+                                            [prestacion]="prestacion" [paciente]="paciente" [registro]="registro"
+                                            [soloValores]="soloValores"
+                                            [params]="elementosRUPService.getParams(registro)">
+                                        </rup>
+                                    </div>
+                                </div>
+                                <!-- ... Footer -->
+                                <div class="rup-footer" *ngIf="registro.relacionadoCon || confirmarEliminar">
+                                    <!-- <div class="type"></div> -->
+                                    <div class="text-center col"
+                                        *ngIf="registro.relacionadoCon && registro.relacionadoCon.length> 0 && confirmarDesvincular[registro.id]">
+                                        <div class="confirmarDesvincular"> ¿Confirmar desvinculación con
+                                            <b>{{registro.relacionadoCon[0].concepto.term}}</b>?
+                                            <div class="buttons">
+                                                <plex-button (click)="cancelarDesvincular(registro.id)" label="Cancelar"
+                                                    type="default"></plex-button>
+                                                <plex-button (click)="confirmarDesvinculacion(registro.id, i)"
+                                                    label="Desvincular" type="success"></plex-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center col"
+                                        *ngIf="confirmarEliminar && scopeEliminar === 'card' && indexEliminar === i">
+                                        <div class="confirmarDesvincular">
+                                            <div>¿Quitar de esta consulta?</div>
+                                            <div class="buttons">
+                                                <plex-button type="danger" label="Cancelar"
+                                                    (click)="confirmarEliminar = false;" class="hover">
+                                                </plex-button>
+                                                <plex-button type="success" label="Confirmar"
+                                                    (click)="eliminarRegistro()" class="confirm hover"></plex-button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </ng-container>
+                    </ng-container>
+                </div>
             </div>
-        </div>
+        </ng-container>
     </div>
 </form>
