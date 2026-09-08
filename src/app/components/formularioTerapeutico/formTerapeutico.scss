@@ -1,0 +1,42 @@
+$color-sistema: #00A5DD;
+
+.scroll-menu {
+    width: 100%;
+    overflow-x: auto;
+    margin: 16px 0;
+
+    .menu-list {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        gap: 16px;
+    }
+
+    .menu-item {
+        display: flex;
+        flex: 0 0 auto;
+    }
+
+    .icon-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 62px;
+        height: 62px;
+        border-radius: 50%;
+        border: 2px solid var(--icon-color, #{$color-sistema});
+        background-color: transparent;
+        cursor: pointer;
+        padding: 0;
+        transition: background-color .2s ease;
+
+        plex-icon {
+            color: var(--icon-color, #{$color-sistema});
+        }
+
+        &:hover {
+            background-color: color-mix(in srgb, var(--icon-color, #{$color-sistema}) 8%, transparent);
+        }
+    }
+}
