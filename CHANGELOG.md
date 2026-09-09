@@ -1,3 +1,12 @@
+## [5.173.5](https://github.com/andes/app/compare/v5.173.4...v5.173.5) (2026-09-09)
+
+
+### Bug Fixes
+
+* **RUP:** vuelve el control de validacion extra ([#3406](https://github.com/andes/app/issues/3406)) ([e0b5d08](https://github.com/andes/app/commit/e0b5d08bd8ff04b4c9df0322792bc63095f1ba01))
+* filtrar acceso a fuera de agenda ([#3405](https://github.com/andes/app/issues/3405)) ([5a2b9de](https://github.com/andes/app/commit/5a2b9de344cf9d1201458a091058646af2aa1fe7))
+* **RUP:** Se agregar control de permiso por snomed y no solo por id ([#3401](https://github.com/andes/app/issues/3401)) ([0a51ab8](https://github.com/andes/app/commit/0a51ab889e3cbd37d36b819238ccfe7ad7f7c816))
+
 ## [5.173.4](https://github.com/andes/app/compare/v5.173.3...v5.173.4) (2026-08-12)
 
 
