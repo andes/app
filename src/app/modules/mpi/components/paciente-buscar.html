@@ -1,9 +1,29 @@
 <plex-wrapper>
     <plex-text [(ngModel)]="textoLibre" (change)="buscar($event)" name='buscador' [debounce]="500"
-               [autoFocus]="autoFocus" prefix="barcode-scan"
-               placeholder="Escanee un documento digital, o escriba un documento / apellido / nombre">
+        [autoFocus]="autoFocus" prefix="barcode-scan"
+        placeholder="Escanee un documento digital, o escriba un documento / apellido / nombre">
     </plex-text>
+    <plex-button type="info" [icon]="busquedaAvanzada ? 'chevron-up' : 'chevron-down'" label="Búsqueda avanzada"
+        (click)="toggleBusquedaAvanzada()" class="mr-1">
+    </plex-button>
     <plex-dropdown *ngIf="create" class="mr-0 dropdown-inline" [disabled]="disabled"
-                   [type]="disabled ? 'default' : 'primary'" [right]="true" [items]="routes" label="NUEVO PACIENTE">
+        [type]="disabled ? 'default' : 'primary'" [right]="true" [items]="routes" label="NUEVO PACIENTE">
     </plex-dropdown>
 </plex-wrapper>
+
+<div *ngIf="busquedaAvanzada" class="mt-3 mb-4">
+    <plex-grid type="sm" cols="4">
+        <plex-text [(ngModel)]="localidad" label="Localidad" placeholder="Buscar por localidad"
+            (change)="buscar($event)" [disabled]="disabled" [debounce]="500" name="localidad">
+        </plex-text>
+        <plex-datetime type="date" [(ngModel)]="fechaNacimientoDesde" label="Fecha de nacimiento desde" (change)="buscar($event)"
+            [disabled]="disabled" name="fechaNacimientoDesde">
+        </plex-datetime>
+        <plex-datetime type="date" [(ngModel)]="fechaNacimientoHasta" label="Fecha de nacimiento hasta" (change)="buscar($event)"
+            [disabled]="disabled" name="fechaNacimientoHasta">
+        </plex-datetime>
+        <plex-text [(ngModel)]="obraSocial" label="Obra Social" placeholder="Buscar por obra social"
+            (change)="buscar($event)" [disabled]="disabled" [debounce]="500" name="obraSocial">
+        </plex-text>
+    </plex-grid>
+</div>
