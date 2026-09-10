@@ -86,6 +86,8 @@ export class ExportarHudsComponent implements OnInit {
         this.fechaDesde = null;
         this.fechaHasta = null;
         this.prestacion = null;
+        this.excluirVacunas = false;
+        this.excluirLaboratorio = false;
         this.motivoSolicitud = null;
         this.numeroReferencia = '';
         this.detalleSolicitud = '';
