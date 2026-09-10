@@ -1,7 +1,6 @@
 import { distinctUntilChanged, map, scan, filter, publishReplay, refCount, tap } from 'rxjs/operators';
 import { pipe, OperatorFunction } from 'rxjs';
 import { saveAs as saveAsFileSaver } from 'file-saver';
-import { Slug } from 'ng2-slugify';
 import * as moment_ from 'moment';
 const moment = moment_;
 
@@ -52,17 +51,25 @@ function getHeaders(type: Extensiones) {
 
 export function saveAs(fileName: string, type: Extensiones, timestamp = true) {
     return tap((blobData: any) => {
-        const slug = new Slug('default');
         const headers = getHeaders(type);
         if (blobData) {
             const blob = new Blob([blobData], headers);
             const timestampText = timestamp ? ` - ${moment().format('DD-MM-YYYY-hmmss')}` : '';
-            const file = slug.slugify(`${fileName}${timestampText}`) + `.${type}`;
+            const file = slugify(`${fileName}${timestampText}`) + `.${type}`;
             saveAsFileSaver(blob, file);
         } else {
             window.print();
         }
     });
+}
+
+function slugify(text: string): string {
+    return text
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
 }
 
 export * from './cache-storage';
