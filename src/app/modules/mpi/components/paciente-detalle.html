@@ -2,8 +2,8 @@
     <plex-button *ngIf="hudsPermiso && accesoHuds" class="float-right mt-4 mr-1" right="true" type="info" size="sm"
                  tooltip="Ver HUDS del paciente" tooltipPosition="left" icon="historial" (click)="showMotivoAcceso()">
     </plex-button>
-    <plex-detail [direction]="orientacion === 'vertical' ? 'column' : 'row'" [size]="size" [items]="datos"
-                 [justify]="justificado">
+    <plex-detail class="plex-detail" [direction]="orientacion === 'vertical' ? 'column' : 'row'" [size]="size"
+                 [items]="datos" [justify]="justificado">
         <img [ngClass]="{'img-fallecido' : paciente?.fechaFallecimiento}" [mpiFotoPaciente]=" paciente" />
 
         <plex-badge *ngIf="paciente.estado" [type]="estadoBadgeType">
@@ -111,14 +111,8 @@
 
     </plex-detail>
 
-    <!-- Se muestran las notas destacadas de un paciente -->
-    <plex-title titulo=" Notas" size="sm" *ngIf="notasDestacadas.length">
-    </plex-title>
 
-    <ng-container *ngFor="let n of notasDestacadas">
-        <plex-label *ngIf="n.destacada" titulo="{{ n.titulo || 'Sin titulo' }}" [subtitulo]="n.nota" grow="4">
-        </plex-label>
-    </ng-container>
+
 
 </ng-container>
 
