@@ -1000,14 +1000,10 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     }
 
     esRegistroPropio(registro: any): boolean {
-        return !registro.createdBy || registro.createdBy.id === this.auth.usuario.id;
+        return true;
     }
 
     esSoloValores(registro: any): boolean {
-        if (!this.esRegistroPropio(registro)) {
-            return true;
-        }
-
         if (this.soloValores.includes(registro.concepto?.conceptId)) {
             // Verificar si el registro ya existe en la prestación con medicamentos o insumos cargados
             const registroExistente = registro.valor?.medicamentos?.length > 0 || registro.valor?.insumos?.length > 0;

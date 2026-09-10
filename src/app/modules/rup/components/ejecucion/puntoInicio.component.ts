@@ -227,11 +227,10 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             this.fueraDeAgenda = this.prestaciones.filter(p => {
                 const puedeValidar = this.prestacionesValidacion.some(tt => tt === p.solicitud.tipoPrestacion.id);
                 const estadoActual = p.estadoActual;
-                const creadaPorMi = estadoActual.createdBy.username === this.auth.usuario.username;
                 const esHoy = moment(p.ejecucion.fecha).isBetween(this.fecha, this.fecha, 'day', '[]');
 
                 return (!p.solicitud.turno && esHoy
-                    && (creadaPorMi || puedeValidar)
+                    && puedeValidar
                     && (estadoActual.tipo === 'ejecucion' || estadoActual.tipo === 'validada'));
             });
             // agregamos el original de las prestaciones que estan fuera
@@ -611,7 +610,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         if (turno.prestaciones[0]) {
             const permisoValidar = this.prestacionesValidacion.some(tt => tt === turno.prestaciones[0].solicitud.tipoPrestacion.id);
             const estado = turno.prestaciones[0].estados[turno.prestaciones[0].estados.length - 1];
-            if (estado.tipo !== 'pendiente' && !(estado.createdBy.username === this.auth.usuario.username || permisoValidar)) {
+            if (estado.tipo !== 'pendiente' && !permisoValidar) {
                 return false;
             }
         }
@@ -619,9 +618,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     checkPuedeValidar(prestacion) {
-        const miPrestacion = prestacion.estadoActual.createdBy.username === this.auth.usuario.username;
-        const permisoValidar = this.prestacionesValidacion.some(tt => tt === prestacion.solicitud.tipoPrestacion.id);
-        return miPrestacion || permisoValidar;
+        return this.prestacionesValidacion.some(tt => tt === prestacion.solicitud.tipoPrestacion.id);
     }
 
     selectAgenda(agenda: any) {

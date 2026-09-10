@@ -316,9 +316,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     }
 
     checkRomperValidacion() {
-        const miPrestacion = this.prestacion.estadoActual.createdBy.username === this.auth.usuario.username;
-        const puedeValidar = this.auth.check('rup:validacion:' + this.prestacion.solicitud.tipoPrestacion.id);
-        this.puedeRomperValidacion = miPrestacion || puedeValidar;
+        this.puedeRomperValidacion = this.auth.check('rup:validacion:' + this.prestacion.solicitud.tipoPrestacion.id);
     }
 
 
