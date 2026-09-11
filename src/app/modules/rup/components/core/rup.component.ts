@@ -36,6 +36,7 @@ import { RecetaService } from '../../../../services/receta.service';
 import { InsumosService } from 'src/app/services/insumos.service';
 import { ECLQueriesService } from './../../../../services/eclqueries.service';
 import { ObraSocialService } from 'src/app/services/obraSocial.service';
+import { InternacionResumenHTTP } from '../../../../apps/rup/mapa-camas/services/resumen-internacion.http';
 
 @Component({
     selector: 'rup',
@@ -165,6 +166,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
         public insumosService: InsumosService,
         @Optional() public ejecucionService: RupEjecucionService,
         public eclqueriesServicies: ECLQueriesService,
+        public internacionResumenHTTP: InternacionResumenHTTP,
         public recetaService: RecetaService
     ) {
     }

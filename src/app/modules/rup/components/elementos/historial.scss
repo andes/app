@@ -1,0 +1,35 @@
+.historial-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  margin: 4px 0;
+}
+
+.historial-fecha {
+  border: 2px solid #000;
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-weight: bold;
+  min-width: 130px;
+  text-align: center;
+  background-color: #fff;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+.historial-texto {
+  flex-grow: 1;
+  font-family: Arial, sans-serif;
+  font-weight: normal;
+  color: #444;
+  word-wrap: break-word;
+  margin-left: 5px;
+}
+
+
+.boton-historial {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
