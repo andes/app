@@ -16,11 +16,11 @@
             <!-- ESTADISTICA -->
             <ng-container *ngIf="capa === 'estadistica'">
                 <app-informe-ingreso (cancel)="activateOption('ingreso')">
-                    <plex-button *ngIf="permisosMapaCamasService.ingreso" tooltip="Editar ingreso"
-                                 tooltipPosition="left" icon="pencil" type="warning" size="sm" (click)="toggleEdit()"
-                                 class="mr-1">
+                    <plex-button *ngIf="permisosMapaCamasService.ingreso && estadoPrestacion !== 'validada'"
+                                 tooltip="Editar ingreso" tooltipPosition="left" icon="pencil" type="warning" size="sm"
+                                 (click)="toggleEdit()" class="mr-1">
                     </plex-button>
-                    <ng-container *ngIf="anular$ | async">
+                    <ng-container *ngIf="(anular$ | async) && estadoPrestacion !== 'validada'">
                         <plex-button size="sm" icon="account-off" type="danger" tooltip="Deshacer Internación"
                                      tooltipPosition="left" (click)="onAnularInternacion()">
                         </plex-button>
@@ -52,7 +52,7 @@
     <ng-container *ngIf="mostrar === 'egreso'">
         <!-- informe (Debe tener un egreso cargado) -->
         <app-informe-egreso *ngIf="!editarEgreso && existeEgreso" (cancel)="activateOption('egreso')">
-            <plex-button *ngIf="puedeEditarEgreso()" tooltip="Editar egreso" tooltipPosition="left" icon="pencil"
+            <plex-button *ngIf="puedeEditarEgreso()" tooltip="fdsfsd" tooltipPosition="left" icon="pencil"
                          type="warning" size="sm" (click)="toggleEdit()">
             </plex-button>
         </app-informe-egreso>
