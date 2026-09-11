@@ -15,8 +15,12 @@
         <plex-item *ngFor="let item of registro.valor.medicamentos">
             <plex-icon size="md" *ngIf="true" name="pildoras" class="icon icon--border--producto mr-2">
             </plex-icon>
-            <plex-label [tituloBold]="true" titulo="{{ item.generico.term  }}" subtitulo=" {{ item.cantEnvases}} envase(s) de {{ item.cantidad}} {{item.presentacion.term }}(s)  {{ item.dosisDiaria.dosis? '| ' + item.dosisDiaria.dosis : '| ' }} {{ item.dosisDiaria.intervalo? ' cada ' + item.dosisDiaria.intervalo.nombre: '' }}  {{ item.dosisDiaria.dias? ' durante ' + item.dosisDiaria.dias + ' día(s)':'' }} 
+            <plex-label [tituloBold]="true" titulo="{{ item.generico.term  }}" subtitulo=" {{ item.cantEnvases}} envase(s) de {{ item.cantidad}} {{item.presentacion.term }}(s)  {{ item.dosisDiaria.dosis? '| ' + item.dosisDiaria.dosis : '' }} {{ item.dosisDiaria.intervalo? ' cada ' + item.dosisDiaria.intervalo.nombre: '' }}  {{ item.dosisDiaria.dias? ' durante ' + item.dosisDiaria.dias + ' día(s)':'' }} 
                         "></plex-label>
+            <plex-label *ngIf="item.obraSocial && item.obraSocial.nombre !== 'Sin obra social'" size="sm" [tituloBold]="false"
+                        titulo="{{ item.obraSocial.nombre || item.obraSocial.financiador }}"
+                        subtitulo="{{ item.obraSocial.numeroAfiliado ? 'Af: ' + item.obraSocial.numeroAfiliado : '' }}">
+            </plex-label>
             <plex-button type="danger" size="sm" tooltip="eliminar" (click)="borrarMedicamento(item)"
                          icon="delete"></plex-button>
         </plex-item>
@@ -28,7 +32,11 @@
             <plex-icon size="md" *ngIf="true" name="pildoras" class="icon icon--border--producto mr-2">
             </plex-icon>
             <plex-label [tituloBold]="true" titulo="{{ item.generico.term  }}"
-                        subtitulo=" {{ item.cantEnvases}} envase(s) de {{ item.cantidad}} {{item.presentacion.term }}(s)  {{ item.dosisDiaria.dosis? '| ' + item.dosisDiaria.dosis : '| ' }} {{ item.dosisDiaria.intervalo? ' cada ' + item.dosisDiaria.intervalo.nombre: '' }}  {{ item.dosisDiaria.dias? ' durante ' + item.dosisDiaria.dias + ' día(s)':'' }} "></plex-label>
+                        subtitulo=" {{ item.cantEnvases}} envase(s) de {{ item.cantidad}} {{item.presentacion.term }}(s)  {{ item.dosisDiaria.dosis? '| ' + item.dosisDiaria.dosis : '' }} {{ item.dosisDiaria.intervalo? ' cada ' + item.dosisDiaria.intervalo.nombre: '' }}  {{ item.dosisDiaria.dias? ' durante ' + item.dosisDiaria.dias + ' día(s)':'' }} "></plex-label>
+            <plex-label *ngIf="item.obraSocial && item.obraSocial.nombre !== 'Sin obra social'" size="sm" [tituloBold]="false"
+                        titulo="{{ item.obraSocial.nombre || item.obraSocial.financiador }}"
+                        subtitulo="{{ item.obraSocial.numeroAfiliado ? 'Af: ' + item.obraSocial.numeroAfiliado : '' }}">
+            </plex-label>
         </plex-item>
     </plex-list>
 </div>
