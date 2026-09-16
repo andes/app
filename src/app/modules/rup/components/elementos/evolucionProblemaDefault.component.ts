@@ -66,6 +66,15 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
                 });
             }
         }
+
+        if (!this.soloValores) {
+            this.conceptObserverService.observe(this.registro).subscribe((data) => {
+                if (this.registro !== data && this.registro.valor.evolucion !== data.valor) {
+                    this.registro.valor.evolucion = data.valor;
+                    this.emitChange(false);
+                }
+            });
+        }
     }
 
     getHallazgo(idOrigen) {
