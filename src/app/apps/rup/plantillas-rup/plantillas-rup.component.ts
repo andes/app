@@ -243,7 +243,7 @@ export class PlantillasRUPComponent implements OnInit, OnDestroy {
         return expression.indexOf('<<') === 0;
     }
 
-    verDescendientes(procedimiento: ISnomedConcept) {
+    verDescendientes(procedimiento) {
         this.snomedService.getQuery({ expression: `<<${procedimiento.conceptId}`, semanticTag: ['procedimiento'] }).subscribe(result => {
             this.descendientes = result;
 
@@ -256,6 +256,7 @@ export class PlantillasRUPComponent implements OnInit, OnDestroy {
             });
         });
     }
+
 
     eliminarPlantilla(plantilla, idx) {
         if (plantilla.title || plantilla.descripcion) {
@@ -308,8 +309,7 @@ export class PlantillasRUPComponent implements OnInit, OnDestroy {
     }
 
     get permiteSolicitud(): boolean {
-        const tagsPermitidos = ['procedimiento', 'régimen/tratamiento', 'situación', 'hallazgo', 'evento'];
-        return tagsPermitidos.includes(this.procedimiento?.semanticTag);
+        return this.procedimiento?.semanticTag === 'procedimiento';
     }
 
 }
