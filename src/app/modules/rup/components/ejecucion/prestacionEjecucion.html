@@ -54,6 +54,7 @@
                         <div
                              *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length  && itemsRegistros">
                             <ng-container *ngFor="let registro of prestacion.ejecucion.registros; let i = index">
+                                <ng-container *ngIf="!(registro._origenMolecula || registro.valor?.origen === 'molecula')">
                                 <!-- Drop area -->
                                 <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)"
                                      [dragOverClass]="'drop-posicion-hover'" [hidden]="!isDraggingRegistro"
@@ -225,6 +226,7 @@
                                 </div>
 
 
+                                </ng-container>
                             </ng-container>
 
                             <!-- Drop area -->

@@ -44,7 +44,7 @@
     <!-- Moléculas -->
     <ng-container *ngIf="contentLoaded && elementoRUP.requeridos && elementoRUP.requeridos.length">
         <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
-            <ng-container *ngFor="let item of requeridos; let i = index">
+            <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
                 <div *ngIf="item.elementoRUP"
                      class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style.offset : '0' }}">
                     <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
@@ -54,5 +54,39 @@
                 </div>
             </ng-container>
         </div>
+    </ng-container>
+    <!-- Registros agregados dinámicamente dentro de la molécula -->
+    <ng-container *ngIf="contentLoaded && registro.registros.length > cantidadRequeridos">
+        <ng-container *ngFor="let registroDin of registro.registros; let i = index">
+            <ng-container *ngIf="i >= cantidadRequeridos && elementosRUPService.elementoRegistro(registroDin)">
+                <hr
+                    style="border-top: 1px solid #000; border-bottom: 0; border-left: 0; border-right: 0; margin: 0.5rem 0 1rem;">
+
+                <div class="molecula-wrapper" style="position: relative;">
+
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong class="text-capitalize">{{ registroDin.concepto.term }}</strong>
+                    </div>
+                    <plex-button *ngIf="!soloValores" icon="delete" type="danger" size="sm"
+                                 (click)="quitarRegistro(registroDin); $event.stopPropagation()"
+                                 tooltip="Quitar de la molécula" tooltipPosition="left"
+                                 style="position: absolute; right: 8px; top: -2px; z-index: 5; pointer-events: auto;">
+                    </plex-button>
+
+                    <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
+                        <div
+                             class="col-{{ elementosRUPService.elementoRegistro(registroDin).style.columns }} mr-{{ elementosRUPService.elementoRegistro(registroDin).style?.offset ? elementosRUPService.elementoRegistro(registroDin).style.offset : '0' }}">
+                            <rup [elementoRUP]="elementosRUPService.elementoRegistro(registroDin)" [paciente]="paciente"
+                                 [params]="elementosRUPService.getParams(registroDin)" [prestacion]="prestacion"
+                                 [registro]="registroDin" [soloValores]="soloValores"
+                                 [style]="elementosRUPService.elementoRegistro(registroDin).style"
+                                 (change)="emitChange($event)">
+                            </rup>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
     </ng-container>
 </ng-container>

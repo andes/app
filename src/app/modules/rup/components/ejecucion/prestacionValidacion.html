@@ -75,7 +75,8 @@
                     <plex-title size="sm" *ngIf="tipoOrden && esTipoOrden(elemento, ['elemento de registro'])"
                                 titulo="Adjuntos">
                     </plex-title>
-                    <div class="rup-card {{ elemento | semanticClass }} elementoRup">
+                    <div class="rup-card {{ elemento | semanticClass }} elementoRup"
+                         *ngIf="!(elemento._origenMolecula || elemento.valor?.origen === 'molecula')">
                         <a name="{{ elemento.concepto.conceptId }}"></a>
                         <div class="rup-header">
                             <div class="icon-rup">
@@ -172,9 +173,12 @@
                                     </rup>
                                 </plex-grid>
                                 <plex-grid *ngIf="(elemento.concepto.semanticTag !== 'elemento de registro')">
+
                                     <ng-container *ngIf="esDiagonisticoPrincipal(elemento)"
                                                   title="Establecer como Procedimiento/Diagnóstico principal"
                                                   class="diagnostico-principal d-flex align-items-end">
+                                        <hr *ngIf="tieneAddRegister(elemento)" class="grid-column-full"
+                                            style="border-top: 1px solid #000; margin: .25rem 0;">
                                         <plex-radio [data]="opcionDiagnosticoPrincipal"
                                                     label="¿Procedimiento/Diagnóstico principal?"
                                                     (change)="diagnosticoPrestacion($event, elemento)"
