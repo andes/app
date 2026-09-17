@@ -1,4 +1,27 @@
-$color-sistema: #00A5DD;
+// sistemas-colores
+$sistema-colors: (
+  respiratorio: #00A5DD,
+  vacunas: #107CE6,
+  gastrointestinal: #0443BF,
+  cardiovascular: #5700FF,
+  genitourinario: #BA00FF,
+  antineoplasicos-e-inmunosupresores: #E6104E,
+  endocrino: #FF00A4,
+  anticonceptivos: #C54B8C,
+  anestesicos: #F4A47E,
+  emergencias-toxicologicas: #FFD400,
+  analgesicos-puros: #FF9D00,
+  nervioso-central: #EE5A24,
+  sanguineo: #FF0000,
+  contraste-radiologicos: #96001C,
+  antinflamatorios: #A8102E,  
+  bloqueantes-neuromusculares: #897150,
+  oftalmologico: #4A5E18,
+  antiinfecciosos: #72E8D7,
+  metabolismo: #5CB55C,
+  antisepticos-y-desinfectantes: #6B8E23,
+);
+
 
 .scroll-menu {
     width: 100%;
@@ -25,18 +48,37 @@ $color-sistema: #00A5DD;
         width: 62px;
         height: 62px;
         border-radius: 50%;
-        border: 2px solid var(--icon-color, #{$color-sistema});
+        border: 2px solid var(--icon-color),;
         background-color: transparent;
         cursor: pointer;
         padding: 0;
-        transition: background-color .2s ease;
+        transition: background-color ease;
 
         plex-icon {
-            color: var(--icon-color, #{$color-sistema});
+            color: var(--icon-color);
         }
 
         &:hover {
-            background-color: color-mix(in srgb, var(--icon-color, #{$color-sistema}) 8%, transparent);
+            background-color: color-mix(in srgb, var(--icon-color) 8%, transparent);
+        }
+
+         &.active {
+        background-color: var(--icon-color);
+
+        plex-icon {
+            color: #fff;
+        }
+
+        &:hover {
+            background-color: var(--icon-color);
+        }
+    }
+
+
+        @each $id, $color in $sistema-colors {
+            &[data-sistema="#{$id}"] {
+                --icon-color: #{$color};
+            }
         }
     }
 }
