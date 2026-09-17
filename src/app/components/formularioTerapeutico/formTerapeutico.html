@@ -2,7 +2,7 @@
     <plex-layout-main>
         <header>
             <plex-title titulo="FORMULARIO TERAPÉUTICO">
-               <plex-button label="CREAR NUEVO" type="success" size="sm"></plex-button>
+               <plex-button label="CARGAR NUEVO" type="success" size="sm"></plex-button>
                <plex-button label="VOLVER" type="danger" size="sm" class="ml-1"></plex-button>
             </plex-title>
         </header>
@@ -12,7 +12,7 @@
         <li class="menu-item" *ngFor="let s of sistemas">
             <button type="button" class="icon-btn"
                 [class.active]="sistemaSeleccionado === s.id"
-                [style.--icon-color]="s.color"
+                [attr.data-sistema]="s.id"
                 [attr.aria-pressed]="sistemaSeleccionado === s.id"
                 (click)="seleccionarSistema(s)">
                 <plex-icon [name]="s.icon" size="xl"></plex-icon>
