@@ -415,6 +415,18 @@ export class PrestacionesService {
     }
 
     /**
+     * Método getUnConceptoPaciente obtiene el registro agrupado (con evoluciones) de un
+     * concepto para un paciente, sin filtrar por estado.
+     * @param {String} idPaciente
+     * @param {Object} concepto
+     */
+    getUnConceptoPaciente(idPaciente: any, concepto: any): Observable<any> {
+        return this.getConceptosByPaciente(idPaciente, true).pipe(map(registros =>
+            registros.find(registro => registro.concepto.conceptId === concepto.conceptId)
+        ));
+    }
+
+    /**
      * Método getUnHallazgoPacienteXOrigen obtiene un hallazgo con todas sus evoluciones
      * para un paciente buscandolo por el registro de origen
      * @param {String} idPaciente

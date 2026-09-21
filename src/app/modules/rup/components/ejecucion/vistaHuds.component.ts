@@ -25,14 +25,23 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
 
     public paciente: IPaciente = null;
     public activeIndexPrestacion = 0;
-    public activeIndexResumen = 0;
-    public tabsCargadas = {
-        registros: false,
-        historial: false
-    };
-    public internacionesLength = 0;
     public internacione$: Observable<any[]>;
     public registros = [];
+    public indice = 0;
+    public indiceSeccion = 0;
+    public hudsOpciones = [
+        { icon: 'corazon-pulso', tooltip: 'Situaciones de salud activas' },
+        { icon: 'paciente', tooltip: 'Antecedentes personales' },
+        { icon: 'familia', tooltip: 'Antecedentes familiares' },
+        { icon: 'corazon-sano', tooltip: 'Hábitos y condiciones de vida' },
+        { icon: 'escudo-check', tooltip: 'Cuidados-preventivos' },
+        { icon: 'listado-receta', tooltip: 'Prescripciones' },
+        { icon: 'signos-vitales', tooltip: 'Mediciones y signos vitales' },
+        { icon: 'conecciones', tooltip: 'Vínculos y red familiar' },
+        { icon: 'historial', tooltip: 'Accesos a la HUDS' },
+        { icon: 'camilla', tooltip: 'Internación' },
+        { icon: 'calendario-rango-bold', tooltip: 'Turnos' }
+    ];
     public permisoHudsCompleta: boolean;
     public permisoLaboratorios: boolean;
     public permisoVacunas: boolean;
@@ -78,11 +87,12 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         // cargar las internaciones y armar un filtro en api .
         this.huds.registrosHUDS.subscribe((datos) => {
             if (this.registros.length < datos.length) {
-                this.activeIndexPrestacion = datos.length + 1;
+                this.activeIndexPrestacion = datos.length;
             } else if (this.activeIndexPrestacion > datos.length) {
                 this.activeIndexPrestacion = this.activeIndexPrestacion - 1;
             }
             this.registros = [...datos];
+            this.indice = this.registros.length;
             this.registros.forEach((elemento, index) => {
                 if (elemento.tipo === 'internacion' && elemento.data?.indices && elemento.data.registros?.length > 0) {
                     const registrosAux = elemento.data.registros[0];
@@ -101,6 +111,11 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                     this.registros[index].data.registros[0] = allRegistros;
                 }
             });
+        });
+        this.huds.activeTab$.subscribe((tab) => {
+            if (tab >= 0) {
+                this.activeIndexPrestacion = tab;
+            }
         });
         // Limpiar los valores observados al iniciar la ejecución
         // Evita que se autocompleten valores de una consulta anterior
@@ -146,6 +161,16 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         this.huds.remove(index - 1);
     }
 
+    public onChangeTab(index: number) {
+        if (index >= 0 && index <= this.registros.length) {
+            this.activeIndexPrestacion = index;
+        }
+    }
+
+    public seleccionarSeccion(index: number) {
+        this.indiceSeccion = index;
+    }
+
     /**
     * Setea el boton volver, Segun la ruta que recibe
     * Si no recibe ninguna por defecto setea RUP (el punto de inicio de RUP)
@@ -188,23 +213,5 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
             registro.data?.prestacion?.snomed?.term;
         const isGuardia = term && term.toLowerCase().includes('emergencia');
         return isGuardia;
-    }
-
-    get historialIndex() {
-        let index = 2; // 0: Accesos, 1: Registros
-
-        if (this.internacionesLength > 0) {
-            index++;
-        }
-        return index;
-    }
-
-    cambioTabResumen(index: number) {
-        this.activeIndexResumen = index;
-        if (index === 1) {
-            this.tabsCargadas.registros = true;
-        } else if (index === this.historialIndex) {
-            this.tabsCargadas.historial = true;
-        }
     }
 }

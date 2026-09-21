@@ -1,46 +1,50 @@
 <plex-layout [main]="8" *ngIf="paciente">
     <plex-layout-main>
         <plex-title titulo="Historia única de Salud">
-            <plex-button type="info" size="sm" (click)="volver()">Volver</plex-button>
+            <plex-button type="danger" size="sm" (click)="volver()">Volver</plex-button>
         </plex-title>
-        <div class="w-100 h-100 mt-4">
-            <plex-tabs (close)=" onCloseTab($event)" [activeIndex]="activeIndexPrestacion"
-                       *ngIf="elementosRUPService.ready | async">
-                <ng-container *ngIf="permisoHudsCompleta">
-                    <plex-button *feature="'hudsExploracion'" label="Exploración" tooltip="Exploración Visual de HUDS"
-                                 type="info" size="sm" class="mr-2" (click)="onExploracionClick()">
-                    </plex-button>
-                </ng-container>
+        <div class="huds-resumen-view w-100 h-100 d-flex flex-column pt-4 overflow-hidden"
+             *ngIf="elementosRUPService.ready | async">
+            <div class="d-flex justify-content-end mb-2" *ngIf="permisoHudsCompleta">
+                <plex-button *feature="'hudsExploracion'" label="Exploración" tooltip="Exploración Visual de HUDS"
+                             type="info" size="sm" (click)="onExploracionClick()">
+                </plex-button>
+            </div>
 
-                <plex-tab label="Resumen del Paciente">
-                    <rup-resumenPaciente-estatico [paciente]="paciente" esTab="true">
-                    </rup-resumenPaciente-estatico>
+            <ng-template #resumenDetalle>
+                <rup-resumenPaciente-estatico [paciente]="paciente" esTab="true" [enHuds]="true"
+                                              (irATrastornos)="huds.filtroBuscador('hallazgo')">
+                </rup-resumenPaciente-estatico>
 
-                    <plex-tabs [activeIndex]="activeIndexResumen" (change)="cambioTabResumen($event)">
-                        <plex-tab label="Accesos a la HUDS" [allowClose]="false">
-                            <vista-accesos-huds [paciente]="paciente"></vista-accesos-huds>
-                        </plex-tab>
-
-                        <plex-tab label="Registros del Paciente">
-                            <rup-resumenPaciente-dinamico-nino *ngIf="tabsCargadas.registros && paciente?.edad <= 6"
-                                                               [paciente]="paciente" esTab="true">
-                            </rup-resumenPaciente-dinamico-nino>
-                            <rup-resumenPaciente-dinamico *ngIf="tabsCargadas.registros && paciente?.edad > 6"
-                                                          [paciente]="paciente" esTab="true">
-                            </rup-resumenPaciente-dinamico>
-                        </plex-tab>
-
-                        <ng-container *ngIf="internacione$ | async as internaciones">
-                            <plex-tab *ngIf="internaciones.length" label="Listado Internacion" [allowClose]="false">
-                                <listado-internacion-huds [internaciones]="internaciones">
-                                </listado-internacion-huds>
-                            </plex-tab>
+                <div class="huds-detail d-flex mt-2">
+                    <div class="huds-rail d-flex flex-column">
+                        <div class="huds-rail-item" *ngFor="let opcion of hudsOpciones; let i = index"
+                             [class.active]="indiceSeccion === i" (click)="seleccionarSeccion(i)">
+                            <plex-icon [name]="opcion.icon" size="lg" type="default" tooltip="{{ opcion.tooltip }}"
+                                       tooltipPosition="right"></plex-icon>
+                        </div>
+                    </div>
+                    <div class="flex-fill">
+                        <ng-container [ngSwitch]="indiceSeccion">
+                            <huds-seccion-situaciones-salud *ngSwitchCase="0" [paciente]="paciente">
+                            </huds-seccion-situaciones-salud>
+                            <huds-antecedentes-personales *ngSwitchCase="1"
+                                                          [paciente]="paciente"></huds-antecedentes-personales>
+                            <huds-antecedentes-familiares *ngSwitchCase="2"
+                                                          [paciente]="paciente"></huds-antecedentes-familiares>
+                            <huds-signos-vitales *ngSwitchCase="6" [paciente]="paciente"></huds-signos-vitales>
+                            <vista-accesos-huds *ngSwitchCase="8" [paciente]="paciente"></vista-accesos-huds>
+                            <ng-container *ngSwitchCase="9">
+                            </ng-container>
+                            <historial-turnos *ngSwitchCase="10" [paciente]="paciente" [fill]="true"></historial-turnos>
                         </ng-container>
-                        <plex-tab *ngIf="permisoHudsCompleta" label="Historial de turnos" [allowClose]="false">
-                            <historial-turnos *ngIf="tabsCargadas.historial" [paciente]="paciente"></historial-turnos>
-                        </plex-tab>
-                    </plex-tabs>
-                </plex-tab>
+                    </div>
+                </div>
+            </ng-template>
+
+            <plex-tabs (close)="onCloseTab($event)" (change)="onChangeTab($event)" [activeIndex]="activeIndexPrestacion"
+                       *ngIf="indice > 0">
+                <plex-tab label="Resumen del Paciente" [allowClose]="false"></plex-tab>
 
                 <ng-container *ngFor="let registro of registros">
                     <plex-tab [allowClose]="true" [label]="registro.data.concepto.term" [class]="registro.data.class"
@@ -150,6 +154,10 @@
                     </plex-tab>
                 </ng-container>
             </plex-tabs>
+
+            <div class="huds-resumen-body" [class.is-hidden]="indice > 0 && activeIndexPrestacion !== 0">
+                <ng-container *ngTemplateOutlet="resumenDetalle"></ng-container>
+            </div>
         </div>
     </plex-layout-main>
     <plex-layout-sidebar>

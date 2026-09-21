@@ -1,0 +1,98 @@
+<plex-title titulo="Mediciones de signos vitales" size="sm"></plex-title>
+<plex-select grow="1" name="signosVitales" [data]="signosVitales" label="Seleccione el tipo de signo vital"
+             [(ngModel)]="signoSenalado" (change)="onChangeSignoVital($event)">
+</plex-select>
+
+<ng-container *ngIf="grafico">
+    <div class="row mt-3">
+        <div class="col-12">
+            <h4 class="text-capitalize mt-2">
+                {{ grafico.conceptos | enumerar:['term'] }}
+            </h4>
+            <rup *ngFor="let c of [graficoClave]" [elementoRUP]="grafico" [paciente]="paciente" [soloValores]="false">
+            </rup>
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="elemento">
+    <div class="row mt-3">
+        <div class="col-12">
+            <span class="d-flex justify-content-between">
+                <p class="h4 text-capitalize">{{ elemento.conceptos | enumerar:['term'] }}</p>
+                <plex-badge type="info" *ngIf="registro && registro.updatedAt">
+                    {{ registro.updatedAt | fecha }}
+                </plex-badge>
+            </span>
+            <ng-container *ngIf="registro; else mensaje">
+                <rup [elementoRUP]="elemento" [paciente]="paciente" [registro]="registro" [soloValores]="true">
+                </rup>
+            </ng-container>
+            <ng-template #mensaje>
+                No se ha registrado ningún valor de {{ elemento.conceptos | enumerar:['term'] }}
+            </ng-template>
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="curvaRadio">
+    <div class="row mt-3">
+        <div class="col-12">
+            <radio-chart [paciente]="paciente" [curva]="curvaRadio"></radio-chart>
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="signoSenalado?.id === 'vacunas'">
+    <div class="row mt-3">
+        <div class="col-12">
+            <h5>Vacunas aplicadas</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Vacuna</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="vacunas.length; else sinDatosVacunas">
+                        <tr *ngFor="let vacuna of vacunas">
+                            <td>{{ vacuna.fechaAplicacion | date: 'dd/M/yyyy' }}</td>
+                            <td>{{ vacuna.vacuna }}</td>
+                        </tr>
+                    </tbody>
+                    <ng-template #sinDatosVacunas>
+                        <tbody>
+                            <td colspan="2">No registra datos</td>
+                        </tbody>
+                    </ng-template>
+                </table>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="signoSenalado?.id === 'registroVisitas'">
+    <div class="row mt-3">
+        <div class="col-12">
+            <h5>Registro de visitas</h5>
+            <div class="table-responsive">
+                <table *ngIf="tabla.length; else sinDatosVisitas" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th *ngFor="let col of tabla[0]">{{ col.titulo }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let fila of tabla">
+                            <td *ngFor="let celda of fila">{{ celda.valor }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <ng-template #sinDatosVisitas>
+                    No registra datos
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</ng-container>

@@ -1,0 +1,42 @@
+<plex-title titulo="Antecedentes Familiares" size="sm"></plex-title>
+<plex-text [(ngModel)]="busqueda" class="mb-2"
+           placeholder="Busque un diagnóstico o profesional de la salud"></plex-text>
+<br>
+<ng-container *ngIf="antecedentesFiltrados.length">
+    <plex-accordion>
+        <plex-panel *ngFor="let antecedente of antecedentesFiltrados" [active]="antecedenteExpandido === antecedente"
+                    (toggle)="toggleAcordeon(antecedente, $event)">
+            <div plex-accordion-title class="d-flex justify-content-between align-items-center">
+                <plex-label titulo="{{ antecedente.registro.concepto.term }}"
+                            subtitulo="{{ antecedente.tipoPrestacion.term }}"></plex-label>
+                <plex-label titulo="Profesional" subtitulo="{{ antecedente.profesional.nombreCompleto }}"></plex-label>
+                <section class="d-flex align-items-center">
+                    <plex-badge type="info" class="mr-2">{{ antecedente.registro.createdAt | fecha }}</plex-badge>
+                    <plex-button icon="eye" type="info" size="sm" class="mr-1" tooltip="Ver prestación"
+                                 (click)="$event.stopPropagation(); verAntecedente(antecedente)"></plex-button>
+                    <plex-button icon="{{ antecedenteExpandido === antecedente ? 'chevron-up' : 'chevron-down' }}"
+                                 type="info" size="sm"></plex-button>
+                </section>
+            </div>
+            <div *ngIf="antecedente.registro.valor !== ''" else sinValor>
+                <h6><strong>Valor: </strong></h6>
+                {{ antecedente.registro.valor }}
+            </div>
+            <ng-template #sinValor>
+                <div>
+                    <h6><strong>Sin valores </strong></h6>
+                </div>
+            </ng-template>
+        </plex-panel>
+    </plex-accordion>
+</ng-container>
+<div *ngIf="antecedentesF.length && !antecedentesFiltrados.length" class="mt-5">
+    <plex-label class="flex-column" icon="familia" type="info" justify="center" size="xl" direction="column"
+                titulo="No se encontraron antecedentes para el filtro aplicado">
+    </plex-label>
+</div>
+<div *ngIf="!antecedentesF.length" class="mt-5">
+    <plex-label class="flex-column" icon="familia" type="info" justify="center" size="xl" direction="column"
+                titulo="El paciente no tiene antecedentes familiares registrados">
+    </plex-label>
+</div>
