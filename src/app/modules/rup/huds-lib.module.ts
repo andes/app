@@ -9,6 +9,7 @@ import { NgDragDropModule } from 'ng-drag-drop';
 import { ChartsModule } from 'ng2-charts';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { TOPLibModule } from 'src/app/components/top/top.module';
+import { HistorialTurnosModule } from 'src/app/components/turnos/historial-turnos/historial-turnos.module';
 import { DirectiveLibModule } from 'src/app/directives/directives.module';
 import { MPILibModule } from '../mpi/mpi-lib.module';
 import { HudsBusquedaComponent } from './components/ejecucion/hudsBusqueda.component';
@@ -29,7 +30,6 @@ import { VistaIPSComponent } from './components/huds/vista-ips.component';
 import { VistaCDAComponent } from './components/huds/vistaCDA.component';
 import { VistaContextoPrestacionComponent } from './components/huds/vistaContextoPrestacion';
 import { VistaDetalleRegistroComponent } from './components/huds/vistaDetalleRegistro';
-import { VistaHistorialTurnosComponent } from './components/huds/vistaHistorialTurnos.component';
 import { VistaSolicitudTopComponent } from './components/huds/vistaSolicitudTop';
 import { ElementosRUPModule } from './elementos-rup.module';
 import { RUPLibModule } from './rup-lib.module';
@@ -38,6 +38,10 @@ import { VistaLaboratorioComponent } from './components/ejecucion/laboratorios/v
 import { VistaRecetaComponent } from './components/huds/vistaReceta';
 import { SuspenderMedicacionComponent } from './components/ejecucion/recetas/suspenderMedicacion';
 import { VistaDerivacionComponent } from './components/huds/vistaDerivacion';
+import { HudsSeccionSituacionesSaludComponent } from './components/huds/secciones/huds-seccion-situaciones-salud/huds-seccion-situaciones-salud.component';
+import { HudsSignosVitalesComponent } from './components/huds/huds-signos-vitales.component';
+import { HudsAntecedentesFamiliaresComponent } from './components/huds/huds-antecedentes-familiares.component';
+import { HudsAntecedentesPersonalesComponent } from './components/huds/huds-antecedentes-personales.component';
 
 @NgModule({
     imports: [
@@ -55,7 +59,8 @@ import { VistaDerivacionComponent } from './components/huds/vistaDerivacion';
         NgDragDropModule,
         RUPLibModule,
         SharedModule,
-        DirectiveLibModule
+        DirectiveLibModule,
+        HistorialTurnosModule
 
     ],
     declarations: [
@@ -79,10 +84,13 @@ import { VistaDerivacionComponent } from './components/huds/vistaDerivacion';
         VistaAccesosHudsComponent,
         VistaDerivacionComponent,
         VistaSolicitudTopComponent,
-        VistaHistorialTurnosComponent,
         HudsBusquedaComponent,
         ListadoInternacionHudsComponent,
-        SuspenderMedicacionComponent
+        SuspenderMedicacionComponent,
+        HudsSeccionSituacionesSaludComponent,
+        HudsSignosVitalesComponent,
+        HudsAntecedentesFamiliaresComponent,
+        HudsAntecedentesPersonalesComponent
     ],
     exports: [
         VistaCDAComponent,
@@ -103,10 +111,14 @@ import { VistaDerivacionComponent } from './components/huds/vistaDerivacion';
         VistaAccesosHudsComponent,
         VistaSolicitudTopComponent,
         VistaDerivacionComponent,
-        VistaHistorialTurnosComponent,
         HudsBusquedaComponent,
         ListadoInternacionHudsComponent,
-        SuspenderMedicacionComponent
+        SuspenderMedicacionComponent,
+        HudsSeccionSituacionesSaludComponent,
+        HudsSignosVitalesComponent,
+        HudsAntecedentesFamiliaresComponent,
+        HudsAntecedentesPersonalesComponent,
+        HistorialTurnosModule
     ],
 
     providers: [MotivosHudsService]

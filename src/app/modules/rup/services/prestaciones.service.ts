@@ -423,11 +423,24 @@ export class PrestacionesService {
     getUnTrastornoPaciente(idPaciente: any, concepto: any): Observable<any> {
         return this.getByPacienteTrastorno(idPaciente).pipe(map(hallazgos => {
             return hallazgos.find(registro => {
-                if ((registro.concepto.conceptId === concepto.conceptId) && (registro.evoluciones[0].esCronico || registro.evoluciones[0].estado === 'activo')) {
+                const evolucion = registro.evoluciones?.[0];
+                if ((registro.concepto?.conceptId === concepto?.conceptId) && (evolucion?.esCronico || evolucion?.estado === 'activo')) {
                     return registro;
                 }
             });
         }));
+    }
+
+    /**
+     * Método getUnConceptoPaciente obtiene el registro agrupado (con evoluciones) de un
+     * concepto para un paciente, sin filtrar por estado.
+     * @param {String} idPaciente
+     * @param {Object} concepto
+     */
+    getUnConceptoPaciente(idPaciente: any, concepto: any): Observable<any> {
+        return this.getConceptosByPaciente(idPaciente, true).pipe(map(registros =>
+            registros.find(registro => registro.concepto.conceptId === concepto.conceptId)
+        ));
     }
 
     /**

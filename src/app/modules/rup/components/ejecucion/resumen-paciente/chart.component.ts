@@ -29,18 +29,18 @@ export class ChartComponent implements AfterViewInit {
             this.generarEtiquetasCurva();
         }
     }
+    @Input()
+    set curva(value: number) {
+        this.curvaSeleccionada = value;
+        if (this.paciente) {
+            this.generarEtiquetasCurva();
+        }
+    }
     get paciente(): IPaciente {
         return this._paciente;
     }
-    public modelo = {
-        radio: 1
-    };
-    public opciones = [
-        { id: 1, label: 'Curva de Peso' },
-        { id: 2, label: 'Curva de Talla' },
-        { id: 3, label: 'Perímetro cefálico' },
-        // { id: 4, label: 'Índice de masa corporal' },
-    ];
+    public clave = 0;
+    public curvaSeleccionada = 1;
 
     constructor(public auth: Auth, public prestacionesService: PrestacionesService) { }
 
@@ -78,9 +78,10 @@ export class ChartComponent implements AfterViewInit {
         });
     }
     generarEtiquetasCurva() {
+        this.clave++;
         let expresion;
         const opcionesGrafico = { titulo: '', labelY: '', unidad: '' };
-        switch (this.modelo.radio) {
+        switch (this.curvaSeleccionada) {
             case 1: // Peso
                 expresion = '<<27113001';
                 opcionesGrafico.titulo = 'Curva de Peso';

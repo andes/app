@@ -15,6 +15,9 @@ export class SemanticIconPipe implements PipeTransform {
 }
 
 export function getCSSIcon(concepto: ISnomedConcept, esSolicitud: boolean = false) {
+    if (!concepto) {
+        return '';
+    }
     if (esSolicitud) {
         return 'adi-mano-corazon';
     } else {
