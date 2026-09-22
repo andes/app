@@ -48,6 +48,8 @@
         </plex-label>
         <plex-label titulo="Creada por" subtitulo="{{derivacion.createdBy | nombre}}">
         </plex-label>
+        <plex-label *ngIf='derivacion.ambito' titulo="Ámbito" subtitulo="{{derivacion?.ambito}}">
+        </plex-label>
         <plex-label titulo="Ultima actualización" subtitulo="{{derivacion.updatedAt
                                     | fecha}}  {{derivacion.updatedAt
                             | hora}}">

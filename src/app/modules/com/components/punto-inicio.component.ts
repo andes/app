@@ -80,10 +80,17 @@ export class ComPuntoInicioComponent implements OnInit {
         return this.fechaDesde ? moment(this.fechaDesde).startOf('day').toDate() : null;
     }
 
+    public ambito: any;
     public rangoEtario: any;
     public opcionesRangoEtario = [
         { id: 'pediatrico', nombre: 'Pediátrico' },
         { id: 'adultos', nombre: 'Adolescentes y Adultos' }
+    ];
+
+    public opcionesAmbito = [
+        { id: 'sin-ambito', nombre: 'SIN ÁMBITO ASIGNADO' },
+        { id: 'internacion', nombre: 'INTERNACIÓN' },
+        { id: 'guardia', nombre: 'GUARDIA' },
     ];
 
     constructor(
@@ -192,6 +199,9 @@ export class ComPuntoInicioComponent implements OnInit {
         if (this.rangoEtario) {
             query.rangoEtario = this.rangoEtario.id;
         }
+        if (this.ambito) {
+            query.ambito = this.ambito.id;
+        }
 
         let rangoFecha;
         let desde;
@@ -269,6 +279,7 @@ export class ComPuntoInicioComponent implements OnInit {
             this.organizacionDestino = null;
             this.paciente = null;
             this.rangoEtario = null;
+            this.ambito = null;
             this.tabIndex = index;
             this.ocultarSidebars();
             this.cargarDerivaciones();
