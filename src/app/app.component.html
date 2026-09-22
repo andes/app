@@ -70,8 +70,19 @@
                             'dd/MM/yyyy'}}</plex-badge>
                     </td>
                     <td>
-                        <plex-badge *ngIf="esVigente(item)" type="success">VIGENTE</plex-badge>
-                        <plex-badge *ngIf="!esVigente(item)" type="danger">VENCIDA</plex-badge>
+                        <plex-badge *ngIf="verificarFecha(item) === 'vigente'" type="success">VIGENTE
+                        </plex-badge>
+
+                        <plex-badge *ngIf="verificarFecha(item) === 'vencida'" type="danger">VENCIDA
+                        </plex-badge>
+
+                        <plex-badge *ngIf="verificarFecha(item) === 'suspendida'" type="danger">
+                            SUSPENDIDA
+                        </plex-badge>
+
+                        <plex-badge *ngIf="verificarFecha(item) === 'sinVencimiento'" type="warning">
+                            SIN VENCIMIENTO
+                        </plex-badge>
                     </td>
                 </tr>
             </plex-table>
