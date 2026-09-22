@@ -122,8 +122,8 @@ export class AppComponent {
             if (this.auth.profesional) {
                 this.profesionalService.getByID(this.auth.profesional).pipe(
                     switchMap((profesional: IProfesional) => {
-                        if (profesional) {
-                            this.profesional = profesional;
+                        this.profesional = profesional;
+                        if (this.profesional) {
                             this.profesional.formacionGrado?.forEach(item => {
                                 item['estado'] = this.verificarEstado(item);
                             });
@@ -261,15 +261,23 @@ export class AppComponent {
         return nuevaFecha;
     }
 
-    esVigente(formacionPosgrado) {
-        const ultimaMatricula = formacionPosgrado.matriculacion[formacionPosgrado.matriculacion.length - 1];
-        const fechaUltimaAlta = new Date(ultimaMatricula.fechaAlta);
-        fechaUltimaAlta.setFullYear(fechaUltimaAlta.getFullYear() + 5);
-        if (fechaUltimaAlta < this.hoy) {
-            if (new Date(ultimaMatricula.periodos[ultimaMatricula.periodos.length - 1].fin) < this.hoy) {
-                return false;
+    verificarFecha(formacionPosgrado) {
+        if (formacionPosgrado?.matriculacion?.length) {
+            if (!formacionPosgrado.matriculado) {
+                return 'suspendida';
+            } else {
+                if (!formacionPosgrado.tieneVencimiento) {
+                    return 'sinVencimiento';
+                } else {
+                    const ultMat = formacionPosgrado.matriculacion.length - 1;
+                    const ultPer = formacionPosgrado.matriculacion[ultMat].periodos.length - 1;
+                    if (this.hoy > formacionPosgrado.matriculacion[ultMat].periodos[ultPer].fin) {
+                        return 'vencida';
+                    } else {
+                        return 'vigente';
+                    }
+                }
             }
         }
-        return true;
     }
 }
