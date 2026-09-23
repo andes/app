@@ -78,9 +78,29 @@ export class PlantillasService {
             };
         } else {
             return () => {
-                this.cos.notify({ conceptId: ctid } as any, { valor: plantilla.descripcion } as any);
+                const descripcion = this.descripcionComoHtml(plantilla.descripcion);
+                this.cos.notify({ conceptId: ctid } as any, { valor: descripcion } as any);
             };
         }
+    }
+
+    /**
+     * El editor de observaciones trabaja con HTML de Quill. Las plantillas
+     * creadas previamente pueden tener texto plano, que Quill no renderiza
+     * al asignarlo dinámicamente.
+     */
+    private descripcionComoHtml(descripcion: string): string {
+        if (!descripcion || /<\/?[a-z][^>]*>/i.test(descripcion)) {
+            return descripcion;
+        }
+
+        const textoEscapado = descripcion
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/\r?\n/g, '<br>');
+
+        return `<p>${textoEscapado}</p>`;
     }
 
 

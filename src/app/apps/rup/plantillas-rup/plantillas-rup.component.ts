@@ -1,15 +1,16 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { PlantillasService } from '../../../modules/rup/services/plantillas.service';
 import { ISnomedConcept } from '../../../modules/rup/interfaces/snomed-concept.interface';
 import { SnomedService } from '../../mitos';
 import { Unsubscribe } from '@andes/shared';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 import { PrestacionesService } from '../../../../app/modules/rup/services/prestaciones.service';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
+import { SEMANTIC_TAGS_CON_PLANTILLA } from '../../../modules/rup/helpers/semantic-tags.helper';
 @Component({
     selector: 'app-plantillas-rup',
     templateUrl: './plantillas-rup.component.html',
@@ -19,7 +20,7 @@ import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.s
     ],
     encapsulation: ViewEncapsulation.None
 })
-export class PlantillasRUPComponent implements OnInit {
+export class PlantillasRUPComponent implements OnInit, OnDestroy {
 
     searchTerm: string;
     busqueda: string;
@@ -36,6 +37,7 @@ export class PlantillasRUPComponent implements OnInit {
     mostrarDescendientes = false;
 
     public puedeCargarEditarPlantilla = false;
+    private destroy$ = new Subject<void>();
     addItems = [
         {
             label: 'Plantilla',
@@ -78,6 +80,11 @@ export class PlantillasRUPComponent implements OnInit {
         }, {
             name: 'Plantillas de Procedimientos'
         }]);
+    }
+
+    ngOnDestroy() {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
     redirect(pagina: string) {
@@ -125,31 +132,60 @@ export class PlantillasRUPComponent implements OnInit {
 
     @Unsubscribe()
     buscarProcedimiento() {
-
-        if (this.searchTerm.match(/<<\s{1,}/)) {
-            this.searchTerm = '';
+        // Validar que no esté vacío
+        if (!this.searchTerm || !this.searchTerm.trim()) {
+            this.procedimientos = [];
+            this.loading = false;
             return;
         }
 
-        const search = this.searchTerm.trim();
+        // Evitar búsquedas con patrón inválido
+        if (this.searchTerm.match(/<<\s{1,}/)) {
+            this.searchTerm = '';
+            this.procedimientos = [];
+            this.loading = false;
+            return;
+        }
+
+        // Evitar búsquedas concurrentes
+        if (this.loading) {
+            return;
+        }
+
+        this.loading = true;
 
         const query = {
-            search: this.searchTerm,
-            semanticTag: ['procedimiento', 'elemento de registro', 'régimen/tratamiento', 'situación']
-
+            search: this.searchTerm.trim(),
+            semanticTag: SEMANTIC_TAGS_CON_PLANTILLA
         };
 
+        this.snomedService.get(query)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(
+                (resultado: ISnomedConcept[]) => {
+                    this.procedimientos = resultado;
+                    this.loading = false;
 
-        this.snomedService.get(query).subscribe((resultado: ISnomedConcept[]) => {
-            this.procedimientos = resultado;
-        });
+                    if (!resultado || resultado.length === 0) {
+                        this.plex.info(
+                            'warning',
+                            `No se encontraron datos para: "${this.searchTerm.trim()}"`,
+                            'Atención'
+                        );
+                    }
+                },
+                (error) => {
+                    this.loading = false;
+                    this.procedimientos = [];
+                    this.plex.toast('danger', 'Error al buscar procedimientos', 'Error');
+                }
+            );
     }
 
 
-    cargarPlantillas(procedimiento) {
-
+    cargarPlantillas(procedimiento: ISnomedConcept) {
         this.procedimiento = procedimiento;
-        const elementoRUP = this.elementoRupService.buscarElemento(this.procedimiento);
+        const elementoRUP = this.elementoRupService.buscarElemento(procedimiento);
 
         if (elementoRUP?.params?.habilitarPlantilla === false) {// null o true no ingresa
             this.addItems = [
@@ -221,6 +257,7 @@ export class PlantillasRUPComponent implements OnInit {
         });
     }
 
+
     eliminarPlantilla(plantilla, idx) {
         if (plantilla.title || plantilla.descripcion) {
             this.plex.confirm(`Se eliminará la plantilla ${plantilla.title ? `"${plantilla.title}"` : ''}`, '¿Eliminar plantilla?', 'Eliminar', 'Cancelar').then(confirmar => {
@@ -246,7 +283,7 @@ export class PlantillasRUPComponent implements OnInit {
         }
     }
 
-    agregarPlantilla(procedimiento, esLink) {
+    agregarPlantilla(procedimiento: ISnomedConcept | null, esLink: boolean) {
         const miOrganizacion = this.auth.organizacion;
         const plantilla = {
             conceptos: [procedimiento],
@@ -270,4 +307,9 @@ export class PlantillasRUPComponent implements OnInit {
     canDeletePlantilla(): boolean {
         return this.procedimiento?.conceptId !== '33633005';
     }
+
+    get permiteSolicitud(): boolean {
+        return this.procedimiento?.semanticTag === 'procedimiento';
+    }
+
 }
