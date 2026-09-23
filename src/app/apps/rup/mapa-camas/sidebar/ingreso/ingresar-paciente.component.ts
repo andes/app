@@ -25,6 +25,8 @@ import { cache } from '@andes/shared';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 import { ListadoInternacionCapasService } from '../../views/listado-internacion-capas/listado-internacion-capas.service';
 import { IObraSocial } from 'src/app/interfaces/IObraSocial';
+import { MapaCamasHTTP } from '../../services/mapa-camas.http';
+import { ICama } from '../../interfaces/ICama';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -94,6 +96,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     private subscriptionResumenInternacion: Subscription;
     public selectedOS = false;
     public financiador;
+    public edicionFinanciador = false;
     public selectorFinanciadores: IObraSocial[] = [];
     public obrasSociales: IObraSocial[] = [];
     public OSPrivada = false;
@@ -109,6 +112,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         private organizacionService: OrganizacionService,
         private servicioPrestacion: PrestacionesService,
         public mapaCamasService: MapaCamasService,
+        private camasHTTP: MapaCamasHTTP,
         private listadoInternacionService: ListadoInternacionService,
         private historialInternacionService: ListadoInternacionCapasService,
         private auth: Auth,
@@ -486,29 +490,56 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         }
     }
 
-    // Sincroniza las fechas editadas entre la cama y elresumen/prestacion
-    private sincronizarCamaInternacion(idInternacion, fechaIngresoOriginal, fechaIngreso): Observable<IResumenInternacion> {
-        return this.mapaCamasService.snapshot(this.fechaIngresoOriginal, idInternacion).pipe(
-            switchMap(snapshot => {
-                const primeraCama = snapshot[0];
-                return this.mapaCamasService.changeTime(primeraCama, fechaIngresoOriginal, fechaIngreso, idInternacion);
-            }),
+    /* Sincroniza tras editar (y/o) ...
+        1. fecha de ingreso entre la cama y elresumen/prestacion de cualquier capa
+        2. obra social entre la cama y la prestacion (solo capa estadistica)
+    */
+    private sincronizarCamaInternacion(idInternacion, fechaIngresoOriginal, fechaIngreso): Observable<IResumenInternacion | ICama> {
+        const setFecha = fechaIngresoOriginal.getTime() !== fechaIngreso.getTime();
+        const obs$ = setFecha ?
+            this.mapaCamasService.snapshot(this.fechaIngresoOriginal, idInternacion).pipe(
+                switchMap(snapshot => {
+                    const primeraCama = snapshot[0];
+                    return this.mapaCamasService.changeTime(primeraCama, fechaIngresoOriginal, fechaIngreso, idInternacion);
+                })
+            ) : of(this.cama);
+
+        return obs$.pipe(
             switchMap(cama => {
-                if (!cama.id) {
+                if (!cama?.id) {
                     // algun error en changeTime
                     throw new Error();
                 }
-                if (this.capa === 'estadistica') {
-                    return of(null);
+                if (setFecha) {
+                    /*  si se cambió la fecha de ingreso y se pretende también actualizar la obra social, hay que actualizar
+                        la cama local pero manteniendo la información del paciente que guardaba antes del changeTime
+                    */
+                    cama.paciente = this.cama.paciente;
                 }
                 this.cama = cama;
-                // Prestacion creada por capa estadistica-v2. Puede estar siendo actualizada por medica/enfermeria
+
+                if (this.capa === 'estadistica') {
+                    if (this.edicionFinanciador) {
+                        return this.camasHTTP.updateEstados(
+                            this.mapaCamasService.ambito,
+                            this.capa,
+                            this.informeIngreso.fechaIngreso,
+                            this.cama,
+                            { edicionFinanciador: true }
+                        );
+                    }
+                    return of(null);
+                }
+
+                /*  opcion 1: internacion de capa estadistica-v2 siendo editada (fecha de ingreso) por medica/enfermeria
+                    opcion 2: edicion de fecha de ingreso en capa asistencial
+                */
                 return this.internacionResumenService.update(cama.idInternacion, {
                     idPrestacion: this.prestacion?.id,
                     fechaIngreso: this.informeIngreso.fechaIngreso
                 });
             })
-        ) as Observable<IResumenInternacion>;
+        );
     }
 
     isCamaCensable(): boolean {
@@ -526,7 +557,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         if (this.prestacion && this.poseeMovimientos) {
             // Se actualiza fecha y hora en camas
             this.cama.idInternacion = idInternacion;
-            if (this.informeIngreso.fechaIngreso.getTime() !== this.fechaIngresoOriginal.getTime()) {
+            const fechaChange = this.informeIngreso.fechaIngreso.getTime() !== this.fechaIngresoOriginal.getTime();
+            const financiadorChange = this.capa === 'estadistica' && this.edicionFinanciador;
+
+            if (fechaChange || financiadorChange) {
                 // Recuperamos snapshot inicial, por si hay un cambio de cama
                 this.sincronizarCamaInternacion(idInternacion, this.fechaIngresoOriginal, this.informeIngreso.fechaIngreso).subscribe(() => {
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
@@ -911,5 +945,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 financiador: financiadorSeleccionado.financiador
             };
         }
+        this.edicionFinanciador = true;
     }
 }
