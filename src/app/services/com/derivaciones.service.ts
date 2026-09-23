@@ -10,7 +10,7 @@ export class DerivacionesService extends ResourceBaseHttp {
     constructor(protected server: Server) { super(server); }
     private apiUrl = environment.API;
 
-    updateHistorial(id, movimiento) {
-        return this.server.post(`/modules/com/derivaciones/${id}/historial`, movimiento);
+    updateHistorial(id, movimiento, options = null) {
+        return this.server.post(`/modules/com/derivaciones/${id}/historial`, movimiento, options);
     }
 }
