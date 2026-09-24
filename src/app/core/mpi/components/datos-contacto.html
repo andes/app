@@ -21,9 +21,17 @@
                                 [required]="!noPoseeContacto && (i <= 0)" [readonly]="noPoseeContacto"
                                 [pattern]="patronContactoNumerico">
                     </plex-phone>
-                    <plex-text email label="Dirección" *ngIf="!contactoTelefonico(i)" [(ngModel)]="_unContacto.valor"
-                               placeholder="Ej: ejemplo@email.com" [required]="!noPoseeContacto && (i <= 0)"
-                               name="valor-{{i}}" [readonly]="noPoseeContacto" [pattern]="patronContactoAlfabetico">
+
+                    <plex-text label="Número" *ngIf="isCelularExtranjero(i)" [(ngModel)]="_unContacto.valor"
+                               placeholder="Ej: +5492990000000" [required]="!noPoseeContacto && (i <= 0)"
+                               name="valor-ext-{{i}}" [readonly]="noPoseeContacto"
+                               [pattern]="patronContactoCelularExtranjero">
+                    </plex-text>
+
+                    <plex-text email label="Dirección" *ngIf="!contactoTelefonico(i) && !isCelularExtranjero(i)"
+                               [(ngModel)]="_unContacto.valor" placeholder="Ej: ejemplo@email.com"
+                               [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}" [readonly]="noPoseeContacto"
+                               [pattern]="patronContactoAlfabetico">
                     </plex-text>
                     <plex-button *ngIf="i == 0" title="Agregar contacto" titlePosition="left" type="info" icon="plus"
                                  name="agregarContacto" (click)="addContacto('celular', '')"
