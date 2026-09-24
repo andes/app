@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { filter, takeUntil } from 'rxjs/operators';
+import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
+import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
 import { RUPComponent } from '../core/rup.component';
 import { RupElement } from '.';
 
@@ -18,7 +21,12 @@ export class MoleculaBaseComponent extends RUPComponent implements OnInit {
     public consultaTrastornoOriginal: any;
     public evoluciones;
 
+    // Cantidad de requeridos definidos en la configuración de la molécula.
+    // Los registros que superan este índice fueron agregados dinámicamente.
+    public cantidadRequeridos = 0;
+
     ngOnInit() {
+        this.cantidadRequeridos = this.elementoRUP?.requeridos?.length || 0;
         if (this.registro.concepto.semanticTag === 'trastorno') {
             if (!this.registro.valor) {
                 this.registro.valor = { estado: 'activo' };
@@ -67,6 +75,76 @@ export class MoleculaBaseComponent extends RUPComponent implements OnInit {
             this.contentLoaded = true;
         }
         this.createRules();
+
+        if (this.ejecucionService) {
+            // Si un concepto se agrega con la sección de esta molécula, se agrega adentro de la misma
+            this.ejecucionService.conceptosStream().pipe(
+                filter(r => r.seccion && r.seccion.conceptId === this.registro.concepto.conceptId),
+                takeUntil(this.onDestroy$)
+            ).subscribe((registro) => {
+                this.cargarNuevoRegistro(registro.concepto, registro.esSolicitud, registro.valor);
+            });
+        }
+    }
+
+    /**
+     * Agrega un nuevo registro dentro de la molécula para que el elemento RUP se renderice dentro de la misma.
+     */
+    cargarNuevoRegistro(snomedConcept: ISnomedConcept, esSolicitud = false, valor = null) {
+        const elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
+        const nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept, this.prestacion);
+        nuevoRegistro['_id'] = nuevoRegistro.id;
+        if (esSolicitud) {
+            nuevoRegistro.esSolicitud = true;
+        }
+
+        // asignamos valor y marcamos origen para que persista en el backend cuando sea posible
+        if (valor && typeof valor === 'object') {
+            nuevoRegistro.valor = valor;
+            nuevoRegistro.valor.origen = 'molecula';
+        } else if (valor == null) {
+            nuevoRegistro.valor = { origen: 'molecula' } as any;
+        } else {
+            // valor es primitivo; lo asignamos tal cual y mantenemos la marca temporal
+            nuevoRegistro.valor = valor;
+        }
+
+        this.registro.registros.push(nuevoRegistro);
+
+        // También agregamos el registro al array de ejecución de la prestación
+        // para que pueda persistirse junto con la prestación cuando corresponda.
+        if (this.prestacion && this.prestacion.ejecucion && Array.isArray(this.prestacion.ejecucion.registros)) {
+            // marcamos que este registro fue creado desde la molécula para evitar duplicado visual
+            nuevoRegistro._origenMolecula = true;
+            // posponemos la inserción al siguiente tick para evitar ExpressionChangedAfterItHasBeenCheckedError
+            setTimeout(() => {
+                this.prestacion.ejecucion.registros = [...this.prestacion.ejecucion.registros, nuevoRegistro];
+                if (this.ejecucionService) {
+                    this.ejecucionService.actualizar('cargar');
+                }
+            }, 0);
+        }
+    }
+
+    /**
+     * Quita de la molécula un registro que fue agregado dinámicamente.
+     */
+    quitarRegistro(registro: IPrestacionRegistro) {
+        const index = this.registro.registros.findIndex(r => r.id === registro.id);
+        if (index !== -1) {
+            this.registro.registros.splice(index, 1);
+            // También removemos del array global de la prestación para mantener consistencia con backend
+            if (this.prestacion && this.prestacion.ejecucion && Array.isArray(this.prestacion.ejecucion.registros)) {
+                const idxGlobal = this.prestacion.ejecucion.registros.findIndex(r => r.id === registro.id || r._id === registro._id);
+                if (idxGlobal !== -1) {
+                    this.prestacion.ejecucion.registros.splice(idxGlobal, 1);
+                    if (this.ejecucionService) {
+                        this.ejecucionService.actualizar('eliminar');
+                    }
+                }
+            }
+            this.emitChange();
+        }
     }
 
     onChange(value) {

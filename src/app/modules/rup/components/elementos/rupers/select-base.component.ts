@@ -14,6 +14,10 @@ import { ISnomedConcept } from '../../../interfaces/snomed-concept.interface';
  * allowOther: Permite elegir texto libre.
  * preload: Carga el plex-select al renderizar el componente.
  *          Ejecuta el request a la API con todos los datos.
+ * addRegister: Agrega un nuevo registro por concepto seleccionado.
+ * registerMapping: Listado de equivalencias { itemSelected, loadRegister }.
+ *                  itemSelected acepta el conceptId (select snomed) o el id de un select estático.
+ * addToMolecule: Agrega el concepto dentro de la molécula que contiene al select.
  */
 @Component({
     selector: 'rup-select',
@@ -107,13 +111,16 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
                 if (this.params.addRegister) {
                     // verifico que no haya un listado de equivalencias para los conceptos
                     if (this.params.registerMapping) {
-                        const mappedRegister = this.params.registerMapping.find(e => e.itemSelected === this.itemSelected.conceptId);
+                        // el mapeo acepta conceptId (select snomed) o el id de un select estático
+                        const mappedRegister = this.params.registerMapping.find(e => e.itemSelected === this.itemSelected.conceptId || e.itemSelected === this.itemSelected.id);
                         if (mappedRegister) {
-                            this.addConcepto(mappedRegister.loadRegister);
+                            const addToMolecule = mappedRegister.addToMolecule ?? mappedRegister.addToMoleculeInParams ?? this.params.addToMolecule ?? this.params.addToMoleculeInParams;
+                            this.addConcepto(mappedRegister.loadRegister, addToMolecule);
                         }
                     } else {
                         // se agrega un registro por concepto seleccionado
-                        this.addConcepto(this.itemSelected);
+                        const addToMolecule = this.params.addToMolecule ?? this.params.addToMoleculeInParams;
+                        this.addConcepto(this.itemSelected, addToMolecule);
                     }
                 }
             } else {
@@ -129,8 +136,40 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
         this.addFact('value', this.registro.valor);
     }
 
-    addConcepto(concepto: ISnomedConcept) {
+    addConcepto(concepto: ISnomedConcept, addToMolecule = false) {
+        const molecula = this.getMoleculaContenedora();
+        if (addToMolecule || (this.params.addRegister && molecula)) {
+            // se agrega el concepto dentro de la molécula que contiene este registro
+            if (molecula) {
+                this.ejecucionService.agregarConcepto(concepto, false, molecula.concepto);
+                return;
+            }
+        }
         this.ejecucionService.agregarConcepto(concepto);
+    }
+
+    /**
+     * Busca recursivamente la molécula (registro contenedor) dentro de la cual está
+     * el registro de este select, para poder agregar el concepto dinámico adentro.
+     */
+    private getMoleculaContenedora() {
+        if (!this.ejecucionService) {
+            return null;
+        }
+        const registros = this.ejecucionService.getPrestacionRegistro();
+        const buscar = (lista: any[]): any => {
+            for (const registro of lista) {
+                if (registro.registros && registro.registros.some(r => r.id === this.registro.id)) {
+                    return registro;
+                }
+                const encontrado = buscar(registro.registros || []);
+                if (encontrado) {
+                    return encontrado;
+                }
+            }
+            return null;
+        };
+        return buscar(registros);
     }
 
     @Unsubscribe()
