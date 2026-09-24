@@ -101,6 +101,11 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy,
                 filter(r => r.seccion && r.seccion.conceptId === this.registro.concepto.conceptId),
                 takeUntil(this.onDestroy$)
             ).subscribe((registro) => {
+                if (this.registro.elementoRUP) {
+                    this.plex.toast('warning', 'No se puede agregar otro elemento a esta sección');
+                    return;
+                }
+
                 if (this.params.whitelist) {
                     const query = `(${this.params.whitelist}) AND ${registro.concepto.conceptId}`;
                     this.snomedService.getQuery({ expression: query }).subscribe((conceptos) => {
@@ -186,6 +191,10 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy,
     }
 
     onConceptoDrop(e: any) {
+        if (this.registro.elementoRUP) {
+            this.plex.toast('warning', 'No se puede agregar otro elemento a esta sección');
+            return;
+        }
         const { esSolicitud, term, fsn, semanticTag, conceptId } = e.dragData;
         this.ejecucionService.agregarConcepto(
             {
