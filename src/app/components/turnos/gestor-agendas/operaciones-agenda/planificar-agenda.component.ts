@@ -790,7 +790,7 @@ export class PlanificarAgendaComponent implements OnInit {
         }
     }
 
-    onSave($event, clonar: Boolean) {
+    onSave($event, clonar: boolean) {
         this.validarTodo();
         if (this.alertas.length > 0) {
             this.hideGuardar = false;

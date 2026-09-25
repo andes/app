@@ -109,7 +109,7 @@ export class PlanIndicacionEventoComponent implements OnChanges {
         ];
         if (!this.evento || (this.evento[0].estado === 'on-hold')) {
             this.agregarEvento();
-        };
+        }
     }
 
     onCancelar() {

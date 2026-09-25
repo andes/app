@@ -237,7 +237,6 @@ export class PrestacionesService {
     emitirNuevoValor(valor: any) {
         if (valor) {
             this.nuevoValorSubject.next(valor);
-            console.log('Nuevo valor emitido desde PrestacionesService:', valor);
         }
     }
 
