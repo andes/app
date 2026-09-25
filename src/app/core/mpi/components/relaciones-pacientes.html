@@ -20,24 +20,28 @@
 <plex-list *ngIf="relacionEntrante.length">
     <plex-item *ngFor="let unaRel of relacionEntrante" class="">
         <!-- caso paciente relacionado -->
-        <img *ngIf="unaRel.referencia" [ngClass]="{'img-fallecido' : unaRel.fechaFallecimiento}"
-             [mpiFotoPaciente]="{id: unaRel.referencia, fotoId: unaRel.fotoId}">
+        <img *ngIf="unaRel.referencia"
+             [ngClass]="{'img-fallecido' : unaRel.fechaFallecimiento || unaRel.referencia?.fechaFallecimiento}"
+             [mpiFotoPaciente]="{id: unaRel.referencia?.id || unaRel.referencia, fotoId: unaRel.fotoId || unaRel.referencia?.fotoId}">
         <!-- caso paciente aun no relacionado -->
         <img *ngIf="!unaRel.referencia && unaRel.id && unaRel.fotoId"
              [ngClass]="{'img-fallecido' : unaRel.fechaFallecimiento}"
              [mpiFotoPaciente]="{id: unaRel.id, fotoId: unaRel.fotoId}" alt="">
 
-        <plex-label titulo="{{ unaRel | nombre }}" subtitulo="{{ unaRel | documento }}">
+        <plex-label titulo="{{ (unaRel.referencia ? unaRel.referencia : unaRel) | nombre }}"
+                    subtitulo="{{ (unaRel.referencia ? unaRel.referencia : unaRel) | documento }}">
         </plex-label>
 
-        <plex-label *ngIf="unaRel.fechaNacimiento" titulo="{{ unaRel | edad }}"
-                    subtitulo="{{ (unaRel.fechaNacimiento | fecha:'utc') || 'Desconocida' }}">
+        <plex-label *ngIf="unaRel.fechaNacimiento || unaRel.referencia?.fechaNacimiento"
+                    titulo="{{ (unaRel.fechaNacimiento || unaRel.referencia?.fechaNacimiento) | edad }}"
+                    subtitulo="{{ (unaRel.fechaNacimiento || unaRel.referencia?.fechaNacimiento | fecha:'utc') || 'Desconocida' }}">
         </plex-label>
 
         <plex-grid size="sm" type="full">
             <plex-select class="vinculo" [(ngModel)]="unaRel.relacion" name="nuevaRelacion" [data]="parentescoModel"
                          [required]="true" placeholder="Seleccione vínculo...  ">
             </plex-select>
+
         </plex-grid>
 
         <!-- Se muestra con un 'OR' porque no todas las relaciones guardan el genero -->
@@ -54,7 +58,7 @@
                      (click)="addRelacion(unaRel)">
         </plex-button>
 
-        <plex-button type="danger" size="sm" icon="close" tooltip="Borrar" (click)="relacionEntrante=[]">
+        <plex-button type="danger" size="sm" icon="close" tooltip="Cerrar" (click)="relacionEntrante=[]">
         </plex-button>
         <div style="align-items: center;">
             <plex-bool type="slide" name="conviviente" [(ngModel)]="esConviviente" label="Es conviviente"></plex-bool>

@@ -9,8 +9,9 @@
                 subtitulo="{{ paciente | documento }}">
             </plex-label>
 
-            <plex-label *ngIf="showDatosTutor(paciente)" titulo="{{ paciente | nombre }}" subtitulo=" {{paciente.relaciones[0].relacion?.nombre.toUpperCase() || 'RELACIÓN S/D'}}: 
-                             {{ paciente.relaciones[0] | documento }} - {{ (paciente.relaciones[0] | nombre)}}">
+            <plex-label *ngIf="showDatosTutor(paciente)" titulo="{{ paciente | nombre }}"
+                        subtitulo=" {{paciente.relaciones[0].relacion?.nombre.toUpperCase() || 'RELACIÓN S/D'}}: 
+                             {{ (paciente.relaciones[0].referencia ? paciente.relaciones[0].referencia : paciente.relaciones[0]) | documento }}">
             </plex-label>
 
             <plex-label titulo="{{ paciente | edad }}"
