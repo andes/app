@@ -442,7 +442,8 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             organizacion: this.auth.organizacion.id,
             turnos: [turno.id],
             estado: 'pendiente',
-            ambitoOrigen: 'ambulatorio'
+            ambitoOrigen: 'ambulatorio',
+            inicio: 'top'
         }).subscribe((pendientes) => {
             if (pendientes.length && pendientes[0].inicio === 'servicio-intermedio') {
                 const pretacionPendiente = pendientes[0];
@@ -667,6 +668,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             organizacion: this.auth.organizacion.id,
             sinEstado: ['modificada', 'anulada'],
             ambitoOrigen: 'ambulatorio',
+            inicio: 'top',
             tipoPrestaciones: this.cargarTiposPrestacion()
         });
     }
