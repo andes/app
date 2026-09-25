@@ -97,10 +97,9 @@ export class ListadoInternacionService {
                     (internacion.paciente.documento?.includes(paciente) || internacion.paciente?.numeroIdentificacion?.includes(paciente)));
             } else {
                 listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IInformeEstadistica) =>
-                    (internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                    internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
                     internacion.paciente.alias?.toLowerCase().includes(paciente.toLowerCase()) ||
-                    internacion.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
-                );
+                    internacion.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()));
             }
         }
 
@@ -172,9 +171,9 @@ export class ListadoInternacionService {
         if (obraSocial) {
             listaFiltrada = listaFiltrada.filter((i) => {
                 if (obraSocial._id === 'sin-obra-social') {
-                    return !i.paciente?.obraSocial;
+                    return !i.informeIngreso?.cobertura?.obraSocial;
                 }
-                return i.paciente?.obraSocial?.nombre === obraSocial.nombre;
+                return i.informeIngreso?.cobertura?.obraSocial?.nombre === obraSocial.nombre;
             });
         }
         if (unidad) {

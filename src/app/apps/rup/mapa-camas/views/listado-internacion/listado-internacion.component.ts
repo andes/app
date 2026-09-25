@@ -75,7 +75,7 @@ export class InternacionListadoComponent implements OnInit {
             label: 'Obra social',
             sorteable: true,
             opcional: false,
-            sort: (a, b) => (a.obraSocial?.nombre || '').localeCompare(b.obraSocial?.nombre || '')
+            sort: (a, b) => (a.informeIngreso?.cobertura?.obraSocial?.nombre || '').localeCompare(b.informeIngreso?.cobertura?.obraSocial?.nombre || '')
         },
         {
             key: 'unidadOrganizativa',

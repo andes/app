@@ -1,11 +1,5 @@
 <ng-container *ngIf="informeIngreso$ | async as informeIngreso">
     <plex-title titulo="INGRESO" size="md">
-        <ng-container *ngIf="permisosMapaCamasService?.ingreso">
-            <plex-button tooltip="Editar ingreso" tooltipPosition="left" icon="pencil" type="warning" size="sm"
-                         (click)="toggleEdit()" class="mr-1">
-            </plex-button>
-        </ng-container>
-
         <ng-content></ng-content>
     </plex-title>
 
@@ -30,12 +24,6 @@
     <fieldset>
         <plex-title size="sm" titulo="DATOS DE INTERNACIÓN">
             <plex-badge *ngIf="informeIngreso.esCensable" type="info" size="sm">Censable</plex-badge>
-
-            <ng-container *ngIf="botonRegistroHabilitado$ | async as botonHabilitado">
-                <plex-button *ngIf="botonHabilitado" size="sm" class="mr-1" type="success" (click)="onNuevoRegistro()">
-                    NUEVO REGISTRO
-                </plex-button>
-            </ng-container>
         </plex-title>
 
         <plex-grid cols="2">

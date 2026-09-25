@@ -28,6 +28,10 @@ export interface IInformeIngreso {
         tipo?: string;
         obraSocial?: IObraSocial;
     };
+    asociado?: string;
+    horaNacimiento?: Date;
+    edadAlIngreso?: number;
+    financiador?: string;
     createdAt?: Date;
     createdBy?: {
         id: string;
@@ -78,6 +82,10 @@ export interface IInformeEgreso {
         terminacion?: string;
         sexo?: string;
     }[];
+    terminacionEmbarazo?: Date;
+    edadGestacional?: number;
+    paridad?: number;
+    tipoParto?: string;
     createdAt?: Date;
     createdBy?: {
         id: string;
