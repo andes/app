@@ -1,4 +1,3 @@
-
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
@@ -21,7 +20,7 @@ export class ListadoInternacionHudsComponent implements OnInit {
             label: 'Organizacion',
             sorteable: true,
             opcional: true,
-            sort: (a: any, b: any) => a.ejecucion.organizacion.nombre.localeCompare(b.ejecucion.organizacion.nombre)
+            sort: (a: any, b: any) => a.organizacion?.nombre.localeCompare(b.organizacion?.nombre)
 
         },
         {
@@ -41,8 +40,8 @@ export class ListadoInternacionHudsComponent implements OnInit {
             sorteable: true,
             opcional: true,
             sort: (a: any, b: any) => {
-                const fecha1 = moment(a.ejecucion.registros[0].valor.informeIngreso.fechaIngreso);
-                const fecha2 = moment(b.ejecucion.registros[0].valor.informeIngreso.fechaIngreso);
+                const fecha1 = moment(a.informeIngreso?.fechaIngreso);
+                const fecha2 = moment(b.informeIngreso?.fechaIngreso);
                 return fecha1.diff(fecha2);
             }
         },
@@ -52,8 +51,8 @@ export class ListadoInternacionHudsComponent implements OnInit {
             sorteable: true,
             opcional: true,
             sort: (a: any, b: any) => {
-                const fecha1 = a.ejecucion.registros[1].valor.informeEgreso.fechaEgreso || 0;
-                const fecha2 = b.ejecucion.registros[1].valor.informeEgreso.fechaEgreso || 0;
+                const fecha1 = a.informeEgreso?.fechaEgreso || 0;
+                const fecha2 = b.informeEgreso?.fechaEgreso || 0;
                 return fecha1.getTime() - fecha2.getTime();
             }
         },
@@ -63,8 +62,8 @@ export class ListadoInternacionHudsComponent implements OnInit {
             sorteable: true,
             opcional: true,
             sort: (a: any, b: any) => {
-                const r1 = a.ejecucion.registros[1]?.valor.InformeEgreso.tipoEgreso.nombre || '';
-                const r2 = b.ejecucion.registros[1]?.valor.InformeEgreso.tipoEgreso.nombre || '';
+                const r1 = a.InformeEgreso.tipoEgreso?.nombre || '';
+                const r2 = b.InformeEgreso.tipoEgreso?.nombre || '';
                 return r1.localeCompare(r2);
             }
 
