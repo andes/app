@@ -115,7 +115,7 @@ export class ProfesionalComponent implements OnInit {
 
     seleccionarProfesional(profesional) {
         this.profesionalSelected = profesional;
-        if (this.profesionalSelected.validadoRenaper) {
+        if (this.profesionalSelected.validadoRenaper && this.profesionalSelected.foto) {
             this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl(this.profesionalSelected.foto);
         } else {
             this.profesionalService.getFoto({ id: this.profesionalSelected.id }).subscribe(resp => {
