@@ -56,7 +56,7 @@ export class VistaDerivacionComponent implements OnInit {
     imprimirHistorial() {
         this.requestInProgress = true;
         const foo = () => this.requestInProgress = false;
-        this.documentosService.descargarHistorialDerivacion(this.registro._id, this.registro.paciente.apellido).subscribe(foo, foo);
+        this.documentosService.descargarComprobanteDerivacion(this.registro._id, this.registro.paciente.apellido).subscribe(foo, foo);
     }
 
     getFechaAceptada(derivacion) {
