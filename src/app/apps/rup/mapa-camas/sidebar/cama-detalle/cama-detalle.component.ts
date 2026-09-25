@@ -226,7 +226,7 @@ export class CamaDetalleComponent implements OnInit, AfterViewChecked, OnDestroy
 
     puedeDeshacer() {
         const capaEstadistica = this.capa === 'estadistica';
-        const estadoInternacion = this.prestacion?.estadoActual.tipo || '';
+        const estadoInternacion = (capaEstadistica ? this.InformeEstadistica?.estadoActual?.tipo : this.prestacion?.estadoActual?.tipo) || '';
         const esSala = this.cama?.sala;
         return !esSala && !this.loadingDataEgreso && (!this.registraEgreso || capaEstadistica && estadoInternacion !== 'validada');
     }
