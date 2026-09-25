@@ -10,6 +10,8 @@ import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { AdjuntosService } from '../../rup/services/adjuntos.service';
 import { PrestacionesService } from '../../rup/services/prestaciones.service';
 import { DerivacionesService } from './../../../services/com/derivaciones.service';
+import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
 @Component({
     selector: 'detalle-derivacion',
@@ -49,6 +51,11 @@ export class DetalleDerivacionComponent implements OnInit {
     set _derivacion(value) {
         this.derivacion = value;
         this.dispositivo = value.dispositivo;
+        this.financiador = value.paciente?.ObraSocial || value.paciente?.obraSocial || value.obraSocial || null;
+        this.financiadorActual = this.financiador;
+        if (value?.paciente?.id) {
+            this.pacienteService.getById(value.paciente.id).subscribe((pac: any) => this.paciente = pac);
+        }
         this.adjuntosService.generateToken().subscribe((data: any) => {
             this.fileToken = data.token;
             this.reglaSeleccionada = {};
@@ -78,6 +85,10 @@ export class DetalleDerivacionComponent implements OnInit {
     public nuevoEstado;
     public esCOM = false;
     requestInProgress;
+    public puedeVerHuds = false;
+    public financiador;
+    public financiadorActual;
+    public paciente: any;
 
     constructor(
         private servicioPrestacion: PrestacionesService,
@@ -89,11 +100,14 @@ export class DetalleDerivacionComponent implements OnInit {
         public driveService: DriveService,
         private adjuntosService: AdjuntosService,
         private documentosService: DocumentosService,
-        public router: Router
+        public router: Router,
+        private motivoAccesoService: ModalMotivoAccesoHudsService,
+        private pacienteService: PacienteService
     ) { }
 
     ngOnInit() {
         this.extensions = this.extensions.concat(this.imagenes);
+        this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
         this.getOrganizacionesDerivables();
     }
 
@@ -172,24 +186,52 @@ export class DetalleDerivacionComponent implements OnInit {
             if (!this.reglaSeleccionada.definePrioridad) {
                 delete this.nuevoEstado.prioridad;
             }
-            this.nuevoEstado.dispositivo = this.derivacion.dispositivo;
+            const obraSocialOrigen = this.financiadorActual || this.derivacion.paciente?.ObraSocial || this.derivacion.paciente?.obraSocial || this.derivacion.obraSocial || null;
+            const huboCambio = JSON.stringify(this.financiador || null) !== JSON.stringify(obraSocialOrigen || null);
+            let valorOS = null;
+            if (huboCambio) {
+                valorOS = this.financiador?.nombre === 'Sin obra social' ? null : this.financiador;
+                this.nuevoEstado.ObraSocial = valorOS;
+                this.nuevoEstado.obraSocial = valorOS;
+                this.nuevoEstado.paciente = { ObraSocial: valorOS, obraSocial: valorOS };
+            }
             this.derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
-            const body: any = {
-                estado: this.nuevoEstado,
-                trasladoEspecial: {
-                    tipoTraslado: this.derivacion.tipoTraslado,
-                    organizacionTraslado: this.derivacion.organizacionTraslado
-                }
-            };
+            const body: any = { estado: this.nuevoEstado };
 
-            this.derivacionService.updateHistorial(this.derivacion._id, body).subscribe(() => {
+            const doHistorial = () => this.derivacionService.updateHistorial(this.derivacion._id, body).subscribe(() => {
                 this.plex.toast('success', 'La derivación fue actualizada exitosamente');
                 this.returnDetalle.emit(true);
             });
+
+            if (huboCambio && this.paciente?.id && !this.paciente?.fechaFallecimiento) {
+                const previo: any[] = this.paciente.financiador ? [...this.paciente.financiador] : [];
+                const nuevo: any[] = [...previo];
+                if (valorOS) {
+                    const claveNuevo = ((valorOS as any).nombre || (valorOS as any).financiador || '').toString().trim().toLowerCase();
+                    const idx = previo.findIndex((f: any) => ((f?.nombre || f?.financiador || '').toString().trim().toLowerCase()) === claveNuevo);
+                    if (idx === -1) {
+                        nuevo.unshift({ ...(valorOS as any), fechaDeActualizacion: new Date() });
+                    } else {
+                        const actual = { ...previo[idx], ...(valorOS as any), fechaDeActualizacion: new Date() };
+                        nuevo.splice(idx, 1);
+                        nuevo.unshift(actual);
+                    }
+                }
+                if (JSON.stringify(nuevo) !== JSON.stringify(previo) || valorOS === null) {
+                    this.pacienteService.patch(this.paciente.id, { financiador: nuevo }).subscribe({
+                        next: () => doHistorial(),
+                        error: () => this.plex.info('danger', 'No se pudo actualizar la obra social del paciente. La derivación no se guardó.', 'Error')
+                    });
+                    return;
+                }
+            } else if (huboCambio && this.paciente?.fechaFallecimiento) {
+                this.plex.info('warning', 'Paciente fallecido: la obra social del paciente no se modificará, solo la derivación.', 'Advertencia');
+            }
+
+            doHistorial();
         }
     }
 
-    // Adjuntar archivo
     onUpload($event) {
         if ($event.status === 200) {
             this.adjuntosEstado.push({
@@ -230,5 +272,17 @@ export class DetalleDerivacionComponent implements OnInit {
 
     cerrar() {
         this.returnDetalle.emit(false);
+    }
+
+    showMotivoAcceso() {
+        this.motivoAccesoService.showMotivos(this.derivacion.paciente).subscribe(motivo => {
+            if (motivo) {
+                this.router.navigate(['/huds/paciente/', this.derivacion.paciente.id], { queryParams: { origen: 'com' } });
+            }
+        });
+    }
+
+    setFinanciador(financiador) {
+        this.financiador = financiador;
     }
 }

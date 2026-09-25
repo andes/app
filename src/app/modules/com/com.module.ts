@@ -25,6 +25,7 @@ import { NuevaDerivacionComponent } from './components/nueva-derivacion/nueva-de
 import { ComPuntoInicioComponent } from './components/punto-inicio.component';
 import { TipoTrasladoComponent } from './components/tipo-traslado/tipo-traslado';
 import { PuntoInicioService } from 'src/app/services/puntoInicio/punto-inicio.service';
+import { CITASLibModule } from 'src/app/components/turnos/citas.module';
 
 
 export const COM_COMPONENTS = [
@@ -60,7 +61,8 @@ export const COM_PROVIDERS = [
         MPILibModule,
         DirectiveLibModule,
         ElementosRUPModule,
-        SemaforoModule
+        SemaforoModule,
+        CITASLibModule
     ],
     declarations: [
         ...COM_COMPONENTS
