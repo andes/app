@@ -1,6 +1,6 @@
 <paciente-buscar [hostComponent]="hostComponent" [create]="create" [returnScannedPatient]="returnScannedPatient"
-                 (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event)" (searchClear)="onSearchClear()"
-                 grow="full">
+                 [showBusquedaAvanzada]="true" (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event)"
+                 (searchClear)="onSearchClear()" grow="full">
 </paciente-buscar>
 <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 

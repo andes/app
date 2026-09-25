@@ -29,6 +29,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
     /* returnScannedPatient en true retorna un objeto con los datos del paciente escaneado en caso de
         que este no estuviera registrado */
     @Input() returnScannedPatient = false;
+    @Input() showBusquedaAvanzada = false;
 
     // Eventos
     @Output() searchStart: EventEmitter<null> = new EventEmitter<null>();

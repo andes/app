@@ -3,8 +3,8 @@
                [autoFocus]="autoFocus" prefix="barcode-scan"
                placeholder="Escanee un documento digital, o escriba un documento / apellido / nombre">
     </plex-text>
-    <plex-button type="info" [icon]="busquedaAvanzada ? 'chevron-up' : 'chevron-down'" label="Búsqueda avanzada"
-                 (click)="toggleBusquedaAvanzada()" class="mr-1">
+    <plex-button *ngIf="showBusquedaAvanzada" type="info" [icon]="busquedaAvanzada ? 'chevron-up' : 'chevron-down'"
+                 label="Búsqueda avanzada" (click)="toggleBusquedaAvanzada()" class="mr-1">
     </plex-button>
     <plex-dropdown *ngIf="create" class="mr-0 dropdown-inline" [disabled]="disabled"
                    [type]="disabled ? 'default' : 'primary'" [right]="true" [items]="routes" label="NUEVO PACIENTE">
