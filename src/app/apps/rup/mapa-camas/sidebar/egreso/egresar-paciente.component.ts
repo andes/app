@@ -93,7 +93,11 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     otrasCircunstancias: null,
                     diasEstadaOtrasCircunstancias: null,
                     diasDePermisoDeSalida: null
-                }
+                },
+                terminacionEmbarazo: null,
+                edadGestacional: null,
+                paridad: null,
+                tipoParto: null
             }
         }
     };
@@ -267,7 +271,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     this.fechaEgresoOriginal = moment(this.registro.valor.InformeEgreso.fechaEgreso).toDate();
 
                     const informeEgreso = this.registro.valor.InformeEgreso;
-                    this.checkTraslado = informeEgreso.tipoEgreso.id === 'Traslado' && !informeEgreso.UnidadOrganizativaDestino?.id;
+                    this.checkTraslado = informeEgreso.tipoEgreso.id === 'Traslado' && !informeEgreso.tipoEgreso?.OrganizacionDestino?.id;
                     this.fechaMaxProcedimiento = moment(this.registro.valor.InformeEgreso.fechaEgreso).endOf('day').toDate();
                 }
 
@@ -448,8 +452,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
                 if (updateData.tipo_egreso?.toLowerCase() === 'traslado') {
                     updateData.organizacionDestino = {
-                        id: this.registro.valor.InformeEgreso.UnidadOrganizativaDestino.id,
-                        nombre: this.registro.valor.InformeEgreso.UnidadOrganizativaDestino.nombre
+                        id: this.registro.valor.InformeEgreso.tipoEgreso?.OrganizacionDestino?.id,
+                        nombre: this.registro.valor.InformeEgreso.tipoEgreso?.OrganizacionDestino?.nombre
                     };
                 }
 
@@ -495,7 +499,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         }
 
         const informeId = this.informe._id || this.informe.id;
-        const body = { informeEgreso: this.registro.valor.InformeEgreso };
+        const body = { informeEgreso: registros };
 
         return this.informeEstadisticaService.patchRegistros(informeId, body).pipe(
             switchMap(informes => {
@@ -534,20 +538,28 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             tipoEgreso: {
                 id: egreso.tipoEgreso?.id,
                 nombre: egreso.tipoEgreso?.nombre,
-                OrganizacionDestino: egreso.UnidadOrganizativaDestino
+                OrganizacionDestino: egreso.tipoEgreso?.OrganizacionDestino
                     ? {
-                        id: egreso.UnidadOrganizativaDestino.id,
-                        nombre: egreso.UnidadOrganizativaDestino.nombre
+                        id: egreso.tipoEgreso.OrganizacionDestino.id,
+                        nombre: egreso.tipoEgreso.OrganizacionDestino.nombre
                     }
-                    : undefined
+                    : undefined,
+                otraOrganizacion: egreso.tipoEgreso?.otraOrganizacion
             },
             diagnosticos: {
-                principal: egreso.diagnosticoPrincipal,
-                secundarios: egreso.otrosDiagnosticos,
-                otrasCircunstancias: egreso.otrasCircunstancias,
-                diasEstadaOtrasCircunstancias: egreso.diasEstadaOtrasCircunstancias,
-                diasDePermisoDeSalida: egreso.diasDePermisoDeSalida
-            }
+                principal: egreso.diagnosticos?.principal,
+                secundarios: egreso.diagnosticos?.secundarios,
+                otrasCircunstancias: egreso.diagnosticos?.otrasCircunstancias,
+                diasEstadaOtrasCircunstancias: egreso.diagnosticos?.diasEstadaOtrasCircunstancias,
+                diasDePermisoDeSalida: egreso.diagnosticos?.diasDePermisoDeSalida
+            },
+            causaExterna: egreso.causaExterna,
+            procedimientosQuirurgicos: egreso.procedimientosQuirurgicos,
+            nacimientos: egreso.nacimientos?.filter((n: any) => n && (n.pesoAlNacer != null || n.condicionAlNacer || n.terminacion || n.sexo)),
+            terminacionEmbarazo: egreso.terminacionEmbarazo,
+            edadGestacional: egreso.edadGestacional,
+            paridad: egreso.paridad,
+            tipoParto: egreso.tipoParto
         };
     }
 
@@ -625,8 +637,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 callback.push(principal);
             }
 
-            if (this.registro.valor.InformeEgreso.otrosDiagnosticos) {
-                callback.push(...this.registro.valor.InformeEgreso.otrosDiagnosticos);
+            if (this.registro.valor.InformeEgreso.diagnosticos?.secundarios) {
+                callback.push(...this.registro.valor.InformeEgreso.diagnosticos.secundarios);
             }
 
             if (this.registro.valor.InformeEgreso.causaExterna?.comoSeProdujo) {
@@ -661,8 +673,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             );
         }
 
-        if (this.registro.valor.InformeEgreso.otrosDiagnosticos) {
-            const diagCausaExterna = this.registro.valor.InformeEgreso.otrosDiagnosticos.filter(d => regexCIECausasExternas.test(d.codigo));
+        if (this.registro.valor.InformeEgreso.diagnosticos?.secundarios) {
+            const diagCausaExterna = this.registro.valor.InformeEgreso.diagnosticos.secundarios.filter(d => regexCIECausasExternas.test(d.codigo));
             if (diagCausaExterna && diagCausaExterna.length > 0) {
                 this.existeCausaExterna = true;
             }
@@ -673,15 +685,15 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.procedimientosObstetricos = regexCIEProcedimientosObstetricos.test(principal.codigo);
             this.procedimientosObstetricosNoReq = regexCIEProcedimientosObstetricosNoReq.test(principal.codigo);
         }
-        if (this.registro.valor.InformeEgreso.otrosDiagnosticos) {
-            const diagObstetitricos = this.registro.valor.InformeEgreso.otrosDiagnosticos.filter(d => regexCIEProcedimientosObstetricosNoReq.test(d.codigo));
+        if (this.registro.valor.InformeEgreso.diagnosticos?.secundarios) {
+            const diagObstetitricos = this.registro.valor.InformeEgreso.diagnosticos.secundarios.filter(d => regexCIEProcedimientosObstetricosNoReq.test(d.codigo));
             if (diagObstetitricos && diagObstetitricos.length > 0) {
                 this.procedimientosObstetricosNoReq = true;
             }
         }
 
-        if (this.registro.valor.InformeEgreso.otrosDiagnosticos) {
-            const diagObstetitricosReq = this.registro.valor.InformeEgreso.otrosDiagnosticos.filter(d => regexCIEProcedimientosObstetricos.test(d.codigo));
+        if (this.registro.valor.InformeEgreso.diagnosticos?.secundarios) {
+            const diagObstetitricosReq = this.registro.valor.InformeEgreso.diagnosticos.secundarios.filter(d => regexCIEProcedimientosObstetricos.test(d.codigo));
             if (diagObstetitricosReq && diagObstetitricosReq.length > 0) {
                 this.procedimientosObstetricos = true;
             }

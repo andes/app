@@ -69,7 +69,7 @@
 
 
             <plex-select grow="full" (change)="showProcedimientos_causas()" label="Otros Diagnósticos"
-                         [(ngModel)]="registro.valor.InformeEgreso.otrosDiagnosticos" name="otrosDiagnosticos"
+                         [(ngModel)]="registro.valor.InformeEgreso.diagnosticos.secundarios" name="otrosDiagnosticos"
                          (getData)="codigoCIE10($event,'diagnostico')" [multiple]="true" placeholder="buscar..."
                          labelField="nombre">
             </plex-select>

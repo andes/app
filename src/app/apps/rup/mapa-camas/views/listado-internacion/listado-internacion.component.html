@@ -15,37 +15,23 @@
 
         <div *ngIf="estaBuscando" class="mt-5 d-flex flex-column justify-center align-items-center">
           <plex-loader type="ball-pulse"></plex-loader>
-          <plex-label
-            type="info"
-            size="xl"
-            direction="column"
-            titulo="Buscando..."
-            subtitulo="Por favor espere mientras se cargan los resultados">
+          <plex-label type="info" size="xl" direction="column" titulo="Buscando..."
+                      subtitulo="Por favor espere mientras se cargan los resultados">
           </plex-label>
         </div>
 
         <div *ngIf="!estaBuscando && !(listadoInternacionService.fechasIngreso$ | async)" class="mt-5">
-          <plex-label
-            class="flex-column"
-            icon="magnify"
-            type="info"
-            size="xl"
-            direction="column"
-            titulo="No hay resultados"
-            subtitulo="Debe ingresar un rango válido de fechas de ingreso o egreso">
+          <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
+                      titulo="No hay resultados"
+                      subtitulo="Debe ingresar un rango válido de fechas de ingreso o egreso">
           </plex-label>
         </div>
 
         <ng-container *ngIf="!estaBuscando && (listadoInternacionService.fechasIngreso$ | async)">
           <div *ngIf="!(listaInternacion$ | async)?.length" class="mt-5">
-            <plex-label
-              class="flex-column"
-              icon="magnify"
-              type="info"
-              size="xl"
-              direction="column"
-              titulo="No hay resultados"
-              subtitulo="No hay internaciones que coincidan con los filtros de búsqueda">
+            <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
+                        titulo="No hay resultados"
+                        subtitulo="No hay internaciones que coincidan con los filtros de búsqueda">
             </plex-label>
           </div>
 
@@ -54,8 +40,7 @@
             <plex-table-columns></plex-table-columns>
 
             <tr *ngFor="let internacion of listaInternacion$ | plSort:table | async"
-                (click)="seleccionarInforme(internacion, selectedInforme)"
-                class="selectable"
+                (click)="seleccionarInforme(internacion, selectedInforme)" class="selectable"
                 [class.selected]="internacion.id === selectedInforme?.id">
               <td *plTableCol="'apellido-nombre'">{{ internacion.paciente | nombre }}</td>
               <td *plTableCol="'documento'">{{ internacion.paciente | documento }}</td>
@@ -75,7 +60,7 @@
                 </span>
               </td>
               <td *plTableCol="'obraSocial'">
-                {{ internacion.paciente.obraSocial?.nombre }}
+                {{informeIngreso?.cobertura?.obraSocial?.nombre }}
               </td>
               <td *plTableCol="'unidadOrganizativa'">
                 {{ internacion.unidadOrganizativa?.term }}
@@ -98,8 +83,7 @@
     <plex-layout-sidebar type="invert">
       <plex-title *ngIf="mostrar !== 'desocuparCama'" titulo="DETALLES" size="md">
         <plex-button *ngIf="!puedeRomper" class="mr-1" label="VALIDAR" type="success" size="sm"
-                     [disabled]="!puedeValidar || editando"
-                     (click)="validar(selectedInforme)">
+                     [disabled]="!puedeValidar || editando" (click)="validar(selectedInforme)">
         </plex-button>
         <plex-button *ngIf="puedeRomper" class="mr-1" label="ROMPER VALIDACIÓN" type="warning" size="sm"
                      (click)="romperValidacion(selectedInforme)">
@@ -107,8 +91,7 @@
         <plex-button title="cerrar" icon="close" type="danger" size="sm" (click)="cancelar()"></plex-button>
       </plex-title>
 
-      <app-internacion-detalle *ngIf="mostrar === 'datosInternacion' && selectedInforme?.id"
-                               (accion)="onAccion($event)"
+      <app-internacion-detalle *ngIf="mostrar === 'datosInternacion' && selectedInforme?.id" (accion)="onAccion($event)"
                                (cambiarCama)="cambiarCama()">
       </app-internacion-detalle>
 
@@ -117,8 +100,8 @@
         <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()"></plex-button>
       </app-desocupar-cama>
 
-      <app-cambiar-cama *ngIf="mostrar === 'cambiarCama'" [cambiarUO]="cambiarUO"
-                        (onSave)="refresh()" (cancel)="volverADetalle()">
+      <app-cambiar-cama *ngIf="mostrar === 'cambiarCama'" [cambiarUO]="cambiarUO" (onSave)="refresh()"
+                        (cancel)="volverADetalle()">
       </app-cambiar-cama>
     </plex-layout-sidebar>
   </plex-layout>
