@@ -1,16 +1,14 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
-import { Observable } from 'rxjs';
-import { aporteOxigeno, respirador, monitorTelemetrico, monitorFisiologico } from '../../../constantes-internacion';
 
 @Component({
     selector: 'tr[app-item-inconsistencia]',
     templateUrl: './item-inconsistencia.component.html',
 })
 
-export class ItemInconsistenciaComponent implements OnInit {
+export class ItemInconsistenciaComponent {
     @Input() inconsistencia: any;
 
     constructor(
@@ -20,7 +18,4 @@ export class ItemInconsistenciaComponent implements OnInit {
     ) {
     }
 
-    ngOnInit() {
-
-    }
 }

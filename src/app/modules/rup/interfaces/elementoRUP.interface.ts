@@ -4,7 +4,7 @@ import { ISnomedConcept } from './snomed-concept.interface';
 export interface IElementoRUP {
     id: string;
     // Indica si este elemento está activo
-    activo: Boolean;
+    activo: boolean;
     // Vinculación al componente de la aplicación Angular
     componente: string;
     // Indica los semantic tags para los cuales este elemento es el registro por default
@@ -13,12 +13,12 @@ export interface IElementoRUP {
     tipo: string;
     formulaImplementation?: string;
     // Indica si este elementoRUP aplica a una solicitud
-    esSolicitud: Boolean;
-    esIndicacion: Boolean;
-    privacy: String;
+    esSolicitud: boolean;
+    esIndicacion: boolean;
+    privacy: string;
 
     // Indica si requiere indicar diagnostico principal
-    requiereDiagnosticoPrincipal: Boolean;
+    requiereDiagnosticoPrincipal: boolean;
 
     // Indica los parámetros para instanciar el componente
     params: any;
@@ -60,8 +60,8 @@ export interface IElementoRUPRequeridos {
     concepto: ISnomedConcept;
     // Indica estilos para la instancia del elementoRUP
     style: {
-        columns: Number;
-        cssClass: String;
+        columns: number;
+        cssClass: string;
     };
     // Indica parámetros para la instancia del elementoRUP en formato {key: value}
     params: { [key: string]: any };

@@ -1,6 +1,6 @@
 <plex-title titulo="Bloques y turnos" size="md">
     <plex-help class="mr-1" type="help" icon="information-variant" titulo="Detalle de agenda"
-               tooltip="Detalle de agenda">
+               tooltip="Detalle de agenda" size="md">
         <div class="container mb-4">
             <div class="row">
                 <div class="col-12">
@@ -27,7 +27,7 @@
             <div class="row">
                 <div class="col-12">
                     <label>Equipo de Salud</label>
-                    <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de
+                    <span *ngIf="agenda.profesionales?.length === 0" class="text-danger">Equipo de
                         Salud
                         no
                         asignado</span>
@@ -55,7 +55,7 @@
                 <div class="col-12">
                     <label>Cupos disponibles</label>
                     <span *ngIf="agenda.cupo > -1">{{agenda.cupo}}</span>
-                    <span *ngIf="agenda.cupo == -1">Sin límite</span>
+                    <span *ngIf="agenda.cupo === -1">Sin límite</span>
                 </div>
             </div>
             <div *ngIf="agenda.link" class="row">

@@ -1,18 +1,18 @@
 import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
 
 export interface ICama {
-    id: String;
-    nombre: String;
+    id: string;
+    nombre: string;
     organizacion: {
-        id: String;
-        nombre: String;
+        id: string;
+        nombre: string;
     };
-    ambito: String;
+    ambito: string;
     unidadOrganizativaOriginal: ISnomedConcept;
     sectores: [{
         tipoSector: ISnomedConcept;
         unidadConcept: ISnomedConcept;
-        nombre: String;
+        nombre: string;
     }];
     tipoCama: ISnomedConcept;
     equipamiento: [ISnomedConcept];

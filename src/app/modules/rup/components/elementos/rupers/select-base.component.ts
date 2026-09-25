@@ -29,12 +29,12 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
 
     public itemSelected: any | any[] = null;
 
-    public otherEnabled: Boolean = false;
+    public otherEnabled = false;
 
     private watch = false;
 
 
-    public otherText: String = '';
+    public otherText = '';
 
     get titulo() {
         if (this.params.title !== null && this.params.title !== undefined) {

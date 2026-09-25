@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Plex } from '@andes/plex';
@@ -12,7 +13,7 @@ import { map } from 'rxjs/operators';
 
 export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
     @Input() relacion: any;
-    @Output() onSave = new EventEmitter<any>();
+    @Output() save = new EventEmitter<any>();
 
     public fecha;
     public fechaMax = moment().toDate();
@@ -20,7 +21,7 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
     public selectedCama;
     public destino;
     public titulo: string;
-    public disableGuardar$: Observable<Boolean> = of(true);
+    public disableGuardar$: Observable<boolean> = of(true);
     public inProgress = true;
     public mensaje = '';
 
@@ -104,7 +105,7 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
                 this.mapaCamasService.save(this.selectedCama, this.fecha).subscribe(() => {
                     this.plex.info('success', 'Cama ' + this.destino);
                     this.mapaCamasService.setFecha(this.fecha);
-                    this.onSave.emit({ cama: this.selectedCama });
+                    this.save.emit({ cama: this.selectedCama });
                 }, (err1) => {
                     this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
                 });

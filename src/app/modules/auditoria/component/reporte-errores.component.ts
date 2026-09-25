@@ -16,15 +16,15 @@ export class ReporteErroresComponent implements OnInit {
 
     @ViewChild('modalCorreccion') modalCorreccion: ModalCorreccionPacienteComponent;
     @Output() selected = new EventEmitter<any>();
-    @Output() reset = new EventEmitter<any>();
+    @Output() reseted = new EventEmitter<any>();
 
     showSidebar = false;
     filtroPaciente: string;
     pacientesReportados = [];
-    corregirPaciente: Number;
-    showReporteError = false;
-    permisoEdicion: Boolean;
-    permisoVincular: Boolean;
+    corregirPaciente: number;
+    showReporteError = false; // se muestra en el sidebar datos del error reportado
+    permisoEdicion: boolean;
+    permisoVincular: boolean;
     pacienteSelected: IPaciente;
     reportes = {};
     pacientes = [];
@@ -158,7 +158,7 @@ export class ReporteErroresComponent implements OnInit {
                         this.plex.toast('success', 'Los datos se actualizaron correctamente!');
                         // recargamos la lista para reflejar el cambio
                         this.cargar();
-                        this.reset.emit();
+                        this.reseted.emit();
                     }
 
                 } else {

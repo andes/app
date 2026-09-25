@@ -1,5 +1,6 @@
 .list-group-item {
     cursor: pointer;
+
     &:hover {
         background-color: grey;
     }
@@ -7,4 +8,8 @@
 
 fieldset {
     margin-top: 10px;
+}
+
+plex-help {
+    align-self: end;
 }

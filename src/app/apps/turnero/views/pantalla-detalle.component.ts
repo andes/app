@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Location } from '@angular/common';
 import { Auth } from '@andes/auth';
@@ -10,7 +10,7 @@ import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.
     selector: 'pantalla-detalle',
     templateUrl: 'pantalla-detalle.html'
 })
-export class PantallaDetalleComponent implements OnInit, OnDestroy {
+export class PantallaDetalleComponent implements OnInit {
     public espaciosFisicos = [];
     public turnero = false;
     public listaTipos = [];
@@ -39,9 +39,6 @@ export class PantallaDetalleComponent implements OnInit, OnDestroy {
         this.espacioFisicoService.get({ organizacion: this.auth.organizacion }).subscribe(data => this.espaciosFisicos = data);
         this.listaTipos = [{ id: 'totem', nombre: 'Totem' }, { id: 'turnero', nombre: 'Turnero' }];
         this.esTurnero = this.pantalla.tipo === 'turnero';
-    }
-
-    ngOnDestroy() {
     }
 
     @Unsubscribe()

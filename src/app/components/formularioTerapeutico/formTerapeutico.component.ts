@@ -14,7 +14,7 @@ export class FormTerapeuticoComponent implements OnInit {
     @ViewChild('arbol', { static: false }) arbolHijo: ArbolItemComponent;
     @HostBinding('class.plex-layout') layout = true;
     @Input() indice: any;
-    @Input() deep: Number;
+    @Input() deep: number;
     public indices;
     private titulo;
     private padres: any[];

@@ -15,7 +15,7 @@ import { ConstantesService } from 'src/app/services/constantes.service';
     selector: 'app-ficha-epidemiologica-crud',
     templateUrl: './ficha-epidemiologica-crud.component.html'
 })
-export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
+export class FichaEpidemiologicaCrudComponent implements OnChanges {
     @Input() fichaName: string;
     @Input() paciente: IPaciente;
     @Input() form: any;
@@ -54,9 +54,6 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         public constantesService: ConstantesService
     ) { }
 
-    ngOnInit(): void {
-
-    }
 
     ngOnChanges() {
         this.formsService.search({ name: this.fichaName }).subscribe(res => {

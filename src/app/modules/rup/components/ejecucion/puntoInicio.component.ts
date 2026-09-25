@@ -1,10 +1,10 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { cacheStorage, Unsubscribe } from '@andes/shared';
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import * as moment from 'moment';
 import { forkJoin as observableForkJoin, Subscription, switchMap } from 'rxjs';
 import { ITurno } from 'src/app/interfaces/turnos/ITurno';
 import { SnomedService } from '../../../../apps/mitos';
@@ -87,9 +87,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public prestacionNominalizada;
     public accesoHudsPaciente = null;
     public accesoHudsTurno = null;
-    public puedeDarSobreturno: Boolean;
-    public tieneAccesoHUDS: Boolean;
-    public matchPaciente: Boolean = true;
+    public puedeDarSobreturno: boolean;
+    public tieneAccesoHUDS: boolean;
+    public matchPaciente = true;
     public prestacionesValidacion = this.auth.getPermissions('rup:validacion:?');
     public permisoServicioIntermedio = this.auth.getPermissions('rup:servicio-intermedio:?');
     public showSidebar = false;
@@ -339,7 +339,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
                     const lengthBloques = this.agendas[indexAgenda]?.bloques.length;
                     for (let indexBloque = 0; indexBloque < lengthBloques; indexBloque++) {
-                        const _turnos = [...this.agendas[indexAgenda].bloques[indexBloque].turnos, ...this.agendas[indexAgenda]?.sobreturnos];
+                        const _turnos = [...this.agendas[indexAgenda].bloques[indexBloque].turnos, ...this.agendas[indexAgenda]?.sobreturnos ?? []];
 
                         const _filtros = _turnos.filter(t => {
                             let nombreCompleto = '';

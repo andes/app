@@ -10,7 +10,7 @@ export class WebSocketService {
     public socket;
     public token = null;
     public events: Subject<any>;
-    public rooms: String[] = [];
+    public rooms: string[] = [];
 
     constructor() {
     }

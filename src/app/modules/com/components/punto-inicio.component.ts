@@ -13,6 +13,7 @@ import { SemaforoService } from '../../semaforo-priorizacion/service/semaforo.se
 import { IDerivacion } from '../interfaces/IDerivacion.interface';
 import { DerivacionesService } from './../../../services/com/derivaciones.service';
 import { PuntoInicioService } from './../../../services/puntoInicio/punto-inicio.service';
+import moment from 'moment';
 
 @Component({
     selector: 'com-punto-inicio',

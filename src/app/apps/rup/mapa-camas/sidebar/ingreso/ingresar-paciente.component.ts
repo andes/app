@@ -27,6 +27,7 @@ import { ListadoInternacionCapasService } from '../../views/listado-internacion-
 import { IObraSocial } from 'src/app/interfaces/IObraSocial';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { ICama } from '../../interfaces/ICama';
+import moment from 'moment';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -40,7 +41,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     camas$: Observable<ISnapshot[]>;
 
     // EVENTOS
-    @Output() onSave = new EventEmitter<any>();
+    @Output() saved = new EventEmitter<any>();
 
     // CONSTANTES
     public pacienteAsociado = pacienteAsociado;
@@ -66,7 +67,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public inProgress = false;
     public prepagas$: Observable<any[]>;
     private backupObraSocial;
-    public registrosIngresoResumen$: Observable<any>;;
+    public registrosIngresoResumen$: Observable<any>;
     public get origenExterno() {
         return this.informeIngreso?.origen?.id === 'traslado' || this.informeIngreso.origen === 'Traslado';
     }
@@ -90,7 +91,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
         PaseAunidadOrganizativa: null
     };
-    public poseeMovimientos: Boolean;
+    public poseeMovimientos: boolean;
     private subscription: Subscription;
     private subscription2: Subscription;
     private subscriptionResumenInternacion: Subscription;
@@ -567,7 +568,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                     this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
                     this.listadoInternacionService.setFechaHasta(this.informeIngreso.fechaIngreso);
                     this.disableButton = false;
-                    this.onSave.emit();
+                    this.saved.emit();
                 }, () => {
                     this.plex.info('danger', 'Ocurrió un error actualizando los datos. Revise los movimientos e intente nuevamente.', 'Atención');
                     this.disableButton = false;
@@ -577,7 +578,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
                 this.listadoInternacionService.setFechaHasta(this.informeIngreso.fechaIngreso);
                 this.disableButton = false;
-                this.onSave.emit();
+                this.saved.emit();
             }
         } else {
             if (nuevaPrestacion) {
@@ -587,7 +588,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             if (this.cama.idInternacion) {
                 // Edición de internación existente por capa medica/enfermeria
                 this.sincronizarCamaInternacion(this.cama.idInternacion, this.fechaIngresoOriginal, this.informeIngreso.fechaIngreso).subscribe(() => {
-                    this.onSave.emit();
+                    this.saved.emit();
                     this.disableButton = false;
                     this.mapaCamasService.fecha2.next(this.informeIngreso.fechaIngreso); // para vista del mapa
                     this.mapaCamasService.select(this.cama);
@@ -634,7 +635,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                         this.plex.info('success', 'Paciente internado');
                         this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
                         this.selectCama(camaEstado);
-                        this.onSave.emit();
+                        this.saved.emit();
                     } else {
                         this.plex.info('warning', 'Ocurrió un error realizando el ingreso. Por favor revise los movimientos y de ser necesario anule la internación.', 'Atención');
                     }
@@ -660,7 +661,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 nombre: this.informeIngreso.organizacionOrigen.nombre
             };
         }
-        this.informeIngreso.PaseAunidadOrganizativa = this.informeIngreso.PaseAunidadOrganizativa;
+        this.informeIngreso.PaseAunidadOrganizativa = { ...this.informeIngreso.PaseAunidadOrganizativa };
         if (!this.informeIngreso.asociado && this.informeIngreso.obraSocial) {
             delete this.informeIngreso.obraSocial;
         } if (this.informeIngreso.asociado === 'Plan o Seguro público') {
@@ -751,7 +752,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                     return this.internacionResumenService.update(this.cama.idInternacion, { idPrestacion: prestacion.id });
                 })
             ).subscribe(() => {
-                this.onSave.emit();
+                this.saved.emit();
                 this.disableButton = false;
                 this.mapaCamasService.select(this.cama);
                 this.plex.info('success', 'Registro completado con éxito');

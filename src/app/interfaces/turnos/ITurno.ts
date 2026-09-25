@@ -15,8 +15,8 @@ export interface ITurno {
         alias: string;
         documento: string;
         fechaNacimiento: Date;
-        telefono: String;
-        sexo: String;
+        telefono: string;
+        sexo: string;
         carpetaEfectores: [{
             organizacion: string;
             nroCarpeta: string;

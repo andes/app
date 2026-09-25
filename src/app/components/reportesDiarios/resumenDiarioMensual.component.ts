@@ -1,11 +1,8 @@
 import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
-import { Component, Input, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
+import { Component, Input, HostBinding, Output, EventEmitter } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
-
-
-
 
 @Component({
     selector: 'resumenDiarioMensual',
@@ -15,12 +12,12 @@ import { Auth } from '@andes/auth';
     ]
 })
 
-export class ResumenDiarioMensualComponent implements OnInit {
+export class ResumenDiarioMensualComponent {
 
     fecha = new Date();
 
     private _reporte;
-    @Input('reporte') // recibe un array
+    @Input() // recibe un array
 
     set reporte(value: any) {
         this._reporte = value;
@@ -32,7 +29,7 @@ export class ResumenDiarioMensualComponent implements OnInit {
 
 
     private _parametros;
-    @Input('parametros') // recibe
+    @Input() // recibe
 
     public set parametros(value: any) {
         this._parametros = value;
@@ -42,8 +39,7 @@ export class ResumenDiarioMensualComponent implements OnInit {
         return this._parametros;
     }
 
-    @Input()
-    titulo = '';
+    @Input() titulo = '';
 
 
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
@@ -61,7 +57,4 @@ export class ResumenDiarioMensualComponent implements OnInit {
 
     }
 
-    public ngOnInit() {
-
-    }
 }

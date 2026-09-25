@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
 import { ICodificacionPrestacion } from './../../../../modules/rup/interfaces/ICodificacion';
 import { CodificacionService } from './../../../../modules/rup/services/codificacion.service';

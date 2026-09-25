@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { enumToArray } from '../../../utils/enums';
 import { EstadosDevolucionCarpetas } from './../enums';
 import { PrestamosService } from '../../../services/prestamosHC/prestamos-hc.service';
@@ -10,8 +10,8 @@ import { Plex } from '@andes/plex';
     templateUrl: './devolver-hc.component.html'
 })
 
-export class DevolverHcComponent implements OnInit {
-    @Output() cancelDevolverEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+export class DevolverHcComponent {
+    @Output() cancelDevolverEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() carpetaDevueltaEmit: EventEmitter<any> = new EventEmitter<any>();
 
     devolverHC: any = {
@@ -28,11 +28,7 @@ export class DevolverHcComponent implements OnInit {
         public auth: Auth) {
     }
 
-    ngOnInit() {
-
-    }
-
-    @Input('devolver')
+    @Input()
     set devolver(value: any) {
         this.prestamo = value;
     }
@@ -41,7 +37,7 @@ export class DevolverHcComponent implements OnInit {
     }
 
     save() {
-        this.prestamo.datosPrestamo = this.prestamo.datosPrestamo;
+        this.prestamo.datosPrestamo = { ...this.prestamo.datosPrestamo };
         this.prestamo.organizacion = this.auth.organizacion;
         this.prestamo.datosDevolucion = { estado: this.devolverHC.estado.nombre, observaciones: this.devolverHC.observaciones };
         this.prestamosService.devolverCarpeta(this.prestamo).subscribe(carpeta => {

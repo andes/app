@@ -1,5 +1,5 @@
-import { Plex } from '@andes/plex';
-import { IPlexTableColumns } from '@andes/plex/src/lib/table/table.interfaces';
+import moment from 'moment';
+import { Plex, IPlexTableColumns } from '@andes/plex';
 import { Location } from '@angular/common';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -390,19 +390,14 @@ export class HUDSTimelineComponent implements OnInit {
         this.timeline = new Timeline(this.timelineDiv.nativeElement, null, options as any);
         this.timeline.setGroups(groups);
         this.timeline.setItems(items);
-
-        // this.timeline.on('select', function (properties) {
-        //     const ii = (this.timeline as any).itemsData.get(properties.items[0]);
-        // });
-
         this.timeline.on('changed', () => {
             const element: HTMLElement = this.timelineDiv.nativeElement;
 
             this.groups.forEach((g) => {
-                const es: HTMLElement[] = <any>element.querySelectorAll(`.vis-group.${g.id}`);
+                const es: HTMLElement[] = <any>element.querySelectorAll<HTMLElement>(`.vis-group-level-${g.level}`);
                 es.forEach((e: any) => e.style.setProperty('--bg-color', g.color + '2e'));
 
-                const es2: HTMLElement[] = <any>element.querySelectorAll(`.vis-label.${g.id}`);
+                const es2: HTMLElement[] = <any>element.querySelectorAll(`.vis-label.${g.lavel}`);
                 es2.forEach((e: any) => e.style.setProperty('--bg-color', g.color + '2e'));
             });
         });

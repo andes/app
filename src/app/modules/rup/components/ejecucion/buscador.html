@@ -21,7 +21,7 @@
 </div>
 <!-- Fin Tipo de búsqueda -->
 
-<snomed-buscar (onSearch)="recibeResultados($event)" *ngIf="busquedaActual === 'buscadorBasico'" [autofocus]="true"
+<snomed-buscar (search)="recibeResultados($event)" *ngIf="busquedaActual === 'buscadorBasico'" [autofocus]="true"
                id="buscador"></snomed-buscar>
 
 <div class="buscador"

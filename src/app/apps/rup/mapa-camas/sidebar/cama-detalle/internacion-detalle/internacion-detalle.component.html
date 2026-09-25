@@ -34,7 +34,7 @@
             </ng-container>
         </ng-container>
 
-        <app-ingresar-paciente *ngIf="editarIngresoIdInternacion" (onSave)="toggleEdit()">
+        <app-ingresar-paciente *ngIf="editarIngresoIdInternacion" (saved)="toggleEdit()">
             <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="toggleEdit()">
             </plex-button>
         </app-ingresar-paciente>

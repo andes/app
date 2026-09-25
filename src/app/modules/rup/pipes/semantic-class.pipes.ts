@@ -52,7 +52,7 @@ export function getSemanticTag(concepto: ISnomedConcept, esSolicitud: boolean = 
             case 'elemento de registro':
                 return 'elemento de registro';
             default:
-                // No debería
+            // No debería
                 return concepto.semanticTag;
         }
     }

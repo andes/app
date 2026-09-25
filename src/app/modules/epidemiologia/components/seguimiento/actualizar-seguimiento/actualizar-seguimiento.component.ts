@@ -9,8 +9,8 @@ import { SeguimientoPacientesService } from '../../../services/seguimiento-pacie
 })
 export class ActualizarSeguimientoComponent implements OnInit {
     @Input() seguimiento;
-    @Output() close: EventEmitter<any> = new EventEmitter<any>();
-    @Output() save: EventEmitter<any> = new EventEmitter<any>();
+    @Output() closed: EventEmitter<any> = new EventEmitter<any>();
+    @Output() saved: EventEmitter<any> = new EventEmitter<any>();
     editContactos;
     scoreValue;
     esAuditor;
@@ -42,7 +42,7 @@ export class ActualizarSeguimientoComponent implements OnInit {
 
         this.seguimientoPacientesService.update(this.seguimiento.id, data).subscribe(() => {
             this.plex.toast('success', 'La derivación fue actualizada exitosamente', 'Derivacion guardada', 1000);
-            this.save.emit(false);
+            this.saved.emit(false);
         });
     }
 
@@ -51,7 +51,7 @@ export class ActualizarSeguimientoComponent implements OnInit {
     }
 
     cerrar() {
-        this.close.emit(false);
+        this.closed.emit(false);
     }
 
     hideSubmit($event) {

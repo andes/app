@@ -16,7 +16,7 @@ export class ReglaService {
         return this.server.get(this.reglaUrl, { params: params, showError: true });
     }
 
-    getById(id: String): Observable<any> {
+    getById(id: string): Observable<any> {
         return this.server.get(this.reglaUrl + '/' + id, null);
     }
 

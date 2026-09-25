@@ -14,10 +14,12 @@
                              (click)="textoFiltroVisivility = !textoFiltroVisivility">
                     <plex-icon name="zoom"></plex-icon>
                 </plex-button>
-                <plex-button [type]="showListado ? 'success' : 'info'" icon="format-list-bulleted" size="sm"
-                             (click)="onToogleListado()"
-                             [tooltip]="showListado ? 'Ocultar listado' : 'Mostrar listado'"></plex-button>
-                <plex-button type="danger" label="VOLVER" size="sm" (click)="volver()"></plex-button>
+                <plex-button class="mr-1" [type]="showListado ? 'success' : 'info'" icon="format-list-bulleted"
+                             size="sm" (click)="onToogleListado()"
+                             [tooltip]="showListado ? 'Ocultar listado' : 'Mostrar listado'">
+                </plex-button>
+                <plex-button type="danger" label="VOLVER" size="sm" (click)="volver()">
+                </plex-button>
             </plex-title>
             <div #prueba></div>
         </header>

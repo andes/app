@@ -6,7 +6,7 @@ import { ObraSocialService } from 'src/app/services/obraSocial.service';
 import { environment } from 'src/environments/environment';
 import { TurnosPrestacionesService } from '../services/turnos-prestaciones.service';
 import { cache } from '@andes/shared';
-
+import moment from 'moment';
 @Component({
     selector: 'no-nominalizadas',
     templateUrl: 'no-nominalizadas.html',
