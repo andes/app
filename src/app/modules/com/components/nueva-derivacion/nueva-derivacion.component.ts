@@ -56,6 +56,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         historial: [],
         motivoDerivacion: '',
         estrategiaAtencion: null,
+        ambito: null,
         diagnosticoActual: '',
         estadoClinico: '',
         diagnosticoBase: '',
@@ -78,6 +79,11 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         { id: 'mayorComplejidad', nombre: 'Mayor complejidad' },
         { id: 'menorComplejidad', nombre: 'Menor complejidad' },
         { id: 'rehabilitacion', nombre: 'Rehabilitación' },
+    ];
+
+    public ambitos = [
+        { id: 'internacion', nombre: 'Internación' },
+        { id: 'guardia', nombre: 'Guardia' },
     ];
 
     public estrategiasAtencion = [];
@@ -246,6 +252,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         });
         this.modelo.condicion = this.modelo.condicion?.nombre;
         this.modelo.necesidad = this.modelo.necesidad?.nombre;
+        this.modelo.ambito = this.modelo.ambito?.nombre;
         if (this.modelo.estrategiaAtencion) {
             this.modelo.estrategiaAtencion = {
                 id: this.modelo.estrategiaAtencion.id || this.modelo.estrategiaAtencion._id,
