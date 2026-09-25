@@ -100,6 +100,7 @@ import { MapaEspacioFisicoVistaComponent } from './components/turnos/configuraci
 import { MapaEspacioFisicoComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico.component';
 import { EstadisticasAgendasComponent } from './components/turnos/dashboard/estadisticas-agendas.component';
 import { EstadisticasPacientesComponent } from './components/turnos/dashboard/estadisticas-pacientes.component';
+import { HistorialTurnosModule } from './components/turnos/historial-turnos/historial-turnos.module';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
 import { AgregarPacienteComponent } from './components/turnos/gestor-agendas/operaciones-agenda/agregar-paciente.component';
 import { BuscadorCie10Component } from './components/turnos/gestor-agendas/operaciones-agenda/buscador-cie10.component';
@@ -259,6 +260,7 @@ registerLocaleData(localeEs, 'es');
         TOPLibModule,
         DirectiveLibModule,
         CITASLibModule,
+        HistorialTurnosModule,
         RUPLibModule,
         AuditoriaModule,
         RecaptchaModule,

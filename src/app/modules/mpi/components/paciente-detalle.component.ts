@@ -1,13 +1,16 @@
-import { Component, Input, OnInit, OnChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, Output, EventEmitter } from '@angular/core';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
 import { ObraSocialCacheService } from '../../../services/obraSocialCache.service';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { ModalMotivoAccesoHudsService } from '../../rup/components/huds/modal-motivo-acceso-huds.service';
 import { PacienteCacheService } from '../../../core/mpi/services/pacienteCache.service';
+import { InternacionResumenHTTP } from 'src/app/apps/rup/mapa-camas/services/resumen-internacion.http';
+import { PrestacionesService } from '../../rup/services/prestaciones.service';
 
 @Component({
     selector: 'paciente-detalle',
@@ -26,11 +29,16 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     @Input() accesoHuds = false;
     @Input() puedeEditar = false;
     @Input() returnOrigen: string;
+    @Input() enHuds = false;
 
     obraSocial: IObraSocial;
     token$: Observable<string>;
     hudsPermiso;
     documentacionPermiso;
+    internacionEnCurso: { fechaIngreso: Date } | null = null;
+    public registrosAlergia$: Observable<any[]>;
+    private expression = '<<39579001 OR <<419199007';
+    @Output() irATrastornos = new EventEmitter<void>();
 
     get justificado() {
         return this.orientacion === 'vertical' ? 'center' : 'start';
@@ -182,17 +190,27 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
         private auth: Auth,
         private motivoAccesoService: ModalMotivoAccesoHudsService,
         private router: Router,
-        private pacienteCache: PacienteCacheService
+        private pacienteCache: PacienteCacheService,
+        private internacionResumenHTTP: InternacionResumenHTTP,
+        private prestacionesService: PrestacionesService
     ) { }
 
     ngOnInit() {
-
         this.hudsPermiso = this.auth.check('huds:visualizacionHuds');
         this.documentacionPermiso = this.auth.check('mpi:paciente:documentacion');
+        if (this.paciente?.id) {
+            this.registrosAlergia$ = this.prestacionesService.getRegistrosHuds(this.paciente.id, this.expression, null, null, null, 'inferred').pipe(
+                map(alergias => alergias.map(a => ({
+                    nombre: a.registro.nombre,
+                    fechaInicio: a.registro.valor.fechaInicio
+                })))
+            );
+        }
     }
 
 
     ngOnChanges() {
+        this.loadEstadoInternacion();
         const requiereReload = this.reload ||
             !this.paciente?.financiador ||
             !this.paciente?.direccion ||
@@ -207,6 +225,16 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
         } else {
             this.loadObraSocial();
             this.doRelaciones();
+        }
+    }
+
+    loadEstadoInternacion() {
+        this.internacionEnCurso = null;
+        if (this.enHuds && this.paciente?.id) {
+            this.internacionResumenHTTP.search({ paciente: this.paciente.id }).subscribe(internaciones => {
+                const enCurso = internaciones?.find(i => !i.fechaEgreso);
+                this.internacionEnCurso = enCurso ? { fechaIngreso: enCurso.fechaIngreso } : null;
+            });
         }
     }
 

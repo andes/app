@@ -1,5 +1,87 @@
+.huds-rail {
+    width: 64px;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 8px;
+    padding-top: 8px;
+
+    .huds-rail-item {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        cursor: pointer;
+        position: relative;
+
+        .huds-rail-tooltip {
+            position: absolute;
+            left: 60px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #333;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 10;
+        }
+
+        &.active,
+        &:hover {
+            background: #d9ecfb;
+            border-color: #00a8e0;
+
+            .huds-rail-tooltip {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+.flex-fill {
+    flex-grow: 1;
+    min-width: 0;
+    overflow-y: auto;
+}
+
+.huds-detail {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+vista-accesos-huds,
+huds-seccion-situaciones-salud,
+historial-turnos {
+    display: block;
+    height: 100%;
+}
+
+vista-accesos-huds plex-table section {
+    height: 100% !important;
+    overflow-y: auto !important;
+}
+
 plex-tabs>section {
     margin-bottom: 10px;
+}
+
+.huds-resumen-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.huds-resumen-body.is-hidden {
+    display: none;
 }
 
 plex-tab {
