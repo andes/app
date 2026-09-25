@@ -155,6 +155,13 @@ export class RUPAccionesEnvioInformeComponent {
 
 
 
+    private isRecetaRegistro(registro: any): boolean {
+        if (!registro) { return false; }
+        const concepto = registro.concepto?.conceptId;
+        // 33633005 = prescripción de medicamento, 182836005 = alternativa registrada en componente RUP; incluye insumos
+        return concepto === '33633005' || concepto === '182836005' || !!registro.valor?.medicamentos || !!registro.valor?.insumos || !!registro.valor?.insumo;
+    }
+
     async descargarInforme() {
         this.requestInProgress = true;
         let term;
@@ -170,6 +177,13 @@ export class RUPAccionesEnvioInformeComponent {
             term = this.prestacion.solicitud.tipoPrestacion.term;
         }
 
+        if (this.registro && this.isRecetaRegistro(this.registro)) {
+            this.servicioDocumentos.descargarReceta(informe, term).subscribe(
+                () => this.requestInProgress = false,
+                () => this.requestInProgress = false
+            );
+            return;
+        }
 
         this.servicioDocumentos.descargarInformeRUP(informe, term).subscribe(
             () => {

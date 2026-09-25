@@ -3,6 +3,7 @@ import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { HUDSService } from '../../services/huds.service';
 import { RecetaService } from 'src/app/services/receta.service';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
+import { DocumentosService } from '../../../../services/documentos.service';
 import * as moment from 'moment';
 
 @Component({
@@ -99,11 +100,13 @@ export class VistaRecetaComponent implements OnInit {
     public recetas;
     public recetaPrincipal: any;
     public historialRecetas: any[];
+    public requestInProgress = false;
 
     constructor(
         public huds: HUDSService,
         public recetaService: RecetaService,
-        public organizacionesService: OrganizacionService
+        public organizacionesService: OrganizacionService,
+        private documentosService: DocumentosService
     ) { }
 
     ngOnInit() {
@@ -157,6 +160,43 @@ export class VistaRecetaComponent implements OnInit {
             }
         }
         return null;
+    }
+
+    puedeDescargarReceta(receta: any): boolean {
+        if (!receta) { return false; }
+        const estado = receta.estadoActual?.tipo;
+        const dispensa = receta.estadoDispensaActual?.tipo;
+        const esProlongado = receta.medicamento?.tratamientoProlongado || receta.insumo?.tratamientoProlongado;
+        if (esProlongado) {
+            return (estado === 'vigente' || estado === 'pendiente') && dispensa === 'sin-dispensa';
+        }
+        return estado === 'vigente' && dispensa === 'sin-dispensa';
+    }
+
+    get recetasDescargables(): any[] {
+        if (!this.registro?.recetas) { return []; }
+        return this.registro.recetas.filter(r => this.puedeDescargarReceta(r));
+    }
+
+    verDescargarReceta(): boolean {
+        return this.recetasDescargables.length > 0;
+    }
+
+    // Unificado: descarga todas las recetas seleccionadas (1 o N). Antes separado por caso prolongado (1 hoja vs N hojas).
+    descargarPdf() {
+        if (!this.recetasDescargables.length) { return; }
+        this.requestInProgress = true;
+        const primera = this.recetasDescargables[0];
+        const nombre = primera.medicamento?.nombre || primera.medicamento?.concepto?.term || primera.insumo?.nombre || 'prescripción de medicamento';
+        const informe: any = {
+            idPrestacion: primera.idPrestacion,
+            idRegistro: primera.idRegistro,
+            recetasIds: this.recetasDescargables.map(r => r.id || r._id)
+        };
+        this.documentosService.descargarReceta(informe, nombre).subscribe(
+            () => this.requestInProgress = false,
+            () => this.requestInProgress = false
+        );
     }
 
 }
