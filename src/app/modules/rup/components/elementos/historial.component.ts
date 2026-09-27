@@ -1,8 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { map, switchMap } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
 import { RupElement } from '.';
-import { of } from 'rxjs';
 import { PlexTextToolBar } from '@andes/plex';
 
 
