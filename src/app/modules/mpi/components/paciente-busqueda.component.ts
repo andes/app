@@ -21,6 +21,7 @@ export class PacienteBusquedaComponent {
     /* returnScannedPatient en true retorna un objeto con los datos del paciente escaneado en caso de
         que este no estuviera registrado */
     @Input() returnScannedPatient = false;
+    @Input() showFiltrosAvanzada = false;
 
     @Output() searchStart: EventEmitter<null> = new EventEmitter<null>();
     @Output() searchEnd: EventEmitter<PacienteBuscarResultado> = new EventEmitter<PacienteBuscarResultado>();
