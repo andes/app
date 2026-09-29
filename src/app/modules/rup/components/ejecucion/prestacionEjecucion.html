@@ -270,7 +270,7 @@
                         <plex-tab [allowClose]="true" [label]="registro.data.concepto.term"
                                   [class]="registro.data.class" [color]="registro.data.class"
                                   *ngIf="registro.tipo === 'concepto'">
-                            <detalle-registro *="registro.data.class === 'situación' || 
+                            <detalle-registro *ngIf="registro.data.class === 'situación' || 
                                                  registro.data.class === 'hallazgo' || registro.data.class === 'trastorno'"
                                               [registro]="registro.data" [paciente]="paciente">
                             </detalle-registro>
