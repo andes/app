@@ -10,7 +10,7 @@
             <div class="col-md-12">
                 <label class="form-label">Obra Social / Financiador</label>
                 <plex-radio name="financiador" [(ngModel)]="financiadorSeleccionado"
-                            (change)="seleccionarFinanciador($event)" [data]="datosFinanciadores">
+                            (change)="seleccionarFinanciador($event)" [data]="datosFinanciadores" [required]="true">
                 </plex-radio>
             </div>
         </div>
@@ -21,7 +21,7 @@
                 <label class="form-label">Seleccionar otro financiador</label>
                 <plex-select name="otroFinanciador" placeholder="Buscar financiador..."
                              [(ngModel)]="otroFinanciadorSeleccionado" [data]="opcionesFinanciadores"
-                             labelField="nombre" (change)="seleccionarOtroFinanciador($event)">
+                             labelField="nombre" (change)="seleccionarOtroFinanciador($event)" [required]="showListado">
                 </plex-select>
             </div>
         </div>
@@ -135,7 +135,7 @@
                               [required]="true" min="1" max="90">
                     </plex-int>
                     <plex-text name="notaMedica" label="Notas médicas" [(ngModel)]="medicamento.dosisDiaria.notaMedica"
-                               [required]="false" min="1" max="90">
+                               [required]="false">
                     </plex-text>
                 </div>
 
@@ -159,7 +159,8 @@
         <plex-item *ngFor="let item of registro.valor.medicamentos">
             <plex-icon size="md" *ngIf="true" name="pildoras" class="icon icon--border--producto mr-2">
             </plex-icon>
-            <plex-label [tituloBold]="true" titulo="{{ item.esMagistral ? (item.magistral?.nombre || item.generico?.nombre || item.generico?.term) : item.generico?.term }}"
+            <plex-label [tituloBold]="true"
+                        titulo="{{ item.esMagistral ? (item.magistral?.nombre || item.generico?.nombre || item.generico?.term) : item.generico?.term }}"
                         subtitulo="{{ item.cantEnvases }} envase(s){{ item.cantidad ? ' de ' + item.cantidad + ' ' + (item.esMagistral ? (item.magistral?.unidadMedida || item.generico?.unidadMedida || '') : (item.presentacion?.term ? item.presentacion.term + '(s)' : '(s)')) : '' }}{{ item.dosisDiaria?.dosis || item.dosisDiaria?.intervalo || item.dosisDiaria?.dias ? ' | ' : '' }}{{ item.dosisDiaria?.dosis ? item.dosisDiaria.dosis : '' }}{{ item.dosisDiaria?.intervalo ? ' cada ' + item.dosisDiaria.intervalo.nombre : '' }}{{ item.dosisDiaria?.dias ? ' durante ' + item.dosisDiaria.dias + ' día(s)' : '' }}"></plex-label>
             <plex-badge *ngIf="item.diagnostico" size="sm" type="warning" hintType="warning">
                 {{ item.diagnostico.term | truncate }}
@@ -171,6 +172,10 @@
             </plex-badge>
             <plex-badge *ngIf="item.tipoReceta?.length" type="info">{{item.tipoReceta}}
             </plex-badge>
+            <plex-label size="md" [tituloBold]="false"
+                        titulo="{{ item.obraSocial ? (item.obraSocial.nombre || item.obraSocial.financiador) : 'Sin obra social' }}"
+                        subtitulo="{{ item.obraSocial?.numeroAfiliado ? 'Número de Afiliado: ' + item.obraSocial.numeroAfiliado : '' }}">
+            </plex-label>
             <plex-button type="danger" size="sm" (click)="borrarMedicamento(item)" icon="delete"
                          tooltip="eliminar"></plex-button>
         </plex-item>
@@ -180,8 +185,10 @@
     <div *ngIf="soloValores && alerta" class="alerta">{{alerta}}</div>
     <plex-list size="md" *ngIf="registro.valor.medicamentos">
         <plex-item *ngFor="let item of registro.valor.medicamentos">
-            <plex-label [tituloBold]="true" titulo="{{ item.esMagistral ? (item.magistral?.nombre || item.generico?.nombre || item.generico?.term) : item.generico?.term }}"
-                        subtitulo="{{ item.cantEnvases }} envase(s){{ item.cantidad ? ' de ' + item.cantidad + ' ' + (item.esMagistral ? (item.magistral?.unidadMedida || item.generico?.unidadMedida || '') : (item.presentacion?.term ? item.presentacion.term + '(s)' : '(s)')) : '' }}{{ item.dosisDiaria?.dosis || item.dosisDiaria?.intervalo || item.dosisDiaria?.dias ? ' | ' : '' }}{{ item.dosisDiaria?.dosis ? item.dosisDiaria.dosis : '' }}{{ item.dosisDiaria?.intervalo ? ' cada ' + item.dosisDiaria.intervalo.nombre : '' }}{{ item.dosisDiaria?.dias ? ' durante ' + item.dosisDiaria.dias + ' día(s)' : '' }}"></plex-label>
+            <plex-label [tituloBold]="true"
+                        titulo="{{ item.esMagistral ? (item.magistral?.nombre || item.generico?.nombre || item.generico?.term) : item.generico?.term }}"
+                        subtitulo="{{ item.cantEnvases }} envase(s){{ item.cantidad ? ' de ' + item.cantidad + ' ' + (item.esMagistral ? (item.magistral?.unidadMedida || item.generico?.unidadMedida || '') : (item.presentacion?.term ? item.presentacion.term + '(s)' : '(s)')) : '' }}{{ item.dosisDiaria?.dosis || item.dosisDiaria?.intervalo || item.dosisDiaria?.dias ? ' | ' : '' }}{{ item.dosisDiaria?.dosis ? item.dosisDiaria.dosis : '' }}{{ item.dosisDiaria?.intervalo ? ' cada ' + item.dosisDiaria.intervalo.nombre : '' }}{{ item.dosisDiaria?.dias ? ' durante ' + item.dosisDiaria.dias + ' día(s)' : '' }}">
+            </plex-label>
             <plex-badge *ngIf="item.diagnostico" size="sm" type="warning" hintType="warning">
                 {{ item.diagnostico.term | truncate }}
             </plex-badge>
@@ -192,6 +199,10 @@
             </plex-badge>
             <plex-badge *ngIf="item.tipoReceta?.length" type="info">{{item.tipoReceta}}
             </plex-badge>
+            <plex-label size="md" [tituloBold]="false"
+                        titulo="{{ item.obraSocial ? (item.obraSocial.nombre || item.obraSocial.financiador) : 'Sin obra social' }}"
+                        subtitulo="{{ item.obraSocial?.numeroAfiliado ? 'Número de Afiliado: ' + item.obraSocial.numeroAfiliado : '' }}">
+            </plex-label>
         </plex-item>
     </plex-list>
 </div>
