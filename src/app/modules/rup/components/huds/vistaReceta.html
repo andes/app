@@ -54,6 +54,14 @@
                 <p class="texto-detalle">{{recetaPrincipal.diagnostico.term || recetaPrincipal.diagnostico.descripcion}}
                 </p>
             </div>
+            <div *ngIf="recetaPrincipal.medicamento.dosisDiaria?.notaMedica">
+                <b>Indicación para el paciente</b>
+                <p class="texto-detalle">{{recetaPrincipal.medicamento.dosisDiaria.notaMedica}}</p>
+            </div>
+            <div *ngIf="recetaPrincipal.medicamento.dosisDiaria?.notaFarmacia">
+                <b>Indicación para la farmacia</b>
+                <p class="texto-detalle">{{recetaPrincipal.medicamento.dosisDiaria.notaFarmacia}}</p>
+            </div>
             <ng-container *ngIf="recetaPrincipal.medicamento.tipoReceta === 'triplicado'">
                 <div>
                     <b>Serie</b>
