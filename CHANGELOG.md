@@ -1,3 +1,10 @@
+# [5.174.0](https://github.com/andes/app/compare/v5.173.5...v5.174.0) (2026-09-30)
+
+
+### Features
+
+* **MPI:** implementa numero de telefono extranjero ([#3280](https://github.com/andes/app/issues/3280)) ([488a959](https://github.com/andes/app/commit/488a959d4757df4690db1ffad38b7c7b08f00da9))
+
 ## [5.173.5](https://github.com/andes/app/compare/v5.173.4...v5.173.5) (2026-09-09)
 
 
