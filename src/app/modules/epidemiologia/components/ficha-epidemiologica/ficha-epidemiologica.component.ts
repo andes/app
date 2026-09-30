@@ -9,6 +9,7 @@ import { Auth } from '@andes/auth';
 import { SnomedService } from 'src/app/apps/mitos/services/snomed.service';
 import { cache } from '@andes/shared';
 import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
+import moment from 'moment';
 
 @Component({
     selector: 'app-ficha-epidemiologica',

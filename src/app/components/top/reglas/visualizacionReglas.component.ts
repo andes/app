@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ISnomedConcept } from 'src/app/modules/rup/interfaces/snomed-concept.interface';
@@ -8,7 +9,6 @@ import { IRegla } from '../../../interfaces/IRegla';
 import { Observable, of, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 import { ReglaService } from '../../../services/top/reglas.service';
-import * as moment from 'moment';
 
 @Component({
     selector: 'visualizacion-reglas',

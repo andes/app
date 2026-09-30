@@ -9,11 +9,11 @@ export class SmsService {
 
     constructor(private server: Server) { }
 
-    enviarSms(params): Observable<String> {
+    enviarSms(params): Observable<string> {
         return this.server.get(this.smsUrl + 'sms/', { params: params, showError: true });
     }
 
-    enviarNotificacion(params): Observable<String> {
+    enviarNotificacion(params): Observable<string> {
         return this.server.post(this.smsUrl + 'notificacion/', { params: params, showError: true });
     }
 }

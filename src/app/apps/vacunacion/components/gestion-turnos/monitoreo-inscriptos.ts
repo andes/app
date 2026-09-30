@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { catchError } from 'rxjs/operators';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import moment from 'moment';
 
 @Component({
     selector: 'monitoreo-inscriptos',
@@ -39,7 +40,7 @@ export class MonitoreoInscriptosComponent implements OnInit {
     public dacionTurno = false;
     public fechaProximoLlamado;
     public hoy = moment().startOf('day').add(1, 'days').toDate();
-    public desasignarInsc: Boolean;
+    public desasignarInsc: boolean;
     public inscriptosSinturno = [];
     public showDarTurnos = false;
     public solicitudTurno: any;

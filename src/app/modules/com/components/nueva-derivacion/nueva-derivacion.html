@@ -61,13 +61,13 @@
                            [required]="true" grow="full"></plex-text>
             </plex-wrapper>
             <!-- Adjuntos -->
-            <plex-title titulo="Cargar adjuntos"></plex-title>
-            <plex-wrapper>
-                <upload-file label="Adjuntar archivo" (onUpload)="onUpload($event)" [modulo]="'com'"></upload-file>
+            <plex-title titulo="Cargar adjuntos">
+                <upload-file label="Adjuntar archivo" (uploading)="onUpload($event)" [modulo]="'com'"></upload-file>
+                <br><br>
                 <span *ngIf="errorExt">
                     <plex-badge type="danger">Archivo inválido.</plex-badge>
                 </span>
-            </plex-wrapper>
+            </plex-title>
 
             <shared-galeria-archivos [files]="adjuntosUrl" (remove)="removeFile($event)">
             </shared-galeria-archivos>

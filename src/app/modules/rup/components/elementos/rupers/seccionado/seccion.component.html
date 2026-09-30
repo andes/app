@@ -27,8 +27,8 @@
 
         </div>
         <!-- Area droppable del elemento -->
-        <div [class]="colForRegistros" class="mt-4" droppable [dropScope]="'registros-rup'"
-             [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)">
+        <div [class]="colForRegistros" class="mt-4" dndDropzone [dndDropzone]="'registros-rup'"
+             (dndDrop)="onConceptoDrop($event)">
             <div class="text-center" *ngIf="soloValores && registro?.registros?.length === 0">
                 No hay registros vinculados
             </div>
@@ -63,8 +63,8 @@
                                         <button (click)="desvincular(registro, registro.relacionadoCon[0])"
                                                 class="desvincular"
                                                 *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen && !soloValoresfact"
-                                                title="Desvincular"><plex-icon name="link-variant-off"></plex-icon> 
-                                                
+                                                title="Desvincular"><plex-icon name="link-variant-off"></plex-icon>
+
                                         </button>
 
 

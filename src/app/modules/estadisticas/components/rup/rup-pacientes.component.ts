@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import moment from 'moment';
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { EstRupService } from '../../services/rup-estadisticas.service';
 import { SnomedService } from '../../services/snomed.service';
@@ -407,7 +407,7 @@ export class RupPacientesComponent implements OnInit {
         if (!this.selectedConcept || this.selectedConcept.concepto.conceptId !== row.concepto.conceptId) {
             this.selectedConcept = row;
             this.selectIndex = index;
-            this.showFather[row.concepto.conceptId] = !(!!this.showFather[row.concepto.conceptId]);
+            this.showFather[row.concepto.conceptId] = !(this.showFather[row.concepto.conceptId]);
             this.selectedChilds = this.selectedFather = null;
             this.demografia();
         } else {

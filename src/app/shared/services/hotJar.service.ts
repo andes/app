@@ -21,8 +21,8 @@ export class HotjarService {
         }
         this.ready = true;
         (function (h: any, o: any, t: any, j: any, a?: any, r?: any) {
-            h.hj = h.hj || function () {
-                (h.hj.q = h.hj.q || []).push(arguments);
+            h.hj = h.hj || function (...args: any[]) {
+                (h.hj.q = h.hj.q || []).push(args);
             };
 
             h._hjSettings = { hjid: environment.HOTJAR_KEY, hjsv: 6 };

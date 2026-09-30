@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import moment from 'moment';
 import { Component, HostBinding, EventEmitter, Output, SimpleChanges, SimpleChange, OnChanges, Input } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ProfesionalService } from '../../../../services/profesional.service';
@@ -28,7 +28,7 @@ export class FiltrosSolicitudesComponent implements OnChanges {
     ];
 
     @Output() filter = new EventEmitter();
-    @Output() onDisplayChange = new EventEmitter();
+    @Output() displayChange = new EventEmitter();
     @Input() activeTab: any;
 
     public seleccion: any = {
@@ -48,7 +48,7 @@ export class FiltrosSolicitudesComponent implements OnChanges {
 
     changeTablaGrafico() {
         this.esTablaGrafico = !this.esTablaGrafico;
-        this.onDisplayChange.emit(this.esTablaGrafico);
+        this.displayChange.emit(this.esTablaGrafico);
     }
 
     loadProfesionales(event) {

@@ -20,6 +20,8 @@ import { IProvincia } from '../../../interfaces/IProvincia';
 import { ILocalidad } from '../../../interfaces/ILocalidad';
 import { IPais } from 'src/app/interfaces/IPais';
 import { cache } from '@andes/shared';
+import moment from 'moment';
+
 @Component({
     selector: 'datos-basicos',
     templateUrl: 'datos-basicos.html',
@@ -537,9 +539,9 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
     }
 
     verificarNombreApellido(data) {
-        this.pacienteEditado.nombre = data.hasOwnProperty('nombre') ? data.nombre : this.pacienteEditado.nombre;
-        this.pacienteEditado.apellido = data.hasOwnProperty('apellido') ? data.apellido : this.pacienteEditado.apellido;
-        this.pacienteEditado.fechaNacimiento = data.hasOwnProperty('fechaNacimiento') ? data.fechaNacimiento : this.pacienteEditado.fechaNacimiento;
+        this.pacienteEditado.nombre = Object.hasOwn(data, 'nombre') ? data.nombre : this.pacienteEditado.nombre;
+        this.pacienteEditado.apellido = Object.hasOwn(data, 'apellido') ? data.apellido : this.pacienteEditado.apellido;
+        this.pacienteEditado.fechaNacimiento = Object.hasOwn(data, 'fechaNacimiento') ? data.fechaNacimiento : this.pacienteEditado.fechaNacimiento;
         this.changes.emit({ pacienteError: this.pacienteEditado });
     }
 

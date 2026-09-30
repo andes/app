@@ -22,7 +22,7 @@ export class IPrestacion {
         sexo: string;
         genero: string;
         fechaNacimiento: Date;
-        obraSocial?: IObraSocial; // Refactor cobertura
+        obraSocial?: Partial<IObraSocial>; // Refactor cobertura
     };
     // Datos de la solicitud
     solicitud: {

@@ -22,7 +22,7 @@ export class EspecialidadService {
      * Metodo getById. Trae el objeto especialidad por su Id.
      * @param {String} id Busca por Id
      */
-    getById(id: String): Observable<IEspecialidad> {
+    getById(id: string): Observable<IEspecialidad> {
         return this.server.get(this.especialidadUrl + '/' + id, null);
     }
 

@@ -1,5 +1,5 @@
 import { Plex } from '@andes/plex';
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
 
@@ -7,7 +7,7 @@ import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
     selector: 'com-busqueda-paciente',
     templateUrl: './busqueda-paciente.html'
 })
-export class ComBusquedaPacienteComponent implements OnInit {
+export class ComBusquedaPacienteComponent {
 
     @Output() returnBusqueda: EventEmitter<any> = new EventEmitter<any>();
     resultadoBusqueda = null;
@@ -18,9 +18,6 @@ export class ComBusquedaPacienteComponent implements OnInit {
         public plex: Plex,
         private pacienteService: PacienteService
     ) { }
-
-    ngOnInit() {
-    }
 
     searchStart() {
         this.loading = true;

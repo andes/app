@@ -28,7 +28,8 @@
                             <plex-dropdown size="sm" type="success" class="mr-1" [right]="true" [items]="registros"
                                            label="NUEVO REGISTRO">
                             </plex-dropdown>
-                            <plex-button [disabled]="pacienteSeleccionado | pacienteRestringido" size="sm" type="info" (click)="ruteo(pacienteSeleccionado.id, 'huds')">
+                            <plex-button [disabled]="pacienteSeleccionado | pacienteRestringido" size="sm" type="info"
+                                         (click)="ruteo(pacienteSeleccionado.id, 'huds')">
                                 VER HUDS
                             </plex-button>
                         </div>

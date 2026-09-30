@@ -31,7 +31,7 @@ export class UsuarioDetalleComponent implements OnChanges {
     ) { }
 
     ngOnChanges(changes: { [key: string]: SimpleChange }) {
-        if (changes.hasOwnProperty('usuario')) {
+        if (Object.hasOwnProperty.call(changes, 'usuario')) {
             this.usuario$.next(changes['usuario'].currentValue);
         }
 

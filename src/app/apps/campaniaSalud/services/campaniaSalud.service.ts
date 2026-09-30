@@ -28,7 +28,7 @@ export class CampaniaSaludService {
      * @returns {String}
      * @memberof CampaniaSaludService
      */
-    getEstado(campania: ICampaniaSalud): String {
+    getEstado(campania: ICampaniaSalud): string {
         return campania.activo ? 'Activada' : 'Desactivada';
     }
 }

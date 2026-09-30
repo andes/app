@@ -18,6 +18,7 @@ import { MapaCamasHTTP } from './mapa-camas.http';
 import { MaquinaEstadosHTTP } from './maquina-estados.http';
 import { InternacionResumenHTTP, IResumenInternacion } from './resumen-internacion.http';
 import { PermisosMapaCamasService } from '../services/permisos-mapa-camas.service';
+import moment from 'moment';
 @Injectable()
 export class MapaCamasService {
     public timer$;

@@ -18,7 +18,7 @@ export class PlantillasService {
         public cos: ConceptObserverService
     ) { }
 
-    get(conceptId: string, esSolicitud: Boolean, force = false): Observable<any> {
+    get(conceptId: string, esSolicitud: boolean, force = false): Observable<any> {
         const cache = this.getCache(conceptId, esSolicitud);
         if (cache.getValue() && !force) {
             return cache;
@@ -48,7 +48,7 @@ export class PlantillasService {
         }
     }
 
-    getCache(conceptId: string, esSolicitud: Boolean) {
+    getCache(conceptId: string, esSolicitud: boolean) {
         if (esSolicitud && !this.cacheSolicitud[conceptId]) {
             this.cacheSolicitud[conceptId] = new BehaviorSubject(null);
         } else {

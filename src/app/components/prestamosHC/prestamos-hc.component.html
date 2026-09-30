@@ -1,4 +1,4 @@
-<plex-layout main="{{ showSidebar ? 8 : 12 }}">
+<plex-layout [main]="showSidebar ? 8 : 12">
     <plex-layout-main>
         <form #formulario="ngForm" [ngClass]="{'loadMode': loading}">
 
@@ -13,7 +13,7 @@
                 </plex-tab>
                 <plex-tab label="Prestamos de Carpetas">
                     <app-listar-prestamos (recargarSolicitudesEmit)="solicitudes.getCarpetas({}, null)"
-                                        (devolverCarpetaEmit)="onDevolverCarpeta($event)" #prestamos>
+                                          (devolverCarpetaEmit)="onDevolverCarpeta($event)" #prestamos>
                     </app-listar-prestamos>
                 </plex-tab>
                 <plex-tab label="Historial de Prestamos">
@@ -21,7 +21,7 @@
                 </plex-tab>
             </plex-tabs>
             <imprimir-solicitudes [solicutudes]="carpetas" *ngIf="imprimirSolicitudes"
-                                (volverAlListadoEmit)="cancelarImprimir()"></imprimir-solicitudes>
+                                  (volverAlListadoEmit)="cancelarImprimir()"></imprimir-solicitudes>
         </form>
     </plex-layout-main>
 
@@ -34,30 +34,29 @@
             </plex-title>
 
             <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                            (searchClear)="onSearchClear()">
+                             (searchClear)="onSearchClear()">
             </paciente-buscar>
 
             <plex-loader *ngIf="loading" class="loading" type="ball-pulse"></plex-loader>
 
             <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
-                            (selected)="onSelectPaciente($event)" [offset]="110">
+                              (selected)="onSelectPaciente($event)" [offset]="110">
             </paciente-listado>
             <div *ngIf="!searchClear && resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-danger">
                 <plex-icon name="account-alert"></plex-icon> No se encontró ningún paciente..
             </div>
         </ng-container>
 
-        <app-prestar-hc *ngIf="verPrestar" [prestar]="carpetaSeleccionada" (cancelPrestarEmit)="hideSidebar($event)"
+        <app-prestar-hc *ngIf="verPrestar" [prestar]="carpetaSeleccionada" (cancelPrestarEmit)="hideSidebar()"
                         (carpetaPrestadaEmit)="onCarpetaPrestada()"></app-prestar-hc>
 
         <solicitud-manual-hc type="invert" *ngIf="verSolicitudManual" [pacienteSeleccionado]="paciente"
-                            (crearNuevaCarpetaEmmiter)="crearNuevaCarpeta()"
-                            (cancelSolicitudManualEmit)="hideSidebar($event)"
-                            (nuevaCarpetaManualEmit)="onCarpetaPrestada($event)">
+                             (crearNuevaCarpetaEmmiter)="crearNuevaCarpeta()"
+                             (cancelSolicitudManualEmit)="hideSidebar()" (nuevaCarpetaManualEmit)="onCarpetaPrestada()">
         </solicitud-manual-hc>
 
         <app-devolver-hc *ngIf="verDevolver" [devolver]="carpetaSeleccionada" (cancelDevolverEmit)="hideSidebar()"
-                        (carpetaDevueltaEmit)="onCarpetaDevuelta()">
+                         (carpetaDevueltaEmit)="onCarpetaDevuelta()">
         </app-devolver-hc>
 
         <fieldset *ngIf="verNuevaCarpeta">
@@ -66,8 +65,8 @@
             </plex-title>
             <plex-loader *ngIf="loading" class="loading" type="ball-pulse"></plex-loader>
             <carpeta-paciente [turnoSeleccionado]="null" [pacienteSeleccionado]="paciente"
-                            (guardarCarpetaEmit)="afterComponenteCarpeta($event)"
-                            (cancelarCarpetaEmit)="afterComponenteCarpeta($event) ">
+                              (guardarCarpetaEmit)="afterComponenteCarpeta($event)"
+                              (cancelarCarpetaEmit)="afterComponenteCarpeta($event) ">
             </carpeta-paciente>
         </fieldset>
 

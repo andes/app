@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, OnInit, ReflectiveInjector } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { FormulaBaseService, FormularRegister } from '../formulas/index';
@@ -15,7 +16,7 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
     public hasRules = false;
     public valorEditable; // Indica si se puede editar el resultado de la formula manualmente
     public habilitado = false;
-    public valorManual: Boolean = false; // Indica si el usuario efectivamente editó manualmente el resultado
+    public valorManual = false; // Indica si el usuario efectivamente editó manualmente el resultado
 
     ngOnInit() {
         this.valorManual = this.registro.valorManual;

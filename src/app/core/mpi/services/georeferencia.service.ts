@@ -12,7 +12,7 @@ export class GeoreferenciaService {
      @param texto para autocompletar
  * @returns opciones
      */
-    autocompletar(texto: String): Observable<any> {
+    autocompletar(texto: string): Observable<any> {
         return this.server.get(this.url + '/autocompletar', { params: texto });
     }
 

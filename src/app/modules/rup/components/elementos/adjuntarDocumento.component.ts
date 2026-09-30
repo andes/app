@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, Input, OnInit, } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { environment } from '../../../../../environments/environment';
@@ -25,7 +26,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     uploadValid = true;
 
     // fotos: { file?: any, ext: string, id?: any, descripcion?: ISnomedConcept, fecha?: Date }[] = [];
-    fileToken: String = null;
+    fileToken: string = null;
 
     public descendientesInformeClinico: ISnomedConcept[] = [];
     public hoy = moment().endOf('day').toDate();

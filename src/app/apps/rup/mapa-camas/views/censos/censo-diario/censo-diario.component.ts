@@ -5,6 +5,7 @@ import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { DocumentosService } from '../../../../../../services/documentos.service';
 import { Location } from '@angular/common';
 import { Plex } from '@andes/plex';
+import moment from 'moment';
 
 @Component({
     selector: 'app-censo-diario',

@@ -4,13 +4,21 @@ jobs:
     build:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v1
-            - name: Use Node.js
-              uses: actions/setup-node@v1
+            - uses: actions/checkout@v4
+
+            - name: Use Node.js 18
+              uses: actions/setup-node@v4
               with:
-                  node-version: '14.x'
-            - run: npm ci
+                  node-version: '18'
+                  cache: 'npm'
+
+            - name: Install
+              run: npm ci
             - run: cp ./src/environments/apiKeyMaps.ts.example ./src/environments/apiKeyMaps.ts  
-            - run: npm run lint
+            
+            - name: Lint
+              run: npm run lint
             - run: rm .browserslistrc && touch .browserslistrc
-            - run: npm run build:prod -- --progress=false
+
+            - name: Build
+              run: npm run build:prod -- --progress=false

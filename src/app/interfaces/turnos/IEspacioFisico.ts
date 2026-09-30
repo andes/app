@@ -24,11 +24,11 @@ export interface IEspacioFisico {
         nombre: string;
     };
     equipamiento: [{
-        conceptId: String;
-        term: String;
-        fsn: String;
-        semanticTag: String;
+        conceptId: string;
+        term: string;
+        fsn: string;
+        semanticTag: string;
     }];
-    activo: Boolean;
+    activo: boolean;
     estado: string;
 }

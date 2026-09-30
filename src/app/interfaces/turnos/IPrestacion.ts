@@ -3,7 +3,7 @@ import { ISolicitud } from 'src/app/modules/rup/interfaces/solicitud.interface';
 import { IOrganizacion } from '../IOrganizacion';
 
 export interface IPrestacion {
-    id: String;
+    id: string;
     solicitud: ISolicitud;
     ejecucion: {
         organizacion: IOrganizacion;

@@ -1,7 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
-import { Plex } from '@andes/plex';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 
 // Interfaces
@@ -19,7 +18,7 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
 
     private _paciente: any;
 
-    @Input('paciente')
+    @Input()
     set paciente(value: any) {
         this._paciente = value;
         this.cargarSolicitudes();
