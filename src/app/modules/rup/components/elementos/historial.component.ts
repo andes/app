@@ -40,8 +40,15 @@ export class HistorialComponent extends RUPComponent implements OnInit {
         this.isLoading = true;
 
         if (!this.soloValores) {
-            if (this.params.pacienteInternado && this.params.requiereFechaInicio) {
+            this.conceptObserverService.observe(this.registro).subscribe((data) => {
+                // No soy yo mismo
+                if (this.registro !== data && this.registro.valor !== data.valor) {
+                    this.registro.valor = data.valor;
+                    this.emitChange(false);
+                }
+            });
 
+            if (this.params.pacienteInternado && this.params.requiereFechaInicio) {
                 this.internacionResumenHTTP.search({ paciente: this.paciente.id }).subscribe(resumen => {
 
                     if (resumen.length && resumen[resumen.length - 1].fechaIngreso) {
