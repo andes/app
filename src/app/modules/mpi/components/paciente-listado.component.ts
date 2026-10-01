@@ -159,7 +159,7 @@ export class PacienteListadoComponent {
         //  si es un paciente sin documento menor a 5 años mostramos datos de un familiar/tutor
         const edad = 5;
         const rel = paciente.relaciones;
-        return !paciente.documento && !paciente.numeroIdentificacion && paciente.edad < edad && rel !== null && rel.length;
+        return !paciente.documento && !paciente.numeroIdentificacion && paciente.edad < edad && rel !== null && rel?.length;
     }
     /**
      *
