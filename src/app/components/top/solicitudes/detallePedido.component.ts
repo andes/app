@@ -12,17 +12,20 @@ import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.s
 export class DetallePedidoComponent implements OnDestroy {
     @ViewChild('prescripcion') prescripcion: RUPComponent;
     turno;
-    prestacion;
     itemsHistorial = [];
     registroPrincipal = null;
     elementoRUPPrincipal = null;
     mostrarRup = true;
     private destroy$ = new Subject<void>();
+    private _prestacion;
 
-    @Input('prestacion')
-    set _prestacion(value) {
-        this.prestacion = value;
+    @Input()
+    set prestacion(value) {
+        this._prestacion = value;
         this.cargarDetalle();
+    }
+    get prestacion() {
+        return this._prestacion;
     }
 
     constructor(
