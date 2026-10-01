@@ -103,10 +103,8 @@ export class DetalleSolicitudComponent implements OnChanges, OnDestroy {
             { key: 'turnos', label: 'TURNOS' }
         ];
 
-        // Ejemplo de condición: agregar 'turnos' solo si se cumple permisoDetalle
-        // o si el tipo de solicitud es un valor específico. Ajusta aquí.
         if (this.permisoDetalle) {
-            base.splice(1, 0, { key: 'pedido', label: 'PEDIDO' });
+            base.splice(1, 0, { key: 'detalle', label: 'DETALLE' });
         }
 
         this.items = base;
