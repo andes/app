@@ -209,6 +209,7 @@ export class SolicitudesComponent implements OnInit {
 
     ngOnInit() {
         this.initFechas();
+        this.actualizarColumnas();
 
         // Precarga el mapa de tiempoVigencia por conceptId (con caché)
         this.conceptosTurneablesService.getAll().subscribe((conceptos: any[]) => {
@@ -314,7 +315,19 @@ export class SolicitudesComponent implements OnInit {
             this.check = false;
             this.activeTab = activeTab;
             this.tipoSolicitud = (this.activeTab === 0) ? 'entrada' : 'salida';
+            this.actualizarColumnas();
             this.cargarSolicitudes();
+        }
+    }
+
+    actualizarColumnas() {
+        const colOrigen = this.columns.find(c => c.key === 'origen');
+        const colDestino = this.columns.find(c => c.key === 'destino');
+        if (colOrigen) {
+            colOrigen.label = this.tipoSolicitud === 'entrada' ? 'Datos de origen' : 'Prestación destino';
+        }
+        if (colDestino) {
+            colDestino.label = this.tipoSolicitud === 'entrada' ? 'Datos de destino' : 'Organización destino';
         }
     }
 
