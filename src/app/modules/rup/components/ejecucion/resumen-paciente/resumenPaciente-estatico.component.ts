@@ -1,5 +1,5 @@
 import { PrestacionesService } from '../../../services/prestaciones.service';
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IPrestacion } from '../../../interfaces/prestacion.interface';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
@@ -16,6 +16,8 @@ export class ResumenPacienteEstaticoComponent {
     @Input() prestacion: IPrestacion;
     @Input() paciente: IPaciente;
     @Input() esTab = false;
+    @Input() enHuds = false;
+    @Output() irATrastornos = new EventEmitter<void>();
 
     public prestacionSolicitud;
 

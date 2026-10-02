@@ -75,7 +75,7 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
         this.barChartOptions = {
             scaleShowVerticalLines: true,
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             title: {
                 display: true,
                 text: `Curva de ${this.elementoRUP.params.map(x => x.label).join(' y ')}`

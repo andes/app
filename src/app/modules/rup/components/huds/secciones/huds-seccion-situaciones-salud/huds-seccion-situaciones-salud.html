@@ -1,0 +1,45 @@
+<plex-title titulo="Situaciones de Salud Activas" size="sm"></plex-title>
+
+<plex-text [(ngModel)]="diagnosticoProfesional" class="mb-2"
+           placeholder="Busque un diagnóstico o profesional de la salud"></plex-text>
+<br>
+<ng-container *ngIf="trastornosFiltrados.length">
+    <plex-accordion>
+        <plex-panel *ngFor="let trastorno of trastornosFiltrados" [active]="trastornoExpandido === trastorno"
+                    (toggle)="toggleAcordeon(trastorno, $event)">
+            <div plex-accordion-title class="d-flex justify-content-between align-items-center">
+                <plex-label titulo="{{ trastorno.concepto.term }}"
+                            subtitulo="{{ trastorno.evoluciones[0].tipoPrestacion }}">
+                </plex-label>
+                <plex-label titulo="Profesional" subtitulo="{{ trastorno.evoluciones[0].profesional }}"></plex-label>
+                <section class="d-flex align-items-center">
+                    <plex-badge type="success" class="mr-2">{{ trastorno.evoluciones[0].estado }}</plex-badge>
+                    <plex-badge type="info" class="mr-2">{{ trastorno.evoluciones[0].fechaCarga | fecha }}</plex-badge>
+                    <plex-button icon="eye" type="info" size="sm" class="mr-1" tooltip="Ver prestación"
+                                 (click)="$event.stopPropagation(); verPrestacion(trastorno)"></plex-button>
+                    <plex-button icon="{{ trastornoExpandido === trastorno ? 'chevron-up' : 'chevron-down' }}"
+                                 type="info" size="sm"></plex-button>
+                </section>
+            </div>
+            <div *ngIf="trastorno.evoluciones[0]?.evolucion else sinEvolucion">
+                <h6><strong>Detalles de la evolución: </strong></h6>
+                {{ trastorno.evoluciones[0].evolucion }}
+            </div>
+            <ng-template #sinEvolucion>
+                <div>
+                    <h6><strong>Sin evoluciones </strong></h6>
+                </div>
+            </ng-template>
+        </plex-panel>
+    </plex-accordion>
+</ng-container>
+<div *ngIf="trastornos.length && !trastornosFiltrados.length" class="mt-5">
+    <plex-label class="flex-column" icon="trastorno" type="info" justify="center" size="xl" direction="column"
+                titulo="No se encontraron situaciones de salud para el filtro aplicado">
+    </plex-label>
+</div>
+<div *ngIf="!trastornos.length" class="mt-5">
+    <plex-label class="flex-column" icon="trastorno" type="info" justify="center" size="xl" direction="column"
+                titulo="El paciente no tiene situaciones de salud activas">
+    </plex-label>
+</div>
