@@ -40,6 +40,9 @@
                              [data]="estrategiasAtencion" grow="full">
 
                 </plex-select>
+                <plex-select [(ngModel)]="modelo.ambito" name="ambito" label="Ámbito" placeholder="Seleccione un ámbito"
+                             [data]="ambitos" grow="full">
+                </plex-select>
 
             </plex-wrapper>
             <plex-title titulo="Datos diagnóstico"></plex-title>

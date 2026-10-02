@@ -31,8 +31,8 @@
                     <plex-select [(ngModel)]="rangoEtario" name="rangoEtario" [data]="opcionesRangoEtario"
                                  label="Rango Etario" placeholder="Todos" (change)="cargarDerivaciones()">
                     </plex-select>
-                    <plex-select [(ngModel)]="estado" (change)="cargarDerivaciones()" [data]="estados" name="estado"
-                                 label="Estado">
+                    <plex-select [(ngModel)]="ambito" name="ambito" [data]="opcionesAmbito" label="Ámbito"
+                                 placeholder="Todos" (change)="cargarDerivaciones()">
                     </plex-select>
                     <plex-select [(ngModel)]="estado" (change)="cargarDerivaciones()" [data]="estados" name="estado"
                                  label="Estado">
@@ -152,6 +152,9 @@
 
                     <plex-select [(ngModel)]="rangoEtario" name="rangoEtario" [data]="opcionesRangoEtario"
                                  label="Rango Etario" placeholder="Todos" (change)="cargarDerivaciones()">
+                    </plex-select>
+                    <plex-select [(ngModel)]="ambito" name="ambito" [data]="opcionesAmbito" label="Ámbito"
+                                 placeholder="Todos" (change)="cargarDerivaciones()">
                     </plex-select>
                     <plex-select [(ngModel)]="estado" (change)="cargarDerivaciones()" [data]="estados" name="estado"
                                  label="Estado">
