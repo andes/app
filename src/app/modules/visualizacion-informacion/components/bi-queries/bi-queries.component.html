@@ -25,7 +25,8 @@
             <ng-container *ngFor="let argumento of argumentos" [ngSwitch]="argumento.tipo">
                 <plex-datetime *ngSwitchCase="'date'" [label]="argumento.label ? argumento.label : argumento.key"
                                grow="auto" name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
-                               [required]="argumento.required">
+                               [required]="argumento.required" [min]="getMin(argumento.key)"
+                               [max]="getMax(argumento.key)" (change)="cambiarFecha()">
                 </plex-datetime>
                 <ng-container *ngSwitchCase="'organizacion'">
                     <plex-select *ngIf="argumento.key === 'organizacionOrigen'"
@@ -74,6 +75,9 @@
                 </plex-select>
             </ng-container>
         </plex-wrapper>
+        <plex-label *ngIf="restriccionRango" type="info" size="lg" icon="calendar-clock"
+                    titulo="{{ restriccionRango.mensaje }}">
+        </plex-label>
     </ng-container>
 </form>
 <div justify="center" class="h-75">
