@@ -34,10 +34,6 @@
                     <plex-select [(ngModel)]="estado" (change)="cargarDerivaciones()" [data]="estados" name="estado"
                                  label="Estado">
                     </plex-select>
-                    <plex-select [(ngModel)]="estado" (change)="cargarDerivaciones()" [data]="estados" name="estado"
-                                 label="Estado">
-                    </plex-select>
-
                     <div *ngIf="esCOM">
                         <plex-label titulo="Ordenar por prioridad"></plex-label>
                         <plex-bool (change)="ordenarPrioridad()" [(ngModel)]="ordenarPorPrioridad" type="slide">
