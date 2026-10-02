@@ -33,7 +33,8 @@ import { CITASLibModule } from '../turnos/citas.module';
         MPILibModule,
         CITASLibModule,
         RouterModule.forChild([
-            { path: '', component: TurnosPrestacionesComponent, pathMatch: 'full' },
+            { path: '', redirectTo: 'nominalizadas', pathMatch: 'full' },
+            { path: 'nominalizadas', component: TurnosPrestacionesComponent, pathMatch: 'full' },
             { path: 'no_nominalizadas', component: NoNominalizadasComponent, pathMatch: 'full' },
         ])
     ],

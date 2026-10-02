@@ -2,7 +2,6 @@ import { Auth } from '@andes/auth';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, map, startWith, takeUntil } from 'rxjs';
 import { AdjuntosService } from 'src/app/modules/rup/services/adjuntos.service';
-import { ObraSocialService } from 'src/app/services/obraSocial.service';
 import { environment } from 'src/environments/environment';
 import { TurnosPrestacionesService } from '../services/turnos-prestaciones.service';
 import { cache } from '@andes/shared';
@@ -23,13 +22,9 @@ export class NoNominalizadasComponent implements OnInit, OnDestroy {
     public botonBuscarDisabled;
     public parametros;
     public loader;
-    public prestacionIniciada;
     public pacientes;
     public prestacion;
-    public seleccionada;
-    public tipoActividad;
     public busqueda$: Observable<any[]>;
-    public accion$ = new Subject<any>();
     public onDestroy$ = new Subject<any>();
     public lastSelect$ = new BehaviorSubject<string>(null);
 
@@ -38,15 +33,13 @@ export class NoNominalizadasComponent implements OnInit, OnDestroy {
         efector: true,
         tipoPrestacion: true,
         actividad: true,
-        equipoSalud: true,
-        fechaRegistro: true,
+        equipoSalud: true
     };
 
     constructor(
         private auth: Auth,
         private turnosPrestacionesService: TurnosPrestacionesService,
-        private adjuntosService: AdjuntosService,
-        private obraSocialService: ObraSocialService
+        private adjuntosService: AdjuntosService
     ) { }
 
     ngOnDestroy() {
@@ -132,7 +125,6 @@ export class NoNominalizadasComponent implements OnInit, OnDestroy {
     }
 
     mostrarPrestacion(datos) {
-        this.prestacionIniciada = datos.idPrestacion;
         this.showPrestacion = true;
 
         const aux: any = this.lastSelect$;
@@ -144,7 +136,6 @@ export class NoNominalizadasComponent implements OnInit, OnDestroy {
 
         this.prestacion = datos;
         this.pacientes = datos.pacientes;
-        this.tipoActividad = datos.tipoActividad + '/' + datos.tematica;
     }
 
     onClose() {
@@ -152,21 +143,6 @@ export class NoNominalizadasComponent implements OnInit, OnDestroy {
         const aux: any = this.lastSelect$;
         if (aux._value) {
             aux._value.seleccionada = false;
-        }
-    }
-
-    getObraSocial(paciente) {
-        if (paciente.documento) {
-            this.obraSocialService.getObrasSociales({ documento: paciente.documento, sexo: paciente.sexo }).subscribe(resultado => {
-                if (resultado.length) {
-                    const obraSocialPaciente = resultado.map((os: any) => ({
-                        'id': os.financiador,
-                        'label': os.financiador
-                    }));
-
-                    return obraSocialPaciente[0].label;
-                }
-            });
         }
     }
 
