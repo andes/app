@@ -25,6 +25,13 @@
                 </plex-title>
                 <plex-title size="sm" *ngIf="seccion.name!=='Contactos Estrechos'"
                             titulo="{{seccion.name}}"></plex-title>
+                <plex-grid cols="2" *ngIf="seccion.name === 'Usuario' && fichaPaciente?.createdBy">
+                    <plex-text label="Cargado por" [readonly]="true"
+                               [(ngModel)]="fichaPaciente.createdBy.nombreCompleto" name="usuarioQueCargo"></plex-text>
+                    <plex-text label="Fecha y hora de carga" [readonly]="true"
+                               [ngModel]="fichaPaciente.createdAt | date: 'dd/MM/yyyy'"
+                               name="fechaHoraCarga"></plex-text>
+                </plex-grid>
                 <plex-grid>
                     <ng-container *ngFor="let field of seccion.fields" [ngSwitch]="field.type">
                         <ng-container *ngIf="checkDependency(field)">
