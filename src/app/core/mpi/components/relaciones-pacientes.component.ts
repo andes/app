@@ -127,9 +127,8 @@ export class RelacionesPacientesComponent implements OnInit {
         // Es una relacion existente?
 
         // const idReferencia = unaRelacion.referencia?.id || unaRelacion.referencia?._id || unaRelacion.referencia;
-        const indexRelacionesIniciales = this.paciente.relaciones.findIndex(rel => (rel.referencia?.id || rel.referencia?._id) === this.relacionEntrante.id);
-        if (indexRelacionesIniciales !== -1) {
-            // relacionExistente.relacion.esConviviente !== undefined ? unaRelacion.relacion.esConviviente = this.esConviviente : unaRelacion.relacion['esConviviente'] = this.esConviviente;
+        const indexRelacionesIniciales = this.paciente.relaciones?.findIndex(rel => (rel.referencia?.id || rel.referencia?._id) === this.relacionEntrante.id);
+        if (indexRelacionesIniciales >= 0) {
 
             // Se actualiza el array de relaciones del paciente para que impacte en las vistas
             this.paciente.relaciones[indexRelacionesIniciales].relacion = {
