@@ -1,4 +1,5 @@
 @import "../variables";
+
 rup {
     display: block;
     width: 100%;
@@ -777,8 +778,7 @@ plex-layout [type="invert"] {
 }
 
 .hr-grueso {
-  border: none;
-  height: 4px;
-  background-color: #4a4a4a;
-  opacity: 1;
+    border: none;
+    height: 1px;
+    background-color: #4a4a4a;
 }

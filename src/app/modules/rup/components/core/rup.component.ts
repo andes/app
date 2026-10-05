@@ -42,10 +42,13 @@ import { InternacionResumenHTTP } from '../../../../apps/rup/mapa-camas/services
     selector: 'rup',
     encapsulation: ViewEncapsulation.None,
     template: `
-        <div *ngIf="mostrarTituloSubmolecula" class="rup-submolecula-titulo mb-2" style="margin-top: 10px;">
-            <span class="text-bold text-capitalize" style="font-size: 1.0rem;color:#00a8e0">{{ params?.titulo || registro?.nombre || elementoRUP?.conceptos[0]?.term }}</span>
-        </div>
+        <ng-container *ngIf="mostrarTituloSubmolecula">
+            <div class="rup-submolecula-titulo mb-2" style="margin-top: 10px;">
+                <span class="text-bold text-capitalize" style="font-size: 1.0rem;color:#00a8e0">{{ params?.titulo || registro?.nombre || elementoRUP?.conceptos[0]?.term }}</span>
+            </div>
+        </ng-container>
         <ng-container #componentContainer></ng-container>
+        <hr *ngIf="mostrarTituloSubmolecula" class="hr-grueso" style="margin-top: 27px;">
     `
 })
 export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
