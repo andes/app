@@ -79,7 +79,8 @@ export class ComPuntoInicioComponent implements OnInit {
         return this.fechaDesde ? moment(this.fechaDesde).startOf('day').toDate() : null;
     }
 
-    public ambito: any;
+    public ambito: { id: string; nombre: string } = null;
+
     public rangoEtario: any;
     public opcionesRangoEtario = [
         { id: 'pediatrico', nombre: 'Pediátrico' },
