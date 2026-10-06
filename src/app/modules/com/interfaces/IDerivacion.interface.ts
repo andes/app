@@ -35,4 +35,5 @@ export interface IDerivacion {
     historial: [IDerivacionHistorial];
     cancelada: boolean;
     prioridad: string;
+    ambito: { id: string; nombre: string };
 }
