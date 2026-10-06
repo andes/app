@@ -2,16 +2,20 @@
     <fieldset>
         <plex-title titulo="Contacto / Dirección actual" size="sm"></plex-title>
 
-        <!-- DATOS CONTACTO: tel fijo / tel celular-->
+        <!-- DATOS CONTACTO: tel fijo / tel celular / celular extranjero -->
         <plex-wrapper *ngFor="let _unContacto of contactosTelefonicos; let i = index">
             <plex-select [readonly]="soloLectura" [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion"
                          name="tipo-{{i}}" [required]="true" label="Tipo"
                          (change)="changeTipoContacto(i, _unContacto.tipo)">
             </plex-select>
-            <plex-phone [readonly]="soloLectura" label="Número" [(ngModel)]="_unContacto.valor"
+            <plex-phone *ngIf="!isCelularExtranjero(i)" [readonly]="soloLectura" label="Número" [(ngModel)]="_unContacto.valor"
                         placeholder="Ej: 2990000000" name="valor-{{i}}" (keyup)="disableGuardar = false"
-                        [pattern]="patronContactoNumerico" required="true">
+                        (change)="disableGuardar = false" [pattern]="patronContactoNumerico" required="true">
             </plex-phone>
+            <plex-text *ngIf="isCelularExtranjero(i)" [readonly]="soloLectura" label="Número" [(ngModel)]="_unContacto.valor"
+                       placeholder="Ej: +5492990000000" name="valor-ext-{{i}}" (keyup)="disableGuardar = false"
+                       (change)="disableGuardar = false" [pattern]="patronContactoCelularExtranjero" required="true">
+            </plex-text>
             <ng-container *ngIf="i > 0">
                 <plex-button class="pr-3 pb-1" label="" type="danger btn-sm" icon="close" (click)="removeContacto(i)">
                 </plex-button>
