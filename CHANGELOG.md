@@ -1,3 +1,10 @@
+## [5.174.1](https://github.com/andes/app/compare/v5.174.0...v5.174.1) (2026-10-07)
+
+
+### Bug Fixes
+
+* **MISC-368:** Facturación: no-nominalizadas ([#3103](https://github.com/andes/app/issues/3103)) ([18402df](https://github.com/andes/app/commit/18402dfd1a398422782fa4484d23c62914296a73))
+
 # [5.174.0](https://github.com/andes/app/compare/v5.173.5...v5.174.0) (2026-09-30)
 
 
