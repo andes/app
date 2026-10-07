@@ -14,6 +14,14 @@ import { ISnomedConcept } from '../../../interfaces/snomed-concept.interface';
  * allowOther: Permite elegir texto libre.
  * preload: Carga el plex-select al renderizar el componente.
  *          Ejecuta el request a la API con todos los datos.
+ * addRegister: Agrega un nuevo registro por concepto seleccionado.
+ * registerMapping: Listado de equivalencias { itemSelected, loadRegister, addToMolecule }.
+ *                  itemSelected acepta el conceptId (select snomed) o el id de un select estático.
+ *                  addToMolecule a nivel de cada mapeo sobreescribe el param global.
+ * addToMolecule (param global): Si es true, el concepto dinámico se agrega dentro de la
+ *                  molécula que contiene al select. Si es false (default), se agrega fuera.
+ *
+ * Nota sobre addToMoleculeInParams: alias de addToMolecule, mantenido por compatibilidad.
  */
 @Component({
     selector: 'rup-select',
@@ -32,6 +40,9 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
     public otherEnabled: Boolean = false;
 
     private watch = false;
+
+    /** conceptId del último concepto dinámico agregado vía addRegister (para select simple) */
+    private _lastAddedConceptId: string | null = null;
 
 
     public otherText: String = '';
@@ -105,15 +116,26 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
             if (this.itemSelected) {
                 this.registro.valor = this.itemSelected;
                 if (this.params.addRegister) {
+                    // Para select simple: eliminar el registro dinámico previamente agregado
+                    // antes de agregar el nuevo, evitando acumulación de conceptos.
+                    if (!this.params.multiple) {
+                        this.removeLastAddedConcepto();
+                    }
+
                     // verifico que no haya un listado de equivalencias para los conceptos
                     if (this.params.registerMapping) {
-                        const mappedRegister = this.params.registerMapping.find(e => e.itemSelected === this.itemSelected.conceptId);
+                        // el mapeo acepta conceptId (select snomed) o el id de un select estático
+                        const mappedRegister = this.params.registerMapping.find(e => e.itemSelected === this.itemSelected.conceptId || e.itemSelected === this.itemSelected.id);
                         if (mappedRegister) {
-                            this.addConcepto(mappedRegister.loadRegister);
+                            // addToMolecule del mapeo tiene prioridad; luego el param global;
+                            // si ninguno está definido, default false (agrega fuera de la molécula).
+                            const addToMolecule = mappedRegister.addToMolecule ?? mappedRegister.addToMoleculeInParams ?? this.params.addToMolecule ?? this.params.addToMoleculeInParams ?? false;
+                            this.addConcepto(mappedRegister.loadRegister, addToMolecule);
                         }
                     } else {
                         // se agrega un registro por concepto seleccionado
-                        this.addConcepto(this.itemSelected);
+                        const addToMolecule = this.params.addToMolecule ?? this.params.addToMoleculeInParams ?? false;
+                        this.addConcepto(this.itemSelected, addToMolecule);
                     }
                 }
             } else {
@@ -129,8 +151,78 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
         this.addFact('value', this.registro.valor);
     }
 
-    addConcepto(concepto: ISnomedConcept) {
+    addConcepto(concepto: ISnomedConcept, addToMolecule = false) {
+        if (addToMolecule) {
+            // se agrega el concepto dentro de la molécula que contiene este registro
+            const molecula = this.getMoleculaContenedora();
+            if (molecula) {
+                this._lastAddedConceptId = concepto.conceptId;
+                this.ejecucionService.agregarConcepto(concepto, false, molecula.concepto);
+                return;
+            }
+        }
+        // addToMolecule=false (o no se encontró molécula): agrega fuera de la molécula
+        this._lastAddedConceptId = concepto.conceptId;
         this.ejecucionService.agregarConcepto(concepto);
+    }
+
+    /**
+     * Elimina el último concepto dinámico agregado por este select (select simple).
+     * Busca el registro por conceptId en la lista de registros de la prestación
+     * y lo quita del array correspondiente (raíz o dentro de la molécula contenedora).
+     */
+    private removeLastAddedConcepto() {
+        if (!this._lastAddedConceptId || !this.ejecucionService) {
+            return;
+        }
+        const conceptId = this._lastAddedConceptId;
+        const prestacion = this.ejecucionService['prestacion'];
+        if (!prestacion?.ejecucion?.registros) {
+            return;
+        }
+
+        // Busca y elimina recursivamente en el árbol de registros
+        const eliminarDeLista = (lista: any[]): boolean => {
+            const idx = lista.findIndex(r => r.concepto?.conceptId === conceptId);
+            if (idx !== -1) {
+                lista.splice(idx, 1);
+                this.ejecucionService.actualizar('eliminar');
+                return true;
+            }
+            for (const reg of lista) {
+                if (reg.registros?.length && eliminarDeLista(reg.registros)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        eliminarDeLista(prestacion.ejecucion.registros);
+        this._lastAddedConceptId = null;
+    }
+
+    /**
+     * Busca recursivamente la molécula (registro contenedor) dentro de la cual está
+     * el registro de este select, para poder agregar el concepto dinámico adentro.
+     */
+    private getMoleculaContenedora() {
+        if (!this.ejecucionService) {
+            return null;
+        }
+        const registros = this.ejecucionService.getPrestacionRegistro();
+        const buscar = (lista: any[]): any => {
+            for (const registro of lista) {
+                if (registro.registros && registro.registros.some(r => r.id === this.registro.id)) {
+                    return registro;
+                }
+                const encontrado = buscar(registro.registros || []);
+                if (encontrado) {
+                    return encontrado;
+                }
+            }
+            return null;
+        };
+        return buscar(registros);
     }
 
     @Unsubscribe()
