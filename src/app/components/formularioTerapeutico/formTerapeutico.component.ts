@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
@@ -9,7 +9,7 @@ import { FormTerapeuticoService } from './../../services/formTerapeutico/formTer
     templateUrl: './formTerapeutico.html',
     styleUrls: ['./formTerapeutico.scss']
 })
-export class FormTerapeuticoComponent implements OnInit {
+export class FormTerapeuticoComponent {
 
     public columnas = [
         {
@@ -91,7 +91,5 @@ export class FormTerapeuticoComponent implements OnInit {
         public auth: Auth,
         public servicioFormTerapeutico: FormTerapeuticoService
     ) { }
-
-    ngOnInit() { }
 
 }
