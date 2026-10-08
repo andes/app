@@ -36,11 +36,27 @@ export class ChartComponent implements AfterViewInit {
             this.generarEtiquetasCurva();
         }
     }
+    @Input()
+    set fechaDesde(value: Date) {
+        this.desde = value;
+        if (this.paciente) {
+            this.generarEtiquetasCurva();
+        }
+    }
+    @Input()
+    set fechaHasta(value: Date) {
+        this.hasta = value;
+        if (this.paciente) {
+            this.generarEtiquetasCurva();
+        }
+    }
     get paciente(): IPaciente {
         return this._paciente;
     }
     public clave = 0;
     public curvaSeleccionada = 1;
+    public desde: Date = null;
+    public hasta: Date = null;
 
     constructor(public auth: Auth, public prestacionesService: PrestacionesService) { }
 
@@ -49,7 +65,7 @@ export class ChartComponent implements AfterViewInit {
 
     generarDatosCurva(expresion: string, opcionesGrafico: any) {
         this.mostrarChart = false;
-        this.prestacionesService.getRegistrosHuds(this.paciente.id, expresion).subscribe(prestaciones => {
+        this.prestacionesService.getRegistrosHuds(this.paciente.id, expresion, this.desde, null, null, null, this.hasta).subscribe(prestaciones => {
             if (prestaciones && prestaciones.length) {
                 this.puntos = prestaciones;
                 // ordenamos los pesos por fecha

@@ -43,6 +43,9 @@ export class HudsSignosVitalesComponent implements OnInit {
     public prestaciones: any = [];
     public tabla: any = [];
     public graficoClave = 0;
+    public fechaDesde: Date = null;
+    public fechaHasta: Date = null;
+    public paramsGrafico = {};
     private vacunasCargadas = false;
     private visitasCargadas = false;
 
@@ -86,6 +89,17 @@ export class HudsSignosVitalesComponent implements OnInit {
             this.graficoClave++;
         } else {
             this.cargarRegistro(signo, elementoRUP);
+        }
+    }
+
+    mostrarFiltrosFecha() {
+        return this.signoSenalado?.tipo === 'grafico' || this.signoSenalado?.tipo === 'curva';
+    }
+
+    onChangeFiltroFecha() {
+        this.paramsGrafico = { fechaDesde: this.fechaDesde, fechaHasta: this.fechaHasta };
+        if (this.signoSenalado?.tipo === 'grafico') {
+            this.graficoClave++;
         }
     }
 

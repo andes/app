@@ -3,13 +3,27 @@
              [(ngModel)]="signoSenalado" (change)="onChangeSignoVital($event)">
 </plex-select>
 
+<div class="row mt-3" *ngIf="mostrarFiltrosFecha()">
+    <div class="col-6">
+        <plex-datetime type="date" label="DESDE" [(ngModel)]="fechaDesde" [debounce]="600"
+                       (change)="onChangeFiltroFecha()">
+        </plex-datetime>
+    </div>
+    <div class="col-6">
+        <plex-datetime type="date" label="HASTA" [(ngModel)]="fechaHasta" [debounce]="600"
+                       (change)="onChangeFiltroFecha()">
+        </plex-datetime>
+    </div>
+</div>
+
 <ng-container *ngIf="grafico">
     <div class="row mt-3">
         <div class="col-12">
             <h4 class="text-capitalize mt-2">
                 {{ grafico.conceptos | enumerar:['term'] }}
             </h4>
-            <rup *ngFor="let c of [graficoClave]" [elementoRUP]="grafico" [paciente]="paciente" [soloValores]="false">
+            <rup *ngFor="let c of [graficoClave]" [elementoRUP]="grafico" [paciente]="paciente" [soloValores]="false"
+                 [params]="paramsGrafico">
             </rup>
         </div>
     </div>
@@ -38,7 +52,8 @@
 <ng-container *ngIf="curvaRadio">
     <div class="row mt-3">
         <div class="col-12">
-            <radio-chart [paciente]="paciente" [curva]="curvaRadio"></radio-chart>
+            <radio-chart [paciente]="paciente" [curva]="curvaRadio" [fechaDesde]="fechaDesde"
+                         [fechaHasta]="fechaHasta"></radio-chart>
         </div>
     </div>
 </ng-container>

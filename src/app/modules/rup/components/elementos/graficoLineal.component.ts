@@ -23,10 +23,12 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         moment.locale('es');
 
+        const fechaDesde = this.params?.fechaDesde || null;
+        const fechaHasta = this.params?.fechaHasta || null;
 
         this.elementoRUP.params.map((param) => {
 
-            this.prestacionesService.getRegistrosHuds(this.paciente.id, `${param.query}`, null, true).subscribe(prestaciones => {
+            this.prestacionesService.getRegistrosHuds(this.paciente.id, `${param.query}`, fechaDesde, true, null, null, fechaHasta).subscribe(prestaciones => {
 
                 if (prestaciones.length) {
                     // ordenamos los datosLineales por fecha
