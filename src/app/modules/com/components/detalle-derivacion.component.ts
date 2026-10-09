@@ -77,6 +77,7 @@ export class DetalleDerivacionComponent implements OnInit {
     reglasDerivacionFiltradas = [];
     public nuevoEstado;
     public esCOM = false;
+    public organizacionCOM = null;
     requestInProgress;
 
     constructor(
@@ -120,6 +121,11 @@ export class DetalleDerivacionComponent implements OnInit {
             }
             this.filterReglasDerivaciones();
         });
+        this.organizacionService.get({ esCOM: true }).subscribe(orgs => {
+            if (orgs && orgs.length) {
+                this.organizacionCOM = orgs[0];
+            }
+        });
     }
 
     getOrganizacionesDerivables() {
@@ -157,6 +163,13 @@ export class DetalleDerivacionComponent implements OnInit {
         if (this.reglaSeleccionada.estadoFinal === 'asignada') {
             this.nuevoEstado.organizacionDestino = null;
             this.nuevoEstado.unidadDestino = null;
+        } else if (this.reglaSeleccionada.estadoFinal === 'rechazada') {
+            if (this.organizacionCOM) {
+                this.nuevoEstado.organizacionDestino = { id: this.organizacionCOM.id, nombre: this.organizacionCOM.nombre, direccion: this.organizacionCOM.direccion };
+            } else {
+                this.nuevoEstado.organizacionDestino = this.derivacion.organizacionDestino;
+            }
+            this.nuevoEstado.unidadDestino = null;
         } else {
             this.nuevoEstado.organizacionDestino = this.derivacion.organizacionDestino;
             this.nuevoEstado.unidadDestino = this.derivacion.unidadDestino;
@@ -173,20 +186,41 @@ export class DetalleDerivacionComponent implements OnInit {
                 delete this.nuevoEstado.prioridad;
             }
             this.nuevoEstado.dispositivo = this.derivacion.dispositivo;
-            this.derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
-            const body: any = {
-                estado: this.nuevoEstado,
-                trasladoEspecial: {
-                    tipoTraslado: this.derivacion.tipoTraslado,
-                    organizacionTraslado: this.derivacion.organizacionTraslado
+            if (this.nuevoEstado.estado === 'rechazada') {
+                this.nuevoEstado.unidadDestino = null;
+                if (this.organizacionCOM) {
+                    this.nuevoEstado.organizacionDestino = { id: this.organizacionCOM.id, nombre: this.organizacionCOM.nombre, direccion: this.organizacionCOM.direccion };
+                    this.enviar();
+                } else {
+                    this.organizacionService.get({ esCOM: true }).subscribe(orgs => {
+                        if (orgs && orgs.length) {
+                            this.organizacionCOM = orgs[0];
+                            this.nuevoEstado.organizacionDestino = { id: orgs[0].id, nombre: orgs[0].nombre, direccion: orgs[0].direccion };
+                        }
+                        this.enviar();
+                    });
+                    return;
                 }
-            };
-
-            this.derivacionService.updateHistorial(this.derivacion._id, body).subscribe(() => {
-                this.plex.toast('success', 'La derivación fue actualizada exitosamente');
-                this.returnDetalle.emit(true);
-            });
+            } else {
+                this.enviar();
+            }
         }
+    }
+
+    enviar() {
+        this.derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
+        const body: any = {
+            estado: this.nuevoEstado,
+            trasladoEspecial: {
+                tipoTraslado: this.derivacion.tipoTraslado,
+                organizacionTraslado: this.derivacion.organizacionTraslado
+            }
+        };
+
+        this.derivacionService.updateHistorial(this.derivacion._id, body).subscribe(() => {
+            this.plex.toast('success', 'La derivación fue actualizada exitosamente');
+            this.returnDetalle.emit(true);
+        });
     }
 
     // Adjuntar archivo
