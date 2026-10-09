@@ -1,6 +1,8 @@
 <div *ngIf="barChartData.length">
-    <canvas class="w-100" baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
-        [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+    <div style="display: block; width: 100%; position: relative; height: 350px;">
+        <canvas class="w-100" baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+            [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+    </div>
 </div>
 
 <p *ngIf="!barChartData.length">

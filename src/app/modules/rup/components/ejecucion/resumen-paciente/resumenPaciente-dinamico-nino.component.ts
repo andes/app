@@ -1,10 +1,7 @@
-import { Component, Input, OnInit, HostBinding } from '@angular/core';
-import { Plex } from '@andes/plex';
+import { Component, Input, OnInit } from '@angular/core';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { ResumenPacienteDinamicoService } from '../../../services/resumenPaciente-dinamico.service';
 import { VacunasService } from '../../../../../services/vacunas.service';
-import { PrestacionesService } from '../../../services/prestaciones.service';
-import { ElementosRUPService } from '../../../services/elementosRUP.service';
 
 @Component({
     selector: 'rup-resumenPaciente-dinamico-nino',
@@ -17,31 +14,41 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
     public tabla = []; // tabla que finalmente va a mostrar la informacion. Se utiliza el formato de la tabla modelo para confeccionarla.
     public prestaciones: any = [];
     public vacunas = [];
-    public registro = null;
+    public opcionesSecciones = [
+        { id: 'vacunas', nombre: 'Vacunas aplicadas' },
+        { id: 'curvaPeso', nombre: 'Curva de peso' },
+        { id: 'curvaTalla', nombre: 'Curva de talla' },
+        { id: 'perimetroCefalico', nombre: 'Perímetro cefálico' },
+        { id: 'registroVisitas', nombre: 'Registro de visitas' }
+    ];
+    public seccionSeleccionada;
 
     constructor(private servicioResumenPaciente: ResumenPacienteDinamicoService,
-                private servicioVacunas: VacunasService,
-                private prestacionesService: PrestacionesService,
-                public elementosRUPService: ElementosRUPService,
-                private plex: Plex) { }
+                private servicioVacunas: VacunasService) { }
 
     ngOnInit() {
+        this.seccionSeleccionada = this.opcionesSecciones[0];
         this.loadPrestaciones();
         this.loadVacunas();
-        this.loadResumen();
     }
-    // carga el resumen de historia clinica
-    loadResumen() {
-        this.prestacionesService.getRegistrosHuds(this.paciente.id, '6035001').subscribe(prestaciones => {
-            if (prestaciones && prestaciones.length) {
-                prestaciones.sort((a, b) => {
-                    const dateA = new Date(a.fecha).getTime();
-                    const dateB = new Date(b.fecha).getTime();
-                    return dateA > dateB ? 1 : -1;
-                });
-                this.registro = prestaciones[prestaciones.length - 1].registro;
-            }
-        });
+
+    get mostrarCurva() {
+        return this.seccionSeleccionada?.id === 'curvaPeso' ||
+            this.seccionSeleccionada?.id === 'curvaTalla' ||
+            this.seccionSeleccionada?.id === 'perimetroCefalico';
+    }
+
+    get curvaActual() {
+        switch (this.seccionSeleccionada?.id) {
+            case 'curvaPeso':
+                return 1;
+            case 'curvaTalla':
+                return 2;
+            case 'perimetroCefalico':
+                return 3;
+            default:
+                return null;
+        }
     }
 
     loadVacunas() {

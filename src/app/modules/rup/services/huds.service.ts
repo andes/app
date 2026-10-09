@@ -18,8 +18,11 @@ export class HUDSService {
     private _registrosHUDS: ElementoHUDS[] = [];
     private _obsRegistros = new BehaviorSubject<ElementoHUDS[]>([]);
     public registrosHUDS = this._obsRegistros.asObservable();
+    private _obsActiveTab = new BehaviorSubject<number>(-1);
+    public activeTab$ = this._obsActiveTab.asObservable();
     public activeTab = -1;
     private hudsUrl = '/modules/huds/accesos';
+    private hudsSituaciones = '/modules/huds';
 
     constructor(
         private server: Server,
@@ -29,16 +32,35 @@ export class HUDSService {
     /**
      * Controladores globales de las tabs de la huds
      */
+    private setActiveTab(index: number) {
+        this.activeTab = index;
+        this._obsActiveTab.next(index);
+    }
+
     private push(elemento: ElementoHUDS) {
         this._registrosHUDS = [...this._registrosHUDS, elemento];
         this._obsRegistros.next([...this._registrosHUDS]);
-        this.activeTab = this._registrosHUDS.length;
+        this.setActiveTab(this._registrosHUDS.length);
     }
 
     public remove(index) {
         this._registrosHUDS.splice(index, 1);
         this._obsRegistros.next([...this._registrosHUDS]);
 
+    }
+
+    /**
+     * Abre un elemento en un tab. Si ya está abierto, activa ese tab en lugar de cerrarlo.
+     * @param registro Elemento seleccionado en hudsBusqueda.
+     * @param tipo 'cda' 'rup' 'concepto'.
+     */
+    public open(registro: Registro, tipo: string) {
+        const index = this.index(registro, tipo);
+        if (index === -1) {
+            this.push({ tipo: tipo, data: { ...registro } });
+        } else {
+            this.setActiveTab(index + 1);
+        }
     }
 
     /**
@@ -63,7 +85,7 @@ export class HUDSService {
     public clear() {
         this._registrosHUDS = [];
         this._obsRegistros.next([]);
-        this.activeTab = -1;
+        this.setActiveTab(-1);
     }
 
     index(registro: Registro, tipo: string) {
@@ -183,6 +205,18 @@ export class HUDSService {
 
     getHudsToken() {
         return window.sessionStorage.getItem('huds-token');
+    }
+
+    getSituacionesActivas(id: String): Observable<any> {
+        return this.server.get(`${this.hudsSituaciones}/${id}/situacionesActivas`);
+    }
+
+    getAntecedentesFamiliares(id: String): Observable<any> {
+        return this.server.get(`${this.hudsSituaciones}/${id}/antecedentesFamiliares`);
+    }
+
+    getAntecedentesPersonales(id: String): Observable<any> {
+        return this.server.get(`${this.hudsSituaciones}/${id}/antecedentesPersonales`);
     }
 
     armarRelaciones(registros: IPrestacionRegistro[]) {
