@@ -1,6 +1,6 @@
 <ng-container *ngIf="!soloValores">
     <form class="mt-1" #formMedicamento="ngForm">
-        <plex-select [(ngModel)]="medicamento.diagnostico" hintType="info" label="Diagnóstico" [data]="registros"
+        <plex-select [(ngModel)]="medicamento.diagnostico" label="Diagnóstico" [data]="registros"
                      name="diagnostico" multiline="true" [required]="true" labelField="term" idField="conceptId"
                      hint="Se listaran los conceptos registrados en esta consulta" hintType="info" hintIcon="eye">
         </plex-select>
@@ -42,19 +42,28 @@
                        label="Fórmula Magistral (Insumos)" (change)="onChangeMagistral()">
             </plex-bool>
         </div>
+
         <plex-grid cols="2">
             <plex-select *ngIf="!medicamento.esMagistral" [(ngModel)]="medicamento.generico" name="generico"
                          (getData)="loadMedicamentoGenerico($event)" placeholder="Medicamento genérico"
                          label="Medicamento" idField="conceptId" labelField="term" (change)="loadPresentaciones()"
                          required="true">
             </plex-select>
-            <plex-select *ngIf="medicamento.esMagistral" [(ngModel)]="medicamento.generico" name="genericoMagistral"
-                         (getData)="loadMedicamentoGenerico($event)" placeholder="Buscar Insumo Magistral"
-                         label="Fórmula Magistral" idField="conceptId" labelField="term" (change)="loadPresentaciones()"
-                         required="true">
-            </plex-select>
+            <div *ngIf="medicamento.esMagistral">
+                <plex-select [(ngModel)]="medicamento.generico" name="genericoMagistral"
+                             (getData)="loadMedicamentoGenerico($event)" placeholder="Buscar Insumo Magistral"
+                             label="Fórmula Magistral" idField="conceptId" labelField="term"
+                             (change)="loadPresentaciones()" [disabled]="medicamento.esMagistralManual"
+                             [required]="!medicamento.esMagistralManual">
+                </plex-select>
+                <div class="mt-2">
+                    <plex-bool [(ngModel)]="medicamento.esMagistralManual" name="esMagistralManual"
+                               label="Otro Magistral" (change)="onChangeOtros()">
+                    </plex-bool>
+                </div>
+            </div>
 
-            <div grow="full">
+            <div grow="full" *ngIf="!medicamento.esMagistralManual">
                 <plex-select *ngIf="!medicamento.generico || unidades.length || loading" class="formEditar w-100"
                              name="unidades" [(ngModel)]="medicamento.cantidad" [data]="unidades"
                              placeholder="Seleccione una opción" label="Cantidad" labelField="valor" required="true"
@@ -78,11 +87,35 @@
             </div>
         </plex-grid>
 
-        <plex-grid cols="2">
+        <div class="mt-2 mb-2" *ngIf="medicamento.esMagistral && medicamento.esMagistralManual">
+            <plex-label size="md" icon="information-outline" type="info"
+                        titulo="El medicamento no podrá ser dispensado desde una farmacia del sistema público">
+            </plex-label>
+        </div>
+
+        <plex-grid cols="1" *ngIf="medicamento.esMagistral && medicamento.esMagistralManual">
+            <plex-text [(ngModel)]="medicamento.formulacionMagistral" name="formulacionMagistral"
+                       label="Formulación magistral" placeholder="Ingrese la formulación magistral..." [required]="true"
+                       multiline="true">
+            </plex-text>
+        </plex-grid>
+
+        <plex-grid cols="2" *ngIf="!medicamento.esMagistralManual">
             <plex-int name="envases" label="Cantidad de envases" [(ngModel)]="medicamento.cantEnvases" required="true"
                       min="1" max="90">
             </plex-int>
 
+            <plex-grid cols="2" class="grid-tratamiento">
+                <plex-bool [(ngModel)]="medicamento.tratamientoProlongado" name="tratamientoProlongado" type="slide"
+                           label="Tratamiento prolongado" [readonly]="medicamento.tipoReceta === 'triplicado'">
+                </plex-bool>
+                <plex-select *ngIf="medicamento.tratamientoProlongado" [(ngModel)]="medicamento.tiempoTratamiento"
+                             name="tiempoTratamiento" [data]="tiemposTratamiento" required="true">
+                </plex-select>
+            </plex-grid>
+        </plex-grid>
+
+        <plex-grid cols="1" *ngIf="medicamento.esMagistralManual">
             <plex-grid cols="2" class="grid-tratamiento">
                 <plex-bool [(ngModel)]="medicamento.tratamientoProlongado" name="tratamientoProlongado" type="slide"
                            label="Tratamiento prolongado" [readonly]="medicamento.tipoReceta === 'triplicado'">
@@ -175,13 +208,16 @@
             <plex-icon size="md" *ngIf="true" name="pildoras" class="icon icon--border--producto mr-2">
             </plex-icon>
             <plex-label [tituloBold]="true"
-                        titulo="{{ item.esMagistral ? (item.magistral?.nombre || item.generico?.nombre || item.generico?.term) : item.generico?.term }}"
-                        subtitulo="{{ item.cantEnvases }} envase(s){{ item.cantidad ? ' de ' + item.cantidad + ' ' + (item.esMagistral ? (item.magistral?.unidadMedida || item.generico?.unidadMedida || '') : (item.presentacion?.term ? item.presentacion.term + '(s)' : '(s)')) : '' }}{{ item.dosisDiaria?.dosis || item.dosisDiaria?.intervalo || item.dosisDiaria?.dias ? ' | ' : '' }}{{ item.dosisDiaria?.dosis ? item.dosisDiaria.dosis : '' }}{{ item.dosisDiaria?.intervalo ? ' cada ' + item.dosisDiaria.intervalo.nombre : '' }}{{ item.dosisDiaria?.dias ? ' durante ' + item.dosisDiaria.dias + ' día(s)' : '' }}"></plex-label>
+                        titulo="{{ item.formulacionMagistral || (item.esMagistral ? (item.magistral?.nombre || item.generico?.nombre || item.generico?.term) : item.generico?.term) }}"
+                        subtitulo="{{ item.cantEnvases ? item.cantEnvases + ' envase(s)' : '' }}{{ item.cantidad ? ' de ' + item.cantidad + ' ' + (item.esMagistral ? (item.magistral?.unidadMedida || item.generico?.unidadMedida || '') : (item.presentacion?.term ? item.presentacion.term + '(s)' : '(s)')) : '' }}{{ item.dosisDiaria?.dosis || item.dosisDiaria?.intervalo || item.dosisDiaria?.dias ? ((item.cantEnvases || item.cantidad) ? ' | ' : '') : '' }}{{ item.dosisDiaria?.dosis ? item.dosisDiaria.dosis : '' }}{{ item.dosisDiaria?.intervalo ? ' cada ' + item.dosisDiaria.intervalo.nombre : '' }}{{ item.dosisDiaria?.dias ? ' durante ' + item.dosisDiaria.dias + ' día(s)' : '' }}"></plex-label>
             <plex-badge *ngIf="item.diagnostico" size="sm" type="warning" hintType="warning">
                 {{ item.diagnostico.term | truncate }}
             </plex-badge>
             <plex-badge *ngIf="item.esMagistral" size="sm" type="info" hintType="info">
                 Fórmula Magistral
+            </plex-badge>
+            <plex-badge *ngIf="item.esMagistralManual" size="sm" type="warning" hintType="warning">
+                Ingreso Manual
             </plex-badge>
             <plex-badge *ngIf="item.tratamientoProlongado" type="info">Tratamiento prolongado
             </plex-badge>
@@ -197,13 +233,17 @@
     <plex-list size="md" *ngIf="registro.valor.medicamentos">
         <plex-item *ngFor="let item of registro.valor.medicamentos">
             <plex-label [tituloBold]="true"
-                        titulo="{{ item.esMagistral ? (item.magistral?.nombre || item.generico?.nombre || item.generico?.term) : item.generico?.term }}"
-                        subtitulo="{{ item.cantEnvases }} envase(s){{ item.cantidad ? ' de ' + item.cantidad + ' ' + (item.esMagistral ? (item.magistral?.unidadMedida || item.generico?.unidadMedida || '') : (item.presentacion?.term ? item.presentacion.term + '(s)' : '(s)')) : '' }}{{ item.dosisDiaria?.dosis || item.dosisDiaria?.intervalo || item.dosisDiaria?.dias ? ' | ' : '' }}{{ item.dosisDiaria?.dosis ? item.dosisDiaria.dosis : '' }}{{ item.dosisDiaria?.intervalo ? ' cada ' + item.dosisDiaria.intervalo.nombre : '' }}{{ item.dosisDiaria?.dias ? ' durante ' + item.dosisDiaria.dias + ' día(s)' : '' }}"></plex-label>
+                        titulo="{{ item.formulacionMagistral || (item.esMagistral ? (item.magistral?.nombre || item.generico?.nombre || item.generico?.term) : item.generico?.term) }}"
+                        subtitulo="{{ item.cantEnvases ? item.cantEnvases + ' envase(s)' : '' }}{{ item.cantidad ? ' de ' + item.cantidad + ' ' + (item.esMagistral ? (item.magistral?.unidadMedida || item.generico?.unidadMedida || '') : (item.presentacion?.term ? item.presentacion.term + '(s)' : '(s)')) : '' }}{{ item.dosisDiaria?.dosis || item.dosisDiaria?.intervalo || item.dosisDiaria?.dias ? ((item.cantEnvases || item.cantidad) ? ' | ' : '') : '' }}{{ item.dosisDiaria?.dosis ? item.dosisDiaria.dosis : '' }}{{ item.dosisDiaria?.intervalo ? ' cada ' + item.dosisDiaria.intervalo.nombre : '' }}{{ item.dosisDiaria?.dias ? ' durante ' + item.dosisDiaria.dias + ' día(s)' : '' }}">
+            </plex-label>
             <plex-badge *ngIf="item.diagnostico" size="sm" type="warning" hintType="warning">
                 {{ item.diagnostico.term | truncate }}
             </plex-badge>
             <plex-badge *ngIf="item.esMagistral" size="sm" type="info" hintType="info">
                 Fórmula Magistral
+            </plex-badge>
+            <plex-badge *ngIf="item.esMagistralManual" size="sm" type="warning" hintType="warning">
+                Ingreso Manual
             </plex-badge>
             <plex-badge *ngIf="item.tratamientoProlongado" type="info">Tratamiento prolongado
             </plex-badge>
