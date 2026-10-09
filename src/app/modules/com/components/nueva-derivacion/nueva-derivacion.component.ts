@@ -56,6 +56,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         historial: [],
         motivoDerivacion: '',
         estrategiaAtencion: null,
+        ambito: null,
         diagnosticoActual: '',
         estadoClinico: '',
         diagnosticoBase: '',
@@ -80,7 +81,13 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         { id: 'rehabilitacion', nombre: 'Rehabilitación' },
     ];
 
+    public ambitos = [
+        { id: 'internacion', nombre: 'Internación' },
+        { id: 'guardia', nombre: 'Guardia' },
+    ];
+
     public estrategiasAtencion = [];
+    public saving = false;
 
     constructor(
         private plex: Plex,
@@ -190,9 +197,14 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
 
     guardarDerivacion($event) {
         if ($event.formValid) {
+            if (this.saving) {
+                return;
+            }
+            this.saving = true;
             this.derivacionesService.search({ paciente: this.paciente.id, estado: '~finalizada', cancelada: false }).subscribe(resultado => {
                 if (resultado.length) {
                     this.plex.toast('danger', 'Ya existe una derivación en curso para el paciente seleccionado');
+                    this.saving = false;
                 } else {
                     const concepto = this.elementoRupService.getConceptoDerivacion();
                     const crearPrestacionActive = this.auth.featureFlag('COMCrearPrestacion');
@@ -202,15 +214,25 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
                             this.crearDerivacion(prestacion).subscribe(respuesta => {
                                 this.plex.toast('success', 'Derivación guardada', 'Éxito', 4000);
                                 this.editarPrestacion();
+                                this.saving = false;
+                            }, () => {
+                                this.saving = false;
                             });
+                        }, () => {
+                            this.saving = false;
                         });
                     } else {
                         this.crearDerivacion().subscribe(respuesta => {
                             this.router.navigate(['/com']);
                             this.plex.toast('success', 'Derivación guardada', 'Éxito', 4000);
+                            this.saving = false;
+                        }, () => {
+                            this.saving = false;
                         });
                     }
                 }
+            }, () => {
+                this.saving = false;
             });
         } else {
             this.plex.info('danger', 'Debe completar los datos requeridos');
@@ -246,6 +268,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         });
         this.modelo.condicion = this.modelo.condicion?.nombre;
         this.modelo.necesidad = this.modelo.necesidad?.nombre;
+        this.modelo.ambito = this.modelo.ambito?.id || null;
         if (this.modelo.estrategiaAtencion) {
             this.modelo.estrategiaAtencion = {
                 id: this.modelo.estrategiaAtencion.id || this.modelo.estrategiaAtencion._id,

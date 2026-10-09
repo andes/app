@@ -4,7 +4,7 @@
             <plex-button position="right" type="danger" label="Cancelar" (click)="cancelar()">
             </plex-button>
             <plex-button position="right" type="success" label="Guardar" (click)="guardarDerivacion($event)"
-                         [validateForm]="form" [disabled]="form.invalid">
+                         [validateForm]="form" [disabled]="form.invalid || saving">
             </plex-button>
         </plex-title>
         <form #form="ngForm">
@@ -39,6 +39,9 @@
                              label="Estrategia de atención" placeholder="Seleccione una estrategia de atención"
                              [data]="estrategiasAtencion" grow="full">
 
+                </plex-select>
+                <plex-select [(ngModel)]="modelo.ambito" name="ambito" label="Ámbito" placeholder="Seleccione un ámbito"
+                             [data]="ambitos" grow="full">
                 </plex-select>
 
             </plex-wrapper>
