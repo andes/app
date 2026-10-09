@@ -103,7 +103,6 @@ export class RenovacionRecetaMedicaComponent extends RUPComponent implements OnI
         );
 
         if (index !== -1) {
-            // console.log(index, ' elim : ', this.medicamentoSeleccionado);
             const medSeleccionado = this.recetasFiltradas[index];
             this.medicamentoEliminado = this.recetasFiltradas[index];
             this.registro.valor.medicamentos.push(medSeleccionado);

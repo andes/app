@@ -71,6 +71,7 @@ import { PeriodosCensablesComponent } from './sidebar/periodos-censables/periodo
 import { ListadoMedicamentosCapasComponent } from './views/listado-internacion-capas/listado-medicamentos-capas.component';
 import { CITASLibModule } from '../../../components/turnos/citas.module';
 import { MapaCamasResumenComponent } from './views/mapa-camas-capa/mapa-camas-resumen.component';
+import { InformeEstadisticaService } from 'src/app/modules/rup/services/informe-estadistica.service';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -130,7 +131,8 @@ export const INTERNACION_PROVIDERS = [
     IntegridadService,
     PermisosMapaCamasService,
     PlanIndicacionesEventosServices,
-    IngresoPacienteService
+    IngresoPacienteService,
+    InformeEstadisticaService
 ];
 
 @NgModule({
