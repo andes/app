@@ -1,5 +1,10 @@
 @import "../variables";
 
+rup {
+    display: block;
+    width: 100%;
+}
+
 $rotate: -90deg;
 
 .rup-card {
@@ -770,4 +775,10 @@ plex-layout [type="invert"] {
     .readonly span {
         color: white;
     }
+}
+
+.hr-grueso {
+    border: none;
+    height: 1px;
+    background-color: #4a4a4a;
 }
