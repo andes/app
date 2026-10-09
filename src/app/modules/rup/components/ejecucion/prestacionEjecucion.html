@@ -93,6 +93,7 @@
                                                                 <button (click)="desvincular(registro, registro.relacionadoCon[r])"
                                                                         class="desvincular"
                                                                         *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
+                                                                        [disabled]="!esRegistroPropio(registro)"
                                                                         title="Desvincular"
                                                                         class="btn btn-sm btn-primary">
                                                                     <i class="mdi mdi-link-variant-off"></i>
