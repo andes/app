@@ -30,7 +30,7 @@
 <div *ngIf="item.type" [hidden]="isHidden">
     <!-- items hoja -->
     <plex-bool [(ngModel)]="state" *ngIf="item.type === 'boolean'" [label]="item.title" type="slide"
-               (change)="checkIncompatibles($event)">
+               (change)="onBooleanChange($event)">
     </plex-bool>
     <div *ngIf="item.type !== 'boolean'">
         <h5>
