@@ -161,13 +161,16 @@
                                                             {{ grupo.recetaVisible?.estadoActual?.tipo.replace('-', ' ')
                                                             }}
                                                         </plex-badge>
-                                                        <plex-badge size="sm"
-                                                                    [type]="estadoDispensa[grupo.recetaVisible?.estadoDispensaActual.tipo]">
-                                                            {{
-                                                            grupo.recetaVisible?.estadoDispensaActual?.tipo.replace('-',
-                                                            ' ')
-                                                            }}
-                                                        </plex-badge>
+                                                        <plex-badge *ngIf="!checkDispensaAnticipada(grupo.recetaVisible)" size="sm"
+                                                                     [type]="estadoDispensa[grupo.recetaVisible?.estadoDispensaActual.tipo]">
+                                                             {{
+                                                             grupo.recetaVisible?.estadoDispensaActual?.tipo.replace('-',
+                                                             ' ')
+                                                             }}
+                                                         </plex-badge>
+                                                         <plex-badge *ngIf="checkDispensaAnticipada(grupo.recetaVisible)" size="sm" type="warning">
+                                                             {{ checkDispensaAnticipada(grupo.recetaVisible) }}
+                                                         </plex-badge>
                                                     </div>
                                                 </div>
                                             </div>
