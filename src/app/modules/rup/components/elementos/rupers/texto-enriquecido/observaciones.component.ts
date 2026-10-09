@@ -50,7 +50,7 @@ export class ObservacionesComponent extends RUPComponent implements OnInit, Afte
             this.params = {};
         }
         this.params.required = this.params && this.params.required ? this.params.required : false;
-        this.params.titulo = this.params.titulo || 'Observaciones';
+        this.params.title = this.params.title || this.params.titulo || this.registro?.concepto?.term || 'Observaciones';
         this.params.placeholder = this.params.placeholder || 'Ingrese una observación';
 
         if (!this.registro.valor || this.registro.valor.length === 0) {

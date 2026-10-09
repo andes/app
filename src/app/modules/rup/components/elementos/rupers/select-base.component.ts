@@ -39,6 +39,8 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
     get titulo() {
         if (this.params.title !== null && this.params.title !== undefined) {
             return this.params.title;
+        } else if (this.params.titulo !== null && this.params.titulo !== undefined) {
+            return this.params.titulo;
         } else {
             return this.registro.concepto.term;
         }
