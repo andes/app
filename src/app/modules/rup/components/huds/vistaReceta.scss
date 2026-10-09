@@ -25,6 +25,13 @@
         display: flex;
         column-gap: 5px;
         align-items: center;
+        width: 100%;
+    }
+
+    .descargar-pdf {
+        margin-left: auto;
+        margin-bottom: 10px;
+        margin-right: 10px
     }
 
     .registros {
@@ -47,6 +54,7 @@
         .info-registro {
             display: flex;
             flex-direction: column;
+            flex-grow: 1;
 
             plex-badge {
                 margin-bottom: 10px;
