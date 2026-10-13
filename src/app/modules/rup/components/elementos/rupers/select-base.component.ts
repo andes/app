@@ -44,6 +44,13 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
     /** conceptId del último concepto dinámico agregado vía addRegister (para select simple) */
     private _lastAddedConceptId: string | null = null;
 
+    /**
+     * Referencia directa al array de registros donde se insertó el último concepto dinámico.
+     * Cuando addToMolecule=true apunta a registro.registros de la molécula;
+     * cuando es false, apunta a prestacion.ejecucion.registros.
+     */
+    private _lastAddedList: any[] | null = null;
+
 
     public otherText: String = '';
 
@@ -157,36 +164,56 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
             const molecula = this.getMoleculaContenedora();
             if (molecula) {
                 this._lastAddedConceptId = concepto.conceptId;
+                this._lastAddedList = molecula.registros;
                 this.ejecucionService.agregarConcepto(concepto, false, molecula.concepto);
                 return;
             }
         }
         // addToMolecule=false (o no se encontró molécula): agrega fuera de la molécula
+        const prestacion = this.ejecucionService['prestacion'];
         this._lastAddedConceptId = concepto.conceptId;
+        this._lastAddedList = prestacion?.ejecucion?.registros ?? null;
         this.ejecucionService.agregarConcepto(concepto);
     }
 
     /**
      * Elimina el último concepto dinámico agregado por este select (select simple).
-     * Busca el registro por conceptId en la lista de registros de la prestación
-     * y lo quita del array correspondiente (raíz o dentro de la molécula contenedora).
+     * Usa _lastAddedList (referencia directa al array donde se insertó) para una búsqueda
+     * precisa; si la referencia ya no está disponible recurre a búsqueda recursiva completa.
      */
     private removeLastAddedConcepto() {
         if (!this._lastAddedConceptId || !this.ejecucionService) {
             return;
         }
         const conceptId = this._lastAddedConceptId;
-        const prestacion = this.ejecucionService['prestacion'];
-        if (!prestacion?.ejecucion?.registros) {
-            return;
-        }
 
-        // Busca y elimina recursivamente en el árbol de registros
-        const eliminarDeLista = (lista: any[]): boolean => {
+        const eliminarDeArray = (lista: any[]): boolean => {
             const idx = lista.findIndex(r => r.concepto?.conceptId === conceptId);
             if (idx !== -1) {
                 lista.splice(idx, 1);
                 this.ejecucionService.actualizar('eliminar');
+                return true;
+            }
+            return false;
+        };
+
+        // 1. Intentar primero en la lista donde sabemos que se insertó (O(n) directo)
+        if (this._lastAddedList && eliminarDeArray(this._lastAddedList)) {
+            this._lastAddedConceptId = null;
+            this._lastAddedList = null;
+            return;
+        }
+
+        // 2. Fallback: búsqueda recursiva en todo el árbol (por si la referencia cambió)
+        const prestacion = this.ejecucionService['prestacion'];
+        if (!prestacion?.ejecucion?.registros) {
+            this._lastAddedConceptId = null;
+            this._lastAddedList = null;
+            return;
+        }
+
+        const eliminarDeLista = (lista: any[]): boolean => {
+            if (eliminarDeArray(lista)) {
                 return true;
             }
             for (const reg of lista) {
@@ -199,6 +226,7 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
 
         eliminarDeLista(prestacion.ejecucion.registros);
         this._lastAddedConceptId = null;
+        this._lastAddedList = null;
     }
 
     /**
