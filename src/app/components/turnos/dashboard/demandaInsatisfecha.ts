@@ -8,6 +8,7 @@ import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.s
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { ListaEsperaService } from 'src/app/services/turnos/listaEspera.service';
 import { ProfesionalService } from './../../../services/profesional.service';
+import moment from 'moment';
 
 @Component({
     selector: 'demandaInsatisfecha',

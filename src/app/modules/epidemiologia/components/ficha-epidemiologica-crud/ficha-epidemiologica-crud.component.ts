@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { NgForm } from '@angular/forms';
@@ -11,6 +11,7 @@ import { Auth } from '@andes/auth';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { DocumentosService } from 'src/app/services/documentos.service';
 import { ConstantesService } from 'src/app/services/constantes.service';
+import moment from 'moment';
 @Component({
     selector: 'app-ficha-epidemiologica-crud',
     templateUrl: './ficha-epidemiologica-crud.component.html'
