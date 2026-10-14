@@ -5,12 +5,10 @@
 <plex-detail size="md" direction="row">
     <img [mpiFotoPaciente]="derivacion?.paciente" />
     <plex-badge type="warning">
-        {{derivacion.fecha
-        | fecha}} {{derivacion.fecha
-        | hora}}
+        {{derivacion | fecha}} {{derivacion | hora}}
     </plex-badge>
     <plex-badge type="info">
-        {{derivacion.estado}}
+        {{derivacion?.estado}}
     </plex-badge>
     <div title>
         {{derivacion?.paciente | nombre }}
@@ -26,7 +24,7 @@
     </plex-title>
     <plex-wrapper>
         <dispositivo [modelo]="derivacion" [tipo]="oxigeno" grow="full"></dispositivo>
-        <semaforo-priorizacion *ngIf="esCOM && derivacion.prioridad" [name]="'com'" [prioridad]="nuevoEstado.prioridad"
+        <semaforo-priorizacion *ngIf="esCOM && derivacion?.prioridad" [name]="'com'" [prioridad]="nuevoEstado.prioridad"
                                (changed)="nuevoEstado.prioridad = $event?.label"></semaforo-priorizacion>
         <plex-text [(ngModel)]="nuevoEstado.observacion" label="Observacion" name="observacion" multiline="true"
                    grow="full" required="true">

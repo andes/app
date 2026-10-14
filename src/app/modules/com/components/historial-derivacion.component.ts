@@ -34,7 +34,7 @@ export class HistorialDerivacionComponent {
     ) { }
 
     cargarItemsHistorial() {
-        let historial = [...this._derivacion.historial.filter(elto => !elto.eliminado)];
+        let historial = [...this.derivacion.historial.filter(elto => !elto.eliminado)];
         if (!historial) {
             historial = [];
         }
@@ -59,10 +59,10 @@ export class HistorialDerivacionComponent {
     eliminarNota(nota) {
         this.plex.confirm('¿Está seguro de querer eliminar la nota?', 'Eliminar nota').then((resultado) => {
             if (resultado) {
-                const index = this._derivacion.historial.findIndex(x => x._id === nota._id);
+                const index = this.derivacion.historial.findIndex(x => x._id === nota._id);
                 nota.eliminado = true;
-                this._derivacion.historial[index] = nota;
-                this.derivacionesService.update(this._derivacion._id, this._derivacion).subscribe((derivacion) => {
+                this.derivacion.historial[index] = nota;
+                this.derivacionesService.update(this.derivacion._id, this.derivacion).subscribe((unaDerivacion) => {
                     this.plex.toast('success', 'Nota eliminada');
                     this.cargarItemsHistorial();
                 });

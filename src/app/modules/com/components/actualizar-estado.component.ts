@@ -44,6 +44,9 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
         this.adjuntosEstado = [];
         this._derivacion = value;
     }
+    get derivacion() {
+        return this._derivacion;
+    }
 
     @Output() returnEditarEstado: EventEmitter<any> = new EventEmitter<any>();
 
@@ -66,15 +69,15 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
         if ($event.formValid) {
             this.nuevoEstado.adjuntos = this.adjuntosEstado;
 
-            if (this._derivacion.prioridad === this.nuevoEstado.prioridad) {
+            if (this.derivacion.prioridad === this.nuevoEstado.prioridad) {
                 delete this.nuevoEstado.prioridad;
             }
 
-            this.nuevoEstado.dispositivo = this._derivacion.dispositivo;
+            this.nuevoEstado.dispositivo = this.derivacion.dispositivo;
 
             const body = { estado: this.nuevoEstado };
 
-            this.derivacionService.updateHistorial(this._derivacion._id, body).subscribe(() => {
+            this.derivacionService.updateHistorial(this.derivacion._id, body).subscribe(() => {
                 this.plex.toast('success', 'La derivación fue actualizada exitosamente');
                 this.returnEditarEstado.emit(true);
             });
