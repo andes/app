@@ -38,6 +38,10 @@
         <plex-label *ngIf="turnoSeleccionado" titulo="Fecha de turno"
                     subtitulo="{{ turnoSeleccionado.horaInicio | fecha }} - {{ turnoSeleccionado.horaInicio | date: 'HH:mm' }}">
         </plex-label>
+        <plex-label *ngIf="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.conceptoAsociado"
+                    titulo="Diagnóstico Asociado"
+                    subtitulo="{{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.conceptoAsociado.term}}">
+        </plex-label>
         <plex-label *ngIf="prestacionSeleccionada.estadoActual.observaciones" titulo="Observaciones" subtitulo="
                 {{prestacionSeleccionada.estadoActual.observaciones}}">
         </plex-label>
