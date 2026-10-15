@@ -92,16 +92,6 @@
                             </ng-container>
                         </plex-tab>
 
-                        <plex-tab [allowClose]="true" [label]="registro.data.solicitud.tipoPrestacion.term"
-                                  [class]="registro.class" *ngIf="registro.tipo === 'solicitud'">
-                            <vista-solicitud-top [registro]="registro.data"></vista-solicitud-top>
-                        </plex-tab>
-
-                        <plex-tab [allowClose]="true" [label]="registro.data.solicitud.tipoPrestacion.term"
-                                  [class]="registro.class" *ngIf="registro.tipo === 'solicitud'">
-                            <vista-solicitud-top [registro]="registro.data"></vista-solicitud-top>
-                        </plex-tab>
-
                         <plex-tab [allowClose]="true" label="Ficha Epidemilógica"
                                   *ngIf="registro.tipo === 'ficha-epidemiologica'">
                             <app-ficha-epidemiologica-crud *ngIf="registro.data.type.name == 'covid19'"
@@ -133,7 +123,7 @@
                     </plex-tab>
 
                     <plex-tab [allowClose]="true" [label]="registro.data.solicitud.tipoPrestacion.term"
-                              [class]="registro.class" *ngIf="registro.tipo === 'solicitud'">
+                              [class]="registro.class" *ngIf="registro.tipo === 'solicitud' && this.permisoSolicitudes">
                         <vista-solicitud-top [registro]="registro.data"></vista-solicitud-top>
                     </plex-tab>
 
