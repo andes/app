@@ -3,7 +3,8 @@
     <ng-container *ngFor="let rama of registrosRelaciones.relacionesOrdenadas;">
         <ul class="list-group">
             <li [class.ml-0]="!rama.esDiagnosticoPrincipal"
-                class="list-group-item pl-0 pt-0 pb-0 mb-0 ml-{{ registrosRelaciones.registrosDeep[rama.id] }}">
+                class="list-group-item pl-0 pt-0 pb-0 mb-0 ml-{{ registrosRelaciones.registrosDeep[rama.id] }}"
+                title="Cargado por: {{ (rama.createdBy?.nombreCompleto || (rama.createdBy?.nombre + ' ' + rama.createdBy?.apellido)) || 'Desconocido' }}">
                 <div>
                     <span
                           class="type {{ rama.esSolicitud ? 'solicitud' : rama.concepto.semanticTag }} pr-2 mr-1"></span>
