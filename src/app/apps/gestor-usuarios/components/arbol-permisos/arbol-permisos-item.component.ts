@@ -370,8 +370,8 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges {
         if (!this.item.requires) {
             return true;
         }
-        const checker = shiroTrie.new();
-        checker.add(this.userPermissions);
+        const checker = ShiroTrie.newTrie();
+        checker.add(...this.userPermissions);
         return checker.check(this.parentPermission + ':' + this.item.requires);
     }
 
