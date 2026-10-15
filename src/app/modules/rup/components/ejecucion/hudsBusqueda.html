@@ -134,7 +134,8 @@
                                                     </div>
                                                     <div class="col p-0 pl-2 float-left">
                                                         <div class="row p-0 m-0 titulo">
-                                                            {{ grupo.recetas[0].medicamento.nombre || grupo.recetas[0].medicamento.concepto?.term }}</div>
+                                                            {{ grupo.recetas[0].medicamento.nombre ||
+                                                            grupo.recetas[0].medicamento.concepto?.term }}</div>
                                                         <div class="row p-0 m-0">
                                                             <div class="col-10 p-0 m-0">
                                                                 <div class="sugerido">
@@ -161,16 +162,18 @@
                                                             {{ grupo.recetaVisible?.estadoActual?.tipo.replace('-', ' ')
                                                             }}
                                                         </plex-badge>
-                                                        <plex-badge *ngIf="!checkDispensaAnticipada(grupo.recetaVisible)" size="sm"
-                                                                     [type]="estadoDispensa[grupo.recetaVisible?.estadoDispensaActual.tipo]">
-                                                             {{
-                                                             grupo.recetaVisible?.estadoDispensaActual?.tipo.replace('-',
-                                                             ' ')
-                                                             }}
-                                                         </plex-badge>
-                                                         <plex-badge *ngIf="checkDispensaAnticipada(grupo.recetaVisible)" size="sm" type="warning">
-                                                             {{ checkDispensaAnticipada(grupo.recetaVisible) }}
-                                                         </plex-badge>
+                                                        <plex-badge *ngIf="!checkDispensaAnticipada(grupo.recetaVisible)"
+                                                                    size="sm"
+                                                                    [type]="estadoDispensa[grupo.recetaVisible?.estadoDispensaActual.tipo]">
+                                                            {{
+                                                            grupo.recetaVisible?.estadoDispensaActual?.tipo.replace('-',
+                                                            ' ')
+                                                            }}
+                                                        </plex-badge>
+                                                        <plex-badge *ngIf="checkDispensaAnticipada(grupo.recetaVisible)"
+                                                                    size="sm" type="warning">
+                                                            {{ checkDispensaAnticipada(grupo.recetaVisible) }}
+                                                        </plex-badge>
                                                     </div>
                                                 </div>
                                             </div>
@@ -669,7 +672,7 @@
                                     <div class="rup-border rup-border-prestacion"
                                          [ngClass]="{'active': huds.isOpen(prestacion.data, prestacion.tipo)}">
                                         <div class="row p-0 m-0 border-secondary border-left-0">
-                                            <div class="col-10 p-0 m-0">
+                                            <div class="col-9 p-0 m-0">
                                                 <div class="row m-0 p-0">
                                                     <div class="col-2 icon-rup drag-handle">
                                                         <i class="adi adi-clipboard-check-outline"></i>
@@ -698,7 +701,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-2 p-0 m-0">
+                                            <div class="col-3 p-0 m-0">
                                                 <div class="p-0 pt-1 pr-1 float-right">
                                                     <plex-badge size="sm"
                                                                 [type]=" prestacion.tipo !== 'ficha-epidemiologica' ? 'success' : 'info'">
