@@ -1,6 +1,5 @@
 import { ICie10 } from '../../../interfaces/ICie10';
 import { ISnomedConcept } from './snomed-concept.interface';
-import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 interface ICodificacion {
     codificacionProfesional?: {
@@ -8,19 +7,19 @@ interface ICodificacion {
         snomed: ISnomedConcept;
     };
     codificacionAuditoria?: ICie10;
-    primeraVez: Boolean;
+    primeraVez: boolean;
 }
 
 export interface ICodificacionPrestacion {
-    id?: String;
-    idPrestacion: String;
+    id?: string;
+    idPrestacion: string;
     paciente: {
-        id: String;
-        nombre: String;
-        apellido: String;
-        documento: String;
-        telefono?: String;
-        sexo: String;
+        id: string;
+        nombre: string;
+        apellido: string;
+        documento: string;
+        telefono?: string;
+        sexo: string;
         fechaNacimiento: Date;
     };
     diagnostico: { codificaciones: ICodificacion[] };

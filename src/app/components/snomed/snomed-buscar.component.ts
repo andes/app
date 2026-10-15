@@ -14,13 +14,13 @@ import { SnomedBuscarService } from './snomed-buscar.service';
 })
 
 export class SnomedBuscarComponent implements OnInit, OnDestroy {
-    @Input() tipoBusqueda: String;
-    @Input() autofocus: Boolean = true;
+    @Input() tipoBusqueda: string;
+    @Input() autofocus = true;
     expression: string = null;
 
-    @Output() onSearch: EventEmitter<any> = new EventEmitter<any>();
+    @Output() search: EventEmitter<any> = new EventEmitter<any>();
 
-    public searchTerm: String = '';
+    public searchTerm = '';
     public loading = false;
     private _suscribe = null;
 
@@ -105,7 +105,7 @@ export class SnomedBuscarComponent implements OnInit, OnDestroy {
 
             return apiMethod.subscribe(resultados => {
                 this.loading = false;
-                this.onSearch.emit(this.formatearResultados(resultados));
+                this.search.emit(this.formatearResultados(resultados));
             }, err => {
                 this.loading = false;
                 this.plex.toast('error', 'No se pudo realizar la búsqueda', '', 5000);
@@ -114,7 +114,7 @@ export class SnomedBuscarComponent implements OnInit, OnDestroy {
 
         } else {
             this.loading = false;
-            this.onSearch.emit(this.formatearResultados());
+            this.search.emit(this.formatearResultados());
         }
     }
 

@@ -1,8 +1,8 @@
+import moment from 'moment';
 import { Plex } from '@andes/plex';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PlexModalComponent } from '@andes/plex';
 import { cache, calcularEdad } from '@andes/shared';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
 import { LocalidadService } from 'src/app/services/localidad.service';
@@ -173,13 +173,14 @@ export class InscripcionComponent implements OnInit {
                     this.fechaMinimaNacimiento = moment().subtract(60, 'years').toDate();
                     this.fechaMaximaNacimiento = moment().subtract(12, 'years').toDate();
                     break;
-                default:
+                default: {
                     const excepciones = grupo.excepciones.any[0].all;
                     if (excepciones) {
                         this.fechaMinimaNacimiento = moment().subtract(excepciones[1].value, 'years').toDate();
                         this.fechaMaximaNacimiento = moment().subtract(excepciones[0].value, 'years').toDate();
                     }
                     break;
+                }
             }
         }
     }

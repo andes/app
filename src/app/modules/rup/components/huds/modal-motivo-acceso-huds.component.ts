@@ -1,5 +1,5 @@
 import { Component, Output, ViewChild, Input, EventEmitter, OnInit } from '@angular/core';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PlexModalComponent } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { ProfesionalService } from 'src/app/services/profesional.service';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -16,10 +16,10 @@ export class ModalMotivoAccesoHudsComponent implements OnInit {
     public binaryString = null;
     public firmas = null;
     public urlFirma = null;
-    public base64textString: String = '';
+    public base64textString = '';
     public binaryStringAdmin = null;
     public urlFirmaAdmin = null;
-    public base64textStringAdmin: String = '';
+    public base64textStringAdmin = '';
     public nombreAdministrativo = '';
     public firmaAdmin = null;
     @ViewChild('modal', { static: true }) modal: PlexModalComponent;
@@ -30,7 +30,7 @@ export class ModalMotivoAccesoHudsComponent implements OnInit {
         public _profesionalService: ProfesionalService,
         public motivosHudsService: MotivosHudsService,
         public sanitizer: DomSanitizer,
-    ) { };
+    ) { }
     @Input()
     set show(value) {
         if (value) {

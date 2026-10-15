@@ -10,6 +10,7 @@ import { PermisosService } from '../services/permisos.service';
 import { ArbolPermisosComponent } from '../components/arbol-permisos/arbol-permisos.component';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
+import moment from 'moment';
 
 @Component({
     selector: 'gestor-usarios-usuarios-edit',

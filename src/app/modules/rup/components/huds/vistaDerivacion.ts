@@ -5,6 +5,7 @@ import { HUDSService } from '../../services/huds.service';
 import { DocumentosService } from 'src/app/services/documentos.service';
 import { AdjuntosService } from '../../services/adjuntos.service';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
+import moment from 'moment';
 @Component({
     selector: 'vista-derivacion',
     templateUrl: 'vistaDerivacion.html',

@@ -9,8 +9,8 @@ import { Router } from '@angular/router';
     templateUrl: './forms-list.component.html'
 })
 export class FormsListComponent implements OnInit {
-    canCreate: Boolean;
-    canUpdate: Boolean;
+    canCreate: boolean;
+    canUpdate: boolean;
 
     forms$: Observable<Form[]>;
 

@@ -101,11 +101,11 @@
                 </tipo-traslado>
                 <semaforo-priorizacion *ngIf="reglaSeleccionada?.definePrioridad" [name]="'com'"
                                        [prioridad]="nuevoEstado.prioridad"
-                                       (change)="nuevoEstado.prioridad = $event?.label"></semaforo-priorizacion>
+                                       (changed)="nuevoEstado.prioridad = $event?.label"></semaforo-priorizacion>
                 <plex-text [(ngModel)]="nuevoEstado.observacion" label="Observacion" name="observacion" multiline="true"
                            grow="full">
                 </plex-text>
-                <upload-file label="Adjuntar archivo" (onUpload)="onUpload($event)" [modulo]="'com'"></upload-file>
+                <upload-file label="Adjuntar archivo" (uploading)="onUpload($event)" [modulo]="'com'"></upload-file>
                 <br><br>
                 <span *ngIf="errorExt">
                     <plex-badge type="danger">Archivo inválido.

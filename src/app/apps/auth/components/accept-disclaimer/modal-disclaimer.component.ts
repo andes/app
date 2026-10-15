@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { DisclaimerService } from '../../../../services/disclaimer.service';
 import { IDisclaimer } from '../../../../interfaces/IDisclaimer';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PlexModalComponent } from '@andes/plex';
 
 @Component({
     selector: 'modal-disclaimer',
@@ -16,8 +16,8 @@ export class ModalDisclaimerComponent implements OnInit {
     @ViewChild('modal', { static: true }) modal: PlexModalComponent;
 
     public disclaimer: IDisclaimer = null;
-    public version: String = null;
-    public texto: String = null;
+    public version: string = null;
+    public texto: string = null;
 
     @Input()
     set show(value) {

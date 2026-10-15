@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { DirectiveLibModule } from 'src/app/directives/directives.module';
@@ -30,7 +30,7 @@ import { NuevaSolicitudComponent } from './solicitudes/nuevaSolicitud.component'
 import { ReferirSolicitudComponent } from './solicitudes/referirSolicitud.component';
 import { SolicitudesComponent } from './solicitudes/solicitudes.component';
 
-export const TOP_ROUTES = [
+export const TOP_ROUTES: Routes = [
     { path: '', component: SolicitudesComponent, pathMatch: 'full' },
     { path: ':tipo/:paciente', component: NuevaSolicitudComponent },
     { path: 'asignadas', component: SolicitudesComponent },

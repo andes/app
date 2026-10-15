@@ -8,11 +8,11 @@ export class CodificacionService {
     private codificacionUrl = '/modules/rup/codificacion/'; // URL to web api
     constructor(private server: Server) { }
 
-    addCodificacion(idPrestacion: String): Observable<ICodificacionPrestacion> {
+    addCodificacion(idPrestacion: string): Observable<ICodificacionPrestacion> {
         return this.server.post(this.codificacionUrl, { idPrestacion: idPrestacion });
     }
 
-    patch(id: String, cambios: any): Observable<ICodificacionPrestacion> {
+    patch(id: string, cambios: any): Observable<ICodificacionPrestacion> {
         return this.server.patch(this.codificacionUrl + id, cambios);
     }
 

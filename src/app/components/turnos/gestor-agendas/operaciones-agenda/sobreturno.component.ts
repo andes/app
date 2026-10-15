@@ -37,7 +37,7 @@ export class AgregarSobreturnoComponent implements OnInit {
     public pacientes: any;
     public obraSocialPaciente: any[] = [];
     public prepagas: any[] = [];
-    showListaPrepagas: Boolean = false;
+    showListaPrepagas = false;
     public seleccion = null;
     public esEscaneado = false;
     public hoy = new Date();

@@ -1,4 +1,4 @@
-const _package = require('../../package.json');
+import _package from '../../package.json';
 import { analytics, apiKeys, captcha, hotjar, password_recovery } from './apiKeyMaps';
 
 export const environment = {

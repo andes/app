@@ -18,7 +18,7 @@ import { DerivacionesService } from './../../../services/com/derivaciones.servic
 })
 export class DetalleDerivacionComponent implements OnInit {
     @ViewChildren('upload') childsComponents: QueryList<any>;
-    public derivacion;
+    public _derivacion;
     public reglaSeleccionada;
     public dispositivo = null;
     public opcionesPrioridad = [
@@ -45,16 +45,16 @@ export class DetalleDerivacionComponent implements OnInit {
     public documentosEstadoUrl = [];
     public adjuntosUrl = [];
 
-    @Input('derivacion')
-    set _derivacion(value) {
-        this.derivacion = value;
+    @Input()
+    set derivacion(value) {
+        this._derivacion = value;
         this.dispositivo = value.dispositivo;
         this.adjuntosService.generateToken().subscribe((data: any) => {
             this.fileToken = data.token;
             this.reglaSeleccionada = {};
             this.adjuntosEstado = [];
             this.documentosEstadoUrl = [];
-            this.adjuntosUrl = this.derivacion.adjuntos.map((doc) => {
+            this.adjuntosUrl = this._derivacion.adjuntos.map((doc) => {
                 return {
                     ...doc,
                     url: this.adjuntosService.createUrl('drive', doc, this.fileToken)
@@ -63,17 +63,23 @@ export class DetalleDerivacionComponent implements OnInit {
             this.cargarEstado();
         });
     }
+    get derivacion() {
+        return this._derivacion;
+    }
 
-    @Input('reglasDerivacion')
-    set _reglasDerivacion(value) {
-        this.reglasDerivacion = value;
+    @Input()
+    set reglasDerivacion(value) {
+        this._reglasDerivacion = value;
+    }
+    get reglasDerivacion() {
+        return this._reglasDerivacion;
     }
 
     @Output() returnDetalle: EventEmitter<any> = new EventEmitter<any>();
     public tabIndex = 0;
     organizacionesDestino = [];
     unidadesDestino = [];
-    reglasDerivacion = [];
+    _reglasDerivacion = [];
     reglasDerivacionFiltradas = [];
     public nuevoEstado;
     public esCOM = false;

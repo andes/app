@@ -4,7 +4,7 @@ interface IFormula {
 }
 
 import { Injectable } from '@angular/core';
-
+import moment from 'moment';
 
 
 const formulas: IFormula[] = [];
@@ -54,7 +54,7 @@ export class FormulaBaseService {
             const str = `__CONTEXT_FUNCTION__ = function ($, paciente, prestacion) { return ${this.formula};  }`;
             // eslint-disable-next-line no-eval
             eval(str);
-            const value = __CONTEXT_FUNCTION__.bind(null)($, paciente, prestacion);
+            const value = __CONTEXT_FUNCTION__.bind(null)($, paciente, prestacion, moment);
             return {
                 value,
                 message: value

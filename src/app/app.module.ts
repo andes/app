@@ -14,7 +14,6 @@ de la siguiente manera:
 */
 
 // Angular
-import { AgmCoreModule } from '@agm/core';
 import { Auth, AuthModule } from '@andes/auth';
 // Global
 import { Plex, PlexModule } from '@andes/plex';
@@ -22,17 +21,26 @@ import { AuthContext, Server, ServerErrorHandler, SharedModule } from '@andes/sh
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import localeEs from '@angular/common/locales/es';
+import localeEsAr from '@angular/common/locales/es-AR';
 import { ErrorHandler, LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HammerModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgDragDropModule } from 'ng-drag-drop';
+import { DndModule } from 'ngx-drag-drop';
 import { RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
 // Libs
-import { ChartsModule } from 'ng2-charts';
+import { NgChartsModule } from 'ng2-charts';
 import { NgxImageCompressService } from 'ngx-image-compress';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+
+
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+
 /** Configuraciones de entorno */
 import { environment } from '../environments/environment';
 // Locales
@@ -45,7 +53,7 @@ import { CampaniaVisualizacionComponent } from './apps/campaniaSalud/components/
 // Campañas Salud
 import { CampaniaSaludService } from './apps/campaniaSalud/services/campaniaSalud.service';
 import { GestorUsuariosProvidersModule } from './apps/gestor-usuarios/gestor-usuarios.providers';
-import { MitosModule } from './apps/mitos';
+import { MitosModule } from './apps/mitos/mitos.module';
 import { TurneroProvidersModule } from './apps/turnero/turnero.providers';
 import { TurnosPrestacionesService } from './components/buscadorTurnosPrestaciones/services/turnos-prestaciones.service';
 import { EspecialidadCreateUpdateComponent } from './components/especialidad/especialidad-create-update.component';
@@ -222,16 +230,15 @@ import { VacunasService } from './services/vacunas.service';
 import { WebSocketService } from './services/websocket.service';
 import { AcronimoSvgComponent } from './styles/acronimo.svg';
 import { LogoSvgComponent } from './styles/logo.svg';
-import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
 import { ObraSocialComponent } from './core/mpi/components/obra-social.component';
 
 // COM
 import { EstadosCamaProvincialComponent } from './modules/com/components/estados-cama-provincial';
 import { EstadosCamaProvincialService } from './modules/com/services/estados-cama-provincial.service';
+import { GeorrefMapComponent } from './core/mpi/components/georref-map.component';
 
-
-registerLocaleData(localeEs, 'es');
+registerLocaleData(localeEsAr);
 
 // Main module
 @NgModule({
@@ -244,13 +251,10 @@ registerLocaleData(localeEs, 'es');
         HttpClientModule,
         AuthModule,
         TurneroProvidersModule,
-        ChartsModule,
-        MitosModule.forRoot(),
-        NgDragDropModule.forRoot(),
+        NgChartsModule,
+        MitosModule,
+        DndModule,
         routing,
-        AgmCoreModule.forRoot({
-            apiKey: environment.MAPS_KEY
-        }),
         InfiniteScrollModule,
         GestorUsuariosProvidersModule,
         MPILibModule,
@@ -263,8 +267,12 @@ registerLocaleData(localeEs, 'es');
         AuditoriaModule,
         RecaptchaModule,
         RecaptchaFormsModule,
-        VisualizacionInformacionModule
-
+        VisualizacionInformacionModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        NgxMatTimepickerModule.setLocale('es-AR')
     ],
     declarations: [
         AppComponent,
@@ -273,7 +281,6 @@ registerLocaleData(localeEs, 'es');
         ProfesionalComponent, ProfesionalCreateUpdateComponent, FirmaProfesionalComponent,
         ProfesionalCreateUpdateComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
-        MapsComponent,
         PlanificarAgendaComponent,
         BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         GestorAgendasComponent, TurnosComponent, ClonarAgendaComponent, ModalAgendaComponent,
@@ -319,7 +326,6 @@ registerLocaleData(localeEs, 'es');
         ImprimirSolicitudesComponent,
         SolicitudManualComponent,
         PucoComponent,
-
         // MPI
         NotaComponent,
         RelacionesPacientesComponent,
@@ -329,31 +335,26 @@ registerLocaleData(localeEs, 'es');
         DatosContactoComponent,
         DocumentosPacienteComponent,
         ObraSocialComponent,
-
+        GeorrefMapComponent,
         // form Terapeutico
         FormTerapeuticoComponent,
         ArbolItemComponent,
         FormTerapeuticoDetallePageComponent,
         AddformTerapeuticoComponent,
         PucoComponent,
-
         // Campañas Salud
         CampaniaSaludComponent,
         CampaniaVisualizacionComponent,
         CampaniaFormComponent,
-
         LogoSvgComponent,
-        AcronimoSvgComponent,
-
-    ],
-    entryComponents: [
-        HeaderPacienteComponent
+        AcronimoSvgComponent
     ],
     bootstrap: [
         AppComponent
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'es-AR' },
+        { provide: MAT_DATE_LOCALE, useValue: 'es-AR' },
         { provide: AuthContext, useExisting: Auth },
         HttpClient,
         Plex,

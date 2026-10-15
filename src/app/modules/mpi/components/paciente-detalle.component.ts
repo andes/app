@@ -20,7 +20,7 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     @Input() datos = [];
     @Input() paciente: IPaciente;
     @Input() fields: string[] = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'telefono', 'direccion', 'lugarNacimiento'];
-    @Input() reload: Boolean = false;
+    @Input() reload = false;
     @Input() showRelaciones = false;
     @Input() showDocumentos = false;
     @Input() accesoHuds = false;

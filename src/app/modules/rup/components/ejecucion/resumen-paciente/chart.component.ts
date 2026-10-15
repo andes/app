@@ -1,5 +1,5 @@
-
-import { Component, AfterViewInit, HostBinding, Input } from '@angular/core';
+import moment from 'moment';
+import { Component, HostBinding, Input } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { PrestacionesService } from '../../../services/prestaciones.service';
@@ -8,7 +8,7 @@ import { PrestacionesService } from '../../../services/prestaciones.service';
     selector: 'radio-chart',
     templateUrl: 'chart.html'
 })
-export class ChartComponent implements AfterViewInit {
+export class ChartComponent {
     private _paciente: IPaciente;
     public chart;
     // variables para guardar los pesos de las prestaciones
@@ -43,9 +43,6 @@ export class ChartComponent implements AfterViewInit {
     ];
 
     constructor(public auth: Auth, public prestacionesService: PrestacionesService) { }
-
-    ngAfterViewInit() {
-    }
 
     generarDatosCurva(expresion: string, opcionesGrafico: any) {
         this.mostrarChart = false;
@@ -118,47 +115,53 @@ export class ChartComponent implements AfterViewInit {
      */
     private setChartOptions(data, opcionesGrafico): void {
         this.barChartOptions = {
-            scaleShowVerticalLines: false,
             responsive: true,
             maintainAspectRatio: false,
-            title: {
-                display: true,
-                text: opcionesGrafico.titulo,
+            plugins: {
+                title: {
+                    display: true,
+                    text: opcionesGrafico.titulo
+                },
+                tooltip: {
+                    callbacks: {
+                        footer: (tooltipItems) => {
+                            const text: string[] = [];
+
+                            tooltipItems.forEach((tooltipItem) => {
+                                const index = tooltipItem.dataIndex;
+
+                                text.push(
+                                    'Profesional: ' + data[index].profesional.nombreCompleto
+                                );
+                                text.push(
+                                    'Prestación: ' + data[index].tipoPrestacion.term
+                                );
+                            });
+
+                            return text;
+                        }
+                    }
+                },
+                legend: {
+                    display: false
+                }
             },
             scales: {
-                yAxes: [{
-                    scaleLabel: {
+                y: {
+                    title: {
                         display: true,
-                        labelString: opcionesGrafico.labelY,
+                        text: opcionesGrafico.labelY
                     },
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }],
-                xAxes: [{
+                    beginAtZero: true
+                },
+                x: {
                     type: 'time',
                     time: {
-                        min: moment(data[0].fecha).subtract(0.5, 'days'),
-                        max: moment(data[data.length - 1].fecha).add(0.5, 'days'),
+                        min: moment(data[0].fecha).subtract(0.5, 'days').toDate(),
+                        max: moment(data[data.length - 1].fecha).add(0.5, 'days').toDate(),
                         unit: 'month',
-                        tooltipFormat: 'DD/MM/YYYY',
-                        unitStepSize: 0.5,
-                        round: 'hour',
+                        tooltipFormat: 'DD/MM/YYYY'
                     }
-                }],
-            },
-            tooltips: {
-                callbacks: {
-                    // Use the footer callback to display the sum of the items showing in the tooltip
-                    footer: function (tooltipItems, _data) {
-                        const text = [];
-                        tooltipItems.forEach((tooltipItem) => {
-                            text.push('Profesional: ' + data[tooltipItem.index].profesional.nombreCompleto);
-                            text.push('Prestación: ' + data[tooltipItem.index].tipoPrestacion.term);
-                        });
-
-                        return text;
-                    },
                 }
             }
         };

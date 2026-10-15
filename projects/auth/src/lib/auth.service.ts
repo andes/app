@@ -183,7 +183,7 @@ export class Auth {
         }
     }
     // Metodo que invoca a la api para realizar el recovering de la password
-    setValidationTokenAndNotify(usuario: Number): Observable<any> {
+    setValidationTokenAndNotify(usuario: number): Observable<any> {
         return this.server.post('/auth/setValidationTokenAndNotify', { username: usuario }, { showError: false });
     }
 
