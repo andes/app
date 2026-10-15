@@ -32,7 +32,7 @@
   "dependencies": {
     "@andes/icons": "^1.1.28",
     "@andes/match": "^1.1.12",
-    "@andes/plex": "^9.0.0-beta.5",
+    "@andes/plex": "^9.0.0-beta.6",
     "@angular/animations": "15.2.10",
     "@angular/cdk": "^15.2.9",
     "@angular/common": "15.2.10",
@@ -58,8 +58,8 @@
     "core-js": "^3.29.0",
     "enhanced-resolve": "^4.1.0",
     "file-saver": "^2.0.2",
-    "html2canvas": "^1.0.0",
     "hammerjs": "^2.0.8",
+    "html2canvas": "^1.0.0",
     "install": "^0.13.0",
     "jquery": "^3.7.1",
     "json-rules-engine": "^5.0.4",
