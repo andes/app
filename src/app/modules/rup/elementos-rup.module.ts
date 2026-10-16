@@ -61,7 +61,6 @@ import { SaturacionOxigenoComponent } from './components/elementos/saturacionOxi
 import { SeleccionBinariaComponent } from './components/elementos/seleccionBinaria.component';
 import { SelectPorRefsetComponent } from './components/elementos/SelectPorRefset.component';
 import { SolicitudPrestacionDefaultComponent } from './components/elementos/solicitudPrestacionDefault.component';
-import { TallaComponent } from './components/elementos/talla.component';
 import { TemperaturaComponent } from './components/elementos/temperatura.component';
 import { TensionDiastolicaComponent } from './components/elementos/tensionDiastolica.component';
 import { TensionSistolicaComponent } from './components/elementos/tensionSistolica.component';
@@ -97,7 +96,6 @@ const RUPComponentsArray = [
     SaturacionOxigenoComponent,
     GraficoLinealComponent,
     SolicitudPrestacionDefaultComponent,
-    TallaComponent,
     TemperaturaComponent,
     TensionDiastolicaComponent,
     TensionSistolicaComponent,
