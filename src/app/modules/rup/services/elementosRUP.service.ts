@@ -188,6 +188,7 @@ export class ElementosRUPService {
                 elem.style = { ...(elem.elementoRUP.style || {}), ...(elem.style || {}) } as any;
             } else if (typeof (elem.elementoRUP as any) === 'string') {
                 elem.elementoRUP = this.populateElemento(this.cacheById[elem.elementoRUP as any], false);
+                elem.params = { ...(elem.elementoRUP?.params || {}), ...(elem.params || {}) };
             }
         });
         return elemento;
