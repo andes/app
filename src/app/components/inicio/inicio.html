@@ -30,11 +30,11 @@
         <main *ngIf="!denied && !loading" responsive>
             <plex-loader *ngIf="loading" type="linear"></plex-loader>
             <div class="modulos">
-                <ng-container *ngFor="let modulo of modulos">
+                <ng-container *ngFor="let modulo of modulos; let i = index">
 
                     <!-- Módulo principal -->
-                    <div *ngIf="modulo.activo" class="modulo"
-                         [class.auto-height]="modulo.submodulos?.main?.length >= 4">
+                    <div *ngIf="modulo.activo" class="modulo" [class.auto-height]="modulo.submodulos?.main?.length >= 4"
+                         [style.--animation-delay]="(i * 0.08) + 's'">>
                         <div class="principal" [style.color]="modulo.color">
                             <b class="titulo">{{ modulo.nombre }}
                                 <a href="#" *ngIf="novedades[modulo._id]?.length > 0" hintType="info"
