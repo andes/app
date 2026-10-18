@@ -88,3 +88,8 @@ div[main-menu] {
         flex-grow: 1;
     }
 }
+
+plex-layout.nueva-derivacion-layout>section {
+    // parche temporal para que el layout no se rompa con el height del formulario
+    overflow: hidden !important;
+}

@@ -25,6 +25,9 @@ export class HistorialDerivacionComponent {
             this.cargarItemsHistorial();
         });
     }
+    get derivacion() {
+        return this._derivacion;
+    }
 
     constructor(
         public auth: Auth,
