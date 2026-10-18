@@ -29,11 +29,11 @@
                 </plex-label>
             </section>
             <section *ngIf="item.createdBy">
-                <plex-badge type="info" *ngIf="item.adjuntos?.length > 0" title="Tiene adjuntos">
+                <plex-badge type="info" *ngIf="item.adjuntos?.length > 0" tooltip="Tiene adjuntos">
                     <plex-icon name="file-multiple"></plex-icon>
                 </plex-badge>
                 <plex-button *ngIf="!item.prioridad && !item.estado && item.createdBy.username === auth.usuario.username"
-                             type="danger" size="sm" icon="trash-can"
+                             class="ml-1" type="danger" size="sm" icon="trash-can" tooltip="Eliminar nota"
                              (click)="$event.stopPropagation();eliminarNota(item)">
                 </plex-button>
             </section>

@@ -1,4 +1,4 @@
-<plex-layout main="8">
+<plex-layout [main]="8" class="nueva-derivacion-layout">
     <plex-layout-main>
         <plex-title main titulo="NUEVA DERIVACIÓN">
             <plex-button position="right" type="danger" label="Cancelar" (click)="cancelar()">
@@ -42,6 +42,7 @@
                 </plex-select>
 
             </plex-wrapper>
+
             <plex-title titulo="Datos diagnóstico"></plex-title>
             <plex-wrapper>
                 <plex-text [(ngModel)]="modelo.diagnosticoActual" label="Diagnóstico actual" name="diagnosticoActual"

@@ -124,8 +124,8 @@ export class DatosContactoComponent implements OnInit {
                 this.provinciaActual = org.direccion.ubicacion.provincia;
                 this.localidadActual = org.direccion.ubicacion.localidad;
                 const ubicacion = this.paciente.direccion[0].ubicacion;
-                this.viveProvActual = ubicacion.provincia && ubicacion.provincia.id === this.provinciaActual.id;
-                this.viveLocActual = ubicacion.localidad && ubicacion.localidad.id === this.localidadActual.id;
+                this.viveProvActual = ubicacion.provincia && ubicacion.provincia.id === this.provinciaActual?.id;
+                this.viveLocActual = ubicacion.localidad && ubicacion.localidad.id === this.localidadActual?.id;
 
                 let direccionCompleta;
 
@@ -133,7 +133,7 @@ export class DatosContactoComponent implements OnInit {
                     direccionCompleta = this.paciente.direccion[0].valor + ', ' + this.paciente.direccion[0].ubicacion.localidad.nombre
                         + ', ' + this.paciente.direccion[0].ubicacion.provincia.nombre;
                 } else {
-                    direccionCompleta = (this.organizacionActual.direccion.valor || '') + ', ' + (this.localidadActual.nombre || '') + ', ' + (this.provinciaActual.nombre || '');
+                    direccionCompleta = (this.organizacionActual.direccion.valor || '') + ', ' + (this.localidadActual?.nombre || '') + ', ' + (this.provinciaActual?.nombre || '');
                 }
                 return this.georeferenciaService.getGeoreferencia({ direccion: direccionCompleta });
             }),
