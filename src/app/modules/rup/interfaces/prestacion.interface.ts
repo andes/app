@@ -3,6 +3,20 @@ import { IPrestacionRegistro } from './prestacion.registro.interface';
 import { ISnomedConcept } from './snomed-concept.interface';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
 
+export interface IFirmaPrevalidacion {
+    profesional: {
+        id: string;
+        nombre: string;
+        apellido: string;
+        documento: string;
+    };
+    // Rol derivado de permisos al firmar (snapshot): 'validador' | 'prevalidador'
+    rol: string;
+    // Matrícula del profesional al firmar (snapshot)
+    matricula?: string;
+    fecha: Date;
+}
+
 export class IPrestacion {
     id: string;
     trackId: string;
@@ -84,6 +98,8 @@ export class IPrestacion {
     // Historia de estado de la prestación
     estados: IPrestacionEstado[];
     estadoActual: IPrestacionEstado;
+    // Firmas previas (residentes) de la doble firma. Ver ADR 0001.
+    firmasPrevalidacion?: IFirmaPrevalidacion[];
     unidadOrganizativa: ISnomedConcept;
     createdAt: Date;
     updatedAt: Date;
