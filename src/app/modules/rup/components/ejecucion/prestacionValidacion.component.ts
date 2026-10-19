@@ -114,6 +114,61 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         return this.prestacion && this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada';
     }
 
+    // El usuario puede validar este tipo de prestación (gate nuevo del botón Validar). Ver ADR 0001.
+    get puedeValidar(): boolean {
+        return this.prestacion && this.auth.check('rup:validacion:' + this.prestacion.solicitud.tipoPrestacion.id);
+    }
+
+    // El usuario puede pre-validar (residente) y la prestación lo admite por su estado.
+    // Un validador (médico de planta) NO ve el botón de pre-validar: valida directo.
+    // Encapsula la convención del ADR 0001 (prevalidación y validación son excluyentes en la UI).
+    get puedePrevalidar(): boolean {
+        if (!this.prestacion) {
+            return false;
+        }
+        const tipoId = this.prestacion.solicitud.tipoPrestacion.id;
+        if (!this.auth.check('rup:prevalidacion:' + tipoId) || this.auth.check('rup:validacion:' + tipoId)) {
+            return false;
+        }
+        const tipo = this.prestacion.estados[this.prestacion.estados.length - 1].tipo;
+        return tipo === 'ejecucion' || tipo === 'pendienteValidacion';
+    }
+
+    get firmasPrevalidacion(): any[] {
+        return (this.prestacion && (this.prestacion as any).firmasPrevalidacion) || [];
+    }
+
+    // Se puede quitar una firma de pre-validación si la prestación está pendiente y el
+    // usuario es el firmante o un validador. Ver ADR 0001.
+    puedeQuitarFirma(firma): boolean {
+        if (!this.prestacion || this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'pendienteValidacion') {
+            return false;
+        }
+        const esMia = String(firma.profesional.id) === String(this.auth.profesional);
+        const esValidador = this.auth.check('rup:validacion:' + this.prestacion.solicitud.tipoPrestacion.id);
+        return esMia || esValidador;
+    }
+
+    quitarPrevalidacion(firma) {
+        this.plex.confirm('¿Quitar esta pre-validación del informe?', 'Confirmar').then(ok => {
+            if (!ok) {
+                return false;
+            }
+            const esMia = String(firma.profesional.id) === String(this.auth.profesional);
+            const target = esMia ? null : firma.profesional.id;
+            unPopulateRelaciones(this.prestacion);
+            this.servicioPrestacion.quitarPrevalidacion(this.prestacion, target).pipe(
+                map(prestacion => populateRelaciones(prestacion))
+            ).subscribe({
+                next: prestacion => {
+                    this.prestacion = prestacion;
+                    this.plex.toast('success', 'Pre-validación quitada');
+                },
+                error: (err) => this.plex.info('danger', 'No se pudo quitar la pre-validación. ' + err)
+            });
+        });
+    }
+
     ngOnDestroy() {
         this.prestacionSubscription.unsubscribe();
     }
@@ -280,6 +335,44 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         this.puedeRomperValidacion = miPrestacion || puedeValidar;
     }
 
+
+    /**
+     * Pre-validación (doble firma). Deja la firma del residente y la prestación
+     * queda pendiente de validación, sin bloquear la edición. Ver ADR 0001.
+     * @memberof PrestacionValidacionComponent
+     */
+    prevalidar() {
+        const existeDiagnostico = this.registros.find(p => p.esDiagnosticoPrincipal === true);
+        const diagnosticoRepetido = this.registros.filter(p => p.esDiagnosticoPrincipal === true).length > 1;
+        const existeC2 = this.registros.find(p => p.valor?.estado === 'activo' && p.esPrimeraVez === undefined && this.codigosCie10[p.id] && this.codigosCie10[p.id].c2);
+        if (existeC2) {
+            this.plex.toast('info', existeC2.concepto.term.toUpperCase() + '. Debe indicar si es primera vez.');
+            return false;
+        }
+        if (this.elementoRUP.requiereDiagnosticoPrincipal && !existeDiagnostico) {
+            this.plex.toast('info', 'Debe seleccionar un procedimiento / diagnóstico principal', 'procedimiento / diagóstico principal', 1000);
+            return false;
+        }
+        if (diagnosticoRepetido) {
+            this.plex.toast('info', 'No puede seleccionar más de un procedimiento / diagnóstico principal');
+            return false;
+        }
+        this.plex.confirm('Vas a dejar tu firma en el informe para que un médico de planta lo valide. Podés seguir editándolo.<br />¿Continuar?', 'Confirmar pre-validación').then(ok => {
+            if (!ok) {
+                return false;
+            }
+            unPopulateRelaciones(this.prestacion);
+            this.servicioPrestacion.prevalidarPrestacion(this.prestacion).pipe(
+                map(prestacion => populateRelaciones(prestacion))
+            ).subscribe({
+                next: prestacion => {
+                    this.prestacion = prestacion;
+                    this.plex.toast('success', 'Pre-validación registrada');
+                },
+                error: (err) => this.plex.info('danger', 'No se pudo registrar la pre-validación. ' + err)
+            });
+        });
+    }
 
     /**
      * Confirmamos validacion y guardamos

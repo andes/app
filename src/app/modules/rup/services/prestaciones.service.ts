@@ -684,6 +684,43 @@ export class PrestacionesService {
 
     }
 
+    /**
+     * Pre-validación (doble firma). Opcional y aditiva: NO valida la prestación.
+     * Primero persiste los registros por su op normal (que convierte ids a ObjectId
+     * en el pre-save), y luego agrega la firma del profesional de forma atómica.
+     * Ver ADR 0001.
+     */
+    prevalidarPrestacion(prestacion): Observable<any> {
+        prestacion.ejecucion.registros.forEach(x => {
+            if (x.relacionadoCon && x.relacionadoCon.length) {
+                x.relacionadoCon.forEach(y => {
+                    delete y.relacionadoCon;
+                });
+            }
+        });
+        const guardarRegistros = {
+            op: 'registros',
+            registros: prestacion.ejecucion.registros,
+            registrarFrecuentes: true
+        };
+        return this.patch(prestacion.id, guardarRegistros).pipe(
+            switchMap(() => this.patch(prestacion.id, { op: 'prevalidacion' }))
+        );
+    }
+
+    /**
+     * Quita una firma de pre-validación del informe (análogo a romper validación,
+     * pero para la pre-firma). Sin firmaProfesionalId quita la del usuario actual;
+     * un validador puede pasar el id de otro profesional. Ver ADR 0001.
+     */
+    quitarPrevalidacion(prestacion, firmaProfesionalId: string = null): Observable<any> {
+        const dto: any = { op: 'quitarPrevalidacion' };
+        if (firmaProfesionalId) {
+            dto.firmaProfesionalId = firmaProfesionalId;
+        }
+        return this.patch(prestacion.id, dto);
+    }
+
     invalidarPrestacion(prestacion, agendaTurno = null): Observable<any> {
         let data;
         if (prestacion.solicitud.turno) {
