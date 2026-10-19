@@ -91,6 +91,8 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public tieneAccesoHUDS: boolean;
     public matchPaciente = true;
     public prestacionesValidacion = this.auth.getPermissions('rup:validacion:?');
+    // Tipos sobre los que el usuario puede pre-validar (residente). Ver ADR 0001.
+    public prestacionesPrevalidacion = this.auth.getPermissions('rup:prevalidacion:?');
     public permisoServicioIntermedio = this.auth.getPermissions('rup:servicio-intermedio:?');
     public showSidebar = false;
 
@@ -226,13 +228,14 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             // son prestaciones sin turno creadas en la fecha seleccionada en el filtro
             this.fueraDeAgenda = this.prestaciones.filter(p => {
                 const puedeValidar = this.prestacionesValidacion.some(tt => tt === p.solicitud.tipoPrestacion.id);
+                const puedePrevalidar = this.prestacionesPrevalidacion.some(tt => tt === p.solicitud.tipoPrestacion.id);
                 const estadoActual = p.estadoActual;
                 const creadaPorMi = estadoActual.createdBy.username === this.auth.usuario.username;
                 const esHoy = moment(p.ejecucion.fecha).isBetween(this.fecha, this.fecha, 'day', '[]');
 
                 return (!p.solicitud.turno && esHoy
-                    && (creadaPorMi || puedeValidar)
-                    && (estadoActual.tipo === 'ejecucion' || estadoActual.tipo === 'validada'));
+                    && (creadaPorMi || puedeValidar || puedePrevalidar)
+                    && (estadoActual.tipo === 'ejecucion' || estadoActual.tipo === 'validada' || estadoActual.tipo === 'pendienteValidacion'));
             });
             // agregamos el original de las prestaciones que estan fuera
             // de agenda para poder reestablecer los filtros
@@ -609,8 +612,10 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         const existe = this.tiposPrestacion.find(tp => (tp.id === turno.tipoPrestacion?.id || tp.conceptId === turno.tipoPrestacion?.conceptId));
         if (turno.prestaciones[0]) {
             const permisoValidar = this.prestacionesValidacion.some(tt => tt === turno.prestaciones[0].solicitud.tipoPrestacion.id);
+            // El residente (pre-validación) también puede abrir/continuar el turno. Ver ADR 0001.
+            const permisoPrevalidar = this.prestacionesPrevalidacion.some(tt => tt === turno.prestaciones[0].solicitud.tipoPrestacion.id);
             const estado = turno.prestaciones[0].estados[turno.prestaciones[0].estados.length - 1];
-            if (estado.tipo !== 'pendiente' && !(estado.createdBy.username === this.auth.usuario.username || permisoValidar)) {
+            if (estado.tipo !== 'pendiente' && !(estado.createdBy.username === this.auth.usuario.username || permisoValidar || permisoPrevalidar)) {
                 return false;
             }
         }
@@ -620,7 +625,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     checkPuedeValidar(prestacion) {
         const miPrestacion = prestacion.estadoActual.createdBy.username === this.auth.usuario.username;
         const permisoValidar = this.prestacionesValidacion.some(tt => tt === prestacion.solicitud.tipoPrestacion.id);
-        return miPrestacion || permisoValidar;
+        // El residente (pre-validación) también puede abrir/continuar la prestación. Ver ADR 0001.
+        const permisoPrevalidar = this.prestacionesPrevalidacion.some(tt => tt === prestacion.solicitud.tipoPrestacion.id);
+        return miPrestacion || permisoValidar || permisoPrevalidar;
     }
 
     selectAgenda(agenda: any) {
@@ -658,6 +665,21 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             this.agendas[this.agendas.indexOf(this.agendaSeleccionada)] = this.agendaSeleccionada = agenda;
         }
         ) : null;
+    }
+
+    /**
+     * Cola de prestaciones pendientes de validación que el usuario puede validar
+     * (médico de planta). Se deriva de las prestaciones ya cargadas. Ver ADR 0001.
+     */
+    get prestacionesPendientesValidacion(): any[] {
+        return (this.prestaciones || []).filter(p =>
+            p.estadoActual?.tipo === 'pendienteValidacion' &&
+            this.auth.check('rup:validacion:' + p.solicitud.tipoPrestacion.id)
+        );
+    }
+
+    irAValidar(prestacion) {
+        this.router.navigate(['rup/validacion', prestacion.id]);
     }
 
     getPrestaciones() {

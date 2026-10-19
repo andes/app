@@ -40,6 +40,27 @@
         </div>
         <br>
         <!--Resultados-->
+        <!-- Cola de pendientes de validación (médico de planta) - ADR 0001 -->
+        <ng-container *ngIf="prestacionesPendientesValidacion.length">
+            <plex-title titulo="Pendientes de validación" size="sm" class="mt-4"></plex-title>
+            <plex-list [striped]="true">
+                <plex-item *ngFor="let p of prestacionesPendientesValidacion" (click)="irAValidar(p)">
+                    <div class="d-flex align-items-center">
+                        <plex-icon class="icono-circulo mr-3" name="historial" type="warning"></plex-icon>
+                        <plex-label
+                            titulo="{{ p.paciente?.apellido }}, {{ p.paciente?.nombre }} - {{ p.solicitud.tipoPrestacion.term }}"
+                            size="sm">
+                        </plex-label>
+                    </div>
+                    <div colspan="2" class="d-flex justify-content-end align-items-end w-100">
+                        <plex-badge type="warning">
+                            {{ p.firmasPrevalidacion?.length || 0 }} firma(s)
+                        </plex-badge>
+                    </div>
+                </plex-item>
+            </plex-list>
+        </ng-container>
+
         <plex-title titulo="Lista de agendas" size="sm" class="mt-4">
             <plex-radio class="form-check-inline" [(ngModel)]="filtroAgendas.radio" [data]="opciones" name="agendas"
                 type="horizontal" (change)="filtrar();">
@@ -636,7 +657,7 @@
                                         </plex-button>
                                         <plex-button class="ml-1" tooltip="Continuar registro" tooltipPosition="left"
                                             icon="lapiz-documento" size="sm"
-                                            *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion' && checkPuedeValidar(prestacion)"
+                                            *ngIf="(prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion' || prestacion.estados[prestacion.estados.length - 1].tipo === 'pendienteValidacion') && checkPuedeValidar(prestacion)"
                                             (click)="setRouteToParams(['ejecucion', prestacion.id]); prestacionNominalizada=prestacion.solicitud.tipoPrestacion.noNominalizada;accesoHudsPaciente = prestacion.paciente; accesoHudsTurno = null; accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)"
                                             type="success">
                                         </plex-button>
