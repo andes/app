@@ -13,7 +13,7 @@ export class AgendaService {
 
     constructor(private server: Server) { }
 
-    find(idPaciente: String): Observable<IAgenda[]> {
+    find(idPaciente: string): Observable<IAgenda[]> {
         return this.server.get(this.agendaUrl + '/paciente' + '/' + idPaciente);
     }
 
@@ -40,15 +40,15 @@ export class AgendaService {
         return this.server.get(this.agendaUrl, { params: params, showError: true });
     }
 
-    getById(id: String): Observable<IAgenda> {
+    getById(id: string): Observable<IAgenda> {
         return this.server.get(this.agendaUrl + '/' + id, null);
     }
 
-    patch(id: String, cambios: any): Observable<IAgenda> {
+    patch(id: string, cambios: any): Observable<IAgenda> {
         return this.server.patch(this.agendaUrl + '/' + id, cambios);
     }
 
-    patchMultiple(id: String, params: any): Observable<IAgenda> {
+    patchMultiple(id: string, params: any): Observable<IAgenda> {
         return this.server.patch(this.agendaUrl + '/' + id + '/multiple', params);
     }
 

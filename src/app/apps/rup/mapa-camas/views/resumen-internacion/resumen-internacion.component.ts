@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
@@ -12,9 +13,8 @@ import { map } from 'rxjs/operators';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
-import { Plex } from '@andes/plex';
+import { Plex, IPlexTableColumns } from '@andes/plex';
 import { HeaderPacienteComponent } from 'src/app/components/paciente/headerPaciente.component';
-import { IPlexTableColumns } from '@andes/plex/src/lib/table/table.interfaces';
 import { Location } from '@angular/common';
 import { Auth } from '@andes/auth';
 

@@ -1,3 +1,10 @@
+# [5.175.0](https://github.com/andes/app/compare/v5.174.1...v5.175.0) (2026-10-14)
+
+
+### Features
+
+* **REC:** se unifica badges ([#3341](https://github.com/andes/app/issues/3341)) ([9e3af27](https://github.com/andes/app/commit/9e3af27a0830e5838972e9d6f33342cce22a66b8))
+
 ## [5.174.1](https://github.com/andes/app/compare/v5.174.0...v5.174.1) (2026-10-07)
 
 

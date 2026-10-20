@@ -9,7 +9,7 @@ export class IPSService {
         private server: Server
     ) { }
 
-    getDominiosIdPaciente(idPaciente: String): Observable<any> {
+    getDominiosIdPaciente(idPaciente: string): Observable<any> {
         return this.server.get(this.ipsUrl + 'dominios/' + idPaciente);
     }
 

@@ -44,7 +44,7 @@ export function getCSSIcon(concepto: ISnomedConcept, esSolicitud: boolean = fals
             case 'elemento de registro':
                 return 'adi-documento-lapiz';
             default:
-                // No debería
+            // No debería
                 return concepto.semanticTag;
         }
     }

@@ -1,8 +1,8 @@
 <plex-title main titulo="Detalle de Derivación">
-    <plex-button size="sm" class="pr-1" type="info" [icon]="'printer'" title="Imprimir histórico de derivación"
-                 [disabled]="requestInProgress" (click)="imprimirHistorial()">
+    <plex-button size="sm" class="pr-1" type="info" [icon]="'printer'" tooltip="Imprimir histórico de derivación"
+                 tooltipPosition="left" [disabled]="requestInProgress" (click)="imprimirHistorial()">
     </plex-button>
-    <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()">
+    <plex-button size="sm" type="danger" [icon]="'close'" tooltip="Cerrar" tooltipPosition="left" (click)="cerrar()">
     </plex-button>
 </plex-title>
 <plex-options [items]="items" (activated)="cambiarOption($event)"></plex-options>
@@ -101,11 +101,11 @@
                 </tipo-traslado>
                 <semaforo-priorizacion *ngIf="reglaSeleccionada?.definePrioridad" [name]="'com'"
                                        [prioridad]="nuevoEstado.prioridad"
-                                       (change)="nuevoEstado.prioridad = $event?.label"></semaforo-priorizacion>
+                                       (changed)="nuevoEstado.prioridad = $event?.label"></semaforo-priorizacion>
                 <plex-text [(ngModel)]="nuevoEstado.observacion" label="Observacion" name="observacion" multiline="true"
                            grow="full">
                 </plex-text>
-                <upload-file label="Adjuntar archivo" (onUpload)="onUpload($event)" [modulo]="'com'"></upload-file>
+                <upload-file label="Adjuntar archivo" (uploading)="onUpload($event)" [modulo]="'com'"></upload-file>
                 <br><br>
                 <span *ngIf="errorExt">
                     <plex-badge type="danger">Archivo inválido.

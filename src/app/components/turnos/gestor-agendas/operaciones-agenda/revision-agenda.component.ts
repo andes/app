@@ -30,7 +30,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     public cantidadTurnosAsignados: number;
     public indiceReparo: any;
     public showReparo = false;
-    public existeCodificacionProfesional: Boolean;
+    public existeCodificacionProfesional: boolean;
     public horaInicio: any;
     public turnoSeleccionado: any = null;
     public bloqueSeleccionado: any = null;
@@ -106,7 +106,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     }
 
     asignarPaciente(paciente) {
-        const estado: String = 'asignado';
+        const estado = 'asignado';
         let telefono;
         if (paciente.contacto) {
             if (paciente.contacto.length > 0) {

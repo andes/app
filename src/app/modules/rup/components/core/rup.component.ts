@@ -1,7 +1,7 @@
 import { Auth } from '@andes/auth';
 import { Plex, PlexVisualizadorService } from '@andes/plex';
 import { calcularEdad } from '@andes/shared';
-import { AfterViewInit, Component, ComponentFactoryResolver, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Optional, Output, QueryList, SimpleChanges, ViewChild, ViewChildren, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ComponentFactoryResolver, ComponentRef, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Optional, Output, QueryList, SimpleChanges, ViewChild, ViewChildren, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Engine } from 'json-rules-engine';
@@ -41,11 +41,20 @@ import { InternacionResumenHTTP } from '../../../../apps/rup/mapa-camas/services
 @Component({
     selector: 'rup',
     encapsulation: ViewEncapsulation.None,
-    template: ''
+    template: `
+        <ng-container *ngIf="mostrarTituloSubmolecula">
+            <div class="rup-submolecula-titulo mb-2" style="margin-top: 10px;">
+                <span class="text-bold text-capitalize" style="font-size: 1.0rem;color:#00a8e0">{{ params?.titulo || registro?.nombre || elementoRUP?.conceptos[0]?.term }}</span>
+            </div>
+        </ng-container>
+        <ng-container #componentContainer></ng-container>
+        <hr *ngIf="mostrarTituloSubmolecula" class="hr-grueso" style="margin-top: 27px;">
+    `
 })
 export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
-    @ViewChildren(RUPComponent) rupElements: QueryList<RUPComponent>;
+    @ViewChildren(RUPComponent) rupElements!: QueryList<RUPComponent>;
     @ViewChild('form', { static: false }) formulario: any;
+    @ViewChild('componentContainer', { read: ViewContainerRef, static: true }) componentContainer!: ViewContainerRef;
 
     // Propiedades
     @Input() elementoRUP: IElementoRUP;
@@ -65,6 +74,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
     private rulesEngine: Engine;
     private rulesEvent = new Subject<{ type: string; params: any }>();
     private rulesEvent$ = this.rulesEvent.asObservable();
+    @Input() public mostrarTituloSubmolecula = null;
 
     /**
      * Determina si un elemento RUP es valido. Se setea apartir de reglas.
@@ -73,7 +83,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
     public _isValid = true;
 
     // Eventos
-    @Output() change: EventEmitter<any> = new EventEmitter<any>();
+    @Output() changes: EventEmitter<any> = new EventEmitter<any>();
 
     @Output() ejecutarAccion: EventEmitter<any> = new EventEmitter<any>();
 
@@ -96,9 +106,12 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
         }
 
         // Cargamos el componente
-        const component = ElementosRUPRegister.get(this.elementoRUP.componente).component;
+        const component = ElementosRUPRegister.get(this.elementoRUP!.componente)?.component;
+        if (!component) {
+            return;
+        }
         const componentFactory = this.componentFactoryResolver.resolveComponentFactory(component as any);
-        const componentReference = this.viewContainerRef.createComponent(componentFactory);
+        const componentReference: ComponentRef<any> = this.componentContainer.createComponent(componentFactory);
 
         // Copia todas las propiedades
         componentReference.instance['prestacion'] = this.prestacion;
@@ -114,7 +127,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
         componentReference.instance['conceptosAsociados'] = this.conceptosAsociados || [];
 
         // Event bubbling
-        componentReference.instance['change'].subscribe(value => {
+        componentReference.instance['change']?.subscribe(value => {
             this.emitChange(false);
         });
 
@@ -173,7 +186,11 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
 
     ngOnInit() {
         this.loadComponent();
+        if (this.mostrarTituloSubmolecula === null) {
+            this.mostrarTituloSubmolecula = !!this.params?.mostrarTituloSubmolecula;
+        }
     }
+
 
     ngOnDestroy() {
         this.onDestroy();
@@ -217,7 +234,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
         }
 
         // Notifica al componente padre del cambio
-        this.change.emit(this.registro);
+        this.changes.emit(this.registro);
     }
 
     public emitEjecutarAccion(evento, datos) {

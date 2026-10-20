@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, Input, OnInit } from '@angular/core';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { ResumenPacienteDinamicoService } from '../../../services/resumenPaciente-dinamico.service';

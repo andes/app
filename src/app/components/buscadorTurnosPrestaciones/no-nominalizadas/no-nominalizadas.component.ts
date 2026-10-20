@@ -5,7 +5,7 @@ import { AdjuntosService } from 'src/app/modules/rup/services/adjuntos.service';
 import { environment } from 'src/environments/environment';
 import { TurnosPrestacionesService } from '../services/turnos-prestaciones.service';
 import { cache } from '@andes/shared';
-
+import moment from 'moment';
 @Component({
     selector: 'no-nominalizadas',
     templateUrl: 'no-nominalizadas.html',

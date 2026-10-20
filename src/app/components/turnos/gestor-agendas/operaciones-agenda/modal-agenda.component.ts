@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PlexModalComponent } from '@andes/plex';
 
 @Component({
     selector: 'modal-agenda',
@@ -39,11 +39,11 @@ import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 
 export class ModalAgendaComponent {
     @Input() dato: any;
-    @Output() close = new EventEmitter<any>();
+    @Output() closed = new EventEmitter<any>();
     @ViewChild('modal', { static: true }) modal: PlexModalComponent;
 
     cerrar() {
         this.modal.close();
-        this.close.emit();
+        this.closed.emit();
     }
 }

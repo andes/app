@@ -3,6 +3,7 @@ import { RUPComponent } from '../core/rup.component';
 import { RupElement } from '.';
 import { Observable } from 'rxjs';
 import { NgForm } from '@angular/forms';
+import moment from 'moment';
 @Component({
     selector: 'rup-renovacionRecetaMedica',
     templateUrl: 'renovacionRecetaMedica.html',

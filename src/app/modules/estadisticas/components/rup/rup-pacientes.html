@@ -9,9 +9,10 @@
             <plex-select [data]="prestaciones" idField="conceptId" labelField="term" label="Prestacion"
                          [(ngModel)]="prestacion" (change)="onPrestacionChange()">
             </plex-select>
-            <plex-button *ngIf="!prestacionesHijas.length" class="pr-3 d-flex align-items-end" type="info" size="md"
-                         label="Detalles" disabled="true"></plex-button>
-            <plex-help *ngIf="prestacionesHijas.length" class="pr-3 d-flex align-items-end" size="md" type="info"
+            <plex-button *ngIf="!prestacionesHijas.length" class="pr-1 pb-1" type="info" size="md" label="Detalles"
+                         disabled="true">
+            </plex-button>
+            <plex-help *ngIf="prestacionesHijas.length" class="pr-1 pb-1" size="md" btnSize="md" btnType="info"
                        tituloBoton="Detalles">
                 <plex-title titulo="Prestaciones descendientes" size="sm">
                     <plex-bool *ngIf="prestacionesHijas?.length > 1" [(ngModel)]="detallar" type="slide"
@@ -23,7 +24,7 @@
                     </ng-container>
                 </plex-grid>
             </plex-help>
-            <plex-button type="success" label="Filtrar" [disabled]="!prestacion" (click)="onChange()">
+            <plex-button class="pb-1" type="success" label="Filtrar" [disabled]="!prestacion" (click)="onChange()">
             </plex-button>
         </plex-wrapper>
 

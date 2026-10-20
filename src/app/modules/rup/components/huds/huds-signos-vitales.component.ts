@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, Input, OnInit } from '@angular/core';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { VacunasService } from 'src/app/services/vacunas.service';

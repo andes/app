@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { auditTime, map, switchMap } from 'rxjs/operators';
 import { InternacionResumenHTTP, IResumenInternacion } from '../../services/resumen-internacion.http';
-
+import moment from 'moment';
 @Injectable({ providedIn: 'root' })
 export class ListadoInternacionCapasService {
 

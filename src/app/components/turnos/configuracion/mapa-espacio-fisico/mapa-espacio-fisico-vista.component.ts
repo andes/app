@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnInit, OnChanges } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
@@ -12,7 +11,7 @@ import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisi
 import { OrganizacionService } from './../../../../services/organizacion.service';
 import { IOrganizacion } from '../../../../interfaces/IOrganizacion';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
-
+import moment from 'moment';
 @Component({
     selector: 'mapa-espacio-fisico-vista',
     templateUrl: 'mapa-espacio-fisico-vista.html',

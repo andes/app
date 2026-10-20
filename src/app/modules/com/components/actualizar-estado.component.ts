@@ -13,7 +13,7 @@ import { AdjuntosService } from './../../rup/services/adjuntos.service';
 })
 export class ActualizarEstadoDerivacionComponent implements OnInit {
     @ViewChildren('upload') childsComponents: QueryList<any>;
-    public derivacion;
+    public _derivacion;
     // Adjuntar Archivo
     errorExt = false;
     waiting = false;
@@ -34,15 +34,18 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
         { id: 'especial', label: 'Especial' }
     ];
     @Input() esCOM = false;
-    @Input('derivacion')
-    set _derivacion(value) {
+    @Input()
+    set derivacion(value) {
         this.nuevoEstado = {
             observacion: '',
             prioridad: value.prioridad
         };
         this.dispositivo = value.dispositivo;
         this.adjuntosEstado = [];
-        this.derivacion = value;
+        this._derivacion = value;
+    }
+    get derivacion() {
+        return this._derivacion;
     }
 
     @Output() returnEditarEstado: EventEmitter<any> = new EventEmitter<any>();

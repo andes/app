@@ -23,7 +23,7 @@
         </div>
         <div grow="1">
             <label>&nbsp;</label>
-            <plex-button class="pt-2 float-right" type="primary"
+            <plex-button class="pt-2 float-right" type="info"
                          [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
                          (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
         </div>
@@ -31,12 +31,12 @@
 
     <plex-wrapper *ngIf="mostrarMasOpciones">
         <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event, 'prestaciones')" tmPrestaciones
-                     preload="true" name="prestaciones" label="Prestación" placeholder="Buscar una prestación">
+                     [preload]="true" name="prestaciones" label="Prestación" placeholder="Buscar una prestación">
         </plex-select>
 
         <plex-select [(ngModel)]="espacioFisico" (change)="getCarpetas($event,'espacioFisico')" name="espacioFisico"
                      (getData)="loadEspacios($event)" label="Espacio Físico" placeholder="Buscar un espacio físico"
-                     labelField="nombre + '(' + servicio.nombre + ')'" ngModelOptions="{standalone: true}">
+                     labelField="nombre + '(' + servicio.nombre + ')'" [ngModelOptions]="{standalone: true}">
         </plex-select>
         <plex-select [(ngModel)]="profesional" name="profesional" (change)="getCarpetas($event, 'profesionales')"
                      (getData)="loadProfesionales($event)" label="Profesional"

@@ -2,47 +2,47 @@ import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 
 export interface IDemanda {
     profesional: {
-        id: String;
-        nombre: String;
-        apellido: String;
+        id: string;
+        nombre: string;
+        apellido: string;
     };
     organizacion: {
-        id: String;
-        nombre: String;
+        id: string;
+        nombre: string;
     };
-    motivo: String;
+    motivo: string;
     fecha: Date;
-    origen: String;
-};
+    origen: string;
+}
 
 export type IPacienteListaEspera = IPaciente & { _id?: string };
 
 export interface IListaEspera {
     _id?: string;
-    id?: String;
+    id?: string;
     paciente: IPacienteListaEspera;
     tipoPrestacion: any;
     fecha: Date;
     vencimiento?: Date;
-    estado: String;
-    motivos?: String[];
+    estado: string;
+    motivos?: string[];
     demandas: IDemanda[];
     resolucion: {
         fecha: Date;
-        motivo: String;
-        observacion: String;
+        motivo: string;
+        observacion: string;
         turno: {
-            id: String;
-            idAgenda: String;
+            id: string;
+            idAgenda: string;
             organizacion: {
-                id: String;
-                nombre: String;
+                id: string;
+                nombre: string;
             };
             horaInicio: Date;
-            tipo: String;
-            emitidoPor: String;
+            tipo: string;
+            emitidoPor: string;
             fechaHoraDacion: Date;
-            profesional: String;
+            profesional: string;
         };
     };
     llamados?: ILlamado[];

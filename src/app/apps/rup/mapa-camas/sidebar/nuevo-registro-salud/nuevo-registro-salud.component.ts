@@ -11,6 +11,7 @@ import { NgForm } from '@angular/forms';
 import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 import { cache } from '@andes/shared';
 import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
+import moment from 'moment';
 
 @Component({
     selector: 'app-nuevo-registro-salud',

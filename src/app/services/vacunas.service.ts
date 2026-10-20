@@ -20,7 +20,7 @@ export class VacunasService {
      * Metodo get. Trae el objeto tipoPrestacion.
      * @param {any} params Opciones de busqueda
      */
-    get(idPaciente: String): Observable<any> {
+    get(idPaciente: string): Observable<any> {
         return this.server.get(this.vacunasURL + '/paciente/' + idPaciente, null);
     }
 

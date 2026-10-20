@@ -2,6 +2,7 @@ import { ResourceBaseHttp, Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, EMPTY, Observable } from 'rxjs';
 import { auditTime, map, switchMap } from 'rxjs/operators';
+import moment from 'moment';
 
 @Injectable()
 export class HistorialTurnosService extends ResourceBaseHttp {

@@ -5,8 +5,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { NgDragDropModule } from 'ng-drag-drop';
-import { ChartsModule } from 'ng2-charts';
+import { DndModule } from 'ngx-drag-drop';
+import { NgChartsModule } from 'ng2-charts';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { TOPLibModule } from 'src/app/components/top/top.module';
 import { HistorialTurnosModule } from 'src/app/components/turnos/historial-turnos/historial-turnos.module';
@@ -46,17 +46,17 @@ import { HudsAntecedentesPersonalesComponent } from './components/huds/huds-ante
 @NgModule({
     imports: [
         CommonModule,
-        PlexModule,
+        PlexModule, // .forRoot({ networkLoading: true }),
         FormsModule,
         RouterModule,
         HttpClientModule,
         SharedModule,
         MPILibModule,
         ElementosRUPModule,
-        ChartsModule,
+        NgChartsModule,
         InfiniteScrollModule,
         TOPLibModule,
-        NgDragDropModule,
+        DndModule,
         RUPLibModule,
         SharedModule,
         DirectiveLibModule,

@@ -2,8 +2,8 @@
     <div class="col-12">
         <div style="height: 50%; width:100%">
             <div style="display: block" *ngIf="mostrarChart">
-                <canvas *ngFor="let c of [clave]" baseChart height="300" [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
-                    [chartType]="barChartType"></canvas>
+                <canvas *ngFor="let c of [clave]" baseChart height="300" [data]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
+                    [type]="barChartType"></canvas>
             </div>
         </div>
     </div>

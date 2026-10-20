@@ -1,9 +1,7 @@
 import { Component, Input, EventEmitter, Output, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
-import * as moment from 'moment';
 
 @Component({
     selector: 'listar-carpetas',
@@ -18,7 +16,7 @@ export class ListarCarpetasComponent implements OnInit {
     private _agendasSeleccionadas;
     public idOrganizacion = this.auth.organizacion.id;
 
-    @Input('agendasSeleccionadas')
+    @Input()
     set agendasSeleccionadas(value: any) {
         this._agendasSeleccionadas = value;
     }

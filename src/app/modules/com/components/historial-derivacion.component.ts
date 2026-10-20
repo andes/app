@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Input, Component } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { DerivacionesService } from 'src/app/services/com/derivaciones.service';
@@ -10,19 +11,22 @@ import { AdjuntosService } from '../../rup/services/adjuntos.service';
     styleUrls: ['./adjuntos.scss', './punto-inicio.scss']
 })
 export class HistorialDerivacionComponent {
-    public derivacion;
+    public _derivacion;
     public itemsHistorial = [];
     public fileToken;
     public adjuntos = [];
 
     @Input() esCOM = false;
-    @Input('derivacion')
-    set _derivacion(value) {
-        this.derivacion = value;
+    @Input()
+    set derivacion(value) {
+        this._derivacion = value;
         this.adjuntosService.generateToken().subscribe((data: any) => {
             this.fileToken = data.token;
             this.cargarItemsHistorial();
         });
+    }
+    get derivacion() {
+        return this._derivacion;
     }
 
     constructor(
@@ -61,7 +65,7 @@ export class HistorialDerivacionComponent {
                 const index = this.derivacion.historial.findIndex(x => x._id === nota._id);
                 nota.eliminado = true;
                 this.derivacion.historial[index] = nota;
-                this.derivacionesService.update(this.derivacion._id, this.derivacion).subscribe((derivacion) => {
+                this.derivacionesService.update(this.derivacion._id, this.derivacion).subscribe((unaDerivacion) => {
                     this.plex.toast('success', 'Nota eliminada');
                     this.cargarItemsHistorial();
                 });

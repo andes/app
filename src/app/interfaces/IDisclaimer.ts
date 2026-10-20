@@ -1,7 +1,7 @@
 
 export interface IDisclaimer {
-    id: String;
-    version: String;
-    texto: String;
-    activo: Boolean;
+    id: string;
+    version: string;
+    texto: string;
+    activo: boolean;
 }

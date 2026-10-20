@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PlexModalComponent } from '@andes/plex';
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { catchError, switchMap, throwError } from 'rxjs';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
@@ -8,6 +8,7 @@ import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.s
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { ListaEsperaService } from 'src/app/services/turnos/listaEspera.service';
 import { ProfesionalService } from './../../../services/profesional.service';
+import moment from 'moment';
 
 @Component({
     selector: 'demandaInsatisfecha',

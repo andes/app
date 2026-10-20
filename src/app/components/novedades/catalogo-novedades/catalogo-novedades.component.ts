@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { INovedad } from '../../../interfaces/novedades/INovedad.interface';
 import { CommonNovedadesService } from '../common-novedades.service';
+import moment from 'moment';
 
 @Component({
     selector: 'catalogo-novedades',

@@ -122,12 +122,7 @@ main {
         }
 
         opacity: 0;
-
-        @for $child from 1 through 10 {
-            &:nth-child(#{$child}) {
-                animation: submodulos #{(math.div($child, 4))}s ease-in-out 0.05s 1 forwards;
-            }
-        }
+        animation: submodulos 0.5s ease-in-out var(--animation-delay, 0s) 1 forwards;
 
         .submodulo {
             text-decoration: none;
@@ -195,7 +190,7 @@ main {
     width: 20vw;
     flex-direction: column;
 
-    &> {
+    &>* {
         cursor: pointer;
     }
 }

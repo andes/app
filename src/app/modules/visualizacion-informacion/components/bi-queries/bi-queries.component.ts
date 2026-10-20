@@ -9,6 +9,8 @@ import { QueriesService } from '../../../../services/query.service';
 import { ZonaSanitariaService } from './../../../../services/zonaSanitaria.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { map, switchMap } from 'rxjs/operators';
+import moment from 'moment';
+
 @Component({
     selector: 'app-bi-queries',
     templateUrl: './bi-queries.component.html',
