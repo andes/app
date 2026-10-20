@@ -207,15 +207,15 @@ export class HUDSService {
         return window.sessionStorage.getItem('huds-token');
     }
 
-    getSituacionesActivas(id: String): Observable<any> {
+    getSituacionesActivas(id: string): Observable<any> {
         return this.server.get(`${this.hudsSituaciones}/${id}/situacionesActivas`);
     }
 
-    getAntecedentesFamiliares(id: String): Observable<any> {
+    getAntecedentesFamiliares(id: string): Observable<any> {
         return this.server.get(`${this.hudsSituaciones}/${id}/antecedentesFamiliares`);
     }
 
-    getAntecedentesPersonales(id: String): Observable<any> {
+    getAntecedentesPersonales(id: string): Observable<any> {
         return this.server.get(`${this.hudsSituaciones}/${id}/antecedentesPersonales`);
     }
 

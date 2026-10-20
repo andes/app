@@ -29,6 +29,9 @@ export class ChartComponent {
             this.generarEtiquetasCurva();
         }
     }
+    get paciente(): IPaciente {
+        return this._paciente;
+    }
     @Input()
     set curva(value: number) {
         this.curvaSeleccionada = value;
@@ -49,9 +52,6 @@ export class ChartComponent {
         if (this.paciente) {
             this.generarEtiquetasCurva();
         }
-    }
-    get paciente(): IPaciente {
-        return this._paciente;
     }
     public clave = 0;
     public curvaSeleccionada = 1;
