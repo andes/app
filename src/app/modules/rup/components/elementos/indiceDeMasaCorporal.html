@@ -6,9 +6,9 @@
             <ng-container *ngIf="registro?.registros?.length">
                 <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
                     <div
-                        [ngClass]="{'d-none': !cumpleReglasParams(item.elementoRUP), 'col': cumpleReglasParams(item.elementoRUP)}">
+                         [ngClass]="{'d-none': !cumpleReglasParams(item.elementoRUP), 'col': cumpleReglasParams(item.elementoRUP)}">
                         <rup [elementoRUP]="item.elementoRUP" [params]="item.params" [prestacion]="prestacion"
-                            [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="calculoIMC()">
+                             [registro]="registro.registros[i]" [soloValores]="soloValores" (changes)="calculoIMC()">
                         </rup>
                     </div>
                 </ng-container>
@@ -16,7 +16,7 @@
 
             <div class="col">
                 <plex-float label="{{ termCapitalizado }}" [(ngModel)]="valorImc" required="true" name="imc"
-                    [disabled]="true">
+                            [disabled]="true">
                 </plex-float>
             </div>
         </div>
@@ -33,9 +33,9 @@
         <div class="row">
             <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
                 <div [ngClass]="{'d-none': !cumpleReglasParams(item.elementoRUP), 'col': cumpleReglasParams(item.elementoRUP)}"
-                    class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style : '0' }}">
+                     class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style : '0' }}">
                     <rup [elementoRUP]="item.elementoRUP" [params]="item.params" [prestacion]="prestacion"
-                        [registro]="registro.registros[i]" [soloValores]="true" [paciente]="paciente">
+                         [registro]="registro.registros[i]" [soloValores]="true" [paciente]="paciente">
                     </rup>
                 </div>
             </ng-container>
