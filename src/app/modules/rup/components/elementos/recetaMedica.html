@@ -68,7 +68,7 @@
                     </plex-float>
                     <plex-int *ngIf="!medicamento.generico?.unidadMedida && !medicamento.esMagistral" class="formEditar"
                               [ngClass]="{ 'w-100': !unidades.length }" name="comprimidos" label="Cantidad"
-                              [(ngModel)]="valorCantidadManual" required="true" min="1" max="90">
+                              [(ngModel)]="valorCantidadManual" required="true" min="1" max="200">
                     </plex-int>
                 </ng-container>
                 <plex-button *ngIf="ingresoCantidadManual && unidades.length" class="ml-1" name="deshacer"
@@ -126,13 +126,13 @@
         <plex-wrapper>
             <div [hidden]="collapse" class="w-100">
                 <div class="d-flex">
-                    <plex-text name="dosis" label="Dosis" [(ngModel)]="medicamento.dosisDiaria.dosis" [required]="true">
+                    <plex-text name="dosis" label="Dosis" [(ngModel)]="medicamento.dosisDiaria.dosis">
                     </plex-text>
                     <plex-select name="frecuencia" label="Intervalo" [(ngModel)]="medicamento.dosisDiaria.intervalo"
-                                 [required]="true" [data]="intervalos$ | async">
+                                 [required]="esDosisCompleta" [data]="intervalos$ | async">
                     </plex-select>
                     <plex-int name="duracion" label="Duración (días)" [(ngModel)]="medicamento.dosisDiaria.dias"
-                              [required]="true" min="1" max="90">
+                              [required]="esDosisCompleta" min="1" max="90">
                     </plex-int>
                     <plex-text name="notaMedica" label="Notas médicas" [(ngModel)]="medicamento.dosisDiaria.notaMedica"
                                [required]="false" min="1" max="90">
