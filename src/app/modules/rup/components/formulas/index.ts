@@ -51,7 +51,7 @@ export class FormulaBaseService {
         let __CONTEXT_FUNCTION__;
         if (registros.filter(r => r.valor === null || r.valor === undefined).length === 0) {
             const $ = registros.map(r => r.valor);
-            const str = `__CONTEXT_FUNCTION__ = function ($, paciente, prestacion) { return ${this.formula};  }`;
+            const str = `__CONTEXT_FUNCTION__ = function ($, paciente, prestacion, moment) { return ${this.formula};  }`;
             // eslint-disable-next-line no-eval
             eval(str);
             const value = __CONTEXT_FUNCTION__.bind(null)($, paciente, prestacion, moment);
