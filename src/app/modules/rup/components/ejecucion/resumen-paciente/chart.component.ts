@@ -1,3 +1,4 @@
+import 'chartjs-adapter-moment';
 import moment from 'moment';
 import { Component, HostBinding, Input } from '@angular/core';
 import { Auth } from '@andes/auth';
