@@ -21,6 +21,8 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { ConstantesService } from './../../../../services/constantes.service';
 import { PlexModalComponent } from '@andes/plex';
 
+// Tope de firmas de pre-validación; debe coincidir con la API (op 'prevalidacion'). Ver ADR 0001.
+const MAX_FIRMAS_PREVALIDACION = 4;
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -131,7 +133,13 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
             return false;
         }
         const tipo = this.prestacion.estados[this.prestacion.estados.length - 1].tipo;
-        return tipo === 'ejecucion' || tipo === 'pendienteValidacion';
+        if (tipo !== 'ejecucion' && tipo !== 'pendienteValidacion') {
+            return false;
+        }
+        // Mismas reglas que la API: una firma por profesional y tope de firmas.
+        const firmas = this.firmasPrevalidacion;
+        const yaFirme = firmas.some(f => String(f.profesional.id) === String(this.auth.profesional));
+        return !yaFirme && firmas.length < MAX_FIRMAS_PREVALIDACION;
     }
 
     get firmasPrevalidacion(): any[] {
