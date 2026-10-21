@@ -357,7 +357,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
             this.plex.toast('info', 'No puede seleccionar más de un procedimiento / diagnóstico principal');
             return false;
         }
-        this.plex.confirm('Vas a dejar tu firma en el informe para que un médico de planta lo valide. Podés seguir editándolo.<br />¿Continuar?', 'Confirmar pre-validación').then(ok => {
+        this.plex.confirm('Vas a dejar tu firma en el informe para que un profesional con permiso de validación lo valide. Podés seguir editándolo.<br />¿Continuar?', 'Confirmar pre-validación').then(ok => {
             if (!ok) {
                 return false;
             }
