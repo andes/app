@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
 import { RupElement } from '.';
 import { ChartConfiguration, TooltipItem } from 'chart.js';
@@ -10,6 +10,11 @@ import { ChartConfiguration, TooltipItem } from 'chart.js';
 })
 @RupElement('GraficoLinealComponent')
 export class GraficoLinealComponent extends RUPComponent implements OnInit {
+
+    @Output() hasData = new EventEmitter<boolean>();
+
+    public cargando = true;
+    public hayDatos = false;
 
     // opciones para el grafico
     public lineChartData: ChartConfiguration<'line'>['data'] = {
@@ -25,47 +30,75 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
 
         const fechaDesde = this.params?.fechaDesde || null;
         const fechaHasta = this.params?.fechaHasta || null;
+        const parametros = this.elementoRUP?.params || [];
+        let pendientes = parametros.length;
 
-        this.elementoRUP.params.map((param) => {
+        if (!pendientes) {
+            this.cargando = false;
+            this.hasData.emit(false);
+            return;
+        }
 
-            this.prestacionesService.getRegistrosHuds(this.paciente.id, `${param.query}`, fechaDesde, true, null, null, fechaHasta).subscribe(prestaciones => {
+        const finalizarConsulta = () => {
+            pendientes--;
+            if (pendientes === 0) {
+                this.cargando = false;
+                this.hasData.emit(this.hayDatos);
+            }
+        };
 
-                if (prestaciones.length) {
-                    // ordenamos los datosLineales por fecha
-                    prestaciones.sort((a, b) => {
-                        const dateA = new Date(a.fecha).getTime();
-                        const dateB = new Date(b.fecha).getTime();
+        parametros.forEach((param) => {
 
-                        return dateA > dateB ? 1 : -1;
-                    });
+            this.prestacionesService.getRegistrosHuds(this.paciente.id, `${param.query}`, fechaDesde, true, null, null, fechaHasta).subscribe({
+                next: prestaciones => {
+                    if (prestaciones.length) {
+                        this.hayDatos = true;
+                        // ordenamos los datosLineales por fecha
+                        prestaciones.sort((a, b) => {
+                            const dateA = new Date(a.fecha).getTime();
+                            const dateB = new Date(b.fecha).getTime();
 
-                    // asignamos los datosLineales al data para el chart
-                    this.lineChartData.datasets.push({
-                        data: prestaciones.map(p => p.registro.valor).filter(v => v !== null && typeof v === 'number'),
-                        label: param.label,
-                        fill: false,
-                        type: 'line',
-                        tension: 0.35,
-                        cubicInterpolationMode: 'monotone',
-                        pointRadius: 2
-                    });
+                            return dateA > dateB ? 1 : -1;
+                        });
 
-                    // agregamos las leyendas del eje x
-                    this.lineChartData.labels = prestaciones.map(p =>
-                        moment(p.fecha).format('DD-MM-YYYY')
-                    );
+                        // asignamos los datosLineales al data para el chart
+                        this.lineChartData.datasets.push({
+                            data: prestaciones.map(p => p.registro.valor).filter(v => v !== null && typeof v === 'number'),
+                            label: param.label,
+                            fill: false,
+                            type: 'line',
+                            tension: 0.35,
+                            cubicInterpolationMode: 'monotone',
+                            pointRadius: 2
+                        });
 
-                    // set options charts
-                    this.setChartOptions(prestaciones);
+                        // agregamos las leyendas del eje x
+                        this.lineChartData.labels = prestaciones.map(p =>
+                            moment(p.fecha).format('DD-MM-YYYY')
+                        );
 
-                    if (prestaciones.length > 1) {
-                        this.lineChartOptions.plugins.title.text += ' desde ' + this.lineChartData.labels[0] + ' hasta ' + this.lineChartData.labels[this.lineChartData.labels.length - 1];
-                    } else {
-                        this.lineChartOptions.plugins.title.text += ' al ' + this.lineChartData.labels[0];
+                        // set options charts
+                        this.setChartOptions(prestaciones);
+
+                        if (prestaciones.length > 1) {
+                            this.lineChartOptions.plugins.title.text += ' desde ' + this.lineChartData.labels[0] + ' hasta ' + this.lineChartData.labels[this.lineChartData.labels.length - 1];
+                        } else {
+                            this.lineChartOptions.plugins.title.text += ' al ' + this.lineChartData.labels[0];
+                        }
                     }
-                }
+                    finalizarConsulta();
+                },
+                error: () => finalizarConsulta()
             });
         });
+    }
+
+    get labels() {
+        return this.elementoRUP?.params?.map(p => p.label).join(' y ') || '';
+    }
+
+    get enRango() {
+        return !!(this.params?.fechaDesde || this.params?.fechaHasta);
     }
 
     /**

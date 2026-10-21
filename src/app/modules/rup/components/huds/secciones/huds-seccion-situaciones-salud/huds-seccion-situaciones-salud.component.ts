@@ -3,6 +3,7 @@ import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { PrestacionesService } from '../../../../services/prestaciones.service';
 import { HUDSService } from 'src/app/modules/rup/services/huds.service';
 import { getSemanticClass } from '../../../../pipes/semantic-class.pipes';
+import moment from 'moment';
 
 @Component({
     selector: 'huds-seccion-situaciones-salud',
@@ -13,7 +14,6 @@ export class HudsSeccionSituacionesSaludComponent implements OnChanges {
     @Input() paciente: IPaciente;
 
     public trastornos = [];
-    public trastornoExpandido;
     public diagnosticoProfesional = '';
 
     get trastornosFiltrados() {
@@ -43,15 +43,10 @@ export class HudsSeccionSituacionesSaludComponent implements OnChanges {
     }
 
     cargarTrastornos() {
-        this.trastornoExpandido = null;
         this.trastornos = [];
         this.hudsService.getSituacionesActivas(this.paciente.id).subscribe(trastornos => {
             this.trastornos = trastornos;
         });
-    }
-
-    toggleAcordeon(trastorno, active) {
-        this.trastornoExpandido = active ? trastorno : null;
     }
 
     normalizarCadena(cadena: string) {
@@ -75,6 +70,29 @@ export class HudsSeccionSituacionesSaludComponent implements OnChanges {
             return trastorno.prestacion?.solicitud?.tipoPrestacion?.term || 'Embarazo en curso';
         }
         return trastorno?.evoluciones?.[0]?.tipoPrestacion || 'Sin evolución';
+    }
+
+    getEdadGestacional(trastorno) {
+        if (!this.esEmbarazo(trastorno)) {
+            return null;
+        }
+        const fechaReferencia = trastorno.prestacion?.solicitud?.fecha || trastorno.fechaUltimoControl;
+        if (!fechaReferencia) {
+            return null;
+        }
+        const referencia = moment(fechaReferencia).startOf('day');
+        let diasGestacion;
+        if (trastorno.fechaUltimaMenstruacion) {
+            diasGestacion = referencia.diff(moment(trastorno.fechaUltimaMenstruacion).startOf('day'), 'days');
+        } else if (trastorno.fechaProbableDeParto) {
+            diasGestacion = 280 - moment(trastorno.fechaProbableDeParto).startOf('day').diff(referencia, 'days');
+        } else {
+            return null;
+        }
+        if (!Number.isFinite(diasGestacion) || diasGestacion < 0) {
+            return null;
+        }
+        return (diasGestacion / 7).toFixed(2);
     }
 
     getProfesionalTexto(trastorno) {

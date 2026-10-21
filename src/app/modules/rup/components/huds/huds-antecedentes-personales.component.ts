@@ -14,7 +14,6 @@ export class HudsAntecedentesPersonalesComponent implements OnChanges {
     @Input() paciente: IPaciente;
     public antecedentesP = [];
     public busqueda = '';
-    public antecedenteExpandido;
 
     get antecedentesFiltrados() {
         const searchTerm = this.normalizarCadena(this.busqueda || '');
@@ -43,14 +42,9 @@ export class HudsAntecedentesPersonalesComponent implements OnChanges {
     }
 
     cargarAntecedentesPersonales() {
-        this.antecedenteExpandido = null;
         this.hudsService.getAntecedentesPersonales(this.paciente.id).subscribe(antecedentes => {
             this.antecedentesP = antecedentes;
         });
-    }
-
-    toggleAcordeon(antecedente, active) {
-        this.antecedenteExpandido = active ? antecedente : null;
     }
 
     verAntecedente(antecedente) {

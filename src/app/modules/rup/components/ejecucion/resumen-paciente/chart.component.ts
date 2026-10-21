@@ -1,6 +1,6 @@
 import 'chartjs-adapter-moment';
 import moment from 'moment';
-import { Component, HostBinding, Input } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { PrestacionesService } from '../../../services/prestaciones.service';
@@ -10,6 +10,8 @@ import { PrestacionesService } from '../../../services/prestaciones.service';
     templateUrl: 'chart.html'
 })
 export class ChartComponent {
+    @Output() hasData = new EventEmitter<boolean>();
+
     private _paciente: IPaciente;
     public chart;
     // variables para guardar los pesos de las prestaciones
@@ -88,6 +90,10 @@ export class ChartComponent {
                 this.barChartOptions.plugins.title.text += ' desde ' + moment(this.barChartLabels[0]).format('DD-MM-YYYY') + ' hasta ' + moment(this.barChartLabels[this.barChartLabels.length - 1]).format('DD-MM-YYYY');
 
                 this.mostrarChart = true;
+                this.hasData.emit(true);
+            } else {
+                this.mostrarChart = false;
+                this.hasData.emit(false);
             }
         });
     }

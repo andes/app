@@ -11,7 +11,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid #ccc;
+        border: 2px solid #002738;
         border-radius: 4px;
         cursor: pointer;
         position: relative;
@@ -36,7 +36,6 @@
         &.active,
         &:hover {
             background: #d9ecfb;
-            border-color: #00a8e0;
 
             .huds-rail-tooltip {
                 opacity: 1;

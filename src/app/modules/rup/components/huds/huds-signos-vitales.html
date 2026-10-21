@@ -3,111 +3,167 @@
              [(ngModel)]="signoSenalado" (change)="onChangeSignoVital($event)">
 </plex-select>
 
-<div class="row mt-3" *ngIf="mostrarFiltrosFecha()">
-    <div class="col-6">
-        <plex-datetime type="date" label="DESDE" [(ngModel)]="fechaDesde" [debounce]="600"
-                       (change)="onChangeFiltroFecha()">
-        </plex-datetime>
-    </div>
-    <div class="col-6">
-        <plex-datetime type="date" label="HASTA" [(ngModel)]="fechaHasta" [debounce]="600"
-                       (change)="onChangeFiltroFecha()">
-        </plex-datetime>
-    </div>
-</div>
+<ng-container *ngIf="signoSenalado">
+    <plex-title titulo="{{ signoSenalado.nombre }}" size="sm">
+        <plex-button *ngIf="tieneGrafico()" [icon]="vistaListado ? 'estadistica' : 'listado'"
+                     type="info" size="sm" [tooltip]="vistaListado ? 'Ver gráfico' : 'Cambiar a listado'"
+                     tooltipPosition="left" (click)="toggleVista()"></plex-button>
+    </plex-title>
 
-<ng-container *ngIf="grafico">
-    <div class="row mt-3">
-        <div class="col-12">
-            <h4 class="text-capitalize mt-2">
-                {{ grafico.conceptos | enumerar:['term'] }}
-            </h4>
-            <rup *ngFor="let c of [graficoClave]" [elementoRUP]="grafico" [paciente]="paciente" [soloValores]="false"
-                 [params]="paramsGrafico">
-            </rup>
+    <div class="row mt-3" *ngIf="mostrarFiltrosFecha()">
+        <div class="col-6">
+            <plex-datetime type="date" label="DESDE" [(ngModel)]="fechaDesde" [debounce]="600"
+                           (change)="onChangeFiltroFecha()">
+            </plex-datetime>
+        </div>
+        <div class="col-6">
+            <plex-datetime type="date" label="HASTA" [(ngModel)]="fechaHasta" [debounce]="600"
+                           (change)="onChangeFiltroFecha()">
+            </plex-datetime>
         </div>
     </div>
-</ng-container>
 
-<ng-container *ngIf="elemento">
-    <div class="row mt-3">
-        <div class="col-12">
-            <span class="d-flex justify-content-between">
-                <p class="h4 text-capitalize">{{ elemento.conceptos | enumerar:['term'] }}</p>
-                <plex-badge type="info" *ngIf="registro && registro.updatedAt">
-                    {{ registro.updatedAt | fecha }}
-                </plex-badge>
-            </span>
-            <ng-container *ngIf="registro; else mensaje">
-                <rup [elementoRUP]="elemento" [paciente]="paciente" [registro]="registro" [soloValores]="true">
+    <ng-container *ngIf="signoSenalado.tipo === 'grafico' && grafico && !vistaListado">
+        <div class="row mt-3">
+            <div class="col-12">
+                <rup *ngFor="let c of [graficoClave]" [elementoRUP]="grafico" [paciente]="paciente"
+                     [soloValores]="false" [params]="paramsGrafico" (hasData)="onGraficoData($event)">
                 </rup>
-            </ng-container>
-            <ng-template #mensaje>
-                No se ha registrado ningún valor de {{ elemento.conceptos | enumerar:['term'] }}
-            </ng-template>
+            </div>
         </div>
-    </div>
-</ng-container>
+    </ng-container>
 
-<ng-container *ngIf="curvaRadio">
-    <div class="row mt-3">
-        <div class="col-12">
-            <radio-chart [paciente]="paciente" [curva]="curvaRadio" [fechaDesde]="fechaDesde"
-                         [fechaHasta]="fechaHasta"></radio-chart>
-        </div>
-    </div>
-</ng-container>
-
-<ng-container *ngIf="signoSenalado?.id === 'vacunas'">
-    <div class="row mt-3">
-        <div class="col-12">
-            <h5>Vacunas aplicadas</h5>
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Vacuna</th>
-                        </tr>
-                    </thead>
-                    <tbody *ngIf="vacunas.length; else sinDatosVacunas">
-                        <tr *ngFor="let vacuna of vacunas">
-                            <td>{{ vacuna.fechaAplicacion | date: 'dd/M/yyyy' }}</td>
-                            <td>{{ vacuna.vacuna }}</td>
-                        </tr>
-                    </tbody>
-                    <ng-template #sinDatosVacunas>
-                        <tbody>
-                            <td colspan="2">No registra datos</td>
-                        </tbody>
+    <ng-container *ngIf="signoSenalado.tipo === 'registro'">
+        <div class="row mt-3">
+            <div class="col-12">
+                <plex-loader *ngIf="cargandoRegistro" type="ball-pulse"></plex-loader>
+                <ng-container *ngIf="!cargandoRegistro">
+                    <ng-container *ngIf="registro; else sinRegistro">
+                        <div class="d-flex justify-content-end">
+                            <plex-badge type="info" *ngIf="registro.updatedAt">
+                                {{ registro.updatedAt | fecha }}
+                            </plex-badge>
+                        </div>
+                        <rup [elementoRUP]="elemento" [paciente]="paciente" [registro]="registro" [soloValores]="true">
+                        </rup>
+                    </ng-container>
+                    <ng-template #sinRegistro>
+                        <div class="mt-5">
+                            <plex-label class="flex-column" icon="corazon-pulso" type="info" justify="center" size="xl"
+                                        direction="column" titulo="Sin evaluación de riesgo cardiovascular"
+                                        subtitulo="No se registraron valores para este signo vital.">
+                            </plex-label>
+                        </div>
                     </ng-template>
-                </table>
+                </ng-container>
             </div>
         </div>
-    </div>
-</ng-container>
+    </ng-container>
 
-<ng-container *ngIf="signoSenalado?.id === 'registroVisitas'">
-    <div class="row mt-3">
-        <div class="col-12">
-            <h5>Registro de visitas</h5>
-            <div class="table-responsive">
-                <table *ngIf="tabla.length; else sinDatosVisitas" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th *ngFor="let col of tabla[0]">{{ col.titulo }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let fila of tabla">
-                            <td *ngFor="let celda of fila">{{ celda.valor }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <ng-template #sinDatosVisitas>
-                    No registra datos
-                </ng-template>
+    <ng-container *ngIf="signoSenalado.tipo === 'curva' && !vistaListado">
+        <div class="row mt-3">
+            <div class="col-12">
+                <plex-loader *ngIf="cargandoCurva" type="ball-pulse"></plex-loader>
+                <radio-chart *ngIf="curvaRadio" [paciente]="paciente" [curva]="curvaRadio" [fechaDesde]="fechaDesde"
+                             [fechaHasta]="fechaHasta" (hasData)="onCurvaData($event)"></radio-chart>
+                <div *ngIf="!cargandoCurva && !hayDatosRango" class="mt-5">
+                    <plex-label class="flex-column" icon="signos-vitales" type="info" justify="center" size="xl"
+                                direction="column" titulo="Sin registros de {{ signoSenalado.nombre }}"
+                                subtitulo="{{ getSubtituloVacio() }}">
+                    </plex-label>
+                </div>
             </div>
         </div>
-    </div>
+    </ng-container>
+
+    <ng-container *ngIf="vistaListado">
+        <div class="mt-3 listado-signos">
+            <plex-loader *ngIf="cargandoListado" type="ball-pulse"></plex-loader>
+            <ng-container *ngIf="!cargandoListado">
+                <plex-list *ngIf="listadoCompleto.length" [striped]="true" height="100%"
+                           (scrolled)="onScrollListado()">
+                    <plex-heading [sticky]="true">
+                        <b label>Fecha</b>
+                        <b label>Signo</b>
+                        <b label>Valor</b>
+                        <b label>Profesional</b>
+                        <b label>Prestación</b>
+                    </plex-heading>
+                    <plex-item *ngFor="let item of listado">
+                        <plex-label titulo="{{ item.fecha | fecha }}" subtitulo="{{ item.fecha | hora }}">
+                        </plex-label>
+                        <plex-label titulo="{{ item.label }}"></plex-label>
+                        <plex-label titulo="{{ item.valor }} {{ item.unidad }}"></plex-label>
+                        <plex-label titulo="{{ item.profesional }}"></plex-label>
+                        <plex-label titulo="{{ item.prestacion }}"></plex-label>
+                    </plex-item>
+                </plex-list>
+                <div *ngIf="!listadoCompleto.length" class="mt-5">
+                    <plex-label class="flex-column" icon="signos-vitales" type="info" justify="center"
+                                size="xl" direction="column"
+                                titulo="Sin registros de {{ signoSenalado.nombre }}"
+                                subtitulo="{{ getSubtituloVacio() }}">
+                    </plex-label>
+                </div>
+            </ng-container>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="signoSenalado.id === 'vacunas'">
+        <div class="row mt-3">
+            <div class="col-12">
+                <plex-loader *ngIf="cargandoVacunas" type="ball-pulse"></plex-loader>
+                <div class="table-responsive" *ngIf="!cargandoVacunas && vacunas.length">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Vacuna</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let vacuna of vacunas">
+                                <td>{{ vacuna.fechaAplicacion | date: 'dd/M/yyyy' }}</td>
+                                <td>{{ vacuna.vacuna }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div *ngIf="!cargandoVacunas && !vacunas.length" class="mt-5">
+                    <plex-label class="flex-column" icon="vacuna" type="info" justify="center" size="xl"
+                                direction="column" titulo="Sin vacunas registradas"
+                                subtitulo="El paciente no tiene vacunas aplicadas registradas.">
+                    </plex-label>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="signoSenalado.id === 'registroVisitas'">
+        <div class="row mt-3">
+            <div class="col-12">
+                <plex-loader *ngIf="cargandoVisitas" type="ball-pulse"></plex-loader>
+                <div class="table-responsive" *ngIf="!cargandoVisitas && tabla.length">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th *ngFor="let col of tabla[0]">{{ col.titulo }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let fila of tabla">
+                                <td *ngFor="let celda of fila">{{ celda.valor }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div *ngIf="!cargandoVisitas && !tabla.length" class="mt-5">
+                    <plex-label class="flex-column" icon="historial" type="info" justify="center" size="xl"
+                                direction="column" titulo="Sin visitas registradas"
+                                subtitulo="El paciente no tiene registros de visitas.">
+                    </plex-label>
+                </div>
+            </div>
+        </div>
+    </ng-container>
 </ng-container>

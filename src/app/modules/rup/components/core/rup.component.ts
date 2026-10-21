@@ -87,6 +87,8 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
 
     @Output() ejecutarAccion: EventEmitter<any> = new EventEmitter<any>();
 
+    @Output() hasData: EventEmitter<boolean> = new EventEmitter<boolean>();
+
     /**
      * Carga un componente dinámicamente
      *
@@ -134,6 +136,11 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
         // Event bubbling
         componentReference.instance['ejecutarAccion'].subscribe((value, datos) => {
             this.emitEjecutarAccion(value, datos);
+        });
+
+        // Event bubbling
+        componentReference.instance['hasData']?.subscribe((value: boolean) => {
+            this.hasData.emit(value);
         });
 
         // Inicia el detector de cambios

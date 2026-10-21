@@ -20,7 +20,7 @@
                     <div class="huds-rail d-flex flex-column">
                         <div class="huds-rail-item" *ngFor="let opcion of hudsOpciones; let i = index"
                              [class.active]="indiceSeccion === i" (click)="seleccionarSeccion(i)">
-                            <plex-icon [name]="opcion.icon" size="lg" type="default" tooltip="{{ opcion.tooltip }}"
+                            <plex-icon [name]="opcion.icon" size="lg" type="dark" tooltip="{{ opcion.tooltip }}"
                                        tooltipPosition="right"></plex-icon>
                         </div>
                     </div>
@@ -32,11 +32,26 @@
                                                           [paciente]="paciente"></huds-antecedentes-personales>
                             <huds-antecedentes-familiares *ngSwitchCase="2"
                                                           [paciente]="paciente"></huds-antecedentes-familiares>
-                            <huds-signos-vitales *ngSwitchCase="6" [paciente]="paciente"></huds-signos-vitales>
-                            <vista-accesos-huds *ngSwitchCase="8" [paciente]="paciente"></vista-accesos-huds>
-                            <ng-container *ngSwitchCase="9">
+                            <huds-signos-vitales *ngSwitchCase="3" [paciente]="paciente"></huds-signos-vitales>
+                            <vista-accesos-huds *ngSwitchCase="4" [paciente]="paciente"></vista-accesos-huds>
+                            <ng-container *ngSwitchCase="5">
+                                <ng-container *ngIf="permisoHudsCompleta">
+                                    <ng-container *ngIf="internacione$ | async as internaciones">
+                                        <listado-internacion-huds *ngIf="internaciones.length; else sinInternaciones"
+                                                                  [internaciones]="internaciones">
+                                        </listado-internacion-huds>
+                                        <ng-template #sinInternaciones>
+                                            <div class="mt-5">
+                                                <plex-label class="flex-column" icon="camilla" type="info"
+                                                            justify="center" size="xl" direction="column"
+                                                            titulo="El paciente no tiene internaciones registradas">
+                                                </plex-label>
+                                            </div>
+                                        </ng-template>
+                                    </ng-container>
+                                </ng-container>
                             </ng-container>
-                            <historial-turnos *ngSwitchCase="10" [paciente]="paciente" [fill]="true"></historial-turnos>
+                            <historial-turnos *ngSwitchCase="6" [paciente]="paciente" [fill]="true"></historial-turnos>
                         </ng-container>
                     </div>
                 </div>
