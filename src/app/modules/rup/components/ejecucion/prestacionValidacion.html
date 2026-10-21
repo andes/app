@@ -202,7 +202,7 @@
                 <plex-item *ngFor="let firma of firmasPrevalidacion">
                     <plex-label [tituloBold]="true" size="sm"
                                 titulo="{{ firma.profesional.apellido }}, {{ firma.profesional.nombre }}"
-                                subtitulo="Pre-validador{{ firma.matricula ? ' · Matrícula ' + firma.matricula : '' }}">
+                                subtitulo="Pre-validador{{ firma.matricula ? ' · ' + firma.matricula : '' }}">
                     </plex-label>
                     <plex-label size="sm" titulo="DNI" subtitulo="{{ firma.profesional.documento }}"></plex-label>
                     <plex-label size="sm" titulo="Fecha" subtitulo="{{ firma.fecha | date:'dd/MM/yyyy HH:mm' }}"></plex-label>
