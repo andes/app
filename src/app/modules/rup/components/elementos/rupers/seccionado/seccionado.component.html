@@ -36,7 +36,7 @@
                 </div>
                 <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
                      [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores"
-                     (change)="emitChange()" #rupInstance>
+                     (changes)="emitChange()" #rupInstance>
                 </rup>
             </plex-panel>
         </ng-container>
@@ -57,7 +57,7 @@
                     <div class="contenedor-conceptos ml-3 pl-3">
                         <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
                              [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores"
-                             (change)="emitChange()">
+                             (changes)="emitChange()">
                         </rup>
                     </div>
                     <hr>

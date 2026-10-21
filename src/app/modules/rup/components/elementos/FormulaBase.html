@@ -7,7 +7,7 @@
                     <div *ngIf="item.elementoRUP" class="pr-3">
                         <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
                              [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores"
-                             (change)="emitChange2()" (ejecutarAccion)="emitEjecutarAccion($event)"
+                             (changes)="emitChange2()" (ejecutarAccion)="emitEjecutarAccion($event)"
                              [habilitado]="valorManual">
                         </rup>
                     </div>
@@ -18,7 +18,7 @@
                     <div *ngIf="item.elementoRUP" class="pr-3">
                         <rup [readonly]="false" [elementoRUP]="item.elementoRUP" [paciente]="paciente"
                              [params]="{ title: item.params.title, type: item.params.type }" [prestacion]="prestacion"
-                             [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange2()"
+                             [registro]="registro.registros[i]" [soloValores]="soloValores" (changes)="emitChange2()"
                              (ejecutarAccion)="emitEjecutarAccion($event)" [habilitado]="valorManual">
                         </rup>
                     </div>

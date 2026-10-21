@@ -21,7 +21,7 @@
                                 <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
                                      [prestacion]="prestacion" [registro]="registro.registros[i]"
                                      [soloValores]="soloValores" span="{{ item.style.columns }}"
-                                     (change)="onChange($event)">
+                                     (changes)="onChange($event)">
                                 </rup>
                             </ng-conteiner>
                         </div>
@@ -51,7 +51,7 @@
                      class="col-{{ (item.params?.mostrarTituloSubmolecula || item.elementoRUP?.requeridos?.length) ? 12 : item.style.columns }} mr-{{ item.style?.offset ? item.style.offset : '0' }}">
                     <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
                          [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores"
-                         [style]="item.style" (change)="emitChange($event)">
+                         [style]="item.style" (changes)="emitChange($event)">
                     </rup>
                 </div>
                 <div *ngIf="item.elementoRUP && (item.params?.mostrarTituloSubmolecula || item.elementoRUP?.requeridos?.length)"

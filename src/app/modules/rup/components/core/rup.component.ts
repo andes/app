@@ -129,7 +129,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
         componentReference.instance['conceptosAsociados'] = this.conceptosAsociados || [];
 
         // Event bubbling
-        componentReference.instance['change']?.subscribe(value => {
+        componentReference.instance['changes']?.subscribe(value => {
             this.emitChange(false);
         });
 
