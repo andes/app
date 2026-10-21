@@ -1,0 +1,19 @@
+:host(.signos-listado) {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.listado-signos {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.listado-signos plex-list {
+    flex: 1 1 auto;
+    min-height: 0;
+}

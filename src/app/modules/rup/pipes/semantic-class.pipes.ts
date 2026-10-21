@@ -15,6 +15,9 @@ export class SemanticClassPipe implements PipeTransform {
 }
 
 export function getSemanticClass(concepto: ISnomedConcept, esSolicitud: boolean = false) {
+    if (!concepto) {
+        return '';
+    }
     const semantic = getSemanticTag(concepto, esSolicitud);
     switch (concepto.semanticTag) {
         case 'elemento de registro':
@@ -26,6 +29,9 @@ export function getSemanticClass(concepto: ISnomedConcept, esSolicitud: boolean 
 
 
 export function getSemanticTag(concepto: ISnomedConcept, esSolicitud: boolean = false) {
+    if (!concepto) {
+        return '';
+    }
     if (esSolicitud) {
         return 'solicitud';
     } else {

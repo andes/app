@@ -1,0 +1,26 @@
+<plex-title titulo="Antecedentes Personales" size="sm"></plex-title>
+<plex-text [(ngModel)]="busqueda" class="mb-2"
+           placeholder="Busque un diagnóstico o profesional de la salud"></plex-text>
+<br>
+<ng-container *ngIf="antecedentesFiltrados.length">
+    <plex-list [striped]="true">
+        <plex-item *ngFor="let antecedente of antecedentesFiltrados" [selectable]="false">
+            <plex-label titulo="{{ antecedente.registro.concepto.term }}"
+                        subtitulo="{{ antecedente.tipoPrestacion.term }}"></plex-label>
+            <plex-label titulo="Profesional" subtitulo="{{ antecedente.profesional.nombreCompleto }}"></plex-label>
+            <plex-badge type="info">{{ antecedente.registro.createdAt | fecha }}</plex-badge>
+            <plex-button icon="eye" type="info" size="sm" tooltip="Ver prestación"
+                         (click)="verAntecedente(antecedente)"></plex-button>
+        </plex-item>
+    </plex-list>
+</ng-container>
+<div *ngIf="antecedentesP.length && !antecedentesFiltrados.length" class="mt-5">
+    <plex-label class="flex-column" icon="paciente" type="info" justify="center" size="xl" direction="column"
+                titulo="No se encontraron antecedentes para el filtro aplicado">
+    </plex-label>
+</div>
+<div *ngIf="!antecedentesP.length" class="mt-5">
+    <plex-label class="flex-column" icon="paciente" type="info" justify="center" size="xl" direction="column"
+                titulo="El paciente no tiene antecedentes personales registrados">
+    </plex-label>
+</div>
