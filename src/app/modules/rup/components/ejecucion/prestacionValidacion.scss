@@ -14,6 +14,19 @@
     background-color: $invert !important;
 }
 
+plex-box.profesionales {
+    background-color: $invert !important;
+    height: auto !important;
+    flex: 0 0 auto !important;
+    display: block !important;
+
+    ::ng-deep .plex-box {
+        height: auto !important;
+        flex: 0 0 auto !important;
+        min-height: initial !important;
+    }
+}
+
 .btn-orden {
     height: 28px;
     width: 28px;
