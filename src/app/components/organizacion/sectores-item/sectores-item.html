@@ -25,8 +25,8 @@
         <div class="content">
             <div *ngFor="let child of root.hijos">
                 <sectores-item [root]="child" [actions]="actions" [idOrganizacion]="idOrganizacion"
-                               (selectedNotify)="onSelectItem($event)" (onAdd)="onAdd.emit($event)"
-                               (onEdit)="onEdit.emit($event)" (onRemove)="removeChild($event)"
+                               (selectedNotify)="onSelectItem($event)" (add)="add.emit($event)"
+                               (edit)="edit.emit($event)" (remove)="removeChild($event)"
                                [selected]="selected"></sectores-item>
             </div>
         </div>
