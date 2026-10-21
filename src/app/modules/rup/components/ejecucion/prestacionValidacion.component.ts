@@ -21,8 +21,6 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { ConstantesService } from './../../../../services/constantes.service';
 import { PlexModalComponent } from '@andes/plex';
 
-// Tope de firmas de pre-validación; debe coincidir con la API (op 'prevalidacion'). Ver ADR 0001.
-const MAX_FIRMAS_PREVALIDACION = 4;
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -92,6 +90,8 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     public noNominalizada = true;
     public puedeRomperValidacion = false;
     public tiempoLimiteRomperValidacion;
+    // Tope de firmas de pre-validación informado por la API; null si no se pudo obtener.
+    public maxFirmasPrevalidacion: number = null;
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -136,10 +136,12 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         if (tipo !== 'ejecucion' && tipo !== 'pendienteValidacion') {
             return false;
         }
-        // Mismas reglas que la API: una firma por profesional y tope de firmas.
+        // Mismas reglas que la API: una firma por profesional y tope de firmas (dado por la API).
+        // Si el tope no se pudo cargar, solo se oculta por "ya firmé" y la API hace cumplir el tope.
         const firmas = this.firmasPrevalidacion;
         const yaFirme = firmas.some(f => String(f.profesional.id) === String(this.auth.profesional));
-        return !yaFirme && firmas.length < MAX_FIRMAS_PREVALIDACION;
+        const topeAlcanzado = this.maxFirmasPrevalidacion != null && firmas.length >= this.maxFirmasPrevalidacion;
+        return !yaFirme && !topeAlcanzado;
     }
 
     get firmasPrevalidacion(): any[] {
@@ -184,6 +186,10 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.constantesService.search({ source: 'prestacion:validacion' }).subscribe(constante => {
             this.tiempoLimiteRomperValidacion = constante[0].key || 30; // días
+        });
+        this.servicioPrestacion.getPrevalidacionConfig().subscribe({
+            next: config => this.maxFirmasPrevalidacion = config?.maxFirmasPrevalidacion ?? null,
+            error: () => this.maxFirmasPrevalidacion = null
         });
         // consultamos desde que pagina se ingreso para poder volver a la misma
         this.btnVolver = 'Volver';

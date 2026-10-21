@@ -1,6 +1,6 @@
-import { map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, of } from 'rxjs';
+import { Observable, BehaviorSubject, of, throwError } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { cache, Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
@@ -42,6 +42,7 @@ export class PrestacionesService {
     private prestacionesUrl = '/modules/rup/prestaciones'; // URL to web api
     private cache: any[] = [];
     private cachePrimeraBusqueda = [];
+    private prevalidacionConfig$: Observable<{ maxFirmasPrevalidacion: number }> = null;
     // ---TODO----- Ver en que servicio dejar esta funcionalidad
     public destinoRuta = new BehaviorSubject<boolean>(false);
     public rutaVolver = this.destinoRuta.asObservable();
@@ -706,6 +707,24 @@ export class PrestacionesService {
         return this.patch(prestacion.id, guardarRegistros).pipe(
             switchMap(() => this.patch(prestacion.id, { op: 'prevalidacion' }))
         );
+    }
+
+    /**
+     * Configuración de la pre-validación (doble firma) expuesta por la API, p. ej. el
+     * tope de firmas. Se cachea; si la request falla se descarta el cache para
+     * reintentar en la próxima llamada. Ver ADR 0001.
+     */
+    getPrevalidacionConfig(): Observable<{ maxFirmasPrevalidacion: number }> {
+        if (!this.prevalidacionConfig$) {
+            this.prevalidacionConfig$ = this.server.get('/modules/rup/prevalidacion/config', { showError: false }).pipe(
+                catchError(err => {
+                    this.prevalidacionConfig$ = null;
+                    return throwError(err);
+                }),
+                cache()
+            );
+        }
+        return this.prevalidacionConfig$;
     }
 
     /**
