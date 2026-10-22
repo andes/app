@@ -195,6 +195,33 @@
                 </ng-container>
             </div>
         </div>
+        <!-- Firmas del informe (doble firma) - ADR 0001 -->
+        <div class="rup-firmas mt-4" *ngIf="firmasPrevalidacion.length || validada">
+            <plex-title titulo="Firmas del informe" size="sm"></plex-title>
+            <plex-list [striped]="true">
+                <plex-item *ngFor="let firma of firmasPrevalidacion">
+                    <plex-label [tituloBold]="true" size="sm"
+                                titulo="{{ firma.profesional.apellido }}, {{ firma.profesional.nombre }}"
+                                subtitulo="Pre-validador{{ firma.matricula ? ' · ' + firma.matricula : '' }}">
+                    </plex-label>
+                    <plex-label size="sm" titulo="DNI" subtitulo="{{ firma.profesional.documento }}"></plex-label>
+                    <plex-label size="sm" titulo="Fecha" subtitulo="{{ firma.fecha | date:'dd/MM/yyyy HH:mm' }}"></plex-label>
+                    <plex-badge type="warning" size="sm">Pre-validación</plex-badge>
+                    <plex-button *ngIf="puedeQuitarFirma(firma)" type="danger" size="sm" icon="close"
+                                 tooltip="Quitar pre-validación" (click)="quitarPrevalidacion(firma)">
+                    </plex-button>
+                </plex-item>
+                <plex-item *ngIf="validada">
+                    <plex-label [tituloBold]="true" size="sm"
+                                titulo="{{ prestacion.estadoActual.createdBy.apellido }}, {{ prestacion.estadoActual.createdBy.nombre }}"
+                                subtitulo="Validador">
+                    </plex-label>
+                    <plex-label size="sm" titulo="DNI" subtitulo="{{ prestacion.estadoActual.createdBy.documento }}"></plex-label>
+                    <plex-label size="sm" titulo="Fecha" subtitulo="{{ prestacion.estadoActual.createdAt | date:'dd/MM/yyyy HH:mm' }}"></plex-label>
+                    <plex-badge type="success" size="sm">Validación</plex-badge>
+                </plex-item>
+            </plex-list>
+        </div>
     </plex-layout-main>
     <plex-layout-sidebar *ngIf="prestacion.solicitud.ambitoOrigen == 'ambulatorio'">
         <rup-relaciones [registros]="prestacion.ejecucion.registros"></rup-relaciones>
@@ -211,7 +238,11 @@
         <plex-button *ngIf="validada && prestacion?.solicitud.ambitoOrigen && rutaVolver" label="{{ btnVolver }}"
                      (click)="volverInicio(prestacion?.solicitud.ambitoOrigen, rutaVolver)" type="info" position="left">
         </plex-button>
-        <plex-button *ngIf="prestacion && prestacion.estados && (noNominalizada||paciente)  && prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'"
+        <plex-button *ngIf="puedePrevalidar && (noNominalizada||paciente)"
+                     label="Pre-validar {{prestacion.solicitud.tipoPrestacion.term}}" (click)="prevalidar()" type="warning"
+                     position="right">
+        </plex-button>
+        <plex-button *ngIf="puedeValidar && prestacion && prestacion.estados && (noNominalizada||paciente)  && prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'"
                      label="Validar {{prestacion.solicitud.tipoPrestacion.term}}" (click)="validar()" type="success"
                      position="right">
         </plex-button>
