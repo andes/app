@@ -12,7 +12,7 @@
                 <div class="col">
                     <div *ngIf="hasItems()">
                         <sectores-item *ngFor="let unidad of mapaSectores" [selected]="selectedItem"
-                            [root]="unidad" [idOrganizacion]="idOrganizacion" (onAdd)="addItem($event)" (onEdit)="editItem($event)" (onRemove)="removeItem($event)"></sectores-item>
+                            [root]="unidad" [idOrganizacion]="idOrganizacion" (add)="addItem($event)" (edit)="editItem($event)" (remove)="removeItem($event)"></sectores-item>
                     </div>
                     <div class="text-center align-middle add-more">
                         <plex-button label="Agregar sector" type="primary" size="block" (click)="onAddParent()"></plex-button>

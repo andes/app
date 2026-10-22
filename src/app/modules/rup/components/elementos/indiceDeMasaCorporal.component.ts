@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
-import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
 import { RupElement } from '.';
 
 @Component({
@@ -120,7 +119,7 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
             this.registro.valor = null;
             // Buscamos si las prestaciones en ejecucion tienen datos como para calcular el imc
             switch (true) {
-            // Mostramos el  Alerta de talla
+                // Mostramos el  Alerta de talla
                 case (this.peso && this.talla === null):
                     this.alerta = 'Falta completar el campo talla';
                     break;
