@@ -11,31 +11,30 @@
                     <h6><b>{{ registro.data.fecha | fecha : 'utc' }}</b></h6>
                     <hr />
                 </div>
-                <ng-container *ngIf="registro?.data?.adjuntos?.length">
+                <ng-container *ngIf="registro?.data?.adjuntos?.length; else sinAdjuntos">
                     <div class="d-flex justify-content-between adjuntos">
                         <ng-container *ngFor="let archivo of registro.data.adjuntos; let i=index">
                             <div class="d-flex align-items-end mb-1">
                                 <plex-badge type="info mr-1">PDF</plex-badge>
                                 <plex-button type="info" size="sm" icon="download mdi-18px" (click)="descargar(archivo)"
-                                    tooltip="Descargar PDF">
-                                </plex-button>
-                            </div>
-                        </ng-container>
-                        <ng-container
-                            *ngIf="!registro.data.adjuntos && registro?.data?.prestacion?.snomed?.conceptId !== '33879002'">
-                            <div class="d-flex align-items-end mb-1">
-                                <plex-badge type="info mr-1">PDF</plex-badge>
-                                <plex-button type="info" size="sm" icon="download mdi-18px" tooltip="Descargar CDA"
-                                    (click)="descargarCDA(registro)">
-                                </plex-button>
-
-                                <plex-button type="info" size="sm" icon="download mdi-18px" (click)="descargar(archivo)"
-                                    tooltip="Descargar PDF">
+                                    tooltip="Descargar adjunto">
                                 </plex-button>
                             </div>
                         </ng-container>
                     </div>
                 </ng-container>
+
+                <ng-template #sinAdjuntos>
+                    <ng-container
+                        *ngIf="registro?.data?.prestacion?.snomed?.conceptId !== '33879002' && puedeDescargarCDA">
+                        <div class="d-flex align-items-end mb-1">
+                            <plex-badge type="info mr-1">PDF</plex-badge>
+                            <plex-button type="info" size="sm" icon="download mdi-18px" tooltip="Descargar CDA"
+                                [disabled]="requestInProgress" (click)="descargarCDA(registro)">
+                            </plex-button>
+                        </div>
+                    </ng-container>
+                </ng-template>
             </div>
             <div>
                 <plex-grid cols="2" class="mt-0">
