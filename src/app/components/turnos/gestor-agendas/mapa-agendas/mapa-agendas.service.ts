@@ -1,7 +1,8 @@
-import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Injectable } from '@angular/core';
+import moment from 'moment';
 import { BehaviorSubject, forkJoin } from 'rxjs';
+import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
 import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 
@@ -12,7 +13,7 @@ export class MapaAgendasService {
     fecha;
     agendas;
     public calendario;
-    tiposPrestacion = new Map();
+    tiposPrestacion = new Map<string, ITipoPrestacion>();
     prestacionesPermisos;
 
     constructor(
@@ -45,7 +46,7 @@ export class MapaAgendasService {
 
     }
 
-    private tipoPrestacionesColor(conceptosTurneables: any[]) {
+    private tipoPrestacionesColor(conceptosTurneables: ITipoPrestacion[]) {
         if (this.prestacionesPermisos[0] === '*') {
             this.conceptosTurneables = conceptosTurneables;
         } else {
@@ -124,9 +125,8 @@ export class MapaAgendasService {
 
 
     private getColor(prestacionesDia) {
-        let prestacion;
         prestacionesDia.forEach(prestacionDia => {
-            prestacion = this.tiposPrestacion.get(prestacionDia.tipoPrestacion_id);
+            const prestacion = this.tiposPrestacion.get(prestacionDia.tipoPrestacion_id);
             if (prestacion) {
                 prestacionDia['color'] = prestacion.color;
             }

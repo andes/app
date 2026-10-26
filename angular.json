@@ -97,7 +97,8 @@
                 "serve": {
                     "builder": "@angular-builders/custom-webpack:dev-server",
                     "options": {
-                        "browserTarget": "andes_app:build:dev"
+                        "browserTarget": "andes_app:build:dev",
+                        "proxyConfig": "proxy.conf.json"
                     },
                     "configurations": {
                         "test": {
