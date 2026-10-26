@@ -58,7 +58,7 @@
         </app-informe-egreso>
         <!-- Formulario de egreso -->
         <app-egresar-paciente *ngIf="puedeEgresar() && editarEgreso"
-                              (onSave)="editarEgreso ? toggleEdit() : notificarEgreso()">
+                              (save)="editarEgreso ? toggleEdit() : notificarEgreso()">
             <plex-button *ngIf="editarEgreso && existeEgreso" tooltip="Volver" tooltipPosition="left" icon="arrow-left"
                          type="danger" size="sm" (click)="toggleEdit();" [autodisabled]="true">
             </plex-button>
