@@ -5,70 +5,58 @@
 }
 
 .semana {
+    display: grid;
     width: 100%;
-    height: 97%;
-    border-collapse: collapse;
-    table-layout: fixed;
+    border-top: 1px solid #181717;
+    border-left: 1px solid #181717;
 
-    tr td:first-child {
-        width: 50px;
-
-        &.first {
-            background-image: linear-gradient(to top right,
-                    white 48%,
-                    black,
-                    white 52%);
-
-        }
+    .first,
+    .dia,
+    .hora,
+    .slot {
+        border-right: 1px solid #181717;
+        border-bottom: 1px solid #181717;
+        min-width: 0;
     }
 
-    tr {
-        height: 22px;
-
-        &.punteado {
-            border-top: 3px dotted #8f8b8b;
-        }
+    .first {
+        background-image: linear-gradient(to top right,
+                white 48%,
+                black,
+                white 52%);
     }
 
-    tr:nth-of-type(odd) {
-        background-color: rgba(0, 0, 0, 0.05);
-    }
-
-    td {
-        width: 100%;
-        height: 0;
-        border: 1px solid #181717;
-        position: relative;
-
-        &.selectable {
-            cursor: pointer !important;
-
-            &:hover {
-
-                box-shadow: inset 0 0 0 2px transparentize($color: $light-blue, $amount: 0.4);
-                background-color: $light-blue !important;
-                color: black;
-            }
-        }
-    }
-
-    .circulo {
-
-        width: 20px;
-        height: 100%;
-        -moz-border-radius: 50%;
-        -webkit-border-radius: 50%;
-        border-radius: 50%;
+    .dia,
+    .hora {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         text-align: center;
-        float: left;
-        cursor: pointer !important;
+    }
+
+    .slot.punteado {
+        background-color: rgba(0, 0, 0, 0.05);
+        border-top: 3px dotted #8f8b8b;
+    }
+
+    .paciente {
+        z-index: 1;
+        justify-self: start;
+        align-self: stretch;
+        box-sizing: border-box;
+        min-width: 0;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: pointer;
+        border: 1px solid #181717;
 
         &:hover {
-            background: #080808;
-
-            box-shadow: 0 0 0 2px #080808;
+            box-shadow: inset 0 0 0 2px #080808;
         }
-
     }
 
 }

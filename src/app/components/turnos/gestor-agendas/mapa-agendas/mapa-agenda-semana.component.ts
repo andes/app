@@ -12,10 +12,9 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
 
     public headers = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
     public semana = [];
+    public filas = [];
     public horaInicio = 6;
     public horaFin = 20;
-    public horarios = [];
-    public filasPorHorario;
     public intervalo = 30;
     public _fecha;
     public semanaSeleccionada;
@@ -49,68 +48,179 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
     }
 
     private cargarSemana() {
-
-        this.horarios = this.generarArregloHorarios();
         this._fecha = moment(this._fecha).startOf('week');
-        this.filasPorHorario = this.turnosPorHora();
-        this.semana = this.headers.map((dia, index) => {
+        this.semana = this.headers.map((nombre, index) => {
             return {
-                nombre: dia,
+                nombre,
                 fecha: this._fecha.weekday(index).toDate(),
-                horarios: this.generarArregloHorarios()
-
+                turnos: []
             };
-
         });
         this.cargarTabla();
     }
 
     private cargarTabla() {
+        const totalSlots = this.cantidadFilas();
+        this.filas = [];
+        for (let index = 0; index < totalSlots; index++) {
+            const minutos = index * this.intervalo;
+            this.filas.push({
+                hora: this.horaInicio + Math.floor(minutos / 60)
+            });
+        }
 
         this.semana.forEach(dia => {
+            const turnos = this.turnosDelDia(dia, totalSlots);
+            this.asignarCarriles(turnos);
+            this.asignarAnchos(turnos);
+            dia.turnos = turnos;
+        });
+    }
 
-            dia.horarios.forEach(hora => {
-                hora.intervalos.forEach((intervalo, aux) => {
-                    this.semanaSeleccionada?.forEach(diaSemana => {
-                        if (moment(dia.fecha).isSame(diaSemana.fecha, 'day')) {
+    private cantidadFilas() {
+        return (this.horaFin - this.horaInicio) * (60 / this.intervalo);
+    }
 
-                            diaSemana.prestaciones?.forEach(prestacion => {
+    private turnosDelDia(dia, totalSlots) {
+        const vistos = new Set<string>();
+        const turnos = [];
+        const diaSemana = this.semanaSeleccionada?.find(item =>
+            item.fecha && moment(dia.fecha).isSame(item.fecha, 'day')
+        );
 
-                                const turnos = [];
-
-                                prestacion.turnosPorPrestacion.forEach(turno => {
-
-
-                                    const horaTurno = moment(turno.horaInicio);
-                                    const horaInicial = moment(dia.fecha).hour(hora.hora).minute(this.intervalo * aux);
-                                    const horaFin = moment(dia.fecha).hour(hora.hora).minute(this.intervalo * (aux + 1));
-
-                                    if (horaTurno.isBetween(horaInicial, horaFin, null, '[)')) {
-                                        turnos.push(turno);
-                                    }
-                                });
-                                if (turnos.length > 0) {
-                                    intervalo.turnos.push({
-                                        turnos: turnos,
-                                        agenda: prestacion.agenda,
-                                        color: prestacion.color
-                                    });
-
-                                }
-
-
-
-                            });
-                        }
-                    });
+        diaSemana?.prestaciones?.forEach(prestacion => {
+            if (!prestacion.color) {
+                return;
+            }
+            prestacion.turnosPorPrestacion?.forEach(turno => {
+                if (turno?.estado !== 'asignado' || !turno.paciente || !turno.horaInicio) {
+                    return;
+                }
+                const id = turno.id || turno._id;
+                const clave = id ? String(id) : null;
+                if (clave && vistos.has(clave)) {
+                    return;
+                }
+                if (clave) {
+                    vistos.add(clave);
+                }
+                const ubicacion = this.ubicarTurno(turno, prestacion.agenda, dia, totalSlots);
+                if (!ubicacion) {
+                    return;
+                }
+                const nombre = this.nombrePaciente(turno.paciente);
+                const hora = moment(turno.horaInicio).format('HH:mm');
+                turnos.push({
+                    slot: ubicacion.slot,
+                    rowspan: ubicacion.rowspan,
+                    turno,
+                    agenda: prestacion.agenda,
+                    color: prestacion.color,
+                    iniciales: this.iniciales(turno.paciente),
+                    titulo: nombre ? `${nombre} ${hora}` : hora
                 });
             });
-
-
-
         });
 
+        return turnos;
+    }
 
+    private ubicarTurno(turno, agenda, dia, totalSlots) {
+        const inicioGrilla = moment(dia.fecha).hour(this.horaInicio).minute(0).second(0).millisecond(0);
+        const minutos = moment(turno.horaInicio).diff(inicioGrilla, 'minutes');
+        if (minutos < 0) {
+            return null;
+        }
+        const slot = Math.floor(minutos / this.intervalo);
+        if (slot >= totalSlots) {
+            return null;
+        }
+        const duracion = this.duracionMinutos(turno, agenda);
+        const rowspan = Math.min(
+            Math.max(1, Math.ceil(duracion / this.intervalo)),
+            totalSlots - slot
+        );
+        return { slot, rowspan };
+    }
+
+    private duracionMinutos(turno, agenda) {
+        const bloque = this.bloqueDelTurno(turno, agenda);
+        if (!bloque?.duracionTurno) {
+            return this.intervalo;
+        }
+        // El próximo inicio del segmento queda a duracionTurno * cantidadBloque.
+        if (bloque.citarPorBloque) {
+            return bloque.duracionTurno * (bloque.cantidadBloque || 1);
+        }
+        return bloque.duracionTurno;
+    }
+
+    private bloqueDelTurno(turno, agenda) {
+        const id = turno?.id || turno?._id;
+        return agenda?.bloques?.find(bloque =>
+            bloque.turnos?.some(item =>
+                item === turno || this.mismoId(item?.id || item?._id, id)
+            )
+        );
+    }
+
+    private mismoId(a, b) {
+        if (a === null || a === undefined || b === null || b === undefined) {
+            return false;
+        }
+        return String(a) === String(b);
+    }
+
+    private iniciales(paciente) {
+        if (!paciente) {
+            return '?';
+        }
+        const apellido = (paciente.apellido || '').trim();
+        const nombre = (paciente.alias || paciente.nombre || '').trim();
+        return (apellido.charAt(0) + nombre.charAt(0)).toUpperCase() || '?';
+    }
+
+    private nombrePaciente(paciente) {
+        if (!paciente) {
+            return '';
+        }
+        if (paciente.alias) {
+            return `${paciente.apellido || ''}, ${paciente.alias}`.replace(/^,\s*/, '');
+        }
+        if (paciente.apellido && paciente.nombre) {
+            return `${paciente.apellido}, ${paciente.nombre}`;
+        }
+        return paciente.apellido || paciente.nombre || '';
+    }
+
+    private asignarCarriles(turnos) {
+        turnos.sort((a, b) => a.slot - b.slot || b.rowspan - a.rowspan);
+        const libres = [];
+        turnos.forEach(turno => {
+            let carril = libres.findIndex(libre => libre <= turno.slot);
+            if (carril === -1) {
+                carril = libres.length;
+                libres.push(0);
+            }
+            libres[carril] = turno.slot + turno.rowspan;
+            turno.carril = carril;
+        });
+    }
+
+    private asignarAnchos(turnos) {
+        turnos.forEach(turno => {
+            let simultaneos = 1;
+            for (let slot = turno.slot; slot < turno.slot + turno.rowspan; slot++) {
+                const enSlot = turnos.filter(otro =>
+                    otro.slot <= slot && slot < otro.slot + otro.rowspan
+                ).length;
+                if (enSlot > simultaneos) {
+                    simultaneos = enSlot;
+                }
+            }
+            turno.ancho = `${100 / simultaneos}%`;
+            turno.offset = `${(turno.carril * 100) / simultaneos}%`;
+        });
     }
 
     private cambiarSemana() {
@@ -133,33 +243,14 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
 
     }
 
-    private generarArregloHorarios() {
-        const horarios = [];
-        for (let index = 0; index < (this.horaFin - this.horaInicio); index++) {
-
-            horarios.push({
-                hora: this.horaInicio + index,
-                intervalos: this.turnosPorHora()
-            });
+    detalleDia(celda) {
+        if (!celda?.turno) {
+            return;
         }
-        return horarios;
-    }
-
-
-    private turnosPorHora() {
-        const cantidadTurnosHora = 60 / this.intervalo;
-        const horarioTurnos = [];
-        for (let index = 0; index < cantidadTurnosHora; index++) {
-            horarioTurnos.push({ turnos: [] });
-
-        }
-        return horarioTurnos;
-    }
-
-
-    detalleDia(turno) {
-
-        this.diaDetalle.emit(turno);
+        this.diaDetalle.emit({
+            turnos: [celda.turno],
+            agenda: celda.agenda
+        });
     }
 
 
