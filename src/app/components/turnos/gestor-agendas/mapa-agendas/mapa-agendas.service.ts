@@ -15,6 +15,7 @@ export class MapaAgendasService {
     public calendario;
     tiposPrestacion = new Map<string, ITipoPrestacion>();
     prestacionesPermisos;
+    servicioIntermedio;
 
     constructor(
         private agendaService: AgendaService,
@@ -26,13 +27,20 @@ export class MapaAgendasService {
         this.prestacionesPermisos = this.auth.getPermissions(permisos);
     }
 
+    public setServicioIntermedio(servicio) {
+        this.servicioIntermedio = servicio || null;
+    }
+
     public cargarAgendasMes(fecha) {
         this.fecha = fecha;
-        const parametros = {
+        const parametros: any = {
             fechaDesde: moment(this.fecha).startOf('month').toDate(),
             fechaHasta: moment(this.fecha).endOf('month').toDate(),
             organizacion: this.auth.organizacion.id
         };
+        if (this.servicioIntermedio?.id) {
+            parametros.servicioIntermedio = this.servicioIntermedio.id;
+        }
 
         forkJoin([
             this.conceptoTurneablesService.getAll(),
@@ -47,10 +55,15 @@ export class MapaAgendasService {
     }
 
     private tipoPrestacionesColor(conceptosTurneables: ITipoPrestacion[]) {
-        if (this.prestacionesPermisos[0] === '*') {
+        this.tiposPrestacion.clear();
+        const conceptosServicio = this.servicioIntermedio?.tipoPrestacion || [];
+        if (this.servicioIntermedio) {
+            const conceptIds = conceptosServicio.map(tipo => tipo.conceptId);
+            this.conceptosTurneables = conceptosTurneables.filter(x => conceptIds.indexOf(x.conceptId) >= 0);
+        } else if (this.prestacionesPermisos && this.prestacionesPermisos[0] === '*') {
             this.conceptosTurneables = conceptosTurneables;
         } else {
-            this.conceptosTurneables = conceptosTurneables.filter((x) => this.prestacionesPermisos.indexOf(x.id) >= 0);
+            this.conceptosTurneables = conceptosTurneables.filter((x) => this.prestacionesPermisos?.indexOf(x.id) >= 0);
         }
         this.conceptosTurneables.filter(d => d.color).forEach(tipoPrestacion => {
             this.tiposPrestacion.set(tipoPrestacion.conceptId, tipoPrestacion);
