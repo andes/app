@@ -22,6 +22,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { CDAService } from '../../services/CDA.service';
 
 import { PuntoInicioService } from 'src/app/services/puntoInicio/punto-inicio.service';
+import { DerivacionesService } from 'src/app/services/com/derivaciones.service';
 
 @Component({
     selector: 'rup-hudsBusqueda',
@@ -258,7 +259,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         private recetasService: RecetaService,
         private cdaService: CDAService,
         private profesionalService: ProfesionalService,
-        private puntoInicioService: PuntoInicioService
+        private derivacionesService: DerivacionesService
     ) {
     }
 
@@ -677,12 +678,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     }
 
     listarDerivaciones() {
-        const query = {
-            paciente: `^${this.paciente.documento}`
-        };
-
-        this.puntoInicioService.get(query).subscribe((data) => {
-
+        this.derivacionesService.search({ 'paciente': this.paciente.id }).subscribe((data) => {
             if (data.length > 0) {
                 this.derivaciones = data.filter(d => d.estado === 'finalizada');
             }
