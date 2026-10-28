@@ -32,7 +32,6 @@ export class VistaLaboratorioComponent implements OnInit {
         this.laboratorioService.getProtocoloById(id).subscribe((resultados) => {
             if (resultados && Array.isArray(resultados) && resultados.length > 0) {
                 this.areasLaboratorio = resultados;
-                this.chequearResultado(this.areasLaboratorio);
             } else {
                 this.areasLaboratorio = [];
             }
