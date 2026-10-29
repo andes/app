@@ -8,5 +8,9 @@
     "file-saver",
     "moment",
     "ng2-slugify"
+  ],
+  "assets": [
+    "CHANGELOG.md",
+    "MIGRATION.md"
   ]
 }
