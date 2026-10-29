@@ -30,6 +30,7 @@ export class InternacionListadoComponent implements OnInit {
     public cambiarUO = false;
     public puedeValidar = false;
     public puedeRomper = false;
+    public romperValidacionVencida = false;
     public editando = false;
     public estaBuscando = false;
     public columns = [
@@ -167,6 +168,7 @@ export class InternacionListadoComponent implements OnInit {
             map(prestacion => {
                 this.puedeValidar = false;
                 this.puedeRomper = false;
+                this.romperValidacionVencida = false;
                 if (prestacion?.ejecucion?.registros[1] && prestacion.ejecucion.registros[1].valor?.InformeEgreso) {
                     const informeEgreso = prestacion.ejecucion.registros[1].valor.InformeEgreso;
                     this.puedeValidar = prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' &&
@@ -252,6 +254,7 @@ export class InternacionListadoComponent implements OnInit {
     verificarPrestacion(prestacion: IPrestacion) {
         this.puedeValidar = false;
         this.puedeRomper = false;
+        this.romperValidacionVencida = false;
         if (prestacion.ejecucion) {
             if (prestacion.ejecucion.registros[1]) {
                 if (prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada') {
@@ -263,6 +266,9 @@ export class InternacionListadoComponent implements OnInit {
                     }
                 } else {
                     this.puedeRomper = true;
+                    this.prestacionService.estaVencidaRomperValidacion(prestacion).subscribe(vencida => {
+                        this.romperValidacionVencida = vencida;
+                    });
                 }
             }
         }
@@ -300,23 +306,30 @@ export class InternacionListadoComponent implements OnInit {
     }
 
     romperValidacion(selectedPrestacion: IPrestacion,) {
-        this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {
-            if (validar) {
-                // hacemos el patch y luego creamos los planes
-                const cambioEstado: any = {
-                    op: 'romperValidacion',
-                    desdeInternacion: true
-                };
-                // En api el estado de la prestación cambia a ejecucion
-                this.prestacionService.patch(selectedPrestacion.id, cambioEstado).subscribe({
-                    next: prestacion => {
-                        this.mapaCamasService.selectPrestacion(prestacion);
-                        this.verificarPrestacion(prestacion);
-                        this.listadoInternacionService.refresh.next(true);
-                    },
-                    error: () => this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación')
-                });
+        this.prestacionService.estaVencidaRomperValidacion(selectedPrestacion).subscribe(vencida => {
+            if (vencida) {
+                this.romperValidacionVencida = true;
+                this.plex.info('warning', 'El tiempo para romper la validación ha vencido.', 'Romper validación');
+                return;
             }
+            this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {
+                if (validar) {
+                    // hacemos el patch y luego creamos los planes
+                    const cambioEstado: any = {
+                        op: 'romperValidacion',
+                        desdeInternacion: true
+                    };
+                    // En api el estado de la prestación cambia a ejecucion
+                    this.prestacionService.patch(selectedPrestacion.id, cambioEstado).subscribe({
+                        next: prestacion => {
+                            this.mapaCamasService.selectPrestacion(prestacion);
+                            this.verificarPrestacion(prestacion);
+                            this.listadoInternacionService.refresh.next(true);
+                        },
+                        error: () => this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación')
+                    });
+                }
+            });
         });
     }
 

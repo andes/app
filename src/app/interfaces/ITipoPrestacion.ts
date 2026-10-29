@@ -12,5 +12,6 @@ export interface ITipoPrestacion {
     queries?: string[];
     auditable?: boolean;
     tiempoVigencia?: number;
+    tiempoLimiteRomperValidacion?: number;
     videoConferencia?: boolean;
 }
