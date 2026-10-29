@@ -89,6 +89,9 @@
                              [disabled]="!puedeValidar || editando" (click)="validar(selectedPrestacion)">
                 </plex-button>
                 <plex-button *ngIf="puedeRomper" class="mr-1" label="ROMPER VALIDACION" type="warning" size="sm"
+                             [disabled]="romperValidacionVencida"
+                             [tooltip]="romperValidacionVencida ? 'El tiempo para romper validación ha vencido' : null"
+                             tooltipPosition="top"
                              (click)="romperValidacion(selectedPrestacion)">
                 </plex-button>
                 <plex-button title="cerrar" icon="close" type="danger" size="sm" (click)="cancelar()">
