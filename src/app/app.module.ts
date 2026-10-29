@@ -18,6 +18,7 @@ import { Auth, AuthModule } from '@andes/auth';
 // Global
 import { Plex, PlexModule } from '@andes/plex';
 import { AuthContext, Server, ServerErrorHandler, SharedModule } from '@andes/shared';
+import { AndesAppSharedModule } from '../app/shared/andes-app-shared.module';
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -268,6 +269,7 @@ registerLocaleData(localeEsAr);
         RecaptchaModule,
         RecaptchaFormsModule,
         VisualizacionInformacionModule,
+        AndesAppSharedModule,
         MatFormFieldModule,
         MatInputModule,
         MatDatepickerModule,

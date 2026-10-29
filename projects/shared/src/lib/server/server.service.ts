@@ -137,7 +137,7 @@ export class Server {
             }
         }
 
-        return throwError(message);
+        return throwError(() => message);
     }
 
     private getAbsoluteURL(url: string) {

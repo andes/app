@@ -25,6 +25,7 @@ import { NuevaDerivacionComponent } from './components/nueva-derivacion/nueva-de
 import { ComPuntoInicioComponent } from './components/punto-inicio.component';
 import { TipoTrasladoComponent } from './components/tipo-traslado/tipo-traslado';
 import { PuntoInicioService } from 'src/app/services/puntoInicio/punto-inicio.service';
+import { AndesAppSharedModule } from 'src/app/shared/andes-app-shared.module';
 
 
 export const COM_COMPONENTS = [
@@ -60,7 +61,8 @@ export const COM_PROVIDERS = [
         MPILibModule,
         DirectiveLibModule,
         ElementosRUPModule,
-        SemaforoModule
+        SemaforoModule,
+        AndesAppSharedModule
     ],
     declarations: [
         ...COM_COMPONENTS

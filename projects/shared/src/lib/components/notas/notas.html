@@ -1,5 +1,5 @@
 <plex-title titulo="Notas" size="sm">
-    <plex-button *ngIf="showForm" label="Cancelar" size="sm mr-1" type="danger" (click)="cancelarNota()">
+    <plex-button *ngIf="showForm" label="Cancelar" size="sm" class="mr-1" type="danger" (click)="cancelarNota()">
     </plex-button>
     <plex-button *ngIf="showForm" label="Guardar" type="success" size="sm" (click)="guardarNota()"
                  [disabled]="!formularioNota?.valid">
@@ -37,7 +37,7 @@
     </plex-select>
     <plex-text label="Ingrese nota"
                *ngIf="showForm && (_notasPredefinidas?.length === 0 || notaPredefinida?.id === 'otra')"
-               [(ngModel)]="notaEditada" name="notaText" grow="full" [required]="true" multiline="true"
+               [(ngModel)]="notaEditada" name="notaText" grow="full" [required]="true" [multiline]="true"
                (change)="cleanSpaces()">
     </plex-text>
 </form>
