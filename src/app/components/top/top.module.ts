@@ -14,6 +14,7 @@ import { TurnosSolicitudComponent } from './solicitudes/turnosSolicitud.componen
 import { VisualizacionReglasTopComponent } from './reglas/visualizacionReglasTop.component';
 import { RouterService } from 'src/app/services/router.service';
 import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
+import { AndesAppSharedModule } from 'src/app/shared/andes-app-shared.module';
 
 export const TOP_COMPONENTS = [
     VisualizacionReglasTopComponent,
@@ -35,7 +36,8 @@ export const TOP_PROVIDERS = [
         RouterModule,
         HttpClientModule,
         SharedModule,
-        DirectiveLibModule
+        DirectiveLibModule,
+        AndesAppSharedModule
     ],
     declarations: [
         ...TOP_COMPONENTS

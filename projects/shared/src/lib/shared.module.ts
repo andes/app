@@ -1,5 +1,4 @@
 import { NotasComponent } from './components/notas/notas.component';
-import { UploadFileComponent } from 'src/app/shared/components/upload-file.component';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlexModule } from '@andes/plex';
@@ -17,7 +16,6 @@ import { PopoverAuditComponent } from './components/popover-audit/popover-audit.
 import { GaleriaArchivosComponent } from './components/galeria-archivos/galeria-archivos.component';
 import { FormsModule } from '@angular/forms';
 import { DocumentoPipe } from './pipes/documento.pipe';
-import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 import { CapitalizeFirstPipe } from './pipes/capitalizeFirst.pipe';
 import { FileSize } from './pipes/fileSize.pipe';
 import { TruncatePipe } from './pipes/truncate.pipe';
@@ -40,9 +38,7 @@ import { TruncatePipe } from './pipes/truncate.pipe';
         FormAutoSaveDirective,
         PopoverAuditComponent,
         GaleriaArchivosComponent,
-        UploadFileComponent,
         NotasComponent,
-        PacienteRestringidoPipe,
         CapitalizeFirstPipe,
         FileSize,
         TruncatePipe
@@ -60,15 +56,10 @@ import { TruncatePipe } from './pipes/truncate.pipe';
         FormAutoSaveDirective,
         PopoverAuditComponent,
         GaleriaArchivosComponent,
-        UploadFileComponent,
         NotasComponent,
-        PacienteRestringidoPipe,
         CapitalizeFirstPipe,
         TruncatePipe
-    ],
-    providers: [
-        PacienteRestringidoPipe
-    ],
+    ]
 })
 export class SharedModule {
     static forRoot(host: string): ModuleWithProviders<SharedModule> {

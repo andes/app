@@ -10,6 +10,7 @@ import { HammerModule } from '@angular/platform-browser';
 import { DndModule } from 'ngx-drag-drop';
 import { DirectiveLibModule } from './directives/directives.module';
 import { MPILibModule } from './modules/mpi/mpi-lib.module';
+import { AndesAppSharedModule } from './shared/andes-app-shared.module';
 
 @NgModule({
     imports: [
@@ -21,7 +22,8 @@ import { MPILibModule } from './modules/mpi/mpi-lib.module';
         ScrollingModule,
         CdkTableModule,
         HammerModule,
-        DirectiveLibModule
+        DirectiveLibModule,
+        AndesAppSharedModule
     ],
     exports: [
         CommonModule,
@@ -34,7 +36,8 @@ import { MPILibModule } from './modules/mpi/mpi-lib.module';
         MPILibModule,
         ScrollingModule,
         DndModule,
-        SharedModule
+        SharedModule,
+        AndesAppSharedModule
     ],
 })
 export class AndesCommonModule { }

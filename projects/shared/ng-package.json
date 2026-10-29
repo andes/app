@@ -4,9 +4,13 @@
   "lib": {
     "entryFile": "src/public-api.ts"
   },
-  "whitelistedNonPeerDependencies": [
+  "allowedNonPeerDependencies": [
     "file-saver",
     "moment",
     "ng2-slugify"
+  ],
+  "assets": [
+    "CHANGELOG.md",
+    "MIGRATION.md"
   ]
 }

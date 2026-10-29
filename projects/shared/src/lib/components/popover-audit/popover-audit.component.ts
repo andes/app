@@ -8,7 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class PopoverAuditComponent implements OnInit {
 
     @Input()
-    placement: string;
+    placement: 'top' | 'bottom' | 'left' | 'right' = 'top';
     @Input()
     showUpdate: boolean;
     private _datos: any;

@@ -2,17 +2,17 @@
     <plex-card *ngFor="let archivo of files; let i = index">
         <ng-container *ngIf="archivo.isImage">
             <div justify="center">
-                <plex-icon size="xxl" name="jpg-outiline" class="icon-imagen"></plex-icon>
+                <plex-icon size="36" name="jpg-outiline" class="icon-imagen"></plex-icon>
             </div>
         </ng-container>
         <ng-container *ngIf="archivo.isDocument">
             <div justify="center">
-                <plex-icon size="xxl" name="pdf-outline" type="info"></plex-icon>
+                <plex-icon size="36" name="pdf-outline" type="info"></plex-icon>
             </div>
         </ng-container>
         <ng-container *ngIf="archivo.isVideo">
             <div justify="center">
-                <plex-icon class="icon-video" size="xxl" name="mp4-outline"></plex-icon>
+                <plex-icon class="icon-video" size="36" name="mp4-outline"></plex-icon>
             </div>
         </ng-container>
         <plex-button type="success" size="sm" icon="download" (click)="openUrl(archivo)">
@@ -34,18 +34,18 @@
     <plex-card>
         <ng-container *ngIf="verificarImagen(file.ext)">
             <div justify="center">
-                <plex-icon size="xxl" name="jpg-outiline" class="icon-imagen" (click)="openFile()"></plex-icon>
+                <plex-icon size="36" name="jpg-outiline" class="icon-imagen" (click)="openFile()"></plex-icon>
             </div>
         </ng-container>
         <ng-container *ngIf="verificarDocumento(file.ext)">
             <div justify="center">
-                <plex-icon size="xxl" name="pdf-outline" type="info" class="icon-doc"
+                <plex-icon size="36" name="pdf-outline" type="info" class="icon-doc"
                            (click)="openUrl(file)"></plex-icon>
             </div>
         </ng-container>
         <ng-container *ngIf="verificarVideo(file.ext)">
             <div justify="center">
-                <plex-icon class="icon-video" size="xxl" name="mp4-outline" (click)="openFile()"></plex-icon>
+                <plex-icon class="icon-video" size="36" name="mp4-outline" (click)="openFile()"></plex-icon>
             </div>
         </ng-container>
     </plex-card>

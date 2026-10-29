@@ -1,13 +1,12 @@
 // import { RequestOptions, URLSearchParams } from '@angular/http';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import { Observable, from, of, throwError } from 'rxjs';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 
 import { Plex } from '@andes/plex';
 import { Options } from './options';
-import { finalize, map, catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { finalize, map, catchError, switchMap } from 'rxjs/operators';
 
 // Constantes
 const defaultOptions: Options = { params: null, showError: true, showLoader: true };
@@ -91,14 +90,40 @@ export class Server {
         }
         return result;
     }
-    private handleError(response: any, options: Options) {
-        let message;
-        if (response.error) {
-            if (response.error.message) {
-                message = response.error.message;
-            } else {
-                message = response.error;
-            }
+
+    private handleError(response: any, options: Options): Observable<never> {
+        const body = response.error;
+
+        // Las peticiones con responseType 'blob' también reciben los
+        // errores HTTP como Blob, aunque el servidor devuelva JSON o texto.
+        if (body instanceof Blob) {
+            return from(body.text()).pipe(
+                // Si el Blob no puede leerse, utilizamos el mensaje genérico.
+                catchError(() => of('')),
+                switchMap((text: string) => {
+                    let error: any = text;
+
+                    try {
+                        error = JSON.parse(text);
+                    } catch {
+                        // La respuesta no contiene JSON; conservamos el texto.
+                    }
+
+                    return this.showHttpError(response, options, error);
+                })
+            );
+        }
+
+        return this.showHttpError(response, options, body);
+    }
+
+    private showHttpError(response: any, options: Options, body: any): Observable<never> {
+        let message: string;
+
+        if (body && typeof body.message === 'string') {
+            message = body.message;
+        } else if (typeof body === 'string' && body.trim() && !/<[a-z][\s\S]*>/i.test(body)) {
+            message = body;
         } else {
             message = 'La aplicación no pudo comunicarse con el servidor. Por favor revise su conexión a la red.';
         }
@@ -111,7 +136,8 @@ export class Server {
                 this.plex.info('danger', `${message}<div class="text-muted small pt-3">Código de error: ${response.status}</div>`, 'No se pudo conectar con el servidor');
             }
         }
-        return throwError(message);
+
+        return throwError(() => message);
     }
 
     private getAbsoluteURL(url: string) {
