@@ -999,6 +999,10 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             registro.data.class === 'elementoderegistro' || registro.data.class === 'producto';
     }
 
+    esRegistroPropio(registro: any): boolean {
+        return true;
+    }
+
     esSoloValores(registro: any): boolean {
         if (this.soloValores.includes(registro.concepto?.conceptId)) {
             // Verificar si el registro ya existe en la prestación con medicamentos o insumos cargados

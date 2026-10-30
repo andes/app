@@ -84,8 +84,7 @@ export class VistaPrestacionComponent implements OnInit {
     }
 
     checkUser() {
-        const permisoExtra = this.auth.check('rup:validacion:' + this.prestacion.solicitud.tipoPrestacion.id);
-        return permisoExtra || this.prestacion.createdBy.id === this.auth.usuario.id;
+        return this.auth.check('rup:validacion:' + this.prestacion.solicitud.tipoPrestacion.id);
     }
 
     async descargarInforme() {
