@@ -1,6 +1,6 @@
-import { map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, of } from 'rxjs';
+import { Observable, BehaviorSubject, of, throwError } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { cache, Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
@@ -42,6 +42,7 @@ export class PrestacionesService {
     private prestacionesUrl = '/modules/rup/prestaciones'; // URL to web api
     private cache: any[] = [];
     private cachePrimeraBusqueda = [];
+    private prevalidacionConfig$: Observable<{ maxFirmasPrevalidacion: number }> = null;
     // ---TODO----- Ver en que servicio dejar esta funcionalidad
     public destinoRuta = new BehaviorSubject<boolean>(false);
     public rutaVolver = this.destinoRuta.asObservable();
@@ -682,6 +683,61 @@ export class PrestacionesService {
         };
         return this.patch(prestacion.id, dto);
 
+    }
+
+    /**
+     * Pre-validación (doble firma). Opcional y aditiva: NO valida la prestación.
+     * Primero persiste los registros por su op normal (que convierte ids a ObjectId
+     * en el pre-save), y luego agrega la firma del profesional de forma atómica.
+     * Ver ADR 0001.
+     */
+    prevalidarPrestacion(prestacion): Observable<any> {
+        prestacion.ejecucion.registros.forEach(x => {
+            if (x.relacionadoCon && x.relacionadoCon.length) {
+                x.relacionadoCon.forEach(y => {
+                    delete y.relacionadoCon;
+                });
+            }
+        });
+        const guardarRegistros = {
+            op: 'registros',
+            registros: prestacion.ejecucion.registros,
+            registrarFrecuentes: true
+        };
+        return this.patch(prestacion.id, guardarRegistros).pipe(
+            switchMap(() => this.patch(prestacion.id, { op: 'prevalidacion' }))
+        );
+    }
+
+    /**
+     * Configuración de la pre-validación (doble firma) expuesta por la API, p. ej. el
+     * tope de firmas. Se cachea; si la request falla se descarta el cache para
+     * reintentar en la próxima llamada. Ver ADR 0001.
+     */
+    getPrevalidacionConfig(): Observable<{ maxFirmasPrevalidacion: number }> {
+        if (!this.prevalidacionConfig$) {
+            this.prevalidacionConfig$ = this.server.get('/modules/rup/prevalidacion/config', { showError: false }).pipe(
+                catchError(err => {
+                    this.prevalidacionConfig$ = null;
+                    return throwError(err);
+                }),
+                cache()
+            );
+        }
+        return this.prevalidacionConfig$;
+    }
+
+    /**
+     * Quita una firma de pre-validación del informe (análogo a romper validación,
+     * pero para la pre-firma). Sin firmaProfesionalId quita la del usuario actual;
+     * un validador puede pasar el id de otro profesional. Ver ADR 0001.
+     */
+    quitarPrevalidacion(prestacion, firmaProfesionalId: string = null): Observable<any> {
+        const dto: any = { op: 'quitarPrevalidacion' };
+        if (firmaProfesionalId) {
+            dto.firmaProfesionalId = firmaProfesionalId;
+        }
+        return this.patch(prestacion.id, dto);
     }
 
     invalidarPrestacion(prestacion, agendaTurno = null): Observable<any> {
