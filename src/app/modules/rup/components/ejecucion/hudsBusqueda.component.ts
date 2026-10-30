@@ -776,6 +776,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                         tipo: 'ficha-epidemiologica',
                         ambito: 'ambulatorio',
                         prestacion: {
+                            conceptId: `ficha-epidemiologica-${f.type.name}`,
                             term: `Ficha Epidemiológica ${f.type.name}`
                         },
                         profesional: usuarioConfirma || usuarioPcr || f.createdBy.nombreCompleto,
