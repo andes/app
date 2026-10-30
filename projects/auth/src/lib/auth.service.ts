@@ -120,6 +120,30 @@ export class Auth {
         return this.shiro.permissions(string);
     }
 
+    flattenPermissions(obj, prefix = '', result = []) {
+        Object.keys(obj).forEach(key => {
+            const path = prefix ? `${prefix}:${key}` : key;
+            if (key === '*') {
+                if (prefix) {
+                    result.push(prefix);
+                }
+                return;
+            }
+
+            this.flattenPermissions(obj[key], path, result);
+        });
+
+        return result;
+    }
+
+    hasExactPermission(perm: string): boolean {
+
+        const permisos = this.flattenPermissions(this.shiro.data);
+        const existe = permisos.includes(perm);
+
+        return existe;
+    }
+
     loggedIn() {
         return this.estado === Estado.active;
     }
