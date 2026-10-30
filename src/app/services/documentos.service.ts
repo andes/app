@@ -18,6 +18,12 @@ export class DocumentosService {
         );
     }
 
+    descargarReceta(informe, nombreArchivo: string): Observable<any> {
+        return this.download('recetas', informe).pipe(
+            saveAs(nombreArchivo, 'pdf')
+        );
+    }
+
     descargarLaboratorio(params, nombreArchivo: string): Observable<any> {
         return this.download('laboratorio/pdf', params).pipe(
             saveAs(nombreArchivo, 'pdf')
