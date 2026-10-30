@@ -10,6 +10,7 @@ import { DndModule } from 'ngx-drag-drop';
 import { NgChartsModule } from 'ng2-charts';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
+import { AndesAppSharedModule } from 'src/app/shared/andes-app-shared.module';
 import { PlantillasRUPComponent } from '../../apps/rup/plantillas-rup/plantillas-rup.component';
 import { TOPLibModule } from '../../components/top/top.module';
 import { AutocitarTurnoAgendasComponent } from '../../components/turnos/autocitar/autocitar.component';
@@ -51,6 +52,7 @@ export const RUP_COMPONENTS = [
         RouterModule,
         HttpClientModule,
         SharedModule,
+        AndesAppSharedModule,
         MPILibModule,
         ElementosRUPModule,
         RUPLibModule,

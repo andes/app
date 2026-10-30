@@ -5,6 +5,7 @@ import { PlexModule } from '@andes/plex';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { DirectiveLibModule } from 'src/app/directives/directives.module';
+import { AndesAppSharedModule } from 'src/app/shared/andes-app-shared.module';
 
 import { PacienteBuscarComponent } from './components/paciente-buscar.component';
 import { PacienteListadoComponent } from './components/paciente-listado.component';
@@ -29,6 +30,7 @@ import { PacientePanelComponent } from './components/paciente-panel.component';
         FormsModule,
         HttpClientModule,
         SharedModule,
+        AndesAppSharedModule,
         DirectiveLibModule
     ],
     declarations: [
