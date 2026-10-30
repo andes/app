@@ -45,4 +45,5 @@ export class VistaLaboratorioComponent implements OnInit {
             usuario: this.auth.usuario.nombreCompleto
         }, 'Laboratorio').subscribe();
     }
+
 }
