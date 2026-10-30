@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { cache, Server } from '@andes/shared';
-import { IPrestacion } from '../interfaces/prestacion.interface';
+import { CondicionPaciente, IPrestacion } from '../interfaces/prestacion.interface';
 import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interface';
 import { SnomedService } from '../../../apps/mitos';
 import { HUDSService } from '../services/huds.service';
@@ -540,7 +540,7 @@ export class PrestacionesService {
      * @returns {*} Prestacion
      * @memberof PrestacionesService
      */
-    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null, _profesional: any = null, registrosEjecucion = []): IPrestacion {
+    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null, _profesional: any = null, registrosEjecucion = [], condicionPaciente?: CondicionPaciente): IPrestacion {
         let pacientePrestacion: IPacienteBasico;
         if (!paciente) {
             pacientePrestacion = undefined;
@@ -660,12 +660,15 @@ export class PrestacionesService {
         if (snomedConcept.esMultiprestacion) {
             prestacion['groupId'] = turno;
         }
+        if (condicionPaciente) {
+            prestacion['condicionPaciente'] = condicionPaciente;
+        }
 
         return prestacion as IPrestacion;
     }
 
-    crearPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): Observable<any> {
-        const prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, 'ambulatorio', fecha, turno);
+    crearPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null, condicionPaciente?: CondicionPaciente): Observable<any> {
+        const prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, 'ambulatorio', fecha, turno, undefined, [], condicionPaciente);
         return this.post(prestacion);
     }
 

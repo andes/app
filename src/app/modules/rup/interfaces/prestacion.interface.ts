@@ -3,11 +3,25 @@ import { IPrestacionRegistro } from './prestacion.registro.interface';
 import { ISnomedConcept } from './snomed-concept.interface';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
 
+export type CondicionPaciente = 'ambulatorio' | 'internado' | 'guardia';
+
+export interface ICondicionPacienteOpcion {
+    id: CondicionPaciente;
+    nombre: string;
+}
+
+export const CONDICIONES_PACIENTE: ICondicionPacienteOpcion[] = [
+    { id: 'ambulatorio', nombre: 'Ambulatorio' },
+    { id: 'internado', nombre: 'Internado' },
+    { id: 'guardia', nombre: 'Guardia' }
+];
+
 export class IPrestacion {
     id: string;
     trackId: string;
     groupId: string;
     elementoRUP: string;
+    condicionPaciente?: CondicionPaciente;
     inicio: string;
     // Datos principales del paciente
     paciente: {

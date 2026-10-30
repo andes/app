@@ -1,5 +1,6 @@
 import { ITipoPrestacion } from './../ITipoPrestacion';
 import { IObraSocial } from './../IObraSocial';
+import { CondicionPaciente } from '../../modules/rup/interfaces/prestacion.interface';
 
 // TODO: Recordar actualizar Schema!
 export interface ITurno {
@@ -47,6 +48,7 @@ export interface ITurno {
         nroCarpeta: string;
     }];
     nota: string;
+    condicionPaciente?: CondicionPaciente;
     motivoSuspension: string;
     avisoSuspension: {
         type: string;

@@ -13,6 +13,10 @@
                      label="Seleccione el tipo de prestación" labelField="term" tmPrestaciones="rup:tipoPrestacion:?"
                      preload="true" [required]="true" (change)="seleccionarTipoPrestacion()" grow="2">
         </plex-select>
+        <plex-select *ngIf="opcion === 'fueraAgenda'" [(ngModel)]="condicionPaciente" name="condicionPaciente"
+                     label="Condición del paciente (opcional)" [data]="condicionesPaciente" labelField="nombre" idField="id"
+                     placeholder="Seleccione una condición" grow="2">
+        </plex-select>
     </plex-wrapper>
 </plex-title>
 

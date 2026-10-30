@@ -12,7 +12,7 @@ import { TurneroService } from '../../../../apps/turnero/services/turnero.servic
 import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { WebSocketService } from '../../../../services/websocket.service';
-import { IPrestacion } from '../../interfaces/prestacion.interface';
+import { CondicionPaciente, IPrestacion } from '../../interfaces/prestacion.interface';
 import { HUDSService } from '../../services/huds.service';
 import { ServicioIntermedioService } from '../../services/servicio-intermedio.service';
 import { EstadosAgenda } from './../../../../components/turnos/enums';
@@ -93,6 +93,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public prestacionesValidacion = this.auth.getPermissions('rup:validacion:?');
     public permisoServicioIntermedio = this.auth.getPermissions('rup:servicio-intermedio:?');
     public showSidebar = false;
+    public turnoAIniciar: ITurno;
+    public prestacionNoNominalizadaAIniciar: any;
+    public condicionPacienteServicioIntermedio: CondicionPaciente;
 
     prestacionPendiente: IPrestacion;
     turno: ITurno;
@@ -436,6 +439,28 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     iniciarPrestacion(turno) {
+        this.turnoAIniciar = turno;
+        this.condicionPacienteServicioIntermedio = null;
+    }
+
+    cancelarInicioPrestacion() {
+        this.turnoAIniciar = null;
+        this.prestacionNoNominalizadaAIniciar = null;
+    }
+
+    confirmarInicioPrestacion() {
+        const turno = this.turnoAIniciar;
+        const condicionPaciente = turno?.condicionPaciente;
+        if (this.prestacionNoNominalizadaAIniciar) {
+            this.procesarInicioPrestacionNoNominalizada(this.prestacionNoNominalizadaAIniciar, turno, condicionPaciente);
+        } else {
+            this.procesarInicioPrestacion(turno, condicionPaciente);
+        }
+        this.turnoAIniciar = null;
+        this.prestacionNoNominalizadaAIniciar = null;
+    }
+
+    private procesarInicioPrestacion(turno, condicionPaciente: CondicionPaciente) {
         const paciente = turno.paciente;
         const snomedConcept = this.chequearMultiprestacion(turno.tipoPrestacion.conceptId); // llamar a metodo y recorrer prestaciones;
         this.servicioPrestacion.get({
@@ -448,83 +473,75 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 const pretacionPendiente = pendientes[0];
                 this.prestacionPendiente = pretacionPendiente;
                 this.turno = turno;
+                this.condicionPacienteServicioIntermedio = condicionPaciente;
             } else {
-                this.plex.confirm(
-                    `Paciente: <b> ${paciente.apellido}, ${paciente.alias || paciente.nombre}.</b><br>Prestación: <b>${snomedConcept.term}</b>`,
-                    '¿Iniciar Prestación?'
-                ).then(confirmacion => {
-                    if (confirmacion) {
-                        if (pendientes.length) {
-                            const pretacionPendiente = pendientes[0];
-                            this.ejecutarPrestacionPendiente(pretacionPendiente, turno).subscribe(() => {
-                                if (this.tieneAccesoHUDS) {
-                                    const token = this.motivosHudsService.getMotivo('rup-inicio-prestacion').pipe(
-                                        switchMap(motivoH => {
-                                            const paramsToken = {
-                                                usuario: this.auth.usuario,
-                                                organizacion: this.auth.organizacion,
-                                                paciente: paciente,
-                                                motivo: motivoH[0].key,
-                                                profesional: this.auth.profesional,
-                                                idTurno: turno.id,
-                                                idPrestacion: snomedConcept._id
-                                            };
-                                            return this.hudsService.generateHudsToken(paramsToken);
-                                        }));
-                                    token.subscribe((husdTokenRes) => {
-                                        if (husdTokenRes.token) {
-                                            window.sessionStorage.setItem('huds-token', husdTokenRes.token);
-                                            this.routeTo('ejecucion', pretacionPendiente.id); // prestacion pendiente
-                                        }
-                                    });
-                                } else {
-                                    this.routeTo('ejecucion', pretacionPendiente.id); // prestacion pendiente
+                if (pendientes.length) {
+                    const pretacionPendiente = pendientes[0];
+                    this.ejecutarPrestacionPendiente(pretacionPendiente, turno, condicionPaciente).subscribe(() => {
+                        if (this.tieneAccesoHUDS) {
+                            const token = this.motivosHudsService.getMotivo('rup-inicio-prestacion').pipe(
+                                switchMap(motivoH => {
+                                    const paramsToken = {
+                                        usuario: this.auth.usuario,
+                                        organizacion: this.auth.organizacion,
+                                        paciente: paciente,
+                                        motivo: motivoH[0].key,
+                                        profesional: this.auth.profesional,
+                                        idTurno: turno.id,
+                                        idPrestacion: snomedConcept._id
+                                    };
+                                    return this.hudsService.generateHudsToken(paramsToken);
+                                }));
+                            token.subscribe((husdTokenRes) => {
+                                if (husdTokenRes.token) {
+                                    window.sessionStorage.setItem('huds-token', husdTokenRes.token);
+                                    this.routeTo('ejecucion', pretacionPendiente.id);
                                 }
                             });
-
                         } else {
-                            const fechaPrestacion = this.agendaSeleccionada.dinamica ? this.servicioPrestacion.getFechaPrestacionTurnoDinamico(turno.horaInicio) : turno.horaInicio;
-                            this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', fechaPrestacion, turno.id).subscribe(nuevaPrestacion => {
-                                if (nuevaPrestacion.error) {
-                                    this.plex.info('info', nuevaPrestacion.error, 'Aviso');
-                                }
-                                if (this.tieneAccesoHUDS) {
-                                    const token = this.motivosHudsService.getMotivo('rup-inicio-prestacion').pipe(
-                                        switchMap(motivoH => {
-                                            const paramsToken = {
-                                                usuario: this.auth.usuario,
-                                                organizacion: this.auth.organizacion,
-                                                paciente: paciente,
-                                                motivo: motivoH[0].key,
-                                                profesional: this.auth.profesional,
-                                                idTurno: turno.id,
-                                                idPrestacion: snomedConcept._id
-                                            };
-                                            return this.hudsService.generateHudsToken(paramsToken);
-                                        }));
+                            this.routeTo('ejecucion', pretacionPendiente.id);
+                        }
+                    });
 
-                                    token.subscribe((husdTokenRes) => {
-                                        if (husdTokenRes.token) {
-                                            window.sessionStorage.setItem('huds-token', husdTokenRes.token);
-                                            this.routeTo('ejecucion', nuevaPrestacion.id); // prestacion
-                                        }
-                                    });
-                                } else {
-                                    this.routeTo('ejecucion', nuevaPrestacion.id); // prestacion
-                                }
-                            }, (err) => {
-                                if (err === 'ya_iniciada') {
-                                    this.plex.info('info', 'La prestación ya fue iniciada por otro profesional', 'Aviso');
-                                    this.actualizar();
-                                } else {
-                                    this.plex.info('warning', err, 'Error');
+                } else {
+                    const fechaPrestacion = this.agendaSeleccionada.dinamica ? this.servicioPrestacion.getFechaPrestacionTurnoDinamico(turno.horaInicio) : turno.horaInicio;
+                    this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', fechaPrestacion, turno.id, condicionPaciente).subscribe(nuevaPrestacion => {
+                        if (nuevaPrestacion.error) {
+                            this.plex.info('info', nuevaPrestacion.error, 'Aviso');
+                        }
+                        if (this.tieneAccesoHUDS) {
+                            const token = this.motivosHudsService.getMotivo('rup-inicio-prestacion').pipe(
+                                switchMap(motivoH => {
+                                    const paramsToken = {
+                                        usuario: this.auth.usuario,
+                                        organizacion: this.auth.organizacion,
+                                        paciente: paciente,
+                                        motivo: motivoH[0].key,
+                                        profesional: this.auth.profesional,
+                                        idTurno: turno.id,
+                                        idPrestacion: snomedConcept._id
+                                    };
+                                    return this.hudsService.generateHudsToken(paramsToken);
+                                }));
+
+                            token.subscribe((husdTokenRes) => {
+                                if (husdTokenRes.token) {
+                                    window.sessionStorage.setItem('huds-token', husdTokenRes.token);
+                                    this.routeTo('ejecucion', nuevaPrestacion.id);
                                 }
                             });
+                        } else {
+                            this.routeTo('ejecucion', nuevaPrestacion.id);
                         }
-                    } else {
-                        return false;
-                    }
-                });
+                    }, (err) => {
+                        if (err === 'ya_iniciada') {
+                            this.plex.info('info', 'La prestación ya fue iniciada por otro profesional', 'Aviso');
+                            this.actualizar();
+                        } else {
+                            this.plex.info('warning', err, 'Error');
+                        }
+                    });
+                }
             }
         });
     }
@@ -556,20 +573,20 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
 
     iniciarPrestacionNoNominalizada(snomedConcept, turno) {
-        this.plex.confirm('</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
-            if (confirmacion) {
-                const fechaPrestacion = this.agendaSeleccionada.dinamica ? this.servicioPrestacion.getFechaPrestacionTurnoDinamico(turno.horaInicio) : turno.horaInicio;
-                this.servicioPrestacion.crearPrestacion(null, snomedConcept, 'ejecucion', fechaPrestacion, turno.id).subscribe(prestacion => {
-                    this.routeTo('ejecucion', prestacion.id);
-                }, (err) => {
-                    if (err === 'ya_iniciada') {
-                        this.plex.info('info', 'La prestación ya fue iniciada por otro profesional', 'Aviso');
-                    } else {
-                        this.plex.info('warning', err, 'Error');
-                    }
-                });
+        this.turnoAIniciar = turno;
+        this.prestacionNoNominalizadaAIniciar = snomedConcept;
+        this.condicionPacienteServicioIntermedio = null;
+    }
+
+    private procesarInicioPrestacionNoNominalizada(snomedConcept, turno, condicionPaciente: CondicionPaciente) {
+        const fechaPrestacion = this.agendaSeleccionada.dinamica ? this.servicioPrestacion.getFechaPrestacionTurnoDinamico(turno.horaInicio) : turno.horaInicio;
+        this.servicioPrestacion.crearPrestacion(null, snomedConcept, 'ejecucion', fechaPrestacion, turno.id, condicionPaciente).subscribe(prestacion => {
+            this.routeTo('ejecucion', prestacion.id);
+        }, (err) => {
+            if (err === 'ya_iniciada') {
+                this.plex.info('info', 'La prestación ya fue iniciada por otro profesional', 'Aviso');
             } else {
-                return false;
+                this.plex.info('warning', err, 'Error');
             }
         });
     }
@@ -701,6 +718,11 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             return turno.prestaciones.find(p => p.solicitud.tipoPrestacion.conceptId === prestacionHijo.conceptId);
         }
         return turno.prestaciones ? turno.prestaciones[0] : null;
+    }
+
+    condicionPacienteDeTurno(turno): string {
+        const prestacion = this.chequearPrestacion(turno);
+        return prestacion?.condicionPaciente || turno?.condicionPaciente || (prestacion ? 'no informada' : null);
     }
 
     chequearEstados(turno, estado) {
@@ -884,7 +906,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     /**
        * Ejecutar una prestacion que esta en estado pendiente
     */
-    ejecutarPrestacionPendiente(prestacion, turno?) {
+    ejecutarPrestacionPendiente(prestacion, turno?, condicionPaciente?: CondicionPaciente) {
         const params: any = {
             op: 'estadoPush',
             ejecucion: {
@@ -894,6 +916,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             },
             estado: { tipo: 'ejecucion' }
         };
+        if (condicionPaciente) {
+            params.condicionPaciente = condicionPaciente;
+        }
 
         return this.servicioPrestacion.patch(prestacion.id, params);
     }
@@ -985,5 +1010,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     onCancelPrestacion() {
         this.turno = null;
         this.prestacionPendiente = null;
+        this.condicionPacienteServicioIntermedio = null;
     }
 }

@@ -17,6 +17,7 @@ import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneable
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
+import { CONDICIONES_PACIENTE, CondicionPaciente, ICondicionPacienteOpcion } from '../../../interfaces/prestacion.interface';
 
 @Component({
     selector: 'rup-asignar-turno',
@@ -36,6 +37,8 @@ export class RupAsignarTurnoComponent implements OnInit {
     private prestacionesProfesional;
     public isButtonDisabled = false;
     public tipoPrestacion: ITipoPrestacion;
+    public condicionPaciente: ICondicionPacienteOpcion;
+    public condicionesPaciente = CONDICIONES_PACIENTE;
 
     // Eventos
     @Input() agenda: IAgenda;
@@ -166,6 +169,7 @@ export class RupAsignarTurnoComponent implements OnInit {
             tipoPrestacion: this.datosTurno.tipoPrestacion,
             idAgenda: this.agenda.id,
             paciente,
+            condicionPaciente: this.condicionPaciente?.id
         };
         // guardamos el turno
         this.serviceTurno.saveDinamica(datosConfirma).pipe(
@@ -174,7 +178,7 @@ export class RupAsignarTurnoComponent implements OnInit {
                 return turnoDado?.paciente?.id === paciente.id ? turnoDado.id : null;
             }), switchMap(idturnoDado => {
                 if (idturnoDado) {
-                    return this.servicioPrestacion.crearPrestacion(paciente, this.datosTurno.tipoPrestacion, 'ejecucion', this.servicioPrestacion.getFechaPrestacionTurnoDinamico(fechaTurno), idturnoDado).pipe(tap(prestacion => {
+                    return this.servicioPrestacion.crearPrestacion(paciente, this.datosTurno.tipoPrestacion, 'ejecucion', this.servicioPrestacion.getFechaPrestacionTurnoDinamico(fechaTurno), idturnoDado, this.condicionPaciente?.id).pipe(tap(prestacion => {
                         this.router.navigate(['rup/ejecucion/', prestacion.id]);
                     })
                     );
@@ -219,13 +223,14 @@ export class RupAsignarTurnoComponent implements OnInit {
                     estado: 'asignado',
                     tipoPrestacion: this.tipoPrestacion,
                     paciente: this.pacienteActivo,
+                    condicionPaciente: this.condicionPaciente?.id
                 }
             };
 
             this.serviceAgenda.patch(this.agenda.id, patch).subscribe(agenda => {
                 const sobreTurno = agenda.sobreturnos[agenda.sobreturnos.length - 1];
                 if (sobreTurno) {
-                    this.servicioPrestacion.crearPrestacion(paciente, sobreTurno.tipoPrestacion, 'ejecucion', sobreTurno.horaInicio, sobreTurno.id).subscribe(
+                    this.servicioPrestacion.crearPrestacion(paciente, sobreTurno.tipoPrestacion, 'ejecucion', sobreTurno.horaInicio, sobreTurno.id, this.condicionPaciente?.id).subscribe(
                         prestacion => {
                             this.router.navigate(['rup/ejecucion/', prestacion.id]);
                         }
