@@ -74,7 +74,8 @@
             <plex-button icon="close" type="danger" size="sm" (click)="cancelar()">
             </plex-button>
         </plex-title>
-        <app-internacion-detalle *ngIf="accion === 'verDetalle' || accion === 'editando'" (accion)="onAccion($event)">
+        <app-internacion-detalle *ngIf="accion === 'verDetalle' || accion === 'editando'"
+                                [paciente]="(mapaCamasService.selectedResumen | async)?.paciente" (accion)="onAccion($event)">
         </app-internacion-detalle>
         <app-nuevo-registro-salud *ngIf="accion === 'nuevo-registro'">
             <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="onAccion(null)">

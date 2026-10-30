@@ -67,7 +67,7 @@
             realizar el egreso.
         </plex-label>
     </ng-container>
-    <ng-container *ngIf="mostrar === 'registros' && permisosMapaCamasService.registros">
+    <ng-container *ngIf="mostrar === 'registros' && permisosMapaCamasService.registros && paciente?.id">
         <app-registros-huds-detalle *ngIf="!(paciente | pacienteRestringido)"
                                     (accion)="onAccion($event)"></app-registros-huds-detalle>
         <plex-label *ngIf="paciente | pacienteRestringido" class="mt-4" type="warning" icon="informacion"

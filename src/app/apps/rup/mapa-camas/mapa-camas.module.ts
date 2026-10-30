@@ -9,7 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { HammerModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { DndModule } from 'ngx-drag-drop';
-import { DirectiveLibModule } from 'src/app/directives/directives.module';
+import { DirectiveLibModule } from '../../../directives/directives.module';
+import { AndesAppSharedModule } from '../../../shared/andes-app-shared.module';
 import { OrganizacionLibModule } from '../../../components/organizacion/organizacion-lib.module';
 import { MPILibModule } from '../../../modules/mpi/mpi-lib.module';
 import { ElementosRUPModule } from '../../../modules/rup/elementos-rup.module';
@@ -142,6 +143,7 @@ export const INTERNACION_PROVIDERS = [
         HttpClientModule,
         MapaCamasRouting,
         SharedModule,
+        AndesAppSharedModule,
         MPILibModule,
         MitosModule,
         OrganizacionLibModule,

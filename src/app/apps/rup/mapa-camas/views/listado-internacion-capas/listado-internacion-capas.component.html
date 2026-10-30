@@ -70,6 +70,7 @@
             <plex-button icon="close" type="danger" size="sm" (click)="cancelar()">
             </plex-button>
         </plex-title>
-        <app-internacion-detalle></app-internacion-detalle>
+        <app-internacion-detalle [paciente]="(mapaCamasService.selectedResumen | async)?.paciente">
+        </app-internacion-detalle>
     </plex-layout-sidebar>
 </plex-layout>

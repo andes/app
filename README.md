@@ -13,7 +13,7 @@ Este repositorio contiene la aplicación web y las librerías Angular compartida
 | Angular | 15.2.x |
 | Angular CLI | 15.2.x |
 | TypeScript | 4.9.x |
-| Node.js | 18.x / 20.x, según el entorno |
+| Node.js | 18.x |
 | RxJS | Compatible con Angular 15 |
 | Plex | `@andes/plex` 9.x (beta durante la migración) |
 | ng-packagr | 15.2.x |
