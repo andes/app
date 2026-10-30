@@ -1,0 +1,25 @@
+<plex-layout [main]="8">
+    <plex-layout-main>
+        <header>
+            <plex-title titulo="CREAR NUEVO">
+                <plex-button label="GUARDAR" type="success" size="sm"></plex-button>
+               <plex-button label="VOLVER" type="danger" size="sm" class="ml-1"></plex-button>
+            </plex-title>
+        </header>
+
+        <plex-wrapper>
+            <plex-select label="Sistema" name="sistema" [data]="opciones" [(ngModel)]="sistemas"></plex-select>
+            <!-- <plex-select label="Función" name="grupoFarmacologico" [data]="grupos" [(ngModel)]="grupoFarmacologico"></plex-select>
+            <plex-select label="Grupo farmacológico" name="grupoFarmacologico" [(ngModel)]="grupoFarmacologico"></plex-select>
+            <plex-text label="Medicamento" name="medicamento" [(ngModel)]="medicamento"></plex-text>
+            <plex-text label="Concepto Snomed" name="conceptoSnomed" [(ngModel)]="conceptoSnomed"></plex-text>
+            <plex-text label="Especialidad" name="funcion" [data]="opciones" [(ngModel)]="funcion"></plex-text>
+            <plex-text label="Carro de emergencia" name="grupoFarmacologico" [data]="grupos" [(ngModel)]="grupoFarmacologico"></plex-text>
+            <plex-text label="Requisito deprescripción" name="medicamento" [(ngModel)]="medicamento"></plex-text>
+            <plex-text label="Indicacones" name="conceptoSnomed" [(ngModel)]="conceptoSnomed"></plex-text>    
+            <plex-text label="Recomendación de uso" name="conceptoSnomed" [(ngModel)]="conceptoSnomed"></plex-text>    -->
+
+        </plex-wrapper>
+
+
+    </plex-layout-main>

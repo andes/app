@@ -63,6 +63,7 @@ import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/
 import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem.component';
 import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
 import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
+import { CrearNuevoComponent } from './components/formularioTerapeutico/crear-nuevo/crear-nuevo.component';
 // Componentes
 import { InicioComponent } from './components/inicio/inicio.component';
 import { CommonNovedadesService } from './components/novedades/common-novedades.service';
@@ -344,6 +345,7 @@ registerLocaleData(localeEsAr);
         FormTerapeuticoDetallePageComponent,
         AddformTerapeuticoComponent,
         PucoComponent,
+        CrearNuevoComponent,
         // Campañas Salud
         CampaniaSaludComponent,
         CampaniaVisualizacionComponent,
