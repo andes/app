@@ -184,6 +184,7 @@
 
             <ng-container *ngIf="prestacionPendiente">
                 <rup-servicio-intermedio-alta [turno]="turno" [prestacion]="prestacionPendiente"
+                    [condicionPacienteInicial]="condicionPacienteServicioIntermedio"
                     (cancel)="onCancelPrestacion()">
                 </rup-servicio-intermedio-alta>
             </ng-container>
@@ -276,6 +277,11 @@
                                                             {{ turno.horaAsistencia | hora }} hs </ng-container>
                                                     </plex-badge>
                                                 </ng-container>
+                                                <div *ngIf="turno.paciente?.id && condicionPacienteDeTurno(turno) as condicionPaciente">
+                                                    <plex-badge type="info" class="mb-1">
+                                                        {{ condicionPaciente | titlecase }}
+                                                    </plex-badge>
+                                                </div>
                                             </div>
                                             <ng-container>
                                                 <strong>{{ turno.horaInicio | date: 'HH:mm' }} hs</strong>
@@ -457,6 +463,11 @@
                                                             hora }} hs
                                                         </plex-badge>
                                                     </div>
+                                                    <div *ngIf="sobreturno.paciente?.id && condicionPacienteDeTurno(sobreturno) as condicionPaciente">
+                                                        <plex-badge type="info" class="mb-1">
+                                                            {{ condicionPaciente | titlecase }}
+                                                        </plex-badge>
+                                                    </div>
                                                 </div>
                                                 <strong>{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
                                                 <ng-container
@@ -590,6 +601,9 @@
                                         [type]="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' ? 'success' : (
                                                     prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion' ? 'warning' : 'info')">
                                         {{prestacion.estados[prestacion.estados.length - 1].tipo}}
+                                    </plex-badge>
+                                    <plex-badge *ngIf="prestacion.condicionPaciente" type="info" class="mt-1">
+                                        {{ prestacion.condicionPaciente | titlecase }}
                                     </plex-badge>
                                     <strong class="mt-1" *ngIf="prestacion">{{ prestacion.solicitud.fecha | date:
                                         'HH:mm' }}</strong>
@@ -730,6 +744,33 @@
         </ng-container>
     </plex-layout-sidebar>
 </plex-layout>
+
+<plex-modal *ngIf="turnoAIniciar" size="md" [startOpen]="true" [allowEscClose]="false"
+            [allowBackdropClose]="false" (closed)="cancelarInicioPrestacion()">
+    <plex-modal-title type="info">
+        {{ prestacionNoNominalizadaAIniciar ? '¿Crear Prestación?' : '¿Iniciar Prestación?' }}
+    </plex-modal-title>
+    <plex-modal-subtitle>
+        Confirme los datos de la prestación.
+    </plex-modal-subtitle>
+    <main>
+        <plex-grid type="full" cols="2">
+            <plex-label *ngIf="turnoAIniciar.paciente" icon="paciente" titulo="Paciente"
+                        [subtitulo]="turnoAIniciar.paciente | nombre">
+            </plex-label>
+            <plex-label icon="mano-corazon" titulo="Prestación"
+                        [subtitulo]="prestacionNoNominalizadaAIniciar?.term || turnoAIniciar.tipoPrestacion?.term">
+            </plex-label>
+            <plex-label *ngIf="turnoAIniciar.condicionPaciente" icon="hospital" titulo="Condición del paciente"
+                        [subtitulo]="turnoAIniciar.condicionPaciente | titlecase">
+            </plex-label>
+        </plex-grid>
+    </main>
+    <plex-button modal left type="danger" (click)="cancelarInicioPrestacion()">Cancelar</plex-button>
+    <plex-button modal right type="success" (click)="confirmarInicioPrestacion()">
+        {{ prestacionNoNominalizadaAIniciar ? 'Crear prestación' : 'Iniciar prestación' }}
+    </plex-button>
+</plex-modal>
 
 <modal-motivo-acceso-huds [show]="showModalMotivo" (motivoAccesoHuds)="preAccesoHuds($event)">
 </modal-motivo-acceso-huds>

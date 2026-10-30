@@ -36,6 +36,12 @@
                 </plex-text>
             </div>
             <div class="col-12">
+                <plex-select label="Condición del paciente (opcional)" name="condicionPaciente"
+                             [(ngModel)]="condicionPaciente" [data]="condicionesPaciente" labelField="nombre"
+                             idField="id" placeholder="Seleccione una condición">
+                </plex-select>
+            </div>
+            <div class="col-12">
                 <plex-text label="Observaciones" name="nota" multiline="true" [(ngModel)]="nota"
                            (change)="verificarNota()"></plex-text>
             </div>

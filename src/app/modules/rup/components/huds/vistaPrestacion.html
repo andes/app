@@ -2,6 +2,9 @@
     <ng-container *ngIf="prestacion">
 
         <plex-title main titulo="{{ prestacion.solicitud.tipoPrestacion.term }}" size="sm">
+            <plex-badge *ngIf="prestacion.condicionPaciente" type="info">
+                {{ prestacion.condicionPaciente | titlecase }}
+            </plex-badge>
             <plex-button *ngIf="hasPacs" type="info" (click)="onPacs()" size="sm">
                 VER IMAGEN
             </plex-button>

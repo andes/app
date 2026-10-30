@@ -43,6 +43,10 @@
                          [required]="true">
             </plex-select>
         </div>
+        <plex-select [(ngModel)]="condicionPaciente" name="condicionPaciente" label="Condición del paciente (opcional)"
+                     [data]="condicionesPaciente" labelField="nombre" idField="id"
+                     placeholder="Seleccione una condición">
+        </plex-select>
     </ng-container>
 </form>
 

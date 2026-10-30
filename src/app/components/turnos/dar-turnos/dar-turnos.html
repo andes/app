@@ -367,6 +367,10 @@
                     <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta"
                         [(ngModel)]="motivoConsulta">
                     </plex-text>
+                    <plex-select label="Condición del paciente (opcional)" name="condicionPaciente"
+                        [(ngModel)]="condicionPaciente" [data]="condicionesPaciente" labelField="nombre" idField="id"
+                        placeholder="Seleccione una condición">
+                    </plex-select>
                     <plex-grid type="auto" size="md" cols="2">
                         <plex-phone label="Celular" [(ngModel)]="telefono" (change)="cambiarTelefono($event)"
                             name="telefono">

@@ -12,6 +12,7 @@ import { ObraSocialCacheService } from '../../../../services/obraSocialCache.ser
 import { HUDSService } from '../../services/huds.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { CONDICIONES_PACIENTE, ICondicionPacienteOpcion } from '../../interfaces/prestacion.interface';
 import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 import { PacientesConsentimientoService } from 'src/app/services/paciente-concentimiento.service';
@@ -50,6 +51,8 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
     public tieneAccesoHUDS: boolean;
     public pacienteMas65: boolean;
     public permisoProgramaMas65: boolean;
+    public condicionPaciente: ICondicionPacienteOpcion;
+    public condicionesPaciente = CONDICIONES_PACIENTE;
     /**
      * Indica si muestra el calendario para dar turno autocitado
      */
@@ -91,6 +94,7 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
             this.resultadoBusqueda = null;
             this.paciente = null;
             this.tipoPrestacionSeleccionada = null;
+            this.condicionPaciente = null;
         }
     }
 
@@ -179,6 +183,7 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
                     obraSocial: obraSocialPaciente,
                     genero: this.paciente.genero
                 },
+                condicionPaciente: this.condicionPaciente?.id,
                 solicitud: {
                     fecha: this.fecha,
                     tipoPrestacion: conceptoSnomed,
