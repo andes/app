@@ -197,7 +197,12 @@
         </div>
         <!-- Firmas del informe (doble firma) - ADR 0001 -->
         <div class="rup-firmas mt-4" *ngIf="firmasPrevalidacion.length || validada">
-            <plex-title titulo="Firmas del informe" size="sm"></plex-title>
+            <plex-title titulo="Firmas del informe" size="sm">
+                <plex-badge *ngIf="firmasPrevalidacion.length" type="warning" size="sm"
+                            tooltip="{{ firmasPrevalidacion.length | i18nPlural: { '=1': 'Una firma de pre-validación', 'other': '# firmas de pre-validación' } }}">
+                    {{ firmasPrevalidacion.length | i18nPlural: { '=1': '1 firma', 'other': '# firmas' } }}
+                </plex-badge>
+            </plex-title>
             <plex-list [striped]="true">
                 <plex-item *ngFor="let firma of firmasPrevalidacion">
                     <plex-label [tituloBold]="true" size="sm"

@@ -235,7 +235,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
                 return (!p.solicitud.turno && esHoy
                     && (creadaPorMi || puedeValidar || puedePrevalidar)
-                    && (estadoActual.tipo === 'ejecucion' || estadoActual.tipo === 'validada' || estadoActual.tipo === 'pendienteValidacion'));
+                    && (estadoActual.tipo === 'ejecucion' || estadoActual.tipo === 'validada'));
             });
             // agregamos el original de las prestaciones que estan fuera
             // de agenda para poder reestablecer los filtros
@@ -665,21 +665,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             this.agendas[this.agendas.indexOf(this.agendaSeleccionada)] = this.agendaSeleccionada = agenda;
         }
         ) : null;
-    }
-
-    /**
-     * Cola de prestaciones pendientes de validación que el usuario puede validar
-     * (médico de planta). Se deriva de las prestaciones ya cargadas. Ver ADR 0001.
-     */
-    get prestacionesPendientesValidacion(): any[] {
-        return (this.prestaciones || []).filter(p =>
-            p.estadoActual?.tipo === 'pendienteValidacion' &&
-            this.auth.check('rup:validacion:' + p.solicitud.tipoPrestacion.id)
-        );
-    }
-
-    irAValidar(prestacion) {
-        this.router.navigate(['rup/validacion', prestacion.id]);
     }
 
     getPrestaciones() {

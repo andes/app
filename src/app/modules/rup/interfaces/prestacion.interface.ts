@@ -98,7 +98,8 @@ export class IPrestacion {
     // Historia de estado de la prestación
     estados: IPrestacionEstado[];
     estadoActual: IPrestacionEstado;
-    // Firmas previas (residentes) de la doble firma. Ver ADR 0001.
+    // Firmas previas (residentes) de la doble firma. No cambian el estado: la prestación
+    // sigue en ejecución con N firmas hasta que se valida. Ver ADR 0001.
     firmasPrevalidacion?: IFirmaPrevalidacion[];
     unidadOrganizativa: ISnomedConcept;
     createdAt: Date;

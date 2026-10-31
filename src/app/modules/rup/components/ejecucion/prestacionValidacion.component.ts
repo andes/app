@@ -116,12 +116,15 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         return this.prestacion && this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada';
     }
 
-    // El usuario puede validar este tipo de prestación (gate nuevo del botón Validar). Ver ADR 0001.
+    // Quién puede validar: cualquiera que pudiera validar antes de la doble firma, SALVO quien
+    // tiene permiso de pre-validación sobre este tipo (residente): ese solo pre-valida.
+    // No se exige rup:validacion acá (ese permiso habilita validar prestaciones ajenas en el
+    // punto de inicio, no es requisito para validar). Ver ADR 0001.
     get puedeValidar(): boolean {
-        return this.prestacion && this.auth.check('rup:validacion:' + this.prestacion.solicitud.tipoPrestacion.id);
+        return this.prestacion && !this.auth.check('rup:prevalidacion:' + this.prestacion.solicitud.tipoPrestacion.id);
     }
 
-    // El usuario puede pre-validar (residente) y la prestación lo admite por su estado.
+    // El usuario puede pre-validar (residente) y la prestación está en ejecución.
     // Un validador (médico de planta) NO ve el botón de pre-validar: valida directo.
     // Encapsula la convención del ADR 0001 (prevalidación y validación son excluyentes en la UI).
     get puedePrevalidar(): boolean {
@@ -132,8 +135,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         if (!this.auth.check('rup:prevalidacion:' + tipoId) || this.auth.check('rup:validacion:' + tipoId)) {
             return false;
         }
-        const tipo = this.prestacion.estados[this.prestacion.estados.length - 1].tipo;
-        if (tipo !== 'ejecucion' && tipo !== 'pendienteValidacion') {
+        if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'ejecucion') {
             return false;
         }
         // Mismas reglas que la API: una firma por profesional y tope de firmas (dado por la API).
@@ -148,10 +150,10 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         return (this.prestacion && (this.prestacion as any).firmasPrevalidacion) || [];
     }
 
-    // Se puede quitar una firma de pre-validación si la prestación está pendiente y el
+    // Se puede quitar una firma de pre-validación si la prestación sigue en ejecución y el
     // usuario es el firmante o un validador. Ver ADR 0001.
     puedeQuitarFirma(firma): boolean {
-        if (!this.prestacion || this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'pendienteValidacion') {
+        if (!this.prestacion || this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'ejecucion') {
             return false;
         }
         const esMia = String(firma.profesional.id) === String(this.auth.profesional);
