@@ -40,27 +40,6 @@
         </div>
         <br>
         <!--Resultados-->
-        <!-- Cola de pendientes de validación (médico de planta) - ADR 0001 -->
-        <ng-container *ngIf="prestacionesPendientesValidacion.length">
-            <plex-title titulo="Pendientes de validación" size="sm" class="mt-4"></plex-title>
-            <plex-list [striped]="true">
-                <plex-item *ngFor="let p of prestacionesPendientesValidacion" (click)="irAValidar(p)">
-                    <div class="d-flex align-items-center">
-                        <plex-icon class="icono-circulo mr-3" name="historial" type="warning"></plex-icon>
-                        <plex-label
-                            titulo="{{ p.paciente?.apellido }}, {{ p.paciente?.nombre }} - {{ p.solicitud.tipoPrestacion.term }}"
-                            size="sm">
-                        </plex-label>
-                    </div>
-                    <div colspan="2" class="d-flex justify-content-end align-items-end w-100">
-                        <plex-badge type="warning">
-                            {{ p.firmasPrevalidacion?.length || 0 }} firma(s)
-                        </plex-badge>
-                    </div>
-                </plex-item>
-            </plex-list>
-        </ng-container>
-
         <plex-title titulo="Lista de agendas" size="sm" class="mt-4">
             <plex-radio class="form-check-inline" [(ngModel)]="filtroAgendas.radio" [data]="opciones" name="agendas"
                 type="horizontal" (change)="filtrar();">
@@ -282,6 +261,12 @@
                                                         -
                                                         1].tipo}}
                                                     </plex-badge>
+                                                    <!-- Firmas de pre-validación acumuladas (doble firma) - ADR 0001 -->
+                                                    <plex-badge *ngIf="turno.prestaciones[0].firmasPrevalidacion?.length"
+                                                        type="info" class="mb-1"
+                                                        tooltip="{{ turno.prestaciones[0].firmasPrevalidacion.length | i18nPlural: { '=1': 'Una firma de pre-validación', 'other': '# firmas de pre-validación' } }}">
+                                                        {{ turno.prestaciones[0].firmasPrevalidacion.length | i18nPlural: { '=1': '1 firma', 'other': '# firmas' } }}
+                                                    </plex-badge>
                                                 </div>
                                                 <ng-container *ngIf="turno && turno.estado === 'suspendido'">
                                                     <plex-badge type="danger" class="mb-1">Suspendido</plex-badge>
@@ -466,6 +451,12 @@
                                                             class="mb-1">
                                                             {{sobreturno.prestaciones[0].estados[sobreturno.prestaciones[0].estados.length-1].tipo}}
                                                         </plex-badge>
+                                                        <!-- Firmas de pre-validación acumuladas (doble firma) - ADR 0001 -->
+                                                        <plex-badge *ngIf="sobreturno.prestaciones[0].firmasPrevalidacion?.length"
+                                                            type="info" class="mb-1"
+                                                            tooltip="{{ sobreturno.prestaciones[0].firmasPrevalidacion.length | i18nPlural: { '=1': 'Una firma de pre-validación', 'other': '# firmas de pre-validación' } }}">
+                                                            {{ sobreturno.prestaciones[0].firmasPrevalidacion.length | i18nPlural: { '=1': '1 firma', 'other': '# firmas' } }}
+                                                        </plex-badge>
                                                     </div>
                                                     <div
                                                         *ngIf="sobreturno?.paciente && sobreturno.asistencia && sobreturno.estado !== 'suspendido'">
@@ -612,6 +603,11 @@
                                                     prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion' ? 'warning' : 'info')">
                                         {{prestacion.estados[prestacion.estados.length - 1].tipo}}
                                     </plex-badge>
+                                    <!-- Firmas de pre-validación acumuladas (doble firma) - ADR 0001 -->
+                                    <plex-badge *ngIf="prestacion.firmasPrevalidacion?.length" type="info" class="mt-1"
+                                        tooltip="{{ prestacion.firmasPrevalidacion.length | i18nPlural: { '=1': 'Una firma de pre-validación', 'other': '# firmas de pre-validación' } }}">
+                                        {{ prestacion.firmasPrevalidacion.length | i18nPlural: { '=1': '1 firma', 'other': '# firmas' } }}
+                                    </plex-badge>
                                     <strong class="mt-1" *ngIf="prestacion">{{ prestacion.solicitud.fecha | date:
                                         'HH:mm' }}</strong>
                                     <small
@@ -657,7 +653,7 @@
                                         </plex-button>
                                         <plex-button class="ml-1" tooltip="Continuar registro" tooltipPosition="left"
                                             icon="lapiz-documento" size="sm"
-                                            *ngIf="(prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion' || prestacion.estados[prestacion.estados.length - 1].tipo === 'pendienteValidacion') && checkPuedeValidar(prestacion)"
+                                            *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion' && checkPuedeValidar(prestacion)"
                                             (click)="setRouteToParams(['ejecucion', prestacion.id]); prestacionNominalizada=prestacion.solicitud.tipoPrestacion.noNominalizada;accesoHudsPaciente = prestacion.paciente; accesoHudsTurno = null; accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)"
                                             type="success">
                                         </plex-button>
