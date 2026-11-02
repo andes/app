@@ -45,4 +45,8 @@ export class VistaLaboratorioComponent implements OnInit {
             usuario: this.auth.usuario.nombreCompleto
         }, 'Laboratorio').subscribe();
     }
+
+    public hasHtml(str: string): boolean {
+        return Boolean(str && typeof str === 'string' && /<\/?([a-z][a-z0-9]*)(\s+[^>]*)?\/?>/i.test(str));
+    }
 }
