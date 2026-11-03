@@ -75,6 +75,7 @@ import { SemanticClassPipe } from './pipes/semantic-class.pipes';
 import { SemanticIconPipe } from './pipes/semantic-icon.pipes';
 import { RUPSoloValorPipe } from './pipes/elemento-rup-valor.pipes';
 import { DirectiveLibModule } from '../../directives/directives.module';
+import { AndesAppSharedModule } from '../../shared/andes-app-shared.module';
 import { PrescripcionInsumoComponent } from './components/elementos/prescripcionInsumo.component';
 import { TextoSimpleComponent } from './components/elementos/textoSimple.component';
 import { HistorialComponent } from './components/elementos/historial.component';
@@ -153,6 +154,7 @@ const RUPComponentsArray = [
         MitosModule,
         FormBuilderModule,
         DirectiveLibModule,
+        AndesAppSharedModule,
     ],
     declarations: [
         ...RUPComponentsArray,
