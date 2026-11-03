@@ -40,8 +40,8 @@
         <plex-label *ngIf='derivacion.estrategiaAtencion' titulo="Estrategia de atención"
                     subtitulo="{{derivacion.estrategiaAtencion.nombre}}">
         </plex-label>
-        <plex-label *ngIf="derivacion.paciente?.ObraSocial " titulo="Cobertura"
-                    subtitulo="{{(derivacion.paciente?.ObraSocial ).nombre}}">
+        <plex-label *ngIf="derivacion.paciente?.obraSocial" titulo="Cobertura"
+                    subtitulo="{{derivacion.paciente.obraSocial.nombre}}">
         </plex-label>
         <plex-label titulo="Creada por" subtitulo="{{derivacion.createdBy | nombre}}">
         </plex-label>

@@ -51,7 +51,7 @@ export class DetalleDerivacionComponent implements OnInit {
     set derivacion(value) {
         this._derivacion = value;
         this.dispositivo = value.dispositivo;
-        this.financiador = value.paciente?.ObraSocial || value.paciente?.obraSocial || value.obraSocial || null;
+        this.financiador = value.paciente?.obraSocial || null;
         this.financiadorActual = this.financiador;
         if (value?.paciente?.id) {
             this.pacienteService.getById(value.paciente.id).subscribe((pac: any) => this.paciente = pac);
