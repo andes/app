@@ -51,7 +51,7 @@ export class DetalleDerivacionComponent implements OnInit {
     set derivacion(value) {
         this._derivacion = value;
         this.dispositivo = value.dispositivo;
-        this.financiador = value.paciente?.ObraSocial || value.paciente?.obraSocial || value.obraSocial || null;
+        this.financiador = value.paciente?.obraSocial || null;
         this.financiadorActual = this.financiador;
         if (value?.paciente?.id) {
             this.pacienteService.getById(value.paciente.id).subscribe((pac: any) => this.paciente = pac);
@@ -192,14 +192,12 @@ export class DetalleDerivacionComponent implements OnInit {
             if (!this.reglaSeleccionada.definePrioridad) {
                 delete this.nuevoEstado.prioridad;
             }
-            const obraSocialOrigen = this.financiadorActual || this.derivacion.paciente?.ObraSocial || this.derivacion.paciente?.obraSocial || this.derivacion.obraSocial || null;
+            const obraSocialOrigen = this.financiadorActual || this.derivacion.paciente?.obraSocial || null;
             const huboCambio = JSON.stringify(this.financiador || null) !== JSON.stringify(obraSocialOrigen || null);
             let valorOS = null;
             if (huboCambio) {
                 valorOS = this.financiador?.nombre === 'Sin obra social' ? null : this.financiador;
-                this.nuevoEstado.ObraSocial = valorOS;
                 this.nuevoEstado.obraSocial = valorOS;
-                this.nuevoEstado.paciente = { ObraSocial: valorOS, obraSocial: valorOS };
             }
             this.derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
             const body: any = { estado: this.nuevoEstado };

@@ -3,7 +3,7 @@
                  (click)="showMotivoAcceso()" tooltip="HUDS del paciente" tooltipPosition="top">
     </plex-button>
     <plex-button size="sm" class="pr-1" type="info" [icon]="'printer'" [disabled]="requestInProgress"
-                 (click)="imprimirHistorial()">
+                 (click)="imprimirHistorial()" tooltip="Imprimir histórico de derivación" tooltipPosition="left">
     </plex-button>
     <plex-button size="sm" type="danger" [icon]="'close'" tooltip="Cerrar" tooltipPosition="left" (click)="cerrar()">
     </plex-button>
@@ -40,8 +40,8 @@
         <plex-label *ngIf='derivacion.estrategiaAtencion' titulo="Estrategia de atención"
                     subtitulo="{{derivacion.estrategiaAtencion.nombre}}">
         </plex-label>
-        <plex-label *ngIf="derivacion.paciente?.ObraSocial " titulo="Cobertura"
-                    subtitulo="{{(derivacion.paciente?.ObraSocial ).nombre}}">
+        <plex-label *ngIf="derivacion.paciente?.obraSocial" titulo="Cobertura"
+                    subtitulo="{{derivacion.paciente.obraSocial.nombre}}">
         </plex-label>
         <plex-label titulo="Creada por" subtitulo="{{derivacion.createdBy | nombre}}">
         </plex-label>
