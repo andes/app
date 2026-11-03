@@ -59,7 +59,7 @@
             </ng-container>
         </div>
     </ng-container>
-    <ng-container *ngIf="elementoRUP.esSolicitud">
+    <ng-container *ngIf="elementoRUP.esSolicitud && !validacion && !soloValores">
         <div class="row">
             <div class="col-md">
                 <hr />
@@ -75,11 +75,17 @@
                 </plex-select>
             </div>
         </div>
-        <div class="row" *ngIf="!soloValores && !organizaciones.length">
+        <div class="row" *ngIf="!organizaciones.length">
             <div class="col-md">
                 <plex-label titulo="Esta solicitud NO se registrará en ninguna bandeja de entrada y no podrá ser resuelta desde el módulo de solicitudes"
                             subtitulo="" type="warning" size="md" icon="alert"></plex-label>
             </div>
         </div>
     </ng-container>
+    <div class="row" *ngIf="elementoRUP.esSolicitud && soloValores && registro.valor?.solicitudPrestacion?.organizacionDestino?.id">
+        <div class="col-md">
+            <plex-label titulo="Organización a la cual se solicita"
+                        subtitulo="{{registro.valor.solicitudPrestacion.organizacionDestino.nombre}}"></plex-label>
+        </div>
+    </div>
 </ng-container>

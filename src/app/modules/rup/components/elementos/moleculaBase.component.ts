@@ -82,6 +82,10 @@ export class MoleculaBaseComponent extends RUPComponent implements OnInit {
                 this.registro.valor.solicitudPrestacion['prestacionSolicitada'] = this.registro.concepto;
             }
 
+            if (this.validacion || this.soloValores) {
+                return;
+            }
+
             this.servicioReglas.get({
                 organizacionOrigen: this.auth.organizacion.id,
                 prestacionOrigen: this.prestacion?.solicitud?.tipoPrestacion.conceptId,

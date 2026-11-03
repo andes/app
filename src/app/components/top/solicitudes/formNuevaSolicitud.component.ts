@@ -7,12 +7,12 @@ import { ReglaService } from '../../../services/top/reglas.service';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
 import { FileObject, FILE_EXT, IMAGENES_EXT, VIDEO_EXT } from '@andes/shared';
 import { DriveService } from 'src/app/services/drive.service';
-import { ConstantesService } from './../../../services/constantes.service';
 import { SnomedService } from '../../../apps/mitos';
 import { ECLQueriesService } from 'src/app/services/eclqueries.service';
 import { switchMap, filter, take } from 'rxjs';
 import { ElementosRUPService } from '../../../modules/rup/services/elementosRUP.service';
 import { IPrestacionRegistro } from '../../../modules/rup/interfaces/prestacion.registro.interface';
+import { ConceptObserverService } from '../../../modules/rup/services/conceptObserver.service';
 
 @Component({
     selector: 'form-nueva-solicitud',
@@ -102,6 +102,7 @@ export class FormNuevaSolicitudComponent implements OnInit {
         private snomedService: SnomedService,
         public eclqueriesServicies: ECLQueriesService,
         private elementosRUPService: ElementosRUPService,
+        private conceptObserverService: ConceptObserverService,
         private cd: ChangeDetectorRef
     ) { }
 
@@ -270,6 +271,8 @@ export class FormNuevaSolicitudComponent implements OnInit {
         this.registroSolicitud = null;
         this.cd.detectChanges();
 
+        this.conceptObserverService.destroy();
+
         const concepto = this.modelo.solicitud.tipoPrestacion;
 
         if (!concepto) {
@@ -382,20 +385,24 @@ export class FormNuevaSolicitudComponent implements OnInit {
                 this.modelo.estados = [{ tipo: 'pendiente' }];
             }
         }
-        const valorRUP = this.mostrarRupSolicitud && this.registroSolicitud ? this.registroSolicitud.valor : {};
+        const registroRUP = this.mostrarRupSolicitud ? this.registroSolicitud : null;
+        const valorRUP = registroRUP?.valor || {};
         this.modelo.solicitud.registros.push({
             nombre: this.modelo.solicitud.tipoPrestacion.term,
             concepto: this.modelo.solicitud.tipoPrestacion,
             valor: {
                 ...valorRUP,
                 solicitudPrestacion: {
+                    ...valorRUP.solicitudPrestacion,
                     motivo: this.motivo,
                     autocitado: this.autocitado,
                     conceptoAsociado: this.modelo.solicitud.conceptoAsociado ? this.modelo.solicitud.conceptoAsociado : undefined,
                 },
                 documentos: this.documentos
             },
-            esSolicitud: this.mostrarRupSolicitud ? true : undefined,
+            elementoRUP: registroRUP?.elementoRUP,
+            registros: registroRUP?.registros,
+            esSolicitud: registroRUP ? true : undefined,
             tipo: 'solicitud'
         });
         this.modelo.paciente = {
