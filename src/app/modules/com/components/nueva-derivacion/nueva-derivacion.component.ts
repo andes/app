@@ -253,8 +253,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         };
         const financiadorSeleccionado = this.financiador || this.paciente.financiador?.[0] || null;
         if (financiadorSeleccionado) {
-            this.modelo.paciente.ObraSocial = financiadorSeleccionado;
-            this.modelo.obraSocial = financiadorSeleccionado;
+            this.modelo.paciente.obraSocial = financiadorSeleccionado;
         }
         this.modelo.organizacionDestino = {
             id: this.organizacionDestino.id,
