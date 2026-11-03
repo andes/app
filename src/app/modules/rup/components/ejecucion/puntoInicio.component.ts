@@ -93,6 +93,13 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public prestacionesValidacion = this.auth.getPermissions('rup:validacion:?');
     public permisoServicioIntermedio = this.auth.getPermissions('rup:servicio-intermedio:?');
     public showSidebar = false;
+    public mostrarPrestacionesSinValidar = false;
+    public prestacionesSinValidar: IPrestacion[] = [];
+    public cargandoPrestacionesSinValidar = false;
+    public scrollEnd = false;
+    private skip = 0;
+    private limit = 15;
+    private lastRequestPrestacionesSinValidar: Subscription;
 
     prestacionPendiente: IPrestacion;
     turno: ITurno;
@@ -117,6 +124,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.stopAgendaRefresh();
+        this.stopCargaPrestacionesSinValidar();
         this.ws.disconnect();
     }
 
@@ -167,6 +175,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.showSidebar = value;
         this.tipoPrestacion = null;
         this.verFueraAgenda = false;
+        this.resetSidebarPrestacionesSinValidar();
     }
 
     actualizareleccionada(id: number) {
@@ -395,6 +404,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
      * Navega para crear una nueva prestación
      */
     crearPrestacion(opcion: string): void {
+        this.resetSidebarPrestacionesSinValidar();
         this.showSidebar = true;
         this.tipoPrestacion = opcion;
         this.verFueraAgenda = true;
@@ -464,7 +474,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                                                 usuario: this.auth.usuario,
                                                 organizacion: this.auth.organizacion,
                                                 paciente: paciente,
-                                                motivo: motivoH[0].key,
+                                                motivo: motivoH?.[0]?.key || 'inicio-prestacion',
                                                 profesional: this.auth.profesional,
                                                 idTurno: turno.id,
                                                 idPrestacion: snomedConcept._id
@@ -495,7 +505,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                                                 usuario: this.auth.usuario,
                                                 organizacion: this.auth.organizacion,
                                                 paciente: paciente,
-                                                motivo: motivoH[0].key,
+                                                motivo: motivoH?.[0]?.key || 'inicio-prestacion',
                                                 profesional: this.auth.profesional,
                                                 idTurno: turno.id,
                                                 idPrestacion: snomedConcept._id
@@ -861,7 +871,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                             usuario: this.auth.usuario,
                             organizacion: this.auth.organizacion,
                             paciente: prestacion.paciente,
-                            motivo: motivoH[0].key,
+                            motivo: motivoH?.[0]?.key || 'cambio-estado',
                             profesional: this.auth.profesional,
                             idTurno: null,
                             idPrestacion: prestacion.id
@@ -970,7 +980,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             this.accesoHudsTurno = null;
             this.accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id;
             this.motivosHudsService.getMotivo('continuidad').subscribe(motivoH => {
-                this.preAccesoHuds(motivoH[0].key);
+                this.preAccesoHuds(motivoH?.[0]?.key || 'continuidad');
             });
         } else {
             this.routeTo(estado, prestacion.id);
@@ -985,5 +995,68 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     onCancelPrestacion() {
         this.turno = null;
         this.prestacionPendiente = null;
+    }
+
+    verPrestacionesSinValidar() {
+        if (this.mostrarPrestacionesSinValidar) {
+            return;
+        }
+        this.stopCargaPrestacionesSinValidar();
+        this.showSidebar = true;
+        this.mostrarPrestacionesSinValidar = true;
+        this.verFueraAgenda = false;
+        this.tipoPrestacion = null;
+        this.buscandoPaciente = false;
+        this.prestacionPendiente = null;
+        this.prestacionesSinValidar = [];
+        this.skip = 0;
+        this.scrollEnd = false;
+        this.cargarPrestacionesSinValidar();
+    }
+
+    cargarPrestacionesSinValidar() {
+        if (this.cargandoPrestacionesSinValidar || this.scrollEnd) {
+            return;
+        }
+        this.cargandoPrestacionesSinValidar = true;
+        this.lastRequestPrestacionesSinValidar = this.servicioPrestacion.get({
+            idProfesional: this.auth.profesional,
+            estado: 'ejecucion',
+            organizacion: this.auth.organizacion.id,
+            ambitoOrigen: 'ambulatorio',
+            ordenFechaEjecucion: true,
+            skip: this.skip,
+            limit: this.limit
+        }).subscribe({
+            next: (prestaciones) => {
+                const nuevasPrestaciones = prestaciones || [];
+                this.prestacionesSinValidar = this.prestacionesSinValidar.concat(nuevasPrestaciones);
+                this.skip = this.prestacionesSinValidar.length;
+                if (!nuevasPrestaciones.length || nuevasPrestaciones.length < this.limit) {
+                    this.scrollEnd = true;
+                }
+                this.cargandoPrestacionesSinValidar = false;
+            },
+            error: () => {
+                this.cargandoPrestacionesSinValidar = false;
+            }
+        });
+    }
+
+    onScroll() {
+        this.cargarPrestacionesSinValidar();
+    }
+
+    private resetSidebarPrestacionesSinValidar() {
+        this.mostrarPrestacionesSinValidar = false;
+        this.stopCargaPrestacionesSinValidar();
+    }
+
+    private stopCargaPrestacionesSinValidar() {
+        if (this.lastRequestPrestacionesSinValidar) {
+            this.lastRequestPrestacionesSinValidar.unsubscribe();
+            this.lastRequestPrestacionesSinValidar = null;
+        }
+        this.cargandoPrestacionesSinValidar = false;
     }
 }
