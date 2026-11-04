@@ -41,8 +41,8 @@ export class ListarTurnosComponent implements OnInit {
 
     // Abre diálogo de impresión del navegador
     printAgenda(agendas) {
-        const agendaId = agendas[0].id;
-        this.documentosService.descargarAgenda({ agendaId }, 'agenda').subscribe();
+        const agendaIds = agendas.map(agenda => agenda.id);
+        this.documentosService.descargarAgenda({ agendaIds }, 'agenda').subscribe();
     }
 
     // Vuelve al gestor
