@@ -176,7 +176,8 @@
                     </plex-int>
 
                     <plex-select [(ngModel)]="paciente.sexo" label="Seleccione sexo" [data]="sexos" name="sexo"
-                                 required="true" placeholder="Seleccione..." [readonly]="validado"
+                                 required="true" placeholder="Seleccione..."
+                                 [readonly]="validado && !permitirEditarSexo"
                                  (change)="mapeoGenero();checkDisableValidar()" grow="4">
                     </plex-select>
                     <plex-text *ngIf="!noPoseeDNI" class="mr-3" label="CUIL" [(ngModel)]="paciente.cuil" name="cuil"

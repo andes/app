@@ -135,6 +135,7 @@ export class PacienteComponent implements OnInit {
     public pacientes: IPacienteMatch[] | IPaciente[];
     public disableValidar = true;
     public escaneado = false;
+    public escaneadoSinSexo = false;
     public scanCode = null;
     public paciente: IPaciente;
     public showDeshacer = false;
@@ -148,6 +149,10 @@ export class PacienteComponent implements OnInit {
 
     get width() {
         return window.innerWidth;
+    }
+
+    get permitirEditarSexo() {
+        return this.escaneadoSinSexo && !this.pacienteModel?.id && !this.showDeshacer;
     }
 
     constructor(
@@ -216,7 +221,8 @@ export class PacienteComponent implements OnInit {
                     this.pacienteModel.nombre = this.paciente.nombre.toUpperCase();
                     this.pacienteModel.apellido = this.paciente.apellido.toUpperCase();
                     this.pacienteModel.fechaNacimiento = moment(this.paciente.fechaNacimiento).toDate();
-                    this.pacienteModel.sexo = this.paciente.sexo;
+                    this.escaneadoSinSexo = !this.paciente.sexo;
+                    this.pacienteModel.sexo = this.paciente.sexo || undefined;
                     this.pacienteModel.documento = this.paciente.documento;
                     this.pacienteModel.scan = this.paciente.scan;
                     this.pacienteModel.estado = 'validado';
