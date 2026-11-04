@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { cache, Server } from '@andes/shared';
-import { CondicionPaciente, IPrestacion } from '../interfaces/prestacion.interface';
+import { AmbitoOrigen, IPrestacion } from '../interfaces/prestacion.interface';
 import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interface';
 import { SnomedService } from '../../../apps/mitos';
 import { HUDSService } from '../services/huds.service';
@@ -657,15 +657,12 @@ export class PrestacionesService {
         if (snomedConcept.esMultiprestacion) {
             prestacion['groupId'] = turno;
         }
-        if (condicionPaciente) {
-            prestacion['condicionPaciente'] = condicionPaciente;
-        }
 
         return prestacion as IPrestacion;
     }
 
-    crearPrestacion(paciente: any, snomedConcept: any, momento: string = 'solicitud', fecha: any = new Date(), turno: any = null): Observable<any> {
-        const prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, 'ambulatorio', fecha, turno);
+    crearPrestacion(paciente: any, snomedConcept: any, momento: string = 'solicitud', fecha: any = new Date(), turno: any = null, ambitoOrigen: AmbitoOrigen = 'ambulatorio'): Observable<any> {
+        const prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, ambitoOrigen, fecha, turno, undefined, []);
         return this.post(prestacion);
     }
 

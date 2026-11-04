@@ -2,7 +2,7 @@ import { Auth } from '@andes/auth';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ReglaService } from 'src/app/services/top/reglas.service';
 import { ITurno } from '../../../../interfaces/turnos/ITurno';
-import { CONDICIONES_PACIENTE, CondicionPaciente, ICondicionPacienteOpcion, IPrestacion } from '../../interfaces/prestacion.interface';
+import { AMBITOS_ORIGEN, AmbitoOrigen, IAmbitoOrigenOpcion, IPrestacion } from '../../interfaces/prestacion.interface';
 import { PrestacionesService } from '../../services/prestaciones.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class RUPServicioIntermedioAltaComponent implements OnInit {
 
     @Input() prestacion: IPrestacion;
 
-    @Input() condicionPacienteInicial: CondicionPaciente;
+    @Input() ambitoOrigenInicial: AmbitoOrigen;
 
     @Output() cancel = new EventEmitter();
 
@@ -26,8 +26,8 @@ export class RUPServicioIntermedioAltaComponent implements OnInit {
     regla;
 
     prestacionElegida;
-    condicionPaciente: ICondicionPacienteOpcion;
-    condicionesPaciente = CONDICIONES_PACIENTE;
+    ambitoOrigen: IAmbitoOrigenOpcion;
+    ambitosOrigen = AMBITOS_ORIGEN;
 
     constructor(
         private prestacionService: PrestacionesService,
@@ -38,7 +38,8 @@ export class RUPServicioIntermedioAltaComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.condicionPaciente = this.condicionesPaciente.find(opcion => opcion.id === this.condicionPacienteInicial);
+        const ambitoInicial = this.ambitoOrigenInicial || this.prestacion?.solicitud?.ambitoOrigen || this.turno?.ambitoOrigen;
+        this.ambitoOrigen = this.ambitosOrigen.find(opcion => opcion.id === ambitoInicial);
         if (this.prestacion) {
             this.datosSolicitud = this.prestacion.solicitud.registros[0].valor.solicitudPrestacion;
             this.prestacionSolicitada = this.prestacion.solicitud.registros[0].concepto;
@@ -60,12 +61,12 @@ export class RUPServicioIntermedioAltaComponent implements OnInit {
     }
 
     onConfirmar() {
-        this.ejecutarPrestacionPendiente(this.prestacion, this.turno, this.condicionPaciente?.id).subscribe(() => {
+        this.ejecutarPrestacionPendiente(this.prestacion, this.turno, this.ambitoOrigen?.id).subscribe(() => {
             this.prestacionService.navegarAEjecucion(this.prestacion, this.turno);
         });
     }
 
-    ejecutarPrestacionPendiente(prestacion, turno?, condicionPaciente?: CondicionPaciente) {
+    ejecutarPrestacionPendiente(prestacion, turno?, ambitoOrigen?: AmbitoOrigen) {
         const params: any = {
             op: 'estadoPush',
             ejecucion: {
@@ -78,8 +79,8 @@ export class RUPServicioIntermedioAltaComponent implements OnInit {
             },
             estado: { tipo: 'ejecucion' }
         };
-        if (condicionPaciente) {
-            params.condicionPaciente = condicionPaciente;
+        if (ambitoOrigen) {
+            params.ambitoOrigen = ambitoOrigen;
         }
 
         if (this.prestacionElegida) {

@@ -7,7 +7,7 @@ import { switchMap } from 'rxjs';
 import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
 import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
-import { CONDICIONES_PACIENTE, ICondicionPacienteOpcion } from 'src/app/modules/rup/interfaces/prestacion.interface';
+import { AMBITOS_ORIGEN, IAmbitoOrigenOpcion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { ReglaService } from 'src/app/services/top/reglas.service';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
@@ -185,8 +185,8 @@ export class DarTurnosComponent implements OnInit {
     carpetaEfector: any;
     obraSocialPaciente: IObraSocial;
     motivoConsulta: string;
-    condicionPaciente: ICondicionPacienteOpcion;
-    condicionesPaciente = CONDICIONES_PACIENTE;
+    ambitoOrigen: IAmbitoOrigenOpcion;
+    ambitosOrigen = AMBITOS_ORIGEN;
     showTab = 0;
     equipoSalud;
     prestacionesAlternativa;
@@ -773,7 +773,7 @@ export class DarTurnosComponent implements OnInit {
 
             this.habilitarTurnoDoble();
             this.nota = this.turno.nota;
-            this.condicionPaciente = null;
+            this.ambitoOrigen = null;
             this.videoConferencia = this.turno.videoConferencia;
             this.buscarTurnosFuturos();
         } else {
@@ -1074,7 +1074,7 @@ export class DarTurnosComponent implements OnInit {
             const datosTurno = {
                 nota: this.nota,
                 motivoConsulta: this.motivoConsulta,
-                condicionPaciente: this.condicionPaciente?.id,
+                ambitoOrigen: this.ambitoOrigen?.id,
                 tipoPrestacion: this.turnoTipoPrestacion,
                 paciente: pacienteSave,
                 idAgenda: this.agenda.id,
@@ -1119,7 +1119,7 @@ export class DarTurnosComponent implements OnInit {
                 tipoTurno: this.tiposTurnosSelect,
                 nota: this.nota,
                 motivoConsulta: this.motivoConsulta,
-                condicionPaciente: this.condicionPaciente?.id,
+                ambitoOrigen: this.ambitoOrigen?.id,
                 estadoFacturacion: this.estadoFacturacion,
                 emitidoPor: (this.turnoTelefonico) ? 'turno telefonico' : null,
                 videoConferencia: this.videoConferencia,

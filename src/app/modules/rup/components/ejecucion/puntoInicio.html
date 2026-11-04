@@ -184,7 +184,7 @@
 
             <ng-container *ngIf="prestacionPendiente">
                 <rup-servicio-intermedio-alta [turno]="turno" [prestacion]="prestacionPendiente"
-                    [condicionPacienteInicial]="condicionPacienteServicioIntermedio"
+                    [ambitoOrigenInicial]="ambitoOrigenServicioIntermedio"
                     (cancel)="onCancelPrestacion()">
                 </rup-servicio-intermedio-alta>
             </ng-container>
@@ -277,9 +277,9 @@
                                                             {{ turno.horaAsistencia | hora }} hs </ng-container>
                                                     </plex-badge>
                                                 </ng-container>
-                                                <div *ngIf="turno.paciente?.id && condicionPacienteDeTurno(turno) as condicionPaciente">
+                                                <div *ngIf="turno.paciente?.id && ambitoOrigenDeTurno(turno) as ambitoOrigen">
                                                     <plex-badge type="info" class="mb-1">
-                                                        {{ condicionPaciente | titlecase }}
+                                                        {{ ambitoOrigen | titlecase }}
                                                     </plex-badge>
                                                 </div>
                                             </div>
@@ -463,9 +463,9 @@
                                                             hora }} hs
                                                         </plex-badge>
                                                     </div>
-                                                    <div *ngIf="sobreturno.paciente?.id && condicionPacienteDeTurno(sobreturno) as condicionPaciente">
+                                                    <div *ngIf="sobreturno.paciente?.id && ambitoOrigenDeTurno(sobreturno) as ambitoOrigen">
                                                         <plex-badge type="info" class="mb-1">
-                                                            {{ condicionPaciente | titlecase }}
+                                                            {{ ambitoOrigen | titlecase }}
                                                         </plex-badge>
                                                     </div>
                                                 </div>
@@ -602,8 +602,8 @@
                                                     prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion' ? 'warning' : 'info')">
                                         {{prestacion.estados[prestacion.estados.length - 1].tipo}}
                                     </plex-badge>
-                                    <plex-badge *ngIf="prestacion.condicionPaciente" type="info" class="mt-1">
-                                        {{ prestacion.condicionPaciente | titlecase }}
+                                    <plex-badge *ngIf="prestacion?.solicitud?.ambitoOrigen" type="info" class="mt-1">
+                                        {{ prestacion?.solicitud?.ambitoOrigen | titlecase }}
                                     </plex-badge>
                                     <strong class="mt-1" *ngIf="prestacion">{{ prestacion.solicitud.fecha | date:
                                         'HH:mm' }}</strong>
@@ -761,8 +761,8 @@
             <plex-label icon="mano-corazon" titulo="Prestación"
                         [subtitulo]="prestacionNoNominalizadaAIniciar?.term || turnoAIniciar.tipoPrestacion?.term">
             </plex-label>
-            <plex-label *ngIf="turnoAIniciar.condicionPaciente" icon="hospital" titulo="Condición del paciente"
-                        [subtitulo]="turnoAIniciar.condicionPaciente | titlecase">
+            <plex-label *ngIf="turnoAIniciar.ambitoOrigen" icon="hospital" titulo="Ámbito de origen"
+                        [subtitulo]="turnoAIniciar.ambitoOrigen | titlecase">
             </plex-label>
         </plex-grid>
     </main>

@@ -29,8 +29,8 @@
                         <help-solicitud [solicitud]='prestacion.solicitud'></help-solicitud>
                     </ng-container>
 
-                    <plex-badge *ngIf="prestacion.condicionPaciente" type="info">
-                        {{ prestacion.condicionPaciente | titlecase }}
+                    <plex-badge *ngIf="prestacion?.solicitud?.ambitoOrigen" type="info">
+                        {{ prestacion?.solicitud?.ambitoOrigen | titlecase }}
                     </plex-badge>
 
                     <plex-button (click)="toggleCollapse($event)" type="primary"

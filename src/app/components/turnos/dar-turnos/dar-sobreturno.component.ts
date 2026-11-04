@@ -11,7 +11,7 @@ import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { ObraSocialService } from './../../../services/obraSocial.service';
 import { TurnoService } from './../../../services/turnos/turno.service';
-import { CONDICIONES_PACIENTE, ICondicionPacienteOpcion } from '../../../modules/rup/interfaces/prestacion.interface';
+import { AMBITOS_ORIGEN, IAmbitoOrigenOpcion } from '../../../modules/rup/interfaces/prestacion.interface';
 
 @Component({
     selector: 'dar-sobreturno',
@@ -40,8 +40,8 @@ export class DarSobreturnoComponent implements OnChanges {
         prepaga: ''
     };
     public disableGuardar = true;
-    public condicionPaciente: ICondicionPacienteOpcion;
-    public condicionesPaciente = CONDICIONES_PACIENTE;
+    public ambitoOrigen: IAmbitoOrigenOpcion;
+    public ambitosOrigen = AMBITOS_ORIGEN;
     turnosFuturos = [];
     modalTurnosRepetidos = false;
 
@@ -243,7 +243,7 @@ export class DarSobreturnoComponent implements OnChanges {
                 tipoPrestacion: this.tipoPrestacion,
                 paciente: pacienteSave,
                 nota: this.nota,
-                condicionPaciente: this.condicionPaciente?.id
+                ambitoOrigen: this.ambitoOrigen?.id
             }
         };
         this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {

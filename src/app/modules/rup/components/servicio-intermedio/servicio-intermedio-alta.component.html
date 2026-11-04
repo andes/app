@@ -33,9 +33,9 @@
 <plex-select *ngIf="regla?.destino.agendas" [(ngModel)]="prestacionElegida" [data]="regla?.destino.agendas"
              placeholder="Tipo de Prestación" name="tipoPrestacion" label="Tipo Prestacion">
 </plex-select>
-<plex-select [(ngModel)]="condicionPaciente" [data]="condicionesPaciente" labelField="nombre" idField="id"
-             placeholder="Seleccione una condición" name="condicionPaciente"
-             label="Condición del paciente (opcional)">
+<plex-select [(ngModel)]="ambitoOrigen" [data]="ambitosOrigen" labelField="nombre" idField="id"
+             placeholder="Seleccione una condición" name="ambitoOrigen"
+             label="Ámbito de origen (opcional)">
 </plex-select>
 <div justify class="mt-2">
 
