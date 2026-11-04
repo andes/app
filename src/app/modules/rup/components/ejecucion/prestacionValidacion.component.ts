@@ -18,7 +18,6 @@ import { HUDSService } from '../../services/huds.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { ConstantesService } from './../../../../services/constantes.service';
 import { PlexModalComponent } from '@andes/plex';
 
 
@@ -89,7 +88,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     public hasPacs: boolean;
     public noNominalizada = true;
     public puedeRomperValidacion = false;
-    public tiempoLimiteRomperValidacion;
+    public romperValidacionVencida = false;
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -106,7 +105,6 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         public huds: HUDSService,
         public organizacionService: OrganizacionService,
         private conceptosTurneablesService: ConceptosTurneablesService,
-        private constantesService: ConstantesService,
     ) {
     }
 
@@ -119,9 +117,6 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.constantesService.search({ source: 'prestacion:validacion' }).subscribe(constante => {
-            this.tiempoLimiteRomperValidacion = constante[0].key || 30; // días
-        });
         // consultamos desde que pagina se ingreso para poder volver a la misma
         this.btnVolver = 'Volver';
         this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
@@ -200,9 +195,11 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                     this.motivoReadOnly = true;
                 }
                 this.checkRomperValidacion();
+                this.actualizarVencimientoRomperValidacion();
 
             } else {
                 this.puedeRomperValidacion = false;
+                this.romperValidacionVencida = false;
             }
 
             if (this.elementoRUP.requeridos.length > 0) {
@@ -280,6 +277,12 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         this.puedeRomperValidacion = miPrestacion || puedeValidar;
     }
 
+    private actualizarVencimientoRomperValidacion() {
+        this.servicioPrestacion.estaVencidaRomperValidacion(this.prestacion).subscribe(vencida => {
+            this.romperValidacionVencida = vencida;
+        });
+    }
+
 
     /**
      * Confirmamos validacion y guardamos
@@ -315,6 +318,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                 ).subscribe(prestacion => {
                     this.prestacion = prestacion;
                     this.checkRomperValidacion();
+                    this.actualizarVencimientoRomperValidacion();
                     const recorrerRegistros = registro => {
                         if (!seCreoSolicitud && registro.esSolicitud && registro.valor?.solicitudPrestacion?.organizacionDestino) {
                             seCreoSolicitud = true;
@@ -355,34 +359,13 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     }
 
     romperValidacion() {
-        this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {
-            if (!validar) {
-                return false;
-            } else {
-                // hacemos el patch y luego creamos los planes
-                const cambioEstado: any = {
-                    op: 'romperValidacion'
-                };
-
-                // En api el estado de la prestación cambia a ejecucion
-                this.servicioPrestacion.patch(this.prestacion._id, cambioEstado).subscribe(prestacion => {
-                    this.prestacion = prestacion;
-                    // chequeamos si es no nominalizada si
-                    if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
-                        // actualizamos las prestaciones de la HUDS
-                        this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
-                        });
-                    } else {
-                        this.router.navigate(['rup/ejecucion', this.prestacion.id]);
-                    }
-
-                    this.router.navigate(['rup/ejecucion', this.prestacion.id]);
-                }, (err) => {
-                    this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
-                });
+        this.servicioPrestacion.romperValidacion(this.prestacion).subscribe(prestacion => {
+            this.prestacion = prestacion;
+            if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe();
             }
-
-        });
+            this.router.navigate(['rup/ejecucion', this.prestacion.id]);
+        }, () => { });
     }
 
     turnoDado(e) {
@@ -594,9 +577,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     }
 
     estaVencida() {
-        const prestacionValidada = this.prestacion.estados.find(estado => estado.tipo === 'validada'); // primer validación
-        const diasDiferencia = moment().diff(moment(prestacionValidada.createdAt), 'days');
-        return diasDiferencia > Number(this.tiempoLimiteRomperValidacion);
+        return this.romperValidacionVencida;
     }
 }
 
