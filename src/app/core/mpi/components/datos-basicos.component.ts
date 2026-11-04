@@ -31,6 +31,7 @@ import moment from 'moment';
 export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
     @Input() paciente: IPaciente;
     @Input() tipoPaciente = 'con-dni';
+    @Input() permitirEditarSexo = false;
     @Output() changes: EventEmitter<any> = new EventEmitter<any>();
     @ViewChild('formBasico', { static: false }) formBasico: NgForm;
     @ViewChild('formExtranjero', { static: false }) formExtranjero: NgForm;
