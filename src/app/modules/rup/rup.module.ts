@@ -31,6 +31,7 @@ import { HUDSLibModule } from './huds-lib.module';
 import { RUPLibModule } from './rup-lib.module';
 
 
+
 export const RUP_COMPONENTS = [
     PuntoInicioComponent,
     PrestacionCrearComponent,
