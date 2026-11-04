@@ -1,8 +1,27 @@
 import moment from 'moment';
+import { takeUntil } from 'rxjs/operators';
 
 import { RUPComponent } from './../core/rup.component';
 import { Component, OnInit } from '@angular/core';
 import { RupElement } from '.';
+
+function normalizarEvolucion(valor: any): string {
+    if (!valor) {
+        return '';
+    }
+
+    const evolucion = valor.evolucion;
+
+    if (typeof evolucion === 'string') {
+        return evolucion;
+    }
+
+    if (evolucion && typeof evolucion === 'object' && !Array.isArray(evolucion) && typeof evolucion.evolucion === 'string') {
+        return evolucion.evolucion;
+    }
+
+    return '';
+}
 
 @Component({
     selector: 'rup-evolucion-problema-default',
@@ -48,6 +67,16 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
             this.friendlyDate(this.registro.valor.fechaInicio);
         }
 
+        const evolucionGuardada = this.registro.valor?.evolucion;
+        if (
+            evolucionGuardada &&
+            typeof evolucionGuardada === 'object' &&
+            !Array.isArray(evolucionGuardada) &&
+            typeof evolucionGuardada.evolucion === 'string'
+        ) {
+            this.registro.valor.evolucion = normalizarEvolucion(this.registro.valor);
+        }
+
         if (this.soloValores) {
 
             if (this.registro.evoluciones && this.registro.evoluciones.length) {
@@ -68,12 +97,21 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
         }
 
         if (!this.soloValores) {
-            this.conceptObserverService.observe(this.registro).subscribe((data) => {
-                if (this.registro !== data && this.registro.valor.evolucion !== data.valor) {
-                    this.registro.valor.evolucion = data.valor;
-                    this.emitChange(false);
-                }
-            });
+            this.conceptObserverService.observe(this.registro)
+                .pipe(
+                    takeUntil(this.onDestroy$)
+                )
+                .subscribe((data: any) => {
+                    if (
+                        this.registro !== data &&
+                        data?.tipoNotificacion === 'plantilla' &&
+                        typeof data.valor === 'string' &&
+                        this.registro.valor.evolucion !== data.valor
+                    ) {
+                        this.registro.valor.evolucion = data.valor;
+                        this.emitChange(false);
+                    }
+                });
         }
     }
 
