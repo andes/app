@@ -37,6 +37,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     public permisoLaboratorios: boolean;
     public permisoVacunas: boolean;
     public permisoRecetas: boolean;
+    public permisoSolicitudes: boolean;
     private fechaDesdeInternacion = moment('2016-01-01').toDate();
     private origen: string;
 
@@ -74,7 +75,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         this.permisoLaboratorios = this.permisoHudsCompleta || this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:laboratorio');
         this.permisoVacunas = this.permisoHudsCompleta || this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:vacuna');
         this.permisoRecetas = this.permisoHudsCompleta || this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:receta');
-
+        this.permisoSolicitudes = this.permisoHudsCompleta || this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:solicitudes');
         // cargar las internaciones y armar un filtro en api .
         this.huds.registrosHUDS.subscribe((datos) => {
             if (this.registros.length < datos.length) {
