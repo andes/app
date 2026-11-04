@@ -67,7 +67,9 @@
                                     <td *ngIf="!unItem.esTitulo"><b>{{unItem.nombre}}</b></td>
                                     <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.resultado}}</td>
                                     <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.unidadMedida}}</td>
-                                    <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.valorReferencia}}
+                                    <td *ngIf="!unItem.esTitulo" [ngClass]="hasHtml(unItem.valorReferencia) ? 'text-left' : 'text-center'">
+                                        <span *ngIf="hasHtml(unItem.valorReferencia)" [innerHTML]="unItem.valorReferencia"></span>
+                                        <span *ngIf="!hasHtml(unItem.valorReferencia)">{{unItem.valorReferencia}}</span>
                                     </td>
                                     <td *ngIf="!unItem.esTitulo" class="text-center">{{unItem.metodo}}</td>
                                     <td *ngIf="!unItem.esTitulo" class="text-center">
