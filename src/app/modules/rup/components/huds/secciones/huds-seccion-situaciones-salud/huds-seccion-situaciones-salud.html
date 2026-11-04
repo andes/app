@@ -1,0 +1,42 @@
+<plex-title titulo="Situaciones de Salud Activas" size="sm"></plex-title>
+
+<plex-text [(ngModel)]="diagnosticoProfesional" class="mb-2"
+           placeholder="Busque un diagnóstico o profesional de la salud"></plex-text>
+<br>
+<ng-container *ngIf="trastornosFiltrados.length">
+    <plex-list [striped]="true">
+        <plex-item *ngFor="let trastorno of trastornosFiltrados" [selectable]="false">
+            <plex-label titulo="{{ getTitulo(trastorno) }}" subtitulo="{{ getSubtitulo(trastorno) }}">
+            </plex-label>
+            <plex-label titulo="Profesional" subtitulo="{{ getProfesionalTexto(trastorno) }}"></plex-label>
+            <plex-badge *ngIf="esEmbarazo(trastorno) && getEdadGestacional(trastorno)" type="success">
+                Eg: {{ getEdadGestacional(trastorno) }} semanas
+            </plex-badge>
+            <plex-badge *ngIf="esEmbarazo(trastorno) && trastorno.fechaUltimoControl" type="info"
+                        tooltip="Fecha último control">
+                {{ trastorno.fechaUltimoControl | fecha }}
+            </plex-badge>
+            <plex-badge *ngIf="!esEmbarazo(trastorno) && trastorno.evoluciones?.length" type="success">
+                {{ trastorno.evoluciones[0].estado }}
+            </plex-badge>
+            <plex-badge *ngIf="!esEmbarazo(trastorno) && trastorno.evoluciones?.length" type="info">
+                {{ trastorno.evoluciones[0].fechaCarga | fecha }}
+            </plex-badge>
+            <plex-badge *ngIf="!esEmbarazo(trastorno) && !trastorno.evoluciones?.length" type="info">
+                Sin evoluciones
+            </plex-badge>
+            <plex-button icon="eye" type="info" size="sm" tooltip="Ver prestación"
+                         (click)="verPrestacion(trastorno)"></plex-button>
+        </plex-item>
+    </plex-list>
+</ng-container>
+<div *ngIf="trastornos.length && !trastornosFiltrados.length" class="mt-5">
+    <plex-label class="flex-column" icon="trastorno" type="info" justify="center" size="xl" direction="column"
+                titulo="No se encontraron situaciones de salud para el filtro aplicado">
+    </plex-label>
+</div>
+<div *ngIf="!trastornos.length" class="mt-5">
+    <plex-label class="flex-column" icon="trastorno" type="info" justify="center" size="xl" direction="column"
+                titulo="El paciente no tiene situaciones de salud activas">
+    </plex-label>
+</div>

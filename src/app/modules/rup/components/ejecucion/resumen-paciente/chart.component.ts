@@ -1,5 +1,6 @@
+import 'chartjs-adapter-moment';
 import moment from 'moment';
-import { Component, HostBinding, Input } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { PrestacionesService } from '../../../services/prestaciones.service';
@@ -9,6 +10,8 @@ import { PrestacionesService } from '../../../services/prestaciones.service';
     templateUrl: 'chart.html'
 })
 export class ChartComponent {
+    @Output() hasData = new EventEmitter<boolean>();
+
     private _paciente: IPaciente;
     public chart;
     // variables para guardar los pesos de las prestaciones
@@ -32,21 +35,37 @@ export class ChartComponent {
     get paciente(): IPaciente {
         return this._paciente;
     }
-    public modelo = {
-        radio: 1
-    };
-    public opciones = [
-        { id: 1, label: 'Curva de Peso' },
-        { id: 2, label: 'Curva de Talla' },
-        { id: 3, label: 'Perímetro cefálico' },
-        // { id: 4, label: 'Índice de masa corporal' },
-    ];
+    @Input()
+    set curva(value: number) {
+        this.curvaSeleccionada = value;
+        if (this.paciente) {
+            this.generarEtiquetasCurva();
+        }
+    }
+    @Input()
+    set fechaDesde(value: Date) {
+        this.desde = value;
+        if (this.paciente) {
+            this.generarEtiquetasCurva();
+        }
+    }
+    @Input()
+    set fechaHasta(value: Date) {
+        this.hasta = value;
+        if (this.paciente) {
+            this.generarEtiquetasCurva();
+        }
+    }
+    public clave = 0;
+    public curvaSeleccionada = 1;
+    public desde: Date = null;
+    public hasta: Date = null;
 
     constructor(public auth: Auth, public prestacionesService: PrestacionesService) { }
 
     generarDatosCurva(expresion: string, opcionesGrafico: any) {
         this.mostrarChart = false;
-        this.prestacionesService.getRegistrosHuds(this.paciente.id, expresion).subscribe(prestaciones => {
+        this.prestacionesService.getRegistrosHuds(this.paciente.id, expresion, this.desde, null, null, null, this.hasta).subscribe(prestaciones => {
             if (prestaciones && prestaciones.length) {
                 this.puntos = prestaciones;
                 // ordenamos los pesos por fecha
@@ -68,16 +87,21 @@ export class ChartComponent {
                 this.setChartOptions(this.puntos, opcionesGrafico);
 
                 // nuevo titulo
-                this.barChartOptions.title.text += ' desde ' + moment(this.barChartLabels[0]).format('DD-MM-YYYY') + ' hasta ' + moment(this.barChartLabels[this.barChartLabels.length - 1]).format('DD-MM-YYYY');
+                this.barChartOptions.plugins.title.text += ' desde ' + moment(this.barChartLabels[0]).format('DD-MM-YYYY') + ' hasta ' + moment(this.barChartLabels[this.barChartLabels.length - 1]).format('DD-MM-YYYY');
 
                 this.mostrarChart = true;
+                this.hasData.emit(true);
+            } else {
+                this.mostrarChart = false;
+                this.hasData.emit(false);
             }
         });
     }
     generarEtiquetasCurva() {
+        this.clave++;
         let expresion;
         const opcionesGrafico = { titulo: '', labelY: '', unidad: '' };
-        switch (this.modelo.radio) {
+        switch (this.curvaSeleccionada) {
             case 1: // Peso
                 expresion = '<<27113001';
                 opcionesGrafico.titulo = 'Curva de Peso';

@@ -1,20 +1,10 @@
 <div class="row">
-    <div class="col-3">
-        <form>
-            <plex-radio [(ngModel)]="modelo.radio" [data]="opciones" name="evolucion" [required]="true"
-                        (change)="generarEtiquetasCurva()"></plex-radio>
-        </form>
-    </div>
-    <div class="col-9">
+    <div class="col-12">
         <div style="height: 50%; width:100%">
             <div style="display: block" *ngIf="mostrarChart">
-                <canvas baseChart height="300" [data]="barChartData" [labels]="barChartLabels"
-                        [options]="barChartOptions" [legend]="barChartLegend" [type]="barChartType">
-                </canvas>
+                <canvas *ngFor="let c of [clave]" baseChart height="300" [data]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
+                    [type]="barChartType"></canvas>
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col">&nbsp;</div>
 </div>

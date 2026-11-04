@@ -55,6 +55,7 @@
     "bowser": "^1.9.4",
     "bson": "^4.0.0-rc5",
     "chart.js": "^4.5.0",
+    "chartjs-adapter-moment": "^1.0.1",
     "core-js": "^3.29.0",
     "enhanced-resolve": "^4.1.0",
     "file-saver": "^2.0.2",
