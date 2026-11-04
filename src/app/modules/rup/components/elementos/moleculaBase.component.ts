@@ -94,7 +94,13 @@ export class MoleculaBaseComponent extends RUPComponent implements OnInit {
                     this.registro.valor.fechaInicio = this.consultaTrastornoOriginal.registros.find(reg => reg.concepto.conceptId === '298059007').valor;
                     this.registro.registros.find(reg => reg.concepto.conceptId === '298059007').valor = this.registro.valor.fechaInicio;
                     this.registro.registros.find(reg => reg.concepto.conceptId === '405795006').valor = this.consultaTrastornoOriginal.registros.find(reg => reg.concepto.conceptId === '405795006').valor;
-                    this.registro.valor.evolucion = this.registro.registros.find(reg => reg.concepto.conceptId === '229059009').valor;
+                    const registroEvolucion = this.registro.registros.find(reg => reg.concepto.conceptId === '229059009');
+                    const valorEvolucion = registroEvolucion?.valor;
+                    if (typeof valorEvolucion === 'string') {
+                        this.registro.valor.evolucion = valorEvolucion;
+                    } else if (valorEvolucion && typeof valorEvolucion === 'object' && typeof valorEvolucion.evolucion === 'string') {
+                        this.registro.valor.evolucion = valorEvolucion.evolucion;
+                    }
                 }
             }
         });

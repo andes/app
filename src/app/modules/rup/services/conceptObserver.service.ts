@@ -37,6 +37,16 @@ export class ConceptObserverService {
     }
 
     /**
+     * Notifica el texto de una plantilla sin mezclarlo con los cambios de registros.
+     *
+     * @param {ISnomedConcept} concepto Concepto de SNOMED
+     * @param {string} valor Texto de la plantilla
+     */
+    public notifyPlantilla(concepto: ISnomedConcept, valor: string) {
+        this.notify(concepto, { valor: valor || '', tipoNotificacion: 'plantilla' } as any);
+    }
+
+    /**
    * Limpia los observers para que no aparezcan los valores en una consulta nueva
    *
    */

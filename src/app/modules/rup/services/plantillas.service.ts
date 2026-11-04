@@ -79,7 +79,7 @@ export class PlantillasService {
         } else {
             return () => {
                 const descripcion = this.descripcionComoHtml(plantilla.descripcion);
-                this.cos.notify({ conceptId: ctid } as any, { valor: descripcion } as any);
+                this.cos.notifyPlantilla({ conceptId: ctid } as any, descripcion);
             };
         }
     }
@@ -110,7 +110,7 @@ export class PlantillasService {
 
     limpiarTextoPlantilla(conceptId) {
         return () => {
-            this.cos.notify({ conceptId } as any, { valor: '' } as any);
+            this.cos.notifyPlantilla({ conceptId } as any, '');
         };
     }
 
