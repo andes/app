@@ -31,6 +31,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
         dosisDiaria: {
             dosis: null,
             frecuencia: null,
+            intervalo: null,
             dias: null,
             notaMedica: null,
             notaFarmacia: null
@@ -70,6 +71,10 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     public numeroAfiliado = '';
     public patronNumerico = '^[0-9]*$';
     private timeout: any;
+
+    get esDosisCompleta(): boolean {
+        return Boolean(this.medicamento?.dosisDiaria?.dosis?.toString().trim());
+    }
 
 
     ngOnInit() {
@@ -334,6 +339,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
             esMagistral: false,
             magistral: null,
             dosisDiaria: {
+                dosis: null,
+                intervalo: null,
                 frecuencia: null,
                 dias: null,
                 notaMedica: null,
