@@ -169,7 +169,9 @@
                                     <div [justify]="center">
                                         <plex-badge class=" mr-1"
                                                     *ngIf="prestacion.solicitud.registros[0]?.valor.solicitudPrestacion?.conceptoAsociado"
-                                                    type="warning">
+                                                    type="warning"
+                                                    [tooltip]="prestacion.solicitud.registros[0]?.valor.solicitudPrestacion?.conceptoAsociado?.term"
+                                                    tooltipPosition="top">
                                             <plex-icon name="alert-decagram" size="md"></plex-icon>
                                         </plex-badge>
                                         <plex-badge *ngIf="prestacion | linkTurnoRemoto | async | isNotEmpty"
@@ -356,7 +358,9 @@
                                     <div [justify]="center">
                                         <plex-badge class="mr-1"
                                                     *ngIf="prestacion.solicitud.registros[0]?.valor.solicitudPrestacion?.conceptoAsociado"
-                                                    type="warning">
+                                                    type="warning"
+                                                    [tooltip]="prestacion.solicitud.registros[0]?.valor.solicitudPrestacion?.conceptoAsociado?.term"
+                                                    tooltipPosition="top">
                                             <plex-icon name="alert-decagram" size="md"></plex-icon>
                                         </plex-badge>
                                         <plex-badge *ngIf="existeNotificacion(prestacion)" type="info"
