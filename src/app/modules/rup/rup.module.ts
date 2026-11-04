@@ -45,6 +45,7 @@ export const RUP_COMPONENTS = [
     RUPServicioIntermedioAltaComponent
 ];
 
+
 @NgModule({
     imports: [
         CommonModule,
