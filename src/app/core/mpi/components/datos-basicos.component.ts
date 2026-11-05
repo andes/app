@@ -110,7 +110,7 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, 
             }
         }
 
-        if (!changes.paciente.currentValue.notaError?.length) {
+        if (changes.paciente && !changes.paciente.currentValue.notaError?.length) {
             this.paciente.reportarError = false;
         }
         if (changes.paciente && this.paciente?.fechaNacimiento) {

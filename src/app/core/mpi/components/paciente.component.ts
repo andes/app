@@ -3,8 +3,8 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EMPTY, Subscription } from 'rxjs';
-import { filter, first, map, mergeMap } from 'rxjs/operators';
+import { EMPTY, from, Observable, of, Subscription } from 'rxjs';
+import { catchError, filter, first, map, mergeMap } from 'rxjs/operators';
 import { IUbicacion } from 'src/app/interfaces/IUbicacion';
 import { ValidacionService } from 'src/app/services/fuentesAutenticas/validacion.service';
 import { IContacto } from '../../../interfaces/IContacto';
@@ -140,6 +140,7 @@ export class PacienteComponent implements OnInit {
     public paciente: IPaciente;
     public showDeshacer = false;
     private subscripcionValidar: Subscription = null;
+    private temporalConfirmado: string = null;
     origen = '';
     tipoPaciente = '';
     contactoImportado = false;
@@ -457,21 +458,67 @@ export class PacienteComponent implements OnInit {
             this.pacienteModel.reportarError = !!this.paciente?.reportarError;
             const paciente = this.prepararPaciente(this.mergePaciente(this.pacienteModel, this.pacienteExtranjero), ignoreSuggestions);
             if (paciente) {
-                this.guardarPaciente(paciente).subscribe((paciente) => {
-                    const vinculado = this.pacienteVinculadoCache.getPacienteValor();
-
-                    if (vinculado) {
-                        this.pacienteService.linkPatient(paciente, vinculado).subscribe(() => {
-                            this.success(paciente);
-                            this.pacienteVinculadoCache.clearPaciente();
-                            this.pacienteCache.clearScanState();
-                        });
-                    } else {
-                        this.success(paciente);
+                this.validarEscaneadoSinSexo(paciente).subscribe(pacienteGuardar => {
+                    if (!pacienteGuardar) {
+                        this.disableGuardar = false;
+                        return;
                     }
+                    this.guardarPaciente(pacienteGuardar).subscribe((paciente) => {
+                        const vinculado = this.pacienteVinculadoCache.getPacienteValor();
+
+                        if (vinculado) {
+                            this.pacienteService.linkPatient(paciente, vinculado).subscribe(() => {
+                                this.success(paciente);
+                                this.pacienteVinculadoCache.clearPaciente();
+                                this.pacienteCache.clearScanState();
+                            });
+                        } else {
+                            this.success(paciente);
+                        }
+                    });
                 });
             }
         }
+    }
+
+    private validarEscaneadoSinSexo(paciente): Observable<any> {
+        if (!this.permitirEditarSexo) {
+            return of(paciente);
+        }
+        const clave = `${paciente.documento}|${paciente.sexo}`;
+        if (this.temporalConfirmado === clave) {
+            return of(this.marcarTemporal(paciente));
+        }
+        this.loading = true;
+        return this.validacionService.post({ documento: paciente.documento, sexo: paciente.sexo }).pipe(
+            catchError(() => of(null)),
+            mergeMap((resultado: any) => {
+                this.loading = false;
+                if (resultado && !resultado.error && !resultado.message) {
+                    this.aplicarValidacion(resultado);
+                    this.plex.toast('success', '¡Paciente Validado!');
+                    return of(this.prepararPaciente(this.mergePaciente(this.pacienteModel, this.pacienteExtranjero), paciente.ignoreSuggestions));
+                }
+                return from(this.plex.confirm(
+                    'No se pudo validar el paciente con RENAPER, revise los datos ingresados (documento y sexo).<br>¿Desea guardarlo de todas formas como paciente temporal?',
+                    'Paciente no validado'
+                )).pipe(
+                    map(confirmado => {
+                        if (!confirmado) {
+                            return null;
+                        }
+                        this.temporalConfirmado = clave;
+                        return this.marcarTemporal(paciente);
+                    })
+                );
+            })
+        );
+    }
+
+    private marcarTemporal(paciente) {
+        paciente.estado = 'temporal';
+        paciente.entidadesValidadoras = (paciente.entidadesValidadoras || []).filter(entidad => entidad !== 'RENAPER');
+        return paciente;
     }
 
     private redirect(resultadoSave?: any) {
@@ -741,54 +788,11 @@ export class PacienteComponent implements OnInit {
                         map((resultado: any) => {
                             this.loading = false;
                             if (resultado.error || resultado.message) {
-                                this.plex.info('warning', 'Revise los datos ingresados o registre como paciente temporal', 'Ciudadano no encontrado');
+                                const sugerenciaTemporal = this.pacienteModel.id ? '' : '<br>Si los datos son correctos, puede registrarlo como paciente temporal.';
+                                this.plex.info('warning', `No se pudo validar el paciente con RENAPER, revise los datos ingresados (documento y sexo).${sugerenciaTemporal}`, 'Paciente no validado');
                                 this.disableValidar = false;
                             } else {
-                                this.setBackup();
-                                this.validado = true;
-                                this.showDeshacer = true;
-                                this.pacienteModel.fechaUltimaValidacion = resultado.validateAt ? moment(resultado.validateAt).toDate() : new Date();
-                                this.pacienteModel.nombre = resultado.nombre;
-                                this.pacienteModel.apellido = resultado.apellido;
-                                this.pacienteModel.estado = resultado.estado;
-                                this.pacienteModel.fechaNacimiento = moment(resultado.fechaNacimiento).toDate();
-                                this.pacienteModel.foto = resultado.foto;
-                                this.pacienteModel.fotoId = resultado.fotoId;
-                                if (resultado.errorData) {
-                                    this.pacienteModel.nombreCorrectoReportado = resultado.nombre;
-                                    this.pacienteModel.apellidoCorrectoReportado = resultado.apellido;
-                                    this.pacienteModel.fechaNacimientoCorrectoReportado = resultado.fechaNacimiento;
-                                    this.pacienteModel.reportarError = true;
-                                }
-                                // agregamos en identificadores la validación
-                                const resIdentificadores = resultado.identificadores;
-                                if (this.pacienteModel.identificadores?.length) {
-                                    const posIdentficador = this.pacienteModel.identificadores.findIndex(unId => unId.entidad === resIdentificadores[0].entidad);
-                                    if (posIdentficador !== -1) {
-                                        // seteo el campo valor por si se modificó
-                                        this.pacienteModel.identificadores[posIdentficador].valor = resIdentificadores[0].valor || '';
-                                    } else {
-                                        this.pacienteModel.identificadores.push(resIdentificadores[0]);
-                                    }
-                                } else {
-                                    this.pacienteModel.identificadores = resIdentificadores || null;
-                                }
-                                // Fecha de fallecimiento en caso de poseerla
-                                if (resultado.fechaFallecimiento) {
-                                    this.pacienteModel.fechaFallecimiento = moment(resultado.fechaFallecimiento).toDate();
-                                } else {
-                                    this.pacienteModel.fechaFallecimiento = null;
-                                }
-                                //  Se completan datos FALTANTES
-                                if (resultado.direccion[0] && !this.pacienteModel.direccion[0]) { // direccion fisica
-                                    this.pacienteModel.direccion[0] = resultado.direccion[0];
-                                }
-                                if (resultado.direccion[1]) { // direccion legal
-                                    this.pacienteModel.direccion[1] = resultado.direccion[1];
-                                }
-                                if (!this.pacienteModel.cuil && resultado.cuil) {
-                                    this.pacienteModel.cuil = resultado.cuil;
-                                }
+                                this.aplicarValidacion(resultado);
 
                                 if (this.tipoPaciente === 'extranjero') {
                                     this.disableGuardar = false;
@@ -796,10 +800,12 @@ export class PacienteComponent implements OnInit {
 
                                 this.plex.toast('success', '¡Paciente Validado!');
                             }
-                            // error
-                        }, () => {
+                        }),
+                        catchError(() => {
+                            this.loading = false;
                             this.plex.toast('danger', 'Validación Fallida');
                             this.disableValidar = false;
+                            return EMPTY;
                         })
                     );
                 }
@@ -807,6 +813,54 @@ export class PacienteComponent implements OnInit {
                 return EMPTY;
             })
         ).subscribe(() => this.setMainSize(this.activeTab));
+    }
+
+    private aplicarValidacion(resultado) {
+        this.setBackup();
+        this.validado = true;
+        this.showDeshacer = true;
+        this.pacienteModel.fechaUltimaValidacion = resultado.validateAt ? moment(resultado.validateAt).toDate() : new Date();
+        this.pacienteModel.nombre = resultado.nombre;
+        this.pacienteModel.apellido = resultado.apellido;
+        this.pacienteModel.estado = resultado.estado;
+        this.pacienteModel.fechaNacimiento = moment(resultado.fechaNacimiento).toDate();
+        this.pacienteModel.foto = resultado.foto;
+        this.pacienteModel.fotoId = resultado.fotoId;
+        if (resultado.errorData) {
+            this.pacienteModel.nombreCorrectoReportado = resultado.nombre;
+            this.pacienteModel.apellidoCorrectoReportado = resultado.apellido;
+            this.pacienteModel.fechaNacimientoCorrectoReportado = resultado.fechaNacimiento;
+            this.pacienteModel.reportarError = true;
+        }
+        // agregamos en identificadores la validación
+        const resIdentificadores = resultado.identificadores;
+        if (this.pacienteModel.identificadores?.length) {
+            const posIdentficador = this.pacienteModel.identificadores.findIndex(unId => unId.entidad === resIdentificadores[0].entidad);
+            if (posIdentficador !== -1) {
+                // seteo el campo valor por si se modificó
+                this.pacienteModel.identificadores[posIdentficador].valor = resIdentificadores[0].valor || '';
+            } else {
+                this.pacienteModel.identificadores.push(resIdentificadores[0]);
+            }
+        } else {
+            this.pacienteModel.identificadores = resIdentificadores || null;
+        }
+        // Fecha de fallecimiento en caso de poseerla
+        if (resultado.fechaFallecimiento) {
+            this.pacienteModel.fechaFallecimiento = moment(resultado.fechaFallecimiento).toDate();
+        } else {
+            this.pacienteModel.fechaFallecimiento = null;
+        }
+        //  Se completan datos FALTANTES
+        if (resultado.direccion[0] && !this.pacienteModel.direccion[0]) { // direccion fisica
+            this.pacienteModel.direccion[0] = resultado.direccion[0];
+        }
+        if (resultado.direccion[1]) { // direccion legal
+            this.pacienteModel.direccion[1] = resultado.direccion[1];
+        }
+        if (!this.pacienteModel.cuil && resultado.cuil) {
+            this.pacienteModel.cuil = resultado.cuil;
+        }
     }
 
     private setBackup() {
