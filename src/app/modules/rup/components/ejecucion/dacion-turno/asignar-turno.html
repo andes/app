@@ -43,6 +43,10 @@
                          [required]="true">
             </plex-select>
         </div>
+        <plex-select [(ngModel)]="ambitoOrigen" name="ambitoOrigen" label="Ámbito de origen (opcional)"
+                     [data]="ambitosOrigen" labelField="nombre" idField="id"
+                     placeholder="Seleccione una condición">
+        </plex-select>
     </ng-container>
 </form>
 

@@ -3,6 +3,19 @@ import { IPrestacionRegistro } from './prestacion.registro.interface';
 import { ISnomedConcept } from './snomed-concept.interface';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
 
+export type AmbitoOrigen = 'ambulatorio' | 'internacion' | 'guardia';
+
+export interface IAmbitoOrigenOpcion {
+    id: AmbitoOrigen;
+    nombre: string;
+}
+
+export const AMBITOS_ORIGEN: IAmbitoOrigenOpcion[] = [
+    { id: 'ambulatorio', nombre: 'Ambulatorio' },
+    { id: 'internacion', nombre: 'Internación' },
+    { id: 'guardia', nombre: 'Guardia' }
+];
+
 export class IPrestacion {
     id: string;
     trackId: string;
