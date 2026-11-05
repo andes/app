@@ -1,10 +1,12 @@
 import { Auth } from '@andes/auth';
 import { Injectable } from '@angular/core';
 import moment from 'moment';
-import { BehaviorSubject, forkJoin } from 'rxjs';
+import { BehaviorSubject, forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
 import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
+import { NotaAgendaService } from './nota-agenda.service';
 
 @Injectable({ providedIn: 'root' })
 export class MapaAgendasService {
@@ -16,14 +18,19 @@ export class MapaAgendasService {
     tiposPrestacion = new Map<string, ITipoPrestacion>();
     prestacionesPermisos;
     servicioIntermedio;
+    requiereServicioIntermedio = false;
+    modoRup = false;
+    notas = [];
 
     constructor(
         private agendaService: AgendaService,
         private conceptoTurneablesService: ConceptosTurneablesService,
+        private notaAgendaService: NotaAgendaService,
         private auth: Auth
     ) { }
 
     public setPermisos(permisos: string) {
+        this.modoRup = permisos.startsWith('rup:');
         this.prestacionesPermisos = this.auth.getPermissions(permisos);
     }
 
@@ -31,7 +38,14 @@ export class MapaAgendasService {
         this.servicioIntermedio = servicio || null;
     }
 
+    public setRequiereServicioIntermedio(requiere: boolean) {
+        this.requiereServicioIntermedio = requiere;
+    }
+
     public cargarAgendasMes(fecha) {
+        if (this.requiereServicioIntermedio && !this.servicioIntermedio?.id) {
+            return;
+        }
         this.fecha = fecha;
         const parametros: any = {
             fechaDesde: moment(this.fecha).startOf('month').toDate(),
@@ -42,16 +56,34 @@ export class MapaAgendasService {
             parametros.servicioIntermedio = this.servicioIntermedio.id;
         }
 
+        const notas$ = this.modoRup
+            ? this.notaAgendaService.search(this.parametrosNotas()).pipe(catchError(() => of([])))
+            : of([]);
+
         forkJoin([
             this.conceptoTurneablesService.getAll(),
-            this.agendaService.get(parametros)]
-        ).subscribe(([conceptosTurneables, agendas]) => {
+            this.agendaService.get(parametros),
+            notas$
+        ]).subscribe(([conceptosTurneables, agendas, notas]) => {
             this.tipoPrestacionesColor(conceptosTurneables);
             this.agendas = agendas;
+            this.notas = notas || [];
             this.cargarMes();
         });
 
 
+    }
+
+    private parametrosNotas() {
+        const desde = moment(this.fecha).startOf('month').format('YYYY-MM-DD');
+        const hasta = moment(this.fecha).endOf('month').format('YYYY-MM-DD');
+        const params: any = {
+            fecha: `${desde}|${hasta}`
+        };
+        if (this.servicioIntermedio?.id) {
+            params.servicioIntermedio = this.servicioIntermedio.id;
+        }
+        return params;
     }
 
     private tipoPrestacionesColor(conceptosTurneables: ITipoPrestacion[]) {
@@ -89,7 +121,8 @@ export class MapaAgendasService {
                     week.push({
                         fecha: dia,
                         prestaciones: [],
-                        totalPorPrestacion: []
+                        totalPorPrestacion: [],
+                        notas: this.notasDelDia(dia)
                     });
                 } else {
                     week.push({ estado: 'vacio' });
@@ -100,6 +133,12 @@ export class MapaAgendasService {
         }
 
         this.cargarTabla();
+    }
+
+    private notasDelDia(fecha) {
+        return (this.notas || []).filter(nota =>
+            moment(nota.fecha).isSame(fecha, 'day') || moment(nota.horaInicio).isSame(fecha, 'day')
+        );
     }
 
 

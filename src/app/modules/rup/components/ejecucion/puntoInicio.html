@@ -149,6 +149,33 @@
                 </plex-item>
             </plex-list>
         </ng-container>
+
+        <ng-container *ngIf="servicioIntermedioListado?.length">
+            <br>
+            <plex-title titulo="Servicio intermedio" size="sm" class="mt-4"></plex-title>
+            <plex-list [striped]="true">
+                <plex-item *ngFor="let item of servicioIntermedioListado"
+                    (click)="toogleSidebar(true); cargarTurnos('servicio-intermedio', item); selectAgenda('servicio-intermedio')"
+                    [selected]="agendaSeleccionada === 'servicio-intermedio' && servicioSelected?.id === item.id">
+                    <div class="d-flex align-items-center">
+                        <plex-icon class="icono-circulo mr-3" name="calendario-tilde" type="info"></plex-icon>
+                        <plex-label class="d-flex align-items-center" titulo="{{ item.nombre }}" size="sm"
+                            subtitulo="Solicitudes/pedidos pendientes">
+                        </plex-label>
+                    </div>
+                    <div class="d-flex justify-content-end align-items-end w-100">
+                        <plex-badge type="info">
+                            <ng-container *ngIf="item.total === 1">
+                                1 paciente
+                            </ng-container>
+                            <ng-container *ngIf="item.total > 1">
+                                {{ item.total }} pacientes
+                            </ng-container>
+                        </plex-badge>
+                    </div>
+                </plex-item>
+            </plex-list>
+        </ng-container>
     </plex-layout-main>
     <plex-layout-sidebar class="sidebar" type="invert" *ngIf="showSidebar">
         <prestacion-crear *ngIf="verFueraAgenda" [opcion]="tipoPrestacion" (mostrar)="ocultarCrearPrestacion()">

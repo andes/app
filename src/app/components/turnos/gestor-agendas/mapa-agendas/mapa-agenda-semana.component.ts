@@ -19,6 +19,9 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
     public _fecha;
     public semanaSeleccionada;
     @Output() diaDetalle = new EventEmitter<any>();
+    @Output() notaDetalle = new EventEmitter<any>();
+    @Output() notaNueva = new EventEmitter<{ fecha: Date; horaInicio: Date; horaFin: Date }>();
+    @Input() crearNotaEnSlot = false;
     calendario: any;
     @Input()
     set fecha(value: any) {
@@ -53,7 +56,8 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
             return {
                 nombre,
                 fecha: this._fecha.weekday(index).toDate(),
-                turnos: []
+                turnos: [],
+                notas: []
             };
         });
         this.cargarTabla();
@@ -74,6 +78,11 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
             this.asignarCarriles(turnos);
             this.asignarAnchos(turnos);
             dia.turnos = turnos;
+
+            const notas = this.notasDelDia(dia, totalSlots);
+            this.asignarCarriles(notas);
+            this.asignarAnchos(notas);
+            dia.notas = notas;
         });
     }
 
@@ -223,6 +232,64 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
         });
     }
 
+    private notasDelDia(dia, totalSlots) {
+        const diaSemana = this.semanaSeleccionada?.find(item =>
+            item.fecha && moment(dia.fecha).isSame(item.fecha, 'day')
+        );
+        const fuente = Array.isArray(diaSemana?.notas) ? diaSemana.notas : [];
+        const notas = [];
+        fuente.forEach(nota => {
+            const ubicacion = this.ubicarNota(nota, dia, totalSlots);
+            if (!ubicacion) {
+                return;
+            }
+            notas.push({
+                slot: ubicacion.slot,
+                rowspan: ubicacion.rowspan,
+                nota,
+                texto: nota?.texto || '',
+                titulo: this.tituloNota(nota)
+            });
+        });
+        return notas;
+    }
+
+    private ubicarNota(nota, dia, totalSlots) {
+        if (!nota?.horaInicio || !nota?.horaFin) {
+            return null;
+        }
+        const inicioGrilla = moment(dia.fecha).hour(this.horaInicio).minute(0).second(0).millisecond(0);
+        const finGrilla = moment(dia.fecha).hour(this.horaFin).minute(0).second(0).millisecond(0);
+        const inicio = moment(nota.horaInicio);
+        const fin = moment(nota.horaFin);
+        if (!inicio.isValid() || !fin.isValid()) {
+            return null;
+        }
+        const visibleInicio = inicio.isAfter(inicioGrilla) ? inicio : inicioGrilla;
+        const visibleFin = fin.isBefore(finGrilla) ? fin : finGrilla;
+        if (!visibleInicio.isBefore(visibleFin)) {
+            return null;
+        }
+        const msIntervalo = this.intervalo * 60 * 1000;
+        const slot = Math.floor(visibleInicio.diff(inicioGrilla) / msIntervalo);
+        const slotFin = Math.ceil(visibleFin.diff(inicioGrilla) / msIntervalo);
+        const desde = Math.max(0, Math.min(slot, totalSlots));
+        const hasta = Math.max(0, Math.min(slotFin, totalSlots));
+        const rowspan = hasta - desde;
+        if (rowspan <= 0) {
+            return null;
+        }
+        return { slot: desde, rowspan };
+    }
+
+    private tituloNota(nota) {
+        const servicio = nota?.servicioIntermedio?.nombre || '';
+        const inicio = moment(nota.horaInicio).format('HH:mm');
+        const fin = moment(nota.horaFin).format('HH:mm');
+        const texto = nota?.texto || '';
+        return [servicio, `${inicio}-${fin}`, texto].filter(parte => !!parte).join(' ');
+    }
+
     private cambiarSemana() {
         if (this.calendario) {
             this.semanaSeleccionada = this.calendario.find(dias =>
@@ -250,6 +317,37 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
         this.diaDetalle.emit({
             turnos: [celda.turno],
             agenda: celda.agenda
+        });
+    }
+
+    detalleNota(celda) {
+        if (!celda?.nota) {
+            return;
+        }
+        this.notaDetalle.emit(celda.nota);
+    }
+
+    slotClick(indiceDia: number, indiceFila: number) {
+        if (!this.crearNotaEnSlot) {
+            return;
+        }
+        const dia = this.semana[indiceDia];
+        if (!dia?.fecha) {
+            return;
+        }
+        const minutos = indiceFila * this.intervalo;
+        const horaInicio = moment(dia.fecha)
+            .hour(this.horaInicio)
+            .minute(0)
+            .second(0)
+            .millisecond(0)
+            .add(minutos, 'minutes')
+            .toDate();
+        const horaFin = moment(horaInicio).add(this.intervalo, 'minutes').toDate();
+        this.notaNueva.emit({
+            fecha: moment(dia.fecha).startOf('day').toDate(),
+            horaInicio,
+            horaFin
         });
     }
 

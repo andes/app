@@ -9,12 +9,14 @@
     <ng-container *ngFor="let semana of calendario;let i=index">
         <tr>
             <td class="semana" (click)="week(semana)">
-                <plex-icon size="xl" name="eye" type="primary">
-                </plex-icon>
-
+                <div class="semana-ver">
+                    <plex-icon size="xl" name="eye" type="primary">
+                    </plex-icon>
+                </div>
             </td>
             <td *ngFor="let dia of semana" (click)="detalleDia(dia)" class="selectable">
                 <div *ngIf="!dia.estado" class="dia">{{ dia.fecha | date: 'd' }}</div>
+                <div *ngIf="dia.notas?.length > 0">{{ dia.notas.length === 1 ? '1 nota' : dia.notas.length + ' notas' }}</div>
                 <ng-container *ngIf="dia.totalPorPrestacion?.length>0">
                     <div class="progress mt-1" *ngFor="let prestacion of dia.totalPorPrestacion">
                         <span class="progress-value" [tooltip]="prestacion.nombrePrestacion">

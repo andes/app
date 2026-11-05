@@ -1,8 +1,12 @@
-<plex-layout [main]="(accion === 'verDetalle') ? 9 : 12">
+<plex-layout
+    [main]="(accion === 'verDetalle' || (accion === 'nota' && modulo === 'rup' && mostrarFiltroServicio)) ? 9 : 12">
     <plex-layout-main>
         <plex-title main titulo="CALENDARIO DE TURNOS">
             <plex-button class="ml-2 mr-2" type="info" size="sm" label="Mes" (click)="visualizarMes()"
                 tooltip="ver agendas del mes">
+            </plex-button>
+            <plex-button *ngIf="verSemana && modulo === 'rup' && mostrarFiltroServicio" class="mr-2" type="success"
+                size="sm" label="Nueva nota" (click)="nuevaNota()">
             </plex-button>
 
             <plex-wrapper>
@@ -12,7 +16,7 @@
                 <plex-datetime *ngIf="verMes" type="date" label="" [skipBy]="'month'" [(ngModel)]="diaInicio"
                     name="fechaSkip" (change)="visualizarMes()" required>
                 </plex-datetime>
-                <plex-select *ngIf="mostrarFiltroServicio" class="filtro-servicio" name="servicioIntermedio"
+                <plex-select *ngIf="mostrarFiltroServicio" class="filtro-servicio" name="servicioIntermedio" required
                     [ngModel]="servicioIntermedio" [data]="serviciosIntermedio" idField="id" labelField="nombre"
                     (ngModelChange)="filtrarServicioIntermedio($event)">
                 </plex-select>
@@ -23,12 +27,14 @@
             (agendasDetalles)="verAgendas($event)">
         </mapa-agenda-mes>
 
-        <mapa-agenda-semana *ngIf="verSemana" (diaDetalle)="turnos($event)" [fecha]="diaInicio">
+        <mapa-agenda-semana *ngIf="verSemana" (diaDetalle)="turnos($event)" (notaDetalle)="verNota($event)"
+            (notaNueva)="nuevaNota($event)" [crearNotaEnSlot]="modulo === 'rup' && mostrarFiltroServicio"
+            [fecha]="diaInicio">
         </mapa-agenda-semana>
 
     </plex-layout-main>
 
-    <plex-layout-sidebar *ngIf='accion && verMes' type="invert">
+    <plex-layout-sidebar *ngIf="accion === 'verDetalle' && verMes" type="invert">
         <plex-title titulo="detalle del dia" size="md">
             <plex-button size="sm" class="mr-1" type="danger" icon="close" (click)="close()">
             </plex-button>
@@ -163,9 +169,22 @@
 
         </plex-accordion>
 
+        <ng-container *ngIf="modulo === 'rup' && mostrarFiltroServicio && dia?.notas?.length">
+            <plex-title titulo="Notas" size="sm"></plex-title>
+            <plex-list [selectable]="false">
+                <plex-item *ngFor="let nota of dia.notas">
+                    <plex-label titulo="{{ nota.texto }}"
+                        subtitulo="{{ nota.horaInicio | date:'HH:mm' }}-{{ nota.horaFin | date:'HH:mm' }} {{ nota.servicioIntermedio?.nombre }}">
+                    </plex-label>
+                    <plex-button size="sm" type="info" label="Abrir" (click)="verNota(nota)">
+                    </plex-button>
+                </plex-item>
+            </plex-list>
+        </ng-container>
+
     </plex-layout-sidebar>
 
-    <plex-layout-sidebar *ngIf='accion && verSemana' type="invert">
+    <plex-layout-sidebar *ngIf="accion === 'verDetalle' && verSemana" type="invert">
         <plex-title titulo="detalle del dia" size="md">
             <plex-button size="sm" class="mr-1" type="danger" icon="close" (click)="close()">
             </plex-button>
@@ -213,6 +232,38 @@
 
             </plex-panel>
         </plex-accordion>
+    </plex-layout-sidebar>
+
+    <plex-layout-sidebar *ngIf="accion === 'nota' && modulo === 'rup' && mostrarFiltroServicio" type="invert">
+        <plex-title titulo="{{ notaForm.id ? 'Nota' : 'Nueva nota' }}" size="md">
+            <plex-button *ngIf="notaForm.id" size="sm" class="mr-1" type="danger" label="Eliminar"
+                (click)="eliminarNota()">
+            </plex-button>
+            <plex-button size="sm" class="mr-1" type="success" label="Guardar" (click)="guardarNota()">
+            </plex-button>
+            <plex-button size="sm" class="mr-1" type="danger" icon="close" (click)="close()">
+            </plex-button>
+        </plex-title>
+        <form (ngSubmit)="guardarNota()">
+            <div *ngIf="notaErrores.length" role="alert">
+                <div *ngFor="let error of notaErrores" class="alert alert-warning" role="alert">
+                    <plex-icon name="alert" size="md"></plex-icon> {{ error }}
+                </div>
+            </div>
+            <plex-datetime type="date" label="Fecha" name="fecha" [(ngModel)]="notaForm.fecha" [required]="true">
+            </plex-datetime>
+            <plex-datetime type="time" label="Hora de inicio" name="horaInicio" [(ngModel)]="notaForm.horaInicio"
+                [required]="true">
+            </plex-datetime>
+            <plex-datetime type="time" label="Hora de fin" name="horaFin" [(ngModel)]="notaForm.horaFin"
+                [required]="true">
+            </plex-datetime>
+            <plex-select label="Servicio" name="servicio" [(ngModel)]="notaForm.servicio" [data]="serviciosIntermedio"
+                idField="id" labelField="nombre" [required]="true">
+            </plex-select>
+            <plex-text label="Texto" name="texto" multiline="true" [(ngModel)]="notaForm.texto" [required]="true">
+            </plex-text>
+        </form>
     </plex-layout-sidebar>
 
 </plex-layout>

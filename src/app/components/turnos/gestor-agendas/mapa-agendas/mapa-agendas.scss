@@ -1,5 +1,10 @@
 @import '@andes/plex/styles/variables';
 
+$mapa-agenda-grid-line: #e5e7eb;
+$mapa-agenda-grid-line-day: #d1d5db;
+$mapa-agenda-font: Inter, Roboto, 'Segoe UI', system-ui, -apple-system, sans-serif;
+$mapa-agenda-mes-fila-altura: 6rem;
+
 .filtro-servicio {
     min-width: 16rem;
 }
@@ -7,22 +12,28 @@
 .semana {
     display: grid;
     width: 100%;
-    border-top: 1px solid #181717;
-    border-left: 1px solid #181717;
+    font-family: $mapa-agenda-font;
+    border-top: 1px solid $mapa-agenda-grid-line-day;
+    border-left: 1px solid $mapa-agenda-grid-line-day;
 
     .first,
     .dia,
     .hora,
     .slot {
-        border-right: 1px solid #181717;
-        border-bottom: 1px solid #181717;
+        border-right: 1px solid $mapa-agenda-grid-line;
+        border-bottom: 1px solid $mapa-agenda-grid-line;
         min-width: 0;
+    }
+
+    .dia {
+        border-right-color: $mapa-agenda-grid-line-day;
+        border-bottom-color: $mapa-agenda-grid-line-day;
     }
 
     .first {
         background-image: linear-gradient(to top right,
                 white 48%,
-                black,
+                $mapa-agenda-grid-line-day,
                 white 52%);
     }
 
@@ -34,9 +45,38 @@
         text-align: center;
     }
 
+    .dia {
+        flex-direction: column;
+        gap: 0.125rem;
+        padding: 0.5rem 0.25rem;
+        font-weight: 600;
+        font-size: 0.875rem;
+        line-height: 1.25;
+        color: #374151;
+
+        span {
+            text-transform: none;
+            letter-spacing: normal;
+        }
+    }
+
+    .hora {
+        font-weight: 500;
+        font-size: 0.8125rem;
+        color: #6b7280;
+
+        span {
+            text-transform: none;
+            font-weight: 500;
+        }
+    }
+
     .slot.punteado {
-        background-color: rgba(0, 0, 0, 0.05);
-        border-top: 3px dotted #8f8b8b;
+        border-top: 1px dotted $mapa-agenda-grid-line;
+    }
+
+    &.crear-nota-slot .slot {
+        cursor: pointer;
     }
 
     .paciente {
@@ -59,6 +99,26 @@
         }
     }
 
+    .nota {
+        z-index: 0;
+        justify-self: start;
+        align-self: stretch;
+        box-sizing: border-box;
+        min-width: 0;
+        overflow: hidden;
+        padding: 2px 4px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        cursor: pointer;
+        background-color: #ffe082;
+        border: 1px solid #f9a825;
+        color: #3e2723;
+
+        &:hover {
+            box-shadow: inset 0 0 0 2px #f9a825;
+        }
+    }
+
 }
 
 .mes {
@@ -66,10 +126,34 @@
     border-collapse: collapse;
     table-layout: fixed;
     text-align: center;
+    font-family: $mapa-agenda-font;
+
+    tr:first-child td:not(.first) {
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: #374151;
+        border-bottom-color: $mapa-agenda-grid-line-day;
+
+        p {
+            margin-bottom: 0;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+    }
 
     // Rows
     tr:nth-of-type(odd) {
         background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    tr:not(:first-child) td {
+        height: $mapa-agenda-mes-fila-altura;
+        box-sizing: border-box;
+    }
+
+    tr:not(:first-child) td.selectable {
+        vertical-align: top;
+        overflow: hidden;
     }
 
     tr td:first-child {
@@ -78,7 +162,7 @@
         &.first {
             background-image: linear-gradient(to top right,
                     white 48%,
-                    black,
+                    $mapa-agenda-grid-line-day,
                     white 52%);
 
         }
@@ -86,7 +170,7 @@
 
     // Cells
     td {
-        border: 2px solid #181717;
+        border: 1px solid $mapa-agenda-grid-line;
         position: relative;
 
         &.selectable {
@@ -101,9 +185,18 @@
         }
 
         &.semana {
-
+            padding: 0;
+            vertical-align: top;
             background-color: #00a8e0;
             cursor: pointer !important;
+
+            .semana-ver {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                min-height: $mapa-agenda-mes-fila-altura;
+            }
 
             &:hover {
                 box-sizing: border-box;
@@ -131,9 +224,10 @@
     // Día
     .dia {
         text-align: right;
-        font-size: 1.5em;
-        line-height: 0.8em;
-
+        font-size: 1.25rem;
+        font-weight: 500;
+        line-height: 1.1;
+        color: #374151;
     }
 
 }

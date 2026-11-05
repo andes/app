@@ -1,4 +1,4 @@
-<div class="semana mt-1"
+<div class="semana mt-1" [class.crear-nota-slot]="crearNotaEnSlot"
      [style.grid-template-columns]="'50px repeat(' + semana.length + ', minmax(0, 1fr))'"
      [style.grid-template-rows]="'auto repeat(' + filas.length + ', 40px)'">
     <div class="first" style="grid-column: 1; grid-row: 1"></div>
@@ -12,7 +12,16 @@
             <span class="font-weight-bold text-uppercase">{{fila.hora}}:00</span>
         </div>
         <div *ngFor="let dia of semana; let d = index" class="slot" [class.punteado]="i % 2 === 1"
-             [style.grid-column]="d + 2" [style.grid-row]="i + 2">
+             [style.grid-column]="d + 2" [style.grid-row]="i + 2"
+             (click)="slotClick(d, i)">
+        </div>
+    </ng-container>
+
+    <ng-container *ngFor="let dia of semana; let d = index">
+        <div *ngFor="let nota of dia.notas" class="nota" [style.grid-column]="d + 2"
+             [style.grid-row]="(nota.slot + 2) + ' / span ' + nota.rowspan" [style.width]="nota.ancho"
+             [style.margin-left]="nota.offset" [attr.title]="nota.titulo" (click)="detalleNota(nota)">
+            {{nota.texto}}
         </div>
     </ng-container>
 
