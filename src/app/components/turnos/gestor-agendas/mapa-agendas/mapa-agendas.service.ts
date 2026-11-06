@@ -88,7 +88,7 @@ export class MapaAgendasService {
 
     private tipoPrestacionesColor(conceptosTurneables: ITipoPrestacion[]) {
         this.tiposPrestacion.clear();
-        const conceptosServicio = this.servicioIntermedio?.tipoPrestacion || [];
+        const conceptosServicio = this.servicioIntermedio?.conceptosTurneables || [];
         if (this.servicioIntermedio) {
             const conceptIds = conceptosServicio.map(tipo => tipo.conceptId);
             this.conceptosTurneables = conceptosTurneables.filter(x => conceptIds.indexOf(x.conceptId) >= 0);
