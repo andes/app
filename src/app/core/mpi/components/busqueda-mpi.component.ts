@@ -82,9 +82,4 @@ export class BusquedaMpiComponent implements OnInit {
         this.paciente = null;
     }
 
-    // --------------------------------------------------
-
-    afterPacienteCru(paciente: IPaciente) {
-        this.updateTitle('Buscar pacientes');
-    }
 }
