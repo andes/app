@@ -152,8 +152,12 @@ export class PacienteComponent implements OnInit {
         return window.innerWidth;
     }
 
+    get datosEscaneados() {
+        return this.escaneadoSinSexo && !this.pacienteModel?.id;
+    }
+
     get permitirEditarSexo() {
-        return this.escaneadoSinSexo && !this.pacienteModel?.id && !this.showDeshacer;
+        return this.datosEscaneados && !this.showDeshacer;
     }
 
     constructor(
@@ -226,7 +230,7 @@ export class PacienteComponent implements OnInit {
                     this.pacienteModel.sexo = this.paciente.sexo || undefined;
                     this.pacienteModel.documento = this.paciente.documento;
                     this.pacienteModel.scan = this.paciente.scan;
-                    this.pacienteModel.estado = 'validado';
+                    this.pacienteModel.estado = this.escaneadoSinSexo ? 'temporal' : 'validado';
                     this.paciente = Object.assign({}, this.pacienteModel);
                     this.actualizarDatosPaciente();
                     this.loading = false;
@@ -271,7 +275,7 @@ export class PacienteComponent implements OnInit {
     }
 
     actualizarDatosPaciente() {
-        if (this.escaneado) {
+        if (this.escaneado && !this.escaneadoSinSexo) {
             this.validado = true;
             this.paciente.estado = 'validado';
             if (this.paciente.entidadesValidadoras) {
@@ -485,7 +489,7 @@ export class PacienteComponent implements OnInit {
         if (!this.permitirEditarSexo) {
             return of(paciente);
         }
-        const clave = `${paciente.documento}|${paciente.sexo}`;
+        const clave = this.claveValidacion(paciente.documento, paciente.sexo);
         if (this.temporalConfirmado === clave) {
             return of(this.marcarTemporal(paciente));
         }
@@ -513,6 +517,11 @@ export class PacienteComponent implements OnInit {
                 );
             })
         );
+    }
+
+    private claveValidacion(documento, sexo) {
+        const sexoId = (typeof sexo === 'string') ? sexo : Object(sexo).id;
+        return `${documento}|${sexoId}`;
     }
 
     private marcarTemporal(paciente) {
@@ -892,6 +901,10 @@ export class PacienteComponent implements OnInit {
             delete this.pacienteModel.fechaNacimientoCorrectoReportado;
         }
         this.conservarDatos();
+        if (this.permitirEditarSexo) {
+            this.marcarTemporal(this.pacienteModel);
+            this.temporalConfirmado = this.claveValidacion(this.pacienteModel.documento, this.pacienteModel.sexo);
+        }
         this.disableValidar = false;
         this.pacientesSimilares = [];
         this.visualizarIgnorarGuardar = false;
