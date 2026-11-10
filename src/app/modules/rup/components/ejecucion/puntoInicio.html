@@ -189,6 +189,43 @@
                         <plex-badge type="info">
                             {{ prestacion.solicitud.turno ? 'Agenda' : 'Fuera de agenda' }}
                         </plex-badge>
+                        <plex-badge *ngIf="prestacion.asistenciaTurno === 'noAsistio'" type="danger" class="ml-1">
+                            No asistió
+                        </plex-badge>
+                    </div>
+                    <div class="d-flex align-items-center"
+                         *ngIf="!prestacion.paciente || !(prestacion.paciente | pacienteRestringido)">
+                        <plex-loader *ngIf="!prestacion.turnoCargado" type="ball-pulse"></plex-loader>
+                        <ng-container *ngIf="prestacion.turnoCargado">
+                            <plex-button
+                                        *ngIf="prestacion.turnoEncontrado && prestacion.solicitud.turno && prestacion.paciente && !prestacion.asistenciaTurno"
+                                        type="warning" size="sm" icon="account-cruz"
+                                        tooltip="Registrar inasistencia"
+                                        (click)="registrarInasistenciaSinValidar(prestacion)">
+                            </plex-button>
+                            <plex-button *ngIf="prestacion.paciente && !prestacion.solicitud.tipoPrestacion.noNominalizada && tieneAccesoHUDS"
+                                         class="ml-1" size="sm" icon="historial" type="info" tooltip="Ver HUDS"
+                                         (click)="verHudsPrestacionSinValidar(prestacion)">
+                            </plex-button>
+                            <plex-button
+                                        *ngIf="prestacion.estadoActual?.tipo === 'ejecucion' && (!prestacion.asistenciaTurno || prestacion.asistenciaTurno === 'asistio')"
+                                        class="ml-1" size="sm" icon="lapiz-documento" type="success"
+                                        tooltip="Continuar registro" tooltipPosition="left"
+                                        (click)="continuarPrestacionSinValidar(prestacion)">
+                            </plex-button>
+                            <plex-button
+                                        *ngIf="prestacion.turnoEncontrado && prestacion.estadoActual?.tipo === 'ejecucion' && (!prestacion.asistenciaTurno || prestacion.asistenciaTurno === 'asistio')"
+                                        class="ml-1" size="sm" icon="prohibido" type="danger"
+                                        tooltip="Anular inicio de prestación" tooltipPosition="left"
+                                        titlePosition="left" (click)="invalidarPrestacionSinValidar(prestacion)">
+                            </plex-button>
+                            <plex-button
+                                        *ngIf="prestacion.turnoEncontrado && prestacion.solicitud.turno && prestacion.paciente && prestacion.asistenciaTurno === 'noAsistio'"
+                                        class="ml-1" size="sm" icon="backup-restore" type="danger"
+                                        tooltip="Revertir cambios" tooltipPosition="left"
+                                        (click)="revertirInasistenciaSinValidar(prestacion)">
+                            </plex-button>
+                        </ng-container>
                     </div>
                 </plex-item>
             </plex-list>
