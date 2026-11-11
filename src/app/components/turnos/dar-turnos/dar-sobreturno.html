@@ -3,48 +3,56 @@
         <div class="row">
             <div class="col-6">
                 <plex-phone *ngIf="paciente" label="Celular:" [(ngModel)]="telefono" (change)="cambioTelefono=true"
-                            name="telefono"></plex-phone>
+                    name="telefono"></plex-phone>
             </div>
             <div class="col-6">
                 <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()" label="Nro Carpeta" name="nroCarpeta"
-                           [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
+                    [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
             </div>
         </div>
         <div class="row">
             <div class="col-12">
                 <seleccionar-financiador [paciente]="paciente"
-                                         (setFinanciador)="setFinanciador($event)"></seleccionar-financiador>
+                    (setFinanciador)="setFinanciador($event)"></seleccionar-financiador>
             </div>
         </div>
         <div class="row" *ngIf="agenda && agenda.tipoPrestaciones.length > 1">
             <div class="col">
                 <plex-select [(ngModel)]="tipoPrestacion" name="tipoPrestacion" label="Tipo de prestación"
-                             [data]="agenda.tipoPrestaciones" placeholder="Seleccione el tipo de prestación"
-                             [required]="true">
+                    [data]="agenda.tipoPrestaciones" placeholder="Seleccione el tipo de prestación" [required]="true"
+                    (change)="onTipoPrestacionChange()">
+                </plex-select>
+            </div>
+        </div>
+        <div class="row" *ngIf="mostrarSelectProcedimiento">
+            <div class="col">
+                <plex-select label="Procedimiento" name="turnoProcedimiento" [(ngModel)]="turnoProcedimiento"
+                    [data]="procedimientosOpciones" idField="conceptId" labelField="term" [required]="true"
+                    (change)="onProcedimientoChange($event)">
                 </plex-select>
             </div>
         </div>
         <div class="row">
             <div class="col-6">
                 <plex-datetime type="time" [(ngModel)]="horaTurno" [min]="inicio" [max]="fin" [required]="true"
-                               name="horaTurno" label="Hora Turno">
+                    name="horaTurno" label="Hora Turno">
                 </plex-datetime>
             </div>
             <div *ngIf="agenda?.link" class="col">
                 <plex-text placeholder="Ingrese link turno virtual" [(ngModel)]="turno_link" [required]="true"
-                           name="turno_link" label="Link">
+                    name="turno_link" label="Link">
                 </plex-text>
             </div>
             <div class="col-12">
                 <plex-text label="Observaciones" name="nota" multiline="true" [(ngModel)]="nota"
-                           (change)="verificarNota()"></plex-text>
+                    (change)="verificarNota()"></plex-text>
             </div>
         </div>
         <div class="row" class="botones">
             <plex-button type="danger" label="Cancelar" (click)="cancelar()">
             </plex-button>
             <plex-button *ngIf="paciente" [validateForm]="form" label="Guardar" type="success"
-                         (click)="verTurnosFuturos($event)" [disabled]="!disableGuardar">
+                (click)="verTurnosFuturos($event)" [disabled]="!disableGuardar">
             </plex-button>
         </div>
         <ng-container *ngIf="modalTurnosRepetidos">

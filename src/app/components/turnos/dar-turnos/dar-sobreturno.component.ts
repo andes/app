@@ -5,9 +5,13 @@ import { Plex } from '@andes/plex';
 import { PlexModalComponent } from '@andes/plex';
 import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
+import { IServicioIntermedio } from 'src/app/interfaces/IServicioIntermedio';
+import { ISnomedConcept } from 'src/app/modules/rup/interfaces/snomed-concept.interface';
+import { ServicioIntermedioService } from 'src/app/modules/rup/services/servicio-intermedio.service';
 import { IPaciente, IPacienteBasico } from '../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
+import { resolverProcedimientosOpciones } from '../utils/procedimiento-servicio-intermedio.util';
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { ObraSocialService } from './../../../services/obraSocial.service';
 import { TurnoService } from './../../../services/turnos/turno.service';
@@ -26,6 +30,10 @@ export class DarSobreturnoComponent implements OnChanges {
     public agenda;
     public paciente: IPaciente;
     public tipoPrestacion: ITipoPrestacion;
+    serviciosIntermedios: IServicioIntermedio[] = [];
+    procedimientosOpciones: ISnomedConcept[] = [];
+    turnoProcedimiento: ISnomedConcept;
+    mostrarSelectProcedimiento = false;
     public horaTurno = null;
     public telefono = '';
     public cambioTelefono = false;
@@ -54,7 +62,8 @@ export class DarSobreturnoComponent implements OnChanges {
         private auth: Auth,
         private servicePaciente: PacienteService,
         private serviceCarpetaPaciente: CarpetaPacienteService,
-        public obraSocialService: ObraSocialService) { }
+        public obraSocialService: ObraSocialService,
+        private servicioIntermedioService: ServicioIntermedioService) { }
 
     recuperarDatos() {
         this.serviceAgenda.getById(this.idAgenda).subscribe(agenda => {
@@ -69,6 +78,10 @@ export class DarSobreturnoComponent implements OnChanges {
             if (agenda.link) {
                 this.turno_link = agenda.link;
             }
+            this.servicioIntermedioService.getAll().subscribe(servicios => {
+                this.serviciosIntermedios = servicios ?? [];
+                this.actualizarProcedimientosSegunTipoPrestacion(this.tipoPrestacion);
+            });
         });
 
         this.servicePaciente.getById(this.idPaciente).subscribe(res => {
@@ -129,6 +142,35 @@ export class DarSobreturnoComponent implements OnChanges {
         this.changeCarpeta = true;
     }
 
+    onTipoPrestacionChange() {
+        this.actualizarProcedimientosSegunTipoPrestacion(this.tipoPrestacion);
+        this.buscarTurnosFuturos();
+    }
+
+    onProcedimientoChange(_event?: unknown) { }
+
+    private actualizarProcedimientosSegunTipoPrestacion(tipo: ITipoPrestacion | undefined) {
+        const { procedimientosOpciones, mostrarSelect } = resolverProcedimientosOpciones(
+            this.serviciosIntermedios,
+            tipo
+        );
+
+        this.procedimientosOpciones = procedimientosOpciones;
+        this.mostrarSelectProcedimiento = mostrarSelect;
+
+        if (!tipo?.conceptId || !mostrarSelect) {
+            this.turnoProcedimiento = undefined;
+            return;
+        }
+
+        if (
+            this.turnoProcedimiento?.conceptId
+            && !procedimientosOpciones.some(p => p.conceptId === this.turnoProcedimiento.conceptId)
+        ) {
+            this.turnoProcedimiento = undefined;
+        }
+    }
+
     buscarTurnosFuturos() {
         if (this.tipoPrestacion) {
             this.serviceTurno.getTurnosFuturos({ pacienteId: this.idPaciente }).subscribe(turnos => {
@@ -150,6 +192,10 @@ export class DarSobreturnoComponent implements OnChanges {
 
     verTurnosFuturos($event) {
         if ($event.formValid) {
+            if (this.mostrarSelectProcedimiento && !this.turnoProcedimiento?.conceptId) {
+                this.plex.info('warning', '', 'Seleccione un procedimiento');
+                return;
+            }
             if (this.turnosFuturos.length > 0) {
                 this.modalTurnosRepetidos = true;
             } else {
@@ -161,6 +207,10 @@ export class DarSobreturnoComponent implements OnChanges {
     }
 
     guardar() {
+        if (this.mostrarSelectProcedimiento && !this.turnoProcedimiento?.conceptId) {
+            this.plex.info('warning', '', 'Seleccione un procedimiento');
+            return;
+        }
         this.disableGuardar = false;
         const indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
 
@@ -238,6 +288,7 @@ export class DarSobreturnoComponent implements OnChanges {
                 link: this.turno_link,
                 estado: 'asignado',
                 tipoPrestacion: this.tipoPrestacion,
+                procedimiento: this.mostrarSelectProcedimiento ? this.turnoProcedimiento : undefined,
                 paciente: pacienteSave,
                 nota: this.nota
             }

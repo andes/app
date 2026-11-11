@@ -3,10 +3,14 @@ import { Plex } from '@andes/plex';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
+import { IServicioIntermedio } from 'src/app/interfaces/IServicioIntermedio';
+import { ISnomedConcept } from 'src/app/modules/rup/interfaces/snomed-concept.interface';
+import { ServicioIntermedioService } from 'src/app/modules/rup/services/servicio-intermedio.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
+import { resolverProcedimientosOpciones } from '../../utils/procedimiento-servicio-intermedio.util';
 import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
 import { ObraSocialService } from './../../../../services/obraSocial.service';
 
@@ -27,6 +31,10 @@ export class AgregarSobreturnoComponent implements OnInit {
     public resultadoBusqueda: IPaciente[] = [];
     public paciente: IPaciente;
     public tipoPrestacion: ITipoPrestacion;
+    serviciosIntermedios: IServicioIntermedio[] = [];
+    procedimientosOpciones: ISnomedConcept[] = [];
+    turnoProcedimiento: ISnomedConcept;
+    mostrarSelectProcedimiento = false;
     public resultado: any;
     public showCreateUpdate = false;
     public showSobreturno = true;
@@ -59,7 +67,8 @@ export class AgregarSobreturnoComponent implements OnInit {
         private servicePaciente: PacienteService,
         private serviceCarpetaPaciente: CarpetaPacienteService,
         public obraSocialService: ObraSocialService,
-        private route: ActivatedRoute) { }
+        private route: ActivatedRoute,
+        private servicioIntermedioService: ServicioIntermedioService) { }
 
     ngOnInit() {
         this.route.params.subscribe(params => {
@@ -75,6 +84,10 @@ export class AgregarSobreturnoComponent implements OnInit {
                     if (agenda.link) {
                         this.turno_link = agenda.link;
                     }
+                    this.servicioIntermedioService.getAll().subscribe(servicios => {
+                        this.serviciosIntermedios = servicios ?? [];
+                        this.actualizarProcedimientosSegunTipoPrestacion(this.tipoPrestacion);
+                    });
                 });
 
                 this.route.queryParams.subscribe(params => {
@@ -238,6 +251,34 @@ export class AgregarSobreturnoComponent implements OnInit {
         this.changeCarpeta = true;
     }
 
+    onTipoPrestacionChange() {
+        this.actualizarProcedimientosSegunTipoPrestacion(this.tipoPrestacion);
+    }
+
+    onProcedimientoChange(_event?: unknown) { }
+
+    private actualizarProcedimientosSegunTipoPrestacion(tipo: ITipoPrestacion | undefined) {
+        const { procedimientosOpciones, mostrarSelect } = resolverProcedimientosOpciones(
+            this.serviciosIntermedios,
+            tipo
+        );
+
+        this.procedimientosOpciones = procedimientosOpciones;
+        this.mostrarSelectProcedimiento = mostrarSelect;
+
+        if (!tipo?.conceptId || !mostrarSelect) {
+            this.turnoProcedimiento = undefined;
+            return;
+        }
+
+        if (
+            this.turnoProcedimiento?.conceptId
+            && !procedimientosOpciones.some(p => p.conceptId === this.turnoProcedimiento.conceptId)
+        ) {
+            this.turnoProcedimiento = undefined;
+        }
+    }
+
     verificarTelefono(paciente: IPaciente) {
         // se busca entre los contactos si tiene un celular
         this.telefono = '';
@@ -255,6 +296,10 @@ export class AgregarSobreturnoComponent implements OnInit {
 
     guardar($event) {
         if ($event.formValid) {
+            if (this.mostrarSelectProcedimiento && !this.turnoProcedimiento?.conceptId) {
+                this.plex.info('warning', '', 'Seleccione un procedimiento');
+                return;
+            }
 
             const indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
             if (indiceCarpeta > -1) {
@@ -335,6 +380,7 @@ export class AgregarSobreturnoComponent implements OnInit {
                     link: this.turno_link,
                     estado: 'asignado',
                     tipoPrestacion: this.tipoPrestacion,
+                    procedimiento: this.mostrarSelectProcedimiento ? this.turnoProcedimiento : undefined,
                     paciente: pacienteSave,
                     nota: this.nota
                 }

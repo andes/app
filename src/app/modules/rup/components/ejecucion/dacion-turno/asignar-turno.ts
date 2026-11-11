@@ -16,7 +16,11 @@ import { AgendaService } from 'src/app/services/turnos/agenda.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { PlexModalComponent } from '@andes/plex';
 import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
+import { IServicioIntermedio } from 'src/app/interfaces/IServicioIntermedio';
 import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
+import { ISnomedConcept } from 'src/app/modules/rup/interfaces/snomed-concept.interface';
+import { ServicioIntermedioService } from 'src/app/modules/rup/services/servicio-intermedio.service';
+import { resolverProcedimientosOpciones } from 'src/app/components/turnos/utils/procedimiento-servicio-intermedio.util';
 
 @Component({
     selector: 'rup-asignar-turno',
@@ -36,6 +40,10 @@ export class RupAsignarTurnoComponent implements OnInit {
     private prestacionesProfesional;
     public isButtonDisabled = false;
     public tipoPrestacion: ITipoPrestacion;
+    serviciosIntermedios: IServicioIntermedio[] = [];
+    procedimientosOpciones: ISnomedConcept[] = [];
+    turnoProcedimiento: ISnomedConcept;
+    mostrarSelectProcedimiento = false;
 
     // Eventos
     @Input() agenda: IAgenda;
@@ -52,7 +60,8 @@ export class RupAsignarTurnoComponent implements OnInit {
         private pacienteService: PacienteService,
         private serviceAgenda: AgendaService,
         private conceptosTurneablesService: ConceptosTurneablesService,
-        private pacienteRestringido: PacienteRestringidoPipe
+        private pacienteRestringido: PacienteRestringidoPipe,
+        private servicioIntermedioService: ServicioIntermedioService
     ) { }
 
     ngOnInit() {
@@ -63,6 +72,38 @@ export class RupAsignarTurnoComponent implements OnInit {
         this.conceptosTurneablesService.getByPermisos('rup:tipoPrestacion:?').subscribe(data => {
             this.prestacionesProfesional = data.map(concept => concept.id);
         });
+        this.servicioIntermedioService.getAll().subscribe(servicios => {
+            this.serviciosIntermedios = servicios ?? [];
+            this.actualizarProcedimientosSegunTipoPrestacion(this.tipoPrestacion);
+        });
+    }
+
+    onTipoPrestacionChange() {
+        this.actualizarProcedimientosSegunTipoPrestacion(this.tipoPrestacion);
+    }
+
+    onProcedimientoChange(_event?: unknown) { }
+
+    private actualizarProcedimientosSegunTipoPrestacion(tipo: ITipoPrestacion | undefined) {
+        const { procedimientosOpciones, mostrarSelect } = resolverProcedimientosOpciones(
+            this.serviciosIntermedios,
+            tipo
+        );
+
+        this.procedimientosOpciones = procedimientosOpciones;
+        this.mostrarSelectProcedimiento = mostrarSelect;
+
+        if (!tipo?.conceptId || !mostrarSelect) {
+            this.turnoProcedimiento = undefined;
+            return;
+        }
+
+        if (
+            this.turnoProcedimiento?.conceptId
+            && !procedimientosOpciones.some(p => p.conceptId === this.turnoProcedimiento.conceptId)
+        ) {
+            this.turnoProcedimiento = undefined;
+        }
     }
 
     searchStart() {
@@ -145,6 +186,10 @@ export class RupAsignarTurnoComponent implements OnInit {
      */
     guardar($event: any) {
         if ($event.formValid) {
+            if (this.mostrarSelectProcedimiento && !this.turnoProcedimiento?.conceptId) {
+                this.plex.info('warning', '', 'Seleccione un procedimiento');
+                return;
+            }
             if (this.datosTurno.paciente) {
                 this.datosTurno.tipoPrestacion = this.tipoPrestacion;
                 this.guardarDatosTurno();
@@ -157,6 +202,10 @@ export class RupAsignarTurnoComponent implements OnInit {
     }
 
     confirmar() {
+        if (this.mostrarSelectProcedimiento && !this.turnoProcedimiento?.conceptId) {
+            this.plex.info('warning', '', 'Seleccione un procedimiento');
+            return;
+        }
         this.isButtonDisabled = true;
         const paciente = this.datosTurno.paciente;
         let fechaTurno;
@@ -165,6 +214,7 @@ export class RupAsignarTurnoComponent implements OnInit {
             nota: '',
             motivoConsulta: '',
             tipoPrestacion: this.datosTurno.tipoPrestacion,
+            procedimiento: this.mostrarSelectProcedimiento ? this.turnoProcedimiento : undefined,
             idAgenda: this.agenda.id,
             paciente,
         };
@@ -213,6 +263,10 @@ export class RupAsignarTurnoComponent implements OnInit {
                 return this.plex.info('warning', 'Debe seleccionar hora del sobreturno');
             }
 
+            if (this.mostrarSelectProcedimiento && !this.turnoProcedimiento?.conceptId) {
+                return this.plex.info('warning', '', 'Seleccione un procedimiento');
+            }
+
             const patch = {
                 'op': 'agregarSobreturno',
                 'sobreturno': {
@@ -220,6 +274,7 @@ export class RupAsignarTurnoComponent implements OnInit {
                     estado: 'asignado',
                     tipoPrestacion: this.tipoPrestacion,
                     paciente: this.pacienteActivo,
+                    procedimiento: this.mostrarSelectProcedimiento ? this.turnoProcedimiento : undefined,
                 }
             };
 

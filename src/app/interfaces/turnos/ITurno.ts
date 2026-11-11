@@ -1,7 +1,7 @@
 import { ITipoPrestacion } from './../ITipoPrestacion';
 import { IObraSocial } from './../IObraSocial';
+import { ISnomedConcept } from '../../modules/rup/interfaces/snomed-concept.interface';
 
-// TODO: Recordar actualizar Schema!
 export interface ITurno {
     _id: string;
     id: string;
@@ -25,6 +25,7 @@ export interface ITurno {
 
     };
     tipoPrestacion: ITipoPrestacion;
+    procedimiento?: ISnomedConcept;
     idPrestacionPaciente: string;
     tipoTurno: string;
     reasignado: {

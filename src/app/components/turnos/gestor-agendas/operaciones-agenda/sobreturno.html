@@ -10,11 +10,10 @@
                     </div>
                     <div class="col" *ngIf="modelo.obraSocial !== 'SUMAR'">
                         <plex-radio [data]="obraSocialPaciente" [(ngModel)]="modelo.obraSocial" name="os"
-                                    (change)="seleccionarObraSocial($event)" label="Seleccione una Obra Social">
+                            (change)="seleccionarObraSocial($event)" label="Seleccione una Obra Social">
                         </plex-radio>
                         <plex-select *ngIf="showListaPrepagas" [(ngModel)]="modelo.prepaga" name="prepagas"
-                                     [data]="prepagas" label="Seleccione una Prepaga" idField="nombre"
-                                     labelField="nombre">
+                            [data]="prepagas" label="Seleccione una Prepaga" idField="nombre" labelField="nombre">
                         </plex-select>
                     </div>
                     <div class="col" *ngIf="modelo.obraSocial === 'SUMAR'">
@@ -25,32 +24,40 @@
                 <div class="row">
                     <div class="col">
                         <plex-phone *ngIf="paciente" label="Verifique el número telefónico:" [(ngModel)]="telefono"
-                                    (change)="cambioTelefono=true" name="telefono"></plex-phone>
+                            (change)="cambioTelefono=true" name="telefono"></plex-phone>
                         <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()" label="Nro Carpeta"
-                                   name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
+                            name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
                     </div>
                     <div class="col">
                         <plex-text label="Observaciones" name="nota" multiline="true" [(ngModel)]="nota"
-                                   (change)="verificarNota()"></plex-text>
+                            (change)="verificarNota()"></plex-text>
                     </div>
                 </div>
                 <div class="row" *ngIf="agenda && agenda.tipoPrestaciones.length > 1">
                     <div class="col">
                         <plex-select [(ngModel)]="tipoPrestacion" name="tipoPrestacion" label="Tipo de prestación"
-                                     [data]="agenda.tipoPrestaciones" placeholder="Seleccione el tipo de prestación"
-                                     [required]="true">
+                            [data]="agenda.tipoPrestaciones" placeholder="Seleccione el tipo de prestación"
+                            [required]="true" (change)="onTipoPrestacionChange()">
+                        </plex-select>
+                    </div>
+                </div>
+                <div class="row" *ngIf="mostrarSelectProcedimiento">
+                    <div class="col">
+                        <plex-select label="Procedimiento" name="turnoProcedimiento" [(ngModel)]="turnoProcedimiento"
+                            [data]="procedimientosOpciones" idField="conceptId" labelField="term" [required]="true"
+                            (change)="onProcedimientoChange($event)">
                         </plex-select>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-3">
                         <plex-datetime type="time" [(ngModel)]="horaTurno" [min]="inicio" [max]="fin" [required]="true"
-                                       name="horaTurno" label="Hora Turno">
+                            name="horaTurno" label="Hora Turno">
                         </plex-datetime>
                     </div>
                     <div *ngIf="agenda.link" class="col">
                         <plex-text placeholder="Ingrese link turno virtual" [(ngModel)]="turno_link" [required]="true"
-                                   name="turno_link" label="Link">
+                            name="turno_link" label="Link">
                         </plex-text>
                     </div>
                 </div>
@@ -58,13 +65,13 @@
         </form>
         <ng-container *ngIf="!showSobreturno && pacientesSearch">
             <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes,$event.scan)"
-                             (searchClear)="onSearchClear()">
+                (searchClear)="onSearchClear()">
             </paciente-buscar>
 
             <plex-loader *ngIf="loading"></plex-loader>
 
             <paciente-listado *ngIf="pacientes && pacientes.length" [offset]="110" [pacientes]="pacientes"
-                              (selected)="onSelect($event)"></paciente-listado>
+                (selected)="onSelect($event)"></paciente-listado>
 
             <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
                 ¡No se encontró ningún paciente!
@@ -109,7 +116,7 @@
         <plex-button position="left" type="danger" label="Cancelar" (click)="volver()">
         </plex-button>
         <plex-button position="right" *ngIf="paciente" [validateForm]="form" label="Guardar" type="success"
-                     (click)="guardar($event)">
+            (click)="guardar($event)">
         </plex-button>
     </plex-layout-footer>
 </plex-layout>

@@ -1,15 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
+import { SnomedService } from '../../apps/mitos/services/snomed.service';
 import { IServicioIntermedio } from '../../interfaces/IServicioIntermedio';
 import { mapConceptosTurneablesForApi, normalizeSnomedConcept } from '../../interfaces/servicio-intermedio.normalize';
 import { ISnomedConcept } from '../../modules/rup/interfaces/snomed-concept.interface';
 import { ServicioIntermedioService } from '../../modules/rup/services/servicio-intermedio.service';
-import { SnomedService } from '../../apps/mitos/services/snomed.service';
 
 /**
  * ECL raíz «Procedimiento» (SNOMED CT) para búsqueda de un concepto asociado al TM.
@@ -103,7 +103,6 @@ export class ServiciosIntermedioCreateUpdateComponent implements OnInit, OnDestr
         this.snomed.getQuery({
             expression: expr,
             type: 'inferred',
-            semanticTag: ['procedimiento']
         }).pipe(
             finalize(() => { this.previewLoading = false; })
         ).subscribe(
