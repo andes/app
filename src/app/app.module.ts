@@ -92,6 +92,8 @@ import { FarmaciaCreateUpdateComponent } from './components/farmacia/farmacia-cr
 // ... Tablas Maestras
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 import { FarmaciaComponent } from './components/farmacia/farmacia.component';
+import { ServiciosIntermedioCreateUpdateComponent } from './components/servicios-intermedio-tm/servicios-intermedio-create-update.component';
+import { ServiciosIntermedioListadoComponent } from './components/servicios-intermedio-tm/servicios-intermedio-listado.component';
 // PUCO/ObraSocial
 import { PucoComponent } from './components/puco/puco.component';
 import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
@@ -309,6 +311,8 @@ registerLocaleData(localeEsAr);
         demandaInsatisfechaComponent,
         FarmaciaComponent,
         FarmaciaCreateUpdateComponent,
+        ServiciosIntermedioListadoComponent,
+        ServiciosIntermedioCreateUpdateComponent,
         EstadosCamaProvincialComponent,
 
         // Solicitudes

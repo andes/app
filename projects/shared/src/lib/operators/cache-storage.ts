@@ -9,6 +9,19 @@ export interface CacheStorageOptions {
 }
 const _cacheSource: { [key: string]: BehaviorSubject<any> } = {};
 
+/**
+ * Limpia el valor persistido en `sessionStorage` y el `BehaviorSubject` en memoria asociados a una clave de {@link cacheStorage}.
+ * Usar tras POST/PATCH/DELETE cuando el listado cacheado (`getAll`) debe refrescarse.
+ */
+export function clearCacheStorage(key: string) {
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+        window.sessionStorage.removeItem(key);
+    }
+    if (_cacheSource[key]) {
+        delete _cacheSource[key];
+    }
+}
+
 export function cacheStorage(params: CacheStorageOptions | string) {
     const key = typeof params === 'string' ? params : params.key;
     const until$ = typeof params === 'object' ? params.until : undefined;

@@ -17,6 +17,8 @@ import { InscripcionProfesionalesComponent } from './components/profesional/insc
 import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 import { FarmaciaComponent } from './components/farmacia/farmacia.component';
+import { ServiciosIntermedioListadoComponent } from './components/servicios-intermedio-tm/servicios-intermedio-listado.component';
+import { ServiciosIntermedioCreateUpdateComponent } from './components/servicios-intermedio-tm/servicios-intermedio-create-update.component';
 // ... Obras sociales
 import { PucoComponent } from './components/puco/puco.component';
 import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
@@ -56,6 +58,9 @@ const appRoutes: Routes = [
     { path: 'tm/espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'tm/mapa_espacio_fisico', component: MapaEspacioFisicoVistaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'tm/farmacia', component: FarmaciaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+    { path: 'tm/servicios-intermedio', component: ServiciosIntermedioListadoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+    { path: 'tm/servicios-intermedio/create', component: ServiciosIntermedioCreateUpdateComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+    { path: 'tm/servicios-intermedio/create/:id', component: ServiciosIntermedioCreateUpdateComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
     { path: 'com/estados-cama-provincial', component: EstadosCamaProvincialComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     // MPI

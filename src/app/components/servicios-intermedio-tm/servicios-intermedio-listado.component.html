@@ -1,0 +1,63 @@
+<plex-layout>
+  <plex-layout-main>
+    <plex-title titulo="Servicios intermedio">
+      <plex-button class="mr-1" label="Volver" size="sm" type="danger" position="left"
+                   routerLink="/inicio">
+      </plex-button>
+      <plex-button label="Nuevo servicio" size="sm" type="success" position="right"
+                   routerLink="/tm/servicios-intermedio/create">
+      </plex-button>
+    </plex-title>
+
+    <plex-wrapper>
+      <plex-text [(ngModel)]="searchTerm" name="searchServicioIntermedio"
+                 label="Buscar por nombre"
+                 placeholder="Texto en nombre..."
+                 (change)="filtrar()">
+      </plex-text>
+    </plex-wrapper>
+
+    <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+
+    <div *ngIf="!loading && !(items$ | async)?.length" class="mt-5">
+      <plex-label class="flex-column" icon="magnify" type="info" justify="center" size="xl"
+                  direction="column"
+                  titulo="No hay resultados"
+                  subtitulo="Cambie el filtro o cree un nuevo servicio intermedio.">
+      </plex-label>
+    </div>
+
+    <ng-container *ngIf="(items$ | async)?.length">
+      <plex-table [columns]="columns" #table="plTable" (scroll)="onScroll()" [offset]="102">
+        <plex-title titulo="Listado" size="sm">
+          <plex-table-columns></plex-table-columns>
+        </plex-title>
+        <tr *ngFor="let servicio of (items$ | plSort:table | async)" class="selectable">
+          <td *plTableCol="'nombre'">{{ servicio.nombre }}</td>
+          <td *plTableCol="'turneables'">
+            <plex-badge type="info">{{ turneablesCount(servicio) }}</plex-badge>
+          </td>
+          <td *plTableCol="'procedimientos'">
+            <plex-badge *ngIf="tieneEcl(servicio)" type="warning">ECL</plex-badge>
+            <plex-badge *ngIf="procedimientosCount(servicio) && !tieneEcl(servicio)" type="success">
+              {{ procedimientosCount(servicio) }} proc.
+            </plex-badge>
+            <span *ngIf="!tieneEcl(servicio) && !procedimientosCount(servicio)" class="text-muted">—</span>
+            <plex-badge *ngIf="tieneEcl(servicio) && procedimientosCount(servicio)" class="ml-1" type="info">
+              {{ procedimientosCount(servicio) }} proc.
+            </plex-badge>
+          </td>
+          <td *plTableCol="'acciones'" justify="start">
+            <plex-button size="sm" type="primary" label="Editar" class="mr-1"
+                         (click)="irEditar(servicio)">
+            </plex-button>
+            <plex-button size="sm" type="danger" label="Borrar"
+                         (click)="borrar(servicio)">
+            </plex-button>
+          </td>
+        </tr>
+      </plex-table>
+      <plex-loader *ngIf="loadingMore" type="ball-pulse"></plex-loader>
+    </ng-container>
+  </plex-layout-main>
+</plex-layout>
