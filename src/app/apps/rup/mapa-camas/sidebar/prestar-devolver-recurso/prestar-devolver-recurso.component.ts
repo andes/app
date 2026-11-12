@@ -72,10 +72,7 @@ export class PrestarDevolverRecursoComponent implements OnInit {
             }
             saveRequest = this.camasHTTP.updateEstados(this.ambito, 'medica', this.fecha, datosCama);
         } else {
-            saveRequest = forkJoin([
-                this.camasHTTP.updateEstados(this.ambito, 'estadistica', this.fecha, datosCama),
-                this.camasHTTP.updateEstados(this.ambito, 'medica', this.fecha, datosCama)
-            ]);
+            saveRequest = this.camasHTTP.updateEstados(this.ambito, this.mapaCamasService.capa, this.fecha, datosCama);
         }
         saveRequest.subscribe(() => {
             const title = this.accion === 'prestar' ? 'Recurso prestado' : 'Recurso devuelto';
@@ -97,27 +94,15 @@ export class PrestarDevolverRecursoComponent implements OnInit {
         this.inProgress = true;
         this.accionPermitida = false;
         forkJoin([
-            this.camasHTTP.snapshot(this.ambito, 'estadistica', this.fecha, null, null, this.cama.id).pipe(
-                map(snapshots => snapshots[0])
-            ),
-            this.camasHTTP.snapshot(this.ambito, 'medica', this.fecha, null, null, this.cama.id).pipe(
+            this.camasHTTP.snapshot(this.ambito, this.mapaCamasService.capa, this.fecha, null, null, this.cama.id).pipe(
                 map(snapshots => snapshots[0])
             ),
             this.organizacionService.usaCapasUnificadas(this.auth.organizacion.id)
-        ]).subscribe(([estadistica, medica, organizacionV2]) => {
+        ]).subscribe(([camaCapa, organizacionV2]) => {
             this.inProgress = false;
             this.esOrganizacionV2 = organizacionV2;
-            /**
-             *  Si no usa capas unificadas debe controlarse que la cama este disponible esa fecha en ambas capas
-             *  ya que solo se puede prestar una cama ocupada en efectores que usen capas unificadas
-             */
-            const camasDisponibles = organizacionV2 ? true : estadistica.estado === 'disponible' && medica.estado === 'disponible';
-
-            if (camasDisponibles) {
-                this.accionPermitida = true;
-            } else {
-                this.accionPermitida = false;
-            }
+            // El estado de otra capa no condiciona el préstamo.
+            this.accionPermitida = organizacionV2 || camaCapa?.estado === 'disponible';
         });
     }
 }
