@@ -143,9 +143,26 @@
                         <vista-cda [registro]="registro"></vista-cda>
                     </plex-tab>
 
+                    <plex-tab [allowClose]="true" label="Ficha Epidemilógica"
+                        *ngIf="registro.tipo === 'ficha-epidemiologica'">
+                        <app-ficha-epidemiologica-crud *ngIf="registro.data.type.name == 'covid19'"
+                            [paciente]="paciente" [fichaPaciente]="registro.data" [editFicha]="false"
+                            [fichaName]="registro.data.type.name" [hideVolver]="true" [accesoHuds]="true">
+                        </app-ficha-epidemiologica-crud>
+                        <app-ficha-epidemiologica-generic *ngIf="registro.data.type.name != 'covid19'"
+                            [paciente]="paciente" [fichaPaciente]="registro.data" [editFicha]="false"
+                            [fichaName]="registro.data.type.name" [volverBuscador]="false" [accesoHuds]="true">
+                        </app-ficha-epidemiologica-generic>
+                    </plex-tab>
+
+                    <plex-tab *ngIf="registro.tipo === 'dominio'" [allowClose]="true" [label]="registro.data.name"
+                        [class]="registro.data.class">
+                        <vista-ips [registro]="registro.data"></vista-ips>
+                    </plex-tab>
+
                     <plex-tab *ngIf="registro.tipo === 'receta' && this.permisoRecetas" color="receta"
-                              class="tab-receta" [allowClose]="true"
-                              [label]="recetaService.getLabel(registro.data.recetas)">
+                        class="tab-receta" [allowClose]="true"
+                        [label]="recetaService.getLabel(registro.data.recetas)">
                         <vista-receta [registro]="registro.data" [paciente]="paciente"></vista-receta>
                     </plex-tab>
                 </ng-container>

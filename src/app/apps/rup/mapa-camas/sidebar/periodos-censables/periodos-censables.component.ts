@@ -1,12 +1,16 @@
 import moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { combineLatest, Observable, throwError } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
+import { InformeEstadisticaService } from 'src/app/modules/rup/services/informe-estadistica.service';
+import { IInformeEstadistica } from 'src/app/modules/rup/interfaces/informe-estadistica.interface';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 
 interface Periodo {
     desde: moment.Moment;
-    hasta: moment.Moment;
+    hasta: moment.Moment | null;
 }
 
 @Component({
@@ -17,6 +21,8 @@ interface Periodo {
 
 export class PeriodosCensablesComponent implements OnInit {
     prestacion;
+    informeEstadistica: IInformeEstadistica;
+    capa: string;
     agregar = false;
     nuevoPeriodo: Periodo;
     periodos: Periodo[] = [];
@@ -29,17 +35,33 @@ export class PeriodosCensablesComponent implements OnInit {
     constructor(
         private mapaCamasService: MapaCamasService,
         private servicioPrestacion: PrestacionesService,
+        private informeEstadisticaService: InformeEstadisticaService,
         private plex: Plex
     ) { }
 
     ngOnInit() {
-        this.mapaCamasService.prestacion$.subscribe((prestacion) => {
+        combineLatest([
+            this.mapaCamasService.prestacion$,
+            this.mapaCamasService.informeEstadistica$,
+            this.mapaCamasService.capa2
+        ]).subscribe(([prestacion, informeEstadistica, capa]: [any, IInformeEstadistica, string]) => {
+            this.capa = capa;
             this.prestacion = prestacion;
+            this.informeEstadistica = informeEstadistica;
 
-            const primerRegistro = prestacion?.ejecucion?.registros[0];
-
-            if (primerRegistro?.esCensable) {
-                this.periodos = this.prestacion?.periodosCensables;
+            this.periodos = [];
+            if (capa === 'estadistica' || capa === 'estadistica-v2') {
+                if (informeEstadistica?.periodosCensables?.length) {
+                    this.periodos = informeEstadistica.periodosCensables.map(p => ({
+                        desde: moment(p.desde),
+                        hasta: p.hasta ? moment(p.hasta) : null
+                    }));
+                }
+            } else {
+                const primerRegistro = prestacion?.ejecucion?.registros?.[0];
+                if (primerRegistro?.esCensable) {
+                    this.periodos = prestacion?.periodosCensables || [];
+                }
             }
         });
 
@@ -103,22 +125,52 @@ export class PeriodosCensablesComponent implements OnInit {
         return superpuesto;
     }
 
-    private guardarPrestacion() {
-        const registros = this.prestacion.ejecucion.registros;
-
-        if (this.periodos?.length) {
-            registros[0].esCensable = true;
-        } else {
-            delete registros[0].esCensable;
+    private guardarPrestacion(): Observable<any> {
+        if (this.capa === 'estadistica' || this.capa === 'estadistica-v2') {
+            const idInforme = this.informeEstadistica?._id || this.informeEstadistica?.id;
+            if (!idInforme) {
+                return throwError(() => new Error('No se encontró el informe estadístico para guardar los períodos censables'));
+            }
+            const patchData = {
+                periodosCensables: this.periodos.map(p => ({
+                    desde: moment(p.desde).toDate(),
+                    hasta: p.hasta ? moment(p.hasta).toDate() : null
+                })),
+                informeIngreso: {
+                    ...this.informeEstadistica.informeIngreso,
+                    esCensable: !!this.periodos?.length
+                }
+            };
+            return this.informeEstadisticaService.patch(idInforme, patchData).pipe(
+                tap(informe => {
+                    this.informeEstadistica = informe;
+                    this.mapaCamasService.selectInformeEstadistica(informe);
+                })
+            );
         }
 
-        const params: any = {
-            op: 'periodosCensables',
-            periodosCensables: this.periodos,
-            registros,
-        };
+        if (this.prestacion) {
+            const registros = this.prestacion.ejecucion?.registros;
+            if (!registros?.length) {
+                return throwError(() => new Error('No se encontraron registros de la prestación para guardar los períodos censables'));
+            }
 
-        return this.servicioPrestacion.patch(this.prestacion.id, params);
+            if (this.periodos?.length) {
+                registros[0].esCensable = true;
+            } else {
+                delete registros[0].esCensable;
+            }
+
+            const params: any = {
+                op: 'periodosCensables',
+                periodosCensables: this.periodos,
+                registros,
+            };
+
+            return this.servicioPrestacion.patch(this.prestacion.id, params);
+        }
+
+        return throwError(() => new Error('No se encontró el informe ni la prestación para guardar los períodos censables'));
     }
 
     private addPeriodoSinLimite(desde) {
