@@ -48,6 +48,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     public ingresoCantidadManual = false;
     public valorCantidadManual = null;
     public loading = false;
+    public verificandoDuplicado = false;
     public esDuplicado = false;
     public esTriplicado = false;
     public tiemposTratamiento = [
@@ -229,13 +230,17 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
                     this.checkDuplicado();
                 } else {
                     this.deshacerCantidadManual();
+                    this.verificandoDuplicado = false;
                 }
             });
+        } else {
+            this.verificandoDuplicado = false;
         }
     }
 
     preAgregarMedicamento(form) {
-        if (form.formValid) {
+        if (form.formValid && !this.verificandoDuplicado) {
+            this.verificandoDuplicado = true;
             // si se ingresó una cantidad manualmente y no se seleccionó ninguna presentación comercial
             if (this.unidades.length && this.ingresoCantidadManual) {
                 this.showModalCantidadManual();
@@ -247,52 +252,64 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     checkDuplicado() {
         const estadoDispensa = ['sin-dispensa', 'dispensa-parcial'].toString();
         const options = { pacienteId: this.paciente.id, estadoDispensa };
-        this.recetasService.getRecetas(options).subscribe((data) => {
-            const esMagistralActual = !!this.medicamento.esMagistral;
-            const termNombreActual = esMagistralActual
-                ? (this.medicamento.generico?.nombre || this.medicamento.generico?.term)
-                : this.medicamento.generico?.term;
-            const conceptIdActual = this.medicamento.generico?.conceptId || this.medicamento.generico?.id || this.medicamento.generico?._id;
 
-            const duplicado = data.find(receta => {
-                const esVigenteOMismaDispensa =
-                    (receta.estadoActual.tipo === 'vigente' || receta.estadoActual.tipo === 'pendiente') &&
-                    (receta.estadoDispensaActual.tipo === 'sin-dispensa' || receta.estadoDispensaActual.tipo === 'dispensa-parcial');
+        const esMagistralActual = !!this.medicamento.esMagistral;
+        const termNombreActual = esMagistralActual
+            ? (this.medicamento.generico?.nombre || this.medicamento.generico?.term)
+            : this.medicamento.generico?.term;
+        const conceptIdActual = this.medicamento.generico?.conceptId || this.medicamento.generico?.id || this.medicamento.generico?._id;
 
-                if (!esVigenteOMismaDispensa) {
-                    return false;
-                }
+        if (!conceptIdActual && !termNombreActual) {
+            this.verificandoDuplicado = false;
+            return;
+        }
 
-                if (esMagistralActual) {
-                    return !!receta.medicamento?.esMagistral &&
-                        (receta.medicamento?.magistral?.nombre === termNombreActual ||
-                            receta.medicamento?.magistral?.id === conceptIdActual);
+        this.recetasService.getRecetas(options).subscribe({
+            next: (data) => {
+                const duplicado = data.find(receta => {
+                    const esVigenteOMismaDispensa =
+                        (receta.estadoActual.tipo === 'vigente' || receta.estadoActual.tipo === 'pendiente') &&
+                        (receta.estadoDispensaActual.tipo === 'sin-dispensa' || receta.estadoDispensaActual.tipo === 'dispensa-parcial');
+
+                    if (!esVigenteOMismaDispensa) {
+                        return false;
+                    }
+
+                    if (esMagistralActual) {
+                        return !!receta.medicamento?.esMagistral &&
+                            (receta.medicamento?.magistral?.nombre === termNombreActual ||
+                                receta.medicamento?.magistral?.id === conceptIdActual);
+                    } else {
+                        return !receta.medicamento?.esMagistral &&
+                            receta.medicamento?.concepto?.conceptId === conceptIdActual;
+                    }
+                });
+
+                const cargadoActual = this.registro.valor.medicamentos.find(medicamentoCargado => {
+                    if (esMagistralActual) {
+                        const nombreCargado = medicamentoCargado.magistral?.nombre || medicamentoCargado.generico?.nombre || medicamentoCargado.generico?.term;
+                        const idCargado = medicamentoCargado.magistral?.id || medicamentoCargado.generico?.conceptId || medicamentoCargado.generico?.id || medicamentoCargado.generico?._id;
+                        return medicamentoCargado.esMagistral && (nombreCargado === termNombreActual || idCargado === conceptIdActual);
+                    } else {
+                        return !medicamentoCargado.esMagistral && medicamentoCargado.generico?.conceptId === conceptIdActual;
+                    }
+                });
+
+                if (!duplicado && !cargadoActual) {
+                    return this.agregarMedicamento();
                 } else {
-                    return !receta.medicamento?.esMagistral &&
-                        receta.medicamento?.concepto?.conceptId === conceptIdActual;
+                    this.verificandoDuplicado = false;
+                    if (duplicado) {
+                        const fechaRegistro = new Date(duplicado.fechaRegistro).toLocaleString();
+                        const nombreMed = duplicado.medicamento?.magistral?.nombre || duplicado.medicamento?.nombre || duplicado.medicamento?.concepto?.term;
+                        this.plex.info('danger', `El medicamento "<b>${nombreMed}</b>" se encuentra vigente en otra receta.<br><small>Fecha de registro: ${fechaRegistro}</small>`);
+                    } else {
+                        this.plex.info('danger', `El medicamento "<b>${termNombreActual}</b>" se encuentra cargado en la receta actual.`);
+                    }
                 }
-            });
-
-            const cargadoActual = this.registro.valor.medicamentos.find(medicamentoCargado => {
-                if (esMagistralActual) {
-                    const nombreCargado = medicamentoCargado.magistral?.nombre || medicamentoCargado.generico?.nombre || medicamentoCargado.generico?.term;
-                    const idCargado = medicamentoCargado.magistral?.id || medicamentoCargado.generico?.conceptId || medicamentoCargado.generico?.id || medicamentoCargado.generico?._id;
-                    return medicamentoCargado.esMagistral && (nombreCargado === termNombreActual || idCargado === conceptIdActual);
-                } else {
-                    return !medicamentoCargado.esMagistral && medicamentoCargado.generico?.conceptId === conceptIdActual;
-                }
-            });
-
-            if (!duplicado && !cargadoActual) {
-                return this.agregarMedicamento();
-            } else {
-                if (duplicado) {
-                    const fechaRegistro = new Date(duplicado.fechaRegistro).toLocaleString();
-                    const nombreMed = duplicado.medicamento?.magistral?.nombre || duplicado.medicamento?.nombre || duplicado.medicamento?.concepto?.term;
-                    this.plex.info('danger', `El medicamento "<b>${nombreMed}</b>" se encuentra vigente en otra receta.<br><small>Fecha de registro: ${fechaRegistro}</small>`);
-                } else {
-                    this.plex.info('danger', `El medicamento "<b>${termNombreActual}</b>" se encuentra cargado en la receta actual.`);
-                }
+            },
+            error: () => {
+                this.verificandoDuplicado = false;
             }
         });
     }
@@ -304,6 +321,15 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     }
 
     agregarMedicamento() {
+        const tieneMedicamento = this.medicamento?.esMagistral
+            ? !!(this.medicamento.generico || this.medicamento.magistral)
+            : !!this.medicamento?.generico?.conceptId;
+
+        if (!tieneMedicamento) {
+            this.verificandoDuplicado = false;
+            return;
+        }
+
         if (this.medicamento.cantidad?.valor && this.medicamento.cantidad?.valor !== 'Otro') {
             this.medicamento.cantidad = Number(this.medicamento.cantidad.valor);
         } else if (this.ingresoCantidadManual && this.valorCantidadManual) {
@@ -355,6 +381,8 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
         if (numeroAfiliadoTemporal) {
             this.numeroAfiliado = numeroAfiliadoTemporal;
         }
+
+        this.verificandoDuplicado = false;
     }
 
     borrarMedicamento(medicamento) {
