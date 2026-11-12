@@ -4,6 +4,7 @@
             <ng-container *ngIf="!soloValores; else showSoloValores">
                 <plex-datetime [(ngModel)]="registro.valor" [label]="params?.title || registro.concepto.term"
                                name="DateValue" [type]="params?.type || 'date'" [required]="params?.required || false"
+                               [placeholder]="params?.placeholder || ''"
                                (change)="onChange()" [readonly]="habilitado">
                 </plex-datetime>
             </ng-container>
