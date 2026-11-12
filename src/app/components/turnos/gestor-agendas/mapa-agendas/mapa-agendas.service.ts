@@ -6,6 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
 import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
+import { MapaAgendaColoresService, MapaAgendaColorResuelto, MapaAgendaColoresResolverParams } from './mapa-agenda-colores.service';
 import { NotaAgendaService } from './nota-agenda.service';
 
 @Injectable({ providedIn: 'root' })
@@ -26,6 +27,7 @@ export class MapaAgendasService {
         private agendaService: AgendaService,
         private conceptoTurneablesService: ConceptosTurneablesService,
         private notaAgendaService: NotaAgendaService,
+        private mapaAgendaColoresService: MapaAgendaColoresService,
         private auth: Auth
     ) { }
 
@@ -60,12 +62,17 @@ export class MapaAgendasService {
             ? this.notaAgendaService.search(this.parametrosNotas()).pipe(catchError(() => of([])))
             : of([]);
 
+        const colores$ = this.mapaAgendaColoresService
+            .resolver(this.parametrosColores())
+            .pipe(catchError(() => of([] as MapaAgendaColorResuelto[])));
+
         forkJoin([
             this.conceptoTurneablesService.getAll(),
             this.agendaService.get(parametros),
-            notas$
-        ]).subscribe(([conceptosTurneables, agendas, notas]) => {
-            this.tipoPrestacionesColor(conceptosTurneables);
+            notas$,
+            colores$
+        ]).subscribe(([conceptosTurneables, agendas, notas, coloresResueltos]) => {
+            this.tipoPrestacionesColor(conceptosTurneables, coloresResueltos || []);
             this.agendas = agendas;
             this.notas = notas || [];
             this.cargarMes();
@@ -86,7 +93,15 @@ export class MapaAgendasService {
         return params;
     }
 
-    private tipoPrestacionesColor(conceptosTurneables: ITipoPrestacion[]) {
+    private parametrosColores(): MapaAgendaColoresResolverParams {
+        const params: MapaAgendaColoresResolverParams = {};
+        if (this.servicioIntermedio?.id) {
+            params.servicioIntermedio = this.servicioIntermedio.id;
+        }
+        return params;
+    }
+
+    private tipoPrestacionesColor(conceptosTurneables: ITipoPrestacion[], coloresResueltos: MapaAgendaColorResuelto[]) {
         this.tiposPrestacion.clear();
         const conceptosServicio = this.servicioIntermedio?.conceptosTurneables || [];
         if (this.servicioIntermedio) {
@@ -97,8 +112,24 @@ export class MapaAgendasService {
         } else {
             this.conceptosTurneables = conceptosTurneables.filter((x) => this.prestacionesPermisos?.indexOf(x.id) >= 0);
         }
-        this.conceptosTurneables.filter(d => d.color).forEach(tipoPrestacion => {
-            this.tiposPrestacion.set(tipoPrestacion.conceptId, tipoPrestacion);
+
+        const colorResuelto = new Map<string, string>();
+        (coloresResueltos || []).forEach(regla => colorResuelto.set(regla.conceptId, regla.color));
+
+        this.conceptosTurneables.forEach(tipoPrestacion => {
+            const color = colorResuelto.get(tipoPrestacion.conceptId) ?? tipoPrestacion.color;
+            if (color) {
+                this.tiposPrestacion.set(tipoPrestacion.conceptId, { ...tipoPrestacion, color });
+            }
+        });
+
+        (coloresResueltos || []).forEach(regla => {
+            if (!this.tiposPrestacion.has(regla.conceptId)) {
+                this.tiposPrestacion.set(regla.conceptId, {
+                    conceptId: regla.conceptId,
+                    color: regla.color
+                } as ITipoPrestacion);
+            }
         });
     }
 

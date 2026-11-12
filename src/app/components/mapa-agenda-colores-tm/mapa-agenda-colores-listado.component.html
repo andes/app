@@ -1,0 +1,69 @@
+<plex-layout>
+  <plex-layout-main>
+    <plex-title titulo="Colores del mapa de agendas">
+      <plex-button class="mr-1" label="Volver" size="sm" type="danger" position="left"
+                   routerLink="/inicio">
+      </plex-button>
+      <plex-button *ngIf="puedeCrear" label="Nueva regla" size="sm" type="success" position="right"
+                   routerLink="/tm/mapa-agenda-colores/create">
+      </plex-button>
+    </plex-title>
+
+    <plex-wrapper>
+      <plex-text [(ngModel)]="searchTerm" name="searchMapaAgendaColores"
+                 label="Buscar"
+                 placeholder="Término o concept ID..."
+                 (change)="filtrar()">
+      </plex-text>
+      <plex-select [(ngModel)]="filtroAlcance" name="filtroAlcance" label="Alcance"
+                   [data]="alcanceOpciones" idField="id" labelField="nombre"
+                   (change)="filtrar()">
+      </plex-select>
+    </plex-wrapper>
+
+    <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+
+    <div *ngIf="!loading && !(items$ | async)?.length" class="mt-5">
+      <plex-label class="flex-column" icon="magnify" type="info" justify="center" size="xl"
+                  direction="column"
+                  titulo="No hay resultados"
+                  subtitulo="Cambie el filtro o cree una regla de color SNOMED.">
+      </plex-label>
+    </div>
+
+    <ng-container *ngIf="(items$ | async)?.length">
+      <plex-table [columns]="columns" #table="plTable" (scroll)="onScroll()" [offset]="102">
+        <plex-title titulo="Listado" size="sm">
+          <plex-table-columns></plex-table-columns>
+        </plex-title>
+        <tr *ngFor="let row of (items$ | plSort:table | async)" class="selectable">
+          <td *plTableCol="'concepto'">{{ row.concepto?.term }}</td>
+          <td *plTableCol="'conceptId'"><small>{{ row.concepto?.conceptId }}</small></td>
+          <td *plTableCol="'color'">
+            <span class="color-muestra mr-1" [style.background]="row.color"></span>
+            <small>{{ row.color }}</small>
+          </td>
+          <td *plTableCol="'alcance'">
+            <plex-badge type="info">{{ etiquetaAlcance(row.alcance) }}</plex-badge>
+          </td>
+          <td *plTableCol="'ambito'">{{ ambitoLabel(row) }}</td>
+          <td *plTableCol="'activo'">
+            <plex-badge [type]="row.activo !== false ? 'success' : 'warning'">
+              {{ row.activo !== false ? 'Sí' : 'No' }}
+            </plex-badge>
+          </td>
+          <td *plTableCol="'acciones'" justify="start">
+            <plex-button *ngIf="puedeMutar(row)" size="sm" type="primary" label="Editar" class="mr-1"
+                         (click)="irEditar(row)">
+            </plex-button>
+            <plex-button *ngIf="puedeMutar(row)" size="sm" type="danger" label="Borrar"
+                         (click)="borrar(row)">
+            </plex-button>
+            <span *ngIf="!puedeMutar(row)" class="text-muted">Solo lectura</span>
+          </td>
+        </tr>
+      </plex-table>
+      <plex-loader *ngIf="loadingMore" type="ball-pulse"></plex-loader>
+    </ng-container>
+  </plex-layout-main>
+</plex-layout>
