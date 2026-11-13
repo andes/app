@@ -14,9 +14,6 @@ COPY . .
 RUN cp src/environments/apiKeyMaps.ts.example src/environments/apiKeyMaps.ts
 RUN npm run "build:${ENV}"
 
-FROM nginx:alpine
-
-COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /usr/src/app/dist /usr/share/nginx/html
-
-EXPOSE 80
+# La imagen solo lleva el dist. El nginx que lo sirve es el de integración.
+FROM scratch
+COPY --from=build /usr/src/app/dist /usr/src/app/dist
