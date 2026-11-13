@@ -37,7 +37,7 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit,
         { id: '6', nombre: '6 meses' }
     ];
 
-    public financiadoresPaciente: IObraSocial[] = [];
+    public financiadoresPaciente: Partial<IObraSocial>[] = [];
     public datosFinanciadores = [];
     public financiadorSeleccionado;
     public otroFinanciadorSeleccionado;
@@ -201,28 +201,127 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit,
     }
 
     cargarObrasSocialesPaciente() {
+        this.financiadoresPaciente = [];
+
+        const esValido = (nombreFinanciador: any) => {
+            const nomStr = String(nombreFinanciador || '');
+            return !!nomStr && nomStr !== 'Sin obra social' && nomStr !== 'otras';
+        };
+
+        // 1. Si la prestación ya tiene obraSocial asignada (y no es 'Sin obra social' / 'otras')
         if (this.prestacion?.paciente?.obraSocial) {
-            this.financiadoresPaciente = [{
-                nombre: this.prestacion.paciente.obraSocial.nombre || '',
-                codigoFinanciador: 0,
-                version: new Date(),
-                numeroAfiliado: this.prestacion.paciente.obraSocial.numeroAfiliado || '',
-                financiador: this.prestacion.paciente.obraSocial.financiador || null,
-                codigoPuco: this.prestacion.paciente.obraSocial.codigoPuco || null,
-                id: this.prestacion.paciente.obraSocial.id || null,
-                transmite: '',
-                prepaga: this.prestacion.paciente.obraSocial.prepaga || false,
-                origen: this.prestacion.paciente.obraSocial.origen || 'ANDES'
-            }];
+            const os = this.prestacion.paciente.obraSocial;
+            const nom = os.nombre || os.financiador || '';
+            if (esValido(nom)) {
+                this.financiadoresPaciente.push({
+                    nombre: nom,
+                    codigoFinanciador: os.codigoFinanciador || 0,
+                    version: new Date(),
+                    numeroAfiliado: os.numeroAfiliado || '',
+                    financiador: os.financiador || os.nombre || null,
+                    codigoPuco: os.codigoPuco || null,
+                    id: os.id || null,
+                    transmite: os.transmite || '',
+                    prepaga: os.prepaga || false,
+                    origen: os.origen || 'ANDES'
+                });
+            }
+        }
+
+        // 2. Si el paciente (MPI) o prestacion.paciente tiene el arreglo de financiadores
+        const financiadoresMPI = this.paciente?.financiador || (this.prestacion?.paciente as any)?.financiador || [];
+        if (Array.isArray(financiadoresMPI)) {
+            financiadoresMPI.forEach((f: any) => {
+                const nom = f.nombre || f.financiador || '';
+                if (esValido(nom)) {
+                    const yaExiste = this.financiadoresPaciente.some(os =>
+                        (os.nombre && (os.nombre === f.nombre || os.nombre === f.financiador)) ||
+                        (os.financiador && (os.financiador === f.nombre || os.financiador === f.financiador))
+                    );
+                    if (!yaExiste) {
+                        this.financiadoresPaciente.push({
+                            nombre: nom,
+                            codigoFinanciador: f.codigoFinanciador || 0,
+                            version: new Date(),
+                            numeroAfiliado: f.numeroAfiliado || '',
+                            financiador: f.financiador || f.nombre || null,
+                            codigoPuco: f.codigoPuco || null,
+                            id: f.id || null,
+                            transmite: f.transmite || '',
+                            prepaga: f.prepaga || false,
+                            origen: f.origen || 'ANDES'
+                        });
+                    }
+                }
+            });
+        }
+
+        // 3. Si el paciente en MPI tiene propiedad obraSocial directa
+        if ((this.paciente as any)?.obraSocial) {
+            const os = (this.paciente as any).obraSocial;
+            const nom = os.nombre || os.financiador || '';
+            if (esValido(nom)) {
+                const yaExiste = this.financiadoresPaciente.some(f =>
+                    (f.nombre && (f.nombre === os.nombre || f.nombre === os.financiador))
+                );
+                if (!yaExiste) {
+                    this.financiadoresPaciente.push({
+                        nombre: nom,
+                        codigoFinanciador: os.codigoFinanciador || 0,
+                        version: new Date(),
+                        numeroAfiliado: os.numeroAfiliado || '',
+                        financiador: os.financiador || os.nombre || null,
+                        codigoPuco: os.codigoPuco || null,
+                        id: os.id || null,
+                        transmite: os.transmite || '',
+                        prepaga: os.prepaga || false,
+                        origen: os.origen || 'ANDES'
+                    });
+                }
+            }
+        }
+
+        if (this.prestacion?.paciente) {
             this.showSelector = true;
 
-            const { financiador, nombre } = this.financiadoresPaciente[0];
+            const obraSocialActual = this.prestacion.paciente.obraSocial;
 
-            this.financiadorSeleccionado = nombre || financiador;
+            if (this.financiadoresPaciente.length > 0 && (!obraSocialActual || (obraSocialActual.nombre !== 'Sin obra social' && obraSocialActual.nombre !== 'otras'))) {
+                // Si la prestación no tenía obraSocial asignada previamente, asignamos la primera encontrada a la prestación
+                if (!this.prestacion.paciente.obraSocial) {
+                    const primerFinanciador = this.financiadoresPaciente[0];
+                    this.prestacion.paciente.obraSocial = <IObraSocial>{
+                        id: primerFinanciador.id || null,
+                        nombre: primerFinanciador.nombre,
+                        financiador: primerFinanciador.financiador,
+                        codigoPuco: primerFinanciador.codigoPuco,
+                        numeroAfiliado: primerFinanciador.numeroAfiliado || '',
+                        prepaga: primerFinanciador.prepaga || false,
+                        origen: primerFinanciador.origen || 'ANDES'
+                    };
+                }
 
-            const numeroAfiliadoActual = this.numeroAfiliado;
-            const numeroAfiliadoPrestacion = this.prestacion.paciente.obraSocial.numeroAfiliado as string || '';
-            this.numeroAfiliado = numeroAfiliadoActual || numeroAfiliadoPrestacion;
+                const { financiador, nombre, numeroAfiliado } = this.prestacion.paciente.obraSocial;
+                this.financiadorSeleccionado = nombre || financiador;
+
+                const numeroAfiliadoActual = this.numeroAfiliado;
+                const numeroAfiliadoPrestacion = (numeroAfiliado as string) || '';
+                this.numeroAfiliado = numeroAfiliadoActual || numeroAfiliadoPrestacion;
+            } else {
+                // Si el paciente no tiene financiadores válidos o ya tiene seleccionado 'Sin obra social'
+                this.financiadorSeleccionado = 'Sin obra social';
+                this.numeroAfiliado = '';
+                this.prestacion.paciente.obraSocial = <IObraSocial>{
+                    id: null,
+                    nombre: 'Sin obra social',
+                    financiador: 'Sin obra social',
+                    codigoPuco: null,
+                    numeroAfiliado: '',
+                    prepaga: false,
+                    origen: 'ANDES'
+                };
+            }
+
             this.datosFinanciadores = [
                 ...this.financiadoresPaciente.map((os: IObraSocial) => ({
                     id: os.nombre || os.financiador,
@@ -337,6 +436,14 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit,
     }
 
     public actualizarNumeroAfiliado() {
+        if (!this.prestacion?.paciente?.obraSocial) {
+            return;
+        }
+
+        // Persistimos el número en el modelo compartido para que sobreviva a la
+        // destrucción del componente (ej: al cambiar de pestaña en la ejecución).
+        this.prestacion.paciente.obraSocial.numeroAfiliado = this.numeroAfiliado || '';
+
         if (!this.numeroAfiliado || this.numeroAfiliado.toString().trim() === '') {
             return;
         }
