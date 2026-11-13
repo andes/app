@@ -1,22 +1,33 @@
 name: RELEASE
+
 on:
-    schedule:
-        - cron: '0 14 * * 3'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 14 * * 3'
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
 jobs:
-    release:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            
-            - name: Use Node.js 18
-              uses: actions/setup-node@v4
-              with:
-                  node-version: '18'
-            
-            - name: Install
-              run: npm ci
-            
-            - name: Release 
-              env:
-                  GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
-              run: npx semantic-release
+  release:
+    uses: andes/shared-workflows/.github/workflows/semantic-release.yml@chore/docker
+    secrets:
+      release_token: ${{ secrets.DEPLOY_TOKEN }}
+    with:
+      branches: "['master']"
+      skip_npm: false
+      floating_tag: true
+
+  image:
+    needs: release
+    if: needs.release.outputs.published == 'true'
+    uses: andes/shared-workflows/.github/workflows/docker-image.yml@chore/docker
+    with:
+      image: andesnqn/app
+      tags: ${{ needs.release.outputs.version }},${{ needs.release.outputs.short_sha }}
+      ref: ${{ needs.release.outputs.sha }}
+    secrets:
+      dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
