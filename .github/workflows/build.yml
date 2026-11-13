@@ -7,7 +7,7 @@ permissions:
 
 jobs:
   build:
-    uses: andes/shared-workflows/.github/workflows/node-ci.yml@v1
+    uses: andes/shared-workflows/.github/workflows/node-ci.yml@feat/node-ci-cache
     with:
       runner: ubuntu-22.04
       node-version: "18"
