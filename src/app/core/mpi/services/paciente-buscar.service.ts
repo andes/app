@@ -71,7 +71,7 @@ export class PacienteBuscarService {
 
         let fechaNacimiento = null;
         if (documento.grupoFechaNacimiento > 0) {
-            fechaNacimiento = moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY').format('YYYY-MM-DD').toString();
+            fechaNacimiento = moment(this.completarAnio(datos[documento.grupoFechaNacimiento]), 'DD/MM/YYYY').format('YYYY-MM-DD').toString();
         }
 
         return {
@@ -84,6 +84,18 @@ export class PacienteBuscarService {
         };
     }
 
+
+    private completarAnio(fecha: string) {
+        const partes = /^(\d{2})\/(\d{2})\/(\d{2})$/.exec(fecha || '');
+        if (!partes) {
+            return fecha;
+        }
+        let anio = 2000 + Number(partes[3]);
+        if (anio > new Date().getFullYear()) {
+            anio -= 100;
+        }
+        return `${partes[1]}/${partes[2]}/${anio}`;
+    }
 
     public findByScan(pacienteEscaneado: PacienteEscaneado) {
         const textoLibre = pacienteEscaneado.scan;
