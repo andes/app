@@ -18,5 +18,3 @@ jobs:
     with:
       branches: "['master']"
       skip_npm: false
-      # Se apaga después de revisar el análisis en master.
-      dry_run: true
