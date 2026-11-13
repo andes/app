@@ -1,0 +1,91 @@
+.detalle-molecula {
+
+    .detalle-molecula-encabezado {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: .5rem 1rem;
+        padding-bottom: .75rem;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #00a8e0;
+
+        plex-badge {
+            flex-shrink: 0;
+        }
+    }
+
+    .detalle-molecula-nombre {
+        flex: 1 1 60%;
+        min-width: 12rem;
+        margin: 0;
+        font-weight: bold;
+
+        &::first-letter {
+            text-transform: uppercase;
+        }
+    }
+
+    ::ng-deep {
+
+        rup-molecula-base>.row {
+            @for $i from 1 through 6 {
+                >.col-#{$i} {
+                    flex: 0 0 50%;
+                    max-width: 50%;
+                    margin-right: 0 !important;
+                }
+            }
+
+            @for $i from 7 through 11 {
+                >.col-#{$i} {
+                    flex: 0 0 100%;
+                    max-width: 100%;
+                    margin-right: 0 !important;
+                }
+            }
+
+            >[class*='col-'] {
+                overflow-wrap: anywhere;
+            }
+
+            >.w-100::before {
+                content: '';
+                display: block;
+                margin: .25rem 15px .5rem;
+                border-top: 1px solid rgba(128, 128, 128, .5);
+            }
+
+            >.w-100:first-child::before,
+            >.w-100:last-child::before,
+            >.w-100+.w-100::before {
+                display: none;
+            }
+        }
+
+        .rup-submolecula-titulo span {
+            font-size: .875rem !important;
+            font-weight: bold;
+            letter-spacing: .08em;
+            text-transform: uppercase !important;
+            color: #5ccbf0 !important;
+        }
+
+        hr.hr-grueso {
+            display: none;
+        }
+
+        rup label {
+            display: block;
+            margin-bottom: .15rem;
+            font-size: .875rem;
+            font-weight: normal;
+            text-transform: none !important;
+            opacity: .75;
+
+            &::first-letter {
+                text-transform: uppercase;
+            }
+        }
+    }
+}
