@@ -3,6 +3,7 @@ import { RUPComponent } from '../../core/rup.component';
 import { Unsubscribe } from '@andes/shared';
 import { Observable, of } from 'rxjs';
 import { RupElement } from '..';
+import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
 import { ISnomedConcept } from '../../../interfaces/snomed-concept.interface';
 
 /**
@@ -227,6 +228,24 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
         eliminarDeLista(prestacion.ejecucion.registros);
         this._lastAddedConceptId = null;
         this._lastAddedList = null;
+    }
+
+    public clearSelectionForRemovedConcept(conceptId: string, moleculeRecords: IPrestacionRegistro[]) {
+        const lastAddedMatches = this._lastAddedConceptId === conceptId && this._lastAddedList === moleculeRecords;
+        const selectedConceptMatches = !Array.isArray(this.itemSelected)
+            && this.itemSelected?.conceptId === conceptId
+            && (this.params?.addToMolecule ?? this.params?.addToMoleculeInParams)
+            && this.getMoleculaContenedora()?.registros === moleculeRecords;
+
+        if (!lastAddedMatches && !selectedConceptMatches) {
+            return;
+        }
+
+        this.itemSelected = null;
+        this.otherEnabled = false;
+        this._lastAddedConceptId = null;
+        this._lastAddedList = null;
+        this.onValueChange();
     }
 
     /**

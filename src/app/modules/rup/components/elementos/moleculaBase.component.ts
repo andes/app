@@ -5,6 +5,7 @@ import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interf
 import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
 import { RUPComponent } from '../core/rup.component';
 import { RupElement } from '.';
+import { SelectBaseComponent } from './rupers/select-base.component';
 
 @Component({
     selector: 'rup-molecula-base',
@@ -133,6 +134,12 @@ export class MoleculaBaseComponent extends RUPComponent implements OnInit {
     quitarRegistro(registro: IPrestacionRegistro) {
         const index = this.registro.registros.findIndex(r => r.id === registro.id);
         if (index !== -1) {
+            this.rupElements.forEach(item => {
+                if (item.rupInstance instanceof SelectBaseComponent) {
+                    item.rupInstance.clearSelectionForRemovedConcept(registro.concepto.conceptId, this.registro.registros);
+                }
+            });
+
             this.registro.registros.splice(index, 1);
             // También removemos del array global de la prestación para mantener consistencia con backend
             if (this.prestacion && this.prestacion.ejecucion && Array.isArray(this.prestacion.ejecucion.registros)) {
