@@ -71,7 +71,7 @@ export class PacienteBuscarService {
 
         let fechaNacimiento = null;
         if (documento.grupoFechaNacimiento > 0) {
-            fechaNacimiento = moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY').format('YYYY-MM-DD').toString();
+            fechaNacimiento = moment(this.completarAnio(datos[documento.grupoFechaNacimiento]), 'DD/MM/YYYY').format('YYYY-MM-DD').toString();
         }
 
         return {
@@ -84,6 +84,18 @@ export class PacienteBuscarService {
         };
     }
 
+
+    private completarAnio(fecha: string) {
+        const partes = /^(\d{2})\/(\d{2})\/(\d{2})$/.exec(fecha || '');
+        if (!partes) {
+            return fecha;
+        }
+        let anio = 2000 + Number(partes[3]);
+        if (anio > new Date().getFullYear()) {
+            anio -= 100;
+        }
+        return `${partes[1]}/${partes[2]}/${anio}`;
+    }
 
     public findByScan(pacienteEscaneado: PacienteEscaneado) {
         const textoLibre = pacienteEscaneado.scan;
@@ -128,7 +140,12 @@ export class PacienteBuscarService {
                         if (candidato) {
                             return { scan: textoLibre, pacientes: [candidato], err: null };
                         } else {
-                            // 1.3.3. Busca uno con un porcentaje alto de matcheo
+                            if (!pacienteEscaneado.sexo) {
+                                const candidatos = resultadoSuggest.filter(elto => elto._score >= 0.94);
+                                if (candidatos.length > 1) {
+                                    return { pacientes: candidatos, err: null };
+                                }
+                            }
                             if (resultadoSuggest[0]._score >= 0.94) {
                                 if (resultadoSuggest[0].estado === 'validado') {
                                     return { pacientes: [resultadoSuggest[0]], err: null };
@@ -217,8 +234,7 @@ export class PacienteBuscarService {
                     this.scrollEnd = true;
                 }
                 return { pacientes: resultado, err: null };
-            },
-            err => {
+            }, err => {
                 return { pacientes: [], err: err };
             }
             ),
