@@ -6,7 +6,8 @@ import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.s
 
 @Component({
     selector: 'detalle-pedido',
-    templateUrl: './detallePedido.html'
+    templateUrl: './detallePedido.html',
+    styleUrls: ['./detallePedido.scss']
 })
 
 export class DetallePedidoComponent implements OnDestroy {
