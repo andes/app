@@ -1,0 +1,28 @@
+name: Docker image
+
+# Dispatch manual. Apunta a la rama de shared-workflows donde está el workflow.
+# Cuando salga el próximo 1.x, el ref pasa a @v1.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sha:
+    runs-on: ubuntu-latest
+    outputs:
+      short: ${{ steps.out.outputs.short }}
+    steps:
+      - id: out
+        run: echo "short=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+  image:
+    needs: sha
+    uses: andes/shared-workflows/.github/workflows/docker-image.yml@chore/docker
+    with:
+      image: andesnqn/app
+      tags: ${{ needs.sha.outputs.short }}
+    secrets:
+      dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
