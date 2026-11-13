@@ -13,6 +13,7 @@ import { ParentescoService } from '../../../services/parentesco.service';
 import { IDireccion } from '../interfaces/IDireccion';
 import { IPaciente } from '../interfaces/IPaciente';
 import { HistorialBusquedaService } from '../services/historialBusqueda.service';
+import { DocumentoEscaneados } from '../services/paciente-buscar.service';
 import { PacienteService } from '../services/paciente.service';
 import { PacienteCacheService } from '../services/pacienteCache.service';
 import { PacienteVinculadoCacheService } from '../services/pacienteVinculadoCache.service';
@@ -199,6 +200,10 @@ export class PacienteComponent implements OnInit {
             if (this.paciente.id) {
                 this.historialBusquedaService.add(this.paciente);
 
+                if (this.escaneado) {
+                    const formato = DocumentoEscaneados.find(documento => documento.regEx.test(this.scanCode));
+                    this.escaneadoSinSexo = !!formato && !formato.grupoSexo;
+                }
                 // Busco el paciente en mongodb
                 this.pacienteService.getById(this.paciente.id).subscribe({
                     next: (resultado) => {
@@ -391,7 +396,7 @@ export class PacienteComponent implements OnInit {
             first(), filter((resultadoSave: any) => {
                 // Existen sugerencias de pacientes similares?
                 if (resultadoSave.sugeridos) {
-                    this.pacientesSimilares = this.escaneado || resultadoSave.sugeridos;
+                    this.pacientesSimilares = resultadoSave.sugeridos;
                     // Si el matcheo es alto o el dni-sexo está repetido no podemos ignorar las sugerencias
                     const existePaciente = this.pacientesSimilares[0]?._score > 0.94;
 
@@ -497,26 +502,52 @@ export class PacienteComponent implements OnInit {
         return this.validacionService.post({ documento: paciente.documento, sexo: paciente.sexo }).pipe(
             catchError(() => of(null)),
             mergeMap((resultado: any) => {
-                this.loading = false;
-                if (resultado && !resultado.error && !resultado.message) {
-                    this.aplicarValidacion(resultado);
+                const validadoRenaper = resultado && !resultado.error && !resultado.message
+                    && resultado.identificadores?.some(identificador => identificador.entidad === 'RENAPER');
+                if (validadoRenaper && this.coincideConEscaneo(resultado)) {
+                    this.loading = false;
+                    this.aplicarValidacionEscaneado(resultado);
                     this.plex.toast('success', '¡Paciente Validado!');
                     return of(this.prepararPaciente(this.mergePaciente(this.pacienteModel, this.pacienteExtranjero), paciente.ignoreSuggestions));
                 }
-                return from(this.plex.confirm(
-                    'No se pudo validar el paciente con RENAPER, revise los datos ingresados (documento y sexo).<br>¿Desea guardarlo de todas formas como paciente temporal?',
-                    'Paciente no validado'
-                )).pipe(
-                    map(confirmado => {
-                        if (!confirmado) {
-                            return null;
+                const renaperDisponible = validadoRenaper ? of(true) : this.validacionService.renaperDisponible();
+                return renaperDisponible.pipe(
+                    mergeMap(disponible => {
+                        this.loading = false;
+                        if (!disponible) {
+                            return of(this.marcarTemporal(paciente));
                         }
-                        this.temporalConfirmado = clave;
-                        return this.marcarTemporal(paciente);
+                        return from(this.plex.confirm(
+                            'No se pudo validar el paciente con RENAPER, revise los datos ingresados (documento y sexo).<br>¿Desea guardarlo de todas formas como paciente temporal?',
+                            'Paciente no validado'
+                        )).pipe(
+                            map(confirmado => {
+                                if (!confirmado) {
+                                    return null;
+                                }
+                                this.temporalConfirmado = clave;
+                                return this.marcarTemporal(paciente);
+                            })
+                        );
                     })
                 );
             })
         );
+    }
+
+    private coincideConEscaneo(resultado) {
+        const normalizar = (texto: string) => (texto || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().replace(/[^A-Z]+/g, ' ').trim();
+        const fecha = (valor) => moment(valor).format('DD/MM/YY');
+        return normalizar(resultado.apellido) === normalizar(this.pacienteModel.apellido)
+            && normalizar(resultado.nombre) === normalizar(this.pacienteModel.nombre)
+            && fecha(resultado.fechaNacimiento) === fecha(this.pacienteModel.fechaNacimiento);
+    }
+
+    private aplicarValidacionEscaneado(resultado) {
+        const { apellido, nombre } = this.pacienteModel;
+        this.aplicarValidacion(resultado);
+        this.pacienteModel.apellido = apellido;
+        this.pacienteModel.nombre = nombre;
     }
 
     private claveValidacion(documento, sexo) {
