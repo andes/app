@@ -1,0 +1,15 @@
+<div class="content">
+    <div class="row" *ngIf="prestacion && elementoRUPPrincipal && registroPrincipal">
+        <div class="col-12 detalle-molecula">
+            <div class="detalle-molecula-encabezado">
+                <h5 class="detalle-molecula-nombre">{{ registroPrincipal.concepto?.term }}</h5>
+                <plex-badge size="sm" type="info" *ngIf="registroPrincipal.esDiagnosticoPrincipal">
+                    Procedimiento / diagnóstico principal
+                </plex-badge>
+            </div>
+            <rup #prescripcion [elementoRUP]="elementoRUPPrincipal" [registro]="registroPrincipal"
+                 [prestacion]="prestacion" [paciente]="prestacion.paciente" [soloValores]="true" [vistaHUDS]="false">
+            </rup>
+        </div>
+    </div>
+</div>
