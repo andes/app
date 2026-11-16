@@ -1,9 +1,9 @@
 name: Label merge conflicts
 
-# pull_request_target corre en el repo base: el token puede etiquetar.
+# pull_request alcanza: los PRs salen del mismo repo y el token puede etiquetar.
 # push a master re-chequea los PRs abiertos cuando avanza la base.
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize, reopened]
   push:
     branches: [master]
