@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   release:
-    uses: andes/shared-workflows/.github/workflows/semantic-release.yml@chore/docker
+    uses: andes/shared-workflows/.github/workflows/semantic-release.yml@v1
     secrets:
       release_token: ${{ secrets.DEPLOY_TOKEN }}
     with:
@@ -23,7 +23,7 @@ jobs:
   image:
     needs: release
     if: needs.release.outputs.published == 'true'
-    uses: andes/shared-workflows/.github/workflows/docker-image.yml@chore/docker
+    uses: andes/shared-workflows/.github/workflows/docker-image.yml@v1
     with:
       image: andesnqn/app
       tags: ${{ needs.release.outputs.version }},${{ needs.release.outputs.short_sha }}
