@@ -1,37 +1,11 @@
-// sistemas-colores
-$sistema-colors: (
-  respiratorio: #00A5DD,
-  vacunas: #107CE6,
-  gastrointestinal: #0443BF,
-  cardiovascular: #5700FF,
-  genitourinario: #BA00FF,
-  antineoplasicos-e-inmunosupresores: #E6104E,
-  endocrino: #FF00A4,
-  anticonceptivos: #C54B8C,
-  anestesicos: #F4A47E,
-  emergencias-toxicologicas: #FFD400,
-  analgesicos-puros: #FF9D00,
-  nervioso-central: #EE5A24,
-  sanguineo: #FF0000,
-  contraste-radiologicos: #96001C,
-  antinflamatorios: #A8102E,  
-  bloqueantes-neuromusculares: #897150,
-  oftalmologico: #4A5E18,
-  antiinfecciosos: #72E8D7,
-  metabolismo: #5CB55C,
-  antisepticos-y-desinfectantes: #6B8E23,
-);
-
-
 .scroll-menu {
     width: 100%;
     overflow-x: auto;
-    margin: 16px 0;
+    margin: 0px 16px;
 
     .menu-list {
         display: flex;
         list-style: none;
-        margin: 0;
         padding: 0;
         gap: 16px;
     }
@@ -48,11 +22,11 @@ $sistema-colors: (
         width: 62px;
         height: 62px;
         border-radius: 50%;
-        border: 2px solid var(--icon-color),;
+        border: 2px solid var(--icon-color);
         background-color: transparent;
         cursor: pointer;
         padding: 0;
-        transition: background-color ease;
+        transition: background-color 150ms ease;
 
         plex-icon {
             color: var(--icon-color);
@@ -62,22 +36,15 @@ $sistema-colors: (
             background-color: color-mix(in srgb, var(--icon-color) 8%, transparent);
         }
 
-         &.active {
-        background-color: var(--icon-color);
-
-        plex-icon {
-            color: #fff;
-        }
-
-        &:hover {
+        &.active {
             background-color: var(--icon-color);
-        }
-    }
 
+            plex-icon {
+                color: #fff;
+            }
 
-        @each $id, $color in $sistema-colors {
-            &[data-sistema="#{$id}"] {
-                --icon-color: #{$color};
+            &:hover {
+                background-color: var(--icon-color);
             }
         }
     }

@@ -1,80 +1,71 @@
-<plex-layout [main]="8">
+<plex-layout [main]="medicamentoSeleccionado ? 8 : 12">
     <plex-layout-main>
         <header>
             <plex-title titulo="FORMULARIO TERAPÉUTICO">
-               <plex-button label="CARGAR NUEVO" type="success" size="sm"></plex-button>
-               <plex-button label="VOLVER" type="danger" size="sm" class="ml-1"></plex-button>
+                <plex-button label="CARGAR NUEVO" type="success" size="sm" (click)="nuevo()"></plex-button>
+                <plex-button label="VOLVER" type="danger" size="sm" class="ml-1" (click)="volver()"></plex-button>
             </plex-title>
         </header>
 
-<div class="scroll-menu" aria-label="Filtros de sistema">
-    <ul class="menu-list">
-        <li class="menu-item" *ngFor="let s of sistemas">
-            <button type="button" class="icon-btn"
-                [class.active]="sistemaSeleccionado === s.id"
-                [attr.data-sistema]="s.id"
-                [attr.aria-pressed]="sistemaSeleccionado === s.id"
-                (click)="seleccionarSistema(s)">
-                <plex-icon [name]="s.icon" size="xl"></plex-icon>
-            </button>
-        </li>
-    </ul>
-</div>
+        <div class="scroll-menu" aria-label="Filtros de sistema">
+            <ul class="menu-list">
+                <li class="menu-item" *ngFor="let sistema of sistemas">
+                    <button type="button" class="icon-btn" [class.active]="sistemaSeleccionado === sistema.id"
+                            [style.--icon-color]="sistema.color" [title]="sistema.nombre"
+                            [attr.aria-label]="sistema.nombre" [attr.aria-pressed]="sistemaSeleccionado === sistema.id"
+                            (click)="seleccionarSistema(sistema)">
+                        <plex-icon [name]="sistema.icon" size="xl"></plex-icon>
+                    </button>
+                </li>
+            </ul>
+        </div>
 
         <plex-wrapper>
-            <plex-select label="Función" name="funcion" [data]="opciones" [(ngModel)]="funcion"></plex-select>
-            <plex-select label="Grupo farmacológico" name="grupoFarmacologico" [data]="grupos" [(ngModel)]="grupoFarmacologico"></plex-select>
-            <plex-text label="Medicamento*" name="medicamento" [(ngModel)]="medicamento"></plex-text>
-            <plex-text label="Concepto Snomed" name="conceptoSnomed" [(ngModel)]="conceptoSnomed"></plex-text>    
+            <plex-select label="Función" name="funcion" placeholder="Todas" [data]="funciones" [(ngModel)]="funcion"
+                         (change)="onFuncionChange()">
+            </plex-select>
+            <plex-select label="Grupo farmacológico" name="grupoFarmacologico" placeholder="Todos" [data]="grupos"
+                         [(ngModel)]="grupoFarmacologico" [disabled]="!grupos.length" (change)="filtrar()">
+            </plex-select>
+            <plex-text label="Medicamento" name="medicamento" placeholder="Nombre o principio activo"
+                       [(ngModel)]="medicamento" [debounce]="300" (change)="filtrar()">
+            </plex-text>
+            <plex-text label="Concepto SNOMED" name="conceptoSnomed" placeholder="ConceptId o término"
+                       [(ngModel)]="conceptoSnomed" [debounce]="300" (change)="filtrar()">
+            </plex-text>
         </plex-wrapper>
 
-        <plex-title titulo="Listado"></plex-title>
+        <plex-title titulo="Listado" size="sm">
+            <plex-badge *ngIf="!cargando" type="info" size="sm">{{ (listado$ | async)?.length }} medicamentos</plex-badge>
+        </plex-title>
 
-<!-- <div class=""
-               <plex-label icon="notas-editar" type="info" size="lg" titulo="Bienvenido al formulario terapéutico"
-                subtitulo="Aquí podrás visualizar una guía para prescribir fármacos de manera segura y ordenada.">
-               </plex-label>
-      </div> -->
-<plex-table [columns]="columnas">
-<plex-table-columns>
-</plex-table-columns>       
-            <tr>
-                <td>Sistema gastrointestinal</td>
-                <td>Alteradores de la motilidad intestinal</td>
-                <td>anticolinérgicos</td>
-                <td>Hioscina N- Butilbromuro. 20 mg/mL. Ampolla x 1 mL.. IV/IM</td>
-                <td>317117001</td>
-            </tr>
-            <tr>
-                <td>Sistema gastrointestinal</td>
-                <td>Alteradores de la motilidad intestinal</td>
-                <td>Procinéticos</td>
-                <td>Metoclopramida 5 mg/mL. Ampolla x 2 mL.IV/IM.</td>
-                <td>322093006</td>
-            </tr>
-            <tr>
-                <td>Sistema gastrointestinal</td>
-                <td>Alteradores de la motilidad intestinal</td>
-                <td>Procinéticos</td>
-                <td>Metoclopramida 10 mg. Comprimido. V.O.</td>
-                <td>322093006</td>
-            </tr>
-            <tr>
-                <td>Sistema gastrointestinal</td>
-                <td>Alteradores de la motilidad intestinal</td>
-                <td>Laxantes</td>
-                <td>PICOSULFATO DE SODIO gotas 7,5 mg/ml 50 ml. V.O.</td>
-                <td>322093006</td>
+        <div *ngIf="cargando" class="d-flex justify-content-center mt-4">
+            <plex-loader type="ball-pulse-sync"></plex-loader>
+        </div>
+        <div *ngIf="!cargando && !(listado$ | async)?.length" class="d-flex justify-content-center mt-4">
+            <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
+                        titulo="No hay resultados"
+                        subtitulo="No hay medicamentos que coincidan con los filtros de búsqueda">
+            </plex-label>
+        </div>
+
+        <plex-table *ngIf="!cargando && (listado$ | async)?.length" [columns]="columnas" #tabla="plTable">
+            <plex-table-columns>
+            </plex-table-columns>
+            <tr *ngFor="let med of listado$ | plSort:tabla | async" class="selectable"
+                [class.selected]="med === medicamentoSeleccionado" (click)="seleccionarMedicamento(med)">
+                <td *plTableCol="'sistema'">{{ sistemaDe(med)?.nombre || med.sistema.nombre }}</td>
+                <td *plTableCol="'funcion'">{{ med.funcion }}</td>
+                <td *plTableCol="'grupoFarmacologico'">{{ med.grupoFarmacologico || '-' }}</td>
+                <td *plTableCol="'nombre'">{{ med.descripcion }}</td>
+                <td *plTableCol="'conceptoSnomed'">{{ med.concepto?.conceptId || 'Sin concepto' }}</td>
             </tr>
         </plex-table>
-
     </plex-layout-main>
-<plex-layout-sidebar type="invert">
-<ng-container>
-<form-terapeutico-detalle>
-</form-terapeutico-detalle>
-</ng-container>
-</plex-layout-sidebar>
 
-
+    <plex-layout-sidebar *ngIf="medicamentoSeleccionado" type="invert">
+        <form-terapeutico-detalle [medicamento]="medicamentoSeleccionado" (cerrar)="cerrarDetalle()"
+                                  (editar)="editar($event)" (eliminar)="eliminar($event)">
+        </form-terapeutico-detalle>
+    </plex-layout-sidebar>
 </plex-layout>

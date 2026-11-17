@@ -1,24 +1,34 @@
-
 <plex-title titulo="DETALLE" size="lg">
-<plex-button type="danger" tooltip="Eliminar" icon="delete" size="sm"></plex-button>
-<plex-button type="warning" tooltip="Editar" icon="pencil" size="sm" class="ml-1"></plex-button>
-<plex-button type="danger" tooltip="Cerrar" icon="close" size="sm" class="ml-1"></plex-button>
+    <plex-button type="danger" tooltip="Eliminar" icon="delete" size="sm" (click)="eliminar.emit(medicamento)">
+    </plex-button>
+    <plex-button type="warning" tooltip="Editar" icon="pencil" size="sm" class="ml-1" (click)="editar.emit(medicamento)">
+    </plex-button>
+    <plex-button type="danger" tooltip="Cerrar" icon="close" size="sm" class="ml-1" (click)="cerrar.emit()">
+    </plex-button>
 </plex-title>
 
 <plex-detail size="md">
-    <plex-icon type="" name="pildoras"></plex-icon>
-       <plex-badge class="sistema-chip">SISTEMA GASTROINTESTINAL</plex-badge>
-     <div title>Nombre del medicamento</div>
-     <plex-label titulo="Función" subtitulo="Alteradores de la motilidad intestinal"></plex-label>
-     <plex-label titulo="Grupo farmacológico" subtitulo="Anticolinérgicos"></plex-label>
-     <plex-label titulo="Concepto snomed" subtitulo="317117001"></plex-label>
-     <plex-label titulo="Especialidad" subtitulo="MG"></plex-label>
-     <plex-label titulo="Carro de emergencia" subtitulo="Sin información"></plex-label>
+    <plex-icon [name]="sistema?.icon || 'pildoras'"></plex-icon>
+    <plex-badge class="sistema-chip" [color]="sistema?.color">
+        {{ sistema?.nombre || medicamento.sistema?.nombre }}
+    </plex-badge>
+    <div title>{{ medicamento.descripcion }}</div>
+    <plex-label titulo="Función" subtitulo="{{ medicamento.funcion || 'Sin información' }}"></plex-label>
+    <plex-label titulo="Grupo farmacológico" subtitulo="{{ medicamento.grupoFarmacologico || 'Sin información' }}">
+    </plex-label>
+    <plex-label titulo="Concepto SNOMED"
+                subtitulo="{{ medicamento.concepto ? medicamento.concepto.conceptId + ' - ' + medicamento.concepto.term : 'Sin información' }}">
+    </plex-label>
+    <plex-label titulo="Especialidad" subtitulo="{{ especialidades || 'Sin información' }}"></plex-label>
+    <plex-label titulo="Nivel de complejidad" subtitulo="{{ medicamento.nivelComplejidad || 'Sin información' }}">
+    </plex-label>
+    <plex-label titulo="Carro de emergencia" subtitulo="{{ medicamento.carroEmergencia || 'Sin información' }}">
+    </plex-label>
 </plex-detail>
 
 <plex-title titulo="REQUISITO DE PRESCRIPCIÓN" size="sm"></plex-title>
-<!--SI NO HAY DATOS --> <p class="">Sin información</p>
+<p>{{ medicamento.requisitos || 'Sin información' }}</p>
 <plex-title titulo="INDICACIONES" size="sm"></plex-title>
-<!--SI NO HAY DATOS --> <p class="">Sin información</p>
+<p>{{ medicamento.indicaciones || 'Sin información' }}</p>
 <plex-title titulo="RECOMENDACIÓN DE USO" size="sm"></plex-title>
-<!--SI NO HAY DATOS --> <p class="">Sin información</p>                  
+<p>{{ medicamento.recomendaciones || 'Sin información' }}</p>
