@@ -3,6 +3,7 @@ import { Auth } from '@andes/auth';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ServicioIntermedioService } from 'src/app/modules/rup/services/servicio-intermedio.service';
+import { ITurno } from 'src/app/interfaces/turnos/ITurno';
 import { MapaAgendasService } from './mapa-agendas.service';
 import { NotaAgendaService } from './nota-agenda.service';
 
@@ -142,6 +143,10 @@ export class MapaAgendasComponent implements OnInit {
     close() {
         this.accion = null;
         this.notaErrores = [];
+    }
+
+    etiquetaPrestacionTurno(turno: ITurno) {
+        return this.mapaAgendasService.etiquetaPrestacionTurno(turno);
     }
 
     nuevaNota(horario?: { fecha?: Date; horaInicio?: Date; horaFin?: Date }) {

@@ -41,6 +41,7 @@ export class SelectExpressionDirective implements OnInit, OnChanges {
             this.plexSelect.data = [];
             this.preloadData();
         } else {
+
             this.plexSelect.getData.subscribe(($event) => {
                 const inputText: string = $event.query;
 

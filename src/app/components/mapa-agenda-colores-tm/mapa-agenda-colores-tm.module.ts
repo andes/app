@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { PlexModule } from '@andes/plex';
 import { SharedModule } from '@andes/shared';
 import { DirectiveLibModule } from '../../directives/directives.module';
+import { MitosModule } from '../../apps/mitos';
 import { MapaAgendaColoresListadoComponent } from './mapa-agenda-colores-listado.component';
 import { MapaAgendaColoresCreateUpdateComponent } from './mapa-agenda-colores-create-update.component';
 
@@ -17,6 +18,7 @@ import { MapaAgendaColoresCreateUpdateComponent } from './mapa-agenda-colores-cr
         SharedModule,
         HttpClientModule,
         DirectiveLibModule,
+        MitosModule,
         RouterModule.forChild([
             { path: '', component: MapaAgendaColoresListadoComponent, pathMatch: 'full' },
             { path: 'create', component: MapaAgendaColoresCreateUpdateComponent },

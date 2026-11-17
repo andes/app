@@ -106,12 +106,12 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
                     return;
                 }
                 const id = turno.id || turno._id;
-                const clave = id ? String(id) : null;
-                if (clave && vistos.has(clave)) {
+                const idTurno = id ? String(id) : null;
+                if (idTurno && vistos.has(idTurno)) {
                     return;
                 }
-                if (clave) {
-                    vistos.add(clave);
+                if (idTurno) {
+                    vistos.add(idTurno);
                 }
                 const ubicacion = this.ubicarTurno(turno, prestacion.agenda, dia, totalSlots);
                 if (!ubicacion) {
@@ -119,12 +119,16 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
                 }
                 const nombre = this.nombrePaciente(turno.paciente);
                 const hora = moment(turno.horaInicio).format('HH:mm');
+                const clave = this.mapaAgendaService.conceptoMapaTurno(turno);
+                const colorResuelto = clave
+                    ? this.mapaAgendaService.colorConcepto(clave.conceptId)
+                    : undefined;
                 turnos.push({
                     slot: ubicacion.slot,
                     rowspan: ubicacion.rowspan,
                     turno,
                     agenda: prestacion.agenda,
-                    color: prestacion.color,
+                    color: colorResuelto || prestacion.color,
                     iniciales: this.iniciales(turno.paciente),
                     titulo: nombre ? `${nombre} ${hora}` : hora
                 });

@@ -4,6 +4,7 @@ import moment from 'moment';
 import { BehaviorSubject, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
+import { ITurno } from 'src/app/interfaces/turnos/ITurno';
 import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { MapaAgendaColoresService, MapaAgendaColorResuelto, MapaAgendaColoresResolverParams } from './mapa-agenda-colores.service';
@@ -207,11 +208,15 @@ export class MapaAgendasService {
     }
 
 
+    public colorConcepto(conceptId: string): string | undefined {
+        return this.tiposPrestacion.get(conceptId)?.color;
+    }
+
     private getColor(prestacionesDia) {
         prestacionesDia.forEach(prestacionDia => {
-            const prestacion = this.tiposPrestacion.get(prestacionDia.tipoPrestacion_id);
-            if (prestacion) {
-                prestacionDia['color'] = prestacion.color;
+            const color = this.colorConcepto(prestacionDia.tipoPrestacion_id);
+            if (color) {
+                prestacionDia['color'] = color;
             }
         });
 
@@ -257,6 +262,31 @@ export class MapaAgendasService {
     }
 
 
+    /**
+     * Clave de color y agrupación del mapa: procedimiento del turno si existe; si no, tipoPrestacion.
+     */
+    public conceptoMapaTurno(turno: ITurno): { conceptId: string; nombre: string } | null {
+        const proc = turno.procedimiento;
+        if (proc?.conceptId) {
+            return {
+                conceptId: proc.conceptId,
+                nombre: proc.term || proc.fsn || proc.conceptId
+            };
+        }
+        const tipo = turno.tipoPrestacion;
+        if (tipo?.conceptId) {
+            return {
+                conceptId: tipo.conceptId,
+                nombre: tipo.term || tipo.conceptId
+            };
+        }
+        return null;
+    }
+
+    public etiquetaPrestacionTurno(turno: ITurno): string {
+        return this.conceptoMapaTurno(turno)?.nombre ?? '';
+    }
+
     private ordenarPrestacionesAgendas(dia, turnosAgenda, agenda, disponible) {
         const turnosPrestacion = {};
         const aux = [];
@@ -274,18 +304,22 @@ export class MapaAgendasService {
 
 
         turnosAgenda.forEach(turno => {
+            const clave = this.conceptoMapaTurno(turno);
+            if (!clave) {
+                return;
+            }
 
-            if (!turnosPrestacion[turno.tipoPrestacion.conceptId]) {
-                turnosPrestacion[turno.tipoPrestacion.conceptId] = {
+            if (!turnosPrestacion[clave.conceptId]) {
+                turnosPrestacion[clave.conceptId] = {
                     turnosPorPrestacion: [],
-                    tipoPrestacion_id: turno.tipoPrestacion.conceptId,
-                    nombre: turno.tipoPrestacion.term,
+                    tipoPrestacion_id: clave.conceptId,
+                    nombre: clave.nombre,
                     agenda: agenda,
                     disponible: 0
                 };
             }
 
-            turnosPrestacion[turno.tipoPrestacion.conceptId].turnosPorPrestacion.push(turno);
+            turnosPrestacion[clave.conceptId].turnosPorPrestacion.push(turno);
         });
 
 
