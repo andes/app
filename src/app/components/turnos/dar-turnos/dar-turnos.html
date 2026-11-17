@@ -383,7 +383,7 @@
                         (change)="onTurnoTipoPrestacionChange()"></plex-select>
                     <plex-select *ngIf="mostrarSelectProcedimiento" label="Procedimiento" name="turnoProcedimiento"
                         [(ngModel)]="turnoProcedimiento" [data]="procedimientosOpciones" idField="conceptId"
-                        labelField="term" [required]="true" (change)="onProcedimientoChange($event)">
+                        labelField="term" (change)="onProcedimientoChange($event)">
                     </plex-select>
                     <plex-text label="Nota" name="nota" [(ngModel)]="nota" (change)="verificarNota()">
 

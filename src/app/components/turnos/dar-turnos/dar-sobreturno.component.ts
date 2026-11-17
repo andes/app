@@ -192,10 +192,6 @@ export class DarSobreturnoComponent implements OnChanges {
 
     verTurnosFuturos($event) {
         if ($event.formValid) {
-            if (this.mostrarSelectProcedimiento && !this.turnoProcedimiento?.conceptId) {
-                this.plex.info('warning', '', 'Seleccione un procedimiento');
-                return;
-            }
             if (this.turnosFuturos.length > 0) {
                 this.modalTurnosRepetidos = true;
             } else {
@@ -207,10 +203,6 @@ export class DarSobreturnoComponent implements OnChanges {
     }
 
     guardar() {
-        if (this.mostrarSelectProcedimiento && !this.turnoProcedimiento?.conceptId) {
-            this.plex.info('warning', '', 'Seleccione un procedimiento');
-            return;
-        }
         this.disableGuardar = false;
         const indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
 

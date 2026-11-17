@@ -1064,10 +1064,6 @@ export class DarTurnosComponent implements OnInit {
 
     darTurno() {
         if (this.turnoTipoPrestacion) {
-            if (this.mostrarSelectProcedimiento && !this.turnoProcedimiento?.conceptId) {
-                this.plex.info('warning', '', 'Seleccione un procedimiento');
-                return;
-            }
             this.turnoTipoPrestacion['_id'] = this.turnoTipoPrestacion.id ? this.turnoTipoPrestacion.id : this.turnoTipoPrestacion._id;
             this.hideDarTurno = true; // ocultamos el boton confirmar para evitar efecto gatillo facil
             // Ver si cambió el estado de la agenda desde otro lado

@@ -27,7 +27,7 @@
         <div class="row" *ngIf="mostrarSelectProcedimiento">
             <div class="col">
                 <plex-select label="Procedimiento" name="turnoProcedimiento" [(ngModel)]="turnoProcedimiento"
-                    [data]="procedimientosOpciones" idField="conceptId" labelField="term" [required]="true"
+                    [data]="procedimientosOpciones" idField="conceptId" labelField="term"
                     (change)="onProcedimientoChange($event)">
                 </plex-select>
             </div>

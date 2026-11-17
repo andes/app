@@ -186,10 +186,6 @@ export class RupAsignarTurnoComponent implements OnInit {
      */
     guardar($event: any) {
         if ($event.formValid) {
-            if (this.mostrarSelectProcedimiento && !this.turnoProcedimiento?.conceptId) {
-                this.plex.info('warning', '', 'Seleccione un procedimiento');
-                return;
-            }
             if (this.datosTurno.paciente) {
                 this.datosTurno.tipoPrestacion = this.tipoPrestacion;
                 this.guardarDatosTurno();
@@ -202,10 +198,6 @@ export class RupAsignarTurnoComponent implements OnInit {
     }
 
     confirmar() {
-        if (this.mostrarSelectProcedimiento && !this.turnoProcedimiento?.conceptId) {
-            this.plex.info('warning', '', 'Seleccione un procedimiento');
-            return;
-        }
         this.isButtonDisabled = true;
         const paciente = this.datosTurno.paciente;
         let fechaTurno;
@@ -261,10 +253,6 @@ export class RupAsignarTurnoComponent implements OnInit {
 
             if (!this.horaTurno) {
                 return this.plex.info('warning', 'Debe seleccionar hora del sobreturno');
-            }
-
-            if (this.mostrarSelectProcedimiento && !this.turnoProcedimiento?.conceptId) {
-                return this.plex.info('warning', '', 'Seleccione un procedimiento');
             }
 
             const patch = {

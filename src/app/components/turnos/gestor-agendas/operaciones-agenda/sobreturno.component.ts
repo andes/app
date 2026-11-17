@@ -296,10 +296,6 @@ export class AgregarSobreturnoComponent implements OnInit {
 
     guardar($event) {
         if ($event.formValid) {
-            if (this.mostrarSelectProcedimiento && !this.turnoProcedimiento?.conceptId) {
-                this.plex.info('warning', '', 'Seleccione un procedimiento');
-                return;
-            }
 
             const indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
             if (indiceCarpeta > -1) {
