@@ -33,6 +33,7 @@ jobs:
     outputs:
       short: ${{ steps.out.outputs.short }}
       full: ${{ steps.out.outputs.full }}
+      exists: ${{ steps.out.outputs.exists }}
     steps:
       - id: out
         env:
@@ -50,11 +51,32 @@ jobs:
             echo "No existe la rama o el commit ${REF} en andes/app." >&2
             exit 1
           fi
+          short="${sha:0:7}"
           echo "full=${sha}" >> "$GITHUB_OUTPUT"
-          echo "short=${sha:0:7}" >> "$GITHUB_OUTPUT"
+          echo "short=${short}" >> "$GITHUB_OUTPUT"
+
+          # El tag es el SHA corto: si ya está publicado, el contenido es ese commit.
+          exists=false
+          token="$(curl -fsS "https://auth.docker.io/token?service=registry.docker.io&scope=repository:andesnqn/app:pull" | python3 -c 'import json,sys; print(json.load(sys.stdin)["token"])')" || token=""
+          if [[ -n "${token}" ]]; then
+            code="$(curl -sS -o /dev/null -w "%{http_code}" \
+              -H "Authorization: Bearer ${token}" \
+              -H "Accept: application/vnd.docker.distribution.manifest.list.v2+json, application/vnd.oci.image.index.v1+json, application/vnd.docker.distribution.manifest.v2+json, application/vnd.oci.image.manifest.v1+json" \
+              "https://registry-1.docker.io/v2/andesnqn/app/manifests/${short}")" || code="000"
+            if [[ "${code}" == "200" ]]; then
+              exists=true
+            fi
+          fi
+          echo "exists=${exists}" >> "$GITHUB_OUTPUT"
+          if [[ "${exists}" == "true" ]]; then
+            echo "Ya está andesnqn/app:${short}. No se buildea."
+          else
+            echo "No está andesnqn/app:${short}. Hay que buildear."
+          fi
 
   image:
     needs: sha
+    if: needs.sha.outputs.exists != 'true'
     uses: andes/shared-workflows/.github/workflows/docker-image.yml@ci/docker-workflow-call
     with:
       image: andesnqn/app
