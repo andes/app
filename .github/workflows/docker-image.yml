@@ -1,7 +1,28 @@
 name: Docker image
 
+# El pin es la rama donde el workflow compartido acepta repository.
+# Cuando ese input esté en el tag v1, el ref pasa a @v1.
+
 on:
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        description: >
+          Rama o commit de andes/app a publicar. Vacío usa el commit de esta
+          corrida, que en un dispatch es la rama elegida en la UI.
+        required: false
+        type: string
+        default: ""
+    outputs:
+      tag:
+        description: SHA corto publicado en Docker Hub.
+        value: ${{ jobs.sha.outputs.short }}
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
 
 permissions:
   contents: read
@@ -11,16 +32,35 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       short: ${{ steps.out.outputs.short }}
+      full: ${{ steps.out.outputs.full }}
     steps:
       - id: out
-        run: echo "short=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+        env:
+          REF: ${{ inputs.ref }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${REF}" ]]; then
+            sha="${GITHUB_SHA}"
+          elif [[ "${REF}" =~ ^[0-9a-f]{40}$ ]]; then
+            sha="${REF}"
+          else
+            sha=$(git ls-remote --heads https://github.com/andes/app.git "refs/heads/${REF}" | awk 'NR==1 {print $1}')
+          fi
+          if [[ ! "${sha}" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "No existe la rama o el commit ${REF} en andes/app." >&2
+            exit 1
+          fi
+          echo "full=${sha}" >> "$GITHUB_OUTPUT"
+          echo "short=${sha:0:7}" >> "$GITHUB_OUTPUT"
 
   image:
     needs: sha
-    uses: andes/shared-workflows/.github/workflows/docker-image.yml@v1
+    uses: andes/shared-workflows/.github/workflows/docker-image.yml@ci/docker-workflow-call
     with:
       image: andesnqn/app
       tags: ${{ needs.sha.outputs.short }}
+      repository: andes/app
+      ref: ${{ needs.sha.outputs.full }}
     secrets:
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
