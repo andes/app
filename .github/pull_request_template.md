@@ -50,11 +50,20 @@ _____________________________________________
 
 ### Test
 <!--
-Sin rama es master. Este PR usa el commit del push.
+Completá el bloque de abajo. Vacío no corre.
+Sin rama es master. Este PR usa el commit del push: no escribas su rama.
+
 Grupos: core, citas, rup, rup-internacion, apps, monitoreo, mobile.
 Ramas: app, api, tests, matriculaciones, monitoreo, mobile.
-todos corre la matriz y va solo. Sin grupos, no corre.
-Matriculaciones no tiene specs: matriculaciones: rama solo cambia la imagen.
+todos corre la matriz completa y va solo, sin grupos.
+Matriculaciones no tiene specs. matriculaciones: rama solo cambia la imagen.
+
+Ejemplo: mobile contra master, y monitoreo en otra rama.
+
+```
+mobile
+monitoreo: mi-rama
+```
 -->
 ```text
 ```
