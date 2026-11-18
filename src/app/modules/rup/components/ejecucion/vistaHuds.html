@@ -37,11 +37,14 @@
                             <ng-container *ngSwitchCase="5">
                                 <ng-container *ngIf="permisoHudsCompleta">
                                     <ng-container *ngIf="internacione$ | async as internaciones">
+                                        <plex-title titulo="Internaciones" size="sm"></plex-title>
+
                                         <listado-internacion-huds *ngIf="internaciones.length; else sinInternaciones"
                                                                   [internaciones]="internaciones">
                                         </listado-internacion-huds>
                                         <ng-template #sinInternaciones>
                                             <div class="mt-5">
+
                                                 <plex-label class="flex-column" icon="camilla" type="info"
                                                             justify="center" size="xl" direction="column"
                                                             titulo="El paciente no tiene internaciones registradas">

@@ -3,8 +3,10 @@ import { Plex } from '@andes/plex';
 import { Location } from '@angular/common';
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { MapaCamasHTTP } from 'src/app/apps/rup/mapa-camas/services/mapa-camas.http';
+import { InternacionResumenHTTP } from 'src/app/apps/rup/mapa-camas/services/resumen-internacion.http';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
@@ -60,6 +62,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         public huds: HUDSService,
         private location: Location,
         private serviceMapaCamasHTTP: MapaCamasHTTP,
+        private internacionResumenService: InternacionResumenHTTP,
         public recetaService: RecetaService
     ) { }
 
@@ -133,7 +136,16 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                             fechaIngresoDesde: this.fechaDesdeInternacion,
                             idPaciente: id
                         };
-                        this.internacione$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros);
+                        const prestaciones$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros).pipe(
+                            catchError(() => of([]))
+                        );
+                        // El resumen existe incluso cuando el ingreso se hizo sin prestación (ingreso simplificado)
+                        const resumenes$ = this.internacionResumenService.search({ paciente: id }).pipe(
+                            catchError(() => of([]))
+                        );
+                        this.internacione$ = combineLatest([prestaciones$, resumenes$]).pipe(
+                            map(([prestaciones, resumenes]) => this.combinarInternaciones(prestaciones, resumenes))
+                        );
                     }
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                 });
@@ -169,6 +181,48 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
 
     public seleccionarSeccion(index: number) {
         this.indiceSeccion = index;
+    }
+
+    private combinarInternaciones(prestaciones: any[], resumenes: any[]): any[] {
+        const prestacionesList = prestaciones || [];
+        const idsPrestacion = prestacionesList.map(prestacion => String(prestacion.id || prestacion._id));
+        const resumenesSinPrestacion = (resumenes || []).filter(resumen => {
+            if (!moment(resumen.fechaIngreso).isSameOrAfter(this.fechaDesdeInternacion)) {
+                return false;
+            }
+            const idResumen = String(resumen.id || resumen._id);
+            const idPrestacion = resumen.idPrestacion ? String(resumen.idPrestacion) : null;
+            return idsPrestacion.indexOf(idResumen) === -1 &&
+                (!idPrestacion || idsPrestacion.indexOf(idPrestacion) === -1);
+        });
+
+        return [...prestacionesList, ...resumenesSinPrestacion.map(resumen => this.resumenToPrestacion(resumen))];
+    }
+
+    private resumenToPrestacion(resumen: any): any {
+        const registros: any[] = [
+            { valor: { informeIngreso: { fechaIngreso: resumen.fechaIngreso } } }
+        ];
+        if (resumen.fechaEgreso) {
+            registros.push({
+                valor: {
+                    InformeEgreso: {
+                        fechaEgreso: resumen.fechaEgreso,
+                        tipoEgreso: { nombre: resumen.tipo_egreso || '' }
+                    }
+                }
+            });
+        }
+        return {
+            id: resumen.id || resumen._id,
+            capa: 'medica',
+            organizacion: resumen.organizacion,
+            unidadOrganizativa: null,
+            ejecucion: {
+                organizacion: resumen.organizacion,
+                registros
+            }
+        };
     }
 
     /**
