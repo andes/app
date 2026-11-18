@@ -1,0 +1,57 @@
+name: Test de integración
+
+# Lee el bloque Test del PR y llama a andes-test-integracion.
+# El bloque vacío no corre la suite. El repo de este PR queda en el SHA del push.
+# Las refs @master sirven cuando ci/workflow-call ya está en master de ese repo.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+concurrency:
+  group: integracion-${{ github.repository }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  seleccion:
+    name: Bloque Test
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.sel.outputs.run }}
+      spec: ${{ steps.sel.outputs.spec }}
+      grupos: ${{ steps.sel.outputs.grupos }}
+      app: ${{ steps.sel.outputs.app }}
+      api: ${{ steps.sel.outputs.api }}
+      tests: ${{ steps.sel.outputs.tests }}
+      matriculaciones: ${{ steps.sel.outputs.matriculaciones }}
+      monitoreo: ${{ steps.sel.outputs.monitoreo }}
+      mobile: ${{ steps.sel.outputs.mobile }}
+    steps:
+      - name: Leer el bloque
+        id: sel
+        uses: andes/andes-test-integracion/.github/actions/seleccion@master
+        with:
+          body: ${{ github.event.pull_request.body || '' }}
+          origen: app
+          origen_ref: ${{ github.event.pull_request.head.sha }}
+
+  integrar:
+    name: Cypress
+    needs: seleccion
+    if: needs.seleccion.outputs.run == 'true' && github.event.pull_request.head.repo.full_name == github.repository
+    uses: andes/andes-test-integracion/.github/workflows/test.yml@master
+    with:
+      app: ${{ needs.seleccion.outputs.app }}
+      api: ${{ needs.seleccion.outputs.api }}
+      tests: ${{ needs.seleccion.outputs.tests }}
+      matriculaciones: ${{ needs.seleccion.outputs.matriculaciones }}
+      monitoreo: ${{ needs.seleccion.outputs.monitoreo }}
+      mobile: ${{ needs.seleccion.outputs.mobile }}
+      spec: ${{ needs.seleccion.outputs.spec }}
+      grupos: ${{ needs.seleccion.outputs.grupos }}
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

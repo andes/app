@@ -48,6 +48,17 @@ _____________________________________________
 - [ ] No
 
 
+### Test
+<!--
+Sin rama es master. Este PR usa el commit del push.
+Grupos: core, citas, rup, rup-internacion, apps, monitoreo, mobile.
+Ramas: app, api, tests, matriculaciones, monitoreo, mobile.
+todos corre la matriz y va solo. Sin grupos, no corre.
+Matriculaciones no tiene specs: matriculaciones: rama solo cambia la imagen.
+-->
+```text
+```
+
 <!-- Agregar captura de pantalla, si fuera relevante  -->
 
 
