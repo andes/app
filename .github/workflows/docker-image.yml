@@ -1,8 +1,5 @@
 name: Docker image
 
-# El pin es la rama donde el workflow compartido acepta repository.
-# Cuando ese input esté en el tag v1, el ref pasa a @v1.
-
 on:
   workflow_dispatch:
   workflow_call:
@@ -77,7 +74,7 @@ jobs:
   image:
     needs: sha
     if: needs.sha.outputs.exists != 'true'
-    uses: andes/shared-workflows/.github/workflows/docker-image.yml@ci/docker-workflow-call
+    uses: andes/shared-workflows/.github/workflows/docker-image.yml@v1
     with:
       image: andesnqn/app
       tags: ${{ needs.sha.outputs.short }}
