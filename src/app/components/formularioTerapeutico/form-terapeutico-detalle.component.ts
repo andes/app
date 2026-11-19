@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { getSistemaFTP, IMedicamentoFTP, ISistemaFTP } from './formularioTerapeutico.constantes';
 
 
 @Component({
@@ -8,9 +9,19 @@ import { Component, Input } from '@angular/core';
 })
 
 export class FormTerapeuticoDetallePageComponent {
-    mostrarMenu = false;
 
+    @Input() medicamento: IMedicamentoFTP;
 
-    @Input() medicamento: any;
+    @Output() cerrar = new EventEmitter<void>();
+    @Output() editar = new EventEmitter<IMedicamentoFTP>();
+    @Output() eliminar = new EventEmitter<IMedicamentoFTP>();
+
+    get sistema(): ISistemaFTP {
+        return getSistemaFTP(this.medicamento?.sistema?.id);
+    }
+
+    get especialidades(): string {
+        return this.medicamento?.especialidades?.join(', ');
+    }
 
 }

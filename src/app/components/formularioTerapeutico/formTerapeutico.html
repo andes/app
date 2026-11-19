@@ -1,39 +1,71 @@
-<section>
+<plex-layout [main]="medicamentoSeleccionado ? 8 : 12">
+    <plex-layout-main>
+        <header>
+            <plex-title titulo="FORMULARIO TERAPÉUTICO">
+                <plex-button label="CARGAR NUEVO" type="success" size="sm" (click)="nuevo()"></plex-button>
+                <plex-button label="VOLVER" type="danger" size="sm" class="ml-1" (click)="volver()"></plex-button>
+            </plex-title>
+        </header>
 
-
-    <div class="row">
-        <div class="col">
-            <plex-box>
-                <header>
-                    <!--Busqueda de Pacientes-->
-                    <div class="row">
-                        <div class="clearfix col-10">
-                            <div class="page-title">ARBOL | FORMULARIO TERAPEUTICO</div>
-                        </div>
-                        <div class="col-2">
-                            <button (click)='plegar()' class="btn btn-info">Plegar arbol</button>
-                        </div>
-                    </div>
-                </header>
-                <div *ngFor="let indice of indices">
-                    <arbolItem [indice]="indice" #arbol [newMedicamento]='newMedicamento' (hijosOutPut)='recibeHijos($event)' (borradoOutPut)='borrar($event)' (enviarDetalle)="detallesMedicamento($event)"
-                        (enviarDatosMedicamento)='recibeMedicamenteAgregar($event)'
-                        [deep]="0"></arbolItem>
-                </div>
-            </plex-box>
+        <div class="scroll-menu" aria-label="Filtros de sistema">
+            <ul class="menu-list">
+                <li class="menu-item" *ngFor="let sistema of sistemas">
+                    <button type="button" class="icon-btn" [class.active]="sistemaSeleccionado === sistema.id"
+                            [style.--icon-color]="sistema.color" [title]="sistema.nombre"
+                            [attr.aria-label]="sistema.nombre" [attr.aria-pressed]="sistemaSeleccionado === sistema.id"
+                            (click)="seleccionarSistema(sistema)">
+                        <plex-icon [name]="sistema.icon" size="xl"></plex-icon>
+                    </button>
+                </li>
+            </ul>
         </div>
-        <div class="col-4" *ngIf='detalleMedicamento'>
-            <plex-box>
-                <form-terapeutico-detalle [medicamento]='detalleMedicamento'></form-terapeutico-detalle>
-            </plex-box>
+
+        <plex-wrapper>
+            <plex-select label="Función" name="funcion" placeholder="Todas" [data]="funciones" [(ngModel)]="funcion"
+                         (change)="onFuncionChange()">
+            </plex-select>
+            <plex-select label="Grupo farmacológico" name="grupoFarmacologico" placeholder="Todos" [data]="grupos"
+                         [(ngModel)]="grupoFarmacologico" [disabled]="!grupos.length" (change)="filtrar()">
+            </plex-select>
+            <plex-text label="Medicamento" name="medicamento" placeholder="Nombre o principio activo"
+                       [(ngModel)]="medicamento" [debounce]="300" (change)="filtrar()">
+            </plex-text>
+            <plex-text label="Concepto SNOMED" name="conceptoSnomed" placeholder="ConceptId o término"
+                       [(ngModel)]="conceptoSnomed" [debounce]="300" (change)="filtrar()">
+            </plex-text>
+        </plex-wrapper>
+
+        <plex-title titulo="Listado" size="sm">
+            <plex-badge *ngIf="!cargando" type="info" size="sm">{{ (listado$ | async)?.length }} medicamentos</plex-badge>
+        </plex-title>
+
+        <div *ngIf="cargando" class="d-flex justify-content-center mt-4">
+            <plex-loader type="ball-pulse-sync"></plex-loader>
         </div>
-        <div class="col-4" *ngIf='datosArbol'>
-            <plex-box>
-                <app-addFormTerapeutico (objNuevoMedicamento)="agregar($event)"></app-addFormTerapeutico>
-            </plex-box>
+        <div *ngIf="!cargando && !(listado$ | async)?.length" class="d-flex justify-content-center mt-4">
+            <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
+                        titulo="No hay resultados"
+                        subtitulo="No hay medicamentos que coincidan con los filtros de búsqueda">
+            </plex-label>
         </div>
-    </div>
 
+        <plex-table *ngIf="!cargando && (listado$ | async)?.length" [columns]="columnas" #tabla="plTable">
+            <plex-table-columns>
+            </plex-table-columns>
+            <tr *ngFor="let med of listado$ | plSort:tabla | async" class="selectable"
+                [class.selected]="med === medicamentoSeleccionado" (click)="seleccionarMedicamento(med)">
+                <td *plTableCol="'sistema'">{{ sistemaDe(med)?.nombre || med.sistema.nombre }}</td>
+                <td *plTableCol="'funcion'">{{ med.funcion }}</td>
+                <td *plTableCol="'grupoFarmacologico'">{{ med.grupoFarmacologico || '-' }}</td>
+                <td *plTableCol="'nombre'">{{ med.descripcion }}</td>
+                <td *plTableCol="'conceptoSnomed'">{{ med.concepto?.conceptId || 'Sin concepto' }}</td>
+            </tr>
+        </plex-table>
+    </plex-layout-main>
 
-
-</section>
+    <plex-layout-sidebar *ngIf="medicamentoSeleccionado" type="invert">
+        <form-terapeutico-detalle [medicamento]="medicamentoSeleccionado" (cerrar)="cerrarDetalle()"
+                                  (editar)="editar($event)" (eliminar)="eliminar($event)">
+        </form-terapeutico-detalle>
+    </plex-layout-sidebar>
+</plex-layout>
