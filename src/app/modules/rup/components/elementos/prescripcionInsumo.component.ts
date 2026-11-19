@@ -30,6 +30,7 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit 
     public diagnosticos = [];
     public recetasConFiltros = [];
     private eclInsumos;
+    public conceptosPrescripcion: string[] = [];
     public mostrarEspecificacion = false;
     public tiemposTratamiento = [
         { id: '3', nombre: '3 meses' },
@@ -44,10 +45,6 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit 
         if (!this.registro.valor.insumos) {
             this.registro.valor.insumos = [];
         }
-        const conceptosPrescripcion = ['16076005', '33633005', '313047003', '1217195001', '1217196000'];
-        this.registros = this.prestacion.ejecucion.registros
-            .filter(reg => reg.id !== this.registro.id && !conceptosPrescripcion.includes(reg.concepto.conceptId))
-            .map(reg => reg.concepto);
         this.buscarDiagnosticosConTrastornos();
 
         this.ejecucionService?.hasActualizacion().subscribe(async (estado) => {
@@ -56,6 +53,13 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit 
 
         this.eclqueriesServicies.search({ key: '^receta' }).subscribe(query => {
             this.eclInsumos = query.filter(q => q.key === 'receta:dispositivos');
+            const eclPrescripcion = query.find(q => q.key === 'receta:conceptosPrescripcion');
+            if (eclPrescripcion?.valor) {
+                this.conceptosPrescripcion = typeof eclPrescripcion.valor === 'string'
+                    ? eclPrescripcion.valor.split(/\s*(?:OR|,)\s*/).filter(Boolean)
+                    : eclPrescripcion.valor;
+            }
+            this.loadRegistros();
         });
     }
 
@@ -87,10 +91,9 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit 
     }
 
     loadRegistros() {
-        const conceptosPrescripcion = ['16076005', '33633005', '313047003', '1217195001', '1217196000'];
         this.registros = [
             ...this.prestacion.ejecucion.registros
-                .filter(reg => reg.id !== this.registro.id && !conceptosPrescripcion.includes(reg.concepto.conceptId) && (reg.concepto.semanticTag === 'procedimiento'
+                .filter(reg => reg.id !== this.registro.id && !this.conceptosPrescripcion.includes(reg.concepto.conceptId) && (reg.concepto.semanticTag === 'procedimiento'
                     || reg.concepto.semanticTag === 'hallazgo' || reg.concepto.semanticTag === 'trastorno'))
                 .map(reg => reg.concepto),
             ...this.recetasConFiltros
