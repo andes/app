@@ -18,7 +18,10 @@ import ShiroTrie from 'shiro-trie';
 
 export class ArbolPermisosItemComponent implements OnInit, OnChanges {
 
-    private permisosIncompatibles = [['huds:visualizacionHuds', 'huds:visualizacionParcialHuds:*']];
+    private permisosIncompatibles = [
+        ['huds:visualizacionHuds', 'huds:visualizacionParcialHuds:*'],
+        ['huds:visualizacionHuds', 'huds:programaMas65']
+    ];
     private shiro = ShiroTrie.newTrie();
     public state = false;
     public all = false;
@@ -141,25 +144,27 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges {
         }
         if ($event.value) {
             const permisoActual = this.parentPermission + ':' + this.item.key;
-            let permisoIncompatible;
-            this.permisosIncompatibles.find(par => {
+            const permisosIncompatiblesActuales = [];
+            this.permisosIncompatibles.filter(par => {
                 // buscamos si el permiso que se acaba de activar es incompatible con alguno de los permisos que ya están activos
                 // (se eliminan los comodines al final de los permisos para poder comparar)
                 const p1 = par[0].replace(':*', '');
                 const p2 = par[1].replace(':*', '');
                 if (permisoActual.includes(p1)) {
-                    permisoIncompatible = par[1];
+                    permisosIncompatiblesActuales.push(par[1]);
                 } else if (permisoActual.includes(p2)) {
-                    permisoIncompatible = par[0];
+                    permisosIncompatiblesActuales.push(par[0]);
                 }
-                return !!permisoIncompatible;
+                return !!permisosIncompatiblesActuales;
             });
-            if (permisoIncompatible) {
+            if (permisosIncompatiblesActuales.length) {
                 // si existen permisos incompatibles con el que se acaba de activar, se desactiva el que estaba previamente activo
-                const child = this.findChild(permisoIncompatible);
-                child.state = false;
-                child.allModule = false;
-                child.childsComponents?.forEach(c => c.state = false);
+                permisosIncompatiblesActuales.map(permiso => {
+                    const child = this.findChild(permiso);
+                    child.state = false;
+                    child.allModule = false;
+                    child.childsComponents?.forEach(c => c.state = false);
+                });
             }
         }
     }
