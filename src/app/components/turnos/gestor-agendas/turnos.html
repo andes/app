@@ -37,8 +37,9 @@
                                     (saveAgregarNotaTurno)="saveAgregarNotaTurno()">
                 </agregar-nota-turno>
             </plex-help>
-            <plex-help *ngIf="botones.suspender" class="mr-1" btnType="danger" icon="stop" tooltip="Suspender turnos"
-                       tooltipPosition="left">
+
+            <plex-help *ngIf="puedeSuspenderTurno(botones.suspender)" class="mr-1" btnType="danger" icon="stop"
+                       tooltip="Suspender turnos" tooltipPosition="left">
                 <suspender-turno [agenda]="agenda" [accion]="'suspenderTurno'"
                                  [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="saveSuspenderTurno()"
                                  (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)">
@@ -224,24 +225,21 @@
                     </plex-button>
                     <plex-button *ngIf="botones.quitarTurnoDoble && turnosSeleccionados[0]?.id === turno.id"
                                  ariaLabel="Quitar Turno doble" size="sm" type="default" icon="numeric-1-box-outline"
-                                 (click)="eventosTurno('quitarTurnoDoble')" tooltip="Quitar Turno doble"
+                                 (click)="eventosTurno('quitarTurnoDoble', agenda)" tooltip="Quitar Turno doble"
                                  tooltipPosition="top">
                     </plex-button>
                     <plex-help *ngIf="botones.editarCarpeta && turnosSeleccionados[0]?.id === turno.id" type="info"
-                               size="sm" btnType="info" icon="folder-account" tooltip="Editar Carpeta"
-                               tooltipPosition="top">
+                               btnType="info" icon="folder-account" tooltip="Editar Carpeta" tooltipPosition="top">
                         <plex-title size="sm" titulo="Editar carpeta"></plex-title>
-                        <div class="mt-3">
-                            <plex-label class="text-white" titulo="Paciente"
-                                        subtitulo="{{turnosSeleccionados[0].paciente | nombre }}" icon="paciente">
-                            </plex-label>
-                        </div>
+                        <plex-label class="text-white" titulo="Paciente"
+                                    subtitulo="{{turnosSeleccionados[0].paciente | nombre }}" icon="paciente">
+                        </plex-label>
                         <carpeta-paciente class="text-white" [turnoSeleccionado]="turnosSeleccionados[0] "
                                           (guardarCarpetaEmit)="afterComponenteCarpeta($event)"
                                           (cancelarCarpetaEmit)="afterComponenteCarpeta($event)">
                         </carpeta-paciente>
                     </plex-help>
-                    <plex-help *ngIf="botones.liberar && turnosSeleccionados[0]?.id === turno.id"
+                    <plex-help *ngIf="puedeLiberarTurno(botones.liberar, turnosSeleccionados[0], turno)"
                                class="help-liberar-turnos" type="info" btnType="danger" icon="account-off"
                                tooltip="Liberar turnos" tooltipPosition="left">
                         <liberar-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados"
@@ -325,7 +323,7 @@
                                           (cancelarCarpetaEmit)="afterComponenteCarpeta($event)">
                         </carpeta-paciente>
                     </plex-help>
-                    <plex-help *ngIf="botones.liberar && turnosSeleccionados[0]?.id === sobreturno.id"
+                    <plex-help *ngIf="puedeLiberarSobreturno(botones.liberar, turnosSeleccionados[0], sobreturno)"
                                class="help-liberar-turnos" type="info" btnType="danger" icon="account-off"
                                tooltip="Liberar turnos" tooltipPosition="left">
                         <liberar-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados"
