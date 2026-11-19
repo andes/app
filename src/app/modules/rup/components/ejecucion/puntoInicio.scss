@@ -76,3 +76,25 @@
 .label-agenda {
     margin-top: 25%;
 }
+
+.sidebar-prestaciones-sin-validar {
+    ::ng-deep .plex-box-content {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    .prestaciones-sin-validar {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+
+        plex-list {
+            display: block;
+            flex: 1;
+            min-height: 0;
+        }
+    }
+}
