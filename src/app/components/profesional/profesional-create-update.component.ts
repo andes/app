@@ -124,10 +124,14 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                     this.profesional.contactos = this.profesional.contactos.length ? this.profesional.contactos : [this.contacto];
                     if (this.profesional.validadoRenaper) {
                         this.validado = true;
+                    }
+                    if (this.profesional.foto) {
                         this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl(this.profesional.foto);
                     } else {
                         this.profesionalService.getFoto({ id: this.profesional.id }).subscribe(resp => {
-                            this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp);
+                            this.fotoProfesional = resp
+                                ? this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp)
+                                : null;
                         });
                     }
                 });
@@ -291,11 +295,10 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
 
     guardarFirma(profesionalID: string) {
         if (this.firmaProfesional) {
-            const firma = {
+            this.profesionalService.saveFirma({
                 firmaP: this.firmaProfesional,
                 idProfesional: profesionalID
-            };
-            this.profesionalService.saveFirma({ firma }).subscribe();
+            }).subscribe();
         }
     }
 }
