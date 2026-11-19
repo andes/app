@@ -1,10 +1,45 @@
 .huds-rail {
     width: 64px;
     flex-shrink: 0;
+    min-height: 0;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
     padding-top: 8px;
-    // Sin overflow: los tooltips se pueden ver libremente
+
+    .huds-rail-control {
+        width: 32px;
+        height: 24px;
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+
+        &:disabled {
+            cursor: default;
+        }
+    }
+
+    .huds-rail-items {
+        flex: 1 1 auto;
+        min-height: 0;
+        width: 100%;
+        align-items: center;
+        gap: 8px;
+        overflow-y: auto;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        tooltip-content .tooltip {
+            position: fixed !important;
+        }
+    }
 
     .huds-rail-item {
         width: 48px;
@@ -20,8 +55,7 @@
 
         .huds-rail-tooltip {
             position: absolute;
-            right: 60px;   // tooltip hacia la IZQUIERDA del ícono
-            left: auto;
+            left: 60px;
             top: 50%;
             transform: translateY(-50%);
             background: #333;
@@ -56,8 +90,7 @@
 .huds-detail {
     flex: 1;
     min-height: 0;
-    // overflow: hidden removido — el overflow en .flex-fill alcanza para el contenido
-    // y así el tooltip del rail no queda clippeado
+    overflow: hidden;
 }
 
 vista-accesos-huds,
@@ -81,13 +114,6 @@ plex-tabs>section {
     flex-direction: column;
     flex: 1 1 auto;
     min-height: 0;
-    overflow-y: hidden;
-}
-
-rup-resumenPaciente-estatico {
-    flex-shrink: 0;
-    overflow-y: auto;
-    max-height: 35%;   // limita el encabezado; el rail siempre queda visible debajo
 }
 
 .huds-resumen-body.is-hidden {

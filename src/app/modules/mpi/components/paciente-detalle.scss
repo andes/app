@@ -102,11 +102,17 @@ img {
 }
 
 .alergia-label ::ng-deep small {
-    white-space: nowrap;
+    white-space: normal;
+}
+
+.alergia-acciones {
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 :host ::ng-deep plex-card.card-igual {
     flex: 1 1 0;
+    min-width: 0;
 }
 
 :host ::ng-deep plex-card.card-igual .card {

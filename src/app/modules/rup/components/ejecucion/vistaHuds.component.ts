@@ -1,7 +1,7 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Location } from '@angular/common';
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -24,6 +24,7 @@ import { RecetaService } from 'src/app/services/receta.service';
 })
 export class VistaHudsComponent implements OnInit, OnDestroy {
     @Output() cambiarPaciente = new EventEmitter<boolean>();
+    @ViewChildren('hudsRailItem') private hudsRailItems: QueryList<ElementRef<HTMLElement>>;
 
     public paciente: IPaciente = null;
     public activeIndexPrestacion = 0;
@@ -181,6 +182,14 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
 
     public seleccionarSeccion(index: number) {
         this.indiceSeccion = index;
+        this.hudsRailItems?.get(index)?.nativeElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+
+    public moverSeccion(direccion: number) {
+        const siguienteSeccion = this.indiceSeccion + direccion;
+        if (siguienteSeccion >= 0 && siguienteSeccion < this.hudsOpciones.length) {
+            this.seleccionarSeccion(siguienteSeccion);
+        }
     }
 
     private combinarInternaciones(prestaciones: any[], resumenes: any[]): any[] {

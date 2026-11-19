@@ -18,11 +18,23 @@
 
                 <div class="huds-detail d-flex mt-2">
                     <div class="huds-rail d-flex flex-column">
-                        <div class="huds-rail-item" *ngFor="let opcion of hudsOpciones; let i = index"
-                             [class.active]="indiceSeccion === i" (click)="seleccionarSeccion(i)">
-                            <plex-icon [name]="opcion.icon" size="lg" type="dark" tooltip="{{ opcion.tooltip }}"
-                                       tooltipPosition="right"></plex-icon>
+                        <button type="button" class="huds-rail-control" aria-label="Sección anterior"
+                                [disabled]="indiceSeccion === 0"
+                                (click)="moverSeccion(-1)">
+                            <plex-icon name="chevron-up" size="sm" type="dark"></plex-icon>
+                        </button>
+                        <div class="huds-rail-items d-flex flex-column">
+                            <div #hudsRailItem class="huds-rail-item" *ngFor="let opcion of hudsOpciones; let i = index"
+                                 [class.active]="indiceSeccion === i" (click)="seleccionarSeccion(i)">
+                                <plex-icon [name]="opcion.icon" size="lg" type="dark" tooltip="{{ opcion.tooltip }}"
+                                           tooltipPosition="right"></plex-icon>
+                            </div>
                         </div>
+                        <button type="button" class="huds-rail-control" aria-label="Sección siguiente"
+                                [disabled]="indiceSeccion === hudsOpciones.length - 1"
+                                (click)="moverSeccion(1)">
+                            <plex-icon name="chevron-down" size="sm" type="dark"></plex-icon>
+                        </button>
                     </div>
                     <div class="flex-fill">
                         <ng-container [ngSwitch]="indiceSeccion">

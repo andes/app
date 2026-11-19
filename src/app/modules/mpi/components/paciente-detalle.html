@@ -128,7 +128,7 @@
                     <plex-label class="alergia-label" icon="lupa-ojo" type="warning" direction="column"
                                 titulo="{{ alergias[0].nombre }}"
                                 subtitulo="Registrado el {{ alergias[0].fechaInicio | fecha }}"></plex-label>
-                    <div *ngIf="alergias.length > 1" class="d-flex justify-content-between align-items-center">
+                    <div *ngIf="alergias.length > 1" class="alergia-acciones d-flex justify-content-between align-items-center">
                         <span><strong class="alergia-count">{{ alergias.length - 1 }}</strong> mas.</span>
                         <a class="text-info" (click)="irATrastornos.emit()">Ir a hallazgos</a>
                     </div>
