@@ -35,8 +35,12 @@
         </plex-grid>
     </div>
     <div class="mt-4">
-        <div><b>Diagnóstico / Motivo</b>
-            <p>{{registro.solicitud.registros[0].valor.solicitudPrestacion.motivo || 'Sin diagnóstico o motivo'}}</p>
+        <div><b>Motivo</b>
+            <p>{{registro.solicitud.registros[0].valor.solicitudPrestacion.motivo || 'Sin motivo'}}</p>
+        </div>
+        <div *ngIf="registro.solicitud.registros[0].valor.solicitudPrestacion.conceptoAsociado">
+            <b>Diagnóstico Asociado</b>
+            <p class="texto-detalle">{{registro.solicitud.registros[0].valor.solicitudPrestacion.conceptoAsociado.term}}</p>
         </div>
         <div>
             <b>Observaciones</b>
