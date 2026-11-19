@@ -27,7 +27,8 @@
             <plex-tabs (change)="setMainSize($event)">
                 <plex-tab label="datos básicos" icon="">
                     <datos-basicos #datosBasicos [paciente]="pacienteModel" [tipoPaciente]="tipoPaciente"
-                                   (changes)="datosBasicosForm($event)" name="datos basicos">
+                                   [datosEscaneados]="datosEscaneados" (changes)="datosBasicosForm($event)"
+                                   name="datos basicos">
                     </datos-basicos>
                 </plex-tab>
 
