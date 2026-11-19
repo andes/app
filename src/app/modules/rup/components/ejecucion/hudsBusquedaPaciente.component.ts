@@ -52,7 +52,8 @@ export class HudsBusquedaPacienteComponent implements OnInit {
             'huds:visualizacionParcialHuds:*',
             'huds:visualizacionParcialHuds:laboratorio',
             'huds:visualizacionParcialHuds:vacuna',
-            'huds:visualizacionParcialHuds:receta'
+            'huds:visualizacionParcialHuds:receta',
+            'huds:visualizacionParcialHuds:solicitudes'
         ];
 
         if (!permisos.some(permiso => this.auth.check(permiso))) {
