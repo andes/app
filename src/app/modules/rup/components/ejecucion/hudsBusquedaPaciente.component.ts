@@ -52,7 +52,9 @@ export class HudsBusquedaPacienteComponent implements OnInit {
             'huds:visualizacionParcialHuds:*',
             'huds:visualizacionParcialHuds:laboratorio',
             'huds:visualizacionParcialHuds:vacuna',
-            'huds:visualizacionParcialHuds:receta'
+            'huds:visualizacionParcialHuds:receta',
+            'huds:programaMas65',
+            'huds:soloEfectorActual'
         ];
 
         if (!permisos.some(permiso => this.auth.check(permiso))) {
@@ -93,6 +95,10 @@ export class HudsBusquedaPacienteComponent implements OnInit {
                 this.plex.info('warning', 'No tiene permiso para ingresar a este paciente.', 'Atención');
             } else {
                 if (this.permisoProgramaMas65) {
+                    if (paciente.edad < 65) {
+                        this.plex.info('warning', 'Usted no posee permisos para visualizar la historia de este paciente');
+                        return;
+                    }
                     this.programaMas65(paciente);
                 } else {
                     this.pacienteSelected = paciente;
@@ -106,8 +112,10 @@ export class HudsBusquedaPacienteComponent implements OnInit {
         this.pacientesConsentimientoService.search({ pacienteId: paciente.id }).subscribe({
             next: (consentimiento: any) => {
 
+                const sinPermisoMensaje = 'Este paciente no está adherido al programa <b>Cuidar +65</b>. Usted no posee permisos para visualizar la historia de este paciente';
+
                 if (!consentimiento || (consentimiento.encontrado !== undefined && !consentimiento.encontrado)) {
-                    this.plex.info('warning', 'Usted no posee permisos para visualizar la historia de ese paciente');
+                    this.plex.info('warning', sinPermisoMensaje);
                     return;
                 }
 
@@ -115,7 +123,7 @@ export class HudsBusquedaPacienteComponent implements OnInit {
                 const consentimientosCuidar65 = listado.filter((c: any) => c && c.programa === 'Cuidar65');
 
                 if (consentimientosCuidar65.length === 0) {
-                    this.plex.info('warning', 'Usted no posee permisos para visualizar la historia de ese paciente');
+                    this.plex.info('warning', sinPermisoMensaje);
                     return;
                 }
 
@@ -132,7 +140,7 @@ export class HudsBusquedaPacienteComponent implements OnInit {
                     this.pacienteSelected = paciente;
                     this.showModalMotivo = true;
                 } else {
-                    this.plex.info('warning', 'Este paciente rechazo el programa "Cuidar + 65"');
+                    this.plex.info('warning', 'Este paciente rechazó el último consentimiento del programa <b>Cuidar +65</b>');
                     return;
                 }
             }
