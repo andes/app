@@ -43,19 +43,31 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let censoP of censoPacientes">
-                        <td>{{censoP.datos.paciente | nombre}} |
-                            {{censoP.datos.paciente | documento}} </td>
-                        <td>{{censoP.datos.cama.nombre}},
-                            {{censoP.datos.cama.sectores[censoP.datos.cama.sectores.length -1].nombre}}
-                        </td>
-                        <td>{{censoP.ingreso}}</td>
-                        <td>{{censoP.paseDe}}</td>
-                        <td>{{censoP.egreso}}</td>
-                        <td>{{censoP.paseA}}</td>
                         <td>
-                            <span *ngIf="censoP.fechaIngreso">{{ censoP.fechaIngreso | fecha }}</span>
+                            {{ censoP?.datos?.paciente | nombre }} |
+                            {{ censoP?.datos?.paciente | documento }}
                         </td>
-                        <td>{{censoP.diasEstada}}</td>
+
+                        <td>
+                            {{ censoP?.datos?.cama?.nombre || '-' }},
+                            {{
+                            censoP?.datos?.cama?.sectores?.length
+                            ? censoP.datos.cama.sectores[censoP.datos.cama.sectores.length - 1]?.nombre
+                            : '-'
+                            }}
+                        </td>
+
+                        <td>{{ censoP?.ingreso || '-' }}</td>
+                        <td>{{ censoP?.paseDe || '-' }}</td>
+                        <td>{{ censoP?.egreso || '-' }}</td>
+                        <td>{{ censoP?.paseA || '-' }}</td>
+
+                        <td>
+                            <span *ngIf="censoP?.fechaIngreso">{{ censoP.fechaIngreso | fecha }}</span>
+                            <span *ngIf="!censoP?.fechaIngreso">-</span>
+                        </td>
+
+                        <td>{{ censoP?.diasEstada || 0 }}</td>
                     </tr>
                 </tbody>
             </table>

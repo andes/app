@@ -3,7 +3,7 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { AfterContentInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Optional, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { InternacionResumenHTTP } from 'src/app/apps/rup/mapa-camas/services/resumen-internacion.http';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
@@ -22,8 +22,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { CDAService } from '../../services/CDA.service';
 
 import { PuntoInicioService } from 'src/app/services/puntoInicio/punto-inicio.service';
-import { DerivacionesService } from 'src/app/services/com/derivaciones.service';
-
+import { InformeEstadisticaService } from '../../services/informe-estadistica.service';
 @Component({
     selector: 'rup-hudsBusqueda',
     templateUrl: 'hudsBusqueda.html',
@@ -62,7 +61,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     public loading = false;
 
     public cdas = [];
-
     @Input() paciente: any;
 
     @Input() _dragScope: string;
@@ -85,8 +83,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     public prestacionSeleccionada = [];
     private _prestaciones: any = [];
     private prestacionesCopia: any = [];
-    private internaciones;
-
+    private internaciones: any[] = [];
 
     set prestaciones(value) {
         this._prestaciones = value.sort((a, b) => {
@@ -194,7 +191,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     public txtABuscar;
     public efectorRestringido = this.auth.check('huds:soloEfectorActual');
     public indiceInternaciones;
-    public otrasPrestaciones;
+    public otrasPrestaciones: any = { registros: [] };
     public filtroRecetas;
     public searchRecetas;
     public busquedaRecetas;
@@ -259,7 +256,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         private recetasService: RecetaService,
         private cdaService: CDAService,
         private profesionalService: ProfesionalService,
-        private derivacionesService: DerivacionesService
+        private puntoInicioService: PuntoInicioService,
+        private informeEstadisticaService: InformeEstadisticaService,
     ) {
     }
 
@@ -270,13 +268,25 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
      */
     ngAfterContentInit() {
         if (this.paciente && this.permisosCompletos) {
-            this.listarInternaciones();
-            this.listarPrestaciones();
             this.listarConceptos();
             this.listarDerivaciones();
+
+            forkJoin({
+                internaciones: this.listarInternaciones(),
+                prestaciones: this.listarPrestaciones()
+            }).subscribe(({ internaciones }) => {
+                this.internaciones = internaciones;
+
+                if (this.internaciones && this.internaciones.length > 0) {
+                    this.setAmbitoOrigen('internacion');
+                } else {
+                    this.setAmbitoOrigen('ambulatorio');
+                }
+            });
         }
         // Cuando se inicia una prestación debemos volver a consultar si hay CDA nuevos al ratito.
         // [TODO] Ser notificado via websockets
+        this.token = this.huds.getHudsToken();
         setTimeout(() => {
             this.refreshCdas();
         }, 1000 * 30);
@@ -521,6 +531,16 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 gtag('huds-open', 'rup', 'internacion', index);
                 registro.tipo = 'internacion';
                 registro.index = index;
+                if (registro.registros && registro.registros[index]?.esInformeEstadistico) {
+                    registro.data = {
+                        id: registro.id,
+                        index,
+                        registros: registro.registros,
+                        fechaIngreso: registro.fechaIngreso,
+                        prestaciones: registro.prestaciones,
+                        esInformeEstadistico: true
+                    };
+                }
                 break;
             case 'laboratorio':
                 gtag('huds-open', tipo, 'laboratorio', index);
@@ -538,9 +558,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     getPacientePrincipal(id): Observable<IPaciente> {
         return this.pacienteService.getById(id);
     }
-
     listarInternaciones() {
-        let request;
+        let request: Observable<any[]>;
         if (this.paciente.idPacientePrincipal) {
             request = this.getPacientePrincipal(this.paciente.idPacientePrincipal).pipe(
                 switchMap((paciente: IPaciente) => this.resumenHTTP.search({
@@ -554,7 +573,42 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 paciente: this.paciente.vinculos || this.paciente.id
             });
         }
-        request.subscribe((internaciones) => this.internaciones = internaciones);
+
+        const fechaDesde = this.fechaInicio ? moment(this.fechaInicio).toISOString() : null;
+        const fechaHasta = this.fechaFin ? moment(this.fechaFin).toISOString() : null;
+        const informes = this.informeEstadisticaService.getByPaciente(
+            this.paciente.id,
+            true,
+            fechaDesde,
+            fechaHasta
+        );
+
+        return forkJoin({
+            internaciones: request,
+            informes
+        }).pipe(
+            map(({ internaciones, informes: informesEstadisticos }) => {
+                const internacionesEstadisticas = (informesEstadisticos || [])
+                    .filter(informe => {
+                        const ultimoEstado = informe.estados?.[informe.estados.length - 1]?.tipo;
+                        const estado = informe.estadoActual?.tipo || ultimoEstado ||
+                            (typeof informe.estado === 'string' ? informe.estado : informe.estado?.tipo);
+                        return estado === 'validada';
+                    })
+                    .map(informe => ({
+                        id: informe._id || informe.id,
+                        fechaIngreso: informe.informeIngreso.fechaIngreso,
+                        fechaEgreso: informe.informeEgreso?.fechaEgreso,
+                        organizacion: {
+                            id: informe.organizacion?._id || informe.organizacion?.id,
+                            nombre: informe.organizacion?.nombre
+                        },
+                        esInformeEstadistico: true
+                    }));
+
+                return [...(internaciones || []), ...internacionesEstadisticas];
+            })
+        );
     }
 
     listarPrestaciones() {
@@ -578,8 +632,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             return resultado;
         }
 
-
-        this.servicioPrestacion.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
+        return this.servicioPrestacion.getByPaciente(this.paciente.id, false).pipe(tap(prestaciones => {
             this.prestacionesTotales = prestaciones;
             const validadas = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
 
@@ -618,14 +671,14 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             this.rupGuardias = groupBy(guardiasRUP).map(p => mapRUP(p));
             this.prestaciones = groupBy(filtradas).map(p => mapRUP(p));
             this.prestacionesCopia = this.prestaciones.slice();
-            this.setAmbitoOrigen('ambulatorio');
+            // this.setAmbitoOrigen('ambulatorio');
             this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
             this.organizaciones = this.prestaciones.filter(p => p.data.ejecucion?.organizacion);
             this.organizaciones = this.organizaciones.map(o => o.data.ejecucion.organizacion);
             this.buscarCDAPacientes(this.huds.getHudsToken());
             this.buscarFichasEpidemiologicas();
 
-        });
+        }));
     }
 
     // Trae los hallazgos
@@ -678,7 +731,11 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     }
 
     listarDerivaciones() {
-        this.derivacionesService.search({ 'paciente': this.paciente.id }).subscribe((data) => {
+        const query = {
+            paciente: `^${this.paciente.documento}`
+        };
+
+        this.puntoInicioService.get(query).subscribe((data) => {
             if (data.length > 0) {
                 this.derivaciones = data.filter(d => d.estado === 'finalizada');
             }
@@ -856,7 +913,25 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
             case 'procedimiento':
                 return this.registrosTotalesCopia.procedimiento.length;
             case 'planes':
-                return this.prestacionesCopia.length;
+            {
+                // Contar prestaciones en internaciones combinadas
+                let totalPrestaciones = 0;
+                if (this.indiceInternaciones && this.indiceInternaciones.length > 0) {
+                    this.indiceInternaciones.forEach((internacion: any) => {
+                        internacion.registros.forEach((registro: any) => {
+                            if (registro.otras) {
+                                totalPrestaciones += Object.keys(registro.otras).length;
+                            } else {
+                                totalPrestaciones++;
+                            }
+                        });
+                    });
+                }
+                if (this.otrasPrestaciones?.registros?.length) {
+                    totalPrestaciones += this.otrasPrestaciones.registros.length;
+                }
+                return totalPrestaciones;
+            }
             case 'producto':
                 return this.registrosTotalesCopia.producto.length;
             case 'laboratorios':
@@ -966,50 +1041,89 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         };
     }
 
+    // modificaciones para el pdf y huds
+
     filtrarPorInternacion(prestaciones) {
         const prestacionesEnInternacion = [];
+        this.indiceInternaciones = [];
 
-        const internaciones = this.internaciones?.map(internacion => {
+        this.internaciones?.forEach(internacion => {
             const prestacionesPorInternacion = prestaciones.filter(prestacion => {
-                const fechaIngresoValida = moment(prestacion.fecha).isSameOrAfter(internacion.fechaIngreso);
-                const fechaEgresoValida = internacion.fechaEgreso ? moment(prestacion.fecha).isSameOrBefore(internacion.fechaEgreso) : moment(prestacion.fecha).isSameOrBefore(moment().toDate());
-                const organizacionValida = internacion.organizacion.id === prestacion.organizacion;
+                const fechaPrestacion = moment(prestacion.fecha);
+                const fechaIngreso = moment(internacion.fechaIngreso);
+                const fechaEgreso = internacion.fechaEgreso
+                    ? moment(internacion.fechaEgreso)
+                    : moment();
+                const organizacionInternacion = internacion.organizacion;
+                const organizacionPrestacion = prestacion.data?.solicitud?.organizacion;
+                const idInternacion = organizacionInternacion?.id || organizacionInternacion?._id;
+                const idPrestacion = prestacion.organizacion || organizacionPrestacion?.id || organizacionPrestacion?._id;
+                const nombreInternacion = organizacionInternacion?.nombre || organizacionInternacion;
+                const nombrePrestacion = organizacionPrestacion?.nombre;
+                const coincideOrganizacion = idInternacion && idPrestacion
+                    ? idInternacion === idPrestacion
+                    : nombreInternacion && nombrePrestacion && nombreInternacion === nombrePrestacion;
 
-                if (fechaIngresoValida && fechaEgresoValida && organizacionValida) {
-                    prestacionesEnInternacion.push(prestacion);
-
-                    return prestacion;
-                } else { return null; }
+                return fechaPrestacion.isValid() && fechaIngreso.isValid() &&
+                    fechaPrestacion.isSameOrAfter(fechaIngreso) &&
+                    fechaPrestacion.isSameOrBefore(fechaEgreso) && coincideOrganizacion;
             });
 
-            const indicePrestaciones = prestacionesPorInternacion.reduce((grupo, prestacion) => {
-                return ({ ...grupo, [prestacion.data.id]: prestacion });
-            }, {});
+            prestacionesEnInternacion.push(...prestacionesPorInternacion);
 
-            const registros = prestacionesPorInternacion.flatMap((prestacion) => prestacion.data.ejecucion.registros);
-
+            const indicePrestaciones = prestacionesPorInternacion.reduce((grupo, prestacion) => ({
+                ...grupo,
+                [prestacion.data.id]: prestacion
+            }), {});
+            const registros = prestacionesPorInternacion.flatMap(prestacion =>
+                prestacion.data.ejecucion?.registros || []
+            );
             const grupoRegistros = registros.reduce((grupo, registro) => {
-                const dataRegistro = { conceptId: registro.concepto.conceptId, term: registro.concepto.term, id: registro.id, idPrestacion: registro.idPrestacion };
+                const dataRegistro = {
+                    conceptId: registro.concepto?.conceptId,
+                    term: registro.concepto?.term,
+                    id: registro.id,
+                    idPrestacion: registro.idPrestacion
+                };
 
-                if (this.planIndicaciones.includes(registro.concepto.conceptId)) {
-                    return ({ ...grupo, [registro.concepto.conceptId]: dataRegistro });
+                if (this.planIndicaciones.includes(registro.concepto?.conceptId)) {
+                    return { ...grupo, [registro.concepto.conceptId]: dataRegistro };
                 }
 
-                return ({ ...grupo, ['otras']: { ...grupo['otras'], [registro.idPrestacion]: { ...indicePrestaciones[registro.idPrestacion] } } });
+                return {
+                    ...grupo,
+                    otras: {
+                        ...grupo.otras,
+                        [registro.idPrestacion]: {
+                            ...indicePrestaciones[registro.idPrestacion]
+                        }
+                    }
+                };
             }, {});
+            const registrosArray = Object.values(grupoRegistros);
 
-            return {
-                id: internacion.id,
-                fechaIngreso: internacion.fechaIngreso,
-                fechaEgreso: internacion.fechaEgreso,
-                organizacion: internacion.organizacion.nombre,
-                registros: Object.values(grupoRegistros)
-            };
-        })
-            .filter(grupo => grupo.registros.length);
+            if (internacion.esInformeEstadistico) {
+                registrosArray.push({
+                    conceptId: 'informe-estadistico',
+                    term: 'Informe estadístico de internación',
+                    id: internacion.id,
+                    esInformeEstadistico: true
+                });
+            }
 
-        this.indiceInternaciones = internaciones?.reverse();
+            if (registrosArray.length) {
+                this.indiceInternaciones.push({
+                    id: internacion.id,
+                    fechaIngreso: internacion.fechaIngreso,
+                    fechaEgreso: internacion.fechaEgreso,
+                    organizacion: internacion.organizacion?.nombre || internacion.organizacion,
+                    registros: registrosArray,
+                    prestaciones: prestacionesPorInternacion
+                });
+            }
+        });
 
+        this.indiceInternaciones.reverse();
         this.filtrarOtrasPrestaciones(prestaciones, prestacionesEnInternacion);
     }
 
@@ -1033,7 +1147,6 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
                 return true;
             });
         }
-
         if (this.ambitoOrigen) {
             this.prestaciones = this.prestaciones.filter(p => p.ambito === this.ambitoOrigen);
 
