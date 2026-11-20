@@ -14,6 +14,8 @@ import { TurnosSolicitudComponent } from './solicitudes/turnosSolicitud.componen
 import { VisualizacionReglasTopComponent } from './reglas/visualizacionReglasTop.component';
 import { RouterService } from 'src/app/services/router.service';
 import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
+import { DetallePedidoComponent } from './solicitudes/detallePedido.component';
+import { ElementosRUPModule } from 'src/app/modules/rup/elementos-rup.module';
 import { AndesAppSharedModule } from 'src/app/shared/andes-app-shared.module';
 
 export const TOP_COMPONENTS = [
@@ -21,7 +23,8 @@ export const TOP_COMPONENTS = [
     VisualizacionReglasComponent,
     HistorialSolicitudComponent,
     FormNuevaSolicitudComponent,
-    TurnosSolicitudComponent
+    TurnosSolicitudComponent,
+    DetallePedidoComponent
 ];
 
 export const TOP_PROVIDERS = [
@@ -37,6 +40,7 @@ export const TOP_PROVIDERS = [
         HttpClientModule,
         SharedModule,
         DirectiveLibModule,
+        ElementosRUPModule,
         AndesAppSharedModule
     ],
     declarations: [
@@ -44,6 +48,7 @@ export const TOP_PROVIDERS = [
     ],
     providers: [
         MotivosHudsService,
+
         ...TOP_PROVIDERS
     ],
     exports: [
@@ -51,7 +56,8 @@ export const TOP_PROVIDERS = [
         VisualizacionReglasComponent,
         HistorialSolicitudComponent,
         FormNuevaSolicitudComponent,
-        TurnosSolicitudComponent
+        TurnosSolicitudComponent,
+        DetallePedidoComponent
     ],
 })
 export class TOPLibModule {

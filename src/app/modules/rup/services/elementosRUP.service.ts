@@ -183,7 +183,12 @@ export class ElementosRUPService {
         }
         elemento.requeridos.forEach((elem) => {
             if (!elem.elementoRUP) {
-                elem.elementoRUP = this.buscarElemento(elem.concepto, esSolicitud);
+                const esSolicitudRequerido = elem.esSolicitud ?? esSolicitud;
+                const elementoRUP = this.buscarElemento(elem.concepto, esSolicitudRequerido);
+                if (!elementoRUP) {
+                    return;
+                }
+                elem.elementoRUP = elementoRUP;
                 elem.params = { ...elem.elementoRUP.params, ...(elem.params || {}) };
                 elem.style = { ...(elem.elementoRUP.style || {}), ...(elem.style || {}) } as any;
             } else if (typeof (elem.elementoRUP as any) === 'string') {
