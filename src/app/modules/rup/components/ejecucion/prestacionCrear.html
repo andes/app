@@ -14,6 +14,12 @@
                      [preload]="true" [required]="true" (change)="seleccionarTipoPrestacion()" grow="2">
         </plex-select>
     </plex-wrapper>
+    <!-- Segunda fila: con tres campos en la misma fila se cortaba la etiqueta (y el asterisco) del tipo de prestación -->
+    <plex-wrapper *ngIf="opcion === 'fueraAgenda'">
+        <plex-select [(ngModel)]="procedencia" name="procedencia" label="Procedencia del paciente"
+                     [data]="procedencias" labelField="nombre" idField="id" placeholder="Seleccione la procedencia">
+        </plex-select>
+    </plex-wrapper>
 </plex-title>
 
 <ng-container class="form-group" *ngIf="mostrarPaciente">

@@ -3,6 +3,19 @@ import { IPrestacionRegistro } from './prestacion.registro.interface';
 import { ISnomedConcept } from './snomed-concept.interface';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
 
+export type AmbitoOrigen = 'ambulatorio' | 'internacion' | 'guardia';
+
+export interface IAmbitoOrigenOpcion {
+    id: AmbitoOrigen;
+    nombre: string;
+}
+
+export const AMBITOS_ORIGEN: IAmbitoOrigenOpcion[] = [
+    { id: 'ambulatorio', nombre: 'Ambulatorio' },
+    { id: 'internacion', nombre: 'Internación' },
+    { id: 'guardia', nombre: 'Guardia' }
+];
+
 export class IPrestacion {
     id: string;
     trackId: string;
@@ -26,7 +39,10 @@ export class IPrestacion {
     };
     // Datos de la solicitud
     solicitud: {
+        // Flujo donde nace la prestación; lo define el sistema
         ambitoOrigen: string;
+        // De dónde viene el paciente; lo informa el usuario (informativo)
+        procedencia?: AmbitoOrigen;
         // Tipo de prestación de ejecutarse
         tipoPrestacion: ISnomedConcept;
         // Tipo de prestación de ejecutarse
