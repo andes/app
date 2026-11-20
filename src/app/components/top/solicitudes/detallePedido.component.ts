@@ -1,8 +1,9 @@
 import { Input, Component, ChangeDetectorRef, OnDestroy, ViewChild } from '@angular/core';
-import { Subject } from 'rxjs';
-import { filter, take, takeUntil } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { delay, filter, take, takeUntil } from 'rxjs/operators';
 import { RUPComponent } from 'src/app/modules/rup/components/core/rup.component';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
+import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 
 @Component({
     selector: 'detalle-pedido',
@@ -16,8 +17,8 @@ export class DetallePedidoComponent implements OnDestroy {
     itemsHistorial = [];
     registroPrincipal = null;
     elementoRUPPrincipal = null;
-    mostrarRup = true;
     private destroy$ = new Subject<void>();
+    private detalle$ = new Subject<void>();
     private _prestacion;
 
     @Input()
@@ -31,54 +32,77 @@ export class DetallePedidoComponent implements OnDestroy {
 
     constructor(
         private elementosRUPService: ElementosRUPService,
+        private prestacionesService: PrestacionesService,
         private cd: ChangeDetectorRef
     ) { }
 
 
     cargarDetalle() {
+        this.detalle$.next();
+
         if (!this.prestacion) {
-            // Si no hay prestacion, ocultamos <rup> para que no quede el anterior montado
-            this.mostrarRup = false;
-            this.elementoRUPPrincipal = null;
-            this.registroPrincipal = null;
-            this.cd.detectChanges();
+            this.desmontarRup();
             return;
         }
 
-        // Forzamos desmontaje temporal del <rup> para evitar que quede la instancia anterior
-        this.mostrarRup = false;
-        this.elementoRUPPrincipal = null;
-        this.registroPrincipal = null;
-        this.cd.detectChanges();
+        this.desmontarRup();
 
-        // Esperar a que el servicio esté listo y luego usarlo (una sola vez)
         this.elementosRUPService.ready.pipe(
             filter(v => !!v),
             take(1),
-            takeUntil(this.destroy$)
+            takeUntil(this.destroy$),
+            takeUntil(this.detalle$)
         ).subscribe({
             next: () => {
-                this.registroPrincipal = this.prestacion.solicitud?.registros?.[0] || null;
-                if (!this.registroPrincipal) {
+                const registro = this.prestacion.solicitud?.registros?.[0] || null;
+                if (!registro) {
                     console.warn('DetallePedido: no hay registroPrincipal en la prestacion', this.prestacion);
-                    this.elementoRUPPrincipal = null;
-                    // restaurar flag (no mostrar)
-                    this.mostrarRup = false;
-                    this.cd.detectChanges();
                     return;
                 }
-                this.elementoRUPPrincipal = this.elementosRUPService.buscarElemento(this.registroPrincipal.concepto, true);
-                // Restauramos flag para volver a montar <rup> con los nuevos inputs
-                this.mostrarRup = true;
-                // Forzar detección para que Angular renderice el <rup>
-                this.cd.detectChanges();
+                this.aplicarRegistro(registro);
 
+                const idSolicitud = this.prestacion.id || this.prestacion._id;
+                const idOrigen = this.prestacion.solicitud?.prestacionOrigen;
+                if (idSolicitud && idOrigen) {
+                    this.prestacionesService.getDetalleSolicitud(idSolicitud, { showError: false }).pipe(
+                        take(1),
+                        takeUntil(this.destroy$),
+                        takeUntil(this.detalle$)
+                    ).subscribe({
+                        next: (solicitudActualizada) => {
+                            const registroActualizado = solicitudActualizada?.solicitud?.registros?.[0];
+                            if (!registroActualizado || registroActualizado === this.registroPrincipal) {
+                                return;
+                            }
+                            this.desmontarRup();
+                            of(registroActualizado).pipe(
+                                delay(1),
+                                takeUntil(this.destroy$),
+                                takeUntil(this.detalle$)
+                            ).subscribe(registro => this.aplicarRegistro(registro));
+                        },
+                        error: () => { }
+                    });
+                }
             }
         });
+    }
 
+    private desmontarRup() {
+        this.elementoRUPPrincipal = null;
+        this.registroPrincipal = null;
+        this.cd.detectChanges();
+    }
+
+    private aplicarRegistro(registro) {
+        this.registroPrincipal = registro;
+        this.elementoRUPPrincipal = this.elementosRUPService.buscarElemento(registro.concepto, true);
+        this.cd.detectChanges();
     }
 
     ngOnDestroy() {
+        this.detalle$.next();
+        this.detalle$.complete();
         this.destroy$.next();
         this.destroy$.complete();
     }

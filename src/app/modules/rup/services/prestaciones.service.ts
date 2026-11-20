@@ -163,6 +163,19 @@ export class PrestacionesService {
     }
 
     /**
+     * Devuelve la solicitud TOP con los registros de la molécula sincronizados
+     * desde la prestación RUP de origen.
+     */
+    getDetalleSolicitud(id: string, options: any = {}): Observable<IPrestacion> {
+        if (typeof options.showError === 'undefined') {
+            options.showError = true;
+        }
+
+        const url = `${this.prestacionesUrl}/solicitudes/${id}/detalle`;
+        return this.server.get(url, options);
+    }
+
+    /**
      * Método getByPaciente. Busca todas las prestaciones de un paciente
      * @param {String} idPaciente
      */
