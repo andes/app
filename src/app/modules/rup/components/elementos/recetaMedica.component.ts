@@ -48,6 +48,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     public ingresoCantidadManual = false;
     public valorCantidadManual = null;
     public loading = false;
+    public verificandoDuplicado = false;
     public esDuplicado = false;
     public esTriplicado = false;
     public tiemposTratamiento = [
@@ -60,7 +61,9 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     public eclUnidadesFiltro;
 
     // Propiedades para manejo de obras sociales
-    public financiadoresPaciente: Partial<IObraSocial>[] = [];
+    public financiadoresPaciente: IObraSocial[] = [];
+    public financiadoresOriginalesPaciente: IObraSocial[] = [];
+    public obraSocialOriginal: any = null;
     public datosFinanciadores = [];
     public financiadorSeleccionado;
     public otroFinanciadorSeleccionado;
@@ -83,6 +86,12 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
         }
         if (!this.registro.valor.medicamentos) {
             this.registro.valor.medicamentos = [];
+        } else {
+            this.registro.valor.medicamentos.forEach(med => {
+                if (med.obraSocial?.nombre === 'Sin obra social') {
+                    med.obraSocial = null;
+                }
+            });
         }
         this.registros = this.prestacion.ejecucion.registros.filter(reg => reg.id !== this.registro.id).map(reg => reg.concepto);
         this.intervalos$ = this.constantesService.search({ source: 'plan-indicaciones:frecuencia' });
@@ -229,13 +238,17 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
                     this.checkDuplicado();
                 } else {
                     this.deshacerCantidadManual();
+                    this.verificandoDuplicado = false;
                 }
             });
+        } else {
+            this.verificandoDuplicado = false;
         }
     }
 
     preAgregarMedicamento(form) {
-        if (form.formValid) {
+        if (form.formValid && !this.verificandoDuplicado) {
+            this.verificandoDuplicado = true;
             // si se ingresó una cantidad manualmente y no se seleccionó ninguna presentación comercial
             if (this.unidades.length && this.ingresoCantidadManual) {
                 this.showModalCantidadManual();
@@ -247,52 +260,64 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     checkDuplicado() {
         const estadoDispensa = ['sin-dispensa', 'dispensa-parcial'].toString();
         const options = { pacienteId: this.paciente.id, estadoDispensa };
-        this.recetasService.getRecetas(options).subscribe((data) => {
-            const esMagistralActual = !!this.medicamento.esMagistral;
-            const termNombreActual = esMagistralActual
-                ? (this.medicamento.generico?.nombre || this.medicamento.generico?.term)
-                : this.medicamento.generico?.term;
-            const conceptIdActual = this.medicamento.generico?.conceptId || this.medicamento.generico?.id || this.medicamento.generico?._id;
 
-            const duplicado = data.find(receta => {
-                const esVigenteOMismaDispensa =
-                    (receta.estadoActual.tipo === 'vigente' || receta.estadoActual.tipo === 'pendiente') &&
-                    (receta.estadoDispensaActual.tipo === 'sin-dispensa' || receta.estadoDispensaActual.tipo === 'dispensa-parcial');
+        const esMagistralActual = !!this.medicamento.esMagistral;
+        const termNombreActual = esMagistralActual
+            ? (this.medicamento.generico?.nombre || this.medicamento.generico?.term)
+            : this.medicamento.generico?.term;
+        const conceptIdActual = this.medicamento.generico?.conceptId || this.medicamento.generico?.id || this.medicamento.generico?._id;
 
-                if (!esVigenteOMismaDispensa) {
-                    return false;
-                }
+        if (!conceptIdActual && !termNombreActual) {
+            this.verificandoDuplicado = false;
+            return;
+        }
 
-                if (esMagistralActual) {
-                    return !!receta.medicamento?.esMagistral &&
-                        (receta.medicamento?.magistral?.nombre === termNombreActual ||
-                            receta.medicamento?.magistral?.id === conceptIdActual);
+        this.recetasService.getRecetas(options).subscribe({
+            next: (data) => {
+                const duplicado = data.find(receta => {
+                    const esVigenteOMismaDispensa =
+                        (receta.estadoActual.tipo === 'vigente' || receta.estadoActual.tipo === 'pendiente') &&
+                        (receta.estadoDispensaActual.tipo === 'sin-dispensa' || receta.estadoDispensaActual.tipo === 'dispensa-parcial');
+
+                    if (!esVigenteOMismaDispensa) {
+                        return false;
+                    }
+
+                    if (esMagistralActual) {
+                        return !!receta.medicamento?.esMagistral &&
+                            (receta.medicamento?.magistral?.nombre === termNombreActual ||
+                                receta.medicamento?.magistral?.id === conceptIdActual);
+                    } else {
+                        return !receta.medicamento?.esMagistral &&
+                            receta.medicamento?.concepto?.conceptId === conceptIdActual;
+                    }
+                });
+
+                const cargadoActual = this.registro.valor.medicamentos.find(medicamentoCargado => {
+                    if (esMagistralActual) {
+                        const nombreCargado = medicamentoCargado.magistral?.nombre || medicamentoCargado.generico?.nombre || medicamentoCargado.generico?.term;
+                        const idCargado = medicamentoCargado.magistral?.id || medicamentoCargado.generico?.conceptId || medicamentoCargado.generico?.id || medicamentoCargado.generico?._id;
+                        return medicamentoCargado.esMagistral && (nombreCargado === termNombreActual || idCargado === conceptIdActual);
+                    } else {
+                        return !medicamentoCargado.esMagistral && medicamentoCargado.generico?.conceptId === conceptIdActual;
+                    }
+                });
+
+                if (!duplicado && !cargadoActual) {
+                    return this.agregarMedicamento();
                 } else {
-                    return !receta.medicamento?.esMagistral &&
-                        receta.medicamento?.concepto?.conceptId === conceptIdActual;
+                    this.verificandoDuplicado = false;
+                    if (duplicado) {
+                        const fechaRegistro = new Date(duplicado.fechaRegistro).toLocaleString();
+                        const nombreMed = duplicado.medicamento?.magistral?.nombre || duplicado.medicamento?.nombre || duplicado.medicamento?.concepto?.term;
+                        this.plex.info('danger', `El medicamento "<b>${nombreMed}</b>" se encuentra vigente en otra receta.<br><small>Fecha de registro: ${fechaRegistro}</small>`);
+                    } else {
+                        this.plex.info('danger', `El medicamento "<b>${termNombreActual}</b>" se encuentra cargado en la receta actual.`);
+                    }
                 }
-            });
-
-            const cargadoActual = this.registro.valor.medicamentos.find(medicamentoCargado => {
-                if (esMagistralActual) {
-                    const nombreCargado = medicamentoCargado.magistral?.nombre || medicamentoCargado.generico?.nombre || medicamentoCargado.generico?.term;
-                    const idCargado = medicamentoCargado.magistral?.id || medicamentoCargado.generico?.conceptId || medicamentoCargado.generico?.id || medicamentoCargado.generico?._id;
-                    return medicamentoCargado.esMagistral && (nombreCargado === termNombreActual || idCargado === conceptIdActual);
-                } else {
-                    return !medicamentoCargado.esMagistral && medicamentoCargado.generico?.conceptId === conceptIdActual;
-                }
-            });
-
-            if (!duplicado && !cargadoActual) {
-                return this.agregarMedicamento();
-            } else {
-                if (duplicado) {
-                    const fechaRegistro = new Date(duplicado.fechaRegistro).toLocaleString();
-                    const nombreMed = duplicado.medicamento?.magistral?.nombre || duplicado.medicamento?.nombre || duplicado.medicamento?.concepto?.term;
-                    this.plex.info('danger', `El medicamento "<b>${nombreMed}</b>" se encuentra vigente en otra receta.<br><small>Fecha de registro: ${fechaRegistro}</small>`);
-                } else {
-                    this.plex.info('danger', `El medicamento "<b>${termNombreActual}</b>" se encuentra cargado en la receta actual.`);
-                }
+            },
+            error: () => {
+                this.verificandoDuplicado = false;
             }
         });
     }
@@ -304,6 +329,15 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     }
 
     agregarMedicamento() {
+        const tieneMedicamento = this.medicamento?.esMagistral
+            ? !!(this.medicamento.generico || this.medicamento.magistral)
+            : !!this.medicamento?.generico?.conceptId;
+
+        if (!tieneMedicamento) {
+            this.verificandoDuplicado = false;
+            return;
+        }
+
         if (this.medicamento.cantidad?.valor && this.medicamento.cantidad?.valor !== 'Otro') {
             this.medicamento.cantidad = Number(this.medicamento.cantidad.valor);
         } else if (this.ingresoCantidadManual && this.valorCantidadManual) {
@@ -320,10 +354,24 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
             this.medicamento.generico = null;
         }
 
+        if (this.prestacion?.paciente?.obraSocial && this.prestacion.paciente.obraSocial.nombre !== 'Sin obra social') {
+            this.prestacion.paciente.obraSocial.numeroAfiliado = this.numeroAfiliado || '';
+            this.medicamento.obraSocial = JSON.parse(JSON.stringify(this.prestacion.paciente.obraSocial));
+        } else {
+            this.medicamento.obraSocial = null;
+            if (this.prestacion?.paciente) {
+                this.prestacion.paciente.obraSocial = null;
+            }
+        }
+
         this.registro.valor.medicamentos.push(this.medicamento);
         this.unidades = [];
 
         const numeroAfiliadoTemporal = this.numeroAfiliado;
+        const financiadorSeleccionadoTemporal = this.financiadorSeleccionado;
+        const otroFinanciadorSeleccionadoTemporal = this.otroFinanciadorSeleccionado;
+        const showListadoTemporal = this.showListado;
+        const obraSocialTemporal = (this.prestacion?.paciente?.obraSocial && this.prestacion.paciente.obraSocial.nombre !== 'Sin obra social') ? JSON.parse(JSON.stringify(this.prestacion.paciente.obraSocial)) : null;
 
         this.medicamento = {
             generico: null,
@@ -352,9 +400,17 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
         this.formMedicamento.form.markAsPristine();
         this.formMedicamento.form.markAsUntouched();
 
-        if (numeroAfiliadoTemporal) {
+        setTimeout(() => {
             this.numeroAfiliado = numeroAfiliadoTemporal;
-        }
+            this.financiadorSeleccionado = financiadorSeleccionadoTemporal;
+            this.otroFinanciadorSeleccionado = otroFinanciadorSeleccionadoTemporal;
+            this.showListado = showListadoTemporal;
+            if (this.prestacion?.paciente) {
+                this.prestacion.paciente.obraSocial = obraSocialTemporal;
+            }
+        });
+
+        this.verificandoDuplicado = false;
     }
 
     borrarMedicamento(medicamento) {
@@ -378,8 +434,10 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     }
 
     public onValidate() {
-        if (this.prestacion?.paciente?.obraSocial) {
+        if (this.prestacion?.paciente?.obraSocial && this.prestacion.paciente.obraSocial.nombre !== 'Sin obra social') {
             this.prestacion.paciente.obraSocial.numeroAfiliado = this.numeroAfiliado || '';
+        } else if (this.prestacion?.paciente) {
+            this.prestacion.paciente.obraSocial = null;
         }
         return this.registro.valor.medicamentos && this.registro.valor.medicamentos.length > 0;
     }
@@ -404,80 +462,59 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
             return nomStr && nomStr !== 'Sin obra social' && nomStr !== 'otras';
         };
 
-        // 1. Si la prestación ya tiene obraSocial asignada (y no es 'Sin obra social' / 'otras')
-        if (this.prestacion?.paciente?.obraSocial) {
-            const os = this.prestacion.paciente.obraSocial;
-            const nom = os.nombre || os.financiador || '';
-            if (esValido(nom)) {
-                this.financiadoresPaciente.push({
-                    nombre: nom,
-                    codigoFinanciador: os.codigoFinanciador || 0,
-                    version: new Date(),
-                    numeroAfiliado: os.numeroAfiliado || '',
-                    financiador: os.financiador || os.nombre || null,
-                    codigoPuco: os.codigoPuco || null,
-                    id: os.id || null,
-                    transmite: os.transmite || '',
-                    prepaga: os.prepaga || false,
-                    origen: os.origen || 'ANDES'
-                });
+        const agregarObraSocial = (source: any) => {
+            if (!source) {
+                return;
             }
-        }
+            const nom = source.nombre || source.financiador || '';
+            if (!esValido(nom)) {
+                return;
+            }
+            const existente = this.financiadoresPaciente.find(os =>
+                (os.nombre && (os.nombre === source.nombre || os.nombre === source.financiador)) ||
+                (os.financiador && (os.financiador === source.nombre || os.financiador === source.financiador))
+            );
+            if (!existente) {
+                this.financiadoresPaciente.push({
+                    id: source.id || null,
+                    tipoDocumento: source.tipoDocumento || '',
+                    dni: source.dni || 0,
+                    transmite: source.transmite || '',
+                    nombre: nom,
+                    codigoFinanciador: source.codigoFinanciador || 0,
+                    financiador: source.financiador || source.nombre || null,
+                    version: new Date(),
+                    numeroAfiliado: source.numeroAfiliado || '',
+                    codigoPuco: source.codigoPuco || null,
+                    prepaga: source.prepaga || false,
+                    origen: source.origen || 'ANDES'
+                });
+            } else if (!existente.numeroAfiliado && source.numeroAfiliado) {
+                existente.numeroAfiliado = source.numeroAfiliado;
+            }
+        };
+
+        // 1. Si la prestación ya tiene obraSocial asignada (y no es 'Sin obra social' / 'otras')
+        agregarObraSocial(this.prestacion?.paciente?.obraSocial);
 
         // 2. Si el paciente (MPI) o prestacion.paciente tiene el arreglo de financiadores
         const financiadoresMPI = this.paciente?.financiador || (this.prestacion?.paciente as any)?.financiador || [];
         if (Array.isArray(financiadoresMPI)) {
-            financiadoresMPI.forEach((f: any) => {
-                const nom = f.nombre || f.financiador || '';
-                if (esValido(nom)) {
-                    const yaExiste = this.financiadoresPaciente.some(os =>
-                        (os.nombre && (os.nombre === f.nombre || os.nombre === f.financiador)) ||
-                        (os.financiador && (os.financiador === f.nombre || os.financiador === f.financiador))
-                    );
-                    if (!yaExiste) {
-                        this.financiadoresPaciente.push({
-                            nombre: nom,
-                            codigoFinanciador: f.codigoFinanciador || 0,
-                            version: new Date(),
-                            numeroAfiliado: f.numeroAfiliado || '',
-                            financiador: f.financiador || f.nombre || null,
-                            codigoPuco: f.codigoPuco || null,
-                            id: f.id || null,
-                            transmite: f.transmite || '',
-                            prepaga: f.prepaga || false,
-                            origen: f.origen || 'ANDES'
-                        });
-                    }
-                }
-            });
+            financiadoresMPI.forEach(agregarObraSocial);
         }
 
         // 3. Si el paciente en MPI tiene propiedad obraSocial directa
-        if ((this.paciente as any)?.obraSocial) {
-            const os = (this.paciente as any).obraSocial;
-            const nom = os.nombre || os.financiador || '';
-            if (esValido(nom)) {
-                const yaExiste = this.financiadoresPaciente.some(f =>
-                    (f.nombre && (f.nombre === os.nombre || f.nombre === os.financiador))
-                );
-                if (!yaExiste) {
-                    this.financiadoresPaciente.push({
-                        nombre: nom,
-                        codigoFinanciador: os.codigoFinanciador || 0,
-                        version: new Date(),
-                        numeroAfiliado: os.numeroAfiliado || '',
-                        financiador: os.financiador || os.nombre || null,
-                        codigoPuco: os.codigoPuco || null,
-                        id: os.id || null,
-                        transmite: os.transmite || '',
-                        prepaga: os.prepaga || false,
-                        origen: os.origen || 'ANDES'
-                    });
-                }
-            }
-        }
+        agregarObraSocial((this.paciente as any)?.obraSocial);
 
         if (this.prestacion?.paciente) {
+            this.financiadoresOriginalesPaciente = JSON.parse(JSON.stringify(this.financiadoresPaciente));
+
+            if (this.prestacion?.paciente?.obraSocial && this.prestacion.paciente.obraSocial.nombre !== 'Sin obra social') {
+                this.obraSocialOriginal = JSON.parse(JSON.stringify(this.prestacion.paciente.obraSocial));
+            } else {
+                this.obraSocialOriginal = null;
+            }
+
             this.showSelector = true;
 
             const obraSocialActual = this.prestacion.paciente.obraSocial;
@@ -500,9 +537,18 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
                 const { financiador, nombre, numeroAfiliado } = this.prestacion.paciente.obraSocial;
                 this.financiadorSeleccionado = nombre || financiador;
 
+                const osMatch = this.financiadoresPaciente.find(f =>
+                    f.nombre === (nombre || financiador) || f.financiador === (nombre || financiador)
+                );
+                const numeroAfiliadoOSMatch = (osMatch?.numeroAfiliado as string) || '';
+
                 const numeroAfiliadoActual = this.numeroAfiliado;
                 const numeroAfiliadoPrestacion = (numeroAfiliado as string) || '';
-                this.numeroAfiliado = numeroAfiliadoActual || numeroAfiliadoPrestacion;
+                this.numeroAfiliado = String(numeroAfiliadoActual || numeroAfiliadoPrestacion || numeroAfiliadoOSMatch || '');
+
+                if (this.prestacion.paciente.obraSocial) {
+                    this.prestacion.paciente.obraSocial.numeroAfiliado = String(this.numeroAfiliado || '');
+                }
             } else {
                 // Si el paciente no tiene financiadores válidos o ya tiene seleccionado 'Sin obra social'
                 this.financiadorSeleccionado = 'Sin obra social';
@@ -527,6 +573,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
                 { id: 'Sin obra social', label: 'Sin obra social' }
             ];
         } else {
+            this.obraSocialOriginal = null;
             this.showSelector = false;
             this.financiadorSeleccionado = undefined;
         }
@@ -547,22 +594,18 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
 
     public seleccionarFinanciador(event) {
         this.showListado = false;
+        this.otroFinanciadorSeleccionado = null;
 
         if (event.value === 'otras') {
             this.showListado = true;
-            this.numeroAfiliado = undefined;
-        } else if (event.value === 'Sin obra social') {
+            this.numeroAfiliado = '';
             if (this.prestacion?.paciente) {
-                this.numeroAfiliado = '';
-                this.prestacion.paciente.obraSocial = <IObraSocial>{
-                    id: null,
-                    nombre: 'Sin obra social',
-                    financiador: 'Sin obra social',
-                    codigoPuco: null,
-                    numeroAfiliado: '',
-                    prepaga: false,
-                    origen: 'ANDES'
-                };
+                this.prestacion.paciente.obraSocial = null;
+            }
+        } else if (event.value === 'Sin obra social') {
+            this.numeroAfiliado = '';
+            if (this.prestacion?.paciente) {
+                this.prestacion.paciente.obraSocial = null;
             }
         } else {
             const nombre = event.value;
@@ -571,12 +614,13 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
             );
 
             if (obraSocialSeleccionada && this.prestacion?.paciente) {
-                this.numeroAfiliado = obraSocialSeleccionada.numeroAfiliado as string || '';
+                this.numeroAfiliado = (obraSocialSeleccionada.numeroAfiliado as string) || '';
                 this.prestacion.paciente.obraSocial = <IObraSocial>{
+                    id: obraSocialSeleccionada.id || null,
                     nombre: obraSocialSeleccionada.nombre,
                     financiador: obraSocialSeleccionada.financiador,
                     codigoPuco: obraSocialSeleccionada.codigoPuco,
-                    numeroAfiliado: obraSocialSeleccionada.numeroAfiliado || '',
+                    numeroAfiliado: this.numeroAfiliado,
                     prepaga: obraSocialSeleccionada.prepaga || false,
                     origen: obraSocialSeleccionada.origen || 'ANDES'
                 };
@@ -588,32 +632,43 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
         if (event.value && this.prestacion?.paciente) {
             const { prepaga, nombre, financiador, codigoPuco } = event.value;
 
+            this.numeroAfiliado = '';
+
             this.prestacion.paciente.obraSocial = {
                 id: null,
                 nombre,
                 financiador,
                 codigoPuco,
-                numeroAfiliado: this.numeroAfiliado || '',
+                numeroAfiliado: '',
                 prepaga: prepaga || false,
                 origen: 'ANDES'
             };
 
-            const nuevaObraSocial = {
-                nombre,
-                numeroAfiliado: this.numeroAfiliado || '',
-                financiador,
-                codigoPuco,
-                id: null,
-                prepaga: prepaga || false,
-                origen: 'ANDES'
-            };
-
-            const yaExiste = this.financiadoresPaciente.find(os =>
-                (os.nombre === nombre || os.financiador === financiador)
+            const yaExiste = this.financiadoresPaciente.some(os =>
+                (os.nombre && (os.nombre === nombre || os.nombre === financiador)) ||
+                (os.financiador && (os.financiador === nombre || os.financiador === financiador))
             );
 
             if (!yaExiste) {
-                this.financiadoresPaciente.push(nuevaObraSocial);
+                const nuevaObraSocial: IObraSocial = {
+                    id: null,
+                    tipoDocumento: '',
+                    dni: 0,
+                    transmite: '',
+                    nombre,
+                    codigoFinanciador: 0,
+                    financiador,
+                    version: new Date(),
+                    numeroAfiliado: '',
+                    codigoPuco,
+                    prepaga: prepaga || false,
+                    origen: 'ANDES'
+                };
+
+                this.financiadoresPaciente = [
+                    ...this.financiadoresPaciente,
+                    nuevaObraSocial
+                ];
             }
 
             this.financiadorSeleccionado = nombre || financiador;
@@ -631,25 +686,26 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit, OnCha
     }
 
     public actualizarNumeroAfiliado() {
-        if (!this.numeroAfiliado || this.numeroAfiliado.toString().trim() === '') {
+        const numVal = this.numeroAfiliado ? this.numeroAfiliado.toString().trim() : '';
+
+        if (this.prestacion?.paciente?.obraSocial) {
+            this.prestacion.paciente.obraSocial.numeroAfiliado = numVal;
+        }
+
+        if (!numVal) {
             return;
         }
 
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
-            if (this.prestacion?.paciente?.obraSocial && this.numeroAfiliado && this.numeroAfiliado.toString().trim() !== '') {
+            if (this.prestacion?.paciente?.obraSocial) {
                 const obraSocialActual = this.financiadoresPaciente.find(os =>
                     os.nombre === this.prestacion.paciente.obraSocial.nombre ||
                     os.financiador === this.prestacion.paciente.obraSocial.financiador
                 );
 
                 if (obraSocialActual) {
-                    obraSocialActual.numeroAfiliado = this.numeroAfiliado;
-                }
-
-                // Actualizar solo el primer financiador si existe
-                if (this.financiadoresPaciente && this.financiadoresPaciente.length > 0) {
-                    this.financiadoresPaciente[0].numeroAfiliado = this.numeroAfiliado;
+                    obraSocialActual.numeroAfiliado = numVal;
                 }
             }
         }, 500);

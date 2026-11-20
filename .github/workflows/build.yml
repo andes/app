@@ -2,43 +2,26 @@ name: BUILD AND TEST
 
 on: [push]
 
+permissions:
+  contents: read
+
 jobs:
-    build:
-        runs-on: ubuntu-22.04
-        steps:
-            - uses: actions/checkout@v4
-
-            - name: Use Node.js 18
-              uses: actions/setup-node@v4
-              with:
-                  node-version: '18'
-                  cache: 'npm'
-
-            - name: Install
-              run: npm ci
-
-            - name: Prepare environment
-              run: cp ./src/environments/apiKeyMaps.ts.example ./src/environments/apiKeyMaps.ts
-
-            - name: Lint
-              run: npm run lint
-
-            - name: Prepare browserslist
-              run: rm .browserslistrc && touch .browserslistrc
-
-            # Compilar shared de forma independiente para detectar dependencias
-            # incorrectas hacia archivos de la aplicación.
-            - name: Build Shared
-              run: npx ng build shared
-
-            # Validar el paquete antes del build de ANDES, que limpia dist/.
-            - name: Validate Shared Package
-              run: |
-                  test -f dist/shared/package.json
-                  test -f dist/shared/CHANGELOG.md
-                  test -f dist/shared/MIGRATION.md
-                  cd dist/shared
-                  npm pack --dry-run
-
-            - name: Build
-              run: npm run build:prod -- --progress=false
+  build:
+    uses: andes/shared-workflows/.github/workflows/node-ci.yml@v1
+    with:
+      runner: ubuntu-22.04
+      node-version: "18"
+      cache: npm
+      commands: |
+        cp ./src/environments/apiKeyMaps.ts.example ./src/environments/apiKeyMaps.ts
+        npm run lint
+        rm .browserslistrc && touch .browserslistrc
+        # Compilar shared de forma independiente para detectar dependencias
+        # incorrectas hacia archivos de la aplicación.
+        npx ng build shared
+        # Validar el paquete antes del build de ANDES, que limpia dist/.
+        test -f dist/shared/package.json
+        test -f dist/shared/CHANGELOG.md
+        test -f dist/shared/MIGRATION.md
+        npm pack ./dist/shared --dry-run
+        npm run build:prod -- --progress=false

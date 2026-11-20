@@ -102,7 +102,7 @@ export class ProfesionalService {
     }
 
     saveFirma(firma) {
-        return this.post(firma);
+        return this.server.patch(this.profesionalUrl + '/update', { firma });
     }
 
     saveProfesional(profesionalModel: any) {

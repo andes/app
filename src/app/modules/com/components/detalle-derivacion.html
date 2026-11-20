@@ -1,6 +1,6 @@
 <plex-title main titulo="Detalle de Derivación">
-    <plex-button size="sm" class="pr-1" type="info" [icon]="'printer'" tooltip="Imprimir histórico de derivación"
-                 tooltipPosition="left" [disabled]="requestInProgress" (click)="imprimirHistorial()">
+    <plex-button size="sm" class="pr-1" type="info" [icon]="'printer'" title="Imprimir histórico de derivación"
+                 titlePosition="left" [disabled]="requestInProgress" (click)="imprimirHistorial()">
     </plex-button>
     <plex-button size="sm" type="danger" [icon]="'close'" tooltip="Cerrar" tooltipPosition="left" (click)="cerrar()">
     </plex-button>
@@ -47,6 +47,8 @@
                     subtitulo="{{derivacion.estrategiaAtencion.nombre}}">
         </plex-label>
         <plex-label titulo="Creada por" subtitulo="{{derivacion.createdBy | nombre}}">
+        </plex-label>
+        <plex-label *ngIf='derivacion.ambito' titulo="Ámbito" subtitulo="{{derivacion?.ambito}}">
         </plex-label>
         <plex-label titulo="Ultima actualización" subtitulo="{{derivacion.updatedAt
                                     | fecha}}  {{derivacion.updatedAt
