@@ -13,9 +13,11 @@
                      label="Seleccione el tipo de prestación" labelField="term" tmPrestaciones="rup:tipoPrestacion:?"
                      [preload]="true" [required]="true" (change)="seleccionarTipoPrestacion()" grow="2">
         </plex-select>
-        <plex-select *ngIf="opcion === 'fueraAgenda'" [(ngModel)]="procedencia" name="procedencia"
-                     label="Procedencia del paciente" [data]="procedencias" labelField="nombre" idField="id"
-                     placeholder="Seleccione la procedencia" grow="2">
+    </plex-wrapper>
+    <!-- Segunda fila: con tres campos en la misma fila se cortaba la etiqueta (y el asterisco) del tipo de prestación -->
+    <plex-wrapper *ngIf="opcion === 'fueraAgenda'">
+        <plex-select [(ngModel)]="procedencia" name="procedencia" label="Procedencia del paciente"
+                     [data]="procedencias" labelField="nombre" idField="id" placeholder="Seleccione la procedencia">
         </plex-select>
     </plex-wrapper>
 </plex-title>

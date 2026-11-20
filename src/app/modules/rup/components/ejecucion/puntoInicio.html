@@ -745,7 +745,8 @@
     </plex-layout-sidebar>
 </plex-layout>
 
-<plex-modal *ngIf="turnoAIniciar" size="md" [startOpen]="true" [allowEscClose]="false"
+<!-- size="sm": en "md" plex fuerza overflow-y: scroll en el main del modal -->
+<plex-modal *ngIf="turnoAIniciar" size="sm" [startOpen]="true" [allowEscClose]="false"
             [allowBackdropClose]="false" (closed)="cancelarInicioPrestacion()">
     <plex-modal-title type="info">
         {{ prestacionNoNominalizadaAIniciar ? '¿Crear Prestación?' : '¿Iniciar Prestación?' }}
@@ -754,7 +755,7 @@
         Confirme los datos de la prestación.
     </plex-modal-subtitle>
     <main>
-        <plex-grid type="full" cols="2">
+        <plex-grid type="full" cols="1">
             <plex-label *ngIf="turnoAIniciar.paciente" icon="paciente" titulo="Paciente"
                         [subtitulo]="turnoAIniciar.paciente | nombre">
             </plex-label>
