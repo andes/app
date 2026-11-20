@@ -5,6 +5,7 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output, QueryList, ViewChil
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
@@ -159,28 +160,28 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
     }
 
     seleccionarPaciente(idPaciente): void {
-        this.pacienteService.getById(idPaciente).subscribe(
-            paciente => {
+        this.pacienteService.getById(idPaciente).subscribe({
+            next: paciente => {
                 this.financiadoresOriginales = JSON.parse(JSON.stringify(paciente.financiador || []));
                 this.obraSocialOriginal = JSON.parse(JSON.stringify((paciente as any).obraSocial || paciente.financiador?.[0] || null));
                 this.paciente = paciente;
             },
-            () => {
+            error: () => {
                 this.plex.info('danger', 'Intente nuevamente', 'Error en la búsqueda de paciente');
                 this.router.navigate(['/derivaciones']);
             }
-        );
+        });
     }
 
     seleccionarProfesional(idProfesional): void {
-        this.profesionalService.get({ id: idProfesional }).subscribe(
-            profesional => {
+        this.profesionalService.get({ id: idProfesional }).subscribe({
+            next: profesional => {
                 this.modelo.profesionalSolicitante = profesional[0];
             },
-            () => {
+            error: () => {
                 this.plex.info('danger', 'Intente nuevamente', 'Error al asignar profesional por defecto');
             }
-        );
+        });
     }
 
 
@@ -215,38 +216,50 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
                 return;
             }
             this.saving = true;
-            this.derivacionesService.search({ paciente: this.paciente.id, estado: '~finalizada', cancelada: false }).subscribe(resultado => {
-                if (resultado.length) {
-                    this.plex.toast('danger', 'Ya existe una derivación en curso para el paciente seleccionado');
-                    this.saving = false;
-                } else {
-                    const concepto = this.elementoRupService.getConceptoDerivacion();
-                    const crearPrestacionActive = this.auth.featureFlag('COMCrearPrestacion');
-                    if (crearPrestacionActive) {
-                        const nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, concepto, 'ejecucion', 'internacion');
-                        this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-                            this.crearDerivacion(prestacion).subscribe(respuesta => {
-                                this.plex.toast('success', 'Derivación guardada', 'Éxito', 4000);
-                                this.editarPrestacion();
-                                this.saving = false;
-                            }, () => {
-                                this.saving = false;
-                            });
-                        }, () => {
-                            this.saving = false;
-                        });
+            this.derivacionesService.search({ paciente: this.paciente.id, estado: '~finalizada', cancelada: false }).subscribe({
+                next: resultado => {
+                    if (resultado.length) {
+                        this.plex.toast('danger', 'Ya existe una derivación en curso para el paciente seleccionado');
+                        this.saving = false;
                     } else {
-                        this.crearDerivacion().subscribe(respuesta => {
-                            this.router.navigate(['/com']);
-                            this.plex.toast('success', 'Derivación guardada', 'Éxito', 4000);
-                            this.saving = false;
-                        }, () => {
-                            this.saving = false;
-                        });
+                        const concepto = this.elementoRupService.getConceptoDerivacion();
+                        const crearPrestacionActive = this.auth.featureFlag('COMCrearPrestacion');
+                        if (crearPrestacionActive) {
+                            const nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, concepto, 'ejecucion', 'internacion');
+                            this.servicioPrestacion.post(nuevaPrestacion).subscribe({
+                                next: prestacion => {
+                                    this.crearDerivacion(prestacion).subscribe({
+                                        next: () => {
+                                            this.plex.toast('success', 'Derivación guardada', 'Éxito', 4000);
+                                            this.editarPrestacion();
+                                            this.saving = false;
+                                        },
+                                        error: () => {
+                                            this.saving = false;
+                                        }
+                                    });
+                                },
+                                error: () => {
+                                    this.saving = false;
+                                }
+                            });
+                        } else {
+                            this.crearDerivacion().subscribe({
+                                next: () => {
+                                    this.router.navigate(['/com']);
+                                    this.plex.toast('success', 'Derivación guardada', 'Éxito', 4000);
+                                    this.saving = false;
+                                },
+                                error: () => {
+                                    this.saving = false;
+                                }
+                            });
+                        }
                     }
+                },
+                error: () => {
+                    this.saving = false;
                 }
-            }, () => {
-                this.saving = false;
             });
         } else {
             this.plex.info('danger', 'Debe completar los datos requeridos');
@@ -293,7 +306,10 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
             this.modelo.estrategiaAtencion = null;
         }
         this.modelo.adjuntos = this.adjuntos;
-        return this.derivacionesService.create(this.modelo);
+        // Si se cambió la cobertura, se actualiza el paciente en MPI antes de guardar la derivación.
+        return this.actualizarObraSocialPaciente().pipe(
+            switchMap(() => this.derivacionesService.create(this.modelo))
+        );
     }
 
     private editarPrestacion() {
@@ -330,7 +346,10 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
             return of(null);
         }
 
-        const financiadores = [...this.financiadoresOriginales];
+        // 'Sin obra social' debe quitar los financiadores cargados manualmente (origen ANDES).
+        const financiadores = valorOS
+            ? [...this.financiadoresOriginales]
+            : this.financiadoresOriginales.filter(f => f?.origen !== 'ANDES');
         if (valorOS) {
             const idx = financiadores.findIndex(f => this.nombreFinanciador(f) === this.nombreFinanciador(valorOS));
             const actualizado = { ...(idx === -1 ? {} : financiadores[idx]), ...valorOS, fechaDeActualizacion: new Date() };
