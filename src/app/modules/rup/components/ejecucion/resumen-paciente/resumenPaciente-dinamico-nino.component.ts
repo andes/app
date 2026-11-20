@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { Component, Input, OnInit, HostBinding } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { ResumenPacienteDinamicoService } from '../../../services/resumenPaciente-dinamico.service';
@@ -31,6 +31,7 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
         this.loadVacunas();
         this.loadResumen();
     }
+
     // carga el resumen de historia clinica
     loadResumen() {
         this.prestacionesService.getRegistrosHuds(this.paciente.id, '6035001').subscribe(prestaciones => {

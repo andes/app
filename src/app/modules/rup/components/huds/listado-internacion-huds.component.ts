@@ -96,9 +96,9 @@ export class ListadoInternacionHudsComponent implements OnInit {
         );
     }
 
-    gotoExploracionVisual(idInternacion) {
-        this.router.navigate([`/mapa-camas/internacion/estadistica/resumen/${idInternacion}`]);
-
+    gotoExploracionVisual(internacion: any) {
+        const capa = internacion.capa || 'estadistica';
+        this.router.navigate([`/mapa-camas/internacion/${capa}/resumen/${internacion.id}`]);
     }
 
 

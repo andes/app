@@ -1,10 +1,12 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Location } from '@angular/common';
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { MapaCamasHTTP } from 'src/app/apps/rup/mapa-camas/services/mapa-camas.http';
+import { InternacionResumenHTTP } from 'src/app/apps/rup/mapa-camas/services/resumen-internacion.http';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
@@ -22,6 +24,7 @@ import { RecetaService } from 'src/app/services/receta.service';
 })
 export class VistaHudsComponent implements OnInit, OnDestroy {
     @Output() cambiarPaciente = new EventEmitter<boolean>();
+    @ViewChildren('hudsRailItem') private hudsRailItems: QueryList<ElementRef<HTMLElement>>;
 
     public paciente: IPaciente = null;
     public activeIndexPrestacion = 0;
@@ -30,9 +33,23 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         registros: false,
         historial: false
     };
-    public internacionesLength = 0;
     public internacione$: Observable<any[]>;
     public registros = [];
+    public indice = 0;
+    public indiceSeccion = 0;
+    public hudsOpciones = [
+        { icon: 'corazon-pulso', tooltip: 'Situaciones de salud activas' },
+        { icon: 'paciente', tooltip: 'Antecedentes personales' },
+        { icon: 'familia', tooltip: 'Antecedentes familiares' },
+        // { icon: 'corazon-sano', tooltip: 'Hábitos y condiciones de vida' },
+        // { icon: 'escudo-check', tooltip: 'Cuidados-preventivos' },
+        // { icon: 'listado-receta', tooltip: 'Prescripciones' },
+        { icon: 'signos-vitales', tooltip: 'Mediciones y signos vitales' },
+        // { icon: 'conecciones', tooltip: 'Vínculos y red familiar' },
+        { icon: 'historial', tooltip: 'Accesos a la HUDS' },
+        { icon: 'camilla', tooltip: 'Internación' },
+        { icon: 'calendario-rango-bold', tooltip: 'Turnos' }
+    ];
     public permisoHudsCompleta: boolean;
     public permisoLaboratorios: boolean;
     public permisoVacunas: boolean;
@@ -51,6 +68,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         public huds: HUDSService,
         private location: Location,
         private serviceMapaCamasHTTP: MapaCamasHTTP,
+        private internacionResumenService: InternacionResumenHTTP,
         public recetaService: RecetaService
     ) { }
 
@@ -78,11 +96,12 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         // cargar las internaciones y armar un filtro en api .
         this.huds.registrosHUDS.subscribe((datos) => {
             if (this.registros.length < datos.length) {
-                this.activeIndexPrestacion = datos.length + 1;
+                this.activeIndexPrestacion = datos.length;
             } else if (this.activeIndexPrestacion > datos.length) {
                 this.activeIndexPrestacion = this.activeIndexPrestacion - 1;
             }
             this.registros = [...datos];
+            this.indice = this.registros.length;
             this.registros.forEach((elemento, index) => {
                 if (elemento.tipo === 'internacion' && elemento.data?.indices && elemento.data.registros?.length > 0) {
                     const registrosAux = elemento.data.registros[0];
@@ -102,6 +121,11 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                 }
             });
         });
+        this.huds.activeTab$.subscribe((tab) => {
+            if (tab >= 0) {
+                this.activeIndexPrestacion = tab;
+            }
+        });
         // Limpiar los valores observados al iniciar la ejecución
         // Evita que se autocompleten valores de una consulta anterior
         this.conceptObserverService.destroy();
@@ -118,7 +142,16 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                             fechaIngresoDesde: this.fechaDesdeInternacion,
                             idPaciente: id
                         };
-                        this.internacione$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros);
+                        const prestaciones$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros).pipe(
+                            catchError(() => of([]))
+                        );
+                        // El resumen existe incluso cuando el ingreso se hizo sin prestación (ingreso simplificado)
+                        const resumenes$ = this.internacionResumenService.search({ paciente: id }).pipe(
+                            catchError(() => of([]))
+                        );
+                        this.internacione$ = combineLatest([prestaciones$, resumenes$]).pipe(
+                            map(([prestaciones, resumenes]) => this.combinarInternaciones(prestaciones, resumenes))
+                        );
                     }
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                 });
@@ -144,6 +177,75 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
 
     public onCloseTab(index) {
         this.huds.remove(index - 1);
+    }
+
+    public onChangeTab(index: number) {
+        if (index >= 0 && index <= this.registros.length) {
+            this.activeIndexPrestacion = index;
+        }
+    }
+
+    public cambioTabResumen(index: number) {
+        this.activeIndexResumen = index;
+        if (index === 1) {
+            this.tabsCargadas.registros = true;
+        } else if (index >= 2) {
+            this.tabsCargadas.historial = true;
+        }
+    }
+
+    public seleccionarSeccion(index: number) {
+        this.indiceSeccion = index;
+        this.hudsRailItems?.get(index)?.nativeElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+
+    public moverSeccion(direccion: number) {
+        const siguienteSeccion = this.indiceSeccion + direccion;
+        if (siguienteSeccion >= 0 && siguienteSeccion < this.hudsOpciones.length) {
+            this.seleccionarSeccion(siguienteSeccion);
+        }
+    }
+
+    private combinarInternaciones(prestaciones: any[], resumenes: any[]): any[] {
+        const prestacionesList = prestaciones || [];
+        const idsPrestacion = prestacionesList.map(prestacion => String(prestacion.id || prestacion._id));
+        const resumenesSinPrestacion = (resumenes || []).filter(resumen => {
+            if (!moment(resumen.fechaIngreso).isSameOrAfter(this.fechaDesdeInternacion)) {
+                return false;
+            }
+            const idResumen = String(resumen.id || resumen._id);
+            const idPrestacion = resumen.idPrestacion ? String(resumen.idPrestacion) : null;
+            return idsPrestacion.indexOf(idResumen) === -1 &&
+                (!idPrestacion || idsPrestacion.indexOf(idPrestacion) === -1);
+        });
+
+        return [...prestacionesList, ...resumenesSinPrestacion.map(resumen => this.resumenToPrestacion(resumen))];
+    }
+
+    private resumenToPrestacion(resumen: any): any {
+        const registros: any[] = [
+            { valor: { informeIngreso: { fechaIngreso: resumen.fechaIngreso } } }
+        ];
+        if (resumen.fechaEgreso) {
+            registros.push({
+                valor: {
+                    InformeEgreso: {
+                        fechaEgreso: resumen.fechaEgreso,
+                        tipoEgreso: { nombre: resumen.tipo_egreso || '' }
+                    }
+                }
+            });
+        }
+        return {
+            id: resumen.id || resumen._id,
+            capa: 'medica',
+            organizacion: resumen.organizacion,
+            unidadOrganizativa: null,
+            ejecucion: {
+                organizacion: resumen.organizacion,
+                registros
+            }
+        };
     }
 
     /**
@@ -188,23 +290,5 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
             registro.data?.prestacion?.snomed?.term;
         const isGuardia = term && term.toLowerCase().includes('emergencia');
         return isGuardia;
-    }
-
-    get historialIndex() {
-        let index = 2; // 0: Accesos, 1: Registros
-
-        if (this.internacionesLength > 0) {
-            index++;
-        }
-        return index;
-    }
-
-    cambioTabResumen(index: number) {
-        this.activeIndexResumen = index;
-        if (index === 1) {
-            this.tabsCargadas.registros = true;
-        } else if (index === this.historialIndex) {
-            this.tabsCargadas.historial = true;
-        }
     }
 }
