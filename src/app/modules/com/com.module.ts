@@ -26,6 +26,7 @@ import { ComPuntoInicioComponent } from './components/punto-inicio.component';
 import { TipoTrasladoComponent } from './components/tipo-traslado/tipo-traslado';
 import { PuntoInicioService } from 'src/app/services/puntoInicio/punto-inicio.service';
 import { AndesAppSharedModule } from 'src/app/shared/andes-app-shared.module';
+import { CITASLibModule } from 'src/app/components/turnos/citas.module';
 
 
 export const COM_COMPONENTS = [
@@ -62,7 +63,8 @@ export const COM_PROVIDERS = [
         DirectiveLibModule,
         ElementosRUPModule,
         SemaforoModule,
-        AndesAppSharedModule
+        AndesAppSharedModule,
+        CITASLibModule
     ],
     declarations: [
         ...COM_COMPONENTS

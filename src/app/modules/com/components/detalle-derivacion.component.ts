@@ -2,6 +2,8 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { FILE_EXT, IMAGENES_EXT } from '@andes/shared';
 import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { DocumentosService } from 'src/app/services/documentos.service';
@@ -10,6 +12,8 @@ import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { AdjuntosService } from '../../rup/services/adjuntos.service';
 import { PrestacionesService } from '../../rup/services/prestaciones.service';
 import { DerivacionesService } from './../../../services/com/derivaciones.service';
+import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
 @Component({
     selector: 'detalle-derivacion',
@@ -49,6 +53,11 @@ export class DetalleDerivacionComponent implements OnInit {
     set derivacion(value) {
         this._derivacion = value;
         this.dispositivo = value.dispositivo;
+        this.financiador = value.paciente?.obraSocial || null;
+        this.financiadorActual = this.financiador;
+        if (value?.paciente?.id) {
+            this.pacienteService.getById(value.paciente.id).subscribe((pac: any) => this.paciente = pac);
+        }
         this.adjuntosService.generateToken().subscribe((data: any) => {
             this.fileToken = data.token;
             this.reglaSeleccionada = {};
@@ -85,6 +94,10 @@ export class DetalleDerivacionComponent implements OnInit {
     public esCOM = false;
     public organizacionCOM = null;
     requestInProgress;
+    public puedeVerHuds = false;
+    public financiador;
+    public financiadorActual;
+    public paciente: any;
 
     constructor(
         private servicioPrestacion: PrestacionesService,
@@ -96,11 +109,14 @@ export class DetalleDerivacionComponent implements OnInit {
         public driveService: DriveService,
         private adjuntosService: AdjuntosService,
         private documentosService: DocumentosService,
-        public router: Router
+        public router: Router,
+        private motivoAccesoService: ModalMotivoAccesoHudsService,
+        private pacienteService: PacienteService
     ) { }
 
     ngOnInit() {
         this.extensions = this.extensions.concat(this.imagenes);
+        this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
         this.getOrganizacionesDerivables();
     }
 
@@ -120,6 +136,12 @@ export class DetalleDerivacionComponent implements OnInit {
             prioridad: this.derivacion.prioridad || 'baja',
             observacion: ''
         };
+
+        this.financiador = this.derivacion.paciente?.obraSocial || null;
+        this.financiadorActual = this.financiador;
+        if (this.derivacion.paciente?.id) {
+            this.pacienteService.getById(this.derivacion.paciente.id).subscribe({ next: (pac: any) => this.paciente = pac });
+        }
 
         this.organizacionService.getById(this.auth.organizacion.id).subscribe(org => {
             if (org.esCOM) {
@@ -204,6 +226,9 @@ export class DetalleDerivacionComponent implements OnInit {
 
     enviar() {
         this.derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
+        if (this.huboCambioObraSocial()) {
+            this.nuevoEstado.obraSocial = this.financiador?.nombre === 'Sin obra social' ? null : this.financiador;
+        }
         const body: any = {
             estado: this.nuevoEstado,
             trasladoEspecial: {
@@ -212,7 +237,9 @@ export class DetalleDerivacionComponent implements OnInit {
             }
         };
 
-        this.derivacionService.updateHistorial(this.derivacion._id, body, { showError: false }).subscribe({
+        this.actualizarObraSocialPaciente().pipe(
+            switchMap(() => this.derivacionService.updateHistorial(this.derivacion._id, body, { showError: false }))
+        ).subscribe({
             next: () => {
                 this.plex.toast('success', 'La derivación fue actualizada exitosamente');
                 this.returnDetalle.emit(true);
@@ -223,7 +250,6 @@ export class DetalleDerivacionComponent implements OnInit {
         });
     }
 
-    // Adjuntar archivo
     onUpload($event) {
         if ($event.status === 200) {
             this.adjuntosEstado.push({
@@ -264,5 +290,51 @@ export class DetalleDerivacionComponent implements OnInit {
 
     cerrar() {
         this.returnDetalle.emit(false);
+    }
+
+    showMotivoAcceso() {
+        this.motivoAccesoService.showMotivos(this.derivacion.paciente).subscribe(motivo => {
+            if (motivo) {
+                this.router.navigate(['/huds/paciente/', this.derivacion.paciente.id], { queryParams: { origen: 'com' } });
+            }
+        });
+    }
+
+    setFinanciador(financiador) {
+        this.financiador = financiador;
+    }
+
+    private huboCambioObraSocial(): boolean {
+        const origen = this.financiadorActual || this.derivacion.paciente?.obraSocial || null;
+        return JSON.stringify(this.financiador || null) !== JSON.stringify(origen || null);
+    }
+
+    // Persiste en MPI el cambio de cobertura hecho desde el detalle de la derivación.
+    private actualizarObraSocialPaciente(): Observable<any> {
+        if (!this.huboCambioObraSocial() || !this.paciente?.id || this.paciente.fechaFallecimiento) {
+            return of(null);
+        }
+
+        const valorOS = this.financiador?.nombre === 'Sin obra social' ? null : this.financiador;
+        const previo: any[] = this.paciente.financiador ? [...this.paciente.financiador] : [];
+        const financiadores = valorOS ? [...previo] : previo.filter(f => f?.origen !== 'ANDES');
+        if (valorOS) {
+            const idx = financiadores.findIndex(f => this.nombreFinanciador(f) === this.nombreFinanciador(valorOS));
+            const actualizado = { ...(idx === -1 ? {} : financiadores[idx]), ...valorOS, fechaDeActualizacion: new Date() };
+            if (idx !== -1) {
+                financiadores.splice(idx, 1);
+            }
+            financiadores.unshift(actualizado);
+        }
+
+        if (JSON.stringify(financiadores) === JSON.stringify(previo) && valorOS) {
+            return of(null);
+        }
+
+        return this.pacienteService.patch(this.paciente.id, { financiador: financiadores, obraSocial: valorOS });
+    }
+
+    private nombreFinanciador(financiador): string {
+        return (financiador?.nombre || financiador?.financiador || '').toString().trim().toLowerCase();
     }
 }
