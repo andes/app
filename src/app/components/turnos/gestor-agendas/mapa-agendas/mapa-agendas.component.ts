@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ServicioIntermedioService } from 'src/app/modules/rup/services/servicio-intermedio.service';
 import { ITurno } from 'src/app/interfaces/turnos/ITurno';
+import { SlotSeleccionado } from './dar-turno-slot/dar-turno-slot.interface';
 import { MapaAgendasService } from './mapa-agendas.service';
 import { NotaAgendaService } from './nota-agenda.service';
 
@@ -14,7 +15,10 @@ import { NotaAgendaService } from './nota-agenda.service';
 })
 export class MapaAgendasComponent implements OnInit {
 
-    public accion: string;
+    public accion: 'verDetalle' | 'nota' | 'turno' | null;
+    public slot: SlotSeleccionado = null;
+    public puedeDarTurno = false;
+    public prestacionesTurnos: string[] = [];
     public modulo: string;
     public agendas_dia;
     public dia;
@@ -45,6 +49,8 @@ export class MapaAgendasComponent implements OnInit {
 
     ngOnInit() {
         this.modulo = this.activeRoute.snapshot.data.modulo;
+        this.prestacionesTurnos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
+        this.puedeDarTurno = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
         let serviciosPermisos = [];
         if (this.modulo === 'rup') {
             this.mapaAgendasService.setPermisos('rup:tipoPrestacion:?');
@@ -85,6 +91,7 @@ export class MapaAgendasComponent implements OnInit {
             return;
         }
         this.accion = null;
+        this.slot = null;
         this.servicioIntermedio = servicio || null;
         this.mapaAgendasService.setServicioIntermedio(this.servicioIntermedio);
         this.mapaAgendasService.cargarAgendasMes(this.diaInicio);
@@ -94,6 +101,7 @@ export class MapaAgendasComponent implements OnInit {
     visualizarSemana(semana) {
 
         this.accion = null;
+        this.slot = null;
         const diaSema = semana.find(dia => !dia.estado);
         this.verSemana = true;
         this.verMes = false;
@@ -142,11 +150,22 @@ export class MapaAgendasComponent implements OnInit {
 
     close() {
         this.accion = null;
+        this.slot = null;
         this.notaErrores = [];
     }
 
     etiquetaPrestacionTurno(turno: ITurno) {
         return this.mapaAgendasService.etiquetaPrestacionTurno(turno);
+    }
+
+    onSlotSeleccionado(slot: SlotSeleccionado) {
+        this.slot = slot;
+        this.accion = 'turno';
+    }
+
+    turnoGuardado() {
+        this.close();
+        this.mapaAgendasService.cargarAgendasMes(this.diaInicio);
     }
 
     nuevaNota(horario?: { fecha?: Date; horaInicio?: Date; horaFin?: Date }) {

@@ -75,7 +75,7 @@ $mapa-agenda-mes-fila-altura: 6rem;
         border-top: 1px dotted $mapa-agenda-grid-line;
     }
 
-    &.crear-nota-slot .slot {
+    &.slot-clickeable .slot {
         cursor: pointer;
     }
 

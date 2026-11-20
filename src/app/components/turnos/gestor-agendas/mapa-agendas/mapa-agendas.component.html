@@ -1,5 +1,5 @@
 <plex-layout
-    [main]="(accion === 'verDetalle' || (accion === 'nota' && modulo === 'rup' && mostrarFiltroServicio)) ? 9 : 12">
+    [main]="accion === 'turno' ? 8 : (accion === 'verDetalle' || (accion === 'nota' && modulo === 'rup' && mostrarFiltroServicio)) ? 9 : 12">
     <plex-layout-main>
         <plex-title main titulo="CALENDARIO DE TURNOS">
             <plex-button class="ml-2 mr-2" type="info" size="sm" label="Mes" (click)="visualizarMes()"
@@ -28,7 +28,7 @@
         </mapa-agenda-mes>
 
         <mapa-agenda-semana *ngIf="verSemana" (diaDetalle)="turnos($event)" (notaDetalle)="verNota($event)"
-            (notaNueva)="nuevaNota($event)" [crearNotaEnSlot]="modulo === 'rup' && mostrarFiltroServicio"
+            (slotSeleccionado)="onSlotSeleccionado($event)" [slotClickeable]="puedeDarTurno"
             [fecha]="diaInicio">
         </mapa-agenda-semana>
 
@@ -264,6 +264,12 @@
             <plex-text label="Texto" name="texto" multiline="true" [(ngModel)]="notaForm.texto" [required]="true">
             </plex-text>
         </form>
+    </plex-layout-sidebar>
+
+    <plex-layout-sidebar *ngIf="accion === 'turno' && verSemana && slot" type="invert">
+        <dar-turno-slot [slot]="slot" [servicioIntermedio]="servicioIntermedio"
+            [prestacionesTurnos]="prestacionesTurnos" (cerrar)="close()" (guardado)="turnoGuardado()">
+        </dar-turno-slot>
     </plex-layout-sidebar>
 
 </plex-layout>

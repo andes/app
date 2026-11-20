@@ -26,7 +26,7 @@ export class ServiciosIntermedioCreateUpdateComponent implements OnInit, OnDestr
 
     readonly conceptoSnomedExpression = SNOMED_PROCEDURE_ROOT_ECL;
     /** Convención TM/RUP: permisos de prestaciones turneables (ver plan crud-servicio-intermedio). */
-    readonly tmPrestacionesPerm = 'rup:tipoPrestacion:?';
+    readonly tmPrestacionesPerm = '';
 
     /** Sin `plSort` en la vista: orden fijo API; `sorteable` en false evita cabeceras clicables vacías. */
     readonly previewColumns = [

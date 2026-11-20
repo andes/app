@@ -1,0 +1,208 @@
+<plex-title titulo="Dar turno" size="md">
+    <plex-button size="sm" class="mr-1" type="danger" icon="close" tooltip="Cerrar" (click)="cerrarFlujo()">
+    </plex-button>
+</plex-title>
+
+<!-- ══════════════ PACIENTE (sin elegir) ══════════════ -->
+<ng-container *ngIf="!paciente">
+    <plex-title titulo="Paciente" size="sm"></plex-title>
+    <paciente-busqueda (searchEnd)="searchEnd($event)" (selected)="onPaciente($event)" offset="110">
+    </paciente-busqueda>
+</ng-container>
+
+<!-- ══════════════ PACIENTE ELEGIDO, SIN AGENDA TODAVÍA ══════════════ -->
+<ng-container *ngIf="paciente && !agenda">
+    <plex-title titulo="Paciente" size="sm"></plex-title>
+    <paciente-detalle [paciente]="paciente" orientacion="horizontal" [fields]="pacienteFields">
+    </paciente-detalle>
+    <plex-button size="sm" class="mt-2" type="primary" label="Cambiar paciente" (click)="cambiarPaciente()">
+    </plex-button>
+
+    <plex-loader *ngIf="cargandoAgendas || cargandoAgenda" class="mt-3" type="ball-pulse"></plex-loader>
+
+    <p *ngIf="!cargandoAgendas && !cargandoAgenda && !agendas?.length" class="mt-3 mb-3">
+        {{ agendasVaciasPorPermisos
+            ? 'No hay agendas para las prestaciones habilitadas en ese horario'
+            : 'No hay agendas con turnos disponibles en ese horario' }}
+    </p>
+</ng-container>
+
+<!-- ══════════════ SELECTOR DE AGENDA + HORARIOS + CAMPOS ══════════════ -->
+<ng-container *ngIf="paciente && agenda">
+    <plex-label *ngIf="slot" class="mb-2" size="sm"
+        subtitulo="Horario del mapa: {{ slot.horaInicio | date: 'HH:mm' }} - {{ slot.horaFin | date: 'HH:mm' }} del {{ slot.horaInicio | date: 'dd/MM/yyyy' }}">
+    </plex-label>
+
+    <!-- ── Selector de agenda ── -->
+    <div class="contenedor-slider">
+        <plex-button align="middle" class="btn-prev" size="sm" type="primary" tooltip="Agenda anterior"
+            tooltipPosition="right" [disabled]="!hayAnterior" (click)="anterior()">
+            <plex-icon justify="center" size="md" name="pico-izquierda"></plex-icon>
+        </plex-button>
+
+        <div class="contenido-agenda">
+            <plex-grid type="full" cols="2" justify="start">
+                <plex-badge type="info">AGENDA {{ indice + 1 }} / {{ agendas.length }}</plex-badge>
+                <plex-badge type="warning" class="mx-1" tooltipPosition="top"
+                    tooltip="Turnos libres en este horario">{{ totalTurnosEnSlot }}
+                    <plex-icon name="calendario-fecha" size="md"></plex-icon>
+                </plex-badge>
+                <plex-badge *ngIf="agenda.link" type="info" tooltipPosition="top" tooltip="Agenda Virtual">
+                    <plex-icon name="monitor" size="md"></plex-icon>
+                </plex-badge>
+                <plex-badge *ngIf="condicionLlave" type="info">Con llave</plex-badge>
+                <plex-help titulo="" subtitulo="" type="help" size="sm" icon="information-variant">
+                    <plex-label size="md" titulo="Prestación"
+                        subtitulo="{{ agenda.tipoPrestaciones | enumerar:['term'] }}">
+                    </plex-label>
+                    <plex-label *ngIf="agenda.profesionales?.length" size="md" titulo="Equipo de Salud"
+                        subtitulo="{{ agenda.profesionales | enumerar:['apellido','nombre'] }}">
+                    </plex-label>
+                    <plex-label *ngIf="!agenda.profesionales?.length" size="md" titulo="Equipo de Salud"
+                        subtitulo="Equipo de Salud no asignado">
+                    </plex-label>
+                    <plex-label *ngIf="agenda.espacioFisico" size="md" titulo="Espacio Físico"
+                        subtitulo="{{ agenda | espacioFisico }}">
+                    </plex-label>
+                    <plex-label *ngIf="!agenda.espacioFisico" size="md" titulo="Espacio Físico"
+                        subtitulo="Espacio físico no asignado">
+                    </plex-label>
+                    <plex-label size="md" titulo="Tipo de turno" subtitulo="{{ tipoTurnoTexto }}"></plex-label>
+                </plex-help>
+            </plex-grid>
+
+            <plex-grid type="full" justify="start">
+                <plex-grid type="full" cols="2" justify="center">
+                    <plex-label size="md" case="capitalize"
+                        titulo="{{ agenda.horaInicio | date: 'EEEE d/M/yyyy' }}"
+                        subtitulo="{{ agenda.horaInicio | date: 'HH:mm' }} - {{ agenda.horaFin | date: 'HH:mm' }}hs">
+                    </plex-label>
+                    <plex-grid class="m-0" type="full" justify="center">
+                        <plex-label size="md" titulo="Prestación"
+                            subtitulo="{{ agenda.tipoPrestaciones | enumerar:['term'] }}">
+                        </plex-label>
+                        <plex-badge type="info">{{ tipoTurnoTexto }}</plex-badge>
+                    </plex-grid>
+                </plex-grid>
+            </plex-grid>
+        </div>
+
+        <plex-button align="middle" class="btn-next" size="sm" type="primary" tooltip="Agenda siguiente"
+            tooltipPosition="left" [disabled]="!haySiguiente" (click)="siguiente()">
+            <plex-icon justify="center" size="md" name="pico-derecha"></plex-icon>
+        </plex-button>
+    </div>
+
+    <!-- ── Paciente compacto ── -->
+    <paciente-detalle [paciente]="paciente" orientacion="horizontal" size="xs" [fields]="pacienteFields">
+    </paciente-detalle>
+    <plex-button size="sm" class="mt-2 mb-2" type="primary" label="Cambiar paciente" (click)="cambiarPaciente()">
+    </plex-button>
+
+    <!-- ── Contadores por bloque ── -->
+    <ng-container *ngIf="hayTurnosVisibles">
+        <plex-title size="sm" titulo="Turnos disponibles para este bloque"></plex-title>
+        <plex-grid class="turnos_disponibles mb-3" *ngFor="let bloque of bloques; let indice = index" responsive
+            type="full" cols="4">
+            <plex-label align="center" size="md" titulo="Del día" subtitulo="{{ contadores[indice]?.delDia }}">
+            </plex-label>
+            <plex-label align="center" size="md" titulo="Programados" subtitulo="{{ contadores[indice]?.programado }}">
+            </plex-label>
+            <plex-label align="center" size="md" titulo="Con llave" subtitulo="{{ contadores[indice]?.gestion }}">
+            </plex-label>
+            <plex-label align="center" size="md" titulo="Profesional" subtitulo="{{ contadores[indice]?.profesional }}">
+            </plex-label>
+        </plex-grid>
+    </ng-container>
+
+    <!-- ── Selección de horario ── -->
+    <plex-title titulo="Selección horario" size="sm">
+        <plex-bool *ngIf="mostrarTurnoTelefonico()" class="mr-2" label="Turno telefónico" name="turnoTelefonico"
+            [ngModel]="modelo?.turnoTelefonico" (ngModelChange)="onTurnoTelefonicoChange($event)">
+        </plex-bool>
+    </plex-title>
+
+    <p *ngIf="!hayTurnosVisibles" class="mb-3">
+        No hay turnos disponibles en esta agenda para el horario elegido.
+    </p>
+
+    <ng-container *ngFor="let bloque of bloques; let indice = index">
+        <div class="listado-turnos mb-4" *ngIf="tieneTurnos(bloque)">
+            <plex-label *ngIf="!bloque.descripcion" titulo="Descripción: -"></plex-label>
+            <plex-label *ngIf="bloque.descripcion" titulo="Descripción: {{ bloque.descripcion }}"></plex-label>
+
+            <plex-grid type="full" size="sm">
+                <plex-card type="dark" mode="filled" size="xs" *ngFor="let turno of bloque.turnos; let i = index"
+                    [selectable]="turno.estado === 'disponible'" [selected]="esSeleccionado(bloque, turno)"
+                    (click)="elegirTurno(bloque, indiceEnAgenda(bloque), turno, i)" [ngClass]="{
+                        'disabled': turno.estado !== 'disponible',
+                        'en-slot': turnoEnSlot(bloque, turno)
+                    }">
+                    <plex-label size="md" direction="column" titulo="{{ turno.horaInicio | date: 'HH:mm' }}hs"
+                        [attr.aria-label]="turno.estado !== 'disponible' ? 'turno no disponible' : null">
+                    </plex-label>
+                </plex-card>
+            </plex-grid>
+        </div>
+    </ng-container>
+
+    <!-- ── Videollamada ── -->
+    <div *ngIf="modelo?.tipoPrestacion?.videoConferencia" class="d-flex align-items-center mb-4 p-2 border rounded">
+        <plex-bool label="¿Realizar atención por Videollamada?" name="videoConferencia" type="slide"
+            [ngModel]="modelo?.videoConferencia" (ngModelChange)="onVideoConferenciaChange($event)">
+        </plex-bool>
+    </div>
+
+    <!-- ── Cobertura social ── -->
+    <div class="mb-4">
+        <plex-title titulo="Cobertura Social" size="sm"></plex-title>
+        <plex-grid type="auto" size="md" cols="1">
+            <seleccionar-financiador [paciente]="paciente" (setFinanciador)="onFinanciador($event)">
+            </seleccionar-financiador>
+        </plex-grid>
+    </div>
+
+    <!-- ── Información adicional ── -->
+    <ng-container *ngIf="seleccion">
+        <plex-title titulo="Información Adicional" size="sm"></plex-title>
+
+        <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" [ngModel]="modelo?.motivoConsulta"
+            (ngModelChange)="onMotivoConsultaChange($event)">
+        </plex-text>
+
+        <plex-grid type="auto" size="md" cols="1">
+            <plex-phone label="Celular" name="telefono" [ngModel]="modelo?.telefono"
+                (ngModelChange)="onTelefonoChange($event)">
+            </plex-phone>
+        </plex-grid>
+
+        <plex-select *ngIf="mostrarSelectTipoPrestacion" label="Tipo de prestación" name="turnoTipoPrestacion"
+            [ngModel]="modelo?.tipoPrestacion" (ngModelChange)="onTipoPrestacionChange($event)"
+            [data]="tiposPrestacionDisponibles">
+        </plex-select>
+
+        <plex-select *ngIf="mostrarSelectProcedimiento" label="Procedimiento" name="turnoProcedimiento"
+            [ngModel]="modelo?.procedimiento" (ngModelChange)="onProcedimientoChange($event)"
+            [data]="procedimientosOpciones" idField="conceptId" labelField="term">
+        </plex-select>
+
+        <plex-text label="Nota" name="nota" [ngModel]="modelo?.nota" (ngModelChange)="onNotaChange($event)">
+        </plex-text>
+
+        <plex-text *ngIf="agenda?.link" label="Link" name="link" [ngModel]="modelo?.link"
+            (ngModelChange)="onLinkChange($event)">
+        </plex-text>
+    </ng-container>
+
+    <!-- ── Errores ── -->
+    <div *ngIf="errores.length" role="alert" class="mt-3">
+        <div *ngFor="let error of errores" class="alert alert-warning" role="alert">
+            <plex-icon name="alert" size="md"></plex-icon> {{ error }}
+        </div>
+    </div>
+
+    <!-- ── Confirmar ── -->
+    <plex-button *ngIf="seleccion" class="mt-1" justify="end" label="Confirmar" type="success"
+        [disabled]="!puedeConfirmar" (click)="confirmar()">
+    </plex-button>
+</ng-container>

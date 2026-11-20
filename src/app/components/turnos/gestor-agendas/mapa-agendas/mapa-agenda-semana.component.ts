@@ -1,6 +1,7 @@
 import moment from 'moment';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { SlotSeleccionado } from './dar-turno-slot/dar-turno-slot.interface';
 import { MapaAgendasService } from './mapa-agendas.service';
 
 @Component({
@@ -20,8 +21,8 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
     public semanaSeleccionada;
     @Output() diaDetalle = new EventEmitter<any>();
     @Output() notaDetalle = new EventEmitter<any>();
-    @Output() notaNueva = new EventEmitter<{ fecha: Date; horaInicio: Date; horaFin: Date }>();
-    @Input() crearNotaEnSlot = false;
+    @Output() slotSeleccionado = new EventEmitter<SlotSeleccionado>();
+    @Input() slotClickeable = false;
     calendario: any;
     @Input()
     set fecha(value: any) {
@@ -332,7 +333,7 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
     }
 
     slotClick(indiceDia: number, indiceFila: number) {
-        if (!this.crearNotaEnSlot) {
+        if (!this.slotClickeable) {
             return;
         }
         const dia = this.semana[indiceDia];
@@ -348,7 +349,7 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
             .add(minutos, 'minutes')
             .toDate();
         const horaFin = moment(horaInicio).add(this.intervalo, 'minutes').toDate();
-        this.notaNueva.emit({
+        this.slotSeleccionado.emit({
             fecha: moment(dia.fecha).startOf('day').toDate(),
             horaInicio,
             horaFin
