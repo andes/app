@@ -12,68 +12,94 @@
             </div>
 
             <ng-template #resumenDetalle>
-                <rup-resumenPaciente-estatico [paciente]="paciente" esTab="true" [enHuds]="true"
-                                              (irATrastornos)="huds.filtroBuscador('hallazgo')">
-                </rup-resumenPaciente-estatico>
+                <ng-container *ngIf="paciente?.edad >= 7; else resumenPediatrico">
+                    <rup-resumenPaciente-estatico [paciente]="paciente" esTab="true" [enHuds]="true"
+                                                  (irATrastornos)="huds.filtroBuscador('hallazgo')">
+                    </rup-resumenPaciente-estatico>
 
-                <div class="huds-detail d-flex mt-2">
-                    <div class="huds-rail d-flex flex-column">
-                        <button type="button" class="huds-rail-control" aria-label="Sección anterior"
-                                [disabled]="indiceSeccion === 0"
-                                (click)="moverSeccion(-1)">
-                            <plex-icon name="chevron-up" size="sm" type="dark"></plex-icon>
-                        </button>
-                        <div class="huds-rail-items d-flex flex-column">
-                            <div #hudsRailItem class="huds-rail-item" *ngFor="let opcion of hudsOpciones; let i = index"
-                                 [class.active]="indiceSeccion === i" (click)="seleccionarSeccion(i)">
-                                <plex-icon [name]="opcion.icon" size="lg" type="dark" tooltip="{{ opcion.tooltip }}"
-                                           tooltipPosition="right"></plex-icon>
+                    <div class="huds-detail d-flex mt-2">
+                        <div class="huds-rail d-flex flex-column">
+                            <button type="button" class="huds-rail-control" aria-label="Sección anterior"
+                                    [disabled]="indiceSeccion === 0" (click)="moverSeccion(-1)">
+                                <plex-icon name="chevron-up" size="sm" type="dark"></plex-icon>
+                            </button>
+                            <div class="huds-rail-items d-flex flex-column">
+                                <div #hudsRailItem class="huds-rail-item"
+                                     *ngFor="let opcion of hudsOpciones; let i = index"
+                                     [class.active]="indiceSeccion === i" (click)="seleccionarSeccion(i)">
+                                    <plex-icon [name]="opcion.icon" size="lg" type="dark" tooltip="{{ opcion.tooltip }}"
+                                               tooltipPosition="right"></plex-icon>
+                                </div>
                             </div>
+                            <button type="button" class="huds-rail-control" aria-label="Sección siguiente"
+                                    [disabled]="indiceSeccion === hudsOpciones.length - 1" (click)="moverSeccion(1)">
+                                <plex-icon name="chevron-down" size="sm" type="dark"></plex-icon>
+                            </button>
                         </div>
-                        <button type="button" class="huds-rail-control" aria-label="Sección siguiente"
-                                [disabled]="indiceSeccion === hudsOpciones.length - 1"
-                                (click)="moverSeccion(1)">
-                            <plex-icon name="chevron-down" size="sm" type="dark"></plex-icon>
-                        </button>
-                    </div>
-                    <div class="flex-fill">
-                        <ng-container [ngSwitch]="indiceSeccion">
-                            <huds-seccion-situaciones-salud *ngSwitchCase="0" [paciente]="paciente">
-                            </huds-seccion-situaciones-salud>
-                            <huds-antecedentes-personales *ngSwitchCase="1"
-                                                          [paciente]="paciente"></huds-antecedentes-personales>
-                            <huds-antecedentes-familiares *ngSwitchCase="2"
-                                                          [paciente]="paciente"></huds-antecedentes-familiares>
-                            <huds-signos-vitales *ngSwitchCase="3" [paciente]="paciente"></huds-signos-vitales>
-                            <vista-accesos-huds *ngSwitchCase="4" [paciente]="paciente"></vista-accesos-huds>
-                            <ng-container *ngSwitchCase="5">
-                                <ng-container *ngIf="permisoHudsCompleta">
-                                    <ng-container *ngIf="internacione$ | async as internaciones">
-                                        <plex-title titulo="Internaciones" size="sm"></plex-title>
+                        <div class="flex-fill">
+                            <ng-container [ngSwitch]="indiceSeccion">
+                                <huds-seccion-situaciones-salud *ngSwitchCase="0" [paciente]="paciente">
+                                </huds-seccion-situaciones-salud>
+                                <huds-antecedentes-personales *ngSwitchCase="1"
+                                                              [paciente]="paciente"></huds-antecedentes-personales>
+                                <huds-antecedentes-familiares *ngSwitchCase="2"
+                                                              [paciente]="paciente"></huds-antecedentes-familiares>
+                                <huds-signos-vitales *ngSwitchCase="3" [paciente]="paciente"></huds-signos-vitales>
+                                <vista-accesos-huds *ngSwitchCase="4" [paciente]="paciente"></vista-accesos-huds>
+                                <ng-container *ngSwitchCase="5">
+                                    <ng-container *ngIf="permisoHudsCompleta">
+                                        <ng-container *ngIf="internacione$ | async as internaciones">
+                                            <plex-title titulo="Internación" size="sm"></plex-title>
 
-                                        <listado-internacion-huds *ngIf="internaciones.length; else sinInternaciones"
-                                                                  [internaciones]="internaciones">
-                                        </listado-internacion-huds>
-                                        <ng-template #sinInternaciones>
-                                            <div class="mt-5">
-
-                                                <plex-label class="flex-column" icon="camilla" type="info"
-                                                            justify="center" size="xl" direction="column"
-                                                            titulo="El paciente no tiene internaciones registradas">
-                                                </plex-label>
-                                            </div>
-                                        </ng-template>
+                                            <listado-internacion-huds *ngIf="internaciones.length; else sinInternaciones"
+                                                                      [internaciones]="internaciones">
+                                            </listado-internacion-huds>
+                                            <ng-template #sinInternaciones>
+                                                <div class="mt-5">
+                                                    <plex-label class="flex-column" icon="camilla" type="info"
+                                                                justify="center" size="xl" direction="column"
+                                                                titulo="El paciente no tiene internaciones registradas">
+                                                    </plex-label>
+                                                </div>
+                                            </ng-template>
+                                        </ng-container>
                                     </ng-container>
                                 </ng-container>
+                                <historial-turnos *ngSwitchCase="6" [paciente]="paciente"
+                                                  [fill]="true"></historial-turnos>
                             </ng-container>
-                            <historial-turnos *ngSwitchCase="6" [paciente]="paciente" [fill]="true"></historial-turnos>
-                        </ng-container>
+                        </div>
                     </div>
-                </div>
+                </ng-container>
+                <ng-template #resumenPediatrico>
+                    <rup-resumenPaciente-estatico [paciente]="paciente" esTab="true">
+                    </rup-resumenPaciente-estatico>
+
+                    <plex-tabs [activeIndex]="activeIndexResumen" (change)="cambioTabResumen($event)">
+                        <plex-tab label="Accesos a la HUDS" [allowClose]="false">
+                            <vista-accesos-huds [paciente]="paciente"></vista-accesos-huds>
+                        </plex-tab>
+                        <plex-tab label="Registros del Paciente">
+                            <rup-resumenPaciente-dinamico-nino *ngIf="tabsCargadas.registros" [paciente]="paciente"
+                                                               esTab="true">
+                            </rup-resumenPaciente-dinamico-nino>
+                        </plex-tab>
+                        <ng-container *ngIf="internacione$ | async as internaciones">
+                            <plex-tab *ngIf="internaciones.length" label="Listado Internacion" [allowClose]="false">
+                                <listado-internacion-huds [internaciones]="internaciones">
+                                </listado-internacion-huds>
+                            </plex-tab>
+                        </ng-container>
+                        <plex-tab *ngIf="permisoHudsCompleta" label="Historial de turnos" [allowClose]="false">
+                            <historial-turnos *ngIf="tabsCargadas.historial" [paciente]="paciente">
+                            </historial-turnos>
+                        </plex-tab>
+                    </plex-tabs>
+                </ng-template>
             </ng-template>
 
             <plex-tabs (close)="onCloseTab($event)" (change)="onChangeTab($event)" [activeIndex]="activeIndexPrestacion"
-                       *ngIf="indice > 0">
+                       *ngIf="indice > 0 || !(paciente?.edad >= 7)">
                 <plex-tab label="Resumen del Paciente" [allowClose]="false"></plex-tab>
 
                 <ng-container *ngFor="let registro of registros">

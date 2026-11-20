@@ -28,6 +28,11 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
 
     public paciente: IPaciente = null;
     public activeIndexPrestacion = 0;
+    public activeIndexResumen = 0;
+    public tabsCargadas = {
+        registros: false,
+        historial: false
+    };
     public internacione$: Observable<any[]>;
     public registros = [];
     public indice = 0;
@@ -177,6 +182,15 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     public onChangeTab(index: number) {
         if (index >= 0 && index <= this.registros.length) {
             this.activeIndexPrestacion = index;
+        }
+    }
+
+    public cambioTabResumen(index: number) {
+        this.activeIndexResumen = index;
+        if (index === 1) {
+            this.tabsCargadas.registros = true;
+        } else if (index >= 2) {
+            this.tabsCargadas.historial = true;
         }
     }
 
