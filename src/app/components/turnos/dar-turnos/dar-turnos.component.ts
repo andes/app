@@ -185,8 +185,8 @@ export class DarTurnosComponent implements OnInit {
     carpetaEfector: any;
     obraSocialPaciente: IObraSocial;
     motivoConsulta: string;
-    ambitoOrigen: IAmbitoOrigenOpcion;
-    ambitosOrigen = AMBITOS_ORIGEN;
+    procedencia: IAmbitoOrigenOpcion;
+    procedencias = AMBITOS_ORIGEN;
     showTab = 0;
     equipoSalud;
     prestacionesAlternativa;
@@ -773,7 +773,7 @@ export class DarTurnosComponent implements OnInit {
 
             this.habilitarTurnoDoble();
             this.nota = this.turno.nota;
-            this.ambitoOrigen = null;
+            this.procedencia = null;
             this.videoConferencia = this.turno.videoConferencia;
             this.buscarTurnosFuturos();
         } else {
@@ -1074,7 +1074,7 @@ export class DarTurnosComponent implements OnInit {
             const datosTurno = {
                 nota: this.nota,
                 motivoConsulta: this.motivoConsulta,
-                ambitoOrigen: this.ambitoOrigen?.id,
+                procedencia: this.procedencia?.id,
                 tipoPrestacion: this.turnoTipoPrestacion,
                 paciente: pacienteSave,
                 idAgenda: this.agenda.id,
@@ -1119,7 +1119,7 @@ export class DarTurnosComponent implements OnInit {
                 tipoTurno: this.tiposTurnosSelect,
                 nota: this.nota,
                 motivoConsulta: this.motivoConsulta,
-                ambitoOrigen: this.ambitoOrigen?.id,
+                procedencia: this.procedencia?.id,
                 estadoFacturacion: this.estadoFacturacion,
                 emitidoPor: (this.turnoTelefonico) ? 'turno telefonico' : null,
                 videoConferencia: this.videoConferencia,

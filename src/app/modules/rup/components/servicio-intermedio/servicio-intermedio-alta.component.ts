@@ -15,7 +15,7 @@ export class RUPServicioIntermedioAltaComponent implements OnInit {
 
     @Input() prestacion: IPrestacion;
 
-    @Input() ambitoOrigenInicial: AmbitoOrigen;
+    @Input() procedenciaInicial: AmbitoOrigen;
 
     @Output() cancel = new EventEmitter();
 
@@ -26,8 +26,8 @@ export class RUPServicioIntermedioAltaComponent implements OnInit {
     regla;
 
     prestacionElegida;
-    ambitoOrigen: IAmbitoOrigenOpcion;
-    ambitosOrigen = AMBITOS_ORIGEN;
+    procedencia: IAmbitoOrigenOpcion;
+    procedencias = AMBITOS_ORIGEN;
 
     constructor(
         private prestacionService: PrestacionesService,
@@ -38,8 +38,8 @@ export class RUPServicioIntermedioAltaComponent implements OnInit {
     }
 
     ngOnInit() {
-        const ambitoInicial = this.ambitoOrigenInicial || this.prestacion?.solicitud?.ambitoOrigen || this.turno?.ambitoOrigen;
-        this.ambitoOrigen = this.ambitosOrigen.find(opcion => opcion.id === ambitoInicial);
+        const procedenciaInicial = this.procedenciaInicial || this.prestacion?.solicitud?.procedencia || this.turno?.procedencia;
+        this.procedencia = this.procedencias.find(opcion => opcion.id === procedenciaInicial);
         if (this.prestacion) {
             this.datosSolicitud = this.prestacion.solicitud.registros[0].valor.solicitudPrestacion;
             this.prestacionSolicitada = this.prestacion.solicitud.registros[0].concepto;
@@ -61,12 +61,12 @@ export class RUPServicioIntermedioAltaComponent implements OnInit {
     }
 
     onConfirmar() {
-        this.ejecutarPrestacionPendiente(this.prestacion, this.turno, this.ambitoOrigen?.id).subscribe(() => {
+        this.ejecutarPrestacionPendiente(this.prestacion, this.turno, this.procedencia?.id).subscribe(() => {
             this.prestacionService.navegarAEjecucion(this.prestacion, this.turno);
         });
     }
 
-    ejecutarPrestacionPendiente(prestacion, turno?, ambitoOrigen?: AmbitoOrigen) {
+    ejecutarPrestacionPendiente(prestacion, turno?, procedencia?: AmbitoOrigen) {
         const params: any = {
             op: 'estadoPush',
             ejecucion: {
@@ -79,8 +79,8 @@ export class RUPServicioIntermedioAltaComponent implements OnInit {
             },
             estado: { tipo: 'ejecucion' }
         };
-        if (ambitoOrigen) {
-            params.ambitoOrigen = ambitoOrigen;
+        if (procedencia) {
+            params.procedencia = procedencia;
         }
 
         if (this.prestacionElegida) {

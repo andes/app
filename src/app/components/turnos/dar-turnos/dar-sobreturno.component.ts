@@ -40,8 +40,8 @@ export class DarSobreturnoComponent implements OnChanges {
         prepaga: ''
     };
     public disableGuardar = true;
-    public ambitoOrigen: IAmbitoOrigenOpcion;
-    public ambitosOrigen = AMBITOS_ORIGEN;
+    public procedencia: IAmbitoOrigenOpcion;
+    public procedencias = AMBITOS_ORIGEN;
     turnosFuturos = [];
     modalTurnosRepetidos = false;
 
@@ -243,7 +243,7 @@ export class DarSobreturnoComponent implements OnChanges {
                 tipoPrestacion: this.tipoPrestacion,
                 paciente: pacienteSave,
                 nota: this.nota,
-                ambitoOrigen: this.ambitoOrigen?.id
+                procedencia: this.procedencia?.id
             }
         };
         this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {

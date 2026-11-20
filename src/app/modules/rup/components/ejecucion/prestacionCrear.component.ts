@@ -51,8 +51,8 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
     public tieneAccesoHUDS: boolean;
     public pacienteMas65: boolean;
     public permisoProgramaMas65: boolean;
-    public ambitoOrigen: IAmbitoOrigenOpcion;
-    public ambitosOrigen = AMBITOS_ORIGEN;
+    public procedencia: IAmbitoOrigenOpcion;
+    public procedencias = AMBITOS_ORIGEN;
     /**
      * Indica si muestra el calendario para dar turno autocitado
      */
@@ -94,7 +94,7 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
             this.resultadoBusqueda = null;
             this.paciente = null;
             this.tipoPrestacionSeleccionada = null;
-            this.ambitoOrigen = null;
+            this.procedencia = null;
         }
     }
 
@@ -185,7 +185,7 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
                 },
                 solicitud: {
                     fecha: this.fecha,
-                    ambitoOrigen: this.ambitoOrigen?.id || 'ambulatorio',
+                    procedencia: this.procedencia?.id,
                     tipoPrestacion: conceptoSnomed,
                     // profesional logueado
                     profesional: {

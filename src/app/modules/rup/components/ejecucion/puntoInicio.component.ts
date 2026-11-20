@@ -95,7 +95,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public showSidebar = false;
     public turnoAIniciar: ITurno;
     public prestacionNoNominalizadaAIniciar: any;
-    public ambitoOrigenServicioIntermedio: AmbitoOrigen;
+    public procedenciaServicioIntermedio: AmbitoOrigen;
 
     prestacionPendiente: IPrestacion;
     turno: ITurno;
@@ -440,7 +440,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     iniciarPrestacion(turno) {
         this.turnoAIniciar = turno;
-        this.ambitoOrigenServicioIntermedio = null;
+        this.procedenciaServicioIntermedio = null;
     }
 
     cancelarInicioPrestacion() {
@@ -450,17 +450,18 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     confirmarInicioPrestacion() {
         const turno = this.turnoAIniciar;
-        const ambitoOrigen = turno?.ambitoOrigen;
+        // null (turno sin procedencia) se normaliza a undefined: no se informa
+        const procedencia = turno?.procedencia || undefined;
         if (this.prestacionNoNominalizadaAIniciar) {
-            this.procesarInicioPrestacionNoNominalizada(this.prestacionNoNominalizadaAIniciar, turno, ambitoOrigen);
+            this.procesarInicioPrestacionNoNominalizada(this.prestacionNoNominalizadaAIniciar, turno, procedencia);
         } else {
-            this.procesarInicioPrestacion(turno, ambitoOrigen);
+            this.procesarInicioPrestacion(turno, procedencia);
         }
         this.turnoAIniciar = null;
         this.prestacionNoNominalizadaAIniciar = null;
     }
 
-    private procesarInicioPrestacion(turno, ambitoOrigen: AmbitoOrigen) {
+    private procesarInicioPrestacion(turno, procedencia: AmbitoOrigen) {
         const paciente = turno.paciente;
         const snomedConcept = this.chequearMultiprestacion(turno.tipoPrestacion.conceptId); // llamar a metodo y recorrer prestaciones;
         this.servicioPrestacion.get({
@@ -473,11 +474,11 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 const pretacionPendiente = pendientes[0];
                 this.prestacionPendiente = pretacionPendiente;
                 this.turno = turno;
-                this.ambitoOrigenServicioIntermedio = ambitoOrigen;
+                this.procedenciaServicioIntermedio = procedencia;
             } else {
                 if (pendientes.length) {
                     const pretacionPendiente = pendientes[0];
-                    this.ejecutarPrestacionPendiente(pretacionPendiente, turno, ambitoOrigen).subscribe(() => {
+                    this.ejecutarPrestacionPendiente(pretacionPendiente, turno, procedencia).subscribe(() => {
                         if (this.tieneAccesoHUDS) {
                             const token = this.motivosHudsService.getMotivo('rup-inicio-prestacion').pipe(
                                 switchMap(motivoH => {
@@ -505,7 +506,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
                 } else {
                     const fechaPrestacion = this.agendaSeleccionada.dinamica ? this.servicioPrestacion.getFechaPrestacionTurnoDinamico(turno.horaInicio) : turno.horaInicio;
-                    this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', fechaPrestacion, turno.id, ambitoOrigen).subscribe(nuevaPrestacion => {
+                    this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', fechaPrestacion, turno.id, procedencia).subscribe(nuevaPrestacion => {
                         if (nuevaPrestacion.error) {
                             this.plex.info('info', nuevaPrestacion.error, 'Aviso');
                         }
@@ -575,12 +576,12 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     iniciarPrestacionNoNominalizada(snomedConcept, turno) {
         this.turnoAIniciar = turno;
         this.prestacionNoNominalizadaAIniciar = snomedConcept;
-        this.ambitoOrigenServicioIntermedio = null;
+        this.procedenciaServicioIntermedio = null;
     }
 
-    private procesarInicioPrestacionNoNominalizada(snomedConcept, turno, ambitoOrigen: AmbitoOrigen) {
+    private procesarInicioPrestacionNoNominalizada(snomedConcept, turno, procedencia: AmbitoOrigen) {
         const fechaPrestacion = this.agendaSeleccionada.dinamica ? this.servicioPrestacion.getFechaPrestacionTurnoDinamico(turno.horaInicio) : turno.horaInicio;
-        this.servicioPrestacion.crearPrestacion(null, snomedConcept, 'ejecucion', fechaPrestacion, turno.id, ambitoOrigen).subscribe(prestacion => {
+        this.servicioPrestacion.crearPrestacion(null, snomedConcept, 'ejecucion', fechaPrestacion, turno.id, procedencia).subscribe(prestacion => {
             this.routeTo('ejecucion', prestacion.id);
         }, (err) => {
             if (err === 'ya_iniciada') {
@@ -720,9 +721,10 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         return turno.prestaciones ? turno.prestaciones[0] : null;
     }
 
-    ambitoOrigenDeTurno(turno): string {
+    // Procedencia informada del paciente (prestación primero, luego turno). Null si no se informó.
+    procedenciaDeTurno(turno): string {
         const prestacion = this.chequearPrestacion(turno);
-        return prestacion?.solicitud?.ambitoOrigen || turno?.ambitoOrigen || (prestacion ? 'no informada' : null);
+        return prestacion?.solicitud?.procedencia || turno?.procedencia || null;
     }
 
     chequearEstados(turno, estado) {
@@ -906,7 +908,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     /**
        * Ejecutar una prestacion que esta en estado pendiente
     */
-    ejecutarPrestacionPendiente(prestacion, turno?, ambitoOrigen?: AmbitoOrigen) {
+    ejecutarPrestacionPendiente(prestacion, turno?, procedencia?: AmbitoOrigen) {
         const params: any = {
             op: 'estadoPush',
             ejecucion: {
@@ -916,8 +918,8 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             },
             estado: { tipo: 'ejecucion' }
         };
-        if (ambitoOrigen) {
-            params.ambitoOrigen = ambitoOrigen;
+        if (procedencia) {
+            params.procedencia = procedencia;
         }
 
         return this.servicioPrestacion.patch(prestacion.id, params);
@@ -1010,6 +1012,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     onCancelPrestacion() {
         this.turno = null;
         this.prestacionPendiente = null;
-        this.ambitoOrigenServicioIntermedio = null;
+        this.procedenciaServicioIntermedio = null;
     }
 }

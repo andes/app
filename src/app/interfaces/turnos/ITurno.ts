@@ -48,7 +48,7 @@ export interface ITurno {
         nroCarpeta: string;
     }];
     nota: string;
-    ambitoOrigen?: AmbitoOrigen;
+    procedencia?: AmbitoOrigen;
     motivoSuspension: string;
     avisoSuspension: {
         type: string;

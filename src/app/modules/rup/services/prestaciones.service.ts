@@ -661,8 +661,12 @@ export class PrestacionesService {
         return prestacion as IPrestacion;
     }
 
-    crearPrestacion(paciente: any, snomedConcept: any, momento: string = 'solicitud', fecha: any = new Date(), turno: any = null, ambitoOrigen: AmbitoOrigen = 'ambulatorio'): Observable<any> {
-        const prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, ambitoOrigen, fecha, turno, undefined, []);
+    crearPrestacion(paciente: any, snomedConcept: any, momento: string = 'solicitud', fecha: any = new Date(), turno: any = null, procedencia?: AmbitoOrigen): Observable<any> {
+        const prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, 'ambulatorio', fecha, turno);
+        // Procedencia del paciente: informativa, no cambia solicitud.ambitoOrigen
+        if (procedencia) {
+            prestacion.solicitud.procedencia = procedencia;
+        }
         return this.post(prestacion);
     }
 

@@ -39,7 +39,10 @@ export class IPrestacion {
     };
     // Datos de la solicitud
     solicitud: {
+        // Flujo donde nace la prestación; lo define el sistema
         ambitoOrigen: string;
+        // De dónde viene el paciente; lo informa el usuario (informativo)
+        procedencia?: AmbitoOrigen;
         // Tipo de prestación de ejecutarse
         tipoPrestacion: ISnomedConcept;
         // Tipo de prestación de ejecutarse
