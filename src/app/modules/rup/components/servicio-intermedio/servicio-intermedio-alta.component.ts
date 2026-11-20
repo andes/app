@@ -2,7 +2,7 @@ import { Auth } from '@andes/auth';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ReglaService } from 'src/app/services/top/reglas.service';
 import { ITurno } from '../../../../interfaces/turnos/ITurno';
-import { IPrestacion } from '../../interfaces/prestacion.interface';
+import { AMBITOS_ORIGEN, AmbitoOrigen, IAmbitoOrigenOpcion, IPrestacion } from '../../interfaces/prestacion.interface';
 import { PrestacionesService } from '../../services/prestaciones.service';
 
 @Component({
@@ -15,6 +15,8 @@ export class RUPServicioIntermedioAltaComponent implements OnInit {
 
     @Input() prestacion: IPrestacion;
 
+    @Input() ambitoOrigenInicial: AmbitoOrigen;
+
     @Output() cancel = new EventEmitter();
 
     prestacionSolicitada;
@@ -24,6 +26,8 @@ export class RUPServicioIntermedioAltaComponent implements OnInit {
     regla;
 
     prestacionElegida;
+    ambitoOrigen: IAmbitoOrigenOpcion;
+    ambitosOrigen = AMBITOS_ORIGEN;
 
     constructor(
         private prestacionService: PrestacionesService,
@@ -34,6 +38,8 @@ export class RUPServicioIntermedioAltaComponent implements OnInit {
     }
 
     ngOnInit() {
+        const ambitoInicial = this.ambitoOrigenInicial || this.prestacion?.solicitud?.ambitoOrigen || this.turno?.ambitoOrigen;
+        this.ambitoOrigen = this.ambitosOrigen.find(opcion => opcion.id === ambitoInicial);
         if (this.prestacion) {
             this.datosSolicitud = this.prestacion.solicitud.registros[0].valor.solicitudPrestacion;
             this.prestacionSolicitada = this.prestacion.solicitud.registros[0].concepto;
@@ -55,12 +61,12 @@ export class RUPServicioIntermedioAltaComponent implements OnInit {
     }
 
     onConfirmar() {
-        this.ejecutarPrestacionPendiente(this.prestacion, this.turno).subscribe(() => {
+        this.ejecutarPrestacionPendiente(this.prestacion, this.turno, this.ambitoOrigen?.id).subscribe(() => {
             this.prestacionService.navegarAEjecucion(this.prestacion, this.turno);
         });
     }
 
-    ejecutarPrestacionPendiente(prestacion, turno?) {
+    ejecutarPrestacionPendiente(prestacion, turno?, ambitoOrigen?: AmbitoOrigen) {
         const params: any = {
             op: 'estadoPush',
             ejecucion: {
@@ -73,6 +79,9 @@ export class RUPServicioIntermedioAltaComponent implements OnInit {
             },
             estado: { tipo: 'ejecucion' }
         };
+        if (ambitoOrigen) {
+            params.ambitoOrigen = ambitoOrigen;
+        }
 
         if (this.prestacionElegida) {
             params.solicitud = {

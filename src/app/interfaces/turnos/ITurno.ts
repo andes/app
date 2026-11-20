@@ -1,6 +1,7 @@
-import { ITipoPrestacion } from './../ITipoPrestacion';
-import { IObraSocial } from './../IObraSocial';
+import { AmbitoOrigen } from '../../modules/rup/interfaces/prestacion.interface';
 import { ISnomedConcept } from '../../modules/rup/interfaces/snomed-concept.interface';
+import { IObraSocial } from './../IObraSocial';
+import { ITipoPrestacion } from './../ITipoPrestacion';
 
 export interface ITurno {
     _id: string;
@@ -48,6 +49,7 @@ export interface ITurno {
         nroCarpeta: string;
     }];
     nota: string;
+    ambitoOrigen?: AmbitoOrigen;
     motivoSuspension: string;
     avisoSuspension: {
         type: string;

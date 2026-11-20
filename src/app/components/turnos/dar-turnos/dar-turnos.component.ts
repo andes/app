@@ -7,6 +7,7 @@ import { switchMap } from 'rxjs';
 import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
 import { IServicioIntermedio } from 'src/app/interfaces/IServicioIntermedio';
 import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
+import { AMBITOS_ORIGEN, IAmbitoOrigenOpcion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 import { ISnomedConcept } from 'src/app/modules/rup/interfaces/snomed-concept.interface';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { ServicioIntermedioService } from 'src/app/modules/rup/services/servicio-intermedio.service';
@@ -193,6 +194,8 @@ export class DarTurnosComponent implements OnInit {
     carpetaEfector: any;
     obraSocialPaciente: IObraSocial;
     motivoConsulta: string;
+    ambitoOrigen: IAmbitoOrigenOpcion;
+    ambitosOrigen = AMBITOS_ORIGEN;
     showTab = 0;
     equipoSalud;
     prestacionesAlternativa;
@@ -830,6 +833,7 @@ export class DarTurnosComponent implements OnInit {
 
             this.habilitarTurnoDoble();
             this.nota = this.turno.nota;
+            this.ambitoOrigen = null;
             this.videoConferencia = this.turno.videoConferencia;
             this.buscarTurnosFuturos();
         } else {
@@ -1131,6 +1135,7 @@ export class DarTurnosComponent implements OnInit {
             const datosTurno = {
                 nota: this.nota,
                 motivoConsulta: this.motivoConsulta,
+                ambitoOrigen: this.ambitoOrigen?.id,
                 tipoPrestacion: this.turnoTipoPrestacion,
                 procedimiento: this.mostrarSelectProcedimiento ? this.turnoProcedimiento : undefined,
                 paciente: pacienteSave,
@@ -1178,6 +1183,7 @@ export class DarTurnosComponent implements OnInit {
                 nota: this.nota,
                 motivoConsulta: this.motivoConsulta,
                 procedimiento: this.mostrarSelectProcedimiento ? this.turnoProcedimiento : undefined,
+                ambitoOrigen: this.ambitoOrigen?.id,
                 estadoFacturacion: this.estadoFacturacion,
                 emitidoPor: (this.turnoTelefonico) ? 'turno telefonico' : null,
                 videoConferencia: this.videoConferencia,

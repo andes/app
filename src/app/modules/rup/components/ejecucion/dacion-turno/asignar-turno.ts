@@ -1,26 +1,26 @@
-import { Component, OnInit, Output, EventEmitter, Input, ViewChild } from '@angular/core';
-import { Plex } from '@andes/plex';
-import { IPacienteMatch } from '../../../../../modules/mpi/interfaces/IPacienteMatch.inteface';
-import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
-import { IAgenda } from '../../../../../interfaces/turnos/IAgenda';
-import { PacienteBuscarResultado } from '../../../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
-import { TurnoService } from '../../../../../services/turnos/turno.service';
-import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
+import { Plex, PlexModalComponent } from '@andes/plex';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ObraSocialService } from '../../../../../services/obraSocial.service';
-import { IObraSocial } from '../../../../../interfaces/IObraSocial';
-import { map, tap, switchMap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { resolverProcedimientosOpciones } from 'src/app/components/turnos/utils/procedimiento-servicio-intermedio.util';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
-import { AgendaService } from 'src/app/services/turnos/agenda.service';
-import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
-import { PlexModalComponent } from '@andes/plex';
-import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 import { IServicioIntermedio } from 'src/app/interfaces/IServicioIntermedio';
 import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
 import { ISnomedConcept } from 'src/app/modules/rup/interfaces/snomed-concept.interface';
 import { ServicioIntermedioService } from 'src/app/modules/rup/services/servicio-intermedio.service';
-import { resolverProcedimientosOpciones } from 'src/app/components/turnos/utils/procedimiento-servicio-intermedio.util';
+import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
+import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import { AgendaService } from 'src/app/services/turnos/agenda.service';
+import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
+import { IObraSocial } from '../../../../../interfaces/IObraSocial';
+import { IAgenda } from '../../../../../interfaces/turnos/IAgenda';
+import { IPacienteMatch } from '../../../../../modules/mpi/interfaces/IPacienteMatch.inteface';
+import { PacienteBuscarResultado } from '../../../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
+import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
+import { ObraSocialService } from '../../../../../services/obraSocial.service';
+import { TurnoService } from '../../../../../services/turnos/turno.service';
+import { AMBITOS_ORIGEN, IAmbitoOrigenOpcion } from '../../../interfaces/prestacion.interface';
 
 @Component({
     selector: 'rup-asignar-turno',
@@ -44,6 +44,8 @@ export class RupAsignarTurnoComponent implements OnInit {
     procedimientosOpciones: ISnomedConcept[] = [];
     turnoProcedimiento: ISnomedConcept;
     mostrarSelectProcedimiento = false;
+    public ambitoOrigen: IAmbitoOrigenOpcion;
+    public ambitosOrigen = AMBITOS_ORIGEN;
 
     // Eventos
     @Input() agenda: IAgenda;
@@ -209,6 +211,7 @@ export class RupAsignarTurnoComponent implements OnInit {
             procedimiento: this.mostrarSelectProcedimiento ? this.turnoProcedimiento : undefined,
             idAgenda: this.agenda.id,
             paciente,
+            ambitoOrigen: this.ambitoOrigen?.id
         };
         // guardamos el turno
         this.serviceTurno.saveDinamica(datosConfirma).pipe(
@@ -217,7 +220,7 @@ export class RupAsignarTurnoComponent implements OnInit {
                 return turnoDado?.paciente?.id === paciente.id ? turnoDado.id : null;
             }), switchMap(idturnoDado => {
                 if (idturnoDado) {
-                    return this.servicioPrestacion.crearPrestacion(paciente, this.datosTurno.tipoPrestacion, 'ejecucion', this.servicioPrestacion.getFechaPrestacionTurnoDinamico(fechaTurno), idturnoDado).pipe(tap(prestacion => {
+                    return this.servicioPrestacion.crearPrestacion(paciente, this.datosTurno.tipoPrestacion, 'ejecucion', this.servicioPrestacion.getFechaPrestacionTurnoDinamico(fechaTurno), idturnoDado, this.ambitoOrigen?.id).pipe(tap(prestacion => {
                         this.router.navigate(['rup/ejecucion/', prestacion.id]);
                     })
                     );
@@ -263,13 +266,14 @@ export class RupAsignarTurnoComponent implements OnInit {
                     tipoPrestacion: this.tipoPrestacion,
                     paciente: this.pacienteActivo,
                     procedimiento: this.mostrarSelectProcedimiento ? this.turnoProcedimiento : undefined,
+                    ambitoOrigen: this.ambitoOrigen?.id
                 }
             };
 
             this.serviceAgenda.patch(this.agenda.id, patch).subscribe(agenda => {
                 const sobreTurno = agenda.sobreturnos[agenda.sobreturnos.length - 1];
                 if (sobreTurno) {
-                    this.servicioPrestacion.crearPrestacion(paciente, sobreTurno.tipoPrestacion, 'ejecucion', sobreTurno.horaInicio, sobreTurno.id).subscribe(
+                    this.servicioPrestacion.crearPrestacion(paciente, sobreTurno.tipoPrestacion, 'ejecucion', sobreTurno.horaInicio, sobreTurno.id, this.ambitoOrigen?.id).subscribe(
                         prestacion => {
                             this.router.navigate(['rup/ejecucion/', prestacion.id]);
                         }

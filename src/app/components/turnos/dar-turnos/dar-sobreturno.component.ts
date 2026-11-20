@@ -15,6 +15,7 @@ import { resolverProcedimientosOpciones } from '../utils/procedimiento-servicio-
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { ObraSocialService } from './../../../services/obraSocial.service';
 import { TurnoService } from './../../../services/turnos/turno.service';
+import { AMBITOS_ORIGEN, IAmbitoOrigenOpcion } from '../../../modules/rup/interfaces/prestacion.interface';
 
 @Component({
     selector: 'dar-sobreturno',
@@ -47,6 +48,8 @@ export class DarSobreturnoComponent implements OnChanges {
         prepaga: ''
     };
     public disableGuardar = true;
+    public ambitoOrigen: IAmbitoOrigenOpcion;
+    public ambitosOrigen = AMBITOS_ORIGEN;
     turnosFuturos = [];
     modalTurnosRepetidos = false;
 
@@ -282,7 +285,8 @@ export class DarSobreturnoComponent implements OnChanges {
                 tipoPrestacion: this.tipoPrestacion,
                 procedimiento: this.mostrarSelectProcedimiento ? this.turnoProcedimiento : undefined,
                 paciente: pacienteSave,
-                nota: this.nota
+                nota: this.nota,
+                ambitoOrigen: this.ambitoOrigen?.id
             }
         };
         this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
