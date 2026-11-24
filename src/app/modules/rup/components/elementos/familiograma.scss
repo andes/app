@@ -1,0 +1,59 @@
+.familiograma-toolbar {
+    gap: 6px;
+}
+
+.gap-buttons {
+    gap: 6px;
+}
+
+.familiograma-connect-bar {
+    background-color: #fffbeb;
+    border: 1px solid #f59e0b;
+    border-radius: 4px;
+}
+
+.familiograma-canvas {
+    width: 100%;
+    height: 520px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.familiograma-inspector {
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    background: #f8fafc;
+    max-height: 520px;
+    overflow-y: auto;
+}
+
+.familiograma-preview {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 8px;
+    background: #ffffff;
+    overflow: hidden;
+    text-align: center;
+
+    .familiograma-img {
+        max-width: 100%;
+        width: auto;
+        height: auto;
+        max-height: 460px;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto;
+    }
+
+    ::ng-deep svg {
+        width: 100% !important;
+        max-width: 100%;
+        height: auto !important;
+        max-height: 460px;
+        display: block;
+        margin: 0 auto;
+    }
+}

@@ -1,0 +1,164 @@
+<ng-container *ngIf="!soloValores">
+    <div class="familiograma-toolbar d-flex flex-wrap align-items-center justify-content-between mb-2">
+        <div class="d-flex flex-wrap align-items-center gap-buttons">
+            <plex-button size="sm" type="primary" icon="checkbox-blank-outline" label="Cuadrado"
+                         tooltip="Agregar cuadrado (pene/testículos)" (click)="agregarPersona('cuadrado')">
+            </plex-button>
+            <plex-button size="sm" type="primary" icon="checkbox-blank-circle-outline" label="Círculo"
+                         tooltip="Agregar círculo (vulva)" (click)="agregarPersona('circulo')">
+            </plex-button>
+            <plex-button size="sm" type="primary" icon="dice-d8-outline" label="Rombo"
+                         tooltip="Agregar rombo (intersex)" (click)="agregarPersona('rombo')">
+            </plex-button>
+            <plex-button size="sm" type="info" icon="baby" label="Embarazo"
+                         tooltip="Agregar embarazo en curso" (click)="agregarPersona('embarazo')">
+            </plex-button>
+            <plex-button size="sm" type="default" icon="home" label="Convivencia"
+                         tooltip="Agrupamiento convivientes (+ permeable)" (click)="agregarAgrupamiento(true)">
+            </plex-button>
+            <plex-button size="sm" [type]="modoConectar ? 'warning' : 'success'"
+                         [icon]="modoConectar ? 'link-variant-off' : 'link-variant'"
+                         [label]="modoConectar ? 'Cancelar conexión' : 'Conectar vínculo'"
+                         (click)="toggleModoConectar()">
+            </plex-button>
+        </div>
+
+        <div class="d-flex align-items-center gap-buttons">
+            <plex-button size="sm" type="default" icon="zoom-out" tooltip="Alejar" (click)="zoom(-0.15)">
+            </plex-button>
+            <plex-button size="sm" type="default" icon="zoom-in" tooltip="Acercar" (click)="zoom(0.15)">
+            </plex-button>
+            <plex-button size="sm" type="default" icon="backup-restore" tooltip="Centrar y ajustar vista" (click)="resetZoom()">
+            </plex-button>
+            <plex-button size="sm" type="info" icon="familia" label="Ejemplo Anexo"
+                         tooltip="Cargar ejemplo del Anexo Neuquén" (click)="cargarEjemploAnexo()">
+            </plex-button>
+        </div>
+    </div>
+
+    <div *ngIf="modoConectar" class="familiograma-connect-bar mb-2 p-2">
+        <div class="row align-items-center">
+            <div class="col-md-5">
+                <plex-select name="tipoRelacionNueva" label="Tipo de vínculo a crear" [(ngModel)]="tipoRelacionNueva"
+                             [data]="opcionesRelacion" idField="id" labelField="nombre">
+                </plex-select>
+            </div>
+            <div class="col-md-7 pt-3">
+                <plex-badge type="warning">
+                    <ng-container *ngIf="origenConexion">Ahora hacé clic en la persona DESTINO</ng-container>
+                    <ng-container *ngIf="!origenConexion && (tipoRelacionNueva?.id === 'filial' || tipoRelacionNueva?.id === 'biologica')">
+                        Hacé clic en la línea de pareja o en una persona como ORIGEN
+                    </ng-container>
+                    <ng-container *ngIf="!origenConexion && tipoRelacionNueva?.id !== 'filial' && tipoRelacionNueva?.id !== 'biologica'">
+                        Hacé clic en la persona ORIGEN del vínculo
+                    </ng-container>
+                </plex-badge>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div [ngClass]="(personaForm || agrupamientoForm || relacionForm) ? 'col-md-8' : 'col-md-12'">
+            <div #paperContainer class="familiograma-canvas"></div>
+        </div>
+
+        <!-- Inspector lateral en Plex para editar nodo, agrupamiento o vínculo -->
+        <div class="col-md-4" *ngIf="personaForm || agrupamientoForm || relacionForm">
+            <div class="familiograma-inspector p-2">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <strong>
+                        <ng-container *ngIf="personaForm">Editar persona</ng-container>
+                        <ng-container *ngIf="agrupamientoForm">Editar agrupamiento</ng-container>
+                        <ng-container *ngIf="relacionForm">Editar vínculo</ng-container>
+                    </strong>
+                    <plex-button size="sm" type="danger" icon="delete" tooltip="Eliminar" (click)="eliminarSeleccionado()">
+                    </plex-button>
+                </div>
+
+                <ng-container *ngIf="personaForm">
+                    <plex-text name="fNombre" label="Nombre elegido" [(ngModel)]="personaForm.nombre"
+                               (change)="actualizarPersonaSeleccionada()">
+                    </plex-text>
+                    <plex-select name="fPronombre" label="Pronombre" [(ngModel)]="personaForm.pronombre"
+                                 [data]="opcionesPronombre" idField="id" labelField="nombre"
+                                 (change)="actualizarPersonaSeleccionada()">
+                    </plex-select>
+                    <plex-select name="fSimbolo" label="Corporalidad / Símbolo" [(ngModel)]="personaForm.simbolo"
+                                 [data]="opcionesSimbolo" idField="id" labelField="nombre"
+                                 (change)="actualizarPersonaSeleccionada()">
+                    </plex-select>
+                    <plex-text name="fAnios" label="Años / Edad (ej: 1975 - ó 1940 - 2020)" [(ngModel)]="personaForm.anios"
+                               (change)="actualizarPersonaSeleccionada()">
+                    </plex-text>
+                    <plex-text name="fPadecimiento" label="Determinante / Padecimiento" [(ngModel)]="personaForm.padecimiento"
+                               (change)="actualizarPersonaSeleccionada()">
+                    </plex-text>
+                    <plex-select name="fRol" label="Reproducción asistida" [(ngModel)]="personaForm.rolEspecial"
+                                 [data]="opcionesRolEspecial" idField="id" labelField="nombre"
+                                 (change)="actualizarPersonaSeleccionada()">
+                    </plex-select>
+                    <div class="mt-2">
+                        <plex-bool name="fIndice" label="Individuo índice (doble trazo)" [(ngModel)]="personaForm.esIndice"
+                                   type="slide" (change)="actualizarPersonaSeleccionada()">
+                        </plex-bool>
+                        <plex-bool name="fFallecido" label="Fallecido/a" [(ngModel)]="personaForm.fallecido"
+                                   type="slide" (change)="actualizarPersonaSeleccionada()">
+                        </plex-bool>
+                        <plex-bool name="fAdoptado" label="Adopción [ ]" [(ngModel)]="personaForm.adoptado"
+                                   type="slide" (change)="actualizarPersonaSeleccionada()">
+                        </plex-bool>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="agrupamientoForm">
+                    <plex-text name="aEtiqueta" label="Etiqueta" [(ngModel)]="agrupamientoForm.etiqueta"
+                               (change)="actualizarAgrupamientoSeleccionado()">
+                    </plex-text>
+                    <plex-bool name="aPermeable" label="Sistema permeable (trazo discontinuo)"
+                               [(ngModel)]="agrupamientoForm.permeable" type="slide"
+                               (change)="actualizarAgrupamientoSeleccionado()">
+                    </plex-bool>
+                    <div class="row mt-1">
+                        <div class="col-6">
+                            <plex-int name="aAncho" label="Ancho (px)" [(ngModel)]="agrupamientoForm.ancho"
+                                      (change)="actualizarAgrupamientoSeleccionado()">
+                            </plex-int>
+                        </div>
+                        <div class="col-6">
+                            <plex-int name="aAlto" label="Alto (px)" [(ngModel)]="agrupamientoForm.alto"
+                                      (change)="actualizarAgrupamientoSeleccionado()">
+                            </plex-int>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="relacionForm">
+                    <plex-select name="rTipo" label="Tipo de vínculo" [(ngModel)]="relacionForm.tipo"
+                                 [data]="opcionesRelacion" idField="id" labelField="nombre"
+                                 (change)="actualizarEnlaceSeleccionado()">
+                    </plex-select>
+                    <plex-text name="rEtiqueta" label="Etiqueta / Año (ej: m. 2010, s. 2018)"
+                               [(ngModel)]="relacionForm.etiqueta" (change)="actualizarEnlaceSeleccionado()">
+                    </plex-text>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-2">
+        <plex-text name="familiogramaObs" label="Observaciones del familiograma" [(ngModel)]="observaciones"
+                   [multiline]="true" (change)="onObservacionesChange()">
+        </plex-text>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="soloValores">
+    <div *ngIf="snapshotPreview" class="familiograma-preview">
+        <img [src]="snapshotPreview" alt="Familiograma / Ecomapa" class="familiograma-img">
+    </div>
+    <div *ngIf="!snapshotPreview && svgPreview" class="familiograma-preview" [innerHTML]="svgPreview"></div>
+    <p *ngIf="!snapshotPreview && !svgPreview" class="text-muted">Sin familiograma registrado.</p>
+    <p *ngIf="observaciones" class="mt-2">
+        <strong>Observaciones:</strong> {{ observaciones }}
+    </p>
+</ng-container>

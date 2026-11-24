@@ -79,6 +79,7 @@ import { AndesAppSharedModule } from '../../shared/andes-app-shared.module';
 import { PrescripcionInsumoComponent } from './components/elementos/prescripcionInsumo.component';
 import { TextoSimpleComponent } from './components/elementos/textoSimple.component';
 import { HistorialComponent } from './components/elementos/historial.component';
+import { FamiliogramaComponent } from './components/elementos/familiograma.component';
 
 const RUPComponentsArray = [
     RUPComponent,
@@ -137,7 +138,8 @@ const RUPComponentsArray = [
     SolicitudPrescripcionMedicamentoInternacionComponent,
     PrescripcionInsumoComponent,
     TextoSimpleComponent,
-    HistorialComponent
+    HistorialComponent,
+    FamiliogramaComponent
 ];
 
 @NgModule({
