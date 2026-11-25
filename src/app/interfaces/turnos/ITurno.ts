@@ -3,6 +3,21 @@ import { ISnomedConcept } from '../../modules/rup/interfaces/snomed-concept.inte
 import { IObraSocial } from './../IObraSocial';
 import { ITipoPrestacion } from './../ITipoPrestacion';
 
+export interface IPrestacionBasica {
+    _id: string;
+    inicio?: string;
+    createdAt?: Date;
+    solicitud?: {
+        fecha?: Date;
+        turno?: string;
+        tipoPrestacion?: ITipoPrestacion;
+    };
+    estadoActual?: {
+        tipo?: string;
+        createdAt?: Date;
+    };
+}
+
 export interface ITurno {
     _id: string;
     id: string;
@@ -26,6 +41,7 @@ export interface ITurno {
 
     };
     tipoPrestacion: ITipoPrestacion;
+    prestacion?: IPrestacionBasica;
     procedimiento?: ISnomedConcept;
     idPrestacionPaciente: string;
     tipoTurno: string;

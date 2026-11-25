@@ -53,7 +53,8 @@ export class MapaAgendasService {
         const parametros: any = {
             fechaDesde: moment(this.fecha).startOf('month').toDate(),
             fechaHasta: moment(this.fecha).endOf('month').toDate(),
-            organizacion: this.auth.organizacion.id
+            organizacion: this.auth.organizacion.id,
+            populate: 'prestaciones',
         };
         if (this.servicioIntermedio?.id) {
             parametros.servicioIntermedio = this.servicioIntermedio.id;
