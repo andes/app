@@ -157,7 +157,7 @@
             </div>
         </plex-wrapper>
         <div class="d-flex justify-content-center">
-            <plex-button name="botonAgregar" type="info" [disabled]="!formMedicamento.valid"
+            <plex-button name="botonAgregar" type="info" [disabled]="!formMedicamento.valid || verificandoDuplicado"
                          (click)="preAgregarMedicamento($event)" [validateForm]="formMedicamento">
                 Agregar
             </plex-button>

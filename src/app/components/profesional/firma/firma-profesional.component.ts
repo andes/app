@@ -42,11 +42,11 @@ export class FirmaProfesionalComponent {
     ) { }
 
     loadFirma() {
-        if (this.profesional.id) {
+        if (this.profesional && this.profesional.id) {
             this.profesionalService.getFirma({ id: this.profesional.id }).pipe(
                 catchError(() =>
                     of(null))).subscribe(resp => {
-                this.urlFirma = resp.length ? this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp) : null;
+                this.urlFirma = resp && resp.length ? this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp) : null;
             });
         }
     }
@@ -61,39 +61,49 @@ export class FirmaProfesionalComponent {
 
     onImageChange(event) {
         event.stopPropagation();
-        this.disabledCargar = true;
-        const image = event.target.files[0];
-        if (image) {
-            this.loading = true;
-            const ext = this.getExtension(image.name);
-            if (!this.extensiones.find(i => i === ext.toLowerCase())) {
-                this.plex.toast('danger', 'Tipo de archivo incorrecto');
-                return;
-            }
-            const reader = new FileReader();
-            reader.onload = this.handleReaderLoaded.bind(this);
-            reader.readAsBinaryString(image);
-            this.disabledCargar = false;
+        const input = event.target as HTMLInputElement;
+        const image = input.files && input.files[0];
+        // Permite volver a seleccionar el mismo archivo.
+        input.value = '';
+        if (!image) {
+            return;
         }
+
+        const ext = this.getExtension(image.name).toLowerCase();
+        if (!this.extensiones.find(i => i === ext)) {
+            this.plex.toast('danger', 'Tipo de archivo incorrecto');
+            return;
+        }
+
+        this.loading = true;
+        this.disabledCargar = true;
+
+        // Usamos el archivo ya elegido por el usuario. No hay que volver a abrir
+        // un selector (imageCompress.uploadFile()) porque perdemos la activación
+        // del usuario y el navegador bloquea el diálogo.
+        const reader = new FileReader();
+        reader.onload = () => this.comprimirImagen(reader.result as string, image);
+        reader.onerror = () => this.errorImagen();
+        reader.readAsDataURL(image);
     }
 
-    handleReaderLoaded(readerEvt) {
-        this.imageCompress.uploadFile().then(({ image, orientation }) => {
-            this.imageCompress.compressFile(image, orientation, 50, 50).then(compressedImg => {
+    private comprimirImagen(dataUrl: string, file: File) {
+        this.imageCompress.getOrientation(file)
+            .then(orientation => this.imageCompress.compressFile(dataUrl, orientation, 50, 50))
+            .then(compressedImg => {
                 this.loading = false;
-                // this.binaryString = readerEvt.target.result;
-                this.base64textString = btoa(compressedImg);
-                this.urlFirma = compressedImg; // this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + this.base64textString);
+                this.disabledCargar = false;
+                // compressFile devuelve un data URL: "data:image/png;base64,XXXX"
+                this.base64textString = compressedImg.split(',')[1] || '';
+                this.urlFirma = this.sanitizer.bypassSecurityTrustUrl(compressedImg);
                 this.fileUploaded.emit(this.base64textString);
             },
-            () => {
-                this.plex.toast('danger', 'Ha ocurrido un error realizando la operación.');
-                this.disabledCargar = false;
-            });
-        },
-        () => {
-            this.plex.toast('danger', 'Ha ocurrido un error realizando la operación.');
-            this.disabledCargar = false;
-        });
+            () => this.errorImagen());
+    }
+
+    private errorImagen() {
+        this.loading = false;
+        this.disabledCargar = false;
+        this.plex.toast('danger', 'Ha ocurrido un error realizando la operación.');
     }
 }
