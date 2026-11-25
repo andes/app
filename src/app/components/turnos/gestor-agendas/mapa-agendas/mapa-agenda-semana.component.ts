@@ -57,11 +57,11 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
     }
 
     private cargarSemana() {
-        this._fecha = moment(this._fecha).startOf('week');
+        const inicioSemana = moment(this._fecha).startOf('week');
         this.semana = this.headers.map((nombre, index) => {
             return {
                 nombre,
-                fecha: this._fecha.weekday(index).toDate(),
+                fecha: inicioSemana.clone().weekday(index).toDate(),
                 turnos: [],
                 notas: []
             };
@@ -320,9 +320,13 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
 
     private cambiarSemana() {
         if (this.calendario) {
+            // Busca la semana del calendario que contiene a `_fecha`. Se compara por semana
+            // (no por día) porque `_fecha` puede caer en un día fuera del mes cargado, y
+            // `_fecha` no debe mutarse al renderizar (si mutaba, un refetch recargaba otro mes
+            // y la grilla perdía los turnos de la semana en curso).
             this.semanaSeleccionada = this.calendario.find(dias =>
-                dias.find(
-                    dia => dia.fecha && moment(dia.fecha).isSame(this._fecha, 'day')
+                dias.some(
+                    dia => dia.fecha && moment(dia.fecha).isSame(this._fecha, 'week')
                 )
             );
             if (this.semanaSeleccionada) {
