@@ -1,3 +1,4 @@
+<div class="semana-scroll">
 <div class="semana mt-1" [class.slot-clickeable]="slotClickeable"
      [style.grid-template-columns]="'50px repeat(' + semana.length + ', minmax(0, 1fr))'"
      [style.grid-template-rows]="'auto repeat(' + filas.length + ', 40px)'">
@@ -26,11 +27,15 @@
     </ng-container>
 
     <ng-container *ngFor="let dia of semana; let d = index">
-        <div *ngFor="let celda of dia.turnos" class="paciente" [style.grid-column]="d + 2"
+        <div *ngFor="let celda of dia.turnos" class="paciente" [class.paciente--angosto]="celda.angosto"
+             [style.grid-column]="d + 2"
              [style.grid-row]="(celda.slot + 2) + ' / span ' + celda.rowspan" [style.width]="celda.ancho"
              [style.margin-left]="celda.offset" [style.background]="celda.color" [attr.title]="celda.titulo"
              (click)="detalleDia(celda)">
-            {{celda.iniciales}}
+            <plex-icon *ngIf="celda.turno" class="paciente-ambito" size="xs"
+                       [name]="iconoAmbitoOrigen(celda.turno.ambitoOrigen)"></plex-icon>
+            <span class="paciente-iniciales">{{ celda.iniciales }}</span>
         </div>
     </ng-container>
+</div>
 </div>

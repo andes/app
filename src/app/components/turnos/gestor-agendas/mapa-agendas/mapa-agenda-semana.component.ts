@@ -1,6 +1,11 @@
 import moment from 'moment';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { AmbitoOrigen } from 'src/app/modules/rup/interfaces/prestacion.interface';
+import {
+    etiquetaAmbitoOrigen as etiquetaAmbitoOrigenUtil,
+    iconoAmbitoOrigen as iconoAmbitoOrigenUtil
+} from './ambito-origen-icon.util';
 import { SlotSeleccionado } from './dar-turno-slot/dar-turno-slot.interface';
 import { MapaAgendasService } from './mapa-agendas.service';
 
@@ -131,7 +136,7 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
                     agenda: prestacion.agenda,
                     color: colorResuelto || prestacion.color,
                     iniciales: this.iniciales(turno.paciente),
-                    titulo: nombre ? `${nombre} ${hora}` : hora
+                    titulo: this.tituloCeldaTurno(nombre, hora, turno.ambitoOrigen)
                 });
             });
         });
@@ -234,7 +239,25 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
             }
             turno.ancho = `${100 / simultaneos}%`;
             turno.offset = `${(turno.carril * 100) / simultaneos}%`;
+            turno.angosto = simultaneos >= 3;
         });
+    }
+
+    iconoAmbitoOrigen(ambito?: AmbitoOrigen | null): string | null {
+        return iconoAmbitoOrigenUtil(ambito);
+    }
+
+    etiquetaAmbitoOrigen(ambito?: AmbitoOrigen | null): string | null {
+        return etiquetaAmbitoOrigenUtil(ambito);
+    }
+
+    private tituloCeldaTurno(nombre: string, hora: string, ambitoOrigen?: AmbitoOrigen | null): string {
+        let titulo = nombre ? `${nombre} ${hora}` : hora;
+        const ambito = etiquetaAmbitoOrigenUtil(ambitoOrigen);
+        if (ambito) {
+            titulo += ` — Ámbito: ${ambito}`;
+        }
+        return titulo;
     }
 
     private notasDelDia(dia, totalSlots) {

@@ -126,6 +126,7 @@ export class DarTurnoSlotService {
             emitidoPor: form.turnoTelefonico ? 'turno telefonico' : null,
             videoConferencia: form.videoConferencia,
             link: form.link,
+            ambitoOrigen: form.ambitoOrigen?.id,
         };
 
         return this.turnoService.save(payload, { showError: false });

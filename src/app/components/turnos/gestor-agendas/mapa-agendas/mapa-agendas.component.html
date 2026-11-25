@@ -223,6 +223,9 @@
                     </plex-label>
                     <plex-label size="sm" *ngIf="turno.nota" titulo="Nota" subtitulo="{{turno.nota}}">
                     </plex-label>
+                    <plex-label size="sm" *ngIf="turno.ambitoOrigen" [icon]="iconoAmbitoOrigen(turno.ambitoOrigen)"
+                        titulo="Ámbito de origen" subtitulo="{{ turno.ambitoOrigen | titlecase }}">
+                    </plex-label>
                     <plex-label size="sm" titulo="Organizacion" subtitulo="{{dia.agenda.organizacion.nombre}}">
                     </plex-label>
                     <plex-label size="sm" *ngIf="dia.agenda.profesionales[0]?.apellido" titulo="Profesional"

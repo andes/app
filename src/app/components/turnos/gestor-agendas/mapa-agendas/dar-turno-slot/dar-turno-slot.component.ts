@@ -12,6 +12,7 @@ import { IAgenda } from 'src/app/interfaces/turnos/IAgenda';
 import { IBloque } from 'src/app/interfaces/turnos/IBloque';
 import { ITurno } from 'src/app/interfaces/turnos/ITurno';
 import { PacienteBuscarResultado } from 'src/app/modules/mpi/interfaces/PacienteBuscarResultado.inteface';
+import { AMBITOS_ORIGEN } from 'src/app/modules/rup/interfaces/prestacion.interface';
 import { ISnomedConcept } from 'src/app/modules/rup/interfaces/snomed-concept.interface';
 import { resolverProcedimientosOpciones } from 'src/app/components/turnos/utils/procedimiento-servicio-intermedio.util';
 import { AgendaEnSlot, DatosTurnoForm, SeleccionTurno, SlotSeleccionado } from './dar-turno-slot.interface';
@@ -47,6 +48,7 @@ export class DarTurnoSlotComponent implements OnInit {
 
     readonly pacienteFields = ['financiador', 'numeroAfiliado', 'telefono'];
     readonly lenNota = 140;
+    readonly ambitosOrigen = AMBITOS_ORIGEN;
 
     /** Paso 1 (único bloqueante): sin paciente no se muestran agendas ni campos. */
     paciente: IPaciente = null;
@@ -311,6 +313,7 @@ export class DarTurnoSlotComponent implements OnInit {
         }
         this.seleccion = { bloque, indiceBloque, turno, indiceTurno };
         this.errores = [];
+        this.modelo = { ...this.modelo, ambitoOrigen: undefined };
         this.ajustarTipoPrestacion(this.seleccion);
         this.actualizarProcedimientos();
     }
@@ -323,6 +326,10 @@ export class DarTurnoSlotComponent implements OnInit {
 
     onMotivoConsultaChange(motivoConsulta: string): void {
         this.modelo = { ...this.modelo, motivoConsulta };
+    }
+
+    onAmbitoOrigenChange(ambitoOrigen: DatosTurnoForm['ambitoOrigen']): void {
+        this.modelo = { ...this.modelo, ambitoOrigen };
     }
 
     onTelefonoChange(telefono: string): void {
@@ -413,6 +420,7 @@ export class DarTurnoSlotComponent implements OnInit {
     }
 
     cerrarFlujo(): void {
+        this.modelo = { ...this.modelo, ambitoOrigen: undefined };
         this.cerrar.emit();
     }
 
@@ -440,6 +448,7 @@ export class DarTurnoSlotComponent implements OnInit {
             link: '',
             videoConferencia: false,
             turnoTelefonico: false,
+            ambitoOrigen: undefined,
         };
     }
 
@@ -452,6 +461,7 @@ export class DarTurnoSlotComponent implements OnInit {
             procedimiento: undefined,
             link: '',
             videoConferencia: false,
+            ambitoOrigen: undefined,
         };
         this.procedimientosOpciones = [];
         this.mostrarSelectProcedimiento = false;

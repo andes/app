@@ -170,6 +170,11 @@
             (ngModelChange)="onMotivoConsultaChange($event)">
         </plex-text>
 
+        <plex-select label="Ámbito de origen (opcional)" name="ambitoOrigen" [ngModel]="modelo?.ambitoOrigen"
+            (ngModelChange)="onAmbitoOrigenChange($event)" [data]="ambitosOrigen" labelField="nombre" idField="id"
+            placeholder="Seleccione una condición">
+        </plex-select>
+
         <plex-grid type="auto" size="md" cols="1">
             <plex-phone label="Celular" name="telefono" [ngModel]="modelo?.telefono"
                 (ngModelChange)="onTelefonoChange($event)">

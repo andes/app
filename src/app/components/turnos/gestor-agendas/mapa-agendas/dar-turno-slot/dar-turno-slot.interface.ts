@@ -3,6 +3,7 @@ import { ITipoPrestacion } from '../../../../../interfaces/ITipoPrestacion';
 import { IAgenda } from '../../../../../interfaces/turnos/IAgenda';
 import { IBloque } from '../../../../../interfaces/turnos/IBloque';
 import { ITurno } from '../../../../../interfaces/turnos/ITurno';
+import { IAmbitoOrigenOpcion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { ISnomedConcept } from '../../../../../modules/rup/interfaces/snomed-concept.interface';
 
 export interface SlotSeleccionado {
@@ -43,4 +44,5 @@ export interface DatosTurnoForm {
     link: string;
     videoConferencia: boolean;
     turnoTelefonico: boolean;
+    ambitoOrigen?: IAmbitoOrigenOpcion;
 }

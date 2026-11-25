@@ -9,6 +9,16 @@ $mapa-agenda-mes-fila-altura: 6rem;
     min-width: 16rem;
 }
 
+:host {
+    display: block;
+    height: 100%;
+}
+
+.semana-scroll {
+    height: 100%;
+    overflow: auto;
+}
+
 .semana {
     display: grid;
     width: 100%;
@@ -30,7 +40,16 @@ $mapa-agenda-mes-fila-altura: 6rem;
         border-bottom-color: $mapa-agenda-grid-line-day;
     }
 
+    .first,
+    .dia {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background-color: #fff;
+    }
+
     .first {
+        z-index: 3;
         background-image: linear-gradient(to top right,
                 white 48%,
                 $mapa-agenda-grid-line-day,
@@ -80,6 +99,7 @@ $mapa-agenda-mes-fila-altura: 6rem;
     }
 
     .paciente {
+        position: relative;
         z-index: 1;
         justify-self: start;
         align-self: stretch;
@@ -89,10 +109,28 @@ $mapa-agenda-mes-fila-altura: 6rem;
         display: flex;
         align-items: center;
         justify-content: center;
+        gap: 2px;
         font-weight: bold;
         text-transform: uppercase;
         cursor: pointer;
         border: 1px solid #181717;
+
+        .paciente-ambito {
+            flex-shrink: 0;
+        }
+
+        .paciente-iniciales {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        &.paciente--angosto .paciente-ambito {
+            position: absolute;
+            top: 1px;
+            right: 1px;
+        }
 
         &:hover {
             box-shadow: inset 0 0 0 2px #080808;

@@ -4,6 +4,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ServicioIntermedioService } from 'src/app/modules/rup/services/servicio-intermedio.service';
 import { ITurno } from 'src/app/interfaces/turnos/ITurno';
+import { AmbitoOrigen } from 'src/app/modules/rup/interfaces/prestacion.interface';
+import { iconoAmbitoOrigen as iconoAmbitoOrigenUtil } from './ambito-origen-icon.util';
 import { SlotSeleccionado } from './dar-turno-slot/dar-turno-slot.interface';
 import { MapaAgendasService } from './mapa-agendas.service';
 import { NotaAgendaService } from './nota-agenda.service';
@@ -156,6 +158,10 @@ export class MapaAgendasComponent implements OnInit {
 
     etiquetaPrestacionTurno(turno: ITurno) {
         return this.mapaAgendasService.etiquetaPrestacionTurno(turno);
+    }
+
+    iconoAmbitoOrigen(ambito?: AmbitoOrigen | null): string | null {
+        return iconoAmbitoOrigenUtil(ambito);
     }
 
     onSlotSeleccionado(slot: SlotSeleccionado) {
