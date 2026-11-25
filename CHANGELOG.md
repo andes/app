@@ -1,3 +1,10 @@
+## [5.176.1](https://github.com/andes/app/compare/v5.176.0...v5.176.1) (2026-11-25)
+
+
+### Bug Fixes
+
+* **HUDS:** control de permisos para ingresar al modulo y en shiro ([#3461](https://github.com/andes/app/issues/3461)) ([d888a62](https://github.com/andes/app/commit/d888a626150a0fee4d22883557669b372d49d0aa))
+
 # [5.176.0](https://github.com/andes/app/compare/v5.175.0...v5.176.0) (2026-11-18)
 
 
