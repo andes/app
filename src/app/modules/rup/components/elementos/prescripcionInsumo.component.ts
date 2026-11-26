@@ -38,9 +38,9 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit,
     ];
 
     public financiadoresPaciente: Partial<IObraSocial>[] = [];
-    public datosFinanciadores = [];
-    public financiadorSeleccionado;
-    public otroFinanciadorSeleccionado;
+    public datosFinanciadores: Array<{ id: string; label: string }> = [];
+    public financiadorSeleccionado: string;
+    public otroFinanciadorSeleccionado: any;
     public showSelector = false;
     public showListado = false;
     public opcionesFinanciadores: any[] = [];
@@ -55,6 +55,13 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit,
         }
         if (!this.registro.valor.insumos) {
             this.registro.valor.insumos = [];
+        } else {
+            // Normalizamos insumos ya cargados: "Sin obra social" se guarda como null
+            this.registro.valor.insumos.forEach((insumo: any) => {
+                if (insumo.obraSocial?.nombre === 'Sin obra social') {
+                    insumo.obraSocial = null;
+                }
+            });
         }
         const conceptosPrescripcion = ['16076005', '33633005', '313047003', '1217195001', '1217196000'];
         this.registros = this.prestacion.ejecucion.registros
@@ -62,12 +69,8 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit,
             .map(reg => reg.concepto);
         this.buscarDiagnosticosConTrastornos();
 
-        this.ejecucionService?.hasActualizacion().subscribe(async (estado) => {
-            const numeroAfiliadoTemporal = this.numeroAfiliado;
+        this.ejecucionService?.hasActualizacion().subscribe(async () => {
             this.loadRegistros();
-            if (numeroAfiliadoTemporal && !this.numeroAfiliado) {
-                this.numeroAfiliado = numeroAfiliadoTemporal;
-            }
         });
 
         this.eclqueriesServicies.search({ key: '^receta' }).subscribe(query => {
@@ -80,7 +83,9 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit,
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.paciente && changes.paciente.currentValue) {
+        // En el primer cambio el paciente ya se procesa desde ngOnInit.
+        // Si llega más tarde (o cambia), recargamos los financiadores.
+        if (changes.paciente && changes.paciente.currentValue && !changes.paciente.firstChange) {
             this.cargarObrasSocialesPaciente();
         }
     }
@@ -170,18 +175,52 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit,
     }
 
     agregarInsumo() {
+        // Cada insumo guarda una copia de la obra social seleccionada en ese momento.
+        // Así se pueden cargar insumos con distintas obras sociales en una misma receta.
+        if (this.prestacion?.paciente?.obraSocial && this.prestacion.paciente.obraSocial.nombre !== 'Sin obra social') {
+            this.prestacion.paciente.obraSocial.numeroAfiliado = this.numeroAfiliado || '';
+            this.insumo.obraSocial = JSON.parse(JSON.stringify(this.prestacion.paciente.obraSocial));
+        } else {
+            this.insumo.obraSocial = null;
+            if (this.prestacion?.paciente) {
+                this.prestacion.paciente.obraSocial = null;
+            }
+        }
+
         this.registro.valor.insumos.push(this.insumo);
         this.unidades = [];
+
+        const numeroAfiliadoTemporal = this.numeroAfiliado;
+        const financiadorSeleccionadoTemporal = this.financiadorSeleccionado;
+        const otroFinanciadorSeleccionadoTemporal = this.otroFinanciadorSeleccionado;
+        const showListadoTemporal = this.showListado;
+        const obraSocialTemporal = (this.prestacion?.paciente?.obraSocial && this.prestacion.paciente.obraSocial.nombre !== 'Sin obra social')
+            ? JSON.parse(JSON.stringify(this.prestacion.paciente.obraSocial))
+            : null;
+
         this.insumo = {
             diagnostico: null,
             generico: null,
             cantidad: null,
             tratamientoProlongado: false,
-            tiempoTratamiento: null
+            tiempoTratamiento: null,
+            obraSocial: null
         };
         this.formInsumo.reset();
         this.formInsumo.form.markAsPristine();
         this.formInsumo.form.markAsUntouched();
+
+        // El reset del formulario también limpia los ngModel de obra social.
+        // Restauramos la selección para poder seguir cargando insumos.
+        setTimeout(() => {
+            this.numeroAfiliado = numeroAfiliadoTemporal;
+            this.financiadorSeleccionado = financiadorSeleccionadoTemporal;
+            this.otroFinanciadorSeleccionado = otroFinanciadorSeleccionadoTemporal;
+            this.showListado = showListadoTemporal;
+            if (this.prestacion?.paciente) {
+                this.prestacion.paciente.obraSocial = obraSocialTemporal;
+            }
+        });
     }
 
     borrar(insumo) {
@@ -194,8 +233,13 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit,
     }
 
     public onValidate() {
-        if (this.prestacion?.paciente?.obraSocial) {
-            this.prestacion.paciente.obraSocial.numeroAfiliado = this.numeroAfiliado || '';
+        if (this.prestacion?.paciente) {
+            const obraSocial = this.prestacion.paciente.obraSocial;
+            if (obraSocial && obraSocial.nombre !== 'Sin obra social') {
+                obraSocial.numeroAfiliado = this.numeroAfiliado || '';
+            } else {
+                this.prestacion.paciente.obraSocial = null;
+            }
         }
         return this.registro.valor.insumos && this.registro.valor.insumos.length > 0;
     }
@@ -311,21 +355,13 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit,
                 // Si el paciente no tiene financiadores válidos o ya tiene seleccionado 'Sin obra social'
                 this.financiadorSeleccionado = 'Sin obra social';
                 this.numeroAfiliado = '';
-                this.prestacion.paciente.obraSocial = <IObraSocial>{
-                    id: null,
-                    nombre: 'Sin obra social',
-                    financiador: 'Sin obra social',
-                    codigoPuco: null,
-                    numeroAfiliado: '',
-                    prepaga: false,
-                    origen: 'ANDES'
-                };
+                this.prestacion.paciente.obraSocial = null;
             }
 
             this.datosFinanciadores = [
                 ...this.financiadoresPaciente.map((os: IObraSocial) => ({
-                    id: os.nombre || os.financiador,
-                    label: os.nombre || os.financiador
+                    id: (os.nombre || os.financiador) as string,
+                    label: (os.nombre || os.financiador) as string
                 })),
                 { id: 'otras', label: 'Otras' },
                 { id: 'Sin obra social', label: 'Sin obra social' }
@@ -352,22 +388,18 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit,
 
     public seleccionarFinanciador(event) {
         this.showListado = false;
+        this.otroFinanciadorSeleccionado = null;
 
         if (event.value === 'otras') {
             this.showListado = true;
-            this.numeroAfiliado = undefined;
-        } else if (event.value === 'Sin obra social') {
+            this.numeroAfiliado = '';
             if (this.prestacion?.paciente) {
-                this.numeroAfiliado = '';
-                this.prestacion.paciente.obraSocial = <IObraSocial>{
-                    id: null,
-                    nombre: 'Sin obra social',
-                    financiador: 'Sin obra social',
-                    codigoPuco: null,
-                    numeroAfiliado: '',
-                    prepaga: false,
-                    origen: 'ANDES'
-                };
+                this.prestacion.paciente.obraSocial = null;
+            }
+        } else if (event.value === 'Sin obra social') {
+            this.numeroAfiliado = '';
+            if (this.prestacion?.paciente) {
+                this.prestacion.paciente.obraSocial = null;
             }
         } else {
             const nombre = event.value;
@@ -376,12 +408,13 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit,
             );
 
             if (obraSocialSeleccionada && this.prestacion?.paciente) {
-                this.numeroAfiliado = obraSocialSeleccionada.numeroAfiliado as string || '';
+                this.numeroAfiliado = (obraSocialSeleccionada.numeroAfiliado as string) || '';
                 this.prestacion.paciente.obraSocial = <IObraSocial>{
+                    id: obraSocialSeleccionada.id || null,
                     nombre: obraSocialSeleccionada.nombre,
                     financiador: obraSocialSeleccionada.financiador,
                     codigoPuco: obraSocialSeleccionada.codigoPuco,
-                    numeroAfiliado: obraSocialSeleccionada.numeroAfiliado || '',
+                    numeroAfiliado: this.numeroAfiliado,
                     prepaga: obraSocialSeleccionada.prepaga || false,
                     origen: obraSocialSeleccionada.origen || 'ANDES'
                 };
@@ -391,26 +424,22 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit,
 
     public seleccionarOtroFinanciador(event) {
         if (event.value && this.prestacion?.paciente) {
-            const { prepaga, nombre, financiador, codigoPuco } = event.value;
+            const { prepaga, nombre, financiador, codigoPuco, id, codigoFinanciador, transmite } = event.value;
 
-            this.prestacion.paciente.obraSocial = {
-                id: null,
+            const nuevaObraSocial: Partial<IObraSocial> = {
+                id: id || null,
                 nombre,
+                numeroAfiliado: this.numeroAfiliado || '',
                 financiador,
                 codigoPuco,
-                numeroAfiliado: this.numeroAfiliado || '',
+                codigoFinanciador: codigoFinanciador || 0,
+                transmite: transmite || '',
                 prepaga: prepaga || false,
                 origen: 'ANDES'
             };
 
-            const nuevaObraSocial = {
-                nombre,
-                numeroAfiliado: this.numeroAfiliado || '',
-                financiador,
-                codigoPuco,
-                id: null,
-                prepaga: prepaga || false,
-                origen: 'ANDES'
+            this.prestacion.paciente.obraSocial = <IObraSocial>{
+                ...nuevaObraSocial
             };
 
             const yaExiste = this.financiadoresPaciente.find(os =>
@@ -424,8 +453,8 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit,
             this.financiadorSeleccionado = nombre || financiador;
             this.datosFinanciadores = [
                 ...this.financiadoresPaciente.map((os: IObraSocial) => ({
-                    id: os.nombre || os.financiador,
-                    label: os.nombre || os.financiador
+                    id: (os.nombre || os.financiador) as string,
+                    label: (os.nombre || os.financiador) as string
                 })),
                 { id: 'otras', label: 'Otras' },
                 { id: 'Sin obra social', label: 'Sin obra social' }
@@ -458,10 +487,6 @@ export class PrescripcionInsumoComponent extends RUPComponent implements OnInit,
 
                 if (obraSocialActual) {
                     obraSocialActual.numeroAfiliado = this.numeroAfiliado;
-                }
-
-                if (this.financiadoresPaciente && this.financiadoresPaciente.length > 0) {
-                    this.financiadoresPaciente[0].numeroAfiliado = this.numeroAfiliado;
                 }
             }
         }, 500);

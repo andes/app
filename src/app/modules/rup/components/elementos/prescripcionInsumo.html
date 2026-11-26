@@ -14,6 +14,9 @@
                 <plex-radio name="financiador" [(ngModel)]="financiadorSeleccionado"
                             (change)="seleccionarFinanciador($event)" [data]="datosFinanciadores">
                 </plex-radio>
+                <small class="text-muted d-block mt-1">
+                    Seleccioná la obra social antes de agregar cada insumo. Quedará asociada al insumo que agregues.
+                </small>
             </div>
         </div>
 
@@ -90,6 +93,12 @@
             </plex-badge>
             <plex-badge *ngIf="item.tratamientoProlongado" type="info">Tratamiento prolongado
             </plex-badge>
+            <plex-badge *ngIf="item.obraSocial" size="sm" type="success" hintType="info"
+                        hint="Obra social con la que se prescribió este insumo">
+                {{ item.obraSocial.nombre || item.obraSocial.financiador }}
+                <ng-container *ngIf="item.obraSocial.numeroAfiliado"> | Af. {{ item.obraSocial.numeroAfiliado }}
+                </ng-container>
+            </plex-badge>
             <plex-button type="danger" size="sm" (click)="borrar(item)" icon="delete" tooltip="eliminar"></plex-button>
         </plex-item>
     </plex-list>
@@ -106,6 +115,12 @@
                 {{ item.diagnostico.term | truncate }}
             </plex-badge>
             <plex-badge *ngIf="item.tratamientoProlongado" type="info">Tratamiento prolongado
+            </plex-badge>
+            <plex-badge *ngIf="item.obraSocial" size="sm" type="success" hintType="info"
+                        hint="Obra social con la que se prescribió este insumo">
+                {{ item.obraSocial.nombre || item.obraSocial.financiador }}
+                <ng-container *ngIf="item.obraSocial.numeroAfiliado"> | Af. {{ item.obraSocial.numeroAfiliado }}
+                </ng-container>
             </plex-badge>
         </plex-item>
     </plex-list>
