@@ -80,6 +80,19 @@ table {
         font-size: small;
         vertical-align: middle;
         width: 14.28%;
+
+        p {
+            margin-bottom: 0.25rem;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        ul, ol {
+            padding-left: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
     }
 
     td.esTitulo {

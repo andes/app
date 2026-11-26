@@ -1,3 +1,23 @@
+## [5.176.1](https://github.com/andes/app/compare/v5.176.0...v5.176.1) (2026-11-25)
+
+
+### Bug Fixes
+
+* **HUDS:** control de permisos para ingresar al modulo y en shiro ([#3461](https://github.com/andes/app/issues/3461)) ([d888a62](https://github.com/andes/app/commit/d888a626150a0fee4d22883557669b372d49d0aa))
+
+# [5.176.0](https://github.com/andes/app/compare/v5.175.0...v5.176.0) (2026-11-18)
+
+
+### Bug Fixes
+
+* **MISC-514:** Fix llamadas html por actualizacion Angular ([#3435](https://github.com/andes/app/issues/3435)) ([0f124a4](https://github.com/andes/app/commit/0f124a487dd90c76cfbb1623fbc236e92be268ac))
+* **RUP:** se importa librería shared ([#3444](https://github.com/andes/app/issues/3444)) ([f8eba9c](https://github.com/andes/app/commit/f8eba9c834511c173fe0f88d73325a8f9e01d73a))
+
+
+### Features
+
+* **COM-124:** Descarga de historial de solicitud, resolución de conflictos ([#3412](https://github.com/andes/app/issues/3412)) ([f357f46](https://github.com/andes/app/commit/f357f46240e47bac7a42f59d210012c95f5443a2))
+
 # [5.175.0](https://github.com/andes/app/compare/v5.174.1...v5.175.0) (2026-10-14)
 
 
