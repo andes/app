@@ -53,6 +53,9 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges {
     ) { }
 
     get isHidden() {
+        if (this.item.requires && !this.siblingActivo()) {
+            return true;
+        }
         if (this.item.visibility) {
             if (this.item.visibility === 'hidden') {
                 return true;
@@ -138,6 +141,27 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges {
      * Se ejecuta al activar un checkbox o un colapsable para verificar si se debe desactivar otro checkbox correspondiente a un permiso incompatible.
      * Dos permisos son incompatibles cuando no deberían estar activados al mismo tiempo.
      */
+    onBooleanChange($event) {
+        this.checkIncompatibles($event);
+        this.syncBoolean($event);
+    }
+
+    /**
+     * Mantiene sincronizado el permiso booleano dentro de userPermissions para que
+     * los permisos hermanos con item.requires se muestren u oculten en vivo.
+     */
+    syncBoolean($event) {
+        const permiso = this.makePermission();
+        const idx = this.userPermissions.indexOf(permiso);
+        if ($event?.value) {
+            if (idx < 0) {
+                this.userPermissions.push(permiso);
+            }
+        } else if (idx >= 0) {
+            this.userPermissions.splice(idx, 1);
+        }
+    }
+
     checkIncompatibles($event) {
         if ($event?.value === undefined) { // Se accionó un colapsable
             return;
@@ -344,12 +368,27 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges {
         this.shiro.add(...this.userPermissions);
     }
 
+    /**
+     * Devuelve si el permiso booleano hermano indicado en item.requires está activo en los permisos editados.
+     */
+    private siblingActivo(): boolean {
+        if (!this.item.requires) {
+            return true;
+        }
+        const checker = ShiroTrie.newTrie();
+        checker.add(...this.userPermissions);
+        return checker.check(this.parentPermission + ':' + this.item.requires);
+    }
+
     makePermission() {
         return this.parentPermission + (this.parentPermission.length ? ':' : '') + this.item.key;
     }
 
     public generateString(): string[] {
         let results = [];
+        if (this.item.requires && !this.siblingActivo()) {
+            return results;
+        }
         if (this.allModule) {
             return [this.makePermission() + ':*'];
         }
