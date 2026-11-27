@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { combineLatest, Observable, of, Subject } from 'rxjs';
-import { auditTime, catchError, map, startWith, takeUntil, switchMap } from 'rxjs/operators';
+import { auditTime, catchError, map, startWith, takeUntil, switchMap, tap } from 'rxjs/operators';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 import { IResumenInternacion } from '../../services/resumen-internacion.http';
 import moment from 'moment';
+import { IInformeEstadistica } from 'src/app/modules/rup/interfaces/informe-estadistica.interface';
 @Component({
     selector: 'app-movimientos-internacion',
     templateUrl: './movimientos-internacion.component.html',
@@ -28,15 +29,13 @@ export class MovimientosInternacionComponent implements OnInit, OnDestroy {
 
     getFechasInternacion() {
         const capa = this.mapaCamasService.capa2.getValue();
+        // modificaciones para que se vean los movimientos con la estructura nueva
         if (capa === 'estadistica') {
-            return this.mapaCamasService.prestacion$.pipe(
-                map(prestacion => {
-                    return {
-                        desde: prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso,
-                        hasta: prestacion.ejecucion.registros[1]?.valor.InformeEgreso?.fechaEgreso || new Date()
-                    };
-                }),
-                catchError(() => of(null))
+            return this.mapaCamasService.informeEstadistica$.pipe(
+                map(informeEstadistica => ({
+                    desde: informeEstadistica?.informeIngreso?.fechaIngreso,
+                    hasta: informeEstadistica?.informeEgreso?.fechaEgreso || new Date()
+                })),
             );
         } else {
             return this.mapaCamasService.resumenInternacion$.pipe(
@@ -81,9 +80,9 @@ export class MovimientosInternacionComponent implements OnInit, OnDestroy {
             })
         );
 
-        let requestPrestacion: Observable<IPrestacion | IResumenInternacion>;
+        let requestPrestacion: Observable<IPrestacion | IResumenInternacion | IInformeEstadistica>;
         if (this.mapaCamasService.capa === 'estadistica') {
-            requestPrestacion = this.mapaCamasService.selectedPrestacion;
+            requestPrestacion = this.mapaCamasService.informeEstadistica$;
         } else {
             // se estaría usando capas unificadas
             requestPrestacion = this.mapaCamasService.selectedResumen;
@@ -115,6 +114,7 @@ export class MovimientosInternacionComponent implements OnInit, OnDestroy {
             })
         );
     }
+
 
     onChange() {
         const filtros = {

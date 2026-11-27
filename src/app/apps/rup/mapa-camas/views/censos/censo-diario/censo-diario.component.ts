@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Component, OnInit } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
@@ -54,6 +55,7 @@ export class CensosDiariosComponent implements OnInit {
         });
     }
 
+
     generarCensoDiario() {
         this.censoPacientes = [];
         this.censo = {};
@@ -77,6 +79,7 @@ export class CensosDiariosComponent implements OnInit {
                     let delDiaAnterior = false;
                     let ingresoAServicio = false;
                     const censoPaciente = censoDiario.pacientes[p];
+
                     censoPaciente.actividad.forEach((actividad: any, index) => {
                         const movimiento = {
                             datos: {

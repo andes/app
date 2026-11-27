@@ -41,6 +41,7 @@ export interface IResumenInternacion {
     }[];
     _id: string;
     idPrestacion: string;
+    idInformeEstadistica?: string;
     organizacionDestino?: {
         nombre: string;
         id: string;

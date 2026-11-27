@@ -38,6 +38,7 @@ import { VistaLaboratorioComponent } from './components/ejecucion/laboratorios/v
 import { VistaRecetaComponent } from './components/huds/vistaReceta';
 import { SuspenderMedicacionComponent } from './components/ejecucion/recetas/suspenderMedicacion';
 import { VistaDerivacionComponent } from './components/huds/vistaDerivacion';
+import { VistaInformeEstadisticoComponent } from './components/huds/vistaInformeEstadistico';
 
 @NgModule({
     imports: [
@@ -82,7 +83,8 @@ import { VistaDerivacionComponent } from './components/huds/vistaDerivacion';
         VistaHistorialTurnosComponent,
         HudsBusquedaComponent,
         ListadoInternacionHudsComponent,
-        SuspenderMedicacionComponent
+        SuspenderMedicacionComponent,
+        VistaInformeEstadisticoComponent
     ],
     exports: [
         VistaCDAComponent,
@@ -106,7 +108,8 @@ import { VistaDerivacionComponent } from './components/huds/vistaDerivacion';
         VistaHistorialTurnosComponent,
         HudsBusquedaComponent,
         ListadoInternacionHudsComponent,
-        SuspenderMedicacionComponent
+        SuspenderMedicacionComponent,
+        VistaInformeEstadisticoComponent
     ],
 
     providers: [MotivosHudsService]
