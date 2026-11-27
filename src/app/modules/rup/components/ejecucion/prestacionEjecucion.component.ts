@@ -25,6 +25,8 @@ import { RecetaService } from 'src/app/services/receta.service';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { ITurno } from '../../../../interfaces/turnos/ITurno';
 import { permitePlantilla } from '../../helpers/semantic-tags.helper';
+import { ECLQueriesService } from 'src/app/services/eclqueries.service';
+import { SnomedService } from 'src/app/apps/mitos';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -107,7 +109,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     public alerta = 'Este registro no puede modificarse, si necesita cambiar alguna prescripción puede suspenderla desde la HUDS y registrarla nuevamente.';
 
-    private soloValores = ['33633005', '313047003', '1217195001', '1217196000'];
+    private soloValores = [];
     conceptoSeleccionadoId: string;
 
     constructor(
@@ -126,6 +128,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         public constantesService: ConstantesService,
         public recetaService: RecetaService,
         private turnoService: TurnoService,
+        public eclqueriesServicies: ECLQueriesService,
+        public snomedService: SnomedService
     ) { }
 
     /**
@@ -144,6 +148,23 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             if (resp) {
                 this.btnVolver = resp.nombre;
                 this.rutaVolver = resp.ruta;
+            }
+        });
+
+        this.eclqueriesServicies.search({ key: 'prestacion:registroNoModificable' }).pipe(
+            switchMap(query => {
+                if (query && query.length > 0) {
+                    const snomedQuery: any = {
+                        expression: query[0].valor,
+                        search: ''
+                    };
+                    return this.snomedService.get(snomedQuery);
+                }
+                return of([]);
+            })
+        ).subscribe((resultado: any[]) => {
+            if (resultado?.length) {
+                this.soloValores = resultado.map(item => item.conceptId);
             }
         });
 
