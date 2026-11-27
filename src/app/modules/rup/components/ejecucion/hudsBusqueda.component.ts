@@ -13,6 +13,7 @@ import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneable
 import { LaboratorioService } from 'src/app/services/laboratorio.service';
 import { ProfesionalService } from 'src/app/services/profesional.service';
 import { RecetaService } from 'src/app/services/receta.service';
+import { PacientesConsentimientoService } from 'src/app/services/paciente-concentimiento.service';
 import { gtag } from '../../../../shared/services/analytics.service';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { getSemanticClass } from '../../pipes/semantic-class.pipes';
@@ -56,6 +57,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     public secondsToUpdate = 0;
     private intervalUpdate: any;
     private cantidadRegistros;
+    private datosHudsCargados = false;
 
     solicitudesMezcladas = [];
 
@@ -64,6 +66,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
     public cdas = [];
 
     @Input() paciente: any;
+
+    @Input() vistaHuds = false;
 
     @Input() _dragScope: string;
     @Input() _dragOverClass = 'drag-over-border';
@@ -259,7 +263,8 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         private recetasService: RecetaService,
         private cdaService: CDAService,
         private profesionalService: ProfesionalService,
-        private derivacionesService: DerivacionesService
+        private derivacionesService: DerivacionesService,
+        private pacientesConsentimientoService: PacientesConsentimientoService
     ) {
     }
 
@@ -269,12 +274,7 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
      * @memberof PrestacionEjecucionComponent
      */
     ngAfterContentInit() {
-        if (this.paciente && this.permisosCompletos) {
-            this.listarInternaciones();
-            this.listarPrestaciones();
-            this.listarConceptos();
-            this.listarDerivaciones();
-        }
+        this.cargarDatosHuds();
         // Cuando se inicia una prestación debemos volver a consultar si hay CDA nuevos al ratito.
         // [TODO] Ser notificado via websockets
         setTimeout(() => {
@@ -296,6 +296,9 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
 
         if (this.permisosCompletos || this.permisosParciales || this.permisosRec) {
             this.groupRecetas();
+        }
+        if (!this.permisosCompletos && this.vistaHuds && this.auth.check('huds:programaMas65') && this.paciente?.id) {
+            this.validarAdhesionCuidar65(this.paciente.id);
         }
         this.getProfesional();
 
@@ -330,6 +333,29 @@ export class HudsBusquedaComponent implements AfterContentInit, OnInit, OnDestro
         if (this.intervalUpdate) {
             clearInterval(this.intervalUpdate);
         }
+    }
+
+    private cargarDatosHuds() {
+        if (!this.paciente || !this.permisosCompletos || this.datosHudsCargados) {
+            return;
+        }
+        this.datosHudsCargados = true;
+        this.listarInternaciones();
+        this.listarPrestaciones();
+        this.listarConceptos();
+        this.listarDerivaciones();
+    }
+
+    private validarAdhesionCuidar65(idPaciente: string) {
+        this.pacientesConsentimientoService.getUltimoConsentimientoCuidar65(idPaciente).subscribe(consentimiento => {
+            if (!consentimiento?.aceptacion) {
+                return;
+            }
+            this.permisosCompletos = true;
+            this.filtroActual = 'trastorno';
+            this.groupRecetas();
+            this.cargarDatosHuds();
+        });
     }
 
     getTitulo(filtroactual) {

@@ -95,10 +95,6 @@ export class HudsBusquedaPacienteComponent implements OnInit {
                 this.plex.info('warning', 'No tiene permiso para ingresar a este paciente.', 'Atención');
             } else {
                 if (this.permisoProgramaMas65) {
-                    if (paciente.edad < 65) {
-                        this.plex.info('warning', 'Usted no posee permisos para visualizar la historia de este paciente');
-                        return;
-                    }
                     this.programaMas65(paciente);
                 } else {
                     this.pacienteSelected = paciente;
@@ -109,40 +105,19 @@ export class HudsBusquedaPacienteComponent implements OnInit {
     }
 
     programaMas65(paciente: IPaciente) {
-        this.pacientesConsentimientoService.search({ pacienteId: paciente.id }).subscribe({
+        const sinPermisoMensaje = 'Este paciente no está adherido al programa <b>Cuidar +65</b>. Usted no posee permisos para visualizar la historia de este paciente';
+        this.pacientesConsentimientoService.getUltimoConsentimientoCuidar65(paciente.id).subscribe({
             next: (consentimiento: any) => {
-
-                const sinPermisoMensaje = 'Este paciente no está adherido al programa <b>Cuidar +65</b>. Usted no posee permisos para visualizar la historia de este paciente';
-
-                if (!consentimiento || (consentimiento.encontrado !== undefined && !consentimiento.encontrado)) {
+                if (!consentimiento) {
                     this.plex.info('warning', sinPermisoMensaje);
                     return;
                 }
-
-                const listado = Array.isArray(consentimiento) ? consentimiento : [consentimiento];
-                const consentimientosCuidar65 = listado.filter((c: any) => c && c.programa === 'Cuidar65');
-
-                if (consentimientosCuidar65.length === 0) {
-                    this.plex.info('warning', sinPermisoMensaje);
-                    return;
-                }
-
-                // Ordenar por fechaResp descendente (el más reciente primero)
-                consentimientosCuidar65.sort((a, b) => {
-                    const dateA = a.fechaResp ? new Date(a.fechaResp).getTime() : 0;
-                    const dateB = b.fechaResp ? new Date(b.fechaResp).getTime() : 0;
-                    return dateB - dateA;
-                });
-
-                const masReciente = consentimientosCuidar65[0];
-
-                if (masReciente.aceptacion) {
+                if (consentimiento.aceptacion) {
                     this.pacienteSelected = paciente;
                     this.showModalMotivo = true;
-                } else {
-                    this.plex.info('warning', 'Este paciente rechazó el último consentimiento del programa <b>Cuidar +65</b>');
                     return;
                 }
+                this.plex.info('warning', 'Este paciente rechazó el último consentimiento del programa <b>Cuidar +65</b>');
             }
         });
     }
