@@ -17,7 +17,13 @@ export class RUPSoloValorPipe implements PipeTransform {
 export function getValor(valor: any) {
     if (valor.id) {
         return (valor.id !== 'Otro') ? valor.label : valor.descripcion;
-    } else {
-        return (valor.evolucion) ? valor.evolucion : valor;
+    } else if (valor.evolucion) {
+        if (typeof valor.evolucion === 'string') {
+            return valor.evolucion;
+        }
+        if (typeof valor.evolucion === 'object' && !Array.isArray(valor.evolucion) && typeof valor.evolucion.evolucion === 'string') {
+            return valor.evolucion.evolucion;
+        }
     }
+    return valor;
 }

@@ -17,6 +17,22 @@ import { IPacienteBasico } from 'src/app/core/mpi/interfaces/IPaciente';
 import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 import moment from 'moment';
 
+function normalizarEvolucion(valor: any): string {
+    if (!valor) {
+        return '';
+    }
+
+    if (typeof valor === 'string') {
+        return valor;
+    }
+
+    if (!Array.isArray(valor) && typeof valor === 'object' && typeof valor.evolucion === 'string') {
+        return valor.evolucion;
+    }
+
+    return '';
+}
+
 @Injectable()
 export class PrestacionesService {
     public static InformeDelEncuentro = '371531000';
@@ -306,7 +322,7 @@ export class PrestacionesService {
                                 organizacion: prestacion.solicitud.organizacion.nombre,
                                 fechaInicio: registro.valor && registro.valor.fechaInicio ? registro.valor.fechaInicio : null,
                                 estado: registro.valor && registro.valor.estado ? registro.valor.estado : '',
-                                evolucion: registro.valor && registro.valor.evolucion ? registro.valor.evolucion : '',
+                                evolucion: normalizarEvolucion(registro.valor?.evolucion),
                                 idRegistroOrigen: registro.valor && registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : null,
                                 informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
                                 relacionadoCon: (registro.relacionadoCon ? registro.relacionadoCon : [])
@@ -331,7 +347,7 @@ export class PrestacionesService {
                             organizacion: prestacion.solicitud.organizacion.nombre,
                             fechaInicio: registro.valor && registro.valor.fechaInicio ? registro.valor.fechaInicio : ultimaEvolucion.fechaInicio,
                             estado: registro.valor && registro.valor.estado ? registro.valor.estado : ultimaEvolucion.estado,
-                            evolucion: registro.valor && registro.valor.evolucion ? registro.valor.evolucion : '',
+                            evolucion: normalizarEvolucion(registro.valor?.evolucion),
                             idRegistroOrigen: registro.valor && registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : ultimaEvolucion.idRegistroOrigen,
                             informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
                             relacionadoCon: (registro.relacionadoCon ? registro.relacionadoCon : [])

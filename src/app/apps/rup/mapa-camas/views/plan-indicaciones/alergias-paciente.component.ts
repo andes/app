@@ -4,6 +4,22 @@ import { map } from 'rxjs/operators';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 
+function normalizarEvolucion(valor: any): string {
+    if (!valor) {
+        return '';
+    }
+
+    if (typeof valor === 'string') {
+        return valor;
+    }
+
+    if (!Array.isArray(valor) && typeof valor === 'object' && typeof valor.evolucion === 'string') {
+        return valor.evolucion;
+    }
+
+    return '';
+}
+
 @Component ({
     selector: 'alergias-paciente',
     templateUrl: './alergias-paciente.html',
@@ -31,8 +47,8 @@ export class AlergiasPacienteComponent implements OnInit {
             map(alergias => alergias.map(a => {
                 return {
                     nombre: a.registro.nombre,
-                    evolucion: a.registro.valor.evolucion?.replace(/<[/]*p>/gi, ' '),
-                    fechaInicio: a.registro.valor.fechaInicio
+                    evolucion: normalizarEvolucion(a.registro.valor?.evolucion).replace(/<[/]*p>/gi, ' '),
+                    fechaInicio: a.registro.valor?.fechaInicio
                 };
             })
             )
