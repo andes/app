@@ -67,6 +67,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
     tipoComunicacion: any;
     barriosNeuquen: any[];
     patronContactoNumerico = /^[0-9]{3,4}[0-9]{6}$/;
+    patronContactoCelularExtranjero = /^\+[1-9][0-9]{3,14}$/;
 
     // Inicialización
     constructor(private pacienteService: PacienteService,
@@ -79,8 +80,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
     ngOnInit() {
         this.soloLectura = !this.auth.check('mpi:paciente:patchAndes');
 
-        this.tipoComunicacion = enumerados.getObjTipoComunicacion();
-        this.tipoComunicacion.splice(this.tipoComunicacion.length - 1, 1); // eliminamos 'Email'
+        this.tipoComunicacion = enumerados.getObjTipoComunicacion().filter(t => t.id !== 'email');
 
         this.loadPaciente();
 
@@ -147,9 +147,19 @@ export class UpdateContactoDireccionComponent implements OnInit {
 
     changeTipoContacto(indice, keyTipo) {
         if (keyTipo) {
-            this.contactosTelefonicos[indice].tipo = keyTipo.id;
+            this.contactosTelefonicos[indice].tipo = keyTipo.id || keyTipo;
             this.disableGuardar = false;
         }
+    }
+
+    contactoTelefonico(index) {
+        const tipoContacto = this.contactosTelefonicos[index]?.tipo;
+        return tipoContacto === 'fijo' || tipoContacto?.id === 'fijo' || tipoContacto === 'celular' || tipoContacto?.id === 'celular';
+    }
+
+    isCelularExtranjero(index) {
+        const tipoContacto = this.contactosTelefonicos[index]?.tipo;
+        return tipoContacto === 'extranjero' || tipoContacto?.id === 'extranjero';
     }
 
     removeContacto(i) {
@@ -206,6 +216,9 @@ export class UpdateContactoDireccionComponent implements OnInit {
     save(valid) {
         if (valid.formValid) {
             this.eliminarContactosVacios();
+            this.contactosTelefonicos.forEach(elem => {
+                elem.tipo = typeof elem.tipo === 'string' ? elem.tipo : (elem.tipo?.id || elem.tipo);
+            });
             this.paciente.contacto = this.contactosTelefonicos.concat(this.contactosEmail);
 
             if (this.paciente.direccion?.length) {
