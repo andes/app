@@ -17,6 +17,7 @@ import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneable
 import { PlexModalComponent } from '@andes/plex';
 import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido.pipe';
 import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
+import { AMBITOS_ORIGEN, IAmbitoOrigenOpcion } from '../../../interfaces/prestacion.interface';
 
 @Component({
     selector: 'rup-asignar-turno',
@@ -36,6 +37,8 @@ export class RupAsignarTurnoComponent implements OnInit {
     private prestacionesProfesional;
     public isButtonDisabled = false;
     public tipoPrestacion: ITipoPrestacion;
+    public procedencia: IAmbitoOrigenOpcion;
+    public procedencias = AMBITOS_ORIGEN;
 
     // Eventos
     @Input() agenda: IAgenda;
@@ -167,6 +170,7 @@ export class RupAsignarTurnoComponent implements OnInit {
             tipoPrestacion: this.datosTurno.tipoPrestacion,
             idAgenda: this.agenda.id,
             paciente,
+            procedencia: this.procedencia?.id
         };
         // guardamos el turno
         this.serviceTurno.saveDinamica(datosConfirma).pipe(
@@ -175,7 +179,7 @@ export class RupAsignarTurnoComponent implements OnInit {
                 return turnoDado?.paciente?.id === paciente.id ? turnoDado.id : null;
             }), switchMap(idturnoDado => {
                 if (idturnoDado) {
-                    return this.servicioPrestacion.crearPrestacion(paciente, this.datosTurno.tipoPrestacion, 'ejecucion', this.servicioPrestacion.getFechaPrestacionTurnoDinamico(fechaTurno), idturnoDado).pipe(tap(prestacion => {
+                    return this.servicioPrestacion.crearPrestacion(paciente, this.datosTurno.tipoPrestacion, 'ejecucion', this.servicioPrestacion.getFechaPrestacionTurnoDinamico(fechaTurno), idturnoDado, this.procedencia?.id).pipe(tap(prestacion => {
                         this.router.navigate(['rup/ejecucion/', prestacion.id]);
                     })
                     );
@@ -220,13 +224,14 @@ export class RupAsignarTurnoComponent implements OnInit {
                     estado: 'asignado',
                     tipoPrestacion: this.tipoPrestacion,
                     paciente: this.pacienteActivo,
+                    procedencia: this.procedencia?.id
                 }
             };
 
             this.serviceAgenda.patch(this.agenda.id, patch).subscribe(agenda => {
                 const sobreTurno = agenda.sobreturnos[agenda.sobreturnos.length - 1];
                 if (sobreTurno) {
-                    this.servicioPrestacion.crearPrestacion(paciente, sobreTurno.tipoPrestacion, 'ejecucion', sobreTurno.horaInicio, sobreTurno.id).subscribe(
+                    this.servicioPrestacion.crearPrestacion(paciente, sobreTurno.tipoPrestacion, 'ejecucion', sobreTurno.horaInicio, sobreTurno.id, this.procedencia?.id).subscribe(
                         prestacion => {
                             this.router.navigate(['rup/ejecucion/', prestacion.id]);
                         }

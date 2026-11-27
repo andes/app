@@ -72,6 +72,7 @@ import { ValorNumericoComponent } from './components/elementos/valorNumerico.com
 import { VistaPrestacionComponent } from './components/huds/vistaPrestacion';
 import { ElementoRUPByIdPipes } from './pipes/elemento-rup-id.pipes';
 import { SemanticClassPipe } from './pipes/semantic-class.pipes';
+import { AmbitoLabelPipe } from './pipes/ambito-label.pipe';
 import { SemanticIconPipe } from './pipes/semantic-icon.pipes';
 import { RUPSoloValorPipe } from './pipes/elemento-rup-valor.pipes';
 import { DirectiveLibModule } from '../../directives/directives.module';
@@ -165,6 +166,7 @@ const RUPComponentsArray = [
         RUPObservacionesModalComponent,
         SemanticIconPipe,
         SemanticClassPipe,
+        AmbitoLabelPipe,
         ElementoRUPByIdPipes,
         RUPSoloValorPipe,
         RUPMedicamentosBusquedaDetalleComponent
@@ -177,6 +179,7 @@ const RUPComponentsArray = [
         RelacionRUPPipe,
         SemanticIconPipe,
         SemanticClassPipe,
+        AmbitoLabelPipe,
         ElementoRUPByIdPipes,
         RUPSoloValorPipe
     ]
