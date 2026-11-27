@@ -48,7 +48,7 @@ export class ChecklistComponent extends RUPComponent implements OnInit {
         }
         this.multiple = this.params.multiple || false;
         this.required = this.params.required || false;
-        this.label = this.params.label || this.registro.concepto.term;
+        this.label = this.params.label || this.params.title || this.registro.concepto.term;
         this.idField = this.params.idField || 'id';
         this.labelField = this.params.labelField || 'label';
         this.type = this.params.type || 'horizontal';
