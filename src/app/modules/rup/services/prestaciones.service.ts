@@ -5,6 +5,7 @@ import { Auth } from '@andes/auth';
 import { cache, Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
 import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interface';
+import { IPrestacionesSinValidarResponse } from '../interfaces/prestacionSinValidar.interface';
 import { SnomedService } from '../../../apps/mitos';
 import { HUDSService } from '../services/huds.service';
 import { Plex } from '@andes/plex';
@@ -147,6 +148,10 @@ export class PrestacionesService {
         const opt = { params: params, options };
 
         return this.server.get(this.prestacionesUrl, opt);
+    }
+
+    getPrestacionesSinValidar(params: { skip?: number; limit?: number }): Observable<IPrestacionesSinValidarResponse> {
+        return this.server.get(this.prestacionesUrl + '/sin-validar', { params, showError: false });
     }
 
     /**

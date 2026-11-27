@@ -7,7 +7,9 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SnomedBuscarComponent } from 'src/app/components/snomed/snomed-buscar.component';
+import { AndesAppSharedModule } from 'src/app/shared/andes-app-shared.module';
 import { BuscadorComponent } from './components/ejecucion/buscador.component';
+import { PrestacionesSinValidarComponent } from './components/prestaciones-sin-validar/prestaciones-sin-validar.component';
 import { ModalMotivoAccesoHudsComponent } from './components/huds/modal-motivo-acceso-huds.component';
 import { RUPCardComponent } from './components/huds/rup-card/rup-card.component';
 import { SnomedLinkComponent } from './directives/snomed-link';
@@ -23,7 +25,8 @@ import { ElementosRUPModule } from './elementos-rup.module';
         HttpClientModule,
         SharedModule,
         ScrollingModule,
-        ElementosRUPModule
+        ElementosRUPModule,
+        AndesAppSharedModule
     ],
     declarations: [
         ModalMotivoAccesoHudsComponent,
@@ -31,7 +34,8 @@ import { ElementosRUPModule } from './elementos-rup.module';
         BuscadorComponent,
         SnomedBuscarComponent,
         SnomedLinkComponent,
-        SnomedSinonimoComponent
+        SnomedSinonimoComponent,
+        PrestacionesSinValidarComponent
     ],
     exports: [
         ModalMotivoAccesoHudsComponent,
@@ -40,7 +44,8 @@ import { ElementosRUPModule } from './elementos-rup.module';
         SnomedBuscarComponent,
         ScrollingModule,
         SnomedLinkComponent,
-        SnomedSinonimoComponent
+        SnomedSinonimoComponent,
+        PrestacionesSinValidarComponent
     ],
 })
 export class RUPLibModule {

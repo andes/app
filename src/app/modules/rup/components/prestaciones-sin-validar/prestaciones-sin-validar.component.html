@@ -1,0 +1,57 @@
+<plex-title titulo="Prestaciones sin validar" size="md">
+    <plex-button type="danger" icon="close" (click)="cerrar.emit()" tooltip="Cerrar" size="sm">
+    </plex-button>
+</plex-title>
+<p class="text-muted medium mb-3">
+    Se muestran las prestaciones pendientes de validación. Es fundamental completarlas, ya que
+    mientras permanezcan en este estado no se visualizarán en la Historia de Salud ni estarán
+    disponibles para el paciente o para otros profesionales que requieran dar continuidad a la
+    atención.
+</p>
+<plex-label *ngIf="!cargandoPrestacionesSinValidar && !prestacionesSinValidar.length" icon="calendario-tilde"
+            type="info" size="xl" direction="column" titulo="No hay prestaciones sin validar"
+            subtitulo="No se encontraron prestaciones en ejecución para el profesional">
+</plex-label>
+
+<plex-list #listaSinValidar *ngIf="prestacionesSinValidar.length" [striped]="true" height="100%"
+           (scrolled)="onScroll()">
+    <plex-item *ngFor="let prestacion of prestacionesSinValidar">
+        <plex-icon class="mr-3" name="calendario-tilde" type="info"></plex-icon>
+        <div class="d-flex align-items-center">
+            <plex-label icono="calendario-tilde" titulo="{{ prestacion.ejecucion.fecha | date: 'dd/MM/yyyy HH:mm'}}"
+                        subtitulo="Pac: {{ prestacion.paciente | nombre }}" size="sm">
+            </plex-label>
+        </div>
+        <div class="d-flex align-items-center">
+            <plex-label titulo="{{ prestacion.solicitud.tipoPrestacion.term }}"></plex-label>
+        </div>
+        <div class="d-flex align-items-center">
+            <plex-badge type="info">
+                {{ prestacion.solicitud.turno ? 'Agenda' : 'Fuera de agenda' }}
+            </plex-badge>
+        </div>
+        <div class="d-flex align-items-center"
+             *ngIf="!prestacion.paciente || !(prestacion.paciente | pacienteRestringido)">
+            <plex-button *ngIf="prestacion.turnoInfo?.encontrado && prestacion.solicitud.turno && prestacion.paciente && !prestacion.turnoInfo?.asistencia"
+                         type="warning" size="sm" icon="account-cruz" tooltip="Registrar inasistencia"
+                         (click)="registrarInasistencia(prestacion)">
+            </plex-button>
+            <plex-button *ngIf="prestacion.paciente && !prestacion.solicitud.tipoPrestacion.noNominalizada && tieneAccesoHUDS"
+                         class="ml-1" size="sm" icon="historial" type="info" tooltip="Ver HUDS"
+                         (click)="verHuds.emit(prestacion)">
+            </plex-button>
+            <plex-button *ngIf="prestacion.estadoActual?.tipo === 'ejecucion' && (!prestacion.turnoInfo?.asistencia || prestacion.turnoInfo?.asistencia === 'asistio')"
+                         class="ml-1" size="sm" icon="lapiz-documento" type="success" tooltip="Continuar registro"
+                         tooltipPosition="left" (click)="continuar.emit(prestacion)">
+            </plex-button>
+            <plex-button *ngIf="prestacion.estadoActual?.tipo === 'ejecucion' && (!prestacion.turnoInfo?.asistencia || prestacion.turnoInfo?.asistencia === 'asistio')"
+                         class="ml-1" size="sm" icon="prohibido" type="danger" tooltip="Anular inicio de prestación"
+                         tooltipPosition="left" titlePosition="left" (click)="invalidar(prestacion)">
+            </plex-button>
+            <plex-button *ngIf="prestacion.turnoInfo?.encontrado && prestacion.solicitud.turno && prestacion.paciente && prestacion.turnoInfo?.asistencia === 'noAsistio'"
+                         class="ml-1" size="sm" icon="backup-restore" type="danger" tooltip="Revertir cambios"
+                         tooltipPosition="left" (click)="revertirInasistencia(prestacion)">
+            </plex-button>
+        </div>
+    </plex-item>
+</plex-list>

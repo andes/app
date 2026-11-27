@@ -5,7 +5,7 @@ import { cacheStorage, Unsubscribe } from '@andes/shared';
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { forkJoin as observableForkJoin, Subscription, switchMap, map, catchError, of } from 'rxjs';
+import { firstValueFrom, forkJoin as observableForkJoin, Subscription, switchMap } from 'rxjs';
 import { ITurno } from 'src/app/interfaces/turnos/ITurno';
 import { SnomedService } from '../../../../apps/mitos';
 import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
@@ -21,12 +21,6 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 import { IMotivoAcceso } from '../../interfaces/IMotivoAcceso';
-
-interface IPrestacionSinValidar extends IPrestacion {
-    asistenciaTurno?: string;
-    turnoCargado?: boolean;
-    turnoEncontrado?: boolean;
-}
 
 @Component({
     selector: 'rup-puntoInicio',
@@ -100,13 +94,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public permisoServicioIntermedio = this.auth.getPermissions('rup:servicio-intermedio:?');
     public showSidebar = false;
     public mostrarPrestacionesSinValidar = false;
-    public prestacionesSinValidar: IPrestacionSinValidar[] = [];
-    public cargandoPrestacionesSinValidar = false;
-    public scrollEnd = false;
-    private skip = 0;
-    private limit = 15;
-    private lastRequestPrestacionesSinValidar: Subscription;
-    private requestsAsistenciaTurnos: Subscription[] = [];
 
     prestacionPendiente: IPrestacion;
     turno: ITurno;
@@ -131,7 +118,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.stopAgendaRefresh();
-        this.stopCargaPrestacionesSinValidar();
         this.ws.disconnect();
     }
 
@@ -555,19 +541,23 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.confirmarInvalidarPrestacion(prestacion, data);
     }
 
-    registrarInasistencia(paciente, agenda: IAgenda = null, turno, operacion) {
+    async registrarInasistencia(paciente, agenda: IAgenda = null, turno, operacion): Promise<boolean> {
         const msg = operacion === 'noAsistio' ?
             `¿Está seguro que desea registrar la inasistencia del paciente: <b> ${paciente.apellido} ${paciente.alias || paciente.nombre} </b> ?` :
             '¿Está seguro que desea revertir los cambios?';
 
-        this.plex.confirm(msg).then(confirmacion =>
-            confirmacion ? this.servicioAgenda.patch(agenda.id, { op: operacion, turnos: [turno] }).subscribe(() => {
-                this.actualizar();
-                if (this.mostrarPrestacionesSinValidar) {
-                    this.recargarPrestacionesSinValidar();
-                }
-            }) : false
-        );
+        const confirmado = await this.plex.confirm(msg);
+        if (!confirmado) {
+            return false;
+        }
+
+        try {
+            await firstValueFrom(this.servicioAgenda.patch(agenda.id, { op: operacion, turnos: [turno] }));
+            this.actualizar();
+            return true;
+        } catch {
+            return false;
+        }
     }
 
 
@@ -1007,74 +997,16 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         if (this.mostrarPrestacionesSinValidar) {
             return;
         }
-        this.stopCargaPrestacionesSinValidar();
         this.showSidebar = true;
         this.mostrarPrestacionesSinValidar = true;
         this.verFueraAgenda = false;
         this.tipoPrestacion = null;
         this.buscandoPaciente = false;
         this.prestacionPendiente = null;
-        this.prestacionesSinValidar = [];
-        this.skip = 0;
-        this.scrollEnd = false;
-        this.cargarPrestacionesSinValidar();
-    }
-
-    cargarPrestacionesSinValidar() {
-        if (this.cargandoPrestacionesSinValidar || this.scrollEnd) {
-            return;
-        }
-        this.cargandoPrestacionesSinValidar = true;
-        this.lastRequestPrestacionesSinValidar = this.servicioPrestacion.get({
-            idProfesional: this.auth.profesional,
-            estado: 'ejecucion',
-            organizacion: this.auth.organizacion.id,
-            ambitoOrigen: 'ambulatorio',
-            ordenFechaEjecucion: true,
-            skip: this.skip,
-            limit: this.limit
-        }).subscribe({
-            next: (prestaciones) => {
-                const nuevasPrestaciones: IPrestacionSinValidar[] = prestaciones || [];
-                nuevasPrestaciones.forEach(prestacion => {
-                    if (prestacion.solicitud.turno) {
-                        prestacion.turnoCargado = false;
-                    } else {
-                        prestacion.turnoCargado = true;
-                        prestacion.turnoEncontrado = true;
-                    }
-                });
-                this.prestacionesSinValidar = this.prestacionesSinValidar.concat(nuevasPrestaciones);
-                this.cargarAsistenciaTurnos(nuevasPrestaciones);
-                this.skip = this.prestacionesSinValidar.length;
-                if (!nuevasPrestaciones.length || nuevasPrestaciones.length < this.limit) {
-                    this.scrollEnd = true;
-                }
-                this.cargandoPrestacionesSinValidar = false;
-            },
-            error: () => {
-                this.cargandoPrestacionesSinValidar = false;
-            }
-        });
-    }
-
-    onScroll() {
-        this.cargarPrestacionesSinValidar();
     }
 
     private resetSidebarPrestacionesSinValidar() {
         this.mostrarPrestacionesSinValidar = false;
-        this.stopCargaPrestacionesSinValidar();
-    }
-
-    private stopCargaPrestacionesSinValidar() {
-        if (this.lastRequestPrestacionesSinValidar) {
-            this.lastRequestPrestacionesSinValidar.unsubscribe();
-            this.lastRequestPrestacionesSinValidar = null;
-        }
-        this.requestsAsistenciaTurnos.forEach(request => request.unsubscribe());
-        this.requestsAsistenciaTurnos = [];
-        this.cargandoPrestacionesSinValidar = false;
     }
 
     continuarPrestacionSinValidar(prestacion: IPrestacion) {
@@ -1086,140 +1018,14 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.setAccesoHudsParams(prestacion.paciente, prestacion.solicitud.turno || null, prestacion.solicitud.tipoPrestacion.id);
     }
 
-    registrarInasistenciaSinValidar(prestacion: IPrestacion) {
-        this.actualizarInasistenciaPrestacion(prestacion, 'noAsistio');
-    }
-
-    revertirInasistenciaSinValidar(prestacion: IPrestacion) {
-        this.actualizarInasistenciaPrestacion(prestacion, 'sacarAsistencia');
-    }
-
-    private actualizarInasistenciaPrestacion(prestacion: IPrestacion, operacion: string) {
-        this.buscarAgendaPrestacion(prestacion).subscribe(agendaTurno => {
-            if (!agendaTurno) {
-                this.plex.info('warning', 'No se encontró la agenda asociada al turno', 'Aviso');
-                return;
-            }
-            this.registrarInasistencia(prestacion.paciente, agendaTurno.agenda, agendaTurno.idTurno, operacion);
-        });
-    }
-
-    private cargarAsistenciaTurnos(prestaciones: IPrestacionSinValidar[]) {
-        const prestacionesConTurno = prestaciones.filter(prestacion => prestacion.solicitud.turno);
-        if (!prestacionesConTurno.length) {
-            return;
-        }
-        const fechas = Array.from(new Set(prestacionesConTurno.map(prestacion => moment(prestacion.ejecucion.fecha).format('YYYY-MM-DD'))));
-        const requests = fechas.map(fecha => this.servicioAgenda.get({
-            fechaDesde: moment(fecha).startOf('day').toDate(),
-            fechaHasta: moment(fecha).endOf('day').toDate(),
-            organizacion: this.auth.organizacion.id,
-            teleConsulta: true
-        }).pipe(
-            catchError(() => of([] as IAgenda[]))
-        ));
-        const request = observableForkJoin(requests).subscribe({
-            next: (agendasPorFecha) => {
-                const agendas = agendasPorFecha.reduce((resultado: IAgenda[], agendasFecha: IAgenda[]) => resultado.concat(agendasFecha), []);
-                prestacionesConTurno.forEach(prestacion => {
-                    prestacion.turnoEncontrado = false;
-                    for (const agenda of agendas) {
-                        const turnoEncontrado = this.buscarTurnoEnAgenda(agenda, prestacion.solicitud.turno);
-                        if (turnoEncontrado) {
-                            prestacion.asistenciaTurno = turnoEncontrado.turno.asistencia;
-                            prestacion.turnoEncontrado = true;
-                            break;
-                        }
-                    }
-                    prestacion.turnoCargado = true;
-                });
-            },
-            error: () => {
-                prestacionesConTurno.forEach(prestacion => {
-                    prestacion.turnoEncontrado = false;
-                    prestacion.turnoCargado = true;
-                });
-            }
-        });
-        this.requestsAsistenciaTurnos.push(request);
-    }
-
-    private buscarTurnoEnAgenda(agenda: IAgenda, idTurno: string) {
-        for (const bloque of agenda.bloques || []) {
-            const turno = bloque.turnos?.find(t => t.id === idTurno);
-            if (turno) {
-                return { turno, tipoTurno: 'turno' };
-            }
-        }
-        const sobreturno = agenda.sobreturnos?.find(s => s.id === idTurno);
-        if (sobreturno) {
-            return { turno: sobreturno, tipoTurno: 'sobreturno' };
-        }
-        return null;
-    }
-
-    invalidarPrestacionSinValidar(prestacion: IPrestacion) {
-        if (!prestacion.solicitud.turno) {
-            this.confirmarInvalidarPrestacion(prestacion, null);
-            return;
-        }
-        this.buscarAgendaPrestacion(prestacion).subscribe(agendaTurno => {
-            if (!agendaTurno) {
-                this.plex.info('warning', 'No se encontró la agenda asociada al turno', 'Aviso');
-                return;
-            }
-            const data = {
-                idAgenda: agendaTurno.agenda.id,
-                idTurno: agendaTurno.idTurno,
-                tipoTurno: agendaTurno.tipoTurno
-            };
-            this.confirmarInvalidarPrestacion(prestacion, data);
-        });
-    }
-
-    private buscarAgendaPrestacion(prestacion: IPrestacion) {
-        const fecha = moment(prestacion.ejecucion.fecha);
-        return this.servicioAgenda.get({
-            fechaDesde: fecha.startOf('day').toDate(),
-            fechaHasta: fecha.endOf('day').toDate(),
-            organizacion: this.auth.organizacion.id,
-            teleConsulta: true
-        }).pipe(
-            map(agendas => {
-                for (const agenda of agendas) {
-                    const turnoEncontrado = this.buscarTurnoEnAgenda(agenda, prestacion.solicitud.turno);
-                    if (turnoEncontrado) {
-                        return {
-                            agenda,
-                            turno: turnoEncontrado.turno,
-                            idTurno: turnoEncontrado.turno.id,
-                            tipoTurno: turnoEncontrado.tipoTurno
-                        };
-                    }
-                }
-                return null;
-            })
-        );
-    }
-
     private confirmarInvalidarPrestacion(prestacion: IPrestacion, data: any) {
         this.plex.confirm('¿Está seguro que desea invalidar esta prestación?').then(confirmacion => {
             if (confirmacion) {
-                this.servicioPrestacion.invalidarPrestacion(prestacion, data).subscribe(() => {
-                    this.actualizar();
-                    if (this.mostrarPrestacionesSinValidar) {
-                        this.recargarPrestacionesSinValidar();
-                    }
+                this.servicioPrestacion.invalidarPrestacion(prestacion, data).subscribe({
+                    next: () => this.actualizar(),
+                    error: () => this.plex.info('warning', 'No se pudo invalidar la prestación', 'Aviso')
                 });
             }
         });
-    }
-
-    private recargarPrestacionesSinValidar() {
-        this.prestacionesSinValidar = [];
-        this.skip = 0;
-        this.scrollEnd = false;
-        this.stopCargaPrestacionesSinValidar();
-        this.cargarPrestacionesSinValidar();
     }
 }
