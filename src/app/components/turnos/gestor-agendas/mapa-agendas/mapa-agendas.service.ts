@@ -1,9 +1,14 @@
-import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, forkJoin } from 'rxjs';
+import moment from 'moment';
+import { BehaviorSubject, forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
+import { ITurno } from 'src/app/interfaces/turnos/ITurno';
 import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
+import { MapaAgendaColoresService, MapaAgendaColorResuelto, MapaAgendaColoresResolverParams } from './mapa-agenda-colores.service';
+import { NotaAgendaService } from './nota-agenda.service';
 
 @Injectable({ providedIn: 'root' })
 export class MapaAgendasService {
@@ -12,47 +17,121 @@ export class MapaAgendasService {
     fecha;
     agendas;
     public calendario;
-    tiposPrestacion = new Map();
+    tiposPrestacion = new Map<string, ITipoPrestacion>();
     prestacionesPermisos;
+    servicioIntermedio;
+    requiereServicioIntermedio = false;
+    modoRup = false;
+    notas = [];
 
     constructor(
         private agendaService: AgendaService,
         private conceptoTurneablesService: ConceptosTurneablesService,
+        private notaAgendaService: NotaAgendaService,
+        private mapaAgendaColoresService: MapaAgendaColoresService,
         private auth: Auth
     ) { }
 
     public setPermisos(permisos: string) {
+        this.modoRup = permisos.startsWith('rup:');
         this.prestacionesPermisos = this.auth.getPermissions(permisos);
     }
 
+    public setServicioIntermedio(servicio) {
+        this.servicioIntermedio = servicio || null;
+    }
+
+    public setRequiereServicioIntermedio(requiere: boolean) {
+        this.requiereServicioIntermedio = requiere;
+    }
+
     public cargarAgendasMes(fecha) {
+        if (this.requiereServicioIntermedio && !this.servicioIntermedio?.id) {
+            return;
+        }
         this.fecha = fecha;
-        const parametros = {
+        const parametros: any = {
             fechaDesde: moment(this.fecha).startOf('month').toDate(),
             fechaHasta: moment(this.fecha).endOf('month').toDate(),
-            organizacion: this.auth.organizacion.id
+            organizacion: this.auth.organizacion.id,
+            populate: 'prestaciones',
         };
+        if (this.servicioIntermedio?.id) {
+            parametros.servicioIntermedio = this.servicioIntermedio.id;
+        }
+
+        const notas$ = this.modoRup
+            ? this.notaAgendaService.search(this.parametrosNotas()).pipe(catchError(() => of([])))
+            : of([]);
+
+        const colores$ = this.mapaAgendaColoresService
+            .resolver(this.parametrosColores())
+            .pipe(catchError(() => of([] as MapaAgendaColorResuelto[])));
 
         forkJoin([
             this.conceptoTurneablesService.getAll(),
-            this.agendaService.get(parametros)]
-        ).subscribe(([conceptosTurneables, agendas]) => {
-            this.tipoPrestacionesColor(conceptosTurneables);
+            this.agendaService.get(parametros),
+            notas$,
+            colores$
+        ]).subscribe(([conceptosTurneables, agendas, notas, coloresResueltos]) => {
+            this.tipoPrestacionesColor(conceptosTurneables, coloresResueltos || []);
             this.agendas = agendas;
+            this.notas = notas || [];
             this.cargarMes();
         });
 
 
     }
 
-    private tipoPrestacionesColor(conceptosTurneables: any[]) {
-        if (this.prestacionesPermisos[0] === '*') {
+    private parametrosNotas() {
+        const desde = moment(this.fecha).startOf('month').format('YYYY-MM-DD');
+        const hasta = moment(this.fecha).endOf('month').format('YYYY-MM-DD');
+        const params: any = {
+            fecha: `${desde}|${hasta}`
+        };
+        if (this.servicioIntermedio?.id) {
+            params.servicioIntermedio = this.servicioIntermedio.id;
+        }
+        return params;
+    }
+
+    private parametrosColores(): MapaAgendaColoresResolverParams {
+        const params: MapaAgendaColoresResolverParams = {};
+        if (this.servicioIntermedio?.id) {
+            params.servicioIntermedio = this.servicioIntermedio.id;
+        }
+        return params;
+    }
+
+    private tipoPrestacionesColor(conceptosTurneables: ITipoPrestacion[], coloresResueltos: MapaAgendaColorResuelto[]) {
+        this.tiposPrestacion.clear();
+        const conceptosServicio = this.servicioIntermedio?.conceptosTurneables || [];
+        if (this.servicioIntermedio) {
+            const conceptIds = conceptosServicio.map(tipo => tipo.conceptId);
+            this.conceptosTurneables = conceptosTurneables.filter(x => conceptIds.indexOf(x.conceptId) >= 0);
+        } else if (this.prestacionesPermisos && this.prestacionesPermisos[0] === '*') {
             this.conceptosTurneables = conceptosTurneables;
         } else {
-            this.conceptosTurneables = conceptosTurneables.filter((x) => this.prestacionesPermisos.indexOf(x.id) >= 0);
+            this.conceptosTurneables = conceptosTurneables.filter((x) => this.prestacionesPermisos?.indexOf(x.id) >= 0);
         }
-        this.conceptosTurneables.filter(d => d.color).forEach(tipoPrestacion => {
-            this.tiposPrestacion.set(tipoPrestacion.conceptId, tipoPrestacion);
+
+        const colorResuelto = new Map<string, string>();
+        (coloresResueltos || []).forEach(regla => colorResuelto.set(regla.conceptId, regla.color));
+
+        this.conceptosTurneables.forEach(tipoPrestacion => {
+            const color = colorResuelto.get(tipoPrestacion.conceptId) ?? tipoPrestacion.color;
+            if (color) {
+                this.tiposPrestacion.set(tipoPrestacion.conceptId, { ...tipoPrestacion, color });
+            }
+        });
+
+        (coloresResueltos || []).forEach(regla => {
+            if (!this.tiposPrestacion.has(regla.conceptId)) {
+                this.tiposPrestacion.set(regla.conceptId, {
+                    conceptId: regla.conceptId,
+                    color: regla.color
+                } as ITipoPrestacion);
+            }
         });
     }
 
@@ -75,7 +154,8 @@ export class MapaAgendasService {
                     week.push({
                         fecha: dia,
                         prestaciones: [],
-                        totalPorPrestacion: []
+                        totalPorPrestacion: [],
+                        notas: this.notasDelDia(dia)
                     });
                 } else {
                     week.push({ estado: 'vacio' });
@@ -86,6 +166,12 @@ export class MapaAgendasService {
         }
 
         this.cargarTabla();
+    }
+
+    private notasDelDia(fecha) {
+        return (this.notas || []).filter(nota =>
+            moment(nota.fecha).isSame(fecha, 'day') || moment(nota.horaInicio).isSame(fecha, 'day')
+        );
     }
 
 
@@ -123,12 +209,15 @@ export class MapaAgendasService {
     }
 
 
+    public colorConcepto(conceptId: string): string | undefined {
+        return this.tiposPrestacion.get(conceptId)?.color;
+    }
+
     private getColor(prestacionesDia) {
-        let prestacion;
         prestacionesDia.forEach(prestacionDia => {
-            prestacion = this.tiposPrestacion.get(prestacionDia.tipoPrestacion_id);
-            if (prestacion) {
-                prestacionDia['color'] = prestacion.color;
+            const color = this.colorConcepto(prestacionDia.tipoPrestacion_id);
+            if (color) {
+                prestacionDia['color'] = color;
             }
         });
 
@@ -174,6 +263,31 @@ export class MapaAgendasService {
     }
 
 
+    /**
+     * Clave de color y agrupación del mapa: procedimiento del turno si existe; si no, tipoPrestacion.
+     */
+    public conceptoMapaTurno(turno: ITurno): { conceptId: string; nombre: string } | null {
+        const proc = turno.procedimiento;
+        if (proc?.conceptId) {
+            return {
+                conceptId: proc.conceptId,
+                nombre: proc.term || proc.fsn || proc.conceptId
+            };
+        }
+        const tipo = turno.tipoPrestacion;
+        if (tipo?.conceptId) {
+            return {
+                conceptId: tipo.conceptId,
+                nombre: tipo.term || tipo.conceptId
+            };
+        }
+        return null;
+    }
+
+    public etiquetaPrestacionTurno(turno: ITurno): string {
+        return this.conceptoMapaTurno(turno)?.nombre ?? '';
+    }
+
     private ordenarPrestacionesAgendas(dia, turnosAgenda, agenda, disponible) {
         const turnosPrestacion = {};
         const aux = [];
@@ -191,18 +305,22 @@ export class MapaAgendasService {
 
 
         turnosAgenda.forEach(turno => {
+            const clave = this.conceptoMapaTurno(turno);
+            if (!clave) {
+                return;
+            }
 
-            if (!turnosPrestacion[turno.tipoPrestacion.conceptId]) {
-                turnosPrestacion[turno.tipoPrestacion.conceptId] = {
+            if (!turnosPrestacion[clave.conceptId]) {
+                turnosPrestacion[clave.conceptId] = {
                     turnosPorPrestacion: [],
-                    tipoPrestacion_id: turno.tipoPrestacion.conceptId,
-                    nombre: turno.tipoPrestacion.term,
+                    tipoPrestacion_id: clave.conceptId,
+                    nombre: clave.nombre,
                     agenda: agenda,
                     disponible: 0
                 };
             }
 
-            turnosPrestacion[turno.tipoPrestacion.conceptId].turnosPorPrestacion.push(turno);
+            turnosPrestacion[clave.conceptId].turnosPorPrestacion.push(turno);
         });
 
 

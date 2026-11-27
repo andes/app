@@ -13,4 +13,5 @@ export interface ITipoPrestacion {
     auditable?: boolean;
     tiempoVigencia?: number;
     videoConferencia?: boolean;
+    color?: string;
 }

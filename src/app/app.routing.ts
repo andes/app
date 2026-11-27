@@ -56,6 +56,16 @@ const appRoutes: Routes = [
     { path: 'tm/espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'tm/mapa_espacio_fisico', component: MapaEspacioFisicoVistaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'tm/farmacia', component: FarmaciaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+    {
+        path: 'tm/servicios-intermedio',
+        loadChildren: () => import('./components/servicios-intermedio-tm/servicios-intermedio-tm.module').then(m => m.ServiciosIntermedioTmModule),
+        canActivate: [RoutingNavBar, RoutingGuard]
+    },
+    {
+        path: 'tm/mapa-agenda-colores',
+        loadChildren: () => import('./components/mapa-agenda-colores-tm/mapa-agenda-colores-tm.module').then(m => m.MapaAgendaColoresTmModule),
+        canActivate: [RoutingNavBar, RoutingGuard]
+    },
 
     { path: 'com/estados-cama-provincial', component: EstadosCamaProvincialComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     // MPI

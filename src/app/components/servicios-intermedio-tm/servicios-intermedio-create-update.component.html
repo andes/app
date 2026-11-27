@@ -1,0 +1,68 @@
+<plex-layout main="8">
+  <plex-layout-main>
+    <form #formulario="ngForm">
+      <plex-title [size]="'md'" [titulo]="isEdit ? 'Editar servicio intermedio' : 'Nuevo servicio intermedio'">
+        <plex-button size="sm" label="Volver" type="danger" position="left" (click)="volver()">
+        </plex-button>
+        <plex-button size="sm" class="ml-1" label="Guardar" type="success" position="right"
+          [disabled]="loading || saving" [validateForm]="formulario" (click)="guardar($event)">
+        </plex-button>
+      </plex-title>
+
+      <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+
+      <plex-wrapper *ngIf="!loading">
+        <plex-text [(ngModel)]="model.nombre" name="nombreServicioIntermedio" label="Nombre"
+          placeholder="Nombre del servicio" [required]="true" grow="full">
+        </plex-text>
+
+        <plex-select [(ngModel)]="model.concepto" name="conceptoSnomed" label="Concepto SNOMED"
+          placeholder="Buscar procedimiento..." [snomedExpression]="conceptoSnomedExpression" [preload]="false"
+          idField="conceptId" labelField="term" grow="full">
+        </plex-select>
+
+        <plex-select [(ngModel)]="model.conceptosTurneables" name="conceptosTurneables" label="Conceptos turneables"
+          placeholder="Buscar prestaciones..." [multiple]="true" grow="full" [tmPrestaciones]="tmPrestacionesPerm">
+        </plex-select>
+
+        <plex-text [(ngModel)]="model.procedimientosEcl" name="procedimientosEcl" label="Expresión ECL (procedimientos)"
+          placeholder="ECL Snowstorm..." [multiline]="true" [rows]="4" grow="full">
+        </plex-text>
+      </plex-wrapper>
+
+      <div class="d-flex flex-wrap align-items-center mb-2">
+        <plex-button type="info" size="sm" label="Previsualizar" [disabled]="previewLoading"
+          (click)="previsualizarEcl()">
+        </plex-button>
+        <plex-loader *ngIf="previewLoading" class="ml-2" type="ball-pulse"></plex-loader>
+      </div>
+
+      <plex-label *ngIf="previewNotice" type="warning" [titulo]="previewNotice"></plex-label>
+
+      <ng-container *ngIf="previewRows.length">
+        <plex-table [columns]="previewColumns" #previewTable="plTable">
+          <plex-title size="sm" titulo="Vista previa de la consulta (procedimiento)">
+            <plex-table-columns></plex-table-columns>
+          </plex-title>
+          <tr *ngFor="let row of previewRows">
+            <td *plTableCol="'term'">{{ row.term }}</td>
+            <td *plTableCol="'conceptId'"><small>{{ row.conceptId }}</small></td>
+          </tr>
+        </plex-table>
+        <plex-badge type="info" class="mb-3">{{ previewRows.length }} concepto(s)</plex-badge>
+      </ng-container>
+    </form>
+  </plex-layout-main>
+
+  <plex-layout-sidebar type="invert">
+    <plex-title size="sm" titulo="Procedimientos (servidor)"></plex-title>
+    <plex-label *ngIf="!mostrarProcedimientosServidor" type="info" titulo="Sin procedimientos materializados"
+      subtitulo="Se calculan al guardar según la ECL o quedan vacíos.">
+    </plex-label>
+    <plex-list *ngIf="mostrarProcedimientosServidor" [selectable]="false">
+      <plex-item *ngFor="let p of procedimientosReadonly">
+        <plex-label [titulo]="p.term" [subtitulo]="p.conceptId" type="info"></plex-label>
+      </plex-item>
+    </plex-list>
+  </plex-layout-sidebar>
+</plex-layout>

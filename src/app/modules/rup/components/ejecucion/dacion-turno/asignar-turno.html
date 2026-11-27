@@ -40,9 +40,23 @@
         <div *ngIf="agenda?.tipoPrestaciones.length > 1">
             <plex-select [(ngModel)]="tipoPrestacion" name="tipoPrestacion" label="Tipo de prestación"
                          [data]="agenda.tipoPrestaciones" placeholder="Seleccione el tipo de prestación"
-                         [required]="true">
+                         [required]="true" (change)="onTipoPrestacionChange()">
             </plex-select>
         </div>
+        <div *ngIf="mostrarSelectProcedimiento">
+            <plex-select
+                label="Procedimiento"
+                name="turnoProcedimiento"
+                [(ngModel)]="turnoProcedimiento"
+                [data]="procedimientosOpciones"
+                labelField="term"
+                (change)="onProcedimientoChange($event)">
+            </plex-select>
+        </div>
+        <plex-select [(ngModel)]="ambitoOrigen" name="ambitoOrigen" label="Ámbito de origen (opcional)"
+                     [data]="ambitosOrigen" labelField="nombre" idField="id"
+                     placeholder="Seleccione una condición">
+        </plex-select>
     </ng-container>
 </form>
 

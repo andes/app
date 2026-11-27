@@ -1,0 +1,53 @@
+@import '@andes/plex/styles/variables';
+
+$blue: #00a8e0;
+
+:host {
+    display: block;
+}
+
+// Selector de agenda (misma forma que dar-turnos)
+.contenedor-slider {
+    width: 100%;
+    height: auto;
+    display: flex;
+    margin: 2px 0 3px 0;
+    border-bottom: 1px solid $blue;
+
+    .btn-prev,
+    .btn-next {
+        width: 20px;
+        margin-bottom: 0.25rem;
+    }
+
+    .contenido-agenda {
+        width: 100%;
+        margin-left: 1rem;
+        margin-right: 1rem;
+
+        plex-help {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
+
+// Contadores: fila repartida, no grilla
+.turnos_disponibles {
+    margin-top: 0 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+}
+
+.listado-turnos {
+    plex-grid {
+        margin-top: 0 !important;
+    }
+}
+
+// Turno que coincide con el slot cliqueado en el mapa
+:host ::ng-deep plex-card.en-slot {
+    outline: 2px solid $blue;
+    outline-offset: 2px;
+}

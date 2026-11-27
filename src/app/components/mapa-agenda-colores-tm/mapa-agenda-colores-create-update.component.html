@@ -1,0 +1,77 @@
+<plex-layout main="8">
+  <plex-layout-main>
+    <form #formulario="ngForm">
+      <plex-title [size]="'md'" [titulo]="isEdit ? 'Editar color mapa de agendas' : 'Nueva regla de color'">
+        <plex-button size="sm" label="Volver" type="danger" position="left" (click)="volver()">
+        </plex-button>
+        <plex-button size="sm" class="ml-1" label="Guardar" type="success" position="right"
+          [disabled]="loading || saving || (isEdit && !puedeEditarRegla)" [validateForm]="formulario" (click)="guardar($event)">
+        </plex-button>
+      </plex-title>
+
+      <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+
+      <plex-wrapper *ngIf="!loading">
+        <ng-container *ngIf="!isEdit">
+          <plex-select [(ngModel)]="model.concepto" name="conceptoSnomed" label="Concepto SNOMED"
+            placeholder="Buscar procedimiento..." [snomedExpression]="conceptoSnomedExpression" [preload]="false"
+            idField="conceptId" labelField="term" grow="full" [required]="true">
+          </plex-select>
+
+          <plex-select [(ngModel)]="model.alcance" name="alcance" label="Alcance"
+            [data]="alcanceOpciones" idField="id" labelField="nombre" [required]="true"
+            (change)="onAlcanceChange()">
+          </plex-select>
+
+          <plex-select *ngIf="alcanceEsProfesional" [(ngModel)]="profesionalSeleccionado" name="profesional"
+            label="Profesional" tmProfesionales [required]="true" grow="full">
+          </plex-select>
+
+          <plex-label *ngIf="alcanceEsGlobal" type="info" titulo="Alcance global"
+            subtitulo="La regla aplica a todas las organizaciones.">
+          </plex-label>
+          <plex-label *ngIf="alcanceActual === 'organizacion'" type="info" titulo="Alcance organización"
+            subtitulo="La organización se toma de la sesión actual al guardar.">
+          </plex-label>
+        </ng-container>
+
+        <ng-container *ngIf="isEdit">
+          <plex-label type="info" titulo="Concepto" [subtitulo]="model.concepto?.term"></plex-label>
+          <plex-label type="info" titulo="Concept ID" [subtitulo]="model.concepto?.conceptId"></plex-label>
+          <plex-label type="info" titulo="Alcance" [subtitulo]="etiquetaAlcance(model.alcance)"></plex-label>
+          <plex-label *ngIf="model.alcance === 'profesional'" type="info" titulo="Profesional"
+            [subtitulo]="profesionalCargadoLabel()">
+          </plex-label>
+          <plex-label *ngIf="alcanceActual === 'organizacion'" type="info" titulo="Organización"
+            [subtitulo]="model.organizacion?.nombre || 'Sesión actual'">
+          </plex-label>
+        </ng-container>
+
+        <h6 class="mt-2">Color</h6>
+        <fieldset [disabled]="isEdit && !puedeEditarRegla">
+          <div class="d-flex flex-wrap align-items-end color-form-row">
+            <input type="color" class="mapa-agenda-color-input" [(ngModel)]="model.color" name="colorPicker"
+                   [required]="true" aria-label="Selector de color" />
+            <plex-text class="ml-2 flex-grow-1" [(ngModel)]="model.color" name="colorHex" label="Hexadecimal"
+              placeholder="#RRGGBB" [required]="true" grow="full">
+            </plex-text>
+          </div>
+
+          <plex-bool [(ngModel)]="model.activo" name="activo" label="Regla activa" type="slide"></plex-bool>
+        </fieldset>
+      </plex-wrapper>
+    </form>
+  </plex-layout-main>
+
+  <plex-layout-sidebar type="invert">
+    <plex-title size="sm" titulo="Mapa de agendas"></plex-title>
+    <plex-label type="info"
+      titulo="Colores por concepto SNOMED"
+      subtitulo="Precedencia en el mapa: profesional → organización → global.">
+    </plex-label>
+    <plex-label *ngIf="isEdit" class="mt-2" type="warning"
+      titulo="Edición"
+      subtitulo="Solo puede modificarse el color y el estado activo. Para otro concepto o alcance, cree una regla nueva.">
+    </plex-label>
+  </plex-layout-sidebar>
+</plex-layout>

@@ -5,12 +5,17 @@ import { Plex } from '@andes/plex';
 import { PlexModalComponent } from '@andes/plex';
 import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
+import { IServicioIntermedio } from 'src/app/interfaces/IServicioIntermedio';
+import { ISnomedConcept } from 'src/app/modules/rup/interfaces/snomed-concept.interface';
+import { ServicioIntermedioService } from 'src/app/modules/rup/services/servicio-intermedio.service';
 import { IPaciente, IPacienteBasico } from '../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
+import { resolverProcedimientosOpciones } from '../utils/procedimiento-servicio-intermedio.util';
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { ObraSocialService } from './../../../services/obraSocial.service';
 import { TurnoService } from './../../../services/turnos/turno.service';
+import { AMBITOS_ORIGEN, IAmbitoOrigenOpcion } from '../../../modules/rup/interfaces/prestacion.interface';
 
 @Component({
     selector: 'dar-sobreturno',
@@ -26,6 +31,10 @@ export class DarSobreturnoComponent implements OnChanges {
     public agenda;
     public paciente: IPaciente;
     public tipoPrestacion: ITipoPrestacion;
+    serviciosIntermedios: IServicioIntermedio[] = [];
+    procedimientosOpciones: ISnomedConcept[] = [];
+    turnoProcedimiento: ISnomedConcept;
+    mostrarSelectProcedimiento = false;
     public horaTurno = null;
     public telefono = '';
     public cambioTelefono = false;
@@ -39,6 +48,8 @@ export class DarSobreturnoComponent implements OnChanges {
         prepaga: ''
     };
     public disableGuardar = true;
+    public ambitoOrigen: IAmbitoOrigenOpcion;
+    public ambitosOrigen = AMBITOS_ORIGEN;
     turnosFuturos = [];
     modalTurnosRepetidos = false;
 
@@ -54,7 +65,8 @@ export class DarSobreturnoComponent implements OnChanges {
         private auth: Auth,
         private servicePaciente: PacienteService,
         private serviceCarpetaPaciente: CarpetaPacienteService,
-        public obraSocialService: ObraSocialService) { }
+        public obraSocialService: ObraSocialService,
+        private servicioIntermedioService: ServicioIntermedioService) { }
 
     recuperarDatos() {
         this.serviceAgenda.getById(this.idAgenda).subscribe(agenda => {
@@ -69,6 +81,10 @@ export class DarSobreturnoComponent implements OnChanges {
             if (agenda.link) {
                 this.turno_link = agenda.link;
             }
+            this.servicioIntermedioService.getAll().subscribe(servicios => {
+                this.serviciosIntermedios = servicios ?? [];
+                this.actualizarProcedimientosSegunTipoPrestacion(this.tipoPrestacion);
+            });
         });
 
         this.servicePaciente.getById(this.idPaciente).subscribe(res => {
@@ -127,6 +143,35 @@ export class DarSobreturnoComponent implements OnChanges {
     // Se ejecuta al modificar el campo NroCarpeta
     cambiarCarpeta() {
         this.changeCarpeta = true;
+    }
+
+    onTipoPrestacionChange() {
+        this.actualizarProcedimientosSegunTipoPrestacion(this.tipoPrestacion);
+        this.buscarTurnosFuturos();
+    }
+
+    onProcedimientoChange(_event?: unknown) { }
+
+    private actualizarProcedimientosSegunTipoPrestacion(tipo: ITipoPrestacion | undefined) {
+        const { procedimientosOpciones, mostrarSelect } = resolverProcedimientosOpciones(
+            this.serviciosIntermedios,
+            tipo
+        );
+
+        this.procedimientosOpciones = procedimientosOpciones;
+        this.mostrarSelectProcedimiento = mostrarSelect;
+
+        if (!tipo?.conceptId || !mostrarSelect) {
+            this.turnoProcedimiento = undefined;
+            return;
+        }
+
+        if (
+            this.turnoProcedimiento?.conceptId
+            && !procedimientosOpciones.some(p => p.conceptId === this.turnoProcedimiento.conceptId)
+        ) {
+            this.turnoProcedimiento = undefined;
+        }
     }
 
     buscarTurnosFuturos() {
@@ -238,8 +283,10 @@ export class DarSobreturnoComponent implements OnChanges {
                 link: this.turno_link,
                 estado: 'asignado',
                 tipoPrestacion: this.tipoPrestacion,
+                procedimiento: this.mostrarSelectProcedimiento ? this.turnoProcedimiento : undefined,
                 paciente: pacienteSave,
-                nota: this.nota
+                nota: this.nota,
+                ambitoOrigen: this.ambitoOrigen?.id
             }
         };
         this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {

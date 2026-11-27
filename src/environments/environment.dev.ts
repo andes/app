@@ -4,8 +4,8 @@ import { analytics, apiKeys, captcha, hotjar, password_recovery } from './apiKey
 export const environment = {
     production: false,
     environmentName: 'development',
-    API: '//localhost:3002/api',
-    WS: '//localhost:3002',
+    API: '/api',
+    WS: '/',
     APIStatusCheck: false,
     version: _package.version,
     MAPS_KEY: apiKeys.develop,

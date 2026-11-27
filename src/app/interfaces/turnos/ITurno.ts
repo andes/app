@@ -1,7 +1,23 @@
-import { ITipoPrestacion } from './../ITipoPrestacion';
+import { AmbitoOrigen } from '../../modules/rup/interfaces/prestacion.interface';
+import { ISnomedConcept } from '../../modules/rup/interfaces/snomed-concept.interface';
 import { IObraSocial } from './../IObraSocial';
+import { ITipoPrestacion } from './../ITipoPrestacion';
 
-// TODO: Recordar actualizar Schema!
+export interface IPrestacionBasica {
+    _id: string;
+    inicio?: string;
+    createdAt?: Date;
+    solicitud?: {
+        fecha?: Date;
+        turno?: string;
+        tipoPrestacion?: ITipoPrestacion;
+    };
+    estadoActual?: {
+        tipo?: string;
+        createdAt?: Date;
+    };
+}
+
 export interface ITurno {
     _id: string;
     id: string;
@@ -25,6 +41,8 @@ export interface ITurno {
 
     };
     tipoPrestacion: ITipoPrestacion;
+    prestacion?: IPrestacionBasica;
+    procedimiento?: ISnomedConcept;
     idPrestacionPaciente: string;
     tipoTurno: string;
     reasignado: {
@@ -47,6 +65,7 @@ export interface ITurno {
         nroCarpeta: string;
     }];
     nota: string;
+    ambitoOrigen?: AmbitoOrigen;
     motivoSuspension: string;
     avisoSuspension: {
         type: string;

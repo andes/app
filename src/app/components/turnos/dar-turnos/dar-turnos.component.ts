@@ -1,12 +1,16 @@
-import moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import moment from 'moment';
 import { switchMap } from 'rxjs';
 import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
+import { IServicioIntermedio } from 'src/app/interfaces/IServicioIntermedio';
 import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
+import { AMBITOS_ORIGEN, IAmbitoOrigenOpcion } from 'src/app/modules/rup/interfaces/prestacion.interface';
+import { ISnomedConcept } from 'src/app/modules/rup/interfaces/snomed-concept.interface';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
+import { ServicioIntermedioService } from 'src/app/modules/rup/services/servicio-intermedio.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { ReglaService } from 'src/app/services/top/reglas.service';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
@@ -20,6 +24,7 @@ import { ListaEsperaService } from '../../../services/turnos/listaEspera.service
 import { idCMI } from '../constantes';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 // Interfaces
+import { resolverProcedimientosOpciones } from '../utils/procedimiento-servicio-intermedio.util';
 import { IBloque } from './../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { ObraSocialService } from './../../../services/obraSocial.service';
@@ -85,6 +90,7 @@ export class DarTurnosComponent implements OnInit {
                 this._solicitudPrestacion.solicitud.registros[0].valor && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion &&
                 this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.motivo ? this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.motivo : this.motivoConsulta;
             this.turnoTipoPrestacion = this._solicitudPrestacion.solicitud.tipoPrestacion;
+            this.actualizarProcedimientosSegunTipoPrestacion(this.turnoTipoPrestacion);
             this.actualizarDatosPaciente(this._solicitudPrestacion.paciente);
             if (this._solicitudPrestacion.inicio === 'top') {
                 this.tipoTurno = 'gestion';
@@ -178,12 +184,18 @@ export class DarTurnosComponent implements OnInit {
     gestionDisponibles: number;
     profesionalDisponibles: number;
     turnoTipoPrestacion: any;
+    serviciosIntermedios: IServicioIntermedio[] = [];
+    procedimientosOpciones: ISnomedConcept[] = [];
+    turnoProcedimiento: ISnomedConcept;
+    mostrarSelectProcedimiento = false;
     alternativas: any[] = [];
     reqfiltros = false;
     permitirTurnoDoble = false;
     carpetaEfector: any;
     obraSocialPaciente: IObraSocial;
     motivoConsulta: string;
+    ambitoOrigen: IAmbitoOrigenOpcion;
+    ambitosOrigen = AMBITOS_ORIGEN;
     showTab = 0;
     equipoSalud;
     prestacionesAlternativa;
@@ -218,7 +230,8 @@ export class DarTurnosComponent implements OnInit {
         public auth: Auth,
         private router: Router,
         private osService: ObraSocialCacheService,
-        private reglasService: ReglaService
+        private reglasService: ReglaService,
+        private servicioIntermedioService: ServicioIntermedioService
     ) { }
 
     ngOnInit() {
@@ -256,7 +269,55 @@ export class DarTurnosComponent implements OnInit {
         this.desplegarOS = this.desplegarObraSocial();
         // Si es solicitud con profesional asignado, lo carga por defecto la primera vez
         this.opciones.profesional = this._solicitudPrestacion?.solicitud?.profesional ? this._solicitudPrestacion.solicitud.profesional : this.opciones.profesional;
+        this.servicioIntermedioService.getAll().subscribe(servicios => {
+            this.serviciosIntermedios = servicios ?? [];
+            this.actualizarProcedimientosSegunTipoPrestacion(this.turnoTipoPrestacion);
+        });
         this.actualizar();
+    }
+
+    onTurnoTipoPrestacionChange() {
+        this.actualizarProcedimientosSegunTipoPrestacion(this.turnoTipoPrestacion);
+    }
+
+    onProcedimientoChange(_event?: unknown) { }
+
+    /**
+     * El filtro de calendario (opciones.tipoPrestacion) al confirmar turno pisa el tipo del bloque
+     * (véase seleccionarTurno / turnoDinamico); al cambiar el filtro hay que alinear procedimiento.
+     */
+    private sincronizarProcedimientosConFiltroTipoPrestacion(): void {
+        if (this.opciones.tipoPrestacion) {
+            this.turnoTipoPrestacion = this.opciones.tipoPrestacion;
+            if (this.turno) {
+                this.turno.tipoPrestacion = this.opciones.tipoPrestacion;
+            }
+        }
+        this.actualizarProcedimientosSegunTipoPrestacion(
+            this.opciones.tipoPrestacion ?? this.turnoTipoPrestacion
+        );
+    }
+
+    private actualizarProcedimientosSegunTipoPrestacion(tipo: ITipoPrestacion | undefined) {
+        const { procedimientosOpciones, mostrarSelect } = resolverProcedimientosOpciones(
+            this.serviciosIntermedios,
+            tipo
+        );
+
+        this.procedimientosOpciones = procedimientosOpciones;
+        this.mostrarSelectProcedimiento = mostrarSelect;
+
+        if (!tipo?.conceptId || !mostrarSelect) {
+            this.turnoProcedimiento = undefined;
+            return;
+        }
+
+        if (
+            this.turnoProcedimiento?.conceptId
+            && !procedimientosOpciones.some(p => p.conceptId === this.turnoProcedimiento.conceptId)
+        ) {
+            this.turnoProcedimiento = undefined;
+        }
     }
 
     cargarTurnos() {
@@ -381,6 +442,7 @@ export class DarTurnosComponent implements OnInit {
     filtrar() {
         this.prestacionSeleccionada = this.opciones.tipoPrestacion;
         this.profesionalSeleccionado = this.opciones.profesional;
+        this.sincronizarProcedimientosConFiltroTipoPrestacion();
 
         const search = {
             'tipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion : null,
@@ -767,9 +829,11 @@ export class DarTurnosComponent implements OnInit {
                 this.turno.tipoPrestacion = this.opciones.tipoPrestacion;
                 this.turnoTipoPrestacion = this.opciones.tipoPrestacion;
             }
+            this.actualizarProcedimientosSegunTipoPrestacion(this.turnoTipoPrestacion);
 
             this.habilitarTurnoDoble();
             this.nota = this.turno.nota;
+            this.ambitoOrigen = null;
             this.videoConferencia = this.turno.videoConferencia;
             this.buscarTurnosFuturos();
         } else {
@@ -918,6 +982,7 @@ export class DarTurnosComponent implements OnInit {
                 this.turno.tipoPrestacion = this.opciones.tipoPrestacion;
                 this.turnoTipoPrestacion = this.opciones.tipoPrestacion;
             }
+            this.actualizarProcedimientosSegunTipoPrestacion(this.turnoTipoPrestacion);
             this.darTurno();
         } else {
             this.isButtonDisabled = false;
@@ -1070,7 +1135,9 @@ export class DarTurnosComponent implements OnInit {
             const datosTurno = {
                 nota: this.nota,
                 motivoConsulta: this.motivoConsulta,
+                ambitoOrigen: this.ambitoOrigen?.id,
                 tipoPrestacion: this.turnoTipoPrestacion,
+                procedimiento: this.mostrarSelectProcedimiento ? this.turnoProcedimiento : undefined,
                 paciente: pacienteSave,
                 idAgenda: this.agenda.id,
                 estadoFacturacion: this.estadoFacturacion,
@@ -1097,6 +1164,7 @@ export class DarTurnosComponent implements OnInit {
                         this.resetBuscarPaciente();
                     }
                     this.turnoTipoPrestacion = undefined;
+                    this.turnoProcedimiento = undefined;
                 }
             });
         } else {
@@ -1114,6 +1182,8 @@ export class DarTurnosComponent implements OnInit {
                 tipoTurno: this.tiposTurnosSelect,
                 nota: this.nota,
                 motivoConsulta: this.motivoConsulta,
+                procedimiento: this.mostrarSelectProcedimiento ? this.turnoProcedimiento : undefined,
+                ambitoOrigen: this.ambitoOrigen?.id,
                 estadoFacturacion: this.estadoFacturacion,
                 emitidoPor: (this.turnoTelefonico) ? 'turno telefonico' : null,
                 videoConferencia: this.videoConferencia,
@@ -1205,6 +1275,7 @@ export class DarTurnosComponent implements OnInit {
         }
         this.actualizar();
         this.turnoTipoPrestacion = undefined; // blanquea el select de tipoPrestacion
+        this.turnoProcedimiento = undefined;
     }
 
     tieneTurnos(bloque: IBloque): boolean {
@@ -1261,6 +1332,7 @@ export class DarTurnosComponent implements OnInit {
                         this.plex.toast('success', 'Paciente agregado a Lista de Espera');
                         this.estadoT = 'noSeleccionada';
                         this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion en panel de confirma turno
+                        this.turnoProcedimiento = undefined;
                         this.opciones.tipoPrestacion = undefined; // blanquea el filtro de tipo de prestacion en el calendario
                         this.opciones.profesional = undefined; // blanquea el filtro de profesionales en el calendario
                         this.afterDarTurno.emit(this.paciente);
