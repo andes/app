@@ -50,7 +50,7 @@ export class BusquedaMpiComponent implements OnInit {
 
     onSearchEnd(pacientes: any[], scan: string) {
         this.escaneado = scan?.length > 0;
-        if (this.escaneado) {
+        if (this.escaneado && pacientes?.length === 1) {
             this.pacienteCache.setPaciente(pacientes[0]);
             this.pacienteCache.setScanCode(scan);
             this.router.navigate(['apps/mpi/paciente']); // abre paciente-cru
@@ -82,9 +82,4 @@ export class BusquedaMpiComponent implements OnInit {
         this.paciente = null;
     }
 
-    // --------------------------------------------------
-
-    afterPacienteCru(paciente: IPaciente) {
-        this.updateTitle('Buscar pacientes');
-    }
 }
