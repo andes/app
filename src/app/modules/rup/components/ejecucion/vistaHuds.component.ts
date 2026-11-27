@@ -13,6 +13,7 @@ import { ConceptObserverService } from './../../services/conceptObserver.service
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import moment from 'moment';
 import { RecetaService } from 'src/app/services/receta.service';
+import { PacientesConsentimientoService } from 'src/app/services/paciente-concentimiento.service';
 
 @Component({
     selector: 'rup-vistaHuds',
@@ -34,6 +35,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     public internacione$: Observable<any[]>;
     public registros = [];
     public permisoHudsCompleta: boolean;
+    public permisoProgramaMas65: boolean;
     public permisoLaboratorios: boolean;
     public permisoVacunas: boolean;
     public permisoRecetas: boolean;
@@ -51,7 +53,8 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         public huds: HUDSService,
         private location: Location,
         private serviceMapaCamasHTTP: MapaCamasHTTP,
-        public recetaService: RecetaService
+        public recetaService: RecetaService,
+        private pacientesConsentimientoService: PacientesConsentimientoService
     ) { }
 
     /**
@@ -70,10 +73,8 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         if (!this.auth.getPermissions('huds:?')?.length) {
             this.redirect('inicio');
         }
-        this.permisoHudsCompleta = this.auth.check('huds:visualizacionHuds');
-        this.permisoLaboratorios = this.permisoHudsCompleta || this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:laboratorio');
-        this.permisoVacunas = this.permisoHudsCompleta || this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:vacuna');
-        this.permisoRecetas = this.permisoHudsCompleta || this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:receta');
+        this.permisoProgramaMas65 = this.auth.check('huds:programaMas65');
+        this.setearPermisosHuds();
 
         // cargar las internaciones y armar un filtro en api .
         this.huds.registrosHUDS.subscribe((datos) => {
@@ -114,11 +115,9 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                     this.paciente = paciente;
 
                     if (this.permisoHudsCompleta) {
-                        const filtros = {
-                            fechaIngresoDesde: this.fechaDesdeInternacion,
-                            idPaciente: id
-                        };
-                        this.internacione$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros);
+                        this.cargarInternaciones(id);
+                    } else if (this.permisoProgramaMas65) {
+                        this.validarAdhesionCuidar65(id);
                     }
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                 });
@@ -129,6 +128,38 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
 
         this.route.queryParams.subscribe(params => {
             this.origen = params['origen'];
+        });
+    }
+
+    private setearPermisosHuds(hudsCompleta = this.auth.check('huds:visualizacionHuds')) {
+        this.permisoHudsCompleta = hudsCompleta;
+        this.permisoLaboratorios = this.permisoHudsCompleta || this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:laboratorio');
+        this.permisoVacunas = this.permisoHudsCompleta || this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:vacuna');
+        this.permisoRecetas = this.permisoHudsCompleta || this.auth.check('huds:visualizacionParcialHuds:*') || this.auth.check('huds:visualizacionParcialHuds:receta');
+    }
+
+    private cargarInternaciones(idPaciente: string) {
+        const filtros = {
+            fechaIngresoDesde: this.fechaDesdeInternacion,
+            idPaciente
+        };
+        this.internacione$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros);
+    }
+
+    private validarAdhesionCuidar65(idPaciente: string) {
+        this.pacientesConsentimientoService.getUltimoConsentimientoCuidar65(idPaciente).subscribe(consentimiento => {
+            if (consentimiento?.aceptacion) {
+                this.setearPermisosHuds(true);
+                this.cargarInternaciones(idPaciente);
+                return;
+            }
+            const mensaje = consentimiento
+                ? 'Este paciente rechazó el último consentimiento del programa <b>Cuidar +65</b>'
+                : 'Este paciente no está adherido al programa <b>Cuidar +65</b>. Usted no posee permisos para visualizar la historia de este paciente';
+            this.plex.info('warning', mensaje, 'Atención');
+            if (!this.permisoLaboratorios && !this.permisoVacunas && !this.permisoRecetas) {
+                this.router.navigate(['/huds']);
+            }
         });
     }
 
