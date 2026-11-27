@@ -91,6 +91,9 @@ export class RUPAccionesEnvioInformeComponent {
             return false;
         }
         if (this.registro) {
+            if (this.registro.concepto?.conceptId === '405202004') {
+                return false;
+            }
             const concepto = getSemanticTag(this.registro.concepto, false);
             const esProcedimientoSolicitud = concepto === 'procedimiento' || concepto === 'hallazgo' || concepto === 'trastorno' || concepto === 'elemento de registro' || this.registro.esSolicitud;
             return this.validada && esProcedimientoSolicitud;
