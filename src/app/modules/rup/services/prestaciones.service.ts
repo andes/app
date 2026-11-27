@@ -1,6 +1,6 @@
-import { map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, of } from 'rxjs';
+import { EMPTY, forkJoin, Observable, BehaviorSubject, of, throwError, from } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { cache, Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
@@ -15,7 +15,11 @@ import { ITurno } from 'src/app/interfaces/turnos/ITurno';
 import { Router } from '@angular/router';
 import { IPacienteBasico } from 'src/app/core/mpi/interfaces/IPaciente';
 import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
+import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import { ConstantesService } from 'src/app/services/constantes.service';
 import moment from 'moment';
+
+const LIMITE_ROMPER_VALIDACION_DEFAULT = 30;
 
 @Injectable()
 export class PrestacionesService {
@@ -94,7 +98,9 @@ export class PrestacionesService {
         private plex: Plex,
         private archivoAdjuntoService: AdjuntosService,
         private router: Router,
-        private motivosHudsService: MotivosHudsService
+        private motivosHudsService: MotivosHudsService,
+        private conceptosTurneablesService: ConceptosTurneablesService,
+        private constantesService: ConstantesService
     ) {
     }
 
@@ -769,32 +775,72 @@ export class PrestacionesService {
     }
 
 
-    romperValidacion(prestacion: IPrestacion) {
-        return new Observable((observer) => {
-            this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {
-                if (!validar) {
-                    observer.error();
-                    observer.complete();
-                    return false;
-                } else {
-                    // hacemos el patch y luego creamos los planes
-                    const cambioEstado: any = {
-                        op: 'romperValidacion'
-                    };
+    private parsearDiasLimite(value: any): number | null {
+        if (value === null || value === undefined || value === '') {
+            return null;
+        }
+        return Number.isFinite(value) && value >= 0 ? value : null;
+    }
 
-                    // En api el estado de la prestación cambia a ejecucion
-                    this.patch(prestacion.id, cambioEstado).subscribe(() => {
-                        observer.next(null);
-                        observer.complete();
-                    }, (err) => {
-                        this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
-                        observer.error();
-                        observer.complete();
-                    });
+    limiteRomperValidacion(prestacion: IPrestacion): Observable<number> {
+        const conceptId = prestacion?.solicitud?.tipoPrestacion?.conceptId;
+        return forkJoin([
+            this.conceptosTurneablesService.getAll().pipe(catchError(() => of([]))),
+            this.constantesService.search({ source: 'prestacion:validacion' }).pipe(catchError(() => of([])))
+        ]).pipe(
+            map(([conceptos, constantes]) => {
+                const concepto = conceptos?.find(c => c.conceptId === conceptId);
+                const limiteConcepto = this.parsearDiasLimite(concepto?.tiempoLimiteRomperValidacion);
+                if (limiteConcepto !== null) {
+                    return limiteConcepto;
                 }
-            });
+                const constante = constantes?.[0];
+                const limiteConstante = this.parsearDiasLimite(constante?.key) ?? this.parsearDiasLimite(constante?.nombre);
+                return limiteConstante ?? LIMITE_ROMPER_VALIDACION_DEFAULT;
+            })
+        );
+    }
 
-        });
+    estaVencidaRomperValidacion(prestacion: IPrestacion): Observable<boolean> {
+        return this.limiteRomperValidacion(prestacion).pipe(
+            map(limite => {
+                const fechaValidacion = prestacion?.estados?.find(estado => estado.tipo === 'validada')?.createdAt;
+                const limiteDias = this.parsearDiasLimite(limite);
+                if (!fechaValidacion || limiteDias === null) {
+                    return false;
+                }
+                if (limiteDias === 0) {
+                    return true;
+                }
+                return moment().diff(moment(fechaValidacion), 'days') > limiteDias;
+            })
+        );
+    }
+
+    romperValidacion(prestacion: IPrestacion): Observable<IPrestacion> {
+        return this.estaVencidaRomperValidacion(prestacion).pipe(
+            switchMap(vencida => {
+                if (vencida) {
+                    this.plex.info('warning', 'El tiempo para romper la validación ha vencido.', 'Romper validación');
+                    return EMPTY;
+                }
+                return from(this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación'));
+            }),
+            switchMap(validar => {
+                if (!validar) {
+                    return EMPTY;
+                }
+                const cambioEstado: any = {
+                    op: 'romperValidacion'
+                };
+                return this.patch(prestacion.id, cambioEstado).pipe(
+                    catchError(error => {
+                        this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
+                        return throwError(() => error);
+                    })
+                );
+            })
+        );
     }
 
     getFechaPrestacionTurnoDinamico(fechaTurno) {
