@@ -5,7 +5,7 @@ import { cacheStorage, Unsubscribe } from '@andes/shared';
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { forkJoin as observableForkJoin, Subscription, switchMap } from 'rxjs';
+import { firstValueFrom, forkJoin as observableForkJoin, Subscription, switchMap } from 'rxjs';
 import { ITurno } from 'src/app/interfaces/turnos/ITurno';
 import { SnomedService } from '../../../../apps/mitos';
 import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
@@ -93,6 +93,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public prestacionesValidacion = this.auth.getPermissions('rup:validacion:?');
     public permisoServicioIntermedio = this.auth.getPermissions('rup:servicio-intermedio:?');
     public showSidebar = false;
+    public mostrarPrestacionesSinValidar = false;
 
     prestacionPendiente: IPrestacion;
     turno: ITurno;
@@ -167,6 +168,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.showSidebar = value;
         this.tipoPrestacion = null;
         this.verFueraAgenda = false;
+        this.resetSidebarPrestacionesSinValidar();
     }
 
     actualizareleccionada(id: number) {
@@ -395,6 +397,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
      * Navega para crear una nueva prestación
      */
     crearPrestacion(opcion: string): void {
+        this.resetSidebarPrestacionesSinValidar();
         this.showSidebar = true;
         this.tipoPrestacion = opcion;
         this.verFueraAgenda = true;
@@ -464,7 +467,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                                                 usuario: this.auth.usuario,
                                                 organizacion: this.auth.organizacion,
                                                 paciente: paciente,
-                                                motivo: motivoH[0].key,
+                                                motivo: motivoH?.[0]?.key || 'inicio-prestacion',
                                                 profesional: this.auth.profesional,
                                                 idTurno: turno.id,
                                                 idPrestacion: snomedConcept._id
@@ -495,7 +498,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                                                 usuario: this.auth.usuario,
                                                 organizacion: this.auth.organizacion,
                                                 paciente: paciente,
-                                                motivo: motivoH[0].key,
+                                                motivo: motivoH?.[0]?.key || 'inicio-prestacion',
                                                 profesional: this.auth.profesional,
                                                 idTurno: turno.id,
                                                 idPrestacion: snomedConcept._id
@@ -531,27 +534,30 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     invalidarPrestacion(prestacion, tipo) {
         const data = {
-            idAgenda: this.agendaSeleccionada.id,
+            idAgenda: this.agendaSeleccionada?.id,
             idTurno: prestacion.solicitud.turno,
             tipoTurno: tipo
         };
-        this.plex.confirm('¿Está seguro que desea invalidar esta prestación?').then(confirmacion => {
-            if (confirmacion) {
-                this.servicioPrestacion.invalidarPrestacion(prestacion, data).subscribe(() => this.actualizar());
-            }
-        });
+        this.confirmarInvalidarPrestacion(prestacion, data);
     }
 
-    registrarInasistencia(paciente, agenda: IAgenda = null, turno, operacion) {
+    async registrarInasistencia(paciente, agenda: IAgenda = null, turno, operacion): Promise<boolean> {
         const msg = operacion === 'noAsistio' ?
             `¿Está seguro que desea registrar la inasistencia del paciente: <b> ${paciente.apellido} ${paciente.alias || paciente.nombre} </b> ?` :
             '¿Está seguro que desea revertir los cambios?';
 
-        this.plex.confirm(msg).then(confirmacion =>
-            confirmacion ? this.servicioAgenda.patch(agenda.id, { op: operacion, turnos: [turno] }).subscribe(() => {
-                this.actualizar();
-            }) : false
-        );
+        const confirmado = await this.plex.confirm(msg);
+        if (!confirmado) {
+            return false;
+        }
+
+        try {
+            await firstValueFrom(this.servicioAgenda.patch(agenda.id, { op: operacion, turnos: [turno] }));
+            this.actualizar();
+            return true;
+        } catch {
+            return false;
+        }
     }
 
 
@@ -861,7 +867,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                             usuario: this.auth.usuario,
                             organizacion: this.auth.organizacion,
                             paciente: prestacion.paciente,
-                            motivo: motivoH[0].key,
+                            motivo: motivoH?.[0]?.key || 'cambio-estado',
                             profesional: this.auth.profesional,
                             idTurno: null,
                             idPrestacion: prestacion.id
@@ -970,7 +976,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             this.accesoHudsTurno = null;
             this.accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id;
             this.motivosHudsService.getMotivo('continuidad').subscribe(motivoH => {
-                this.preAccesoHuds(motivoH[0].key);
+                this.preAccesoHuds(motivoH?.[0]?.key || 'continuidad');
             });
         } else {
             this.routeTo(estado, prestacion.id);
@@ -985,5 +991,41 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     onCancelPrestacion() {
         this.turno = null;
         this.prestacionPendiente = null;
+    }
+
+    verPrestacionesSinValidar() {
+        if (this.mostrarPrestacionesSinValidar) {
+            return;
+        }
+        this.showSidebar = true;
+        this.mostrarPrestacionesSinValidar = true;
+        this.verFueraAgenda = false;
+        this.tipoPrestacion = null;
+        this.buscandoPaciente = false;
+        this.prestacionPendiente = null;
+    }
+
+    private resetSidebarPrestacionesSinValidar() {
+        this.mostrarPrestacionesSinValidar = false;
+    }
+
+    continuarPrestacionSinValidar(prestacion: IPrestacion) {
+        this.onVerResumenClick('ejecucion', prestacion);
+    }
+
+    verHudsPrestacionSinValidar(prestacion: IPrestacion) {
+        this.setRouteToParams(['paciente', prestacion.paciente.id]);
+        this.setAccesoHudsParams(prestacion.paciente, prestacion.solicitud.turno || null, prestacion.solicitud.tipoPrestacion.id);
+    }
+
+    private confirmarInvalidarPrestacion(prestacion: IPrestacion, data: any) {
+        this.plex.confirm('¿Está seguro que desea invalidar esta prestación?').then(confirmacion => {
+            if (confirmacion) {
+                this.servicioPrestacion.invalidarPrestacion(prestacion, data).subscribe({
+                    next: () => this.actualizar(),
+                    error: () => this.plex.info('warning', 'No se pudo invalidar la prestación', 'Aviso')
+                });
+            }
+        });
     }
 }

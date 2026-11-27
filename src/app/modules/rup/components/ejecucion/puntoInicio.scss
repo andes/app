@@ -76,3 +76,11 @@
 .label-agenda {
     margin-top: 25%;
 }
+
+.sidebar-prestaciones-sin-validar {
+    ::ng-deep .plex-box-content {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+}
