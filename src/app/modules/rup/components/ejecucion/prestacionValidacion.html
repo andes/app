@@ -1,4 +1,4 @@
-<plex-layout *ngIf="prestacion && !showDarTurnos" [main]="prestacion.solicitud.ambitoOrigen == 'ambulatorio'? 9 : 12">
+<plex-layout *ngIf="prestacion && !showDarTurnos" [main]="prestacion.solicitud.ambitoOrigen === 'ambulatorio'? 9 : 12">
     <plex-layout-main>
         <plex-title main [titulo]="title" *ngIf="prestacion && !showDarTurnos">
             <plex-button *ngIf="hasPacs" type="info" (click)="onPacs()" size="sm" class="mr-1">
@@ -196,7 +196,7 @@
             </div>
         </div>
     </plex-layout-main>
-    <plex-layout-sidebar *ngIf="prestacion.solicitud.ambitoOrigen == 'ambulatorio'">
+    <plex-layout-sidebar *ngIf="prestacion.solicitud.ambitoOrigen === 'ambulatorio'">
         <rup-relaciones [registros]="prestacion.ejecucion.registros"></rup-relaciones>
     </plex-layout-sidebar>
     <plex-layout-footer *ngIf="!showDarTurnos">
@@ -243,7 +243,7 @@
                     <plex-label size="sm" class="tipo-solicitud" icon="mano-corazon" titulo="Tipos de solicitud"
                                 subtitulo="{{ registro.valor.solicitudPrestacion.prestacionSolicitada.term }}"></plex-label>
 
-                    <plex-label size="sm" style="width: 100%;" color="#0070cc" icon="hospital"
+                    <plex-label size="sm" class="tipo-solicitud" icon="hospital"
                                 titulo="Organización destino"
                                 subtitulo="{{ registro.valor.solicitudPrestacion.organizacionDestino.nombre }}"></plex-label>
                 </div>
