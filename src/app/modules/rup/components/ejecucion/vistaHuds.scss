@@ -4,8 +4,8 @@ plex-tabs>section {
 
 plex-tab {
 
-    & rup-evolucion-problema-default,
-    rup-observaciones {
+    & > rup-evolucion-problema-default,
+    & > rup-observaciones {
 
         &:first-child form {
             border: 1px solid lightgrey;
