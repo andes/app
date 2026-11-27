@@ -1,0 +1,51 @@
+<plex-layout>
+    <plex-layout-main>
+        <form #form="ngForm">
+            <header>
+                <plex-title [titulo]="editando ? 'EDITAR MEDICAMENTO' : 'CREAR NUEVO'">
+                    <plex-button label="GUARDAR" type="success" size="sm" [validateForm]="form" [disabled]="guardando"
+                                 (click)="guardar($event)">
+                    </plex-button>
+                    <plex-button label="VOLVER" type="danger" size="sm" class="ml-1" (click)="volver()"></plex-button>
+                </plex-title>
+            </header>
+
+            <plex-wrapper>
+                <plex-select label="Sistema" name="sistema" [data]="sistemas" [(ngModel)]="sistema" [required]="true"
+                             (change)="onSistemaChange()">
+                </plex-select>
+                <plex-select label="Función" name="funcion" [data]="funciones" [(ngModel)]="funcion" [required]="true"
+                             [disabled]="!sistema" (change)="onFuncionChange()">
+                </plex-select>
+                <plex-select label="Grupo farmacológico" name="grupoFarmacologico" [data]="grupos"
+                             [(ngModel)]="grupoFarmacologico" [disabled]="!grupos.length">
+                </plex-select>
+                <plex-text label="Medicamento" name="descripcion" [(ngModel)]="medicamento.descripcion"
+                           [required]="true">
+                </plex-text>
+                <plex-select label="Concepto SNOMED" name="concepto" placeholder="Buscar concepto"
+                             [(ngModel)]="medicamento.concepto" idField="conceptId" labelField="term"
+                             (getData)="buscarConceptos($event)">
+                </plex-select>
+                <plex-text label="Especialidad" name="especialidades" placeholder="Separadas por coma (ej: MG, CM)"
+                           [(ngModel)]="especialidades">
+                </plex-text>
+                <plex-text label="Nivel de complejidad" name="nivelComplejidad"
+                           [(ngModel)]="medicamento.nivelComplejidad">
+                </plex-text>
+                <plex-text label="Carro de emergencia" name="carroEmergencia" [(ngModel)]="medicamento.carroEmergencia">
+                </plex-text>
+            </plex-wrapper>
+
+            <plex-text label="Requisito de prescripción" name="requisitos" [multiline]="true"
+                       [(ngModel)]="medicamento.requisitos">
+            </plex-text>
+            <plex-text label="Indicaciones" name="indicaciones" [multiline]="true"
+                       [(ngModel)]="medicamento.indicaciones">
+            </plex-text>
+            <plex-text label="Recomendación de uso" name="recomendaciones" [multiline]="true"
+                       [(ngModel)]="medicamento.recomendaciones">
+            </plex-text>
+        </form>
+    </plex-layout-main>
+</plex-layout>

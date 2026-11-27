@@ -1,5 +1,7 @@
 import { Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { IMedicamentoFTP } from '../../components/formularioTerapeutico/formularioTerapeutico.constantes';
 
 @Injectable()
 export class FormTerapeuticoService {
@@ -12,6 +14,14 @@ export class FormTerapeuticoService {
 
     get(params) {
         return this.server.get(this.formTerapeuticoUrl + '/formularioTerapeutico', { params: params });
+    }
+
+    getListado(): Observable<IMedicamentoFTP[]> {
+        return this.server.get(this.formTerapeuticoUrl + '/formularioTerapeutico', { params: { listado: true } });
+    }
+
+    getById(id: string): Observable<IMedicamentoFTP> {
+        return this.server.get(this.formTerapeuticoUrl + '/' + id);
     }
 
     put(data) {

@@ -9,6 +9,7 @@ import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campania
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
 // Home de Estadisticas
 import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
+import { CrearNuevoComponent } from './components/formularioTerapeutico/crear-nuevo/crear-nuevo.component';
 import { InicioComponent } from './components/inicio/inicio.component';
 import { NovedadesComponent } from './components/novedades/novedades.component';
 // Préstamos HC
@@ -149,6 +150,8 @@ const appRoutes: Routes = [
 
     // formulario terapeutico
     { path: 'formularioTerapeutico', component: FormTerapeuticoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+    { path: 'formularioTerapeutico/nuevo', component: CrearNuevoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+    { path: 'formularioTerapeutico/:id/editar', component: CrearNuevoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
     // Reportes
     { path: 'reportes', component: EncabezadoReportesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
