@@ -57,21 +57,6 @@ export class ChecklistComponent extends RUPComponent implements OnInit {
         this.allowOtherQuery = this.params.allowOtherQuery || null;
 
 
-        if (!this.registro.valor) {
-            this.registro.valor = this.multiple ? [] : null;
-        }
-
-        if (this.multiple) {
-            this.valor = this.registro.valor.filter(el => !el._o);
-            this.otros = this.registro.valor.filter(el => el._o);
-        } else {
-            if (this.registro.valor?._o) {
-                this.otros = this.registro.valor;
-            } else {
-                this.valor = this.registro.valor;
-            }
-        }
-
         if (this.params.query) {
             this.idField = 'conceptId';
             this.labelField = 'term';
@@ -80,11 +65,53 @@ export class ChecklistComponent extends RUPComponent implements OnInit {
             this.data$ = of(this.params.items);
         }
 
+        if (!this.registro.valor) {
+            this.registro.valor = this.multiple ? [] : null;
+        }
+
+        if (this.multiple) {
+            const list = Array.isArray(this.registro.valor) ? this.registro.valor : [];
+            this.valor = list.filter(el => !el._o).map(el => {
+                if (typeof el === 'object' && el !== null) {
+                    return el;
+                }
+                return { [this.idField]: el, [this.labelField]: el };
+            });
+            this.otros = list.filter(el => el._o);
+        } else {
+            if (this.registro.valor?._o) {
+                this.otros = this.registro.valor;
+                this.valor = null;
+            } else if (this.registro.valor) {
+                const val = this.registro.valor[this.idField] ?? this.registro.valor.id ?? this.registro.valor.conceptId;
+                this.valor = val !== undefined ? val : this.registro.valor;
+            } else {
+                this.valor = null;
+            }
+        }
+
         if (this.watch && !this.soloValores) {
             this.conceptObserverService.observe(this.registro).subscribe((data) => {
                 if (data.valor) {
-                    this.valor = data.valor;
                     this.registro.valor = data.valor;
+                    if (this.multiple) {
+                        const list = Array.isArray(data.valor) ? data.valor : [];
+                        this.valor = list.filter(el => !el._o).map(el => {
+                            if (typeof el === 'object' && el !== null) {
+                                return el;
+                            }
+                            return { [this.idField]: el, [this.labelField]: el };
+                        });
+                        this.otros = list.filter(el => el._o);
+                    } else {
+                        if (data.valor._o) {
+                            this.otros = data.valor;
+                            this.valor = null;
+                        } else {
+                            const val = data.valor[this.idField] ?? data.valor.id ?? data.valor.conceptId;
+                            this.valor = val !== undefined ? val : data.valor;
+                        }
+                    }
                 }
             });
         }
