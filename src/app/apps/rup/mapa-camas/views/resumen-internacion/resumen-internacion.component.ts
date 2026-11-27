@@ -9,7 +9,7 @@ import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.s
 
 import { Timeline } from 'vis-timeline/peer';
 import { DataSet } from 'vis-data';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
@@ -47,6 +47,7 @@ export class ResumenInternacionComponent implements OnInit {
     @ViewChild('prueba') timelineDiv;
 
     private idInternacion: string;
+    private usarResumen = false;
     public internacion: IResumenInternacion;
     public prestacionSelected: IPrestacion;
     public datoIdSelected: string;
@@ -126,19 +127,28 @@ export class ResumenInternacionComponent implements OnInit {
     ];
 
     getInternacion(): Observable<any> {
+        const getResumen = () => this.resumenInternacionService.get(this.idInternacion);
+
         if (this.capa === 'estadistica') {
-            return this.prestacionService.getById(this.idInternacion).pipe(
-                map(prestacion => {
+            return this.prestacionService.getById(this.idInternacion, { showError: false }).pipe(
+                catchError(() => {
+                    // El id puede corresponder a un resumen (ingreso sin prestación)
+                    this.usarResumen = true;
+                    return getResumen();
+                }),
+                map((data: any) => {
+                    if (!data.ejecucion) {
+                        return data;
+                    }
                     return {
-                        paciente: prestacion.paciente,
-                        fechaIngreso: prestacion.ejecucion.registros[0]?.valor.informeIngreso.fechaIngreso,
-                        fechaEgreso: prestacion.ejecucion.registros[1]?.valor.InformeEgreso.fechaEgreso,
+                        paciente: data.paciente,
+                        fechaIngreso: data.ejecucion.registros[0]?.valor.informeIngreso.fechaIngreso,
+                        fechaEgreso: data.ejecucion.registros[1]?.valor.InformeEgreso?.fechaEgreso,
                     };
                 })
             );
-        } else {
-            return this.resumenInternacionService.get(this.idInternacion);
         }
+        return getResumen();
     }
 
     ngOnInit() {
@@ -287,7 +297,7 @@ export class ResumenInternacionComponent implements OnInit {
     getMovimientosInternacion() {
         return this.mapaCamasHTTP.historial(
             'internacion',
-            this.capa,
+            this.usarResumen ? 'medica' : this.capa,
             this.internacion.fechaIngreso,
             this.internacion.fechaEgreso || new Date(),
             { idInternacion: this.idInternacion }
