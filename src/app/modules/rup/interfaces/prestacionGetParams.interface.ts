@@ -19,5 +19,6 @@ export class IPrestacionGetParams {
     ordenFechaEjecucion?: boolean;
     limit?: number;
     ambitoOrigen?: string;
+    inicio?: string;
     tipoPrestaciones?: any[];
 }
