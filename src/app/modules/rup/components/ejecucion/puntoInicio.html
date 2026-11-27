@@ -261,6 +261,12 @@
                                                         -
                                                         1].tipo}}
                                                     </plex-badge>
+                                                    <!-- Firmas de pre-validación acumuladas (doble firma) - ADR 0001 -->
+                                                    <plex-badge *ngIf="turno.prestaciones[0].firmasPrevalidacion?.length"
+                                                        type="info" class="mb-1"
+                                                        tooltip="{{ turno.prestaciones[0].firmasPrevalidacion.length | i18nPlural: { '=1': 'Una firma de pre-validación', 'other': '# firmas de pre-validación' } }}">
+                                                        {{ turno.prestaciones[0].firmasPrevalidacion.length | i18nPlural: { '=1': '1 firma', 'other': '# firmas' } }}
+                                                    </plex-badge>
                                                 </div>
                                                 <ng-container *ngIf="turno && turno.estado === 'suspendido'">
                                                     <plex-badge type="danger" class="mb-1">Suspendido</plex-badge>
@@ -445,6 +451,12 @@
                                                             class="mb-1">
                                                             {{sobreturno.prestaciones[0].estados[sobreturno.prestaciones[0].estados.length-1].tipo}}
                                                         </plex-badge>
+                                                        <!-- Firmas de pre-validación acumuladas (doble firma) - ADR 0001 -->
+                                                        <plex-badge *ngIf="sobreturno.prestaciones[0].firmasPrevalidacion?.length"
+                                                            type="info" class="mb-1"
+                                                            tooltip="{{ sobreturno.prestaciones[0].firmasPrevalidacion.length | i18nPlural: { '=1': 'Una firma de pre-validación', 'other': '# firmas de pre-validación' } }}">
+                                                            {{ sobreturno.prestaciones[0].firmasPrevalidacion.length | i18nPlural: { '=1': '1 firma', 'other': '# firmas' } }}
+                                                        </plex-badge>
                                                     </div>
                                                     <div
                                                         *ngIf="sobreturno?.paciente && sobreturno.asistencia && sobreturno.estado !== 'suspendido'">
@@ -590,6 +602,11 @@
                                         [type]="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' ? 'success' : (
                                                     prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion' ? 'warning' : 'info')">
                                         {{prestacion.estados[prestacion.estados.length - 1].tipo}}
+                                    </plex-badge>
+                                    <!-- Firmas de pre-validación acumuladas (doble firma) - ADR 0001 -->
+                                    <plex-badge *ngIf="prestacion.firmasPrevalidacion?.length" type="info" class="mt-1"
+                                        tooltip="{{ prestacion.firmasPrevalidacion.length | i18nPlural: { '=1': 'Una firma de pre-validación', 'other': '# firmas de pre-validación' } }}">
+                                        {{ prestacion.firmasPrevalidacion.length | i18nPlural: { '=1': '1 firma', 'other': '# firmas' } }}
                                     </plex-badge>
                                     <strong class="mt-1" *ngIf="prestacion">{{ prestacion.solicitud.fecha | date:
                                         'HH:mm' }}</strong>
